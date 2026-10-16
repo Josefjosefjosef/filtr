@@ -17149,12 +17149,85 @@ function buildVideoAsArticleCard(it) {
       var y = parseInt(raw || "0", 10);
       if (Number.isFinite(y) && y > 0) return y;
     } catch (_) {}
+    try {
+      var rawLs = localStorage.getItem("iuPwaMenuNavReturnPersistV1");
+      if (rawLs) {
+        var oLs = JSON.parse(rawLs);
+        var tsLs = Number(oLs && oLs.t);
+        var yLs = Number(oLs && oLs.y);
+        if (oLs && oLs.gate === "nav" && Number.isFinite(tsLs) && Date.now() - tsLs < 45000 && Number.isFinite(yLs) && yLs > 0) {
+          return Math.round(yLs);
+        }
+      }
+    } catch (_) {}
     return 0;
+  }
+
+  function iuMenuNavHasColdReturnPersist() {
+    try {
+      var raw = localStorage.getItem("iuPwaMenuNavReturnPersistV1");
+      if (!raw) return false;
+      var o = JSON.parse(raw);
+      if (!o || o.gate !== "nav") return false;
+      var ts = Number(o.t);
+      return Number.isFinite(ts) && ts > 0 && Date.now() - ts < 45000;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function iuMindMenuPendingToolOverlay() {
+    try {
+      var p = iuMindMenuReadReturnPending();
+      if (!p || !p.tool) return "";
+      return String(p.tool);
+    } catch (_) {
+      return "";
+    }
+  }
+
+  function iuMindMenuShouldDeferReturnBootRelease() {
+    try {
+      if (!document.documentElement.classList.contains("iu-mm-return-boot")) return false;
+      var mode = document.documentElement.getAttribute("data-iu-pwa-return-boot-mode") || "";
+      if (mode === "nav") {
+        return iuMenuNavReadScroll() > 0 || iuMenuNavHasColdReturnPersist();
+      }
+      if (mode === "home-deep") return true;
+      if (mode === "home") {
+        try {
+          var rawHm = localStorage.getItem("iuPwaExternalReturnMainScrollPersistV1");
+          if (rawHm) {
+            var oHm = JSON.parse(rawHm);
+            if (Number(oHm && oHm.y) > 120) return true;
+          }
+        } catch (_hm) {}
+        return false;
+      }
+      if (mode === "tools" || !mode) {
+        if (iuMindMenuHasReturnGuard()) return true;
+        if (iuMindMenuReadPendingScrollY() > 0) return true;
+        if (iuMindMenuPendingToolOverlay()) return true;
+      }
+    } catch (_) {}
+    return false;
   }
   function iuMenuNavApplyScroll(y) {
     if (!(Number.isFinite(y) && y > 0)) return;
     var target = Math.round(y);
     var until = Date.now() + 1200;
+    var releaseNavBoot = function (why) {
+      try {
+        var mode = document.documentElement.getAttribute("data-iu-pwa-return-boot-mode") || "";
+        if (
+          mode === "nav" &&
+          typeof window.__iuMmReturnBootRelease === "function" &&
+          document.documentElement.classList.contains("iu-mm-return-boot")
+        ) {
+          window.__iuMmReturnBootRelease(why || "menu-nav-scroll-done");
+        }
+      } catch (_) {}
+    };
     var apply = function () {
       try {
         var panel = document.getElementById("iuMobileGatePanelNav");
@@ -17173,9 +17246,13 @@ function buildVideoAsArticleCard(it) {
     apply();
     var tick = function () {
       try {
-        if (apply()) return;
+        if (apply()) {
+          releaseNavBoot("menu-nav-scroll-done");
+          return;
+        }
         if (Date.now() >= until) {
           apply();
+          releaseNavBoot("menu-nav-scroll-timeout");
           return;
         }
         requestAnimationFrame(tick);
@@ -17189,6 +17266,7 @@ function buildVideoAsArticleCard(it) {
       try {
         setTimeout(function () {
           apply();
+          releaseNavBoot("menu-nav-scroll-fallback");
         }, 0);
       } catch (_t) {}
     }
@@ -17197,6 +17275,9 @@ function buildVideoAsArticleCard(it) {
     window.iuMenuNavCaptureScroll = iuMenuNavCaptureScroll;
     window.iuMenuNavApplyScroll = iuMenuNavApplyScroll;
     window.iuMenuNavReadScroll = iuMenuNavReadScroll;
+    window.iuMenuNavHasColdReturnPersist = iuMenuNavHasColdReturnPersist;
+    window.iuMindMenuShouldDeferReturnBootRelease = iuMindMenuShouldDeferReturnBootRelease;
+    window.iuMindMenuPendingToolOverlay = iuMindMenuPendingToolOverlay;
   } catch (_) {}
 
   /** P0 Mobile gate: tab click — only one section open; use existing left rail / MindMenu; back button. */
@@ -17438,13 +17519,23 @@ function buildVideoAsArticleCard(it) {
           if (value === "nav" || value === "tools") {
             document.documentElement.classList.add("iu-mobileGateOverlayOpen");
             document.body.classList.add("iu-mobileGateOverlayOpen");
+            if (value === "nav" && typeof window.__iuMmReturnBootRelease === "function") {
+              var deferNavBootRelease = false;
+              try {
+                deferNavBootRelease =
+                  typeof window.iuMindMenuShouldDeferReturnBootRelease === "function" &&
+                  window.iuMindMenuShouldDeferReturnBootRelease();
+              } catch (_dNav) {
+                deferNavBootRelease = false;
+              }
+              if (!deferNavBootRelease) window.__iuMmReturnBootRelease("feed-setTab-nav");
+            }
             if (value === "tools" && typeof window.__iuMmReturnBootRelease === "function") {
               var deferMmBootRelease = false;
               try {
                 deferMmBootRelease =
-                  document.documentElement.classList.contains("iu-mm-return-boot") &&
-                  ((typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard()) ||
-                    (typeof window.iuMindMenuReadPendingScrollY === "function" && window.iuMindMenuReadPendingScrollY() > 0));
+                  typeof window.iuMindMenuShouldDeferReturnBootRelease === "function" &&
+                  window.iuMindMenuShouldDeferReturnBootRelease();
               } catch (_dbr) {
                 deferMmBootRelease = false;
               }
@@ -17943,6 +18034,12 @@ function buildVideoAsArticleCard(it) {
         (typeof window.iuMindMenuReturnBootHidesHome === "function" && window.iuMindMenuReturnBootHidesHome())
       ) {
         setTab("tools");
+      } else if (
+        typeof window.iuMenuNavHasColdReturnPersist === "function" &&
+        window.iuMenuNavHasColdReturnPersist() &&
+        !(typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard())
+      ) {
+        setTab("nav");
       } else if (!String(wrap.getAttribute("data-iu-mobile-gate") || "").trim()) setTab("");
       window.__iuMobileGateTabInitDone = 1;
     } catch (_) {}
@@ -26252,14 +26349,34 @@ function buildVideoAsArticleCard(it) {
     }
   }
 
+  function iuMindMenuCaptureDatovkaOverlayState() {
+    try {
+      var dsOpen =
+        (document.body && document.body.classList.contains("iu-ds-overlay-open")) ||
+        (function () {
+          var ds = document.getElementById("iuDsPanel");
+          return !!(ds && String(ds.dataset.open || "") === "1" && !ds.hasAttribute("hidden"));
+        })();
+      if (!dsOpen) return { tool: "", dsY: 0 };
+      var scrollHost = document.querySelector("#iuDsPanel .iu-datovka-scroll-host, #iuDsPanel .iu-ds-panelBody");
+      var dsY = scrollHost && Number.isFinite(scrollHost.scrollTop) ? scrollHost.scrollTop || 0 : 0;
+      return { tool: "datovka", dsY: dsY };
+    } catch (_) {
+      return { tool: "", dsY: 0 };
+    }
+  }
+
   function iuMindMenuWriteReturnPending(scrollY) {
     try {
       var y = Number.isFinite(scrollY) && scrollY >= 0 ? scrollY : iuMindMenuCapturePanelScrollY();
       var aiSt = iuMindMenuCaptureAiOverlayState();
-      localStorage.setItem(
-        IU_MINDMENU_RETURN_PENDING_KEY,
-        JSON.stringify({ t: Date.now(), y: y, ai: aiSt.ai, aiY: aiSt.aiY })
-      );
+      var dsSt = iuMindMenuCaptureDatovkaOverlayState();
+      var payload = { t: Date.now(), y: y, ai: aiSt.ai, aiY: aiSt.aiY };
+      if (dsSt.tool) {
+        payload.tool = dsSt.tool;
+        payload.dsY = dsSt.dsY;
+      }
+      localStorage.setItem(IU_MINDMENU_RETURN_PENDING_KEY, JSON.stringify(payload));
     } catch (_) {}
   }
 
@@ -26279,11 +26396,14 @@ function buildVideoAsArticleCard(it) {
       }
       var y = Number(obj.y);
       var aiY = Number(obj.aiY);
+      var dsY = Number(obj.dsY);
       return {
         t: ts,
         y: Number.isFinite(y) && y >= 0 ? y : 0,
         ai: obj.ai ? 1 : 0,
         aiY: Number.isFinite(aiY) && aiY >= 0 ? aiY : 0,
+        tool: String(obj.tool || "").trim(),
+        dsY: Number.isFinite(dsY) && dsY >= 0 ? dsY : 0,
       };
     } catch (_) {
       try {
@@ -26336,6 +26456,15 @@ function buildVideoAsArticleCard(it) {
       if (!iuMindMenuHasReturnGuard()) return;
       document.documentElement.classList.add("iu-mm-return-boot");
       document.documentElement.setAttribute("data-iu-mm-return-boot", "1");
+      if (!document.documentElement.getAttribute("data-iu-pwa-return-boot-mode")) {
+        document.documentElement.setAttribute("data-iu-pwa-return-boot-mode", "tools");
+      }
+      try {
+        var pendBoot = iuMindMenuReadReturnPending();
+        if (pendBoot && pendBoot.tool === "datovka") {
+          document.documentElement.setAttribute("data-iu-pwa-return-tool-overlay", "datovka");
+        }
+      } catch (_pb) {}
     } catch (_) {}
   }
   try {
@@ -26401,6 +26530,8 @@ function buildVideoAsArticleCard(it) {
     };
     var releaseBootIfNeeded = function (why) {
       try {
+        var pendRel = iuMindMenuReadReturnPending();
+        if (pendRel && pendRel.tool === "datovka") return;
         if (typeof window.__iuMmReturnBootRelease === "function" && document.documentElement.classList.contains("iu-mm-return-boot")) {
           window.__iuMmReturnBootRelease(why || "mindmenu-scroll-done");
         }
@@ -26673,6 +26804,13 @@ function buildVideoAsArticleCard(it) {
        pageshow/focus and left Back/setTab("") blocked after external return. */
     try { sessionStorage.removeItem(IU_MINDMENU_RETURN_ARMED_KEY); } catch (_) {}
     try {
+      if (pending && pending.tool === "datovka") {
+        try {
+          document.documentElement.setAttribute("data-iu-pwa-return-tool-overlay", "datovka");
+        } catch (_preDs) {}
+      }
+    } catch (_) {}
+    try {
       if (Number.isFinite(scrollY) && scrollY >= 0) {
         iuMindMenuApplyPanelScrollY(scrollY);
       }
@@ -26694,6 +26832,49 @@ function buildVideoAsArticleCard(it) {
         } catch (_mo) {}
       }
     } catch (_aiRest) {}
+    try {
+      if (pending && pending.tool) {
+        var toolId = String(pending.tool);
+        try {
+          document.documentElement.setAttribute("data-iu-pwa-return-tool-overlay", toolId);
+        } catch (_attrTool) {}
+        if (typeof window.iuOpenOverlay === "function") {
+          if (toolId === "datovka") window.iuOpenOverlay("datovka");
+          else if (toolId === "ai") window.iuOpenOverlay("ai");
+          else if (toolId === "financial") window.iuOpenOverlay("financial", null);
+          else if (toolId === "invoice") window.iuOpenOverlay("invoice");
+          else if (toolId === "legal") window.iuOpenOverlay("legal", null);
+          else if (toolId === "parcels") window.iuOpenOverlay("parcels");
+        }
+        if (toolId === "datovka") {
+          try {
+            if (typeof window.ensureDatovkaModalInBody === "function") window.ensureDatovkaModalInBody();
+          } catch (_eds) {}
+          try {
+            document.body.classList.add("iu-modal-open", "iu-ds-overlay-open");
+          } catch (_dsCls) {}
+          var dsHost = document.querySelector("#iuDsPanel .iu-datovka-scroll-host, #iuDsPanel .iu-ds-panelBody");
+          var dsY = Number.isFinite(pending.dsY) ? pending.dsY : Number(pending.toolY);
+          if (dsHost && Number.isFinite(dsY) && dsY > 0) dsHost.scrollTop = dsY;
+        } else if (toolId === "ai" || pending.ai) {
+          try {
+            document.body.classList.add("iu-modal-open");
+          } catch (_aiCls) {}
+          var aiBodyR = document.querySelector("#iu-aiPanel .iu-aiPanelBody");
+          var aiYr = Number.isFinite(pending.aiY) ? pending.aiY : Number(pending.toolY);
+          if (aiBodyR && Number.isFinite(aiYr) && aiYr >= 0) aiBodyR.scrollTop = aiYr;
+        }
+        try {
+          if (typeof window.__iuMmReturnBootRelease === "function" && document.documentElement.classList.contains("iu-mm-return-boot")) {
+            requestAnimationFrame(function () {
+              try {
+                window.__iuMmReturnBootRelease("mindmenu-tool-overlay-restored");
+              } catch (_) {}
+            });
+          }
+        } catch (_relTool) {}
+      }
+    } catch (_toolRest) {}
   }
 
   /**
@@ -26815,6 +26996,7 @@ function buildVideoAsArticleCard(it) {
     window.iuMindMenuClearAllReturnMarkers = iuMindMenuClearAllReturnMarkers;
     window.iuMindMenuClearReturnPending = iuMindMenuClearReturnPending;
     window.iuMindMenuReadPendingScrollY = iuMindMenuReadPendingScrollY;
+    window.iuMindMenuReadReturnPending = iuMindMenuReadReturnPending;
     window.iuMindMenuHasReturnGuard = iuMindMenuHasReturnGuard;
     window.iuMindMenuShouldPinToolsOnGateInit = iuMindMenuShouldPinToolsOnGateInit;
     window.iuMindMenuTouchReturnLatch = iuMindMenuTouchReturnLatch;

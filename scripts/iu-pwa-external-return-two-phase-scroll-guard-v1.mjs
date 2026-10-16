@@ -31,7 +31,7 @@ function staticGate() {
   const app = read("assets/app.js");
   const feed = read("assets/iu-app-feed-pipeline-v1.js");
   const rec = read("assets/iu-pwa-return-recorder-v1.js");
-  must(/pwa-external-return-unified-v14-20261016-hotovo-boot-hold/.test(net), "static:v13_build");
+  must(/pwa-external-return-unified-v15-20261016-three-surface-return/.test(net), "static:v15_build");
   must(/startExternalMainScrollRestoreCoordinated/.test(net), "static:coordinated_restore");
   must(/main_scroll_restore_done/.test(net), "static:restore_done_trace");
   must(/iuPwaExternalReturnMainScrollPersistV1/.test(net), "static:main_scroll_persist_ls");

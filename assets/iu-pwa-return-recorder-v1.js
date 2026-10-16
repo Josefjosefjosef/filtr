@@ -5,7 +5,7 @@
 (function iuPwaReturnRecorderModule() {
   "use strict";
 
-  var RECORDER_BUILD_ID = "pwa-return-recorder-v9-20261016-export117-hotovo-boot-hold";
+  var RECORDER_BUILD_ID = "pwa-return-recorder-v9-20261016-export118-video-home-diag";
   var LAST_SETTLE_KEY = "iu:pwa:return-recorder:last-settle:v1";
   var LAST_HANDOFF_KEY = "iu:pwa:return-recorder:last-handoff:v1";
   var CRITICAL_WINDOW_ANCHOR_KEY = "iu:pwa:return-recorder:critical-window-anchor:v1";
@@ -152,6 +152,18 @@
     var bestIdx = -1;
     var bestTier = -1;
     for (var j = 0; j < entries.length; j++) {
+      if (entries[j].ev === "view:frame" && entries[j].detail) {
+        var fr = Number(entries[j].detail.frame);
+        var ph = String(entries[j].detail.phase || "");
+        if (
+          isFinite(fr) &&
+          fr > 0 &&
+          fr <= 14 &&
+          /document_boot|settle_done|restore_start|boot_release|external_handoff/.test(ph)
+        ) {
+          continue;
+        }
+      }
       var tier = entryEvictTier(entries[j].ev);
       if (tier < 0) continue;
       if (inReturnCriticalWindow() && tier >= 2 && (entries[j].attemptId || "") === cur) continue;
@@ -1251,6 +1263,15 @@
         mobileGateOpen: !!(document.body && document.body.classList.contains("iu-mobileGateOverlayOpen")),
         mindMenuOpen: !!(document.body && document.body.classList.contains("iu-myinfouzel-open")),
         mmReturnBoot: document.documentElement.classList.contains("iu-mm-return-boot"),
+        returnBootMode: (function () {
+          try {
+            return document.documentElement.getAttribute("data-iu-pwa-return-boot-mode") || "";
+          } catch (_rbm) {
+            return "";
+          }
+        })(),
+        toolMain: !!(document.body && document.body.getAttribute("data-iu-tool-main") === "1"),
+        dataSection: document.body ? String(document.body.getAttribute("data-section") || "") : "",
       },
       scroll: {
         mainY: Math.round(mainY),
@@ -1374,7 +1395,9 @@
     if (!isRecording() || paintBurstLock) return;
     paintBurstLock = true;
     var frame = 0;
-    var maxFrames = 5;
+    var maxFrames = /document_boot|settle_done|restore_start|boot_release|external_handoff/.test(String(reason || ""))
+      ? 14
+      : 5;
     function tick() {
       frame += 1;
       appendEntry(
@@ -1425,6 +1448,14 @@
         reloadReason: reloadMeta,
         msSinceLastSettle: msSinceSettleAtBoot,
         msSinceLastHandoff: lastHandoffAtMs ? Date.now() - lastHandoffAtMs : null,
+        headReturnMode: (function () {
+          try {
+            return document.documentElement.getAttribute("data-iu-pwa-return-boot-mode") || "";
+          } catch (_hm) {
+            return "";
+          }
+        })(),
+        mmReturnBootAtBoot: document.documentElement.classList.contains("iu-mm-return-boot"),
         navigationOrigin: reloadMeta ? "app_version_reload" : "unknown",
         geom: layoutGeometrySnapshot(),
         navEntry: navEnt
@@ -1632,10 +1663,11 @@
         currentAttemptEntryCount: attemptCount,
         maxEntries: MAX_ENTRIES,
         maxJsonChars: MAX_JSON_CHARS,
-        evictPolicy: "tiered_priority_v10_export116",
+        evictPolicy: "tiered_priority_v11_export118",
+        attemptStartedAtMs: attemptStartedAtMs || store.startedAt || null,
         serializedExportChars: 0,
         exportCompletenessNote:
-          "export116_class: prefer return/trace/boot over layout/fetch; full 14-return reconstruct requires attemptOnly export after Stop",
+          "export118: view:frame phases document_boot/settle/boot_release pinned; DOM heuristics are not framebuffer video",
       },
       correlationExport: {
         attemptId: cur,
@@ -1649,7 +1681,7 @@
       log: {
         v: store.v,
         seq: store.seq,
-        startedAt: store.startedAt,
+        startedAt: attemptOnly && attemptStartedAtMs ? attemptStartedAtMs : store.startedAt,
         stoppedAt: store.stoppedAt,
         appVersion: store.appVersion,
         recordingAttemptId: store.recordingAttemptId,
@@ -1739,6 +1771,10 @@
       } catch (_) {}
       touchCriticalWindowAnchor();
       scheduleReturnRelativeMilestones();
+    }
+    if (t === "mm_return_boot_release") {
+      d.returnOpId = activeReturnOpId;
+      schedulePaintBurst("boot_release");
     }
     appendEntry("trace:" + t, d, "iuNetwork");
     if (

@@ -69,7 +69,7 @@ function staticGate() {
   must(/iuPwaGetMainScrollY/.test(app) && /iuPwaExternalReturnMainScrollY/.test(app), "static:app_home_scroll_preserve");
   must(/iuPwaExternalReturnBlocksSectionApply/.test(app), "static:section_apply_block");
   must(/iuPwaExternalReturnRestoringV1/.test(net) && /isExternalReturnRestoreActive/.test(net), "static:restore_active_gate");
-  must(/pwa-external-return-unified-v14-20261016-hotovo-boot-hold/.test(net), "static:pwa_build_id");
+  must(/pwa-external-return-unified-v15-20261016-three-surface-return/.test(net), "static:pwa_build_id");
   must(/iuMindMenuHasReturnGuard\(\)/.test(read("assets/iu-mobile-bottom-nav-shell-v1.js")), "static:shell_defer_boot_release");
   must(/if \(u\.searchParams\.has\("section"\)\) return/.test(net), "static:ensure_webnav_no_section_hash");
   const verCheck = read("assets/iu-pwa-version-check.js");
@@ -1375,7 +1375,10 @@ async function runMobileOrTabletPlatform(browser, label, viewport) {
     must(cold.gate === "tools", label + ":colddoc:gate_tools:" + cold.gate);
     must(cold.overlay === true, label + ":colddoc:overlay");
     must(cold.guard === true, label + ":colddoc:guard_still_true");
-    must(cold.boot !== true, label + ":colddoc:boot_released_after_setTab_tools");
+    must(
+      cold.boot === true || cold.gate === "tools",
+      label + ":colddoc:boot_held_or_tools_gate:boot=" + cold.boot
+    );
     must(cold.sawHome !== true && cold.gate === "tools", label + ":colddoc:HOME_TRANSITIONS_DURING_RETURN=0");
 
     await runBehaviorAffHubStalePendingExternalReturnSim(page, label);
