@@ -5,7 +5,7 @@
 (function iuPwaReturnRecorderModule() {
   "use strict";
 
-  var RECORDER_BUILD_ID = "pwa-return-recorder-v9-20261015-export116-aff-mm-log";
+  var RECORDER_BUILD_ID = "pwa-return-recorder-v9-20261016-export117-hotovo-boot-hold";
   var LAST_SETTLE_KEY = "iu:pwa:return-recorder:last-settle:v1";
   var LAST_HANDOFF_KEY = "iu:pwa:return-recorder:last-handoff:v1";
   var CRITICAL_WINDOW_ANCHOR_KEY = "iu:pwa:return-recorder:critical-window-anchor:v1";
@@ -1451,14 +1451,16 @@
     try {
       sessionStorage.setItem(ATTEMPT_KEY, attemptId);
     } catch (_) {}
+    attemptStartedAtMs = Date.now();
     var store = readLogStore();
-    if (!store.startedAt) store.startedAt = Date.now();
+    store.startedAt = attemptStartedAtMs;
     store.stoppedAt = null;
+    store.droppedCurrentAttempt = 0;
+    store.droppedOtherAttempts = store.droppedOtherAttempts || 0;
     store.appVersion = appVersionLabel();
     store.recordingAttemptId = attemptId;
     store.metricCapabilities = buildMetricCapabilities();
     store.attemptStartedMonoMs = monoNow();
-    attemptStartedAtMs = Date.now();
     try {
       sessionStorage.setItem(ATTEMPT_STARTED_AT_KEY, String(attemptStartedAtMs));
       localStorage.setItem(

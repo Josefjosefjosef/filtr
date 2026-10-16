@@ -52,6 +52,29 @@
     try {
       if (sessionStorage.getItem("iu_external_nav_armed") === "1") return true;
     } catch (_) {}
+    try {
+      var rawPost = localStorage.getItem("iuPwaExternalReturnPostSettleV1");
+      if (rawPost) {
+        var op = JSON.parse(rawPost);
+        if (Number(op && op.until) > Date.now()) return true;
+      }
+    } catch (_) {}
+    try {
+      var rawMain = localStorage.getItem("iuPwaExternalReturnMainScrollPersistV1");
+      if (rawMain) {
+        var om = JSON.parse(rawMain);
+        var tsM = Number(om && om.t);
+        if (om && Number(om.y) > 0 && Number.isFinite(tsM) && Date.now() - tsM < 45000) return true;
+      }
+    } catch (_) {}
+    try {
+      var rawMenu = localStorage.getItem("iuPwaMenuNavReturnPersistV1");
+      if (rawMenu) {
+        var oMenu = JSON.parse(rawMenu);
+        var tsN = Number(oMenu && oMenu.t);
+        if (oMenu && oMenu.gate === "nav" && Number.isFinite(tsN) && Date.now() - tsN < 45000) return true;
+      }
+    } catch (_) {}
     return false;
   }
 

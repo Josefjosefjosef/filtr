@@ -20,8 +20,8 @@ function read(rel) {
 const rec = read("assets/iu-pwa-return-recorder-v1.js");
 const html = read("projects/index.html");
 
-must(/pwa-return-recorder-v9-20261015-export116-aff-mm-log/.test(rec), "static:recorder_build");
-must(html.includes("pwa-return-recorder-v9-20261015-export116-aff-mm-log"), "static:html_bust");
+must(/pwa-return-recorder-v9-20261016-export117-hotovo-boot-hold/.test(rec), "static:recorder_build");
+must(html.includes("pwa-return-recorder-v9-20261016-export117-hotovo-boot-hold"), "static:html_bust");
 must(/routeChromeActive/.test(rec), "static:aff_route_chrome_split");
 must(/sectionActive = hubAff && \(shellMounted \|\| shellVisible\)/.test(rec), "static:aff_section_active_shell_only");
 must(!/shellVisible \|\| mobileMain/.test(rec), "static:aff_section_not_mobile_main");

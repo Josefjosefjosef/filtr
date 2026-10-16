@@ -157,7 +157,16 @@
           document.documentElement.classList.add("iu-mobileGateOverlayOpen");
           document.body.classList.add("iu-mobileGateOverlayOpen");
           if (gateVal === "tools" && typeof window.__iuMmReturnBootRelease === "function") {
-            window.__iuMmReturnBootRelease("shell-setTab-tools");
+            var deferShellBootRelease = false;
+            try {
+              deferShellBootRelease =
+                document.documentElement.classList.contains("iu-mm-return-boot") &&
+                ((typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard()) ||
+                  (typeof window.iuMindMenuReadPendingScrollY === "function" && window.iuMindMenuReadPendingScrollY() > 0));
+            } catch (_dShell) {
+              deferShellBootRelease = false;
+            }
+            if (!deferShellBootRelease) window.__iuMmReturnBootRelease("shell-setTab-tools");
           }
         } else {
           document.documentElement.classList.remove("iu-mobileGateOverlayOpen");

@@ -268,6 +268,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-pwa-export116-regression-guard
 
+      - name: PWA export 117 Hotovo return boot guard
+        if: steps.scope.outputs.data_only != 'true'
+        run: npm run iu-pwa-export117-hotovo-return-guard
+
       - name: PWA recorder export 116 load guard (multi-boot export completeness)
         if: steps.scope.outputs.data_only != 'true'
         run: npm run iu-pwa-recorder-export116-load-guard
