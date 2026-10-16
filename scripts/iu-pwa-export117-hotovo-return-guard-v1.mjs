@@ -36,7 +36,9 @@ function staticGate() {
   must(/iuMindMenuHasReturnGuard\(\)/.test(shell), "static:shell_defer_return_guard");
   must(/iuMindMenuHasReturnGuard\(\)/.test(feed), "static:feed_defer_return_guard");
   must(/iuPwaExternalReturnPostSettleV1/.test(ver), "static:version_check_post_settle");
-  must(/export117-hotovo-boot-hold/.test(read("assets/iu-pwa-return-recorder-v1.js")), "static:recorder_export117");
+  must(/export118-video-home-diag/.test(read("assets/iu-pwa-return-recorder-v1.js")), "static:recorder_export118");
+  must(/data-iu-pwa-return-boot-mode="home"/.test(html), "static:home_boot_shell_css");
+  must(/mm_return_boot_release/.test(read("assets/iu-pwa-return-recorder-v1.js")), "static:recorder_boot_release_trace");
 }
 
 function startServer() {
