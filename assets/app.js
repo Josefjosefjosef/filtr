@@ -467,7 +467,14 @@ try {
     var vvWait = false;
     function finish(kind, extra) {
       try {
-        if (kind === "complete" && typeof opts.onComplete === "function") opts.onComplete(extra || {});
+        if (kind === "complete") {
+          if (typeof opts.onComplete === "function") opts.onComplete(extra || {});
+          try {
+            if (typeof window.__iuMmReturnBootRelease === "function") {
+              window.__iuMmReturnBootRelease("home-scroll-restored");
+            }
+          } catch (_) {}
+        }
         if (kind === "cancel" && typeof opts.onCancel === "function") opts.onCancel(extra || {});
       } catch (_) {}
       iuSrRestoreState = null;

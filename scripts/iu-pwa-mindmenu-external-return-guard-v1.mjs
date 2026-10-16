@@ -69,7 +69,8 @@ function staticGate() {
   must(/iuPwaGetMainScrollY/.test(app) && /iuPwaExternalReturnMainScrollY/.test(app), "static:app_home_scroll_preserve");
   must(/iuPwaExternalReturnBlocksSectionApply/.test(app), "static:section_apply_block");
   must(/iuPwaExternalReturnRestoringV1/.test(net) && /isExternalReturnRestoreActive/.test(net), "static:restore_active_gate");
-  must(/pwa-external-return-unified-v13-20261014-scroll-coordinated/.test(net), "static:pwa_build_id");
+  must(/pwa-external-return-unified-v14-20261016-hotovo-boot-hold/.test(net), "static:pwa_build_id");
+  must(/iuMindMenuHasReturnGuard\(\)/.test(read("assets/iu-mobile-bottom-nav-shell-v1.js")), "static:shell_defer_boot_release");
   must(/if \(u\.searchParams\.has\("section"\)\) return/.test(net), "static:ensure_webnav_no_section_hash");
   const verCheck = read("assets/iu-pwa-version-check.js");
   must(/externalReturnBlocksDeployReload/.test(verCheck), "static:version_check_external_defer");

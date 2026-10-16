@@ -31,8 +31,13 @@
     (function(){
       var KEY = "iuMindMenuReturnPendingV1";
       var HUB_KEY = "iuPwaHubSectionReturnV1";
+      var MAIN_SCROLL_LS = "iuPwaExternalReturnMainScrollPersistV1";
+      var MENU_RETURN_LS = "iuPwaMenuNavReturnPersistV1";
+      var MAIN_SCROLL_TTL = 45000;
+      var MENU_RETURN_TTL = 45000;
       var ARMED = "iuMindMenuReturnArmed";
       var LATCH = "iuMindMenuReturnLatchTs";
+      var headReturnMode = "";
       var LATCH_MS = 2500;
       var TTL = 30 * 60 * 1000;
       var HUB_TTL = 30 * 60 * 1000;
@@ -64,6 +69,38 @@
         skippedDesktop: false
       };
       try { window.__iuMmReturnBootDiag = diag; } catch (e0) {}
+      function readMainScrollReturnAtHead() {
+        try {
+          var raw = localStorage.getItem(MAIN_SCROLL_LS);
+          if (!raw) return 0;
+          var obj = JSON.parse(raw);
+          var ts = Number(obj && obj.t);
+          var y = Number(obj && obj.y);
+          if (!isFinite(ts) || ts <= 0 || Date.now() - ts > MAIN_SCROLL_TTL) {
+            localStorage.removeItem(MAIN_SCROLL_LS);
+            return 0;
+          }
+          return isFinite(y) && y > 0 ? y : 0;
+        } catch (eMain) {
+          return 0;
+        }
+      }
+      function readMenuNavReturnAtHead() {
+        try {
+          var raw = localStorage.getItem(MENU_RETURN_LS);
+          if (!raw) return false;
+          var obj = JSON.parse(raw);
+          if (!obj || obj.gate !== "nav") return false;
+          var ts = Number(obj && obj.t);
+          if (!isFinite(ts) || ts <= 0 || Date.now() - ts > MENU_RETURN_TTL) {
+            localStorage.removeItem(MENU_RETURN_LS);
+            return false;
+          }
+          return true;
+        } catch (eMenu) {
+          return false;
+        }
+      }
       function pendingAlive() {
         try {
           if (sessionStorage.getItem(ARMED) === "1") return true;
@@ -82,6 +119,29 @@
           return age < TTL && age > -60000;
         } catch (e3) {
           return false;
+        }
+      }
+      var HUB_BEATS_MM_PENDING_MS = 8000;
+      function mindMenuReturnWinsOverHubSection() {
+        if (!pendingAlive()) return false;
+        try {
+          if (sessionStorage.getItem(ARMED) === "1") return true;
+          var latch = parseInt(sessionStorage.getItem(LATCH) || "0", 10);
+          if (isFinite(latch) && latch > 0 && Date.now() - latch < LATCH_MS) return true;
+        } catch (eMmHub) {}
+        var hub = hubReturnSectionAtHead();
+        if (!hub) return true;
+        try {
+          var cur = String(new URL(location.href).searchParams.get("section") || "").trim();
+          if (!cur || cur !== hub) return true;
+          var rawMm = localStorage.getItem(KEY);
+          if (!rawMm) return false;
+          var objMm = JSON.parse(rawMm);
+          var tsMm = Number(objMm && objMm.t);
+          if (!isFinite(tsMm) || tsMm <= 0) return false;
+          return Date.now() - tsMm < HUB_BEATS_MM_PENDING_MS;
+        } catch (eMmHub2) {
+          return true;
         }
       }
       try {
@@ -116,7 +176,9 @@
           var uHub = new URL(location.href);
           var curSec = String(uHub.searchParams.get("section") || "").trim();
           if (!curSec) {
-            try { localStorage.removeItem(KEY); } catch (eClr) {}
+            if (!mindMenuReturnWinsOverHubSection()) {
+              try { localStorage.removeItem(KEY); } catch (eClr) {}
+            }
             uHub.searchParams.set("section", hubSecHead);
             try {
               document.documentElement.classList.add("iu-hub-section-resume-pending");
@@ -130,11 +192,15 @@
             curSec = hubSecHead;
           }
           if (curSec === hubSecHead) {
-            try { localStorage.removeItem(KEY); } catch (eClr2) {}
-            try { localStorage.removeItem(HUB_KEY); } catch (eClr3) {}
-            try { sessionStorage.removeItem(LATCH); } catch (eClrLatch) {}
-            try { sessionStorage.removeItem(ARMED); } catch (eClrArm) {}
-            return;
+            if (mindMenuReturnWinsOverHubSection()) {
+              try { localStorage.removeItem(HUB_KEY); } catch (eClrHubOnly) {}
+            } else {
+              try { localStorage.removeItem(KEY); } catch (eClr2) {}
+              try { localStorage.removeItem(HUB_KEY); } catch (eClr3) {}
+              try { sessionStorage.removeItem(LATCH); } catch (eClrLatch) {}
+              try { sessionStorage.removeItem(ARMED); } catch (eClrArm) {}
+              return;
+            }
           }
           try { localStorage.removeItem(HUB_KEY); } catch (eClr4) {}
         } catch (eHubNav) {}
@@ -167,17 +233,26 @@
           }
         }
       } catch (_hubSecLatch) {}
-      if (!pendingAlive() || !standaloneOrMobile()) return;
+      var mainScrollHead = readMainScrollReturnAtHead();
+      var menuNavHead = readMenuNavReturnAtHead();
+      var mindPendingHead = mindMenuReturnWinsOverHubSection();
+      if (!mindPendingHead && !mainScrollHead && !menuNavHead) return;
+      if (!standaloneOrMobile()) return;
       if (isDesktopBand()) {
         diag.skippedDesktop = true;
         diag.pendingAtHead = true;
         return;
       }
+      if (mindPendingHead) headReturnMode = "tools";
+      else if (menuNavHead) headReturnMode = "nav";
+      else if (mainScrollHead) headReturnMode = "home";
       diag.pendingAtHead = true;
       diag.applied = true;
       diag.bootClassBeforeBody = !document.body;
+      diag.headReturnMode = headReturnMode;
       document.documentElement.classList.add("iu-mm-return-boot");
       document.documentElement.setAttribute("data-iu-mm-return-boot", "1");
+      document.documentElement.setAttribute("data-iu-pwa-return-boot-mode", headReturnMode);
       var mo = null;
       var pinScheduled = false;
       function schedulePin() {
@@ -229,15 +304,24 @@
         if (!document.documentElement.classList.contains("iu-mm-return-boot")) return;
         var body = document.body;
         if (!body) return;
+        var mode = headReturnMode || "tools";
+        if (mode === "home") return;
         body.classList.add("iu-mobileGateOverlayOpen");
         document.documentElement.classList.add("iu-mobileGateOverlayOpen");
         var wrap = document.getElementById("iuMobileGateWrap");
-        if (wrap && String(wrap.getAttribute("data-iu-mobile-gate") || "") !== "tools") {
-          wrap.setAttribute("data-iu-mobile-gate", "tools");
-        }
         var tools = document.getElementById("iuMobileGatePanelTools");
         var nav = document.getElementById("iuMobileGatePanelNav");
         var content = document.getElementById("iuMobileGateContent");
+        if (mode === "nav") {
+          if (wrap) wrap.setAttribute("data-iu-mobile-gate", "nav");
+          if (nav) nav.hidden = false;
+          if (tools) tools.hidden = true;
+          if (content) content.setAttribute("aria-hidden", "false");
+          return;
+        }
+        if (wrap && String(wrap.getAttribute("data-iu-mobile-gate") || "") !== "tools") {
+          wrap.setAttribute("data-iu-mobile-gate", "tools");
+        }
         if (tools) tools.hidden = false;
         if (nav) nav.hidden = true;
         if (content) content.setAttribute("aria-hidden", "false");
@@ -7100,8 +7184,8 @@ require-trusted-types-for 'script';
     })();
     </script>
     <script data-iu-defer-secondary-js="1" data-iu-secondary-id="crash-shield" data-iu-src="/assets/app-crash-shield.js?v=perf-loop-iter014-secondary-js-batch2-v1-20260820"></script>
-    <script defer src="/assets/iu-network-connectivity-v1.js?v=pwa-offline-menu-articles-v4-20260716-silver-p0-lazy-v1a-20260728-pdf-lazy-v1-20260728-ds-external-return-fullscreen-v1-20260903-silver-cal-save-enable-v1-20260904-wx-offline-online-reconnect-v1-20260904-silver-quick-notes-focus-v1-20260904-cal-sheet-nav-stable-v2-20260904-external-open-no-blank-v1-20260905-external-open-dead-fix-v1-20260907-calendar-nav-external-open-v1-20260916-pwa-mindmenu-external-return-v1-20260916b-pwa-mindmenu-external-return-no-home-flash-v1-20260917-pwa-mindmenu-return-settab-v1-20260918-pwa-external-return-coalesce-v1-20261009-pwa-external-return-section-guard-v3-20261010-pwa-external-return-unified-v13-20261014-scroll-coordinated"></script>
-    <script defer src="/assets/iu-pwa-return-recorder-v1.js?v=pwa-return-recorder-v9-20261015-export116-aff-mm-log"></script>
+    <script defer src="/assets/iu-network-connectivity-v1.js?v=pwa-offline-menu-articles-v4-20260716-silver-p0-lazy-v1a-20260728-pdf-lazy-v1-20260728-ds-external-return-fullscreen-v1-20260903-silver-cal-save-enable-v1-20260904-wx-offline-online-reconnect-v1-20260904-silver-quick-notes-focus-v1-20260904-cal-sheet-nav-stable-v2-20260904-external-open-no-blank-v1-20260905-external-open-dead-fix-v1-20260907-calendar-nav-external-open-v1-20260916-pwa-mindmenu-external-return-v1-20260916b-pwa-mindmenu-external-return-no-home-flash-v1-20260917-pwa-mindmenu-return-settab-v1-20260918-pwa-external-return-coalesce-v1-20261009-pwa-external-return-section-guard-v3-20261010-pwa-external-return-unified-v14-20261016-hotovo-boot-hold"></script>
+    <script defer src="/assets/iu-pwa-return-recorder-v1.js?v=pwa-return-recorder-v9-20261016-export117-hotovo-boot-hold"></script>
     <!-- P0 CLS: run same mobile gate DOM placement synchronously before module paint (iuMobileGateReorder in app.js runs too late vs first paint) -->
     <script>
     (function(){

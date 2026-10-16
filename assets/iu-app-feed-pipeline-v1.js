@@ -17443,8 +17443,8 @@ function buildVideoAsArticleCard(it) {
               try {
                 deferMmBootRelease =
                   document.documentElement.classList.contains("iu-mm-return-boot") &&
-                  typeof window.iuMindMenuReadPendingScrollY === "function" &&
-                  window.iuMindMenuReadPendingScrollY() > 0;
+                  ((typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard()) ||
+                    (typeof window.iuMindMenuReadPendingScrollY === "function" && window.iuMindMenuReadPendingScrollY() > 0));
               } catch (_dbr) {
                 deferMmBootRelease = false;
               }
