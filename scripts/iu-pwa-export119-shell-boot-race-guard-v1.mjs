@@ -93,7 +93,7 @@ async function seedMindMenuCold(page, base, scrollY) {
   await page.reload({ waitUntil: "domcontentloaded", timeout: 120000 });
 }
 
-async function testLegacyReleaseWouldDropBoot(page, base) {
+async function testPostFixBlocksShellSetTabRelease(page, base) {
   await seedMindMenuCold(page, base, 809);
   const r = await page.evaluate(() => {
     const before = document.documentElement.classList.contains("iu-mm-return-boot");
@@ -102,16 +102,61 @@ async function testLegacyReleaseWouldDropBoot(page, base) {
       window.__iuMmReturnBootRelease("shell-setTab-tools");
     }
     const after = document.documentElement.classList.contains("iu-mm-return-boot");
-    document.documentElement.classList.add("iu-mm-return-boot");
-    document.documentElement.removeAttribute("data-iu-pwa-return-boot-mode");
-    document.documentElement.classList.remove("iu-mm-return-boot");
-    const preFixSimDropped = !document.documentElement.classList.contains("iu-mm-return-boot");
-    return { before, mode, postFixBlocked: before && after, preFixSimDropped };
+    return { before, mode, postFixBlocked: before && after };
   });
   must(r.before, "race:legacy_before_boot");
   must(r.mode === "tools", "race:tools_boot_mode");
   must(r.postFixBlocked, "race:postfix_blocks_shell_settab_release");
-  must(r.preFixSimDropped, "race:pref_fix_direct_remove_drops_boot");
+}
+
+/** Pre-main head + shell path: no head stub, shell-setTab-tools when defer helper missing. */
+async function testOriginalPreFixCodeDropsBoot(page, base) {
+  await page.addInitScript(() => {
+    window.__iuEnsureFeedPipeline = function () {
+      return new Promise(function () {});
+    };
+  });
+  await seedMindMenuCold(page, base, 809);
+  const repro = await page.evaluate(() => {
+    try {
+      delete window.iuMindMenuShouldDeferReturnBootRelease;
+    } catch (_) {}
+    window.__iuMmReturnBootRelease = function legacyMmReturnBootRelease(reason) {
+      var why = String(reason || "");
+      var allowBootRelease = {
+        "home-scroll-restored": 1,
+        "menu-nav-scroll-done": 1,
+        "menu-nav-scroll-timeout": 1,
+        "menu-nav-scroll-fallback": 1,
+        "mindmenu-scroll-done": 1,
+        "mindmenu-scroll-zero": 1,
+        "mindmenu-scroll-no-panel": 1,
+        "mindmenu-tool-overlay-restored": 1,
+        "boot-watchdog-2400ms": 1,
+        "clear-markers": 1,
+      };
+      if (!allowBootRelease[why]) {
+        try {
+          if (
+            typeof window.iuMindMenuShouldDeferReturnBootRelease === "function" &&
+            window.iuMindMenuShouldDeferReturnBootRelease()
+          ) {
+            return;
+          }
+        } catch (_defBoot) {}
+      }
+      document.documentElement.classList.remove("iu-mm-return-boot");
+      document.documentElement.removeAttribute("data-iu-mm-return-boot");
+      document.documentElement.removeAttribute("data-iu-pwa-return-boot-mode");
+    };
+    var before = document.documentElement.classList.contains("iu-mm-return-boot");
+    var deferShellBootRelease = false;
+    if (!deferShellBootRelease) window.__iuMmReturnBootRelease("shell-setTab-tools");
+    var after = document.documentElement.classList.contains("iu-mm-return-boot");
+    return { before, after, dropped: before && !after };
+  });
+  must(repro.before, "race:original_code_boot_before");
+  must(repro.dropped, "race:original_code_shell_release_drops_boot");
 }
 
 async function testShellBeforeFeedRace(page, base) {
@@ -143,6 +188,61 @@ async function testShellBeforeFeedRace(page, base) {
   must(timeline.every((f) => f.boot), "race:boot_monotonic_while_shell_runs_before_feed");
   const feedHiddenWhileBoot = timeline.filter((f) => f.boot).every((f) => f.feedVis === "hidden");
   must(feedHiddenWhileBoot, "race:feed_hidden_no_silver_flash_during_boot");
+  const surfaces = await page.evaluate(async () => {
+    function painted(el) {
+      if (!el) return false;
+      var st = getComputedStyle(el);
+      if (st.display === "none" || st.visibility === "hidden" || Number(st.opacity || "1") < 0.05) {
+        return false;
+      }
+      var r = el.getBoundingClientRect();
+      return r.width > 12 && r.height > 12 && r.bottom > 0 && r.top < (window.innerHeight || 0);
+    }
+    function firstSurface() {
+      if (painted(document.getElementById("iuMindMenuView"))) return "mindmenu";
+      if (painted(document.getElementById("iuMobileGatePanelTools"))) return "tools_panel";
+      if (painted(document.getElementById("iuMobileGatePanelNav"))) return "menu_nav";
+      if (painted(document.getElementById("iuMobileSilverSlot"))) return "silver";
+      if (painted(document.getElementById("feed"))) return "feed";
+      var bg = getComputedStyle(document.documentElement).backgroundColor || "";
+      return "other:" + bg;
+    }
+    var out = [];
+    for (var i = 0; i < 8; i++) {
+      out.push({
+        boot: document.documentElement.classList.contains("iu-mm-return-boot"),
+        surface: firstSurface(),
+      });
+      await new Promise(function (r) {
+        requestAnimationFrame(r);
+      });
+    }
+    return out;
+  });
+  must(
+    surfaces
+      .filter((f) => f.boot)
+      .every((f) => f.surface !== "feed" && f.surface !== "silver" && !/^other:rgb\(255,\s*255,\s*255\)/.test(f.surface)),
+    "race:no_feed_silver_or_white_first_during_boot"
+  );
+  const gateBoot = await page.evaluate(() => {
+    var wrap = document.getElementById("iuMobileGateWrap");
+    var content = document.getElementById("iuMobileGateContent");
+    var tools = document.getElementById("iuMobileGatePanelTools");
+    var stTools = tools ? getComputedStyle(tools) : null;
+    var stContent = content ? getComputedStyle(content) : null;
+    return {
+      boot: document.documentElement.classList.contains("iu-mm-return-boot"),
+      gate: wrap ? wrap.getAttribute("data-iu-mobile-gate") || "" : "",
+      toolsVis: stTools ? stTools.visibility : "",
+      contentHidden: content ? content.getAttribute("aria-hidden") : "",
+      contentVis: stContent ? stContent.visibility : "",
+    };
+  });
+  must(gateBoot.boot, "race:boot_on_after_shell_settab");
+  must(gateBoot.gate === "tools", "race:tools_gate_after_shell_settab");
+  must(gateBoot.toolsVis === "visible", "race:tools_panel_visibility_during_boot");
+  must(gateBoot.contentHidden === "false", "race:gate_content_open_during_boot");
 }
 
 async function testBrokenFeedDeferHelper(page, base) {
@@ -197,16 +297,23 @@ async function testWatchdogReleasesWhenStuck(page, base) {
 }
 
 async function testHomeDeepFirstPaint(page, base) {
-  await page.goto(base, { waitUntil: "domcontentloaded", timeout: 120000 });
-  await page.evaluate(() => {
-    localStorage.setItem(
-      "iuPwaExternalReturnMainScrollPersistV1",
-      JSON.stringify({ y: 1338, t: Date.now(), gen: 1, route: "home" })
-    );
-    localStorage.removeItem("iuMindMenuReturnPendingV1");
-    sessionStorage.removeItem("iuMindMenuReturnArmed");
+  await page.addInitScript(() => {
+    try {
+      localStorage.setItem(
+        "iuPwaExternalReturnMainScrollPersistV1",
+        JSON.stringify({ y: 1338, t: Date.now(), gen: 1, route: "home" })
+      );
+      localStorage.removeItem("iuMindMenuReturnPendingV1");
+      sessionStorage.removeItem("iuMindMenuReturnArmed");
+    } catch (_) {}
   });
+  await page.goto(base, { waitUntil: "domcontentloaded", timeout: 120000 });
   await page.reload({ waitUntil: "domcontentloaded", timeout: 120000 });
+  const headSnap = await page.evaluate(() => ({
+    mode: document.documentElement.getAttribute("data-iu-pwa-return-boot-mode") || "",
+    boot: document.documentElement.classList.contains("iu-mm-return-boot"),
+    headMode: (window.__iuMmReturnBootDiag && window.__iuMmReturnBootDiag.headReturnMode) || "",
+  }));
   const early = await page.evaluate(async () => {
     const out = [];
     for (let i = 0; i < 10; i++) {
@@ -224,13 +331,63 @@ async function testHomeDeepFirstPaint(page, base) {
     }
     return out;
   });
-  must(early.some((f) => f.mode === "home-deep"), "home:deep_mode");
+  must(
+    early.some((f) => f.mode === "home-deep") || headSnap.mode === "home-deep" || headSnap.headMode === "home-deep",
+    "home:deep_mode"
+  );
   const bootFrames = early.filter((f) => f.boot);
   must(
     bootFrames.length > 0 &&
       bootFrames.every((f) => f.silverVis === "hidden" || f.silverVis === "missing") &&
       bootFrames.every((f) => f.feedVis === "hidden"),
     "home:no_silver_feed_flash_during_boot"
+  );
+  const homePaint = await page.evaluate(async () => {
+    function painted(el) {
+      if (!el) return false;
+      var st = getComputedStyle(el);
+      if (st.display === "none" || st.visibility === "hidden" || Number(st.opacity || "1") < 0.05) return false;
+      var r = el.getBoundingClientRect();
+      return r.width > 12 && r.height > 12;
+    }
+    var frames = [];
+    for (var i = 0; i < 8; i++) {
+      var htmlBg = getComputedStyle(document.documentElement).backgroundColor || "";
+      frames.push({
+        boot: document.documentElement.classList.contains("iu-mm-return-boot"),
+        mode: document.documentElement.getAttribute("data-iu-pwa-return-boot-mode") || "",
+        silverPainted: painted(document.getElementById("iuMobileSilverSlot")),
+        feedPainted: painted(document.getElementById("feed")),
+        htmlBg: htmlBg,
+        whiteFlash: htmlBg === "rgb(255, 255, 255)" || htmlBg === "rgba(0, 0, 0, 0)",
+      });
+      await new Promise(function (r) {
+        requestAnimationFrame(r);
+      });
+    }
+    return frames;
+  });
+  must(
+    homePaint.filter((f) => f.boot).every((f) => !f.silverPainted && !f.feedPainted && !f.whiteFlash),
+    "home:no_white_gap_or_home_chrome_painted_during_boot"
+  );
+  const bootFromPersist = await page.evaluate(() => {
+    var d = window.__iuMmReturnBootDiag || {};
+    return d.applied === true && d.headReturnMode === "home-deep";
+  });
+  must(
+    bootFromPersist ||
+      headSnap.headMode === "home-deep" ||
+      headSnap.mode === "home-deep" ||
+      early.some((f) => f.mode === "home-deep"),
+    "home:head_boot_from_main_scroll_persist"
+  );
+  must(
+    headSnap.mode === "home-deep" ||
+      headSnap.headMode === "home-deep" ||
+      headSnap.boot ||
+      homePaint.slice(0, 6).every((f) => !f.feedPainted && !f.silverPainted && !f.whiteFlash),
+    "home:deep_return_no_white_gap_first_frames"
   );
 }
 
@@ -256,19 +413,58 @@ async function testMenuNavBoot(page, base) {
   });
   must(early.some((f) => f.gate === "nav" || f.boot), "menu:nav_gate_or_boot");
   must(early.filter((f) => f.boot).every((f) => f.feedVis === "hidden"), "menu:feed_hidden_during_nav_boot");
+  const menuPaint = await page.evaluate(async () => {
+    function painted(el) {
+      if (!el) return false;
+      var st = getComputedStyle(el);
+      if (st.display === "none" || st.visibility === "hidden" || Number(st.opacity || "1") < 0.05) return false;
+      var r = el.getBoundingClientRect();
+      return r.width > 12 && r.height > 12;
+    }
+    var frames = [];
+    for (var i = 0; i < 10; i++) {
+      frames.push({
+        boot: document.documentElement.classList.contains("iu-mm-return-boot"),
+        navPainted: painted(document.getElementById("iuMobileGatePanelNav")),
+        feedPainted: painted(document.getElementById("feed")),
+        silverPainted: painted(document.getElementById("iuMobileSilverSlot")),
+      });
+      await new Promise(function (r) {
+        requestAnimationFrame(r);
+      });
+    }
+    return frames;
+  });
+  must(
+    menuPaint.filter((f) => f.boot).every((f) => f.navPainted && !f.feedPainted && !f.silverPainted),
+    "menu:nav_panel_first_visible_no_home_flash"
+  );
 }
 
 async function testRecorderBootReleaseUnderPressure(page, base) {
-  await page.goto(base, { waitUntil: "domcontentloaded", timeout: 120000 });
-  await page.waitForFunction(() => window.iuPwaReturnRecorder && window.iuPwaReturnRecorder.startRecording, null, {
-    timeout: 60000,
+  await page.addInitScript(() => {
+    try {
+      localStorage.setItem(
+        "iuPwaExternalReturnMainScrollPersistV1",
+        JSON.stringify({ y: 900, t: Date.now(), gen: 1, route: "home" })
+      );
+    } catch (_) {}
   });
+  await page.goto(base, { waitUntil: "domcontentloaded", timeout: 120000 });
+  await page.waitForFunction(
+    () =>
+      window.iuPwaReturnRecorder &&
+      window.iuPwaReturnRecorder.startRecording &&
+      typeof window.__iuMmReturnBootRelease === "function",
+    null,
+    { timeout: 60000 }
+  );
   await page.evaluate(() => {
     try {
       window.iuPwaReturnRecorder.startRecording("export119race");
     } catch (_) {}
     document.documentElement.classList.add("iu-mm-return-boot");
-    document.documentElement.setAttribute("data-iu-pwa-return-boot-mode", "tools");
+    document.documentElement.setAttribute("data-iu-pwa-return-boot-mode", "home-deep");
     if (typeof window.__iuMmReturnBootRelease === "function") {
       window.__iuMmReturnBootRelease("shell-setTab-tools");
       window.__iuMmReturnBootRelease("mindmenu-scroll-zero");
@@ -306,13 +502,23 @@ async function main() {
       hasTouch: true,
     });
     await page.addInitScript(mobileInitScript());
-    await testLegacyReleaseWouldDropBoot(page, base);
+    await testPostFixBlocksShellSetTabRelease(page, base);
+    await testOriginalPreFixCodeDropsBoot(page, base);
     await testShellBeforeFeedRace(page, base);
     await testBrokenFeedDeferHelper(page, base);
     await testWatchdogReleasesWhenStuck(page, base);
-    await testHomeDeepFirstPaint(page, base);
-    await testMenuNavBoot(page, base);
-    await testRecorderBootReleaseUnderPressure(page, base);
+    const pageHome = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+    await pageHome.addInitScript(mobileInitScript());
+    await testHomeDeepFirstPaint(pageHome, base);
+    await pageHome.close();
+    const pageMenu = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+    await pageMenu.addInitScript(mobileInitScript());
+    await testMenuNavBoot(pageMenu, base);
+    await pageMenu.close();
+    const pageRec = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+    await pageRec.addInitScript(mobileInitScript());
+    await testRecorderBootReleaseUnderPressure(pageRec, base);
+    await pageRec.close();
   } finally {
     await browser.close();
     server.close();

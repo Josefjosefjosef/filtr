@@ -104,7 +104,8 @@
     var e = String(ev || "");
     if (/^recorder:(start|stop|teardown|cleared)/.test(e)) return -1;
     if (/^document:boot/.test(e)) return -1;
-    if (/^trace:(external_handoff|restore_start|settle_done|mm_return_boot_release)/.test(e)) return -1;
+    if (/^trace:(external_handoff|restore_start|settle_done|mm_return_boot_release|mm_return_boot_deferred)/.test(e))
+      return -1;
     if (/^(nav:(intent|reload|replace|history_go)|back:click|gate:setTab)/.test(e)) return -1;
     if (/^section:(open_start|apply_start|content_ready|content_timeout|content_cancelled)/.test(e)) return -1;
     if (/^attempt:milestone/.test(e)) return -1;
