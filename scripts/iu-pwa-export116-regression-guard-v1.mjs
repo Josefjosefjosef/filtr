@@ -29,14 +29,14 @@ function staticGate() {
   const feed = read("assets/iu-app-feed-pipeline-v1.js");
   const html = read("projects/index.html");
 
-  must(/pwa-return-recorder-v9-20261016-export118-video-home-diag/.test(rec), "static:recorder_build");
+  must(/pwa-return-recorder-v9-20261016-export119-shell-boot-race/.test(rec), "static:recorder_build");
   must(/ATTEMPT_STARTED_AT_KEY/.test(rec), "static:attempt_started_persist");
-  must(/tiered_priority_v11_export118/.test(rec), "static:evict_policy_v11");
+  must(/tiered_priority_v12_export119_boot_release_pin/.test(rec), "static:evict_policy_v12");
   must(/iuSetElOpenVisible\(el, open\)/.test(app), "static:showview_hidden_toggle");
   must(/view\.removeAttribute\("hidden"\)/.test(cat), "static:affiliate_unhide_on_render");
   must(/iuMindMenuEnsureReturnBootClass/.test(feed), "static:mm_ensure_return_boot");
   must(!/__iuMmReturnBootRelease\("restore-if-armed"\)/.test(feed), "static:no_premature_boot_release");
-  must(html.includes("export118-video-home-diag"), "static:index_recorder_token");
+  must(html.includes("export119-shell-boot-race"), "static:index_recorder_token");
 }
 
 function startServer() {

@@ -28,7 +28,7 @@
   var HUB_SECTION_ARM_SESSION_KEY = "iuPwaExternalReturnHubSectionAtArm";
   var HUB_SECTION_RETURN_TTL_MS = 30 * 60 * 1000;
   var PWA_EXTERNAL_RETURN_BUILD_ID =
-    "pwa-external-return-unified-v15-20261016-three-surface-return";
+    "pwa-external-return-unified-v16-20261016-export119-hub-boot-clear";
   var externalMainScrollRestoreState = null;
   var externalReturnDeferredSnapshotPending = false;
   var PWA_RETURN_DIAG_LS = "iu:pwa-external-return-diag:v1";
@@ -469,6 +469,14 @@
       sessionStorage.removeItem("iuMindMenuReturnArmed");
       sessionStorage.removeItem("iuMindMenuReturnScrollY");
       sessionStorage.removeItem("iuMindMenuReturnLatchTs");
+    } catch (_) {}
+    try {
+      if (
+        typeof window.__iuMmReturnBootRelease === "function" &&
+        document.documentElement.classList.contains("iu-mm-return-boot")
+      ) {
+        window.__iuMmReturnBootRelease("clear-markers");
+      }
     } catch (_) {}
     try {
       if (String(reason || "") === "section_apply") {

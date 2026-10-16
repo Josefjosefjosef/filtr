@@ -5,7 +5,7 @@
 (function iuPwaReturnRecorderModule() {
   "use strict";
 
-  var RECORDER_BUILD_ID = "pwa-return-recorder-v9-20261016-export118-video-home-diag";
+  var RECORDER_BUILD_ID = "pwa-return-recorder-v9-20261016-export119-shell-boot-race";
   var LAST_SETTLE_KEY = "iu:pwa:return-recorder:last-settle:v1";
   var LAST_HANDOFF_KEY = "iu:pwa:return-recorder:last-handoff:v1";
   var CRITICAL_WINDOW_ANCHOR_KEY = "iu:pwa:return-recorder:critical-window-anchor:v1";
@@ -104,7 +104,8 @@
     var e = String(ev || "");
     if (/^recorder:(start|stop|teardown|cleared)/.test(e)) return -1;
     if (/^document:boot/.test(e)) return -1;
-    if (/^trace:(external_handoff|restore_start|settle_done)/.test(e)) return -1;
+    if (/^trace:(external_handoff|restore_start|settle_done|mm_return_boot_release|mm_return_boot_deferred)/.test(e))
+      return -1;
     if (/^(nav:(intent|reload|replace|history_go)|back:click|gate:setTab)/.test(e)) return -1;
     if (/^section:(open_start|apply_start|content_ready|content_timeout|content_cancelled)/.test(e)) return -1;
     if (/^attempt:milestone/.test(e)) return -1;
@@ -1663,7 +1664,8 @@
         currentAttemptEntryCount: attemptCount,
         maxEntries: MAX_ENTRIES,
         maxJsonChars: MAX_JSON_CHARS,
-        evictPolicy: "tiered_priority_v11_export118",
+        evictPolicy: "tiered_priority_v12_export119_boot_release_pin",
+        bootReleaseTraceFields: "reason,caller,bootClassBefore,bootClassAfter",
         attemptStartedAtMs: attemptStartedAtMs || store.startedAt || null,
         serializedExportChars: 0,
         exportCompletenessNote:

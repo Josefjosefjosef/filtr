@@ -156,7 +156,11 @@
         if (gateVal === "nav" || gateVal === "tools") {
           document.documentElement.classList.add("iu-mobileGateOverlayOpen");
           document.body.classList.add("iu-mobileGateOverlayOpen");
-          if (gateVal === "nav" && typeof window.__iuMmReturnBootRelease === "function") {
+          if (
+            gateVal === "nav" &&
+            typeof window.__iuMmReturnBootRelease === "function" &&
+            !document.documentElement.classList.contains("iu-mm-return-boot")
+          ) {
             var deferShellNavBootRelease = false;
             try {
               deferShellNavBootRelease =
@@ -167,7 +171,11 @@
             }
             if (!deferShellNavBootRelease) window.__iuMmReturnBootRelease("shell-setTab-nav");
           }
-          if (gateVal === "tools" && typeof window.__iuMmReturnBootRelease === "function") {
+          if (
+            gateVal === "tools" &&
+            typeof window.__iuMmReturnBootRelease === "function" &&
+            !document.documentElement.classList.contains("iu-mm-return-boot")
+          ) {
             var deferShellBootRelease = false;
             try {
               deferShellBootRelease =
