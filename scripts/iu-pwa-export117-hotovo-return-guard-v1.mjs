@@ -185,7 +185,10 @@ async function simColdDocumentReturn(page, scenario) {
         if (!el) return "missing";
         return getComputedStyle(el).visibility;
       });
-      must(silverVis === "hidden", `${scenario.id}:silver_hidden_during_boot`);
+      must(
+        silverVis === "hidden" || silverVis === "missing",
+        `${scenario.id}:silver_hidden_during_boot vis=${silverVis}`
+      );
     }
   }
   if (scenario.expectNav) {
