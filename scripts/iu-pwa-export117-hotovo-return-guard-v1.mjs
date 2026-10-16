@@ -179,15 +179,16 @@ async function simColdDocumentReturn(page, scenario) {
   }
   if (scenario.expectHomeDeep) {
     must(headMode === "home-deep" || headSnap.headMode === "home-deep", `${scenario.id}:home_deep_mode`);
-    if (headSnap.boot) {
-      const silverVis = await page.evaluate(() => {
-        const el = document.getElementById("iuMobileSilverSlot");
-        if (!el) return "missing";
-        return getComputedStyle(el).visibility;
-      });
+    const bootSilver = await page.evaluate(() => {
+      const boot = document.documentElement.classList.contains("iu-mm-return-boot");
+      const el = document.getElementById("iuMobileSilverSlot");
+      const silverVis = !el ? "missing" : getComputedStyle(el).visibility;
+      return { boot, silverVis };
+    });
+    if (bootSilver.boot) {
       must(
-        silverVis === "hidden" || silverVis === "missing",
-        `${scenario.id}:silver_hidden_during_boot vis=${silverVis}`
+        bootSilver.silverVis === "hidden" || bootSilver.silverVis === "missing",
+        `${scenario.id}:silver_hidden_during_boot vis=${bootSilver.silverVis}`
       );
     }
   }
