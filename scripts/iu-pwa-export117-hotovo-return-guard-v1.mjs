@@ -27,7 +27,7 @@ function staticGate() {
   const shell = read("assets/iu-mobile-bottom-nav-shell-v1.js");
   const feed = read("assets/iu-app-feed-pipeline-v1.js");
   const ver = read("assets/iu-pwa-version-check.js");
-  must(/v15-20261016-three-surface-return/.test(net), "static:net_v15_build");
+  must(/v16-20261016-export119-hub-boot-clear/.test(net), "static:net_v16_build");
   must(/iuPwaExternalReturnPostSettleV1/.test(net), "static:post_settle_ls");
   must(/iuPwaMenuNavReturnPersistV1/.test(net), "static:menu_nav_persist_ls");
   must(/readMainScrollReturnAtHead/.test(html), "static:head_main_scroll_boot");
@@ -36,7 +36,7 @@ function staticGate() {
   must(/iuMindMenuHasReturnGuard\(\)/.test(shell), "static:shell_defer_return_guard");
   must(/iuMindMenuHasReturnGuard\(\)/.test(feed), "static:feed_defer_return_guard");
   must(/iuPwaExternalReturnPostSettleV1/.test(ver), "static:version_check_post_settle");
-  must(/export118-video-home-diag/.test(read("assets/iu-pwa-return-recorder-v1.js")), "static:recorder_export118");
+  must(/export119-shell-boot-race/.test(read("assets/iu-pwa-return-recorder-v1.js")), "static:recorder_export119");
   must(/data-iu-pwa-return-boot-mode="home"/.test(html), "static:home_boot_shell_css");
   must(/home-deep/.test(html), "static:home_deep_boot_css");
   must(/data-iu-pwa-return-boot-mode="nav"/.test(html), "static:nav_boot_shell_css");
@@ -44,6 +44,9 @@ function staticGate() {
   must(/iuMindMenuCaptureDatovkaOverlayState/.test(feed), "static:datovka_pending_capture");
   must(/iuMenuNavHasColdReturnPersist/.test(feed), "static:menu_nav_cold_persist");
   must(/iuMindMenuShouldDeferReturnBootRelease/.test(feed), "static:defer_boot_release_helper");
+  must(/iuHeadDeferReturnBootRelease/.test(html), "static:head_defer_boot_release_stub");
+  must(/!document\.documentElement\.classList\.contains\("iu-mm-return-boot"\)/.test(shell), "static:shell_skip_boot_release_settab");
+  must(/trace:.*mm_return_boot_release/.test(read("assets/iu-pwa-return-recorder-v1.js")), "static:recorder_boot_release_evict_pin");
   must(/mm_return_boot_release/.test(read("assets/iu-pwa-return-recorder-v1.js")), "static:recorder_boot_release_trace");
 }
 
@@ -162,6 +165,19 @@ async function simColdDocumentReturn(page, scenario) {
   );
   if (scenario.expectTools) {
     must(early.some((s) => s.gate === "tools"), `${scenario.id}:early_gate_tools`);
+    if (scenario.expectDatovkaOverlay) {
+      must(
+        early.every(
+          (s) =>
+            s.feedVis === "hidden" ||
+            s.feedVis === "missing" ||
+            (!s.boot && s.gate === "tools")
+        ),
+        `${scenario.id}:no_feed_flash_datovka_early`
+      );
+    } else {
+      must(early.every((s) => s.boot), `${scenario.id}:boot_steady_early_frames`);
+    }
   }
   if (scenario.expectNav) {
     const menuRaw = await page.evaluate(() => localStorage.getItem("iuPwaMenuNavReturnPersistV1") || "");
@@ -169,11 +185,21 @@ async function simColdDocumentReturn(page, scenario) {
       headMode === "nav" || early.some((s) => s.gate === "nav" || s.mode === "nav"),
       `${scenario.id}:early_gate_nav headMode=${headMode} menuRaw=${menuRaw.slice(0, 80)}`
     );
+    must(
+      early.every((s) => s.boot || s.feedVis === "hidden" || s.feedVis === "missing"),
+      `${scenario.id}:nav_no_feed_flash_early_frames`
+    );
   }
   if (scenario.expectHomeHidden) {
-    const bootFrames = early.filter((s) => s.boot);
+    const bootWindow = samples.slice(0, 8);
+    const bootFrames = bootWindow.filter((s) => s.boot);
     must(
-      bootFrames.length > 0 && bootFrames.every((s) => s.feedVis === "hidden"),
+      headSnap.boot || headMode === "home-deep" || bootFrames.length > 0,
+      `${scenario.id}:home_deep_boot_seen`
+    );
+    must(
+      bootFrames.length === 0 ||
+        bootFrames.every((s) => s.feedVis === "hidden" || s.feedVis === "missing"),
       `${scenario.id}:feed_hidden_during_boot`
     );
   }

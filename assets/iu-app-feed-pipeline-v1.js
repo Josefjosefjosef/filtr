@@ -17519,7 +17519,11 @@ function buildVideoAsArticleCard(it) {
           if (value === "nav" || value === "tools") {
             document.documentElement.classList.add("iu-mobileGateOverlayOpen");
             document.body.classList.add("iu-mobileGateOverlayOpen");
-            if (value === "nav" && typeof window.__iuMmReturnBootRelease === "function") {
+            if (
+              value === "nav" &&
+              typeof window.__iuMmReturnBootRelease === "function" &&
+              !document.documentElement.classList.contains("iu-mm-return-boot")
+            ) {
               var deferNavBootRelease = false;
               try {
                 deferNavBootRelease =
@@ -17530,7 +17534,11 @@ function buildVideoAsArticleCard(it) {
               }
               if (!deferNavBootRelease) window.__iuMmReturnBootRelease("feed-setTab-nav");
             }
-            if (value === "tools" && typeof window.__iuMmReturnBootRelease === "function") {
+            if (
+              value === "tools" &&
+              typeof window.__iuMmReturnBootRelease === "function" &&
+              !document.documentElement.classList.contains("iu-mm-return-boot")
+            ) {
               var deferMmBootRelease = false;
               try {
                 deferMmBootRelease =

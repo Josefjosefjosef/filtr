@@ -29,7 +29,7 @@ function staticGate() {
   const feed = read("assets/iu-app-feed-pipeline-v1.js");
   const html = read("projects/index.html");
 
-  must(/pwa-return-recorder-v9-20261016-export118-video-home-diag/.test(rec), "static:recorder_build");
+  must(/pwa-return-recorder-v9-20261016-export119-shell-boot-race/.test(rec), "static:recorder_build");
   must(/ATTEMPT_STARTED_AT_KEY/.test(rec), "static:attempt_started_persist");
   must(/tiered_priority_v11_export118/.test(rec), "static:evict_policy_v11");
   must(/iuSetElOpenVisible\(el, open\)/.test(app), "static:showview_hidden_toggle");
