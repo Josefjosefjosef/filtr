@@ -28,7 +28,7 @@
   var HUB_SECTION_ARM_SESSION_KEY = "iuPwaExternalReturnHubSectionAtArm";
   var HUB_SECTION_RETURN_TTL_MS = 30 * 60 * 1000;
   var PWA_EXTERNAL_RETURN_BUILD_ID =
-    "pwa-external-return-unified-v14-20261016-hotovo-boot-hold";
+    "pwa-external-return-unified-v15-20261016-three-surface-return";
   var externalMainScrollRestoreState = null;
   var externalReturnDeferredSnapshotPending = false;
   var PWA_RETURN_DIAG_LS = "iu:pwa-external-return-diag:v1";
@@ -281,8 +281,25 @@
             var ds = document.getElementById("iuDsPanel");
             return !!(ds && String(ds.dataset.open || "") === "1" && !ds.hasAttribute("hidden"));
           })()) {
-        document.body.classList.add("iu-ds-overlay-open");
+        document.body.classList.add("iu-ds-overlay-open", "iu-modal-open");
         if (typeof window.ensureDatovkaModalInBody === "function") window.ensureDatovkaModalInBody();
+        try {
+          var dsPan = document.getElementById("iuDsPanel");
+          if (dsPan && String(dsPan.dataset.open || "") !== "1") {
+            if (typeof window.iuOpenOverlay === "function") window.iuOpenOverlay("datovka");
+          }
+        } catch (_dsRe) {}
+      } else {
+        try {
+          if (typeof window.iuMindMenuReadReturnPending === "function") {
+            var pendDs = window.iuMindMenuReadReturnPending();
+            if (pendDs && pendDs.tool === "datovka" && typeof window.iuOpenOverlay === "function") {
+              window.iuOpenOverlay("datovka");
+              document.body.classList.add("iu-modal-open", "iu-ds-overlay-open");
+              if (typeof window.ensureDatovkaModalInBody === "function") window.ensureDatovkaModalInBody();
+            }
+          }
+        } catch (_pendDs) {}
       }
     } catch (_) {}
   }
@@ -912,7 +929,7 @@
       if (typeof window.iuMindMenuArmReturnState === "function") {
         var wrapArm = document.getElementById("iuMobileGateWrap");
         var gateArm = wrapArm ? String(wrapArm.getAttribute("data-iu-mobile-gate") || "") : "";
-        if (gateArm === "tools") window.iuMindMenuArmReturnState();
+        if (gateArm === "tools" || hasIntentionalToolOverlayOpen()) window.iuMindMenuArmReturnState();
       }
     } catch (_) {}
     writeHubSectionReturnResume();
@@ -1106,7 +1123,7 @@
       if (typeof window.iuMindMenuArmReturnState === "function") {
         var wrapArm = document.getElementById("iuMobileGateWrap");
         var gateArm = wrapArm ? String(wrapArm.getAttribute("data-iu-mobile-gate") || "") : "";
-        if (gateArm === "tools") window.iuMindMenuArmReturnState();
+        if (gateArm === "tools" || hasIntentionalToolOverlayOpen()) window.iuMindMenuArmReturnState();
       }
     } catch (_) {}
   }

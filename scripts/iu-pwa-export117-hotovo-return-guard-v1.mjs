@@ -27,7 +27,7 @@ function staticGate() {
   const shell = read("assets/iu-mobile-bottom-nav-shell-v1.js");
   const feed = read("assets/iu-app-feed-pipeline-v1.js");
   const ver = read("assets/iu-pwa-version-check.js");
-  must(/v14-20261016-hotovo-boot-hold/.test(net), "static:net_v14_build");
+  must(/v15-20261016-three-surface-return/.test(net), "static:net_v15_build");
   must(/iuPwaExternalReturnPostSettleV1/.test(net), "static:post_settle_ls");
   must(/iuPwaMenuNavReturnPersistV1/.test(net), "static:menu_nav_persist_ls");
   must(/readMainScrollReturnAtHead/.test(html), "static:head_main_scroll_boot");
@@ -38,6 +38,12 @@ function staticGate() {
   must(/iuPwaExternalReturnPostSettleV1/.test(ver), "static:version_check_post_settle");
   must(/export118-video-home-diag/.test(read("assets/iu-pwa-return-recorder-v1.js")), "static:recorder_export118");
   must(/data-iu-pwa-return-boot-mode="home"/.test(html), "static:home_boot_shell_css");
+  must(/home-deep/.test(html), "static:home_deep_boot_css");
+  must(/data-iu-pwa-return-boot-mode="nav"/.test(html), "static:nav_boot_shell_css");
+  must(/data-iu-pwa-return-tool-overlay="datovka"/.test(html), "static:datovka_boot_overlay_attr");
+  must(/iuMindMenuCaptureDatovkaOverlayState/.test(feed), "static:datovka_pending_capture");
+  must(/iuMenuNavHasColdReturnPersist/.test(feed), "static:menu_nav_cold_persist");
+  must(/iuMindMenuShouldDeferReturnBootRelease/.test(feed), "static:defer_boot_release_helper");
   must(/mm_return_boot_release/.test(read("assets/iu-pwa-return-recorder-v1.js")), "static:recorder_boot_release_trace");
 }
 
@@ -102,10 +108,35 @@ async function simColdDocumentReturn(page, scenario) {
         JSON.stringify({ y: sc.menuY || 420, t: Date.now(), gate: "nav" })
       );
     }
+    if (sc.datovkaTool) {
+      localStorage.setItem(
+        "iuMindMenuReturnPendingV1",
+        JSON.stringify({
+          t: Date.now(),
+          y: sc.scrollY || 120,
+          ai: 0,
+          aiY: 0,
+          tool: "datovka",
+          dsY: 88,
+        })
+      );
+      sessionStorage.setItem("iuMindMenuReturnArmed", "1");
+    }
   }, scenario);
   await page.reload({ waitUntil: "domcontentloaded", timeout: 120000 });
   await page.waitForFunction(() => !!document.body, null, { timeout: 60000 });
-  const headMode = await page.evaluate(() => document.documentElement.getAttribute("data-iu-pwa-return-boot-mode") || "");
+  const headSnap = await page.evaluate(() => {
+    const diag = window.__iuMmReturnBootDiag || {};
+    return {
+      headMode: document.documentElement.getAttribute("data-iu-pwa-return-boot-mode") || diag.headReturnMode || "",
+      boot: document.documentElement.classList.contains("iu-mm-return-boot"),
+      tool: document.documentElement.getAttribute("data-iu-pwa-return-tool-overlay") || "",
+      gate: (document.getElementById("iuMobileGateWrap") || {}).getAttribute?.("data-iu-mobile-gate") || "",
+      headApplied: !!diag.applied,
+      pendingAtHead: !!diag.pendingAtHead,
+    };
+  });
+  const headMode = headSnap.headMode;
   const samples = await page.evaluate(async () => {
     const out = [];
     for (let i = 0; i < 8; i++) {
@@ -125,7 +156,10 @@ async function simColdDocumentReturn(page, scenario) {
     return out;
   });
   const early = samples.slice(0, 4);
-  must(early.some((s) => s.boot), `${scenario.id}:early_boot_class`);
+  must(
+    headSnap.boot || headSnap.headApplied || early.some((s) => s.boot),
+    `${scenario.id}:early_boot_class`
+  );
   if (scenario.expectTools) {
     must(early.some((s) => s.gate === "tools"), `${scenario.id}:early_gate_tools`);
   }
@@ -137,7 +171,33 @@ async function simColdDocumentReturn(page, scenario) {
     );
   }
   if (scenario.expectHomeHidden) {
-    must(early.every((s) => s.feedVis === "hidden"), `${scenario.id}:feed_hidden_early`);
+    const bootFrames = early.filter((s) => s.boot);
+    must(
+      bootFrames.length > 0 && bootFrames.every((s) => s.feedVis === "hidden"),
+      `${scenario.id}:feed_hidden_during_boot`
+    );
+  }
+  if (scenario.expectHomeDeep) {
+    must(headMode === "home-deep" || headSnap.headMode === "home-deep", `${scenario.id}:home_deep_mode`);
+    const silverVis = await page.evaluate(() => {
+      const el = document.getElementById("iuMobileSilverSlot");
+      if (!el) return "missing";
+      return getComputedStyle(el).visibility;
+    });
+    must(silverVis === "hidden", `${scenario.id}:silver_hidden_deep`);
+  }
+  if (scenario.expectNav) {
+    must(
+      early.some((s) => s.mode === "nav") || headMode === "nav",
+      `${scenario.id}:nav_boot_mode`
+    );
+  }
+  if (scenario.expectDatovkaOverlay) {
+    const rawPending = await page.evaluate(() => localStorage.getItem("iuMindMenuReturnPendingV1") || "");
+    must(
+      headSnap.tool === "datovka" || /"tool":"datovka"/.test(rawPending),
+      `${scenario.id}:datovka_tool_overlay_attr`
+    );
   }
 }
 
@@ -179,6 +239,7 @@ async function main() {
       url: base,
       mainY: 1338,
       expectHomeHidden: true,
+      expectHomeDeep: true,
     });
     await simColdDocumentReturn(page, {
       id: "menu_nav",
@@ -186,6 +247,15 @@ async function main() {
       menuNav: true,
       menuY: 420,
       expectNav: true,
+    });
+    await simColdDocumentReturn(page, {
+      id: "mindmenu_datovka_detail",
+      url: base,
+      mindMenu: true,
+      scrollY: 120,
+      datovkaTool: true,
+      expectTools: true,
+      expectDatovkaOverlay: true,
     });
   } finally {
     await browser.close();

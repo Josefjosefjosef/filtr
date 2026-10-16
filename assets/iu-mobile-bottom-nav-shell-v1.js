@@ -156,13 +156,23 @@
         if (gateVal === "nav" || gateVal === "tools") {
           document.documentElement.classList.add("iu-mobileGateOverlayOpen");
           document.body.classList.add("iu-mobileGateOverlayOpen");
+          if (gateVal === "nav" && typeof window.__iuMmReturnBootRelease === "function") {
+            var deferShellNavBootRelease = false;
+            try {
+              deferShellNavBootRelease =
+                typeof window.iuMindMenuShouldDeferReturnBootRelease === "function" &&
+                window.iuMindMenuShouldDeferReturnBootRelease();
+            } catch (_dShellNav) {
+              deferShellNavBootRelease = false;
+            }
+            if (!deferShellNavBootRelease) window.__iuMmReturnBootRelease("shell-setTab-nav");
+          }
           if (gateVal === "tools" && typeof window.__iuMmReturnBootRelease === "function") {
             var deferShellBootRelease = false;
             try {
               deferShellBootRelease =
-                document.documentElement.classList.contains("iu-mm-return-boot") &&
-                ((typeof window.iuMindMenuHasReturnGuard === "function" && window.iuMindMenuHasReturnGuard()) ||
-                  (typeof window.iuMindMenuReadPendingScrollY === "function" && window.iuMindMenuReadPendingScrollY() > 0));
+                typeof window.iuMindMenuShouldDeferReturnBootRelease === "function" &&
+                window.iuMindMenuShouldDeferReturnBootRelease();
             } catch (_dShell) {
               deferShellBootRelease = false;
             }
