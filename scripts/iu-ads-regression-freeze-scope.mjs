@@ -13,13 +13,42 @@ function emit(name, value) {
   process.stdout.write(line);
 }
 
+function run(cmd) {
+  return execSync(cmd, { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] }).trim();
+}
+
+function ensureCommitReachable(sha) {
+  if (!sha) return;
+  try {
+    run("git rev-parse --verify " + sha + "^{commit}");
+    return;
+  } catch {
+    /* fetch below */
+  }
+  try {
+    run("git fetch origin " + sha + " --depth=1");
+  } catch {
+    try {
+      run("git fetch origin main --depth=128 2>/dev/null || git fetch origin main");
+    } catch {
+      /* best effort */
+    }
+  }
+}
+
 function listChangedFiles() {
   const event = process.env.GITHUB_EVENT_NAME || "";
+  try {
+    run("git fetch origin main --depth=64 2>/dev/null || git fetch origin main");
+  } catch {
+    /* best effort */
+  }
   if (event === "pull_request") {
     const base = process.env.SMOKE_BASE_SHA || process.env.GITHUB_BASE_SHA || "";
     const head = process.env.SMOKE_HEAD_SHA || process.env.GITHUB_SHA || "";
     if (base && head) {
-      return execSync("git diff --name-only " + base + " " + head, { encoding: "utf8" })
+      ensureCommitReachable(base);
+      return run("git diff --name-only " + base + "..." + head)
         .split(/\r?\n/)
         .filter(Boolean);
     }
