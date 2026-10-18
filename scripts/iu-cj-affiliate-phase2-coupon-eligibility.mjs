@@ -1,14 +1,33 @@
 #!/usr/bin/env node
 /** Eligibility reclassification for coupon–product rows (no re-bind). */
-import { parseCouponScope } from "./iu-cj-affiliate-phase2-coupon-scope.mjs";
+import { createHash } from "node:crypto";
+import {
+  assessProductDocumentedExclusions,
+  parseCouponScope,
+  productMatchesScope,
+} from "./iu-cj-affiliate-phase2-coupon-scope.mjs";
 import { parseAffiliateClickUrl } from "./iu-cj-affiliate-phase2-product-api.mjs";
+
+function stableDigestSha256(input) {
+  return createHash("sha256").update(String(input ?? ""), "utf8").digest("hex");
+}
 
 export const IU_CJ_ELIGIBILITY_POLICY = {
   whenUncertainDoNotPublish: true,
   publishRequires: "eligible_at_coupon_and_product_level",
   blockedForPublicProductBlock: ["unknown", "ineligible"],
-  rulesVersion: "iu-cj-affiliate-phase2-coupon-eligibility-v2_2",
+  rulesVersion: "iu-cj-affiliate-phase2-coupon-eligibility-v2_8",
 };
+
+export const STORE_AUTHORITATIVE_EVIDENCE_MIN_CAPTURED_EPOCH_MS = Date.parse("2021-01-01T00:00:00.000Z");
+
+/** Where a prepared whole-sortiment card may appear for infoUzel.cz visitors in CZ. */
+export const COUPON_PUBLICATION_TRACK = Object.freeze({
+  CZ_STOREFRONT: "cz_storefront_for_cz_visitors",
+  FOREIGN_FOR_CZ: "foreign_storefront_for_cz_visitors",
+  UNKNOWN_CANDIDATE: "unknown_candidate",
+  NOT_FOR_CZ: "not_for_cz_visitors",
+});
 
 /** Official CJ identifier meanings (not interchangeable). */
 export const CJ_IDENTIFIER_GLOSSARY = {
@@ -30,7 +49,29 @@ export const SYNTHETIC_FIXTURE_MARKER = "iu_synthetic_eligibility_fixture_only";
 
 const GIFT_VOUCHER_RE = /poukaz|voucher|gift\s*card|dárkov|darkov/i;
 const USED_OPEN_RE = /použit|rozbalen|refurb|bazar|second[\s-]?hand|open[\s-]?box/i;
-const FULL_SORTIMENT_RE = /(?:na\s+v[sš]e|v[sš]echny\s+produkty|cel[ýy]\s+sortiment)/i;
+const FULL_SORTIMENT_RE =
+  /(?:na\s+v[sš]e(?:\s+z\s+[a-z0-9.-]+)?|v[sš]echny\s+produkty|v[sš]etky\s+produkty|cel[ýy]\s+sortiment)/i;
+
+export function normalizePromotionStoreHost(hostname) {
+  return String(hostname || "")
+    .toLowerCase()
+    .replace(/^www\./, "")
+    .replace(/\.$/, "");
+}
+
+/** Exact registrable host match; www-only normalization (no suffix-substring tricks). */
+export function promotionStoreHostMatches(productHost, promotionStoreHost) {
+  const p = normalizePromotionStoreHost(productHost);
+  const s = normalizePromotionStoreHost(promotionStoreHost);
+  if (!s) return true;
+  if (!p) return false;
+  return p === s;
+}
+
+export function promotionStoreEvidenceAligned(productHost, promotionStores = []) {
+  if (!promotionStores.length) return true;
+  return promotionStores.some((store) => promotionStoreHostMatches(productHost, store));
+}
 
 export function extractLandingUrl(affiliateClickUrl) {
   if (!affiliateClickUrl) return null;
@@ -154,7 +195,512 @@ function productHitsDocumentedExclusion(product, scope) {
   if (/použit|rozbalen/i.test(blocks) && (USED_OPEN_RE.test(name) || USED_OPEN_RE.test(desc))) {
     return { hit: true, term: "used_or_open_box_signal_in_product_text", source: "creative_exclusion_block" };
   }
+  if (/theraband/i.test(blocks) && /theraband/i.test(name + " " + desc)) {
+    return { hit: true, term: "theraband_in_documented_exclusion", source: "creative_exclusion_block" };
+  }
+  const exDoc = assessProductDocumentedExclusions(product, scope);
+  if (exDoc.status === "ineligible") {
+    return { hit: true, term: exDoc.term || exDoc.reason, source: exDoc.source || "creative_exclusion_block" };
+  }
   return { hit: false };
+}
+
+export function destinationPathMarketHint(destination) {
+  try {
+    const u = new URL(String(destination));
+    const path = u.pathname.toLowerCase();
+    if (/\/sk(\/|$)/.test(path)) return "sk";
+    if (/\/cz(\/|$)/.test(path)) return "cz";
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+/** Authoritative storefront market from destination host/path (not inferred from .cz TLD alone for /sk). */
+export function destinationAuthoritativeMarket(destination) {
+  const pathHint = destinationPathMarketHint(destination);
+  if (pathHint === "sk") return "sk";
+  if (pathHint === "cz") return "cz";
+  try {
+    const host = normalizePromotionStoreHost(new URL(String(destination)).hostname);
+    if (host.endsWith(".sk")) return "sk";
+    if (host.endsWith(".cz")) return "cz";
+  } catch {
+    /* ignore */
+  }
+  return null;
+}
+
+function registrableStoreKey(host) {
+  const h = normalizePromotionStoreHost(host);
+  const parts = h.split(".");
+  if (parts.length >= 2) return parts.slice(-2).join(".");
+  return h;
+}
+
+/** Stores named explicitly in creative „na vše z …“ (authoritative for store–destination coherence). */
+export function creativeAuthoritativeStoreHosts(offerText) {
+  const t = String(offerText || "");
+  const stores = [];
+  const vseZ = t.match(/na\s+v[sš]e\s+z\s+([a-z0-9-]+\.(?:cz|sk|ro|pl|ie|com))/i);
+  if (vseZ) stores.push(normalizePromotionStoreHost(vseZ[1]));
+  return [...new Set(stores)];
+}
+
+/**
+ * One matching store signal must not override a contradictory authoritative pair (creative vs destination).
+ */
+export function assessOfferStoreDestinationCoherence(offerText, linkMeta = {}) {
+  const creative = creativeAuthoritativeStoreHosts(offerText);
+  if (!creative.length || !linkMeta.destination) {
+    return { blocked: false, coherent: true, source: "not_applicable" };
+  }
+  let destHost = null;
+  try {
+    destHost = normalizePromotionStoreHost(new URL(String(linkMeta.destination)).hostname);
+  } catch {
+    return { blocked: false, coherent: true, source: "destination_unparseable" };
+  }
+  const destKey = registrableStoreKey(destHost);
+  const creativeKeys = creative.map(registrableStoreKey);
+  const matching = creativeKeys.filter((k) => k === destKey);
+  const contradicting = creativeKeys.filter((k) => k !== destKey);
+  if (contradicting.length > 0 && matching.length > 0) {
+    return {
+      blocked: true,
+      coherent: false,
+      reason: "creative_store_contradicts_destination_authoritative_pair",
+      detail: contradicting.join(",") + "|dest:" + destKey,
+      source: "creative_na_vse_z|cj_link_search_destination",
+    };
+  }
+  if (creativeKeys.length > 0 && matching.length === 0) {
+    return {
+      blocked: true,
+      coherent: false,
+      reason: "destination_store_not_matching_creative_na_vse_z",
+      detail: destKey + "|creative:" + creativeKeys.join(","),
+      source: "creative_na_vse_z|cj_link_search_destination",
+    };
+  }
+  return { blocked: false, coherent: true, source: "creative_and_destination_aligned" };
+}
+
+function scopeModelListSku(scope) {
+  for (const e of scope?.evidence || []) {
+    const s = String(e);
+    if (s.startsWith("model_list:")) return s.slice("model_list:".length).trim();
+  }
+  return null;
+}
+
+function scopeCategoryPhrase(scope) {
+  for (const e of scope?.evidence || []) {
+    const s = String(e);
+    if (s.startsWith("creative_category_phrase:")) return s.slice("creative_category_phrase:".length).trim();
+  }
+  return null;
+}
+
+export function assessStorefrontIdentity(linkMeta = {}) {
+  const pathHint = destinationPathMarketHint(linkMeta.destination);
+  const destMarket = destinationAuthoritativeMarket(linkMeta.destination);
+  let storeHost = null;
+  try {
+    storeHost = normalizePromotionStoreHost(new URL(String(linkMeta.destination)).hostname);
+  } catch {
+    /* ignore */
+  }
+  return {
+    storefrontMarket: destMarket || "unknown",
+    storeHost,
+    destination: linkMeta.destination || null,
+    destinationPathMarketHint: pathHint,
+    source: "cj_link_search_destination",
+  };
+}
+
+export function assessOfferPresentationVariant(linkMeta = {}, offerText = "") {
+  const storefront = assessStorefrontIdentity(linkMeta);
+  let variant = "foreign_or_mixed_storefront";
+  if (storefront.storefrontMarket === "cz") variant = "czech_storefront_offer";
+  else if (storefront.storefrontMarket === "sk") variant = "slovak_storefront_offer";
+  const sameCodeDifferentStorefront =
+    variant === "slovak_storefront_offer" && /AFFIL10/i.test(String(linkMeta.couponCode || ""));
+  return {
+    variant,
+    mustNotPresentAsCzechStoreVariant: variant !== "czech_storefront_offer",
+    separateFromSameCouponCodeCzechVariant: sameCodeDifferentStorefront,
+    offerTextSample: String(offerText || linkMeta.description || "").slice(0, 120),
+    source: "storefront_identity|coupon_link_id",
+  };
+}
+
+export function assessCouponTargetingForCzVisitors(linkMeta = {}) {
+  const tcRaw = String(linkMeta.targetedCountries || "").trim();
+  const tc = tcRaw.toUpperCase();
+  if (!tc) {
+    return { ok: false, reason: "targeted_countries_missing", detail: null, source: "cj_link_search_targeted_countries" };
+  }
+  if (!tc.includes("CZ")) {
+    return { ok: false, reason: "targeted_countries_exclude_cz", detail: tcRaw, source: "cj_link_search_targeted_countries" };
+  }
+  return { ok: true, reason: "targeted_countries_include_cz", detail: tcRaw, source: "cj_link_search_targeted_countries" };
+}
+
+const CZ_TEXT_NEG_DELIVERY = [
+  /doručen[ií]?\s+do\s+(?:čr|česk[ée]? republiky|\bcz\b)[^.!\n]{0,40}(?:nen[ií]|nemožn|neplat|vyloučen|not\s+possible|not\s+available)/i,
+  /doruč(ení|i)\s+do\s+(?:čr|česk)[^.!\n]{0,20}nen[ií]\s+možn/i,
+  /nákup\s+s\s+doručením\s+do\s+čr\s+(není|neplatí|vyloučen)/i,
+  /(?:nelze|nemožno|cannot)\s+(?:doručit|dodat|deliver|ship)[^.!\n]{0,40}(?:čr|česk|czech|\bcz\b)/i,
+  /doručen[ií]?\s+pouze\s+na\s+slovensko/i,
+  /doruč[^.!\n]{0,30}pouze[^.!\n]{0,25}slovensko/i,
+];
+const CZ_TEXT_NEG_COUPON_VALIDITY = [
+  /kup[oó]n\s+neplat[ií]\s+v\s+(?:čr|česk|\bcz\b)/i,
+  /k[oó]d\s+neplat[ií]\s+v\s+(?:čr|česk|\bcz\b)/i,
+  /akc[eie]\s+neplat[ií]\s+v\s+(?:čr|česk|\bcz\b)/i,
+  /(?:coupon|offer)\s+not\s+valid\s+in\s+czech/i,
+  /plat[ií]\s+(?:pouze|jen|only)\s+(?:na\s+)?slovensko/i,
+  /pouze\s+(?:pro\s+)?slovensko|only\s+slovakia|iba\s+(?:pre\s+)?slovensko/i,
+];
+const CZ_TEXT_POS_DELIVERY = [
+  /doručen[ií]?\s+do\s+(?:čr|česk[ée]? republiky|\bcz\b)(?![^.!\n]{0,30}(?:nen[ií]|nemožn|neplat))/i,
+  /doručen[ií]?\s+do\s+(?:čr|česk[ée]? republiky|\bcz\b)[^.!\n]{0,30}možn/i,
+  /dodán[ií]?\s+do\s+(?:čr|česk)/i,
+  /zasíl[aá]me?\s+do\s+(?:čr|česk)/i,
+  /shipping\s+to\s+czech/i,
+  /deliver(y)?\s+to\s+czech/i,
+];
+const CZ_TEXT_POS_SERVICE = [
+  /dostupn[éeo]\s+v\s+(?:čr|cz)/i,
+  /pro\s+zákazníky\s+v\s+(?:čr|cz)/i,
+  /plat[ií]\s+v\s+(?:čr|cz)(?![^.!\n]{0,20}neplat)/i,
+];
+
+function firstMatchingPattern(text, patterns) {
+  for (const re of patterns) {
+    const m = text.match(re);
+    if (m) return { hit: true, match: m[0], pattern: re.source };
+  }
+  return { hit: false };
+}
+
+/** Creative-only signals; negatives override positives in the same text. */
+export function assessCreativeCzAccessSignals(offerText = "", linkMeta = {}) {
+  const text = [offerText, linkMeta.description, linkMeta.adContent].filter(Boolean).join(" ");
+  const negDelivery = firstMatchingPattern(text, CZ_TEXT_NEG_DELIVERY);
+  const negCoupon = firstMatchingPattern(text, CZ_TEXT_NEG_COUPON_VALIDITY);
+  const posDelivery = firstMatchingPattern(text, CZ_TEXT_POS_DELIVERY);
+  const posService = firstMatchingPattern(text, CZ_TEXT_POS_SERVICE);
+  if (negDelivery.hit || negCoupon.hit) {
+    const contradictoryPositive =
+      (negDelivery.hit && (posDelivery.hit || posService.hit)) ||
+      (negCoupon.hit && (posDelivery.hit || posService.hit));
+    return {
+      state: "excluded",
+      documented: true,
+      blocked: true,
+      reason: negCoupon.hit ? "explicit_coupon_not_valid_in_cz" : "explicit_cz_delivery_exclusion",
+      contradictoryCreativeWording: contradictoryPositive,
+      source: "cj_link_search_description_adcontent",
+      matchedPhrase: (negCoupon.hit ? negCoupon.match : negDelivery.match) || null,
+      dimension: negCoupon.hit ? "coupon_validity_in_cz" : "delivery_to_cz",
+      note: contradictoryPositive ? "negative_cz_wording_overrides_positive_substring" : undefined,
+    };
+  }
+  if (posDelivery.hit || posService.hit) {
+    return {
+      state: "creative_hint_only",
+      documented: false,
+      blocked: false,
+      reason: "creative_cz_access_wording_not_authoritative_alone",
+      source: "cj_link_search_description_adcontent",
+      matchedPhrase: (posDelivery.hit ? posDelivery.match : posService.match) || null,
+      dimension: posDelivery.hit ? "delivery_to_cz" : "service_in_cz",
+    };
+  }
+  if (/doruč|dodán|deliver|shipping/i.test(text) && /(?:možn|available|unclear|nejas)/i.test(text)) {
+    return {
+      state: "unknown",
+      documented: false,
+      blocked: false,
+      reason: "cz_delivery_wording_ambiguous",
+      source: "cj_link_search_description_adcontent",
+    };
+  }
+  return {
+    state: "unknown",
+    documented: false,
+    blocked: false,
+    reason: "cz_access_not_stated_in_creative",
+    source: "cj_link_search_description_adcontent",
+  };
+}
+
+function destinationStoreHostKey(linkMeta = {}) {
+  if (!linkMeta.destination) return null;
+  try {
+    return registrableStoreKey(normalizePromotionStoreHost(new URL(String(linkMeta.destination)).hostname));
+  } catch {
+    return null;
+  }
+}
+
+function domainMentionInSource(sourceText, hostKey) {
+  const s = String(sourceText || "").toLowerCase();
+  const m = s.match(/([a-z0-9-]+\.(?:cz|sk|ro|pl|ie|com|eu))/gi) || [];
+  if (!m.length) return null;
+  const keys = m.map((h) => registrableStoreKey(normalizePromotionStoreHost(h)));
+  return keys;
+}
+
+/** Separate authoritative store substrate (not checkout); validated origin, storefront, content, time. */
+export function assessStoreAuthoritativeCzCustomerAccess(linkMeta = {}, refDate = new Date()) {
+  const ev = linkMeta.storeAuthoritativeEvidence || linkMeta.partnerStoreCzAccess || null;
+  if (!ev || typeof ev !== "object") {
+    return {
+      state: "unknown",
+      documented: false,
+      blocked: false,
+      reason: "store_authoritative_cz_access_missing",
+      source: "stored_partner_store_evidence",
+    };
+  }
+  if (ev.explicitCzExcluded === true) {
+    return {
+      state: "excluded",
+      documented: true,
+      blocked: true,
+      reason: "store_authoritative_explicit_cz_exclusion",
+      source: ev.source || "stored_partner_store_evidence",
+      capturedAt: ev.capturedAt || null,
+      scope: ev.scope || null,
+    };
+  }
+  const destKey = destinationStoreHostKey(linkMeta);
+  const unknownIncomplete = (reason, detail = null) => ({
+    state: "unknown",
+    documented: false,
+    blocked: false,
+    reason,
+    source: "stored_partner_store_evidence",
+    detail,
+  });
+  const source = String(ev.source || "").trim();
+  if (source.length < 4) {
+    return unknownIncomplete("store_authoritative_source_missing_or_too_short");
+  }
+  const capturedRaw = String(ev.capturedAt || "").trim();
+  const capturedMs = Date.parse(capturedRaw);
+  if (!capturedRaw || Number.isNaN(capturedMs)) {
+    return unknownIncomplete("store_authoritative_captured_at_unparseable");
+  }
+  if (capturedMs < STORE_AUTHORITATIVE_EVIDENCE_MIN_CAPTURED_EPOCH_MS) {
+    return unknownIncomplete("store_authoritative_captured_at_before_minimum_epoch");
+  }
+  if (capturedMs > refDate.getTime() + 60000) {
+    return unknownIncomplete("store_authoritative_captured_at_in_future");
+  }
+  const contentSummary = String(ev.contentSummary || ev.summary || "").trim();
+  if (contentSummary.length < 12) {
+    return unknownIncomplete("store_authoritative_content_summary_missing");
+  }
+  const contentCreative = assessCreativeCzAccessSignals(contentSummary, {});
+  if (contentCreative.blocked) {
+    return {
+      state: "excluded",
+      documented: true,
+      blocked: true,
+      reason: "store_authoritative_content_explicit_cz_exclusion",
+      source: "stored_partner_store_evidence",
+      contentExclusion: {
+        matchedPhrase: contentCreative.matchedPhrase,
+        dimension: contentCreative.dimension,
+        reason: contentCreative.reason,
+      },
+      capturedAt: capturedRaw || null,
+      storefrontHost: ev.storefrontHost || ev.storeHost || null,
+    };
+  }
+  const posDelivery = firstMatchingPattern(contentSummary, CZ_TEXT_POS_DELIVERY);
+  const posService = firstMatchingPattern(contentSummary, CZ_TEXT_POS_SERVICE);
+  const confirmsCz =
+    posDelivery.hit ||
+    posService.hit ||
+    /doručen[ií]?\s+do\s+(?:čr|česk[ée]? republiky|\bcz\b)[^.!\n]{0,40}(?:je\s+)?možn/i.test(contentSummary) ||
+    /(?:doruč|dodán)[^.!\n]{0,50}(?:česk[ée]? republiky|\bčr\b|\bcz\b)/i.test(contentSummary);
+  if (!confirmsCz) {
+    return unknownIncomplete("store_authoritative_content_missing_cz_delivery_confirmation");
+  }
+  if (ev.documentsCzDeliveryOrService !== true) {
+    return unknownIncomplete("store_authoritative_flag_not_documented");
+  }
+  if (contentCreative.contradictoryCreativeWording) {
+    return unknownIncomplete("store_authoritative_content_contradictory_cz_wording");
+  }
+  const evStoreHost = String(ev.storefrontHost || ev.storeHost || "").trim();
+  if (!evStoreHost) {
+    return unknownIncomplete("store_authoritative_storefront_host_missing");
+  }
+  const evStoreKey = registrableStoreKey(normalizePromotionStoreHost(evStoreHost));
+  if (destKey && evStoreKey !== destKey) {
+    return unknownIncomplete("store_authoritative_storefront_host_mismatch", destKey + "|ev:" + evStoreKey);
+  }
+  const sourceDomains = domainMentionInSource(source, destKey);
+  if (sourceDomains && destKey) {
+    const foreignOnly = sourceDomains.filter((k) => k !== destKey);
+    if (foreignOnly.length > 0 && !sourceDomains.includes(destKey)) {
+      return unknownIncomplete("store_authoritative_source_store_mismatch", foreignOnly.join(","));
+    }
+  }
+  if (ev.scope && destKey && typeof ev.scope === "string") {
+    const scopeLower = ev.scope.toLowerCase();
+    if (/^[a-z0-9.-]+\.(cz|sk|ro|pl|ie|com)$/i.test(scopeLower)) {
+      const scopeKey = registrableStoreKey(normalizePromotionStoreHost(scopeLower));
+      if (scopeKey !== destKey) {
+        return unknownIncomplete("store_authoritative_scope_store_mismatch");
+      }
+    }
+  }
+  return {
+    state: "documented",
+    documented: true,
+    blocked: false,
+    reason: "store_authoritative_cz_delivery_or_service",
+    source,
+    capturedAt: capturedRaw,
+    scope: ev.scope || null,
+    storefrontHost: evStoreHost,
+    contentSummary: contentSummary.slice(0, 200),
+  };
+}
+
+export function assessCzCustomerAvailability(offerText = "", linkMeta = {}, storefrontMarket = "unknown", refDate = new Date()) {
+  const creative = assessCreativeCzAccessSignals(offerText, linkMeta);
+  const store = assessStoreAuthoritativeCzCustomerAccess(linkMeta, refDate);
+  if (creative.blocked) {
+    return { ...creative, channel: "creative", creative, store };
+  }
+  if (store.blocked) {
+    return { ...store, channel: "store_authoritative", creative, store };
+  }
+  if (storefrontMarket === "cz") {
+    return {
+      state: "same_storefront_market",
+      documented: true,
+      blocked: false,
+      reason: "cz_storefront_default_for_cz_visitors",
+      source: "cj_link_search_destination",
+      channel: "storefront_identity",
+      creative,
+      store,
+    };
+  }
+  if (store.state === "documented") {
+    return { ...store, channel: "store_authoritative", creative, store };
+  }
+  if (creative.state === "unknown") {
+    return {
+      state: "unknown",
+      documented: false,
+      blocked: false,
+      reason: "cz_customer_access_requires_store_authoritative_evidence",
+      source: "stored_partner_store_evidence",
+      channel: "missing_store_substrate",
+      creative,
+      store,
+      missingDecisiveFact: "store_authoritative_cz_delivery_or_service",
+    };
+  }
+  return {
+    state: "unknown",
+    documented: false,
+    blocked: false,
+    reason: "creative_hint_insufficient_without_store_authoritative_evidence",
+    source: "iu_requires_authoritative_delivery_proof",
+    channel: "creative_only_not_sufficient",
+    creative,
+    store,
+    missingDecisiveFact: "store_authoritative_cz_delivery_or_service",
+  };
+}
+
+export function composeCouponPublicationContext(offerText = "", linkMeta = {}, refDate = new Date()) {
+  const storefront = assessStorefrontIdentity(linkMeta);
+  const presentation = assessOfferPresentationVariant(linkMeta, offerText);
+  const targeting = assessCouponTargetingForCzVisitors(linkMeta);
+  const availability = assessCzCustomerAvailability(offerText, linkMeta, storefront.storefrontMarket, refDate);
+  const explicitCouponOrDeliveryBlock = availability.blocked === true;
+  return {
+    storefront,
+    presentation,
+    targeting,
+    availability,
+    targetingNote: "targetedCountries_is_not_automatic_cz_delivery_ban",
+    explicitExclusion: explicitCouponOrDeliveryBlock
+      ? { blocked: true, reason: availability.reason, source: availability.source }
+      : { blocked: false, reason: "" },
+  };
+}
+
+/**
+ * Audience for CZ-site publication: separates storefront identity from CZ delivery proof (foreign shops allowed).
+ */
+export function assessCouponCzAudienceDocumented(linkMeta = {}, offerText = "", refDate = new Date()) {
+  const ctx = composeCouponPublicationContext(offerText, linkMeta, refDate);
+  const { storefront, presentation, targeting, availability, territorial } = ctx;
+  if (availability.blocked) {
+    return {
+      documented: false,
+      blocked: true,
+      reason: availability.reason,
+      source: availability.source,
+      ...ctx,
+    };
+  }
+  if (storefront.storefrontMarket !== "cz") {
+    if (availability.state === "unknown") {
+      return {
+        documented: false,
+        blocked: false,
+        reason: availability.reason,
+        source: availability.source,
+        publicationTrackHint: COUPON_PUBLICATION_TRACK.UNKNOWN_CANDIDATE,
+        ...ctx,
+      };
+    }
+    return {
+      documented: true,
+      blocked: false,
+      reason: "foreign_storefront_with_documented_cz_customer_availability",
+      source: availability.source,
+      publicationTrackHint: COUPON_PUBLICATION_TRACK.FOREIGN_FOR_CZ,
+      ...ctx,
+    };
+  }
+  if (!targeting.ok) {
+    return {
+      documented: false,
+      blocked: true,
+      reason: targeting.reason,
+      detail: targeting.detail,
+      source: targeting.source,
+      ...ctx,
+    };
+  }
+  return {
+    documented: true,
+    blocked: false,
+    reason: "czech_storefront_offer_for_cz_visitors",
+    source: "cj_link_search_destination|targeted_countries",
+    publicationTrackHint: COUPON_PUBLICATION_TRACK.CZ_STOREFRONT,
+    presentation,
+    storefront,
+    targeting,
+    availability: { state: "same_storefront_market", documented: true, blocked: false, reason: "cz_storefront_default" },
+  };
 }
 
 export function buildOfferEvidenceBundle(offerText, linkMeta = {}) {
@@ -163,31 +709,47 @@ export function buildOfferEvidenceBundle(offerText, linkMeta = {}) {
   const stores = [];
   const sources = [];
   const markets = [];
+  const pathHint = destinationPathMarketHint(linkMeta.destination);
 
-  const creativeStore = t.match(/([a-z0-9-]+\.cz)/i);
-  if (creativeStore) {
-    stores.push(creativeStore[1].toLowerCase());
-    markets.push("cz");
-    sources.push("cj_link_search_description_adcontent");
+  const vseZ = t.match(/na\s+v[sš]e\s+z\s+([a-z0-9-]+\.(?:cz|sk|ro|pl|ie|com))/i);
+  if (vseZ) {
+    stores.push(vseZ[1].toLowerCase());
+    sources.push("cj_link_search_description_adcontent_na_vse_z");
+  } else {
+    const creativeStore = t.match(/(?:^|[\s(])([a-z0-9-]+\.cz)(?:[\s),]|$)/i);
+    if (creativeStore) {
+      stores.push(creativeStore[1].toLowerCase());
+      sources.push("cj_link_search_description_adcontent");
+    }
   }
   if (linkMeta.destination) {
     try {
-      const dh = new URL(String(linkMeta.destination)).hostname.toLowerCase();
+      const u = new URL(String(linkMeta.destination));
+      const dh = u.hostname.toLowerCase();
       if (dh && !stores.includes(dh)) stores.push(dh);
-      if (dh.endsWith(".cz")) {
-        markets.push("cz");
-        sources.push("cj_link_search_destination");
-      }
+      sources.push("cj_link_search_destination");
     } catch {
       /* ignore */
     }
   }
+  const tc = String(linkMeta.targetedCountries || "").toUpperCase();
+  const destMarket = destinationAuthoritativeMarket(linkMeta.destination);
+  if (tc.includes("SK")) markets.push("sk");
+  if (destMarket === "sk") {
+    if (!markets.includes("sk")) markets.push("sk");
+  } else if (tc.includes("CZ")) {
+    markets.push("cz");
+  }
+  if (pathHint === "cz" && !markets.includes("cz") && destMarket !== "sk") markets.push("cz");
+
   const fullSortiment = FULL_SORTIMENT_RE.test(lower);
   return {
     stores: [...new Set(stores)],
     markets: [...new Set(markets)],
     sources: [...new Set(sources)],
     fullSortiment,
+    destinationPathMarketHint: pathHint,
+    targetedCountries: linkMeta.targetedCountries || null,
     couponLinkId: linkMeta.linkId ? String(linkMeta.linkId) : null,
     couponCode: linkMeta.couponCode ? String(linkMeta.couponCode) : null,
     validity: {
@@ -197,25 +759,69 @@ export function buildOfferEvidenceBundle(offerText, linkMeta = {}) {
   };
 }
 
-function promotionDocumentsCzStoreAndScope(offerText, linkMeta = {}) {
+function promotionDocumentsPartnerStoreAndScope(offerText, linkMeta = {}) {
   const bundle = buildOfferEvidenceBundle(offerText, linkMeta);
-  const namedCzStore = bundle.stores.some((s) => s.endsWith(".cz"));
-  if (namedCzStore && bundle.fullSortiment) {
+  const audience = assessCouponCzAudienceDocumented(linkMeta, offerText);
+  const storefront = audience.storefront || assessStorefrontIdentity(linkMeta);
+  if (audience.blocked) {
+    return {
+      documented: false,
+      reason: audience.reason,
+      source: audience.source,
+      evidenceBundle: bundle,
+      czAudience: audience,
+    };
+  }
+  if (storefront.storefrontMarket !== "cz" && audience.availability?.state !== "documented" && audience.availability?.state !== "same_storefront_market") {
+    return {
+      documented: false,
+      reason: audience.availability?.reason || "cz_customer_delivery_or_service_not_documented",
+      source: audience.availability?.source || "iu_requires_authoritative_delivery_proof",
+      evidenceBundle: bundle,
+      czAudience: audience,
+      missingDecisiveFact: audience.availability?.missingDecisiveFact || "store_authoritative_cz_delivery_or_service",
+    };
+  }
+  const namedStore = bundle.stores.length > 0;
+  if (namedStore && bundle.fullSortiment) {
     const via = bundle.sources.includes("cj_link_search_destination")
       ? "creative_plus_link_destination"
       : "creative_text";
+    const storeKind = storefront.storefrontMarket === "cz" ? "cz_store" : "partner_store";
     return {
       documented: true,
-      reason: "full_sortiment_promotion_with_cz_store:" + via,
+      reason: "full_sortiment_promotion_with_" + storeKind + ":" + via,
       source: bundle.sources.join("|") || "cj_link_search",
       evidenceBundle: bundle,
+      czAudience: audience,
+    };
+  }
+  const scopePeek = parseCouponScope({
+    description: offerText,
+    adContent: linkMeta.adContent,
+    destination: linkMeta.destination,
+  });
+  const modelEvidence = (scopePeek.evidence || []).filter((e) => e.startsWith("model_list:"));
+  if (
+    namedStore &&
+    modelEvidence.length > 0 &&
+    (scopePeek.scopeType === "selected_models" || scopePeek.scopeType === "category_or_subset_restricted")
+  ) {
+    return {
+      documented: true,
+      reason: "limited_model_promotion_with_partner_store:" + modelEvidence[0],
+      source: (bundle.sources.join("|") || "cj_link_search") + "|" + scopePeek.source,
+      evidenceBundle: bundle,
+      czAudience: audience,
+      documentedScope: scopePeek,
     };
   }
   return {
     documented: false,
-    reason: "promotion_cz_store_or_action_scope_not_documented",
+    reason: "promotion_partner_store_or_action_scope_not_documented",
     source: "iu_eligibility_rules_v2_1",
     evidenceBundle: bundle,
+    czAudience: audience,
   };
 }
 
@@ -300,7 +906,7 @@ export function assessCouponProductAssociation(product, bindingRow, linkMeta = {
   const productHost = landing?.hostname?.toLowerCase() || "";
   const offerText = bindingRow.offerText || "";
   const bundle = buildOfferEvidenceBundle(offerText, linkMeta);
-  const promoDoc = promotionDocumentsCzStoreAndScope(offerText, linkMeta);
+  const promoDoc = promotionDocumentsPartnerStoreAndScope(offerText, linkMeta);
   const affiliateLink = assessProductAffiliateLink(product, linkMeta.websitePid);
 
   const availableEvidence = {
@@ -321,18 +927,6 @@ export function assessCouponProductAssociation(product, bindingRow, linkMeta = {
     validity: bundle.validity,
     bindingSource: product.bindingSource || null,
   };
-
-  if (product.promotionSkuAttestation?.[SYNTHETIC_FIXTURE_MARKER]) {
-    return {
-      status: "eligible",
-      reason: "synthetic_fixture_full_attestation",
-      source: SYNTHETIC_FIXTURE_MARKER,
-      availableEvidence,
-      affiliateLink,
-      missingDecisiveFact: null,
-      smallestVerificationStep: null,
-    };
-  }
 
   const time = assessPromotionTimeActive(linkMeta, refDate);
   if (time.active !== true) {
@@ -359,10 +953,7 @@ export function assessCouponProductAssociation(product, bindingRow, linkMeta = {
     };
   }
 
-  const normHost = (h) => String(h || "").toLowerCase().replace(/^www\./, "");
-  const storeAligned =
-    bundle.stores.length === 0 ||
-    bundle.stores.some((s) => normHost(productHost) === normHost(s) || normHost(productHost).endsWith(normHost(s)));
+  const storeAligned = promotionStoreEvidenceAligned(productHost, bundle.stores);
   if (!storeAligned && bundle.stores.length > 0) {
     return {
       status: "ineligible",
@@ -375,15 +966,40 @@ export function assessCouponProductAssociation(product, bindingRow, linkMeta = {
     };
   }
 
-  if (linkMeta.targetedCountries && !String(linkMeta.targetedCountries).toUpperCase().includes("CZ")) {
+  const audience = assessCouponCzAudienceDocumented(linkMeta, offerText);
+  if (audience.blocked && audience.targeting?.reason === "targeted_countries_exclude_cz") {
     return {
       status: "unknown",
-      reason: "coupon_targeted_countries_exclude_cz",
-      source: "cj_link_search_targeted_countries",
+      reason: audience.reason,
+      source: audience.source,
       availableEvidence,
       affiliateLink,
-      missingDecisiveFact: "cz_in_targeted_countries",
-      smallestVerificationStep: "Confirm link-search targetedCountries for CZ audience",
+      missingDecisiveFact: audience.reason,
+      smallestVerificationStep: "Confirm coupon targeting for CZ visitors",
+    };
+  }
+  if (audience.blocked && audience.availability?.blocked) {
+    return {
+      status: "unknown",
+      reason: audience.reason,
+      source: audience.source,
+      availableEvidence,
+      affiliateLink,
+      missingDecisiveFact: audience.reason,
+      smallestVerificationStep: "Confirm coupon territorial conditions in authoritative creative",
+    };
+  }
+
+  const storeCoherence = assessOfferStoreDestinationCoherence(offerText, linkMeta);
+  if (storeCoherence.blocked) {
+    return {
+      status: "unknown",
+      reason: storeCoherence.reason,
+      source: storeCoherence.source,
+      availableEvidence,
+      affiliateLink,
+      missingDecisiveFact: storeCoherence.detail || storeCoherence.reason,
+      smallestVerificationStep: "Align link-search destination with creative store naming",
     };
   }
 
@@ -400,6 +1016,56 @@ export function assessCouponProductAssociation(product, bindingRow, linkMeta = {
   }
 
   const scopeType = scope?.scopeType || "";
+  const listedSku = scopeModelListSku(scope);
+  if (listedSku) {
+    if (String(product.productId) !== String(listedSku)) {
+      return {
+        status: "ineligible",
+        reason: "product_id_not_in_documented_model_list",
+        source: "creative_model_list",
+        availableEvidence,
+        affiliateLink,
+        missingDecisiveFact: null,
+        smallestVerificationStep: null,
+      };
+    }
+    return {
+      status: "eligible",
+      reason: "documented_authoritative_sku_in_offer_model_list",
+      source: "creative_model_list|product_feed",
+      availableEvidence,
+      affiliateLink,
+      missingDecisiveFact: null,
+      smallestVerificationStep: null,
+    };
+  }
+
+  const catPhrase = scopeCategoryPhrase(scope);
+  if (catPhrase && (scopeType.includes("category") || scopeType.includes("subset"))) {
+    const gpc = String(product.googleProductCategory || "").toLowerCase();
+    const kw = catPhrase.toLowerCase();
+    if (gpc && gpc.includes(kw)) {
+      return {
+        status: "eligible",
+        reason: "documented_category_matches_product_google_category",
+        source: "creative_category_phrase|product_feed",
+        availableEvidence,
+        affiliateLink,
+        missingDecisiveFact: null,
+        smallestVerificationStep: null,
+      };
+    }
+    return {
+      status: "unknown",
+      reason: "documented_category_not_proven_on_product_attributes",
+      source: "creative_category_phrase|product_feed",
+      availableEvidence,
+      affiliateLink,
+      missingDecisiveFact: "structured_product_category",
+      smallestVerificationStep: "Match feed googleProductCategory to documented category phrase",
+    };
+  }
+
   if (
     scopeType.includes("category") ||
     scopeType.includes("subset") ||
@@ -418,6 +1084,29 @@ export function assessCouponProductAssociation(product, bindingRow, linkMeta = {
   }
 
   if (bundle.fullSortiment && promoDoc.documented && storeAligned) {
+    const exDoc = assessProductDocumentedExclusions(product, scope || parseCouponScope({ description: offerText }));
+    if (exDoc.status === "ineligible") {
+      return {
+        status: "ineligible",
+        reason: exDoc.reason,
+        source: exDoc.source,
+        availableEvidence,
+        affiliateLink,
+        missingDecisiveFact: null,
+        smallestVerificationStep: null,
+      };
+    }
+    if (exDoc.status === "unknown") {
+      return {
+        status: "unknown",
+        reason: exDoc.reason,
+        source: exDoc.source,
+        availableEvidence,
+        affiliateLink,
+        missingDecisiveFact: exDoc.reason,
+        smallestVerificationStep: "Verify product attributes against documented exclusion categories",
+      };
+    }
     return {
       status: "eligible",
       reason: "promotion_full_sortiment_same_cz_store_documented_in_link_search",
@@ -493,15 +1182,52 @@ export function evaluateCouponCzPublish(ctx) {
     };
   }
 
-  if (scope.targetStoreHost && !scope.targetStoreHost.endsWith(".cz")) {
+  const refDate = ctx.refDate || new Date();
+  const pubCtx = composeCouponPublicationContext(offerText, linkMeta, refDate);
+  const audience = assessCouponCzAudienceDocumented(linkMeta, offerText, refDate);
+
+  if (!pubCtx.targeting.ok && pubCtx.targeting.reason === "targeted_countries_exclude_cz") {
     return {
       ...base,
-      publishBlockReason: "promotion_targets_non_cz_store:" + scope.targetStoreHost,
-      publishBlockSource: "creative_target_store_domain",
+      czCouponPublishEligibility: "unknown",
+      czAudiencePublishBlocked: false,
+      publicationTrack: COUPON_PUBLICATION_TRACK.UNKNOWN_CANDIDATE,
+      publishBlockReason: "targeting_sk_only_not_explicit_cz_coupon_or_delivery_proof:" + (pubCtx.targeting.detail || ""),
+      publishBlockSource: pubCtx.targeting.source,
+      czAudienceAssessment: audience,
+      publicationContext: pubCtx,
+      missingDecisiveFact: "explicit_coupon_territorial_condition_or_cz_targeting",
+      note: "targeting_countries_not_automatic_cz_delivery_ban",
     };
   }
 
-  const promoDoc = promotionDocumentsCzStoreAndScope(offerText, linkMeta);
+  if (audience.blocked && pubCtx.explicitExclusion?.blocked) {
+    return {
+      ...base,
+      czCouponPublishEligibility: "unknown",
+      publicationTrack: COUPON_PUBLICATION_TRACK.NOT_FOR_CZ,
+      czAudiencePublishBlocked: true,
+      publishBlockReason: audience.reason,
+      publishBlockSource: audience.source,
+      czAudienceAssessment: audience,
+      publicationContext: pubCtx,
+      missingDecisiveFact: audience.reason,
+    };
+  }
+
+  const storeCoherence = assessOfferStoreDestinationCoherence(offerText, linkMeta);
+  if (storeCoherence.blocked) {
+    return {
+      ...base,
+      publishBlockReason: storeCoherence.reason + (storeCoherence.detail ? ":" + storeCoherence.detail : ""),
+      publishBlockSource: storeCoherence.source,
+      czAudienceAssessment: audience,
+      storeDestinationCoherence: storeCoherence,
+      publicationContext: pubCtx,
+    };
+  }
+
+  const promoDoc = promotionDocumentsPartnerStoreAndScope(offerText, linkMeta);
   if (promoDoc.documented) {
     const time = assessPromotionTimeActive(linkMeta, ctx.refDate || new Date());
     if (time.active !== true) {
@@ -510,8 +1236,13 @@ export function evaluateCouponCzPublish(ctx) {
         publishBlockReason: time.reason,
         publishBlockSource: "cj_link_search_promotion_dates",
         promotionTimeState: time.state,
+        publicationContext: pubCtx,
       };
     }
+    const track =
+      pubCtx.storefront.storefrontMarket === "cz"
+        ? COUPON_PUBLICATION_TRACK.CZ_STOREFRONT
+        : COUPON_PUBLICATION_TRACK.FOREIGN_FOR_CZ;
     return {
       ...base,
       czCouponPublishEligibility: "eligible",
@@ -521,7 +1252,36 @@ export function evaluateCouponCzPublish(ctx) {
       couponPublishReason: promoDoc.reason,
       couponPublishSource: promoDoc.source,
       offerEvidenceBundle: promoDoc.evidenceBundle,
+      czAudienceAssessment: audience,
+      publicationTrack: track,
+      presentationVariant: pubCtx.presentation.variant,
+      presentAsCzechStoreVariant: pubCtx.presentation.variant === "czech_storefront_offer",
+      storefrontIdentity: pubCtx.storefront,
+      czCustomerAvailability: pubCtx.availability,
       note: "coupon_only_gate; product_rows_still_require_sku_association_proof",
+    };
+  }
+
+  if (
+    pubCtx.storefront.storefrontMarket !== "cz" &&
+    pubCtx.availability.state === "unknown" &&
+    promoDoc.missingDecisiveFact
+  ) {
+    return {
+      ...base,
+      czCouponPublishEligibility: "unknown",
+      czAudiencePublishBlocked: false,
+      publicationTrack: COUPON_PUBLICATION_TRACK.UNKNOWN_CANDIDATE,
+      publishBlockReason: promoDoc.reason,
+      publishBlockSource: promoDoc.source,
+      czAudienceAssessment: audience,
+      publicationContext: pubCtx,
+      presentationVariant: pubCtx.presentation.variant,
+      presentAsCzechStoreVariant: false,
+      storefrontIdentity: pubCtx.storefront,
+      czCustomerAvailability: pubCtx.availability,
+      missingDecisiveFact: promoDoc.missingDecisiveFact,
+      smallestVerificationStep: "Document CZ delivery/service in link-search creative or partner terms",
     };
   }
 
@@ -619,7 +1379,24 @@ function assessScopeMatch(product, scope, historical) {
     };
   }
 
-  if (reason === "full_sortiment_scope") {
+  if (reason === "full_sortiment_scope" || reason.includes("full_sortiment")) {
+    const pm = productMatchesScope(product, scope, scope.offerTextRaw || scope.offerTextStripped || "");
+    if (pm.scopeStatus === "unknown") {
+      return {
+        ok: false,
+        status: "unknown",
+        reason: pm.reason || "exclusion_not_verified",
+        source: "creative_exclusion_block",
+      };
+    }
+    if (pm.match === false) {
+      return {
+        ok: false,
+        status: "ineligible",
+        reason: pm.reason || "product_in_documented_exclusion_zone",
+        source: "creative_exclusion_block",
+      };
+    }
     return { ok: true, source: "historical_bind_full_sortiment", detail };
   }
 
@@ -722,6 +1499,7 @@ export function evaluateProductBinding(ctx) {
   const couponEval = ctx.couponEval || evaluateCouponCzPublish({ bindingRow, scope, linkId });
 
   const base = {
+    productId: product.productId != null ? String(product.productId) : null,
     eligibility: "unknown",
     eligibilityReason: "",
     eligibilitySource: "",
@@ -761,6 +1539,16 @@ export function evaluateProductBinding(ctx) {
   const exHit = productHitsDocumentedExclusion(product, scope);
   if (exHit?.hit) {
     return finish("ineligible", exHit.term, exHit.source);
+  }
+
+  const exDoc = assessProductDocumentedExclusions(product, scope);
+  if (exDoc.status === "ineligible") {
+    return finish("ineligible", exDoc.reason, exDoc.source, { exclusionTerm: exDoc.term });
+  }
+  if (exDoc.status === "unknown") {
+    return finish("unknown", exDoc.reason, exDoc.source, {
+      missingData: [...new Set([...base.missingData, "product_exclusion_category_proof"])],
+    });
   }
 
   const brand = assessBrandSiteRestriction(product, offerText, scope);
@@ -831,6 +1619,47 @@ export function evaluateProductBinding(ctx) {
   });
 }
 
+/** Fingerprint of coupon offer action fields (not product identity). */
+export function computeOfferActionLinkageFingerprint(linkMeta = {}, bindingRow = {}, scope = null) {
+  let sc = scope || bindingRow.scope || null;
+  if (!sc && bindingRow.offerText) {
+    sc = parseCouponScope({
+      description: bindingRow.offerText,
+      adContent: bindingRow.adContent || "",
+      destination: linkMeta.destination,
+    });
+  }
+  const scopeType = sc?.scopeType || "";
+  const exclusions = [...(sc?.exclusionSpans || [])].map((s) => String(s).trim()).sort();
+  const cart = parseCartCondition(sc);
+  const cartKey = cart ? [cart.type, cart.amount, cart.currency].join(":") : "";
+  const scopeEvidence = [...(sc?.evidence || [])].slice().sort();
+  const fullOfferSubstrate = String(
+    sc?.offerTextRaw || sc?.offerTextStripped || bindingRow.offerText || linkMeta.description || ""
+  );
+  const offerSubstrateDigest = stableDigestSha256(fullOfferSubstrate);
+  const structuredConditions = {
+    scopeType,
+    cartKey,
+    exclusions,
+    scopeEvidence,
+    categoryKeywords: [...(sc?.categoryKeywords || [])].map(String).sort(),
+    brandKeyword: sc?.brandKeyword ? String(sc.brandKeyword) : "",
+    targetStoreHost: sc?.targetStoreHost ? String(sc.targetStoreHost) : "",
+  };
+  const structuredConditionsDigest = stableDigestSha256(JSON.stringify(structuredConditions));
+  return [
+    String(linkMeta.linkId || bindingRow.linkId || ""),
+    String(linkMeta.destination || ""),
+    String(linkMeta.couponCode || bindingRow.couponCode || ""),
+    String(linkMeta.promotionStartDate || bindingRow.validity?.promotionStartDate || ""),
+    String(linkMeta.promotionEndDate || bindingRow.validity?.promotionEndDate || ""),
+    String(linkMeta.websitePid || ""),
+    offerSubstrateDigest,
+    structuredConditionsDigest,
+  ].join("|");
+}
+
 export function parsePromotionEndMs(endStr) {
   if (!endStr) return null;
   const normalized = String(endStr).trim().replace(" ", "T").replace(/\.0+$/, "");
@@ -838,35 +1667,204 @@ export function parsePromotionEndMs(endStr) {
   return Number.isNaN(d.getTime()) ? null : d.getTime();
 }
 
+export const COUPON_PUBLICATION_CARD_TYPE = {
+  WHOLE_SORTIMENT_PARTNER: "whole_sortiment_partner_coupon",
+  LIMITED_SORTIMENT: "limited_sortiment_coupon",
+};
+
+/** Separates product-exclusion scope, minimum-order rules, and store/market targeting for card copy. */
+export function buildCouponCardPresentation(scope, couponEval = {}, linkMeta = {}) {
+  const cart = parseCartCondition(scope);
+  const exclusions = scope?.exclusionSpans || [];
+  const hasProductExclusions = exclusions.length > 0;
+  const sortimentScopeKind = hasProductExclusions
+    ? "whole_sortiment_with_product_exclusions"
+    : "whole_sortiment_without_product_exclusions";
+  const minimumOrderLine = cart
+    ? "Minimální objednávka: " + cart.amount + " " + cart.currency + " (podmínka košíku, ne výjimka sortimentu)"
+    : null;
+  const exclusionLine = hasProductExclusions ? "Výjimky z produktového sortimentu: " + exclusions.join(" · ") : null;
+  const offerText = scope?.offerTextStripped || linkMeta.description || "";
+  const audience = couponEval.czAudienceAssessment || assessCouponCzAudienceDocumented(linkMeta, offerText);
+  const presentation =
+    couponEval.presentationVariant ||
+    audience.presentation?.variant ||
+    assessOfferPresentationVariant(linkMeta, offerText).variant;
+  const isForeign = presentation !== "czech_storefront_offer";
+  const sortimentLabel = isForeign ? "Celý sortiment partnerského obchodu (zahraniční storefront)" : "Celý sortiment obchodu";
+  const proposedCardScopeLabel = hasProductExclusions
+    ? sortimentLabel + " · " + (exclusionLine || "")
+    : sortimentLabel + (minimumOrderLine ? " · " + minimumOrderLine : "");
+  return {
+    sortimentScopeKind,
+    minimumOrderCondition: cart,
+    minimumOrderLine,
+    productExclusionLines: exclusions,
+    exclusionLine,
+    presentationVariant: presentation,
+    presentAsCzechStoreVariant: !isForeign,
+    priceDisplayNote: "Cena, sleva a minimální objednávka v původní měně kupónu",
+    storeAndMarket: {
+      storeHosts: couponEval.offerEvidenceBundle?.stores || [],
+      targetedCountries: linkMeta.targetedCountries || couponEval.offerEvidenceBundle?.targetedCountries || null,
+      destination: linkMeta.destination || null,
+      storefrontIdentity: couponEval.storefrontIdentity || audience.storefront || assessStorefrontIdentity(linkMeta),
+      czCustomerAvailability: couponEval.czCustomerAvailability || audience.availability || null,
+      destinationPathMarketHint:
+        destinationPathMarketHint(linkMeta.destination) ||
+        couponEval.offerEvidenceBundle?.destinationPathMarketHint ||
+        null,
+      czAudience: audience,
+    },
+    proposedCardScopeLabel,
+    noteWholeSortimentNotNoMinimumOrder:
+      "Celý sortiment neznamená bez minimální objednávky; košík a produktové výjimky jsou oddělené dimenze.",
+  };
+}
+
+/**
+ * Type A = documented whole sortiment for a named partner store (not from „na vše“ alone).
+ * Type B = subset/category/brand/models or missing partner whole-sortiment proof.
+ */
+export function classifyCouponPublicationCardType(scope, couponEval, offerText = "", linkMeta = {}) {
+  const st = scope?.scopeType || "unknown";
+  const text = String(offerText || scope?.offerTextStripped || "");
+  const stores = couponEval?.offerEvidenceBundle?.stores || [];
+  const hasNamedStore =
+    Boolean(scope?.targetStoreHost) || stores.some((s) => /\.(cz|sk|com|eu)$/i.test(String(s)));
+
+  if (couponEval?.czCouponPublishEligibility !== "eligible") {
+    return {
+      type: COUPON_PUBLICATION_CARD_TYPE.LIMITED_SORTIMENT,
+      reason: "coupon_assessment_not_explicitly_eligible",
+    };
+  }
+  if (
+    /vybran[ée]\s+modely/i.test(text) ||
+    st.includes("subset") ||
+    st.includes("category_or") ||
+    st === "brand_restricted" ||
+    st === "category_restricted" ||
+    st === "cart_rule_second_item" ||
+    (st === "site_restricted" && !st.includes("full"))
+  ) {
+    return {
+      type: COUPON_PUBLICATION_CARD_TYPE.LIMITED_SORTIMENT,
+      reason: "documented_limited_scope_requires_eligible_product_row",
+    };
+  }
+  const wholePartnerScope =
+    st === "full_sortiment_site_restricted" ||
+    st === "full_sortiment_with_exclusions" ||
+    st === "full_sortiment_with_selected_models_note";
+  if (wholePartnerScope && hasNamedStore) {
+    return {
+      type: COUPON_PUBLICATION_CARD_TYPE.WHOLE_SORTIMENT_PARTNER,
+      reason: "documented_partner_whole_sortiment_offer",
+      cardMetadata: {
+        futureHighlightEligible: true,
+        documentedExclusionCount: (scope?.exclusionSpans || []).length,
+        targetStoreHost: scope?.targetStoreHost || stores[0] || null,
+        minimumOrderCondition: parseCartCondition(scope),
+        cardPresentation: buildCouponCardPresentation(scope, couponEval, linkMeta),
+      },
+    };
+  }
+  if (st === "full_sortiment" && hasNamedStore) {
+    return {
+      type: COUPON_PUBLICATION_CARD_TYPE.WHOLE_SORTIMENT_PARTNER,
+      reason: "full_sortiment_with_named_store_evidence",
+      cardMetadata: {
+        futureHighlightEligible: true,
+        targetStoreHost: scope?.targetStoreHost || stores[0] || null,
+        minimumOrderCondition: parseCartCondition(scope),
+        cardPresentation: buildCouponCardPresentation(scope, couponEval, linkMeta),
+      },
+    };
+  }
+  if (/na\s+v[sš]e/i.test(text) && !hasNamedStore) {
+    return {
+      type: COUPON_PUBLICATION_CARD_TYPE.LIMITED_SORTIMENT,
+      reason: "na_vse_wording_without_partner_store_proof",
+    };
+  }
+  return {
+    type: COUPON_PUBLICATION_CARD_TYPE.LIMITED_SORTIMENT,
+    reason: "scope_requires_concrete_eligible_display_item",
+  };
+}
+
+function promotionValidityFromCard(card) {
+  return {
+    promotionStartDate:
+      card.validity?.promotionStartDate ||
+      card.promotionStartDate ||
+      card.linkMeta?.promotionStartDate ||
+      null,
+    promotionEndDate:
+      card.validity?.promotionEndDate ||
+      card.promotionEndDate ||
+      card.linkMeta?.promotionEndDate ||
+      null,
+  };
+}
+
 /** Rejects unknown/ineligible in displayProducts and expired coupons. */
 export function validatePublicationCard(card, refDate = new Date()) {
   const errors = [];
-  const endRaw = card.validity?.promotionEndDate || card.promotionEndDate;
-  const startRaw = card.validity?.promotionStartDate || card.promotionStartDate;
-  const endMs = parsePromotionEndMs(endRaw);
-  const startMs = parsePromotionEndMs(startRaw);
-  const now = refDate.getTime();
-  if (String(endRaw || "").trim() && endMs === null) {
-    errors.push("promotion_end_date_unparseable");
-  }
-  if (String(startRaw || "").trim() && startMs === null) {
-    errors.push("promotion_start_date_unparseable");
-  }
+  const validityMerged = promotionValidityFromCard(card);
+  const endRaw = validityMerged.promotionEndDate;
+  const startRaw = validityMerged.promotionStartDate;
+  const cardType =
+    card.publicationCardType ||
+    (card.couponCardMode === "whole_sortiment_partner"
+      ? COUPON_PUBLICATION_CARD_TYPE.WHOLE_SORTIMENT_PARTNER
+      : null);
+  const isWholeSortimentPartnerCard =
+    cardType === COUPON_PUBLICATION_CARD_TYPE.WHOLE_SORTIMENT_PARTNER;
   if (!String(endRaw || "").trim()) {
     errors.push("promotion_end_date_missing");
   }
-  if (endMs !== null && endMs < now) {
-    errors.push("coupon_expired_for_publication");
+  if (!String(startRaw || "").trim()) {
+    errors.push("promotion_start_date_missing");
   }
-  if (startMs !== null && startMs > now) {
-    errors.push("coupon_not_yet_started_for_publication");
+  const time = assessPromotionTimeActive(validityMerged, refDate);
+  if (time.state === "unknown") {
+    errors.push("promotion_time_unknown:" + time.reason);
+  }
+  if (time.active === false) {
+    errors.push("promotion_time_inactive:" + time.reason);
+  }
+  if (String(endRaw || "").trim() && parsePromotionEndMs(endRaw) === null) {
+    errors.push("promotion_end_date_unparseable");
+  }
+  if (String(startRaw || "").trim() && parsePromotionEndMs(startRaw) === null) {
+    errors.push("promotion_start_date_unparseable");
   }
   if (card.couponCzPublish?.czAudiencePublishBlocked) {
     errors.push("coupon_cz_audience_blocked:" + (card.couponCzPublish.publishBlockReason || "blocked"));
   }
+  if (card.couponCzPublish?.czCouponPublishEligibility !== "eligible") {
+    errors.push("coupon_publish_assessment_not_explicitly_eligible");
+  }
+  if (isWholeSortimentPartnerCard) {
+    if ((card.displayProducts || []).length > 0) {
+      errors.push("whole_sortiment_card_must_not_include_display_products");
+    }
+    return { ok: errors.length === 0, errors, publicationCardType: cardType };
+  }
+  if (!Array.isArray(card.displayProducts) || card.displayProducts.length === 0) {
+    errors.push("display_products_missing_concrete_eligible_item");
+  }
+  let explicitEligibleCount = 0;
   for (const p of card.displayProducts || []) {
     if (p.eligibility === "unknown" || p.eligibility === "ineligible") {
       errors.push("display_product_blocked_eligibility:" + p.productId + ":" + p.eligibility);
+    }
+    if (p.eligibility !== "eligible") {
+      errors.push("display_product_eligibility_not_explicit:" + p.productId + ":" + (p.eligibility || "missing"));
+    } else {
+      explicitEligibleCount += 1;
     }
     if (p.publicProductBlockPublishable !== true) {
       errors.push("display_product_not_publishable:" + p.productId);
@@ -875,6 +1873,9 @@ export function validatePublicationCard(card, refDate = new Date()) {
     if (land && land !== "pass") {
       errors.push("display_product_landing_not_verified:" + p.productId + ":" + (p.landingIdentity?.reason || card.landingIdentity?.reason || land));
     }
+  }
+  if (explicitEligibleCount === 0 && (card.displayProducts || []).length > 0) {
+    errors.push("no_explicit_eligible_display_product");
   }
   return { ok: errors.length === 0, errors };
 }

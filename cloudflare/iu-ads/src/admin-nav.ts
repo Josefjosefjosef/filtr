@@ -41,6 +41,7 @@ export const ADMIN_NAV_ORDER_IDS: readonly string[] = [
   "exports",
   "backups",
   "audit",
+  "affiliate_archive",
   "users",
 ];
 
@@ -91,6 +92,12 @@ export const ADMIN_NAV_CATALOG: readonly NavEntry[] = [
   { id: "exports", label_cs: "Exporty", href: "/v1/admin/exports", permission: "exports.read" },
   { id: "backups", label_cs: "Zálohy", href: "/v1/admin/backups", permission: "backups.read" },
   { id: "audit", label_cs: "Audit", href: "/v1/admin/audit", permission: "audit.read" },
+  {
+    id: "affiliate_archive",
+    label_cs: "Archiv reklam – Affiliate",
+    href: "/v1/admin/affiliate-archive",
+    permission: "audit.read",
+  },
   { id: "users", label_cs: "Uživatelé", href: "/v1/admin/users", permission: "users.read" },
 ];
 

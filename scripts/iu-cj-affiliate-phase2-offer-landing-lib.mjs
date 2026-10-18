@@ -1,7 +1,15 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /** SSRF-safe direct landing fetch (inner product URL / coupon destination only; no affiliate click hops). */
 import dns from "node:dns/promises";
-import { extractLandingUrl } from "./iu-cj-affiliate-phase2-coupon-eligibility.mjs";
+import {
+  computeOfferActionLinkageFingerprint,
+  extractLandingUrl,
+  parsePromotionEndMs,
+} from "./iu-cj-affiliate-phase2-coupon-eligibility.mjs";
+
+/** Max age of reusable landing proof relative to evaluation time (no network refresh). */
+export const LANDING_BATCH_PROOF_MAX_AGE_MS = 120 * 24 * 60 * 60 * 1000;
+export const LANDING_BATCH_MIN_PROBE_EPOCH_MS = Date.parse("2021-01-01T00:00:00.000Z");
 
 const PRIVATE_V4 = [
   /^127\./,
@@ -48,6 +56,8 @@ export function isPrivateOrBlockedHost(hostname) {
   }
   const v4Mapped = h.match(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/i);
   if (v4Mapped && isPrivateOrBlockedHost(v4Mapped[1])) return true;
+  if (/^0:0:0:0:0:ffff:127\.0\.0\.1$/i.test(h)) return true;
+  if (/^::ffff:7f00:0?1$/i.test(h) || /^::ffff:0:0:7f00:1$/i.test(h)) return true;
   return false;
 }
 
@@ -165,7 +175,7 @@ export function productIdMatchTokens(productId) {
   return [...tokens];
 }
 
-/** @deprecated for identity pass — use primary-product parsers only */
+/** @deprecated for identity pass ÔÇö use primary-product parsers only */
 export function snippetContainsProductId(snippet, productId) {
   const lower = String(snippet || "").toLowerCase();
   for (const t of productIdMatchTokens(productId)) {
@@ -548,6 +558,324 @@ export function assessMainProductConsensus({ html, productUrl, expectedProduct }
       visibleH1: h1,
       primaryDataLayer: primary,
       jsonLdProduct: jsonLd,
+    },
+  };
+}
+
+function batchConsensusDocumentsProductId(consensus, productId, productUrl) {
+  if (!consensus || consensus.status !== "pass") return false;
+  const sig = consensus.signals || {};
+  const dlId = sig.primaryDataLayer?.productId || null;
+  const jsonSku = sig.jsonLdProduct?.sku || null;
+  if (dlId && merchantProductIdsEquivalent(productId, dlId, productUrl)) return true;
+  if (jsonSku && merchantProductIdsEquivalent(productId, jsonSku, productUrl)) return true;
+  if (consensus.consensus?.urlAuthority && productUrl && sig.productUrl === productUrl) {
+    return merchantProductIdsEquivalent(productId, dlId || jsonSku || productId, productUrl);
+  }
+  return false;
+}
+
+function batchVerifyFail(reason, linkageLayer, ctxExtra = {}) {
+  return {
+    ok: false,
+    reason,
+    linkageLayer,
+    productId: ctxExtra.productId ?? null,
+    diagnostics: ctxExtra.diagnostics ?? null,
+    productIdentityLinkage: ctxExtra.productIdentityLinkage ?? null,
+    offerActionLinkage: ctxExtra.offerActionLinkage ?? null,
+  };
+}
+
+/** Product landing identity only (unchanged when offer action fields drift). */
+export function verifyLandingBatchProductIdentity(batch, ctx = {}) {
+  const productId = String(ctx.productId || ctx.product?.productId || "");
+  const product = ctx.product || {};
+  const diagBase = { productId: productId || null };
+
+  if (!batch?.landingIdentity) {
+    return { ok: false, reason: "batch_missing_landing_identity", productIdentityLinkage: { ok: false, reason: "batch_missing_landing_identity" }, diagnostics: diagBase };
+  }
+
+  const batchProductId = String(batch.productId || batch.probedProductId || "");
+  if (!batchProductId) {
+    return { ok: false, reason: "batch_missing_product_id", productIdentityLinkage: { ok: false, reason: "batch_missing_product_id" }, diagnostics: diagBase };
+  }
+  if (productId && batchProductId !== productId) {
+    return {
+      ok: false,
+      reason: "batch_product_id_mismatch",
+      productIdentityLinkage: { ok: false, reason: "batch_product_id_mismatch" },
+      diagnostics: { ...diagBase, batchProductId, expectedProductId: productId },
+    };
+  }
+
+  const currentInner = extractLandingUrl(product.affiliateClickUrl)?.href || null;
+  const batchUrl = batch.productInnerUrl || batch.productLandingUrl || null;
+  if (!batchUrl || !currentInner) {
+    return { ok: false, reason: "batch_missing_product_url_linkage", productIdentityLinkage: { ok: false, reason: "batch_missing_product_url_linkage" }, diagnostics: diagBase };
+  }
+  if (batchUrl !== currentInner) {
+    return {
+      ok: false,
+      reason: "batch_landing_url_stale",
+      productIdentityLinkage: { ok: false, reason: "batch_landing_url_stale" },
+      diagnostics: { ...diagBase, batchUrl, currentInner },
+    };
+  }
+
+  const identity = batch.landingIdentity;
+  if (identity.status !== "pass") {
+    return {
+      ok: false,
+      reason: "batch_landing_identity_not_pass",
+      productIdentityLinkage: { ok: false, reason: "batch_landing_identity_not_pass" },
+      diagnostics: diagBase,
+    };
+  }
+  const consensusEntry = (identity.evidence || []).find((e) => e.mainProductConsensus);
+  const consensus = consensusEntry?.mainProductConsensus;
+  if (!consensus || consensus.status !== "pass") {
+    return {
+      ok: false,
+      reason: "batch_pass_missing_consensus_evidence",
+      productIdentityLinkage: { ok: false, reason: "batch_pass_missing_consensus_evidence" },
+      diagnostics: diagBase,
+    };
+  }
+  if (!batchConsensusDocumentsProductId(consensus, batchProductId, batchUrl)) {
+    return {
+      ok: false,
+      reason: "batch_pass_sku_not_documented_in_consensus",
+      productIdentityLinkage: { ok: false, reason: "batch_pass_sku_not_documented_in_consensus" },
+      diagnostics: { ...diagBase, batchProductId },
+    };
+  }
+  return {
+    ok: true,
+    reason: "product_identity_consensus_verified",
+    productIdentityLinkage: { ok: true, reason: "product_identity_consensus_verified" },
+    diagnostics: diagBase,
+  };
+}
+
+/**
+ * Stored landing batch: product identity proof vs offer-action proof (separate layers).
+ */
+export function verifyLandingBatchEntry(batch, ctx = {}) {
+  const linkId = String(ctx.linkId || "");
+  const productId = String(ctx.productId || ctx.product?.productId || "");
+  const product = ctx.product || {};
+  const linkMeta = ctx.linkMeta || {};
+  const bindingRow = ctx.bindingRow || {};
+  const scope = ctx.scope || null;
+  const refDate = ctx.refDate || new Date();
+  const diagBase = { productId: productId || null };
+
+  const productIdentity = verifyLandingBatchProductIdentity(batch, ctx);
+  if (!productIdentity.ok) {
+    return batchVerifyFail(productIdentity.reason, "product_identity", {
+      productId,
+      productIdentityLinkage: productIdentity.productIdentityLinkage,
+      diagnostics: productIdentity.diagnostics,
+    });
+  }
+  const productIdentityLinkage = productIdentity.productIdentityLinkage;
+
+  if (!batch.linkId) {
+    return batchVerifyFail("batch_offer_link_id_missing", "offer_action", {
+      productId,
+      productIdentityLinkage,
+      offerActionLinkage: { ok: false, reason: "batch_offer_link_id_missing" },
+      diagnostics: diagBase,
+    });
+  }
+  if (linkId && String(batch.linkId) !== linkId) {
+    return batchVerifyFail("batch_link_id_mismatch", "offer_action", { productId, productIdentityLinkage, diagnostics: diagBase });
+  }
+  if (batch.offerLinkId && linkId && String(batch.offerLinkId) !== linkId) {
+    return batchVerifyFail("batch_offer_link_id_mismatch", "offer_action", { productId, productIdentityLinkage, diagnostics: diagBase });
+  }
+
+  const expectedDest = linkMeta.destination || null;
+  const batchDest =
+    batch.couponDestination ||
+    batch.landingIdentity?.evidence?.find((e) => e.kind === "coupon_destination")?.url ||
+    null;
+  if (!expectedDest) {
+    return batchVerifyFail("batch_coupon_destination_expected_missing", "offer_action", {
+      productId,
+      productIdentityLinkage,
+      diagnostics: diagBase,
+    });
+  }
+  if (!batchDest) {
+    return batchVerifyFail("batch_coupon_destination_missing", "offer_action", {
+      productId,
+      productIdentityLinkage,
+      offerActionLinkage: { ok: false, reason: "batch_coupon_destination_missing" },
+      diagnostics: { ...diagBase, expectedDestination: expectedDest },
+    });
+  }
+  if (batchDest !== expectedDest) {
+    return batchVerifyFail("batch_coupon_destination_mismatch", "offer_action", {
+      productId,
+      productIdentityLinkage,
+      offerActionLinkage: { ok: false, reason: "batch_coupon_destination_mismatch" },
+      diagnostics: { ...diagBase, batchDestination: batchDest, expectedDestination: expectedDest },
+    });
+  }
+
+  const promoEnd = linkMeta.promotionEndDate || bindingRow.validity?.promotionEndDate || null;
+  const promoStart = linkMeta.promotionStartDate || bindingRow.validity?.promotionStartDate || null;
+  if (!promoEnd) {
+    return batchVerifyFail("batch_promotion_end_expected_missing", "offer_action", {
+      productId,
+      productIdentityLinkage,
+      diagnostics: diagBase,
+    });
+  }
+  if (!batch.promotionEndDate) {
+    return batchVerifyFail("batch_promotion_end_missing", "offer_action", {
+      productId,
+      productIdentityLinkage,
+      offerActionLinkage: { ok: false, reason: "batch_promotion_end_missing" },
+      diagnostics: { ...diagBase, expectedPromotionEndDate: promoEnd, batchPromotionEndDate: null },
+    });
+  }
+  if (batch.promotionEndDate !== promoEnd) {
+    return batchVerifyFail("batch_promotion_end_mismatch", "offer_action", {
+      productId,
+      productIdentityLinkage,
+      offerActionLinkage: { ok: false, reason: "batch_promotion_end_mismatch" },
+      diagnostics: {
+        ...diagBase,
+        batchPromotionEndDate: batch.promotionEndDate,
+        expectedPromotionEndDate: promoEnd,
+      },
+    });
+  }
+  if (!promoStart) {
+    return batchVerifyFail("batch_promotion_start_expected_missing", "offer_action", {
+      productId,
+      productIdentityLinkage,
+      diagnostics: diagBase,
+    });
+  }
+  if (!batch.promotionStartDate) {
+    return batchVerifyFail("batch_promotion_start_missing", "offer_action", {
+      productId,
+      productIdentityLinkage,
+      offerActionLinkage: { ok: false, reason: "batch_promotion_start_missing" },
+      diagnostics: { ...diagBase, expectedPromotionStartDate: promoStart, batchPromotionStartDate: null },
+    });
+  }
+  if (batch.promotionStartDate !== promoStart) {
+    return batchVerifyFail("batch_promotion_start_mismatch", "offer_action", {
+      productId,
+      productIdentityLinkage,
+      offerActionLinkage: { ok: false, reason: "batch_promotion_start_mismatch" },
+      diagnostics: {
+        ...diagBase,
+        batchPromotionStartDate: batch.promotionStartDate,
+        expectedPromotionStartDate: promoStart,
+      },
+    });
+  }
+
+  const expectedPid = linkMeta.websitePid ? String(linkMeta.websitePid) : null;
+  if (expectedPid) {
+    if (!batch.websitePid) {
+      return batchVerifyFail("batch_website_pid_missing", "offer_action", {
+        productId,
+        productIdentityLinkage,
+        offerActionLinkage: { ok: false, reason: "batch_website_pid_missing" },
+        diagnostics: { ...diagBase, expectedWebsitePid: expectedPid },
+      });
+    }
+    if (String(batch.websitePid) !== expectedPid) {
+      return batchVerifyFail("batch_website_pid_mismatch", "offer_action", {
+        productId,
+        productIdentityLinkage,
+        offerActionLinkage: { ok: false, reason: "batch_website_pid_mismatch" },
+        diagnostics: { ...diagBase, batchWebsitePid: batch.websitePid, expectedWebsitePid: expectedPid },
+      });
+    }
+  }
+
+  if (linkMeta.couponCode) {
+    if (!batch.couponCode) {
+      return batchVerifyFail("batch_coupon_code_missing", "offer_action", {
+        productId,
+        productIdentityLinkage,
+        offerActionLinkage: { ok: false, reason: "batch_coupon_code_missing" },
+        diagnostics: { ...diagBase, expectedCouponCode: linkMeta.couponCode },
+      });
+    }
+    if (String(batch.couponCode) !== String(linkMeta.couponCode)) {
+      return batchVerifyFail("batch_coupon_code_stale", "offer_action", {
+        productId,
+        productIdentityLinkage,
+        offerActionLinkage: { ok: false, reason: "batch_coupon_code_stale" },
+        diagnostics: { ...diagBase, batchCouponCode: batch.couponCode, expectedCouponCode: linkMeta.couponCode },
+      });
+    }
+  }
+
+  const expectedFingerprint = computeOfferActionLinkageFingerprint(linkMeta, bindingRow, scope);
+  if (!batch.actionLinkageFingerprint) {
+    return batchVerifyFail("batch_action_linkage_fingerprint_missing", "offer_action", {
+      productId,
+      productIdentityLinkage,
+      offerActionLinkage: { ok: false, reason: "batch_action_linkage_fingerprint_missing" },
+      diagnostics: { ...diagBase, expectedFingerprint },
+    });
+  }
+  if (batch.actionLinkageFingerprint !== expectedFingerprint) {
+    return batchVerifyFail("batch_action_linkage_fingerprint_mismatch", "offer_action", {
+      productId,
+      productIdentityLinkage,
+      offerActionLinkage: { ok: false, reason: "batch_action_linkage_fingerprint_mismatch" },
+      diagnostics: {
+        ...diagBase,
+        batchFingerprint: batch.actionLinkageFingerprint,
+        expectedFingerprint,
+      },
+    });
+  }
+
+  if (!batch.probedAt) {
+    return batchVerifyFail("batch_missing_probed_at", "offer_action", { productId, productIdentityLinkage, diagnostics: diagBase });
+  }
+  const probedMs = Date.parse(batch.probedAt);
+  if (Number.isNaN(probedMs)) {
+    return batchVerifyFail("batch_probed_at_unparseable", "offer_action", { productId, productIdentityLinkage, diagnostics: diagBase });
+  }
+  if (probedMs < LANDING_BATCH_MIN_PROBE_EPOCH_MS) {
+    return batchVerifyFail("batch_proof_before_minimum_epoch", "offer_action", { productId, productIdentityLinkage, diagnostics: diagBase });
+  }
+  if (probedMs > refDate.getTime() + 60000) {
+    return batchVerifyFail("batch_probed_at_in_future", "offer_action", { productId, productIdentityLinkage, diagnostics: diagBase });
+  }
+  const startMs = parsePromotionEndMs(promoStart);
+  if (startMs !== null && probedMs < startMs) {
+    return batchVerifyFail("batch_probed_before_promotion_start", "offer_action", { productId, productIdentityLinkage, diagnostics: diagBase });
+  }
+  if (refDate.getTime() - probedMs > LANDING_BATCH_PROOF_MAX_AGE_MS) {
+    return batchVerifyFail("batch_proof_too_stale", "offer_action", { productId, productIdentityLinkage, diagnostics: diagBase });
+  }
+
+  return {
+    ok: true,
+    landingIdentity: batch.landingIdentity,
+    reason: "batch_linkage_verified",
+    linkageLayer: "verified",
+    productId,
+    productIdentityLinkage,
+    offerActionLinkage: { ok: true, reason: "offer_action_fields_verified" },
+    diagnostics: {
+      ...diagBase,
+      actionLinkageFingerprint: expectedFingerprint,
     },
   };
 }

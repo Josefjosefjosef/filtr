@@ -1,0 +1,16 @@
+# Local-only: affiliate archive D1 batch tests (never deploy to production).
+name = "iu-ads-archive-local-test"
+main = "src/archive-d1-local-test-entry.ts"
+compatibility_date = "2024-11-01"
+compatibility_flags = ["nodejs_compat"]
+
+workers_dev = true
+
+[vars]
+IU_ARCHIVE_LOCAL_TEST = "1"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "iu-ads-archive-local-test"
+database_id = "00000000-0000-0000-0000-000000000001"
+migrations_dir = "migrations"
