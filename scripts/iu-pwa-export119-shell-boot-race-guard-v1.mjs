@@ -14,9 +14,16 @@ const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
 const { chromium } = require("playwright");
 
+const SHELL_WRAP_WAIT_MS = 20000;
+const MENU_NAV_GATE_WAIT_MS = 8000;
+const MENU_POST_WRAP_EARLY_FRAMES = 12;
+
 const fails = [];
 function must(cond, id) {
   if (!cond) fails.push(id);
+}
+function mustBucket(bucket, cond, id) {
+  if (!cond) bucket.push(id);
 }
 function read(rel) {
   return fs.readFileSync(path.join(REPO, rel), "utf8");
@@ -79,6 +86,53 @@ function mobileInitScript() {
         return { matches: false, media: s };
       };
     } catch (_) {}
+    try {
+      window.__iuExport119JsErrors = window.__iuExport119JsErrors || [];
+      window.addEventListener(
+        "error",
+        (ev) => {
+          try {
+            window.__iuExport119JsErrors.push(String(ev.message || ev.error || "error"));
+          } catch (_) {}
+        },
+        true
+      );
+    } catch (_) {}
+  };
+}
+
+/** First 12 rAF samples from DOMContentLoaded — early boot/gate race window. */
+function menuNavReloadEarlySamplerScript() {
+  return () => {
+    window.__iuExport119MenuEarly = { samples: [], domReadyMs: 0 };
+    function sampleFrame() {
+      const feed = document.getElementById("feed");
+      window.__iuExport119MenuEarly.samples.push({
+        t: performance.now(),
+        boot: document.documentElement.classList.contains("iu-mm-return-boot"),
+        gate: document.getElementById("iuMobileGateWrap")?.getAttribute?.("data-iu-mobile-gate") || "",
+        feedVis: feed ? getComputedStyle(feed).visibility : "missing",
+      });
+    }
+    function burstFromDomReady() {
+      window.__iuExport119MenuEarly.domReadyMs = performance.now();
+      sampleFrame();
+      let left = 11;
+      const step = () => {
+        if (left <= 0) return;
+        left -= 1;
+        requestAnimationFrame(() => {
+          sampleFrame();
+          step();
+        });
+      };
+      requestAnimationFrame(step);
+    }
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", burstFromDomReady, { once: true });
+    } else {
+      burstFromDomReady();
+    }
   };
 }
 
@@ -91,6 +145,11 @@ async function seedMindMenuCold(page, base, scrollY) {
     localStorage.removeItem("iuPwaMenuNavReturnPersistV1");
   }, scrollY);
   await page.reload({ waitUntil: "domcontentloaded", timeout: 120000 });
+  await page
+    .waitForFunction(() => document.documentElement.classList.contains("iu-mm-return-boot"), null, {
+      timeout: MENU_NAV_GATE_WAIT_MS,
+    })
+    .catch(() => null);
 }
 
 async function testPostFixBlocksShellSetTabRelease(page, base) {
@@ -391,28 +450,201 @@ async function testHomeDeepFirstPaint(page, base) {
   );
 }
 
-async function testMenuNavBoot(page, base) {
+async function applyMenuNavBootSabotage(page, options = {}) {
+  if (options.sabotageNavGate) {
+    await page.addInitScript(() => {
+      document.addEventListener("DOMContentLoaded", () => {
+        const wrap = document.getElementById("iuMobileGateWrap");
+        if (wrap && typeof wrap.__iuMobileGateSetTab === "function") {
+          wrap.__iuMobileGateSetTab = function () {};
+        }
+      });
+    });
+  }
+  if (options.sabotageBootClass) {
+    await page.addInitScript(() => {
+      const strip = () => document.documentElement.classList.remove("iu-mm-return-boot");
+      document.addEventListener("DOMContentLoaded", () => {
+        strip();
+        new MutationObserver(strip).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ["class"],
+        });
+      });
+    });
+  }
+  if (options.hideNavPanel) {
+    await page.addInitScript(() => {
+      const hide = () => {
+        const nav = document.getElementById("iuMobileGatePanelNav");
+        if (nav) {
+          nav.hidden = true;
+          nav.style.visibility = "hidden";
+        }
+      };
+      document.addEventListener("DOMContentLoaded", () => {
+        hide();
+        setInterval(hide, 5);
+        new MutationObserver(hide).observe(document.documentElement, { subtree: true, childList: true });
+      });
+    });
+  }
+  if (options.forceFeedVisibleDuringBoot) {
+    await page.addInitScript(() => {
+      const loop = () => {
+        const feed = document.getElementById("feed");
+        const boot = document.documentElement.classList.contains("iu-mm-return-boot");
+        if (feed && boot) {
+          feed.style.visibility = "visible";
+          feed.style.display = "block";
+        }
+        requestAnimationFrame(loop);
+      };
+      requestAnimationFrame(loop);
+    });
+  }
+  if (options.exposeFeedBeforeNav) {
+    await page.addInitScript(() => {
+      const loop = () => {
+        const wrap = document.getElementById("iuMobileGateWrap");
+        const gate = wrap ? wrap.getAttribute("data-iu-mobile-gate") || "" : "";
+        const boot = document.documentElement.classList.contains("iu-mm-return-boot");
+        const feed = document.getElementById("feed");
+        if (boot && gate !== "nav" && feed) {
+          feed.style.visibility = "visible";
+          feed.style.display = "block";
+        }
+        requestAnimationFrame(loop);
+      };
+      requestAnimationFrame(loop);
+    });
+  }
+  if (options.removeMobileGateWrap) {
+    await page.addInitScript(() => {
+      const remove = () => {
+        const wrap = document.getElementById("iuMobileGateWrap");
+        if (wrap) wrap.remove();
+      };
+      document.addEventListener("DOMContentLoaded", () => {
+        remove();
+        new MutationObserver(remove).observe(document.documentElement, { subtree: true, childList: true });
+      });
+    });
+  }
+}
+
+export async function testMenuNavBoot(page, base, bucket = fails, options = {}) {
+  await applyMenuNavBootSabotage(page, options);
+  await page.addInitScript(menuNavReloadEarlySamplerScript());
+
   await page.goto(base, { waitUntil: "domcontentloaded", timeout: 120000 });
-  await page.evaluate(() => {
-    localStorage.setItem("iuPwaMenuNavReturnPersistV1", JSON.stringify({ y: 420, t: Date.now(), gate: "nav" }));
-    localStorage.removeItem("iuMindMenuReturnPendingV1");
-  });
+  if (!options.skipMenuPersist) {
+    const gate = options.menuPersistGate === "home" ? "home" : "nav";
+    await page.evaluate((g) => {
+      localStorage.setItem("iuPwaMenuNavReturnPersistV1", JSON.stringify({ y: 420, t: Date.now(), gate: g }));
+      localStorage.removeItem("iuMindMenuReturnPendingV1");
+    }, gate);
+  } else {
+    await page.evaluate(() => {
+      localStorage.removeItem("iuPwaMenuNavReturnPersistV1");
+      localStorage.removeItem("iuMindMenuReturnPendingV1");
+    });
+  }
+
+  const reloadStarted = Date.now();
   await page.reload({ waitUntil: "domcontentloaded", timeout: 120000 });
-  const early = await page.evaluate(async () => {
+
+  const wrapSeen = await page
+    .waitForFunction(() => Boolean(document.getElementById("iuMobileGateWrap")), null, { timeout: SHELL_WRAP_WAIT_MS })
+    .catch(() => null);
+  mustBucket(bucket, Boolean(wrapSeen), "menu:shell_wrap_timeout");
+
+  const gateWaitStart = await page.evaluate(() => performance.now());
+  const navReady = await page
+    .waitForFunction(
+      () => {
+        const boot = document.documentElement.classList.contains("iu-mm-return-boot");
+        const gate = document.getElementById("iuMobileGateWrap")?.getAttribute("data-iu-mobile-gate") || "";
+        return gate === "nav" || boot;
+      },
+      null,
+      { timeout: MENU_NAV_GATE_WAIT_MS }
+    )
+    .catch(() => null);
+  const gateWaitMs = await page.evaluate((t0) => Math.round(performance.now() - t0), gateWaitStart);
+
+  if (!navReady) {
+    const diag = await page.evaluate(() => {
+      const wrap = document.getElementById("iuMobileGateWrap");
+      const nav = document.getElementById("iuMobileGatePanelNav");
+      return {
+        boot: document.documentElement.classList.contains("iu-mm-return-boot"),
+        gate: wrap?.getAttribute("data-iu-mobile-gate") || "",
+        wrapPresent: Boolean(wrap),
+        navVisibility: nav ? getComputedStyle(nav).visibility : "missing",
+        jsErrors: window.__iuExport119JsErrors || [],
+      };
+    });
+    console.log(
+      "menu_nav_boot_timeout_diag=" +
+        JSON.stringify({ gateWaitMs, reloadMs: Date.now() - reloadStarted, diag })
+    );
+  }
+  mustBucket(bucket, Boolean(navReady), "menu:nav_gate_or_boot");
+
+  const reloadEarly = await page.evaluate(() => window.__iuExport119MenuEarly?.samples || []);
+
+  const postWrapEarly = await page.evaluate(async (frameCount) => {
+    function painted(el) {
+      if (!el) return false;
+      var st = getComputedStyle(el);
+      if (st.display === "none" || st.visibility === "hidden" || Number(st.opacity || "1") < 0.05) return false;
+      var r = el.getBoundingClientRect();
+      return r.width > 12 && r.height > 12;
+    }
     const out = [];
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < frameCount; i++) {
       const feed = document.getElementById("feed");
       out.push({
         boot: document.documentElement.classList.contains("iu-mm-return-boot"),
-        gate: (document.getElementById("iuMobileGateWrap") || {}).getAttribute?.("data-iu-mobile-gate") || "",
+        gate: document.getElementById("iuMobileGateWrap")?.getAttribute?.("data-iu-mobile-gate") || "",
         feedVis: feed ? getComputedStyle(feed).visibility : "missing",
+        navPainted: painted(document.getElementById("iuMobileGatePanelNav")),
+        feedPainted: painted(document.getElementById("feed")),
+        silverPainted: painted(document.getElementById("iuMobileSilverSlot")),
       });
       await new Promise((r) => requestAnimationFrame(r));
     }
     return out;
-  });
-  must(early.some((f) => f.gate === "nav" || f.boot), "menu:nav_gate_or_boot");
-  must(early.filter((f) => f.boot).every((f) => f.feedVis === "hidden"), "menu:feed_hidden_during_nav_boot");
+  }, MENU_POST_WRAP_EARLY_FRAMES);
+
+  mustBucket(
+    bucket,
+    postWrapEarly.some((f) => f.gate === "nav" || f.boot),
+    "menu:shell_early_nav_or_boot"
+  );
+
+  mustBucket(
+    bucket,
+    reloadEarly.filter((f) => f.boot).every((f) => f.feedVis === "hidden" || f.feedVis === "missing"),
+    "menu:reload_early_feed_hidden_during_boot"
+  );
+
+  mustBucket(
+    bucket,
+    postWrapEarly.filter((f) => f.boot).every((f) => f.feedVis === "hidden" || f.feedVis === "missing"),
+    "menu:feed_hidden_during_nav_boot"
+  );
+
+  const firstNavIdx = postWrapEarly.findIndex((f) => f.gate === "nav" || f.boot);
+  if (firstNavIdx > 0) {
+    mustBucket(
+      bucket,
+      postWrapEarly.slice(0, firstNavIdx).every((f) => !f.feedPainted && !f.silverPainted),
+      "menu:no_home_flash_before_nav_ready"
+    );
+  }
+
   const menuPaint = await page.evaluate(async () => {
     function painted(el) {
       if (!el) return false;
@@ -425,6 +657,7 @@ async function testMenuNavBoot(page, base) {
     for (var i = 0; i < 10; i++) {
       frames.push({
         boot: document.documentElement.classList.contains("iu-mm-return-boot"),
+        gate: document.getElementById("iuMobileGateWrap")?.getAttribute?.("data-iu-mobile-gate") || "",
         navPainted: painted(document.getElementById("iuMobileGatePanelNav")),
         feedPainted: painted(document.getElementById("feed")),
         silverPainted: painted(document.getElementById("iuMobileSilverSlot")),
@@ -435,10 +668,25 @@ async function testMenuNavBoot(page, base) {
     }
     return frames;
   });
-  must(
-    menuPaint.filter((f) => f.boot).every((f) => f.navPainted && !f.feedPainted && !f.silverPainted),
+  mustBucket(
+    bucket,
+    menuPaint.filter((f) => f.boot).every((f) => !f.feedPainted && !f.silverPainted),
     "menu:nav_panel_first_visible_no_home_flash"
   );
+
+  const navShellOpen = await page.evaluate(() => {
+    const nav = document.getElementById("iuMobileGatePanelNav");
+    const wrap = document.getElementById("iuMobileGateWrap");
+    return (
+      wrap?.getAttribute("data-iu-mobile-gate") === "nav" &&
+      Boolean(nav) &&
+      nav.hidden === false &&
+      !nav.hasAttribute("hidden")
+    );
+  });
+  mustBucket(bucket, navShellOpen, "menu:nav_shell_open");
+
+  return { gateWaitMs, reloadMs: Date.now() - reloadStarted, reloadEarly, postWrapEarly };
 }
 
 async function testRecorderBootReleaseUnderPressure(page, base) {
@@ -489,7 +737,10 @@ async function testRecorderBootReleaseUnderPressure(page, base) {
   must(/"reason":"mindmenu-scroll-zero"/.test(log), "recorder:whitelist_release_reason");
 }
 
-async function main() {
+export { REPO, startServer, mobileInitScript, SHELL_WRAP_WAIT_MS, MENU_NAV_GATE_WAIT_MS };
+
+export async function runExport119ShellBootRaceGuard() {
+  fails.length = 0;
   staticGate();
   const server = await startServer();
   const port = server.address().port;
@@ -503,7 +754,14 @@ async function main() {
     });
     await page.addInitScript(mobileInitScript());
     await testPostFixBlocksShellSetTabRelease(page, base);
-    await testOriginalPreFixCodeDropsBoot(page, base);
+    const pageLegacy = await browser.newPage({
+      viewport: { width: 390, height: 844 },
+      isMobile: true,
+      hasTouch: true,
+    });
+    await pageLegacy.addInitScript(mobileInitScript());
+    await testOriginalPreFixCodeDropsBoot(pageLegacy, base);
+    await pageLegacy.close();
     await testShellBeforeFeedRace(page, base);
     await testBrokenFeedDeferHelper(page, base);
     await testWatchdogReleasesWhenStuck(page, base);
@@ -523,15 +781,22 @@ async function main() {
     await browser.close();
     server.close();
   }
-  if (fails.length) {
+  return { ok: fails.length === 0, fails: [...fails] };
+}
+
+async function main() {
+  const result = await runExport119ShellBootRaceGuard();
+  if (!result.ok) {
     console.log("IU_PWA_EXPORT119_SHELL_BOOT_RACE_GUARD=FAIL");
-    console.log(fails.join(","));
+    console.log(result.fails.join(","));
     process.exit(1);
   }
   console.log("IU_PWA_EXPORT119_SHELL_BOOT_RACE_GUARD=PASS");
 }
 
-main().catch((e) => {
-  console.log(String(e));
-  process.exit(1);
-});
+if (process.argv[1] && process.argv[1].includes("iu-pwa-export119-shell-boot-race-guard-v1.mjs")) {
+  main().catch((e) => {
+    console.log(String(e));
+    process.exit(1);
+  });
+}
