@@ -187,11 +187,13 @@ async function installClsObserver(context) {
   await context.addInitScript(() => {
     try {
       window.__iuSilverLayoutCls = 0;
+      window.__iuSilverLayoutClsFromLoad = 0;
       new PerformanceObserver(function (list) {
         const entries = list.getEntries();
         for (let i = 0; i < entries.length; i++) {
           const e = entries[i];
           if (!e.hadRecentInput && e.value) {
+            window.__iuSilverLayoutClsFromLoad = (window.__iuSilverLayoutClsFromLoad || 0) + e.value;
             window.__iuSilverLayoutCls = (window.__iuSilverLayoutCls || 0) + e.value;
           }
         }
@@ -202,6 +204,23 @@ async function installClsObserver(context) {
 
 async function readCls(page) {
   return page.evaluate(() => Number(window.__iuSilverLayoutCls || 0));
+}
+
+async function readClsFromLoad(page) {
+  return page.evaluate(() => Number(window.__iuSilverLayoutClsFromLoad || 0));
+}
+
+function evaluateSilverLayoutClsGate(clsFromLoad, clsInteraction, cap) {
+  const load = Number(clsFromLoad) || 0;
+  const interaction = Number(clsInteraction) || 0;
+  const limit = Number(cap) || 0;
+  return {
+    cls_from_load: load,
+    cls_interaction: interaction,
+    cls_from_load_pass: load <= limit,
+    cls_interaction_pass: interaction <= limit,
+    cls_pass: load <= limit && interaction <= limit,
+  };
 }
 
 async function runViewport(page, w, h) {
@@ -381,7 +400,7 @@ async function runViewport(page, w, h) {
     };
   });
 
-  const cls = await readCls(page);
+  const clsFromLoadAtGeom = await readClsFromLoad(page);
   const parcelTrack = await readParcelHeightTrack(page);
 
   let calendarFlowOk = false;
@@ -629,6 +648,10 @@ async function runViewport(page, w, h) {
   page.off("console", onConsole);
   page.off("pageerror", onPageError);
 
+  const clsFromLoad = await readClsFromLoad(page);
+  const clsInteraction = await readCls(page);
+  const clsGate = evaluateSilverLayoutClsGate(clsFromLoad, clsInteraction, CLS_CAP);
+
   const ignorableOpts = {
     hadRecentIgnorableFailure: ignorableTracker.hadRecentIgnorableFailure.bind(ignorableTracker),
   };
@@ -641,7 +664,7 @@ async function runViewport(page, w, h) {
   const imageGapPass =
     g.image_to_input_gap_px != null && g.image_to_input_gap_px >= 0 && g.image_to_input_gap_px <= 2;
   const buttonGapPass = g.button_gap_delta_px != null && g.button_gap_delta_px <= 8;
-  const clsPass = cls <= CLS_CAP;
+  const clsPass = clsGate.cls_pass;
   const parcelStable =
     parcelTrack.first != null &&
     parcelTrack.last != null &&
@@ -696,7 +719,12 @@ async function runViewport(page, w, h) {
     blockingConsoleErrorsCount: blockingConsoleErrors.length,
     consoleErrorsCount: blockingConsoleErrors.length,
     appErrorsCount: appErrors,
-    cls,
+    cls: clsInteraction,
+    cls_from_load: clsFromLoad,
+    cls_from_load_at_geom: clsFromLoadAtGeom,
+    cls_interaction: clsInteraction,
+    cls_from_load_pass: clsGate.cls_from_load_pass,
+    cls_interaction_pass: clsGate.cls_interaction_pass,
     cls_pass: clsPass,
     parcel_height_first_px: parcelTrack.first,
     parcel_height_last_px: parcelTrack.last,
@@ -737,6 +765,10 @@ function formatBlock(label, o) {
     "  blockingConsoleErrorsCount: " + o.blockingConsoleErrorsCount,
     "  consoleErrorsCount: " + o.consoleErrorsCount,
     "  appErrorsCount: " + o.appErrorsCount,
+    "  cls_from_load: " + o.cls_from_load,
+    "  cls_interaction: " + o.cls_interaction,
+    "  cls_from_load_pass: " + o.cls_from_load_pass,
+    "  cls_interaction_pass: " + o.cls_interaction_pass,
     "  cls: " + o.cls,
     "  cls_pass: " + o.cls_pass,
     "  parcel_height_first_px: " + o.parcel_height_first_px,
@@ -823,14 +855,18 @@ async function main() {
   if (!finalPass) process.exitCode = 1;
 }
 
-main().catch((e) => {
-  process.stderr.write(String(e && e.stack ? e.stack : e) + "\n");
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch((e) => {
+    process.stderr.write(String(e && e.stack ? e.stack : e) + "\n");
+    process.exit(1);
+  });
+}
 
 module.exports = {
   isCloudflareInsightsCspBeaconNoise,
   isIgnoredSilverLayoutConsoleError,
   partitionConsoleErrors,
   runConsoleErrorFilterSelfCheck,
+  evaluateSilverLayoutClsGate,
+  CLS_CAP,
 };
