@@ -1,8 +1,25 @@
 /**
  * CJ Affiliate archive export ZIP (PDF at export time + manifest + SHA-256).
  */
+import { zipSync } from "fflate";
 import { sha256Hex } from "./backup";
-import { buildZipArchive, sanitizeZipFilenamePart, type ZipEntry } from "./admin-pdf-zip";
+import { sanitizeZipFilenamePart, type ZipEntry } from "./admin-pdf-zip";
+
+function buildZipArchive(entries: ZipEntry[]): Uint8Array {
+  const files: Record<string, Uint8Array> = {};
+  for (const e of entries) {
+    const safe = String(e.path || "file")
+      .replace(/\\/g, "/")
+      .replace(/\.\./g, "_")
+      .replace(/^\/+/, "")
+      .replace(/[^\w./\-()+]/g, "_");
+    if (!safe) continue;
+    files[safe] = e.bytes;
+  }
+  return zipSync(files, { level: 0 });
+}
+
+export { buildZipArchive };
 
 export type AffiliateArchiveZipInput = {
   record: Record<string, unknown>;
