@@ -108,12 +108,19 @@ export function deployWorkflowDiffIsProductionDeployGateSafe(diff) {
 export function testHelperApplyMigrationsDiffIsTestOnlyCj(diff) {
   if (!diff || !String(diff).trim()) return false;
   if (!String(diff).includes("migrations-cj-affiliate-archive")) return false;
+  const forbidden = [/wrangler/i, /--remote/i, /production/i, /secret put/i];
   for (const line of String(diff).split("\n")) {
-    if (line.startsWith("-") && !line.startsWith("---")) {
-      const t = line.slice(1).trim();
-      if (t !== "" && !t.startsWith("import ") && !t.startsWith("const migrationsDir")) {
-        return false;
-      }
+    if (!line.startsWith("+") && !line.startsWith("-")) continue;
+    if (line.startsWith("+++") || line.startsWith("---")) continue;
+    const t = line.slice(1);
+    for (const re of forbidden) {
+      if (re.test(t)) return false;
+    }
+    if (line.startsWith("-") && /migrations_dir\s*=/.test(t) && !/migrations-cj-affiliate-archive/.test(t)) {
+      return false;
+    }
+    if (line.startsWith("+") && /migrations_dir\s*=/.test(t) && !/"migrations"/.test(t)) {
+      return false;
     }
   }
   return true;
