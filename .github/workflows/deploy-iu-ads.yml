@@ -437,7 +437,7 @@ jobs:
             EXTRA_VARS+=(--var ADS_CLIENT_API_ENABLED:false)
             echo "DEPLOY_VAR_CLIENT_API=false"
           fi
-          npx wrangler deploy --main src/index-production.ts "${EXTRA_VARS[@]}"
+          npx wrangler deploy src/index-production.ts "${EXTRA_VARS[@]}"
 
       - name: Deployment proof (version metadata, no secrets)
         run: |
