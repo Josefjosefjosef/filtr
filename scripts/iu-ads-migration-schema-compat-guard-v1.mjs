@@ -25,6 +25,14 @@ const { files, combined, byFile } = readMigrations();
 
 must(files.length >= 24, "expected migration 0024 (pending placement unique) in repo");
 
+const cjArchiveInStandard = files.filter((f) => /^002[5-9]_affiliate_ad_archive/i.test(f));
+must(
+  cjArchiveInStandard.length === 0,
+  "CJ affiliate archive migrations must live under cloudflare/iu-ads/migrations-cj-affiliate-archive/ (found in migrations/: " +
+    cjArchiveInStandard.join(", ") +
+    ")"
+);
+
 for (const [file, sql] of Object.entries(byFile)) {
   const upper = sql.toUpperCase();
   if (/DROP\s+TABLE\s+PREMIUM_SELECTED_(PLACEMENTS|ORDERS|CATEGORIES)/i.test(sql)) {
