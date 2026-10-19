@@ -85,16 +85,43 @@ assertContains(
 
 runScopeExpectBlocked({ GITHUB_EVENT_NAME: "push", IU_ADS_SCOPE_CHANGED_FILES: "" });
 
-const pr12112Files = execSync("git diff --name-only origin/main HEAD", { cwd: repoRoot, encoding: "utf8" })
-  .trim()
-  .split("\n")
-  .filter(Boolean)
-  .join("|");
+let pr12112Files = "";
+try {
+  pr12112Files = execSync("git diff --name-only origin/main origin/fix/iu-ads-deploy-cj-infra-gate-v1", {
+    cwd: repoRoot,
+    encoding: "utf8",
+  })
+    .trim()
+    .split("\n")
+    .filter(Boolean)
+    .join("|");
+} catch {
+  pr12112Files = execSync("git diff --name-only origin/main HEAD", { cwd: repoRoot, encoding: "utf8" })
+    .trim()
+    .split("\n")
+    .filter(Boolean)
+    .join("|");
+}
 
 assertContains(
   runScope({ GITHUB_EVENT_NAME: "push", IU_ADS_SCOPE_CHANGED_FILES: pr12112Files }),
   "IU_ADS_PRODUCTION_DEPLOY=skip"
 );
+
+const pr12110DeployRelevant = execSync(
+  "git diff --name-only origin/main HEAD -- cloudflare/iu-ads .github/workflows/deploy-iu-ads.yml",
+  { cwd: repoRoot, encoding: "utf8" }
+)
+  .trim()
+  .split("\n")
+  .filter(Boolean)
+  .join("|");
+if (pr12110DeployRelevant) {
+  assertContains(
+    runScope({ GITHUB_EVENT_NAME: "push", IU_ADS_SCOPE_CHANGED_FILES: pr12110DeployRelevant }),
+    "IU_ADS_PRODUCTION_DEPLOY=skip"
+  );
+}
 
 assertContains(
   runScope({
