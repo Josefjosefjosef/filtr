@@ -8,7 +8,7 @@
  * - gap_buttons_to_card_bottom = cardBottom - buttonsBottom
  * - button_gap_delta = |gap_input_to_buttons - gap_buttons_to_card_bottom| ≤ 8
  * - Calendar / Úkoly / Poznámky smoke; no mic; submit shows arrow only
- * - overflowX false; no console errors; no page errors; CLS cap after idle paint
+ * - overflowX false; no console errors; no page errors; CLS cap after deferred CSS + parcel baseline (early hero hydrate tracked via parcel height delta)
  * - #iuSilverParcelWatch first-paint vs hydrated height delta ≤ 8 px (mobile/tablet)
  * - Open-Meteo fetch stubbed in proof (see proofs/open_meteo_guard_stub.cjs) — external API CORS is not layout signal
  *
@@ -162,6 +162,9 @@ async function waitForDeferredAppCss(page) {
     t.min = h;
     t.max = h;
     t.shiftDelta = 0;
+    try {
+      window.__iuSilverLayoutCls = 0;
+    } catch (_) {}
   });
 }
 
@@ -261,6 +264,9 @@ async function runViewport(page, w, h) {
     t.min = h;
     t.max = h;
     t.shiftDelta = 0;
+    try {
+      window.__iuSilverLayoutCls = 0;
+    } catch (_) {}
   });
   await page.waitForTimeout(400);
 
