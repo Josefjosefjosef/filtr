@@ -19,8 +19,6 @@ function runScope(envExtra) {
     env: {
       ...process.env,
       IU_ADS_SCOPE_REPO_ROOT: repoRoot,
-      IU_ADS_SCOPE_DIFF_BASE: "origin/main",
-      IU_ADS_SCOPE_DIFF_HEAD: "HEAD",
       ...envExtra,
     },
   });
@@ -85,28 +83,40 @@ assertContains(
 
 runScopeExpectBlocked({ GITHUB_EVENT_NAME: "push", IU_ADS_SCOPE_CHANGED_FILES: "" });
 
-let pr12112Files = "";
-try {
-  pr12112Files = execSync("git diff --name-only origin/main origin/fix/iu-ads-deploy-cj-infra-gate-v1", {
+const mergePushPairs = [
+  ["22f1bcd5b6571a185fad72a7525f4466d93d70ef", "cbb3344b04c60b6574eceed4d0997fe4f5087d1c"],
+  ["cbb3344b04c60b6574eceed4d0997fe4f5087d1c", "e8fc466931b91f0c4ec5250ac873b9c5420d9b71"],
+];
+
+function runScopePush(before, sha) {
+  return execSync(`node "${script}"`, {
     cwd: repoRoot,
     encoding: "utf8",
-  })
-    .trim()
-    .split("\n")
-    .filter(Boolean)
-    .join("|");
-} catch {
-  pr12112Files = execSync("git diff --name-only origin/main HEAD", { cwd: repoRoot, encoding: "utf8" })
-    .trim()
-    .split("\n")
-    .filter(Boolean)
-    .join("|");
+    env: {
+      ...process.env,
+      IU_ADS_SCOPE_REPO_ROOT: repoRoot,
+      GITHUB_EVENT_NAME: "push",
+      GITHUB_BEFORE: before,
+      GITHUB_SHA: sha,
+    },
+  });
 }
 
-assertContains(
-  runScope({ GITHUB_EVENT_NAME: "push", IU_ADS_SCOPE_CHANGED_FILES: pr12112Files }),
-  "IU_ADS_PRODUCTION_DEPLOY=skip"
-);
+for (const [before, sha] of mergePushPairs) {
+  try {
+    execSync(`git cat-file -t ${before}`, { cwd: repoRoot, stdio: "pipe" });
+    execSync(`git cat-file -t ${sha}`, { cwd: repoRoot, stdio: "pipe" });
+  } catch {
+    continue;
+  }
+  assertContains(runScopePush(before, sha), "IU_ADS_PRODUCTION_DEPLOY=skip");
+}
+
+runScopeExpectBlocked({
+  GITHUB_EVENT_NAME: "push",
+  GITHUB_BEFORE: "not-a-valid-sha",
+  GITHUB_SHA: "e8fc466931b91f0c4ec5250ac873b9c5420d9b71",
+});
 
 const pr12110DeployRelevant = execSync(
   "git diff --name-only origin/main HEAD -- cloudflare/iu-ads .github/workflows/deploy-iu-ads.yml",
