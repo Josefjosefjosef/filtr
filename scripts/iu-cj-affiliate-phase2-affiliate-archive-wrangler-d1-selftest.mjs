@@ -68,7 +68,7 @@ function restoreArchiveSchemaIfNeeded() {
       "npx wrangler d1 execute DB --local --config " +
         config +
         " --file=" +
-        JSON.stringify(path.join(adsDir, "migrations", "0025_affiliate_ad_archive.sql")),
+        JSON.stringify(path.join(adsDir, "migrations-cj-affiliate-archive", "0025_affiliate_ad_archive.sql")),
       { cwd: adsDir, stdio: "pipe" }
     );
   }
@@ -77,7 +77,7 @@ function restoreArchiveSchemaIfNeeded() {
       "npx wrangler d1 execute DB --local --config " +
         config +
         " --file=" +
-        JSON.stringify(path.join(adsDir, "migrations", "0026_affiliate_ad_archive_idempotency.sql")),
+        JSON.stringify(path.join(adsDir, "migrations-cj-affiliate-archive", "0026_affiliate_ad_archive_idempotency.sql")),
       { cwd: adsDir, stdio: "pipe" }
     );
   } catch {

@@ -14,9 +14,7 @@ export const ADMIN_UI_SCRIPT = String.raw`
     premiumFilters:{ q:"", filter:"", payment:"", category:"", position:"", ending_days:"", ad_product:"" },
     searchFilters:null,
     searchSuggestTimer:null,
-    searchReqSeq:0,
-    affiliateArchiveDetailId:null,
-    affiliateArchiveFilters:{partner:"",ad_type:"",is_test:"",placement_key:"",ended:""}
+    searchReqSeq:0
   };
   var el = function(id){ return document.getElementById(id); };
   function esc(s){
@@ -2773,91 +2771,6 @@ export const ADMIN_UI_SCRIPT = String.raw`
           if(!r.res.ok){ el("ex-err").textContent=apiError(r.body); el("ex-err").hidden=false; return; }
           state.flash="Export hotov: "+((r.body&&r.body.export&&r.body.export.export_id)||"");
           render();
-        };
-      } else if(v==="affiliate_archive"){
-        var affDetail=state.affiliateArchiveDetailId||null;
-        var affFilters=state.affiliateArchiveFilters||{partner:"",ad_type:"",is_test:"",placement_key:"",ended:""};
-        if(affDetail){
-          var ad=await api("/v1/admin/affiliate-archive/"+encodeURIComponent(affDetail),{method:"GET",headers:{}});
-          if(!ad.res.ok){ panel('<p class="err">'+esc(apiError(ad.body))+'</p>'); return; }
-          var rec=ad.body&&ad.body.record;
-          var vers=(ad.body&&ad.body.versions)||[];
-          panel('<div class="card"><div class="row"><button type="button" class="btn secondary" id="aff-back">← Seznam</button></div>'+
-            '<h2>Archiv reklam – Affiliate</h2>'+
-            '<p><strong>'+esc(rec.partner_name)+'</strong> · '+esc(rec.ad_type)+
-            (rec.is_test?' <span class="badge warn">TEST</span>':' <span class="badge ok">Archiv</span>')+'</p>'+
-            '<p class="muted">Hash: '+esc(rec.content_hash)+' · Publikováno: '+esc(rec.published_at||"—")+
-            ' · Ukončeno: '+esc(rec.ended_at||"—")+'</p>'+
-            '<details open><summary>Důkazy (JSON)</summary><pre class="code">'+esc(JSON.stringify(rec.evidence,null,2))+'</pre></details>'+
-            '<details><summary>Rozhodnutí brány</summary><pre class="code">'+esc(JSON.stringify(rec.gate_decision,null,2))+'</pre></details>'+
-            '<h3>Verze ('+vers.length+')</h3>'+
-            listTable(vers,[["version_no","#"],["publish_event_type","Událost"],["content_hash","Hash"],["created_at","Čas"]])+
-            '<div class="row"><button type="button" class="btn" id="aff-export-one">Stáhnout ZIP export</button></div></div>');
-          el("aff-back").onclick=function(){ state.affiliateArchiveDetailId=null; render(); };
-          el("aff-export-one").onclick=async function(){
-            var res=await fetch("/v1/admin/affiliate-archive/"+encodeURIComponent(affDetail)+"/export",{credentials:"include"});
-            if(!res.ok){ alert("Export se nezdařil."); return; }
-            var blob=await res.blob();
-            var a=document.createElement("a");
-            a.href=URL.createObjectURL(blob);
-            a.download="affiliate-archive-"+affDetail+".zip";
-            document.body.appendChild(a); a.click(); a.remove();
-          };
-          return;
-        }
-        var qs=new URLSearchParams();
-        if(affFilters.partner) qs.set("partner",affFilters.partner);
-        if(affFilters.ad_type) qs.set("ad_type",affFilters.ad_type);
-        if(affFilters.is_test) qs.set("is_test",affFilters.is_test);
-        if(affFilters.placement_key) qs.set("placement_key",affFilters.placement_key);
-        if(affFilters.ended) qs.set("ended",affFilters.ended);
-        var al=await api("/v1/admin/affiliate-archive"+(qs.toString()?"?"+qs.toString():""),{method:"GET",headers:{}});
-        if(!al.res.ok){ panel('<p class="err">'+esc(apiError(al.body))+'</p>'); return; }
-        var affRows=(al.body&&al.body.records)||[];
-        panel('<div class="card"><h2>Archiv reklam – Affiliate</h2>'+
-          '<p class="muted">Odděleno od placených reklamních pozic. Testovací záznamy jsou označené TEST.</p>'+
-          '<div class="filter-grid">'+
-          '<label>Partner<input id="aff-f-partner" type="text" value="'+esc(affFilters.partner||"")+'"></label>'+
-          '<label>Typ reklamy<input id="aff-f-type" type="text" value="'+esc(affFilters.ad_type||"")+'"></label>'+
-          '<label>Umístění<input id="aff-f-placement" type="text" value="'+esc(affFilters.placement_key||"")+'"></label>'+
-          sel("aff-f-test","Test",[["","Vše"],["1","Jen test"],["0","Bez testu"]],affFilters.is_test||"")+
-          sel("aff-f-ended","Stav",[["","Vše"],["active","Aktivní"],["ended","Ukončené"]],affFilters.ended||"")+
-          '</div><div class="row">'+
-          '<button class="btn" type="button" id="aff-filter-go">Filtrovat</button>'+
-          '<button class="btn secondary" type="button" id="aff-export-bulk">Hromadný ZIP export</button></div>'+
-          (affRows.length?listTable(affRows.map(function(r){
-            return {
-              record_id:r.record_id,
-              partner:r.partner_name,
-              ad_type:r.ad_type,
-              is_test:r.is_test?"TEST":"—",
-              published_at:r.published_at||"—",
-              ended_at:r.ended_at||"—"
-            };
-          }),[["partner","Partner"],["ad_type","Typ"],["is_test","Test"],["published_at","Publikováno"],["ended_at","Ukončeno"],["record_id","ID"]],function(row){
-            state.affiliateArchiveDetailId=row.record_id;
-            render();
-          }):'<p class="muted empty">Žádné záznamy.</p>')+'</div>');
-        el("aff-filter-go").onclick=function(){
-          state.affiliateArchiveFilters={
-            partner:val("aff-f-partner").trim(),
-            ad_type:val("aff-f-type").trim(),
-            placement_key:val("aff-f-placement").trim(),
-            is_test:val("aff-f-test"),
-            ended:val("aff-f-ended")
-          };
-          render();
-        };
-        el("aff-export-bulk").onclick=async function(){
-          var payload={
-            partner:affFilters.partner||undefined,
-            ad_type:affFilters.ad_type||undefined,
-            placement_key:affFilters.placement_key||undefined,
-            is_test:affFilters.is_test==="1"?true:affFilters.is_test==="0"?false:undefined,
-            ended:affFilters.ended||undefined
-          };
-          var r=await downloadZipExport("/v1/admin/affiliate-archive/export/bulk",payload);
-          if(!r.ok) alert(r.message||"Export selhal.");
         };
       } else if(v==="audit"){
         var au=await api("/v1/admin/audit?limit=50",{method:"GET",headers:{}});

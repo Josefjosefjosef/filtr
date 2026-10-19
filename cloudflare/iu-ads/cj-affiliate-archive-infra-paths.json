@@ -1,0 +1,29 @@
+{
+  "description": "Paths that may change in CJ affiliate archive infrastructure merges without triggering production IU Ads deploy (see scripts/iu-ads-production-deploy-scope-v1.mjs).",
+  "cjInfraOnlyPaths": [
+    "cloudflare/iu-ads/migrations-cj-affiliate-archive/",
+    "cloudflare/iu-ads/cj-affiliate-archive-infra-paths.json",
+    "cloudflare/iu-ads/src/admin-affiliate-archive.ts",
+    "cloudflare/iu-ads/src/admin-affiliate-archive-routes.ts",
+    "cloudflare/iu-ads/src/affiliate-ad-archive-lib.ts",
+    "cloudflare/iu-ads/src/affiliate-ad-archive-publication-trust.ts",
+    "cloudflare/iu-ads/src/affiliate-ad-archive-zip.ts",
+    "cloudflare/iu-ads/src/archive-d1-local-test-entry.ts",
+    "cloudflare/iu-ads/src/index-cj-affiliate-archive.ts",
+    "cloudflare/iu-ads/src/index-production.ts",
+    "cloudflare/iu-ads/test/affiliate-ad-archive.test.ts",
+    "cloudflare/iu-ads/test/affiliate-ad-archive-publication-trust.test.ts",
+    "cloudflare/iu-ads/test/helpers/d1-sqlite-shim.ts",
+    "cloudflare/iu-ads/vitest.archive.config.ts",
+    "cloudflare/iu-ads/wrangler.toml",
+    "cloudflare/iu-ads/src/types.ts",
+    "cloudflare/iu-ads/src/regression-freeze-manifest.ts",
+    "cloudflare/iu-ads/wrangler.local-archive-test.toml",
+    "cloudflare/iu-ads/wrangler.cj-affiliate-archive.deploy.toml",
+    ".github/workflows/deploy-iu-ads-cj-affiliate-archive.yml"
+  ],
+  "productionWorkerMain": "src/index-production.ts",
+  "cjWorkerMain": "src/index-cj-affiliate-archive.ts",
+  "standardMigrationsDir": "migrations",
+  "cjMigrationsDir": "migrations-cj-affiliate-archive"
+}

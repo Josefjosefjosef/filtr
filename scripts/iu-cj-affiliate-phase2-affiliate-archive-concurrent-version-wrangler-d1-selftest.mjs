@@ -32,9 +32,9 @@ function d1QueryJson(sql) {
 }
 
 function restoreSchema() {
-  const mig25 = path.join(adsDir, "migrations", "0025_affiliate_ad_archive.sql");
-  const mig26 = path.join(adsDir, "migrations", "0026_affiliate_ad_archive_idempotency.sql");
-  const mig27 = path.join(adsDir, "migrations", "0027_affiliate_ad_archive_version_seq.sql");
+  const mig25 = path.join(adsDir, "migrations-cj-affiliate-archive", "0025_affiliate_ad_archive.sql");
+  const mig26 = path.join(adsDir, "migrations-cj-affiliate-archive", "0026_affiliate_ad_archive_idempotency.sql");
+  const mig27 = path.join(adsDir, "migrations-cj-affiliate-archive", "0027_affiliate_ad_archive_version_seq.sql");
   try {
     execSync("npx wrangler d1 execute DB --local --config " + config + " --file=" + JSON.stringify(mig25), {
       cwd: adsDir,

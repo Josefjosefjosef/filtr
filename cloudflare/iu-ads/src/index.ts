@@ -66,14 +66,6 @@ import {
   handleUpdateComplaint,
 } from "./admin-complaints";
 import { handleCreateExportJob, handleDownloadExportJob, handleGetExportJob, handleListExportJobs } from "./admin-exports";
-import {
-  handleBulkExportAffiliateArchive,
-  handleExportAffiliateArchive,
-  handleGetAffiliateArchive,
-  handleGetAffiliateArchiveEvidence,
-  handleListAffiliateArchive,
-  handleSimulateAffiliateArchiveTestPublish,
-} from "./admin-affiliate-archive";
 import { handleFinanceSummary } from "./admin-finance";
 import {
   handleCreateCampaign,
@@ -575,24 +567,6 @@ async function handleFetch(request: Request, env: Env): Promise<Response> {
 
       if (path === "/v1/admin/exports" && method === "GET") return handleListExportJobs(request, env, url);
       if (path === "/v1/admin/exports" && method === "POST") return handleCreateExportJob(request, env);
-
-      if (path === "/v1/admin/affiliate-archive" && method === "GET") return handleListAffiliateArchive(request, env, url);
-      if (path === "/v1/admin/affiliate-archive/simulate-test-publish" && method === "POST") {
-        return handleSimulateAffiliateArchiveTestPublish(request, env);
-      }
-      if (path === "/v1/admin/affiliate-archive/export/bulk" && method === "POST") {
-        return handleBulkExportAffiliateArchive(request, env);
-      }
-      const affArchExportMatch = path.match(/^\/v1\/admin\/affiliate-archive\/([^/]+)\/export$/);
-      if (affArchExportMatch && method === "GET") {
-        return handleExportAffiliateArchive(request, env, affArchExportMatch[1]!);
-      }
-      const affArchEvidenceMatch = path.match(/^\/v1\/admin\/affiliate-archive\/([^/]+)\/evidence$/);
-      if (affArchEvidenceMatch && method === "GET") {
-        return handleGetAffiliateArchiveEvidence(request, env, affArchEvidenceMatch[1]!);
-      }
-      const affArchIdMatch = path.match(/^\/v1\/admin\/affiliate-archive\/([^/]+)$/);
-      if (affArchIdMatch && method === "GET") return handleGetAffiliateArchive(request, env, affArchIdMatch[1]!);
       const exportDownloadMatch = path.match(/^\/v1\/admin\/exports\/([^/]+)\/download$/);
       if (exportDownloadMatch && method === "GET") return handleDownloadExportJob(request, env, exportDownloadMatch[1]);
       const exportIdMatch = path.match(/^\/v1\/admin\/exports\/([^/]+)$/);
