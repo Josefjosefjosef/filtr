@@ -15,8 +15,6 @@
     "cloudflare/iu-ads/test/affiliate-ad-archive-publication-trust.test.ts",
     "cloudflare/iu-ads/test/helpers/d1-sqlite-shim.ts",
     "cloudflare/iu-ads/vitest.archive.config.ts",
-    "cloudflare/iu-ads/wrangler.toml",
-    "cloudflare/iu-ads/src/types.ts",
     "cloudflare/iu-ads/src/regression-freeze-manifest.ts",
     "cloudflare/iu-ads/wrangler.local-archive-test.toml",
     "cloudflare/iu-ads/wrangler.cj-affiliate-archive.deploy.toml",
@@ -25,5 +23,10 @@
   "productionWorkerMain": "src/index-production.ts",
   "cjWorkerMain": "src/index-cj-affiliate-archive.ts",
   "standardMigrationsDir": "migrations",
-  "cjMigrationsDir": "migrations-cj-affiliate-archive"
+  "cjMigrationsDir": "migrations-cj-affiliate-archive",
+  "productionSensitivePaths": [
+    "cloudflare/iu-ads/wrangler.toml",
+    "cloudflare/iu-ads/src/types.ts",
+    ".github/workflows/deploy-iu-ads.yml"
+  ]
 }

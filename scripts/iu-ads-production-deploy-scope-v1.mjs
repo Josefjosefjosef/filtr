@@ -22,25 +22,37 @@ function emit(decision, reason) {
   }
 }
 
+function finish(decision, reason, exitCode = 0) {
+  emit(decision, reason);
+  process.exit(exitCode);
+}
+
 const event = process.env.GITHUB_EVENT_NAME || "local";
 if (event === "workflow_dispatch") {
-  emit("run", "workflow_dispatch");
-  process.exit(0);
+  finish("run", "workflow_dispatch");
 }
 
 if (!fs.existsSync(manifestPath)) {
-  emit("run", "manifest_missing_fail_open");
-  process.exit(0);
+  finish("blocked", "manifest_missing", 1);
 }
 
 const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
 const cjPaths = manifest.cjInfraOnlyPaths || [];
+const productionSensitivePaths = manifest.productionSensitivePaths || [
+  "cloudflare/iu-ads/wrangler.toml",
+  "cloudflare/iu-ads/src/types.ts",
+  ".github/workflows/deploy-iu-ads.yml",
+];
 
 function isCjInfraOnlyPath(filePath) {
   for (const p of cjPaths) {
     if (filePath === p || filePath.startsWith(p)) return true;
   }
   return false;
+}
+
+function isProductionSensitivePath(filePath) {
+  return productionSensitivePaths.some((p) => filePath === p || filePath.startsWith(p));
 }
 
 const deployRelevantPrefixes = ["cloudflare/iu-ads/", ".github/workflows/deploy-iu-ads.yml"];
@@ -52,36 +64,43 @@ function isDeployRelevant(filePath) {
 const sha = process.env.GITHUB_SHA || "HEAD";
 const before = process.env.GITHUB_BEFORE || "";
 let files = [];
-if (process.env.IU_ADS_SCOPE_CHANGED_FILES) {
-  files = process.env.IU_ADS_SCOPE_CHANGED_FILES.split("|").map((s) => s.trim()).filter(Boolean);
-} else try {
-  if (before && before !== "0000000000000000000000000000000000000000") {
-    files = execSync(`git diff --name-only ${before} ${sha}`, { cwd: repoRoot, encoding: "utf8" })
-      .trim()
-      .split("\n")
-      .filter(Boolean);
-  } else {
-    files = execSync("git diff --name-only HEAD^ HEAD", { cwd: repoRoot, encoding: "utf8" })
-      .trim()
-      .split("\n")
-      .filter(Boolean);
+if (process.env.IU_ADS_SCOPE_CHANGED_FILES !== undefined) {
+  if (process.env.IU_ADS_SCOPE_CHANGED_FILES === "") {
+    finish("blocked", "empty_change_list", 1);
   }
-} catch {
-  emit("run", "diff_failed_fail_open");
-  process.exit(0);
+  files = process.env.IU_ADS_SCOPE_CHANGED_FILES.split("|")
+    .map((s) => s.trim())
+    .filter(Boolean);
+} else {
+  try {
+    if (before && before !== "0000000000000000000000000000000000000000") {
+      files = execSync(`git diff --name-only ${before} ${sha}`, { cwd: repoRoot, encoding: "utf8" })
+        .trim()
+        .split("\n")
+        .filter(Boolean);
+    } else {
+      files = execSync("git diff --name-only HEAD^ HEAD", { cwd: repoRoot, encoding: "utf8" })
+        .trim()
+        .split("\n")
+        .filter(Boolean);
+    }
+  } catch {
+    finish("blocked", "diff_failed", 1);
+  }
 }
 
 const relevant = files.filter(isDeployRelevant);
 if (relevant.length === 0) {
-  emit("run", "no_deploy_relevant_paths");
-  process.exit(0);
+  finish("run", "no_deploy_relevant_paths");
+}
+
+if (relevant.some(isProductionSensitivePath)) {
+  finish("run", "production_sensitive_config");
 }
 
 const allCjInfra = relevant.every(isCjInfraOnlyPath);
 if (allCjInfra) {
-  emit("skip", "cj_affiliate_archive_infra_only");
-  process.exit(0);
+  finish("skip", "cj_affiliate_archive_infra_only");
 }
 
-emit("run", "production_ads_paths_changed");
-process.exit(0);
+finish("run", "production_ads_paths_changed");
