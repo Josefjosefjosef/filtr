@@ -5,6 +5,12 @@
 import { createRequire } from "module";
 import path from "path";
 import { fileURLToPath } from "url";
+import {
+  evaluateExternalReturnProdDelivery,
+  aggregateReturnScenariosPass,
+  formatDeliveryLogLines,
+  buildNetworkScriptUrl,
+} from "./iu-pwa-external-return-prod-delivery-v1.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
@@ -178,19 +184,105 @@ async function runScenarioMindMenu(page) {
   return { pass, gate: after.gate, scroll: after.panelScroll, feedPeek: after.feedPeek, buildId: after.buildId };
 }
 
+async function runDesktopLayoutAudit(page) {
+  await page.goto(ORIGIN + "/?nosw=1", { waitUntil: "domcontentloaded", timeout: 120000 });
+  await page
+    .waitForFunction(
+      () => {
+        const feed = document.getElementById("feed");
+        if (!feed) return false;
+        if (feed.getAttribute("data-feed-ready") === "1") return true;
+        return feed.querySelector("a[href]") != null;
+      },
+      null,
+      { timeout: 90000 }
+    )
+    .catch(() => {});
+  await page.evaluate(async () => {
+    if (typeof window.__iuEnsureFeedPipeline === "function") {
+      try {
+        await window.__iuEnsureFeedPipeline();
+      } catch (_) {}
+    }
+  });
+  await page.waitForTimeout(2500);
+  return page.evaluate(async () => {
+    const cls = { sum: 0 };
+    try {
+      if (window.PerformanceObserver) {
+        const po = new PerformanceObserver((list) => {
+          for (const e of list.getEntries()) {
+            if (!e.hadRecentInput) cls.sum += e.value;
+          }
+        });
+        if (po.supportedEntryTypes && po.supportedEntryTypes.indexOf("layout-shift") !== -1) {
+          po.observe({ type: "layout-shift", buffered: true });
+          await new Promise((r) => setTimeout(r, 1200));
+          po.disconnect();
+        }
+      }
+    } catch (_) {}
+    const docEl = document.documentElement;
+    const overflowX = docEl.scrollWidth > docEl.clientWidth + 2;
+    const feed = document.getElementById("feed");
+    const mainCol = document.querySelector(".layout .mainCol") || document.querySelector(".mainCol");
+    const layout = document.querySelector(".layout");
+    const asideCols = document.querySelectorAll(".layout > aside.accordionCol");
+    const desktopMq = window.matchMedia && window.matchMedia("(min-width: 901px)").matches;
+    const rightAside = asideCols[0] || null;
+    const silverSticky = document.getElementById("iuSilverWelcomeSticky");
+    const silverCard = document.getElementById("iuSilverWelcomeCard");
+    const affButtons = document.querySelectorAll(
+      "[data-iu-affiliate], .iuAffiliateBtn, a[data-iu-aff-href], .iuHomeAffiliateModule a[href]"
+    );
+    const affModule = document.querySelector(".iuHomeAffiliateModule, [data-iu-home-affiliate-module]");
+    const title = document.title || "";
+    const metaDesc = (document.querySelector('meta[name="description"]') || {}).content || "";
+    return {
+      buildId: window.iuNetwork && window.iuNetwork.pwaExternalReturnBuildId,
+      overflowX,
+      clsSum: Math.round(cls.sum * 10000) / 10000,
+      desktopMq,
+      mainColWidth: mainCol ? Math.round(mainCol.getBoundingClientRect().width) : 0,
+      hasMainCol: !!(mainCol && mainCol.getBoundingClientRect().width > 280),
+      hasRightAside: !!(rightAside && rightAside.getBoundingClientRect().width > 200),
+      feedReady: feed ? feed.getAttribute("data-feed-ready") === "1" : false,
+      feedLinkCount: feed ? feed.querySelectorAll("a[href]").length : 0,
+      hasFeed: !!(
+        feed &&
+        feed.getBoundingClientRect().width > 120 &&
+        (feed.getAttribute("data-feed-ready") === "1" || feed.querySelectorAll("a[href]").length > 0)
+      ),
+      layoutCols: asideCols.length,
+      layoutWidth: layout ? layout.getBoundingClientRect().width : 0,
+      silverVisible: !!(
+        (silverSticky && silverSticky.getBoundingClientRect().height > 8) ||
+        (silverCard && silverCard.getBoundingClientRect().height > 8)
+      ),
+      affiliateBtnCount: affButtons.length,
+      hasAffiliateModule: !!affModule,
+      titleLen: title.length,
+      metaDescLen: metaDesc.length,
+    };
+  });
+}
+
 async function main() {
+  const pinBuildId = (process.env.IU_PWA_DELIVERY_PIN_BUILD_ID || "").trim();
   const root = await fetchText(ORIGIN + "/");
-  const expectedBuild = "pwa-external-return-unified-v13-20261014-scroll-coordinated";
-  const tokenV5 = root.text.includes(expectedBuild);
   const netMatch = root.text.match(/iu-network-connectivity-v1\.js\?v=([^"']+)/);
-  const netUrl = netMatch
-    ? new URL("/assets/iu-network-connectivity-v1.js?v=" + netMatch[1], ORIGIN).href
-    : ORIGIN + "/assets/iu-network-connectivity-v1.js";
+  const netUrl = buildNetworkScriptUrl(ORIGIN, netMatch ? netMatch[1] : "");
   const netJs = await fetchText(netUrl);
-  const buildMatch = netJs.text.match(/PWA_EXTERNAL_RETURN_BUILD_ID\s*=\s*"([^"]+)"/);
-  console.log("DELIVERY_ROOT_URL=" + root.url);
-  console.log("DELIVERY_TOKEN_V5=" + (tokenV5 ? "found" : "missing"));
-  console.log("DELIVERY_NET_BUILD=" + (buildMatch ? buildMatch[1] : "MISSING"));
+  let deliveryEval = evaluateExternalReturnProdDelivery({
+    rootStatus: root.status,
+    rootHtml: root.text,
+    netJsStatus: netJs.status,
+    netJsText: netJs.text,
+    options: pinBuildId ? { pinBuildId } : {},
+  });
+  for (const line of formatDeliveryLogLines(deliveryEval, { rootUrl: root.url, netUrl })) {
+    console.log(line);
+  }
   console.log("DELIVERY_HAS_DIAG_PANEL=" + (/enableExternalReturnDiagPanel/.test(netJs.text) ? "yes" : "no"));
 
   const { chromium } = require("playwright");
@@ -198,7 +290,7 @@ async function main() {
   const viewports = [
     { tag: "MOBILE", width: 390, height: 844, mobile: true },
     { tag: "TABLET", width: 768, height: 900, mobile: true },
-    { tag: "PC", width: 1280, height: 800, mobile: false },
+    { tag: "PC", width: 1440, height: 900, mobile: false },
   ];
   const scenarioResults = {};
   for (const vp of viewports) {
@@ -217,14 +309,26 @@ async function main() {
       console.log("SCENARIO_" + vp.tag + "_MENU=" + JSON.stringify(menu));
       console.log("SCENARIO_" + vp.tag + "_MINDMENU=" + JSON.stringify(mind));
     } else {
-      await page.goto(ORIGIN + "/?nosw=1", { waitUntil: "domcontentloaded", timeout: 120000 });
-      await page.waitForTimeout(2000);
-      const snap = await page.evaluate(() => ({
-        buildId: window.iuNetwork && window.iuNetwork.pwaExternalReturnBuildId,
-        title: document.title,
-      }));
-      scenarioResults[vp.tag] = { webRegression: snap, pass: !!snap.buildId };
-      console.log("SCENARIO_PC_WEB=" + JSON.stringify(snap));
+      const desk = await runDesktopLayoutAudit(page);
+      const deskPass =
+        !!desk.buildId &&
+        desk.desktopMq === true &&
+        desk.hasRightAside &&
+        desk.layoutWidth >= 900 &&
+        desk.silverVisible &&
+        !desk.overflowX &&
+        desk.clsSum === 0 &&
+        desk.titleLen > 5;
+      console.log(
+        "DESKTOP_FEED_IN_HARNESS=" + (desk.hasFeed ? "verified" : "unverified_feed_pipeline_not_settled_in_headless")
+      );
+      console.log(
+        "DESKTOP_AFFILIATE_IN_HARNESS=" +
+          (desk.affiliateBtnCount > 0 || desk.hasAffiliateModule ? "verified" : "unverified_lazy_or_below_fold")
+      );
+      scenarioResults[vp.tag] = { desktop: desk, pass: deskPass };
+      console.log("SCENARIO_PC_DESKTOP=" + JSON.stringify(desk));
+      console.log("SCENARIO_PC_DESKTOP_PASS=" + deskPass);
     }
     const diagPage = await ctx.newPage();
     await diagPage.goto(ORIGIN + "/?nosw=1", { waitUntil: "domcontentloaded", timeout: 120000 });
@@ -244,18 +348,37 @@ async function main() {
   await browser.close();
 
   console.log("INSTALLED_PWA=unverified");
+  console.log(
+    "INSTALLED_PWA_REASON=headless_chromium_cannot_install_standalone_pwa_manifest_on_windows_ci_agent"
+  );
   const mobile = scenarioResults.MOBILE || {};
-  const behPass =
-    mobile.home &&
-    mobile.home.pass &&
-    mobile.menu &&
-    mobile.menu.pass &&
-    mobile.mind &&
-    mobile.mind.pass;
-  const delPass = tokenV5 && buildMatch && buildMatch[1] === expectedBuild;
+  const behPass = aggregateReturnScenariosPass(mobile);
+  const tablet = scenarioResults.TABLET || {};
+  const tabletPass = aggregateReturnScenariosPass(tablet);
+  const pc = scenarioResults.PC || {};
+  const runtimeBoot =
+    (mobile.mind && mobile.mind.buildId) ||
+    (pc.desktop && pc.desktop.buildId) ||
+    "";
+  if (runtimeBoot) {
+    deliveryEval = evaluateExternalReturnProdDelivery({
+      rootStatus: root.status,
+      rootHtml: root.text,
+      netJsStatus: netJs.status,
+      netJsText: netJs.text,
+      runtimeBootBuildId: runtimeBoot,
+      options: pinBuildId ? { pinBuildId } : {},
+    });
+    console.log("DELIVERY_RUNTIME_BOOT_BUILD=" + runtimeBoot);
+    console.log("DELIVERY_RUNTIME_ALIGNED=" + (deliveryEval.pass ? "yes" : "no"));
+  }
+  const delPass = deliveryEval.pass;
+  const desktopPass = pc.pass === true;
+  console.log("IU_PWA_PROD_TABLET_RETURN_SCENARIOS_PASS=" + tabletPass);
+  console.log("IU_PWA_PROD_DESKTOP_LAYOUT_PASS=" + desktopPass);
   console.log("IU_PWA_PROD_DELIVERY_PASS=" + delPass);
   console.log("IU_PWA_PROD_RETURN_SCENARIOS_PASS=" + behPass);
-  if (!delPass || !behPass) process.exitCode = 1;
+  if (!delPass || !behPass || !tabletPass || !desktopPass) process.exitCode = 1;
 }
 
 main().catch((e) => {
