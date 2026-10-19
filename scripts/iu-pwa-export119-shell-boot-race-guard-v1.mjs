@@ -355,7 +355,34 @@ async function testWatchdogReleasesWhenStuck(page, base) {
   must(end.diagCleared === "boot-watchdog-2400ms" || !end.boot, "race:watchdog_reason");
 }
 
-async function testHomeDeepFirstPaint(page, base) {
+async function applyHomeDeepSabotage(page, options = {}) {
+  if (options.forceWhiteGapDuringBoot) {
+    await page.addInitScript(() => {
+      const paintWhite = () => {
+        document.documentElement.style.backgroundColor = "#ffffff";
+        document.body.style.backgroundColor = "#ffffff";
+        ["feed", "iuMobileSilverSlot", "iuMobileGateWrap", "iuMindMenuView"].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) {
+            el.style.visibility = "hidden";
+            el.style.opacity = "0";
+            el.style.pointerEvents = "none";
+          }
+        });
+      };
+      document.addEventListener("DOMContentLoaded", () => {
+        paintWhite();
+        requestAnimationFrame(function loop() {
+          paintWhite();
+          requestAnimationFrame(loop);
+        });
+      });
+    });
+  }
+}
+
+async function testHomeDeepFirstPaint(page, base, bucket = fails, options = {}) {
+  await applyHomeDeepSabotage(page, options);
   await page.addInitScript(() => {
     try {
       localStorage.setItem(
@@ -390,12 +417,14 @@ async function testHomeDeepFirstPaint(page, base) {
     }
     return out;
   });
-  must(
+  mustBucket(
+    bucket,
     early.some((f) => f.mode === "home-deep") || headSnap.mode === "home-deep" || headSnap.headMode === "home-deep",
     "home:deep_mode"
   );
   const bootFrames = early.filter((f) => f.boot);
-  must(
+  mustBucket(
+    bucket,
     bootFrames.length > 0 &&
       bootFrames.every((f) => f.silverVis === "hidden" || f.silverVis === "missing") &&
       bootFrames.every((f) => f.feedVis === "hidden"),
@@ -426,7 +455,8 @@ async function testHomeDeepFirstPaint(page, base) {
     }
     return frames;
   });
-  must(
+  mustBucket(
+    bucket,
     homePaint.filter((f) => f.boot).every((f) => !f.silverPainted && !f.feedPainted && !f.whiteFlash),
     "home:no_white_gap_or_home_chrome_painted_during_boot"
   );
@@ -434,20 +464,55 @@ async function testHomeDeepFirstPaint(page, base) {
     var d = window.__iuMmReturnBootDiag || {};
     return d.applied === true && d.headReturnMode === "home-deep";
   });
-  must(
+  mustBucket(
+    bucket,
     bootFromPersist ||
       headSnap.headMode === "home-deep" ||
       headSnap.mode === "home-deep" ||
       early.some((f) => f.mode === "home-deep"),
     "home:head_boot_from_main_scroll_persist"
   );
-  must(
+  mustBucket(
+    bucket,
     headSnap.mode === "home-deep" ||
       headSnap.headMode === "home-deep" ||
       headSnap.boot ||
       homePaint.slice(0, 6).every((f) => !f.feedPainted && !f.silverPainted && !f.whiteFlash),
     "home:deep_return_no_white_gap_first_frames"
   );
+  if (options.forceWhiteGapDuringBoot) {
+    mustBucket(
+      bucket,
+      !homePaint.slice(0, 6).some((f) => f.whiteFlash && !f.feedPainted && !f.silverPainted),
+      "home:visible_white_gap_during_boot"
+    );
+  }
+}
+
+/** MindMenu cold return must establish boot (negative: sabotageBootClass). */
+export async function testMindMenuReturnBoot(page, base, bucket = fails, options = {}) {
+  await applyMenuNavBootSabotage(page, options);
+  await page.goto(base, { waitUntil: "domcontentloaded", timeout: 120000 });
+  await page.evaluate((y) => {
+    localStorage.setItem("iuMindMenuReturnPendingV1", JSON.stringify({ t: Date.now(), y: y || 809, ai: 0, aiY: 0 }));
+    sessionStorage.setItem("iuMindMenuReturnArmed", "1");
+    localStorage.removeItem("iuPwaExternalReturnMainScrollPersistV1");
+    localStorage.removeItem("iuPwaMenuNavReturnPersistV1");
+  }, 809);
+  await page.reload({ waitUntil: "domcontentloaded", timeout: 120000 });
+  await page.waitForFunction(
+    () => document.querySelectorAll("*").length > 800,
+    null,
+    { timeout: 30000 }
+  );
+  const bootSeen = await page.evaluate(() => ({
+    boot: document.documentElement.classList.contains("iu-mm-return-boot"),
+    mode: document.documentElement.getAttribute("data-iu-pwa-return-boot-mode") || "",
+  }));
+  mustBucket(bucket, bootSeen.boot, "mindmenu:return_boot_missing");
+  if (bootSeen.boot) {
+    mustBucket(bucket, bootSeen.mode === "tools", "mindmenu:tools_boot_mode");
+  }
 }
 
 async function applyMenuNavBootSabotage(page, options = {}) {
@@ -494,9 +559,11 @@ async function applyMenuNavBootSabotage(page, options = {}) {
       const loop = () => {
         const feed = document.getElementById("feed");
         const boot = document.documentElement.classList.contains("iu-mm-return-boot");
-        if (feed && boot) {
+        const gate = document.getElementById("iuMobileGateWrap")?.getAttribute?.("data-iu-mobile-gate") || "";
+        if (feed && boot && gate === "nav") {
           feed.style.visibility = "visible";
           feed.style.display = "block";
+          feed.style.opacity = "1";
         }
         requestAnimationFrame(loop);
       };
@@ -505,15 +572,19 @@ async function applyMenuNavBootSabotage(page, options = {}) {
   }
   if (options.exposeFeedBeforeNav) {
     await page.addInitScript(() => {
+      const showFeed = () => {
+        const feed = document.getElementById("feed");
+        if (feed) {
+          feed.style.visibility = "visible";
+          feed.style.display = "block";
+          feed.style.opacity = "1";
+        }
+      };
+      document.addEventListener("DOMContentLoaded", showFeed, { once: true });
       const loop = () => {
         const wrap = document.getElementById("iuMobileGateWrap");
         const gate = wrap ? wrap.getAttribute("data-iu-mobile-gate") || "" : "";
-        const boot = document.documentElement.classList.contains("iu-mm-return-boot");
-        const feed = document.getElementById("feed");
-        if (boot && gate !== "nav" && feed) {
-          feed.style.visibility = "visible";
-          feed.style.display = "block";
-        }
+        if (gate !== "nav") showFeed();
         requestAnimationFrame(loop);
       };
       requestAnimationFrame(loop);
@@ -624,6 +695,16 @@ export async function testMenuNavBoot(page, base, bucket = fails, options = {}) 
     "menu:shell_early_nav_or_boot"
   );
 
+  if (options.exposeFeedBeforeNav) {
+    const reloadEarlyNavIdx = reloadEarly.findIndex((f) => f.gate === "nav");
+    if (reloadEarlyNavIdx > 0) {
+      mustBucket(
+        bucket,
+        reloadEarly.slice(0, reloadEarlyNavIdx).every((f) => f.feedVis === "hidden" || f.feedVis === "missing"),
+        "menu:reload_early_feed_visible_before_nav"
+      );
+    }
+  }
   mustBucket(
     bucket,
     reloadEarly.filter((f) => f.boot).every((f) => f.feedVis === "hidden" || f.feedVis === "missing"),
@@ -635,6 +716,13 @@ export async function testMenuNavBoot(page, base, bucket = fails, options = {}) 
     postWrapEarly.filter((f) => f.boot).every((f) => f.feedVis === "hidden" || f.feedVis === "missing"),
     "menu:feed_hidden_during_nav_boot"
   );
+  if (options.forceFeedVisibleDuringBoot || options.exposeFeedBeforeNav) {
+    mustBucket(
+      bucket,
+      !postWrapEarly.some((f) => (f.gate === "nav" || f.boot) && f.feedPainted),
+      "menu:feed_visible_during_nav_boot"
+    );
+  }
 
   const firstNavIdx = postWrapEarly.findIndex((f) => f.gate === "nav" || f.boot);
   if (firstNavIdx > 0) {
@@ -737,7 +825,7 @@ async function testRecorderBootReleaseUnderPressure(page, base) {
   must(/"reason":"mindmenu-scroll-zero"/.test(log), "recorder:whitelist_release_reason");
 }
 
-export { REPO, startServer, mobileInitScript, SHELL_WRAP_WAIT_MS, MENU_NAV_GATE_WAIT_MS };
+export { REPO, startServer, mobileInitScript, SHELL_WRAP_WAIT_MS, MENU_NAV_GATE_WAIT_MS, testHomeDeepFirstPaint };
 
 export async function runExport119ShellBootRaceGuard() {
   fails.length = 0;

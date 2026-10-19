@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** Negative regression harness for export119 menu nav boot guard (must FAIL). */
+/** Negative regression harness for export119 guard — each scenario must FAIL with a specific ID. */
 import path from "path";
 import { fileURLToPath } from "url";
 import { createRequire } from "module";
@@ -7,37 +7,74 @@ import {
   startServer,
   mobileInitScript,
   testMenuNavBoot,
+  testHomeDeepFirstPaint,
+  testMindMenuReturnBoot,
 } from "./iu-pwa-export119-shell-boot-race-guard-v1.mjs";
 
 const require = createRequire(path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "package.json"));
 const { chromium } = require("playwright");
 
+/** Seven required regression classes (1:1 with acceptance spec). */
 const scenarios = [
   {
-    id: "no_menu_persist",
-    options: { skipMenuPersist: true },
-    expectAny: ["menu:nav_gate_or_boot", "menu:shell_early_nav_or_boot"],
+    id: "1_nav_gate_never",
+    label: "Navigační brána nikdy nevznikne",
+    run: async (page, base, bucket) => {
+      await testMenuNavBoot(page, base, bucket, { skipMenuPersist: true, sabotageNavGate: true });
+    },
+    expectId: "menu:nav_gate_or_boot",
   },
   {
-    id: "menu_persist_wrong_gate",
-    options: { menuPersistGate: "home" },
-    expectAny: ["menu:nav_gate_or_boot", "menu:shell_early_nav_or_boot"],
+    id: "2_boot_never",
+    label: "Boot stav nikdy nevznikne",
+    run: async (page, base, bucket) => {
+      await page.addInitScript(mobileInitScript());
+      await testMindMenuReturnBoot(page, base, bucket, { sabotageBootClass: true });
+    },
+    expectId: "mindmenu:return_boot_missing",
   },
   {
-    id: "remove_mobile_gate_wrap",
-    options: { removeMobileGateWrap: true },
-    expectAny: ["menu:shell_wrap_timeout", "menu:nav_gate_or_boot"],
+    id: "3_menu_hidden",
+    label: "Menu zůstane skryté",
+    run: async (page, base, bucket) => {
+      await testMenuNavBoot(page, base, bucket, { hideNavPanel: true });
+    },
+    expectId: "menu:nav_shell_open",
   },
   {
-    id: "hide_nav_panel",
-    options: { hideNavPanel: true },
-    expectAny: ["menu:nav_shell_open", "menu:nav_panel_first_visible_no_home_flash"],
+    id: "4_wrong_content",
+    label: "Nesprávný obsah",
+    run: async (page, base, bucket) => {
+      await testMenuNavBoot(page, base, bucket, { forceFeedVisibleDuringBoot: true });
+    },
+    expectId: "menu:feed_visible_during_nav_boot",
+  },
+  {
+    id: "5_white_gap",
+    label: "Bílá mezera",
+    run: async (page, base, bucket) => {
+      await page.addInitScript(mobileInitScript());
+      await testHomeDeepFirstPaint(page, base, bucket, { forceWhiteGapDuringBoot: true });
+    },
+    expectId: "home:visible_white_gap_during_boot",
+  },
+  {
+    id: "6_init_stuck",
+    label: "Inicializace se zasekne",
+    run: async (page, base, bucket) => {
+      await testMenuNavBoot(page, base, bucket, { removeMobileGateWrap: true });
+    },
+    expectId: "menu:shell_wrap_timeout",
+  },
+  {
+    id: "7_early_nav_exposed",
+    label: "Navigace / feed odhalen předčasně",
+    run: async (page, base, bucket) => {
+      await testMenuNavBoot(page, base, bucket, { exposeFeedBeforeNav: true });
+    },
+    expectId: "menu:reload_early_feed_visible_before_nav",
   },
 ];
-
-function hitExpectation(fails, expectAny) {
-  return expectAny.some((id) => fails.includes(id));
-}
 
 async function main() {
   const server = await startServer();
@@ -56,20 +93,21 @@ async function main() {
       });
       await page.addInitScript(mobileInitScript());
       await Promise.race([
-        testMenuNavBoot(page, base, bucket, scenario.options),
+        scenario.run(page, base, bucket),
         new Promise((_, reject) =>
-          setTimeout(() => reject(new Error("scenario_timeout_" + scenario.id)), 45000)
+          setTimeout(() => reject(new Error("scenario_timeout_" + scenario.id)), 120000)
         ),
       ]).catch((err) => {
-        bucket.push("menu:scenario_timeout:" + scenario.id);
+        bucket.push("menu:scenario_timeout:" + scenario.id + ":" + (err && err.message ? err.message : "err"));
       });
       await page.close();
-      const failedAsExpected = bucket.length > 0 && hitExpectation(bucket, scenario.expectAny);
+      const hit = bucket.includes(scenario.expectId);
       results.push({
         id: scenario.id,
-        pass: failedAsExpected,
+        label: scenario.label,
+        pass: bucket.length > 0 && hit,
+        expectId: scenario.expectId,
         fails: bucket,
-        expectAny: scenario.expectAny,
       });
     }
   } finally {
@@ -79,10 +117,14 @@ async function main() {
 
   const allOk = results.every((r) => r.pass);
   console.log(
-    JSON.stringify({
-      IU_PWA_EXPORT119_SHELL_BOOT_RACE_GUARD_NEGATIVE: allOk ? "OK" : "FAIL",
-      scenarios: results,
-    })
+    JSON.stringify(
+      {
+        IU_PWA_EXPORT119_SHELL_BOOT_RACE_GUARD_NEGATIVE: allOk ? "OK" : "FAIL",
+        scenarios: results,
+      },
+      null,
+      2
+    )
   );
   process.exit(allOk ? 0 : 1);
 }
