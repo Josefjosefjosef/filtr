@@ -32,8 +32,19 @@ export function d1FromSqlite(db: DatabaseSync): D1Database {
         run: () => bound().run(),
       };
     },
-    batch: async () => {
-      throw new Error("batch not implemented in test shim");
+    batch: async (statements: { run: () => Promise<{ success: boolean }> }[]) => {
+      db.exec("BEGIN IMMEDIATE");
+      try {
+        for (const stmt of statements) {
+          const r = await stmt.run();
+          if (!r.success) throw new Error("batch_statement_failed");
+        }
+        db.exec("COMMIT");
+        return statements.map(() => ({ success: true, meta: { changes: 0 } }));
+      } catch (e) {
+        db.exec("ROLLBACK");
+        throw e;
+      }
     },
     exec: async () => {
       throw new Error("exec not implemented in test shim");

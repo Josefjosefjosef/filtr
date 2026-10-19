@@ -10,6 +10,8 @@ export type Env = {
   ADS_PUBLIC_DELIVERY_ENABLED?: string;
   ADS_ADMIN_API_ENABLED?: string;
   ADS_CLIENT_API_ENABLED?: string;
+  /** When true (controlled CJ deploy only), enables /v1/admin/affiliate-archive routes on CJ Worker entry. */
+  ADS_CJ_AFFILIATE_ARCHIVE_ENABLED?: string;
   CORS_ALLOW_ORIGIN?: string;
   /** Worker secret for short-lived private object access signatures (Etapa 1+). */
   ADS_R2_SIGNING_SECRET?: string;

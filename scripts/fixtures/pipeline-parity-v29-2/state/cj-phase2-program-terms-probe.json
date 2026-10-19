@@ -1,0 +1,79 @@
+{
+  "generatedAt": "2026-10-17T05:11:36.908Z",
+  "docRef": "https://docs.cj.com/docs/copy-of-program-terms-api.md",
+  "advertiserIdRequested": "7084105",
+  "joinedRecordVerified": true,
+  "joinedRecord": {
+    "advertiserId": "7084105",
+    "advertiserName": "Autohotarek.cz",
+    "relationshipStatus": "joined",
+    "programUrl": "https://www.autohotarek.cz/"
+  },
+  "publisherId": "7991692",
+  "apiCall": {
+    "httpStatus": 200,
+    "endpoint": "https://programs.api.cj.com/query",
+    "gqlErrors": []
+  },
+  "imageUsage": {
+    "state": "unknown",
+    "signals": [],
+    "source": "program_terms_api",
+    "note": "no_special_terms_body_returned; cannot_confirm_image_license_from_api"
+  },
+  "specialTermsExtract": [
+    {
+      "programTermsId": "396675",
+      "name": "Cashback/Coupon/CSS_7 % commission (1 % low-margin), 14 days cookies",
+      "specialTermsName": null,
+      "effectiveWindow": {
+        "startTime": "2026-09-16T09:24:19Z",
+        "endTime": null,
+        "contractStatus": "ACTIVE"
+      },
+      "imageSignalTokens": []
+    }
+  ],
+  "contractsSummary": [
+    {
+      "status": "ACTIVE",
+      "startTime": "2026-09-16T09:24:19Z",
+      "endTime": null,
+      "advertiserId": "7084105",
+      "programTermsId": "396675",
+      "programTermsName": "Cashback/Coupon/CSS_7 % commission (1 % low-margin), 14 days cookies",
+      "programTermsIsDefault": false,
+      "specialTermsName": null,
+      "specialTermsBodyLength": 0,
+      "specialTermsBodyExcerpt": "",
+      "imageSignalTokens": [],
+      "actionTermsSummary": [
+        {
+          "actionTrackerName": "Autohotarek.cz_item_sale",
+          "actionTrackerType": "item_sale",
+          "referralPeriodDays": 14,
+          "commissionRows": [
+            {
+              "rank": 0,
+              "rateType": "PERCENT",
+              "rateValue": 7,
+              "currency": null,
+              "situationName": null,
+              "itemListName": null,
+              "promotionalPropertyNames": []
+            },
+            {
+              "rank": 1,
+              "rateType": "PERCENT",
+              "rateValue": 1,
+              "currency": null,
+              "situationName": null,
+              "itemListName": "low-margin-yes",
+              "promotionalPropertyNames": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
