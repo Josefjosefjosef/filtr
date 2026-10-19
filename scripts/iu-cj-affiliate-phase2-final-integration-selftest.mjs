@@ -154,13 +154,17 @@ if (fs.existsSync(offersJsPath)) {
 
 const navSrc = fs.readFileSync(path.join(repoRoot, "cloudflare", "iu-ads", "src", "admin-nav.ts"), "utf8");
 
-record("admin_nav_affiliate_archive", navSrc.includes("Archiv reklam – Affiliate"), {});
+record("admin_nav_affiliate_archive_deferred", !navSrc.includes("Archiv reklam – Affiliate"), {
+  note: "CJ admin archive UI ships only via controlled CJ deploy",
+});
 
 
 
 const adminUi = fs.readFileSync(path.join(repoRoot, "cloudflare", "iu-ads", "src", "admin-ui-script.ts"), "utf8");
 
-record("admin_ui_affiliate_archive", adminUi.includes('v==="affiliate_archive"'), {});
+record("admin_ui_affiliate_archive_deferred", !adminUi.includes('v==="affiliate_archive"'), {
+  note: "CJ admin archive UI ships only via controlled CJ deploy",
+});
 
 const pubNeg = runNode("iu-cj-affiliate-phase2-affiliate-archive-publication-negative-selftest.mjs");
 record("archive_publication_negative", pubNeg.IU_CJ_ARCHIVE_PUBLICATION_NEGATIVE_SELFTEST === "OK", {});

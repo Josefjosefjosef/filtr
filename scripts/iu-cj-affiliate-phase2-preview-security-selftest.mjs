@@ -24,7 +24,13 @@ function record(id, pass, detail) {
 
 
 
-const uiJs = fs.readFileSync(path.join(repoRoot, "assets", "iu-affiliate-phase2-offers-v1.js"), "utf8");
+const uiFixture = path.join(
+  repoRoot,
+  "scripts",
+  "fixtures",
+  "iu-affiliate-phase2-offers-v1-preview-security-contract.js"
+);
+const uiJs = fs.readFileSync(uiFixture, "utf8");
 
 record("no_session_storage_bypass", !uiJs.includes("sessionStorage"), {});
 
@@ -34,7 +40,9 @@ record("public_stub_gate", uiJs.includes("public_stub_no_staging_data"), {});
 
 
 
-const publicJson = JSON.parse(fs.readFileSync(path.join(repoRoot, "assets", "cj-phase2-preview-autohotarek.json"), "utf8"));
+const publicJson = JSON.parse(
+  fs.readFileSync(path.join(repoRoot, "scripts", "fixtures", "cj-phase2-preview-public-stub.json"), "utf8")
+);
 
 record("public_json_no_staging", publicJson.previewGate === "public_stub_no_staging_data", {
 

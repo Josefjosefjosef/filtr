@@ -12,6 +12,14 @@ import { migrateCentralOfferRegistryD1 } from "./iu-cj-affiliate-phase2-central-
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const workerDir = path.join(repoRoot, "cloudflare", "cj-email-ingest-d1-worker");
+const wranglerBin = path.join(repoRoot, "cloudflare", "iu-ads", "node_modules", "wrangler", "bin", "wrangler.js");
+
+function wranglerExec(args, cwd, opts = {}) {
+  if (!fs.existsSync(wranglerBin)) {
+    throw new Error("missing_wrangler_bin:" + wranglerBin);
+  }
+  return execSync(`node "${wranglerBin}" ${args}`, { cwd, ...opts });
+}
 const token = "test-ingest-token-32chars-minimum-length-v17";
 const TEST_OPS = ["registryTestSetClaimGen", "registryTestDbSnapshot", "registryResetForTest"];
 
@@ -49,7 +57,7 @@ for (const op of TEST_OPS) {
 
 let bundleHasTestRpc = false;
 try {
-  const out = execSync("npx wrangler deploy --dry-run", { cwd: workerDir, encoding: "utf8", stdio: "pipe" });
+  const out = wranglerExec("deploy --dry-run", workerDir, { encoding: "utf8", stdio: "pipe" });
   bundleHasTestRpc = TEST_OPS.some((op) => out.includes(op));
   record("production_wrangler_dry_run_bundle_no_test_rpc_names", !bundleHasTestRpc, { found: bundleHasTestRpc });
 } catch (e) {
@@ -72,13 +80,13 @@ if (process.env.IU_CJ_EXTRACT_SELFTEST === "1") {
     "IU_CJ_D1_WORKER_INGEST_TOKEN=" + token + "\nREGISTRY_V21_ALLOW_TEST_HOOKS=1\n",
     "utf8"
   );
-  execSync("npx wrangler d1 migrations apply DB --local --config wrangler.toml", { cwd: workerDir, stdio: "pipe" });
+  wranglerExec("d1 migrations apply DB --local --config wrangler.toml", workerDir, { stdio: "pipe" });
 
   port = 27800 + Math.floor(Math.random() * 2000);
   child = spawn(
-    "npx",
-    ["wrangler", "dev", "--local", "--config", "wrangler.toml", "--port", String(port), "--ip", "127.0.0.1"],
-    { cwd: workerDir, stdio: "pipe", shell: true }
+    process.execPath,
+    [wranglerBin, "dev", "--local", "--config", "wrangler.toml", "--port", String(port), "--ip", "127.0.0.1"],
+    { cwd: workerDir, stdio: "pipe" }
   );
 
   async function sleep(ms) {

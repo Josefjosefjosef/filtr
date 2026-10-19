@@ -1,14 +1,30 @@
 # Controlled CJ affiliate archive production deploy (D1 0025–0027 + Worker routes).
-# Never runs on push. Requires workflow_dispatch + explicit confirmation.
+# Never runs on push. Requires workflow_dispatch + explicit confirmation + Environment approval.
+#
+# GitHub Settings prerequisite (NOT optional for safe prod CJ deploy):
+#   Environment "cj-affiliate-archive-production" with required reviewers and deployment branch rules.
+#   Until configured, workflow jobs referencing that environment will fail at queue time.
 name: Deploy IU Ads CJ affiliate archive
 
 on:
   workflow_dispatch:
     inputs:
       confirm_controlled_cj_deploy:
-        description: "Type-required gate: set true to apply CJ archive D1 migrations and deploy CJ Worker entry (NOT public ads)."
+        description: "Set true to request CJ archive D1 migrations + CJ Worker entry deploy."
         type: boolean
         default: false
+      acknowledge_worker_replacement:
+        description: "Set true to confirm infouzel-ads Worker script will be replaced by CJ entry for this deploy."
+        type: boolean
+        default: false
+      deploy_git_ref:
+        description: "Git ref (branch/tag/SHA) in this repository to build and deploy."
+        type: string
+        required: true
+      expected_commit_sha:
+        description: "Full 40-character commit SHA that MUST match the checked-out HEAD."
+        type: string
+        required: true
 
 concurrency:
   group: deploy-iu-ads-cj-affiliate-archive
@@ -16,9 +32,11 @@ concurrency:
 
 jobs:
   deploy_cj_archive:
-    if: inputs.confirm_controlled_cj_deploy == true
+    if: inputs.confirm_controlled_cj_deploy == true && inputs.acknowledge_worker_replacement == true
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    environment:
+      name: cj-affiliate-archive-production
     permissions:
       contents: read
     defaults:
@@ -29,12 +47,17 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: "577868e9aac9c289e9323100f68fad16"
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
-          node-version: "24"
-          cache: npm
-          cache-dependency-path: cloudflare/iu-ads/package-lock.json
+          ref: ${{ inputs.deploy_git_ref }}
+
+      - name: Verify pinned commit SHA
+        run: |
+          set -euo pipefail
+          HEAD_SHA="$(git rev-parse HEAD)"
+          EXPECT="${{ inputs.expected_commit_sha }}"
+          test "${#EXPECT}" -eq 40
+          test "$HEAD_SHA" = "$EXPECT"
+          echo "IU_CJ_DEPLOY_COMMIT_SHA=$HEAD_SHA"
 
       - name: Block when CJ deploy config missing
         run: |
@@ -43,11 +66,24 @@ jobs:
           test -f src/index-cj-affiliate-archive.ts
           test -d migrations-cj-affiliate-archive
 
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: cloudflare/iu-ads/package-lock.json
+
       - name: Install
         run: npm ci
 
       - name: CJ archive Vitest (publication trust)
         run: npx vitest run test/affiliate-ad-archive-publication-trust.test.ts
+
+      - name: Pre-deploy Worker backup snapshot (rollback reference)
+        run: |
+          set -euo pipefail
+          echo "IU_CJ_DEPLOY_BACKUP=wrangler_deployments_list"
+          npx wrangler deployments list 2>/tmp/iu-cj-pre-deploy-deployments.err | head -n 40 || true
+          echo "Rollback: re-run Deploy IU Ads from main at last known-good commit via workflow_dispatch."
 
       - name: Resolve D1 database id
         run: |
@@ -81,11 +117,12 @@ jobs:
             --var ADS_CJ_AFFILIATE_ARCHIVE_ENABLED:true
 
   blocked_without_confirmation:
-    if: inputs.confirm_controlled_cj_deploy != true
+    if: inputs.confirm_controlled_cj_deploy != true || inputs.acknowledge_worker_replacement != true
     runs-on: ubuntu-latest
     steps:
-      - name: CJ deploy blocked (confirmation false)
+      - name: CJ deploy blocked (confirmation incomplete)
         run: |
           echo "IU_ADS_CJ_AFFILIATE_ARCHIVE_DEPLOY=BLOCKED"
-          echo "Set confirm_controlled_cj_deploy=true to run controlled deploy."
+          echo "Requires confirm_controlled_cj_deploy=true AND acknowledge_worker_replacement=true."
+          echo "Production deploy also requires GitHub Environment cj-affiliate-archive-production with reviewers."
           exit 1
