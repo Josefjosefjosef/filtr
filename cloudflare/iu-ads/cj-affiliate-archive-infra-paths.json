@@ -28,5 +28,13 @@
     "cloudflare/iu-ads/wrangler.toml",
     "cloudflare/iu-ads/src/types.ts",
     ".github/workflows/deploy-iu-ads.yml"
-  ]
+  ],
+  "deployGateScriptPaths": [
+    "scripts/iu-ads-production-deploy-scope-v1.mjs",
+    "scripts/iu-ads-production-deploy-scope-diff-v1.mjs",
+    "scripts/iu-ads-production-deploy-scope-selftest.mjs",
+    "scripts/iu-ads-production-entry-isolation-guard-v1.mjs",
+    "scripts/iu-ads-migration-schema-compat-guard-v1.mjs"
+  ],
+  "cjOptionalEnvFields": ["ADS_CJ_AFFILIATE_ARCHIVE_ENABLED"]
 }
