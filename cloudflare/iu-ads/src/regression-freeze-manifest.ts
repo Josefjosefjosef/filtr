@@ -23,6 +23,7 @@ export const REPO_REQUIRED_STATUS_CONTEXTS = ["layout-guard", "repo-guard", "smo
 
 /** Guards executed in Deploy IU Ads before wrangler deploy (see .github/workflows/deploy-iu-ads.yml). */
 export const DEPLOY_IU_ADS_GUARD_SCRIPTS = [
+  "scripts/iu-ads-production-deploy-scope-selftest.mjs",
   "scripts/iu-ads-migration-schema-compat-guard-v1.mjs",
   "scripts/iu-premium-public-admin-consistency-guard-v1.mjs",
   "scripts/iu-premium-admin-order-documents-guard-v1.mjs",

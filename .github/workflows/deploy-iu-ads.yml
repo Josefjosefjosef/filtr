@@ -33,7 +33,38 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  resolve_production_deploy_scope:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      production_deploy: ${{ steps.scope.outputs.production_deploy }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Resolve production deploy scope
+        id: scope
+        env:
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_BEFORE: ${{ github.event.before }}
+        run: |
+          set -euo pipefail
+          OUT="$(node scripts/iu-ads-production-deploy-scope-v1.mjs)"
+          printf '%s\n' "$OUT"
+          DECISION="$(printf '%s\n' "$OUT" | sed -n 's/^IU_ADS_PRODUCTION_DEPLOY=\(.*\)/\1/p' | tail -n 1)"
+          if [ -z "$DECISION" ]; then DECISION="blocked"; fi
+          if [ "$DECISION" = "blocked" ]; then
+            echo "production_deploy=blocked" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+          echo "production_deploy=$DECISION" >> "$GITHUB_OUTPUT"
+
   deploy:
+    needs: resolve_production_deploy_scope
+    if: needs.resolve_production_deploy_scope.outputs.production_deploy == 'run'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     permissions:
@@ -139,6 +170,10 @@ jobs:
           name: premium-storno-credit-visual-deploy-${{ github.run_id }}
           path: ${{ runner.temp }}/iu-storno-credit-visual/
           if-no-files-found: warn
+
+      - name: Production deploy scope selftest
+        working-directory: .
+        run: node scripts/iu-ads-production-deploy-scope-selftest.mjs
 
       - name: IU Ads migration schema compat guard
         working-directory: .
@@ -406,7 +441,7 @@ jobs:
             EXTRA_VARS+=(--var ADS_CLIENT_API_ENABLED:false)
             echo "DEPLOY_VAR_CLIENT_API=false"
           fi
-          npx wrangler deploy "${EXTRA_VARS[@]}"
+          npx wrangler deploy src/index-production.ts "${EXTRA_VARS[@]}"
 
       - name: Deployment proof (version metadata, no secrets)
         run: |

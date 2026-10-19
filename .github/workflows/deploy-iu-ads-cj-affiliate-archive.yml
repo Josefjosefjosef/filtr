@@ -1,0 +1,128 @@
+# Controlled CJ affiliate archive production deploy (D1 0025–0027 + Worker routes).
+# Never runs on push. Requires workflow_dispatch + explicit confirmation + Environment approval.
+#
+# GitHub Settings prerequisite (NOT optional for safe prod CJ deploy):
+#   Environment "cj-affiliate-archive-production" with required reviewers and deployment branch rules.
+#   Until configured, workflow jobs referencing that environment will fail at queue time.
+name: Deploy IU Ads CJ affiliate archive
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_controlled_cj_deploy:
+        description: "Set true to request CJ archive D1 migrations + CJ Worker entry deploy."
+        type: boolean
+        default: false
+      acknowledge_worker_replacement:
+        description: "Set true to confirm infouzel-ads Worker script will be replaced by CJ entry for this deploy."
+        type: boolean
+        default: false
+      deploy_git_ref:
+        description: "Git ref (branch/tag/SHA) in this repository to build and deploy."
+        type: string
+        required: true
+      expected_commit_sha:
+        description: "Full 40-character commit SHA that MUST match the checked-out HEAD."
+        type: string
+        required: true
+
+concurrency:
+  group: deploy-iu-ads-cj-affiliate-archive
+  cancel-in-progress: false
+
+jobs:
+  deploy_cj_archive:
+    if: inputs.confirm_controlled_cj_deploy == true && inputs.acknowledge_worker_replacement == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    environment:
+      name: cj-affiliate-archive-production
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: cloudflare/iu-ads
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_ADS_API_TOKEN || secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: "577868e9aac9c289e9323100f68fad16"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.deploy_git_ref }}
+
+      - name: Verify pinned commit SHA
+        run: |
+          set -euo pipefail
+          HEAD_SHA="$(git rev-parse HEAD)"
+          EXPECT="${{ inputs.expected_commit_sha }}"
+          test "${#EXPECT}" -eq 40
+          test "$HEAD_SHA" = "$EXPECT"
+          echo "IU_CJ_DEPLOY_COMMIT_SHA=$HEAD_SHA"
+
+      - name: Block when CJ deploy config missing
+        run: |
+          set -euo pipefail
+          test -f wrangler.cj-affiliate-archive.deploy.toml
+          test -f src/index-cj-affiliate-archive.ts
+          test -d migrations-cj-affiliate-archive
+
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: cloudflare/iu-ads/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: CJ archive Vitest (publication trust)
+        run: npx vitest run test/affiliate-ad-archive-publication-trust.test.ts
+
+      - name: Pre-deploy Worker backup snapshot (rollback reference)
+        run: |
+          set -euo pipefail
+          echo "IU_CJ_DEPLOY_BACKUP=wrangler_deployments_list"
+          npx wrangler deployments list 2>/tmp/iu-cj-pre-deploy-deployments.err | head -n 40 || true
+          echo "Rollback: re-run Deploy IU Ads from main at last known-good commit via workflow_dispatch."
+
+      - name: Resolve D1 database id
+        run: |
+          set -euo pipefail
+          LIST_JSON="$(npx wrangler d1 list --json)"
+          ID="$(printf '%s' "$LIST_JSON" | node -e "
+            let s='';process.stdin.on('data',d=>s+=d);process.stdin.on('end',()=>{
+              const arr=JSON.parse(s);
+              const hit=(arr||[]).find(x=>x&&x.name==='iu-ads');
+              process.stdout.write(hit&&(hit.uuid||hit.id||'')?String(hit.uuid||hit.id):'');
+            });
+          ")"
+          test -n "$ID"
+          echo "D1_ID_RESOLVED=yes"
+          ID="$ID" node -e "
+            const fs=require('fs');
+            let t=fs.readFileSync('wrangler.cj-affiliate-archive.deploy.toml','utf8');
+            t=t.replace(/database_id = \"[^\"]+\"/, 'database_id = \"'+process.env.ID+'\"');
+            fs.writeFileSync('wrangler.cj-affiliate-archive.deploy.toml',t);
+          "
+
+      - name: Apply CJ affiliate archive D1 migrations (0025–0027 only)
+        run: npx wrangler d1 migrations apply iu-ads --remote --config wrangler.cj-affiliate-archive.deploy.toml
+
+      - name: Deploy CJ affiliate archive Worker entry
+        run: |
+          set -euo pipefail
+          npx wrangler deploy --config wrangler.cj-affiliate-archive.deploy.toml \
+            --var ADS_SAFE_MODE:true \
+            --var ADS_PUBLIC_DELIVERY_ENABLED:false \
+            --var ADS_CJ_AFFILIATE_ARCHIVE_ENABLED:true
+
+  blocked_without_confirmation:
+    if: inputs.confirm_controlled_cj_deploy != true || inputs.acknowledge_worker_replacement != true
+    runs-on: ubuntu-latest
+    steps:
+      - name: CJ deploy blocked (confirmation incomplete)
+        run: |
+          echo "IU_ADS_CJ_AFFILIATE_ARCHIVE_DEPLOY=BLOCKED"
+          echo "Requires confirm_controlled_cj_deploy=true AND acknowledge_worker_replacement=true."
+          echo "Production deploy also requires GitHub Environment cj-affiliate-archive-production with reviewers."
+          exit 1
