@@ -97,6 +97,9 @@
     position: relative;
     width: 100%;
     min-width: 0;
+    /* CLS: reserve taller parcel panel so quick↔parcel and first hydrate do not shift #iuSilverHeroPremium (~28px). */
+    min-height: 182px;
+    contain: layout style;
   }
 
   .iuHomeQuickParcelModule__panel {

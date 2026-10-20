@@ -16270,11 +16270,31 @@ function buildVideoAsArticleCard(it) {
         return false;
       }
     }
+    function lockSpeechBubbleMinHeight() {
+      try {
+        var bubble = document.querySelector("[data-iu-silver-speech-bubble]");
+        if (!bubble) return;
+        var h = bubble.getBoundingClientRect().height;
+        if (h <= 0) return;
+        var prev = parseFloat(bubble.style.minHeight) || 0;
+        var next = Math.ceil(h);
+        if (next > prev) bubble.style.minHeight = next + "px";
+      } catch (_) {}
+    }
     function start() {
       var el = document.querySelector("[data-iu-silver-speech-text]");
       if (!el || !narrowHero()) return;
       var idx = 0;
       el.textContent = LINES[0];
+      lockSpeechBubbleMinHeight();
+      try {
+        requestAnimationFrame(function () {
+          requestAnimationFrame(lockSpeechBubbleMinHeight);
+        });
+        [400, 1200, 2500, 4000].forEach(function (ms) {
+          window.setTimeout(lockSpeechBubbleMinHeight, ms);
+        });
+      } catch (_) {}
       if (reducedMotion()) return;
       var fading = false;
       var timer = setInterval(function () {
@@ -16291,6 +16311,7 @@ function buildVideoAsArticleCard(it) {
               idx = (idx + 1) % LINES.length;
               el.textContent = LINES[idx];
               el.classList.remove("silver-speech-text--fading");
+              lockSpeechBubbleMinHeight();
             } catch (_) {}
             fading = false;
           }, FADE_MS);
