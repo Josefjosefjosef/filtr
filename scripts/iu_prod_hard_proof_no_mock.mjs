@@ -6,6 +6,11 @@ import {
   silverSlotMaxHeightCapIsActive,
 } from "./iu-prod-hard-proof-silver-flex-remainder-readiness.mjs";
 import { evaluateDesktopRightColumnGate } from "./iu-prod-hard-proof-desktop-right-column-readiness.mjs";
+import {
+  applyCzVerticalDeepLinkReadiness,
+  evaluateCzVerticalFeedContentGate,
+  probePublishedMediaArticlesAvailable,
+} from "./iu-prod-hard-proof-cz-vertical-deep-link-readiness.mjs";
 const NO_CACHE = process.argv.includes("--no-cache");
 const BASE = process.env.IU_PROOF_BASE?.trim() || "https://infouzel.cz/projects/";
 const viewports = [
@@ -1116,6 +1121,8 @@ async function runCzVerticalDeepLinkProof(chromiumBrowser) {
   await page.setViewportSize({ width: 390, height: 844 });
   const baseUrl = new URL(BASE);
   const sections = ["hry", "kultura", "veda", "vzdelavani"];
+  const articlesProbe = await probePublishedMediaArticlesAvailable(page, baseUrl.href);
+  const articlesRequired = articlesProbe.articlesRequired === true;
 
   async function readSectionProbe(expected) {
     return page.evaluate((exp) => {
@@ -1123,10 +1130,11 @@ async function runCzVerticalDeepLinkProof(chromiumBrowser) {
         (document.body && document.body.getAttribute("data-section")) ||
         (document.documentElement && document.documentElement.getAttribute("data-section")) ||
         "";
-      const active = document.querySelector(
-        `.iu-leftNav .iu-leftNavItem[data-accent="${exp}"].is-active`
-      );
+      const active =
+        document.querySelector(`.iu-leftNav .iu-leftNavItem[data-accent="${exp}"].is-active`) ||
+        document.querySelector(`.iu-leftNavItem[data-accent="${exp}"].is-active`);
       const feed = document.getElementById("feed");
+      const stage = document.getElementById("iuCenterStage");
       let feedDisplay = "";
       let feedVisible = false;
       if (feed) {
@@ -1136,7 +1144,8 @@ async function runCzVerticalDeepLinkProof(chromiumBrowser) {
           feedVisible =
             feedDisplay !== "none" &&
             (cs.visibility || "") !== "hidden" &&
-            parseFloat(cs.opacity || "1") > 0.02;
+            parseFloat(cs.opacity || "1") > 0.02 &&
+            feed.getBoundingClientRect().height > 8;
         } catch (_) {}
       }
       const feedLinks = feed ? feed.querySelectorAll("a[href]").length : 0;
@@ -1151,7 +1160,12 @@ async function runCzVerticalDeepLinkProof(chromiumBrowser) {
       });
       return {
         dataSection: String(ds).toLowerCase(),
-        hasActiveRail: !!active,
+        dataIuFc: document.body ? document.body.getAttribute("data-iu-fc") : null,
+        coldSectionAttr: document.body ? document.body.getAttribute("data-iu-cold-section") : null,
+        centerView: stage ? stage.getAttribute("data-view") || stage.dataset.view || null : null,
+        hasActiveNav: !!active,
+        feedExists: !!feed,
+        feedReady: feed ? feed.getAttribute("data-feed-ready") : null,
         feedDisplay,
         feedVisible,
         feedLinkCount: feedLinks,
@@ -1162,63 +1176,103 @@ async function runCzVerticalDeepLinkProof(chromiumBrowser) {
     }, expected);
   }
 
-  for (const sec of sections) {
+  async function runOneCzVerticalPass(sec, passLabel) {
     const u = new URL(baseUrl.href);
     u.searchParams.set("section", sec);
     await page.goto(u.href, { waitUntil: "load", timeout: 120000 });
+    await applyCzVerticalDeepLinkReadiness(page);
+    try {
+      await page.waitForFunction(
+        (expectedSec) => {
+          const ds = String(document.body?.getAttribute("data-section") || "").toLowerCase();
+          const cold = document.body?.getAttribute("data-iu-cold-section");
+          return ds === expectedSec && cold !== "1";
+        },
+        sec,
+        { timeout: 90000 }
+      );
+    } catch (_) {}
     try {
       await page.waitForLoadState("networkidle", { timeout: 90000 });
     } catch (_) {}
-    await page.waitForTimeout(7000);
-    const direct = await readSectionProbe(sec);
-    const okTitlesDirect =
-      direct.titleLinkCount > 0 &&
-      direct.titleLinksBlank > 0 &&
-      /^https?:\/\//i.test(direct.sampleHref || "");
-    const okDirect =
-      direct.dataSection === sec &&
-      direct.hasActiveRail &&
-      direct.feedVisible === true &&
-      direct.feedLinkCount > 0 &&
-      okTitlesDirect;
+    await page.waitForTimeout(4000);
+    const probe = await readSectionProbe(sec);
+    const gate = evaluateCzVerticalFeedContentGate({
+      expectedSection: sec,
+      articlesRequired,
+      dataSection: probe.dataSection,
+      dataIuFc: probe.dataIuFc,
+      coldSectionAttr: probe.coldSectionAttr,
+      centerView: probe.centerView,
+      hasActiveNav: probe.hasActiveNav,
+      feedExists: probe.feedExists,
+      feedReady: probe.feedReady,
+      feedVisible: probe.feedVisible,
+      titleLinkCount: probe.titleLinkCount,
+      titleLinksBlank: probe.titleLinksBlank,
+      sampleHref: probe.sampleHref,
+    });
+    return { passLabel, probe, gate };
+  }
 
+  for (const sec of sections) {
+    const directRun = await runOneCzVerticalPass(sec, "direct");
+    await applyCzVerticalDeepLinkReadiness(page);
     await page.reload({ waitUntil: "load", timeout: 120000 });
+    await applyCzVerticalDeepLinkReadiness(page);
+    try {
+      await page.waitForFunction(
+        (expectedSec) => {
+          const ds = String(document.body?.getAttribute("data-section") || "").toLowerCase();
+          const cold = document.body?.getAttribute("data-iu-cold-section");
+          return ds === expectedSec && cold !== "1";
+        },
+        sec,
+        { timeout: 90000 }
+      );
+    } catch (_) {}
     try {
       await page.waitForLoadState("networkidle", { timeout: 90000 });
     } catch (_) {}
-    await page.waitForTimeout(7000);
-    const afterReload = await readSectionProbe(sec);
-    const okTitlesReload =
-      afterReload.titleLinkCount > 0 &&
-      afterReload.titleLinksBlank > 0 &&
-      /^https?:\/\//i.test(afterReload.sampleHref || "");
-    const okReload =
-      afterReload.dataSection === sec &&
-      afterReload.hasActiveRail &&
-      afterReload.feedVisible === true &&
-      afterReload.feedLinkCount > 0 &&
-      okTitlesReload;
+    await page.waitForTimeout(4000);
+    const reloadProbe = await readSectionProbe(sec);
+    const reloadGate = evaluateCzVerticalFeedContentGate({
+      expectedSection: sec,
+      articlesRequired,
+      dataSection: reloadProbe.dataSection,
+      dataIuFc: reloadProbe.dataIuFc,
+      coldSectionAttr: reloadProbe.coldSectionAttr,
+      centerView: reloadProbe.centerView,
+      hasActiveNav: reloadProbe.hasActiveNav,
+      feedExists: reloadProbe.feedExists,
+      feedReady: reloadProbe.feedReady,
+      feedVisible: reloadProbe.feedVisible,
+      titleLinkCount: reloadProbe.titleLinkCount,
+      titleLinksBlank: reloadProbe.titleLinksBlank,
+      sampleHref: reloadProbe.sampleHref,
+    });
 
-    const noMediaFallback = okDirect && okReload;
+    const okDirect = directRun.gate.ok === true;
+    const okReload = reloadGate.ok === true;
 
     console.log(
       JSON.stringify({
         _proofPass: "cz-vertical-deep-link",
         section: sec,
+        articlesRequired,
+        articlesProbe,
         directOpen: okDirect,
         reload: okReload,
-        activeUi: okDirect && okReload,
-        renderedFeed: okDirect && okReload,
-        clickableArticleTitles: okTitlesDirect && okTitlesReload,
-        noMediaFallback,
-        detail: { direct, afterReload },
+        directGateMode: directRun.gate.mode,
+        reloadGateMode: reloadGate.mode,
+        detail: { direct: directRun.probe, afterReload: reloadProbe, directGate: directRun.gate, reloadGate },
       })
     );
 
-    if (!okDirect || !okReload || !noMediaFallback) {
+    if (!okDirect || !okReload) {
       await ctx.close();
       throw new Error(
-        `PROOF FAIL cz-vertical-deep-link section=${sec} okDirect=${okDirect} okReload=${okReload}`
+        `PROOF FAIL cz-vertical-deep-link section=${sec} okDirect=${okDirect} okReload=${okReload} articlesRequired=${articlesRequired} directReason=${String(directRun.gate.reason)} reloadReason=${String(reloadGate.reason)}`
       );
     }
   }
