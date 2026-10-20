@@ -9,6 +9,7 @@ import { evaluateDesktopRightColumnGate } from "./iu-prod-hard-proof-desktop-rig
 import {
   applyCzVerticalDeepLinkReadiness,
   evaluateCzVerticalFeedContentGate,
+  evaluateMediaTopicZpravyReferenceGate,
   probePublishedMediaArticlesAvailable,
 } from "./iu-prod-hard-proof-cz-vertical-deep-link-readiness.mjs";
 const NO_CACHE = process.argv.includes("--no-cache");
@@ -1283,14 +1284,23 @@ async function runCzVerticalDeepLinkProof(chromiumBrowser) {
     uRef.searchParams.set("section", "media");
     uRef.searchParams.set("topic", "zpravy");
     await page.goto(uRef.href, { waitUntil: "load", timeout: 120000 });
+    await applyCzVerticalDeepLinkReadiness(page);
+    try {
+      await page.waitForFunction(() => {
+        const ds = String(document.body?.getAttribute("data-section") || "").toLowerCase();
+        const cold = document.body?.getAttribute("data-iu-cold-section");
+        return (ds === "feed" || ds === "media") && cold !== "1";
+      }, { timeout: 90000 });
+    } catch (_) {}
     try {
       await page.waitForLoadState("networkidle", { timeout: 90000 });
     } catch (_) {}
-    await page.waitForTimeout(7000);
+    await page.waitForTimeout(4000);
     const ref = await page.evaluate(() => {
       const feed = document.getElementById("feed");
-      let feedVisible = false;
+      const stage = document.getElementById("iuCenterStage");
       let feedDisplay = "";
+      let feedVisible = false;
       if (feed) {
         try {
           const cs = getComputedStyle(feed);
@@ -1298,7 +1308,8 @@ async function runCzVerticalDeepLinkProof(chromiumBrowser) {
           feedVisible =
             feedDisplay !== "none" &&
             (cs.visibility || "") !== "hidden" &&
-            parseFloat(cs.opacity || "1") > 0.02;
+            parseFloat(cs.opacity || "1") > 0.02 &&
+            feed.getBoundingClientRect().height > 8;
         } catch (_) {}
       }
       const links = feed ? feed.querySelectorAll("a.news-titleLink[href]") : [];
@@ -1312,6 +1323,10 @@ async function runCzVerticalDeepLinkProof(chromiumBrowser) {
       });
       return {
         dataSection: String(document.body?.getAttribute("data-section") || "").toLowerCase(),
+        coldSectionAttr: document.body ? document.body.getAttribute("data-iu-cold-section") : null,
+        centerView: stage ? stage.getAttribute("data-view") || stage.dataset.view || null : null,
+        feedExists: !!feed,
+        feedReady: feed ? feed.getAttribute("data-feed-ready") : null,
         feedDisplay,
         feedVisible,
         titleLinkCount: links.length,
@@ -1319,24 +1334,36 @@ async function runCzVerticalDeepLinkProof(chromiumBrowser) {
         sampleHref: href0,
       };
     });
-    /* IU_ARTICLE_HUB_SECTION is canonical "feed"; ?section=media deep links normalize to feed. */
-    const refOk =
-      (ref.dataSection === "media" || ref.dataSection === "feed") &&
-      ref.feedVisible === true &&
-      ref.titleLinkCount > 0 &&
-      ref.titleLinksBlank > 0 &&
-      /^https?:\/\//i.test(ref.sampleHref || "");
+    const refGate = evaluateMediaTopicZpravyReferenceGate({
+      articlesRequired,
+      dataSection: ref.dataSection,
+      coldSectionAttr: ref.coldSectionAttr,
+      centerView: ref.centerView,
+      feedExists: ref.feedExists,
+      feedReady: ref.feedReady,
+      feedVisible: ref.feedVisible,
+      titleLinkCount: ref.titleLinkCount,
+      titleLinksBlank: ref.titleLinksBlank,
+      sampleHref: ref.sampleHref,
+    });
+    const refOk = refGate.ok === true;
     console.log(
       JSON.stringify({
         _proofPass: "cz-vertical-reference-zpravy",
         referenceTopic: "zpravy",
+        articlesRequired,
+        articlesProbe,
         ok: refOk,
+        gateMode: refGate.mode,
+        gateReason: refGate.reason,
         detail: ref,
       })
     );
     if (!refOk) {
       await ctx.close();
-      throw new Error(`PROOF FAIL cz-vertical-reference-zpravy ${JSON.stringify(ref)}`);
+      throw new Error(
+        `PROOF FAIL cz-vertical-reference-zpravy ok=${refOk} articlesRequired=${articlesRequired} reason=${String(refGate.reason)} ${JSON.stringify(ref)}`
+      );
     }
   }
 

@@ -122,3 +122,45 @@ export function evaluateCzVerticalFeedContentGate(input) {
   }
   return { ok: true, mode: "feed_content", reason: null };
 }
+
+/** Reference hub deep link: ?section=media&topic=zpravy (canonical body section feed|media). */
+export function evaluateMediaTopicZpravyReferenceGate(input) {
+  const ds = String(input.dataSection || "").toLowerCase();
+  if (ds !== "media" && ds !== "feed") {
+    return { ok: false, mode: "routing", reason: "wrong_data_section" };
+  }
+  if (input.coldSectionAttr === "1") {
+    return {
+      ok: false,
+      mode: "routing",
+      reason: "stale_data_iu_cold_section_hides_feed",
+    };
+  }
+  if (input.centerView !== "media") {
+    return { ok: false, mode: "routing", reason: "center_view_not_media" };
+  }
+
+  if (input.articlesRequired !== true) {
+    if (input.feedExists !== true) {
+      return { ok: false, mode: "feed_skipped", reason: "feed_element_missing" };
+    }
+    if (input.feedReady !== "true") {
+      return { ok: false, mode: "feed_skipped", reason: "feed_not_ready" };
+    }
+    return { ok: true, mode: "feed_skipped_no_published_articles", reason: null };
+  }
+
+  if (input.feedVisible !== true) {
+    return { ok: false, mode: "feed_content", reason: "feed_not_visible" };
+  }
+  if (!(Number(input.titleLinkCount) > 0)) {
+    return { ok: false, mode: "feed_content", reason: "no_title_links" };
+  }
+  if (!(Number(input.titleLinksBlank) > 0)) {
+    return { ok: false, mode: "feed_content", reason: "title_links_not_blank_target" };
+  }
+  if (!/^https?:\/\//i.test(String(input.sampleHref || ""))) {
+    return { ok: false, mode: "feed_content", reason: "sample_href_invalid" };
+  }
+  return { ok: true, mode: "feed_content", reason: null };
+}

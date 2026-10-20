@@ -3,6 +3,7 @@ import {
   CZ_VERTICAL_SECTIONS,
   evaluateCzVerticalFeedContentGate,
   evaluateCzVerticalRoutingGate,
+  evaluateMediaTopicZpravyReferenceGate,
 } from "./iu-prod-hard-proof-cz-vertical-deep-link-readiness.mjs";
 
 const fails = [];
@@ -89,6 +90,49 @@ must(
 );
 
 must(CZ_VERTICAL_SECTIONS.length === 4, "four_cz_verticals");
+
+must(
+  evaluateMediaTopicZpravyReferenceGate({
+    articlesRequired: false,
+    dataSection: "feed",
+    coldSectionAttr: null,
+    centerView: "media",
+    feedExists: true,
+    feedReady: "true",
+    feedVisible: false,
+    titleLinkCount: 0,
+  }).ok === true,
+  "zpravy_reference_skipped_when_no_published_articles"
+);
+
+must(
+  evaluateMediaTopicZpravyReferenceGate({
+    articlesRequired: false,
+    dataSection: "feed",
+    coldSectionAttr: "1",
+    centerView: "media",
+    feedExists: true,
+    feedReady: "true",
+    feedVisible: false,
+  }).ok === false,
+  "zpravy_reference_cold_section_fail"
+);
+
+must(
+  evaluateMediaTopicZpravyReferenceGate({
+    articlesRequired: true,
+    dataSection: "feed",
+    coldSectionAttr: null,
+    centerView: "media",
+    feedExists: true,
+    feedReady: "true",
+    feedVisible: true,
+    titleLinkCount: 2,
+    titleLinksBlank: 2,
+    sampleHref: "https://example.com/z",
+  }).ok === true,
+  "zpravy_reference_feed_content_pass"
+);
 
 console.log("IU_PROD_HARD_PROOF_CZ_VERTICAL_DEEP_LINK_READINESS_SELFTEST_PASS=" + (fails.length === 0));
 if (fails.length) {
