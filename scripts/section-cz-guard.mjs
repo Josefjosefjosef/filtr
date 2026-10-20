@@ -46,6 +46,11 @@ must(
 
 must(/function iuArticleReleaseEligible/.test(appJs), "iuArticleReleaseEligible must exist");
 
+must(
+  /if \(usesFeed\)[\s\S]{0,320}iuPwaClearColdSectionAttrsForHub/.test(appJs),
+  "applySectionFromURL must clear data-iu-cold-section when feed pipeline applies"
+);
+
 /* #feed chrome: data-iu-fc=1 pro media + 4 CZ vertikály (krátký atribut kvůli CSS size budgetu). */
 must(
   /body\[data-iu-fc="1"\]\s*#feed/.test(appCss),
