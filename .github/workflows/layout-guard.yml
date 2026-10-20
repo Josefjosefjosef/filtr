@@ -76,6 +76,8 @@ jobs:
         if: steps.prgate.outputs.skip != 'true'
         with:
           node-version: "24"
+          cache: npm
+          cache-dependency-path: package-lock.json
       - run: npm ci
         if: steps.prgate.outputs.skip != 'true'
       - name: GHA immutable pin guard (SC-GHA-02)
