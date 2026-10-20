@@ -1,9 +1,9 @@
 /* InfoUzel — TERMS/VOP clickwrap gate (blocking; above analytics sheet) */
 
 html.iu-terms-gate-open {
+  scrollbar-gutter: stable !important;
   overflow: hidden !important;
   /* Keep scrollbar gutter reserved when the gate hides overflow (mobile full-page CLS). */
-  scrollbar-gutter: stable !important;
 }
 
 body.iu-terms-gate-open {
