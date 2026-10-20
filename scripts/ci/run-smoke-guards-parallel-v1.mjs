@@ -22,33 +22,30 @@ function scopeEnv() {
 
 function evalIf(ifGha, scope) {
   if (!ifGha || ifGha === "true") return true;
-  const parts = ifGha.split("&&").map((p) => p.trim()).filter(Boolean);
-  for (const part of parts) {
-    const m = part.match(/^steps\.scope\.outputs\.([a-z0-9_]+)\s*(!==|!=|==)\s*'true'$/i);
-    if (!m) {
-      console.error("IF_EVAL_UNKNOWN", ifGha, part);
-      return false;
-    }
-    const key = m[1].toLowerCase();
-    const val = scope[key] ?? "";
-    const isTrue = val === "true";
-    const op = m[2];
-    if (op === "==") {
-      if (!isTrue) return false;
-    } else if (isTrue) {
-      return false;
-    }
+  let expr = ifGha.replace(/steps\.scope\.outputs\.([a-z0-9_]+)/gi, (_, key) => {
+    const val = scope[key.toLowerCase()] ?? "";
+    return (val === "true" ? "true" : "false");
+  });
+  expr = expr.replace(/([^=!])\s*!=\s*'true'/g, "$1 !== 'true'");
+  expr = expr.replace(/([^=!])\s*==\s*'true'/g, "$1 === 'true'");
+  try {
+    return Boolean(new Function(`return (${expr});`)());
+  } catch (err) {
+    console.error("IF_EVAL_FAIL", ifGha, err.message);
+    return false;
   }
-  return true;
 }
 
-function runCmd(name, run, env, timeoutMinutes) {
+function runCmd(name, run, env, timeoutMinutes, taskIndex) {
   return new Promise((resolve) => {
     const started = Date.now();
+    const guardPort =
+      env.IU_GUARD_PORT ||
+      String(8600 + (Number.isFinite(taskIndex) ? taskIndex % 400 : 0));
     const child = spawn(run, {
       cwd: REPO,
       shell: true,
-      env: { ...process.env, ...env },
+      env: { ...process.env, ...env, IU_GUARD_PORT: guardPort },
       stdio: "inherit",
     });
     let killed = false;
@@ -59,12 +56,14 @@ function runCmd(name, run, env, timeoutMinutes) {
     }, maxMs);
     child.on("close", (code) => {
       clearTimeout(timer);
-      resolve({
+      const result = {
         name,
         ok: !killed && code === 0,
         code: killed ? "timeout" : code,
         sec: Math.round((Date.now() - started) / 1000),
-      });
+      };
+      console.log(JSON.stringify({ IU_SMOKE_GUARD_DONE: result.name, ok: result.ok, code: result.code, sec: result.sec }));
+      resolve(result);
     });
   });
 }
@@ -111,15 +110,29 @@ async function main() {
     })
   );
   const tasks = selected.map(
-    (g) => () => runCmd(g.name, g.run, g.env || {}, g.timeoutMinutes || null)
+    (g, taskIndex) => () => runCmd(g.name, g.run, g.env || {}, g.timeoutMinutes || null, taskIndex)
   );
   const results = await poolRun(tasks, parallel);
   const failed = results.filter((r) => !r.ok);
+  const doneCount = results.filter(Boolean).length;
+  if (doneCount !== selected.length) {
+    console.error(
+      JSON.stringify({
+        IU_SMOKE_GUARDS_PARALLEL: "FAIL",
+        reason: "results_count_mismatch",
+        selected: selected.length,
+        doneCount,
+      })
+    );
+    process.exit(1);
+  }
   console.log(
     JSON.stringify({
       IU_SMOKE_GUARDS_PARALLEL: failed.length ? "FAIL" : "OK",
       failed: failed.map((f) => ({ name: f.name, code: f.code, sec: f.sec })),
       passCount: results.length - failed.length,
+      completedCount: doneCount,
+      selected: selected.length,
     })
   );
   process.exit(failed.length ? 1 : 0);

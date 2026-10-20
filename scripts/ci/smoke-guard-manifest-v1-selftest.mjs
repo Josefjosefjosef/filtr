@@ -19,23 +19,29 @@ for (const n of names) {
 
 function evalIf(ifGha, scope) {
   if (!ifGha || ifGha === "true") return true;
-  const parts = ifGha.split("&&").map((p) => p.trim()).filter(Boolean);
-  for (const part of parts) {
-    const m = part.match(/^steps\.scope\.outputs\.([a-z0-9_]+)\s*(!==|!=|==)\s*'true'$/i);
-    if (!m) return false;
-    const key = m[1].toLowerCase();
-    const isTrue = (scope[key] ?? "") === "true";
-    const op = m[2];
-    if (op === "==") {
-      if (!isTrue) return false;
-    } else if (isTrue) {
-      return false;
-    }
+  let expr = ifGha.replace(/steps\.scope\.outputs\.([a-z0-9_]+)/gi, (_, key) => {
+    const val = scope[key.toLowerCase()] ?? "";
+    return val === "true" ? "true" : "false";
+  });
+  expr = expr.replace(/([^=!])\s*!=\s*'true'/g, "$1 !== 'true'");
+  expr = expr.replace(/([^=!])\s*==\s*'true'/g, "$1 === 'true'");
+  try {
+    return Boolean(new Function(`return (${expr});`)());
+  } catch {
+    return false;
   }
-  return true;
 }
-const defaultSelected = manifest.guards.filter((g) => evalIf(g.ifGha, {})).length;
-if (defaultSelected < 300) fail.push("default_scope_selected:" + defaultSelected);
+const scopeFalse = Object.fromEntries(
+  [
+    "data_only",
+    "desktop_article_read_mark_only",
+    "legal_docs_form_state_only",
+    "info_panel_cnb_rates_only",
+  ].map((k) => [k, "false"])
+);
+const defaultSelected = manifest.guards.filter((g) => evalIf(g.ifGha, scopeFalse)).length;
+if (defaultSelected < 389) fail.push("default_scope_selected:" + defaultSelected);
+if (manifest.guards.some((g) => g.ifGha === ">")) fail.push("manifest_ifGha_corrupt");
 if (fail.length) {
   console.error(JSON.stringify({ IU_SMOKE_GUARD_MANIFEST_SELFTEST: "FAIL", fail }));
   process.exit(1);

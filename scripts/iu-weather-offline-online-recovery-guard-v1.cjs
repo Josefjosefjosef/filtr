@@ -14,7 +14,7 @@ const REPO = path.resolve(__dirname, "..");
 const req = createRequire(path.join(REPO, "package.json"));
 const { chromium } = req("playwright");
 const OUT = path.join(process.env.TEMP || process.env.TMPDIR || "/tmp", "iu_weather_offline_online_recovery_guard.json");
-const PORT = 8847;
+const PORT = parseInt(process.env.IU_GUARD_PORT || "8847", 10);
 const PIPELINE_REL = "assets/iu-app-feed-pipeline-v1.js";
 const SMOKE_REL = path.join(".github", "workflows", "smoke.yml");
 
