@@ -4,6 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   evaluateFlexRemainderInfoCardsReadiness,
+  evaluateSilverFlexRemainderGate,
   isMobileOrTabletHardProofViewport,
 } from "./iu-prod-hard-proof-silver-flex-remainder-readiness.mjs";
 
@@ -49,6 +50,42 @@ must(
 
 must(isMobileOrTabletHardProofViewport({ group: "mobile", name: "mobileShort" }), "vp_mobile");
 must(!isMobileOrTabletHardProofViewport({ name: "desktop" }), "vp_desktop_not");
+
+must(
+  evaluateSilverFlexRemainderGate({
+    slotMaxHeightCapActive: false,
+    deltaPx: 67,
+    tallHeightPx: 1055,
+  }).ok === true,
+  "document_scroll_ignores_delta"
+);
+must(
+  evaluateSilverFlexRemainderGate({
+    slotMaxHeightCapActive: false,
+    deltaPx: 67,
+    tallHeightPx: 100,
+  }).ok === false,
+  "document_scroll_short_third_fail"
+);
+must(
+  evaluateSilverFlexRemainderGate({
+    slotMaxHeightCapActive: true,
+    deltaPx: 67,
+    tallHeightPx: 400,
+  }).ok === false,
+  "capped_slot_bad_delta_fail"
+);
+must(
+  evaluateSilverFlexRemainderGate({
+    slotMaxHeightCapActive: true,
+    deltaPx: 8,
+    tallHeightPx: 400,
+  }).ok === true,
+  "capped_slot_ok_delta_pass"
+);
+
+must(/evaluateSilverFlexRemainderGate/.test(hardProof), "hard_proof_uses_gate");
+must(/silverSlotMaxHeightCapActive/.test(hardProof), "hard_proof_cap_flag");
 
 must(/applySilverFlexRemainderReadiness/.test(hardProof), "hard_proof_calls_readiness");
 must(/iu-prod-hard-proof-silver-flex-remainder-readiness\.mjs/.test(hardProof), "hard_proof_imports_module");

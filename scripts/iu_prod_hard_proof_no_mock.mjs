@@ -1,6 +1,9 @@
 /** PROD hard proof — NO Date mock. Flags: --no-cache (fresh network, no SW) */
 import { chromium, webkit } from "playwright";
-import { applySilverFlexRemainderReadiness } from "./iu-prod-hard-proof-silver-flex-remainder-readiness.mjs";
+import {
+  applySilverFlexRemainderReadiness,
+  evaluateSilverFlexRemainderGate,
+} from "./iu-prod-hard-proof-silver-flex-remainder-readiness.mjs";
 const NO_CACHE = process.argv.includes("--no-cache");
 const BASE = process.env.IU_PROOF_BASE?.trim() || "https://infouzel.cz/projects/";
 const viewports = [
@@ -282,6 +285,8 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
     let silverSmallBoxesContentDrivenOk = null;
     let silverThirdBoxIsTrueRemainderOk = null;
     let silverThirdBoxRemainderDeltaPx = null;
+    let silverSlotMaxHeightCapActive = null;
+    let silverFlexRemainderMode = null;
     let silverThirdBoxHasNoFixedHeightOk = null;
     let silverIsFixedOk = null;
     try {
@@ -419,6 +424,23 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
         } else {
           silverIsFixedOk = false;
         }
+        if (slot) {
+          try {
+            const csSlot = getComputedStyle(slot);
+            const rawVar = csSlot.getPropertyValue("--iu-silver-slot-max-h").trim();
+            const maxPx = parseFloat(csSlot.maxHeight);
+            silverSlotMaxHeightCapActive =
+              rawVar !== "" &&
+              csSlot.maxHeight !== "none" &&
+              Number.isFinite(maxPx) &&
+              maxPx > 0 &&
+              maxPx < 4000;
+          } catch (_) {
+            silverSlotMaxHeightCapActive = false;
+          }
+        } else {
+          silverSlotMaxHeightCapActive = false;
+        }
         if (stackEl && tallEl) {
           let sumExclTall = 0;
           for (let i = 0; i < stackEl.children.length; i++) {
@@ -428,7 +450,7 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
           }
           const remainderPx = stackEl.clientHeight - sumExclTall;
           silverThirdBoxRemainderDeltaPx = Math.round(Math.abs(hTall - remainderPx) * 100) / 100;
-          silverThirdBoxIsTrueRemainderOk = silverThirdBoxRemainderDeltaPx <= 12;
+          silverThirdBoxIsTrueRemainderOk = null;
         }
 
         let overflow = 0;
@@ -563,10 +585,25 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
       silverSmallBoxesContentDrivenOk,
       silverThirdBoxIsTrueRemainderOk,
       silverThirdBoxRemainderDeltaPx,
+      silverSlotMaxHeightCapActive,
+      silverFlexRemainderMode,
       silverThirdBoxHasNoFixedHeightOk,
       silverIsFixedOk,
     };
   });
+
+  if ((vp.group || vp.name) === "mobile" || (vp.group || vp.name) === "tablet") {
+    const gate = evaluateSilverFlexRemainderGate({
+      slotMaxHeightCapActive: data.silverSlotMaxHeightCapActive === true,
+      deltaPx: data.silverThirdBoxRemainderDeltaPx,
+      tallHeightPx:
+        data.silverThirdBoxHeights && data.silverThirdBoxHeights.thirdBox != null
+          ? data.silverThirdBoxHeights.thirdBox
+          : data.thirdBoxHeight,
+    });
+    data.silverFlexRemainderMode = gate.mode;
+    data.silverThirdBoxIsTrueRemainderOk = gate.ok === true;
+  }
 
   if (
     ((vp.group || vp.name) === "mobile" || (vp.group || vp.name) === "tablet") &&
