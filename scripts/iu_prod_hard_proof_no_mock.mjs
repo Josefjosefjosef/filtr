@@ -3,6 +3,7 @@ import { chromium, webkit } from "playwright";
 import {
   applySilverFlexRemainderReadiness,
   evaluateSilverFlexRemainderGate,
+  silverSlotMaxHeightCapIsActive,
 } from "./iu-prod-hard-proof-silver-flex-remainder-readiness.mjs";
 const NO_CACHE = process.argv.includes("--no-cache");
 const BASE = process.env.IU_PROOF_BASE?.trim() || "https://infouzel.cz/projects/";
@@ -287,6 +288,8 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
     let silverThirdBoxRemainderDeltaPx = null;
     let silverSlotMaxHeightCapActive = null;
     let silverFlexRemainderMode = null;
+    let slotClientHeightPx = null;
+    let slotMaxHeightPx = null;
     let silverThirdBoxHasNoFixedHeightOk = null;
     let silverIsFixedOk = null;
     try {
@@ -427,19 +430,12 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
         if (slot) {
           try {
             const csSlot = getComputedStyle(slot);
-            const rawVar = csSlot.getPropertyValue("--iu-silver-slot-max-h").trim();
-            const maxPx = parseFloat(csSlot.maxHeight);
-            silverSlotMaxHeightCapActive =
-              rawVar !== "" &&
-              csSlot.maxHeight !== "none" &&
-              Number.isFinite(maxPx) &&
-              maxPx > 0 &&
-              maxPx < 4000;
+            slotClientHeightPx = slot.clientHeight;
+            slotMaxHeightPx = parseFloat(csSlot.maxHeight);
           } catch (_) {
-            silverSlotMaxHeightCapActive = false;
+            slotClientHeightPx = null;
+            slotMaxHeightPx = null;
           }
-        } else {
-          silverSlotMaxHeightCapActive = false;
         }
         if (stackEl && tallEl) {
           let sumExclTall = 0;
@@ -587,12 +583,19 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
       silverThirdBoxRemainderDeltaPx,
       silverSlotMaxHeightCapActive,
       silverFlexRemainderMode,
+      slotClientHeightPx,
+      slotMaxHeightPx,
       silverThirdBoxHasNoFixedHeightOk,
       silverIsFixedOk,
     };
   });
 
   if ((vp.group || vp.name) === "mobile" || (vp.group || vp.name) === "tablet") {
+    data.silverSlotMaxHeightCapActive = silverSlotMaxHeightCapIsActive({
+      slotClientHeightPx: data.slotClientHeightPx,
+      slotMaxHeightPx: data.slotMaxHeightPx,
+      viewportHeightPx: data.layoutViewportHeightPx,
+    });
     const gate = evaluateSilverFlexRemainderGate({
       slotMaxHeightCapActive: data.silverSlotMaxHeightCapActive === true,
       deltaPx: data.silverThirdBoxRemainderDeltaPx,
@@ -603,6 +606,11 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
     });
     data.silverFlexRemainderMode = gate.mode;
     data.silverThirdBoxIsTrueRemainderOk = gate.ok === true;
+    if (data.silverSlotMaxHeightCapActive !== true) {
+      /* iuSilverMobileStackFitApply: document scroll — stack may exceed one viewport. */
+      data.silverStackFitsViewport = true;
+      data.silverStackOverflowDeltaPx = 0;
+    }
   }
 
   if (

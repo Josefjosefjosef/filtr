@@ -12,6 +12,18 @@ export function isMobileOrTabletHardProofViewport(vp) {
 }
 
 /** Gate: flex remainder proof is invalid when info cards stay collapsed (calendar/tasks height 0). */
+/** True only when max-height actually constrains the slot (not document-scroll mobile). */
+export function silverSlotMaxHeightCapIsActive({ slotClientHeightPx, slotMaxHeightPx, viewportHeightPx }) {
+  const ch = Number(slotClientHeightPx);
+  const maxPx = Number(slotMaxHeightPx);
+  const vh = Number(viewportHeightPx);
+  if (!Number.isFinite(ch) || ch <= 0) return false;
+  if (!Number.isFinite(maxPx) || maxPx <= 0) return false;
+  if (ch > maxPx + 4) return false;
+  if (Number.isFinite(vh) && vh > 0 && ch > vh + 96) return false;
+  return true;
+}
+
 /** When false, mobile/tablet uses document scroll (iuSilverMobileStackFitApply clears --iu-silver-slot-max-h). */
 export function evaluateSilverFlexRemainderGate({ slotMaxHeightCapActive, deltaPx, tallHeightPx }) {
   if (!slotMaxHeightCapActive) {
