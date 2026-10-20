@@ -8,6 +8,7 @@ import {
   isMobileOrTabletHardProofViewport,
   silverSlotMaxHeightCapIsActive,
 } from "./iu-prod-hard-proof-silver-flex-remainder-readiness.mjs";
+import { evaluateDesktopRightColumnGate } from "./iu-prod-hard-proof-desktop-right-column-readiness.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const hardProof = fs.readFileSync(
@@ -110,6 +111,71 @@ must(/applySilverFlexRemainderReadiness/.test(hardProof), "hard_proof_calls_read
 must(/iu-prod-hard-proof-silver-flex-remainder-readiness\.mjs/.test(hardProof), "hard_proof_imports_module");
 must(/data-iu-info-cards-expanded/.test(readiness), "readiness_expanded_attr");
 must(/iu\.infoCards\.expanded\.v1/.test(readiness), "readiness_ls_key");
+
+must(
+  evaluateDesktopRightColumnGate({
+    isDesktopBp: true,
+    asidePaddingTopPx: 0,
+    asideTopY: 92,
+    mindMenuVisible: false,
+    mindMenuTopY: 0,
+    qrVisible: true,
+    qrTopY: 92,
+    railVisible: true,
+    railHeightPx: 568,
+    railTopY: 710,
+    horizontalOverflow: false,
+    leftSilverTopY: 92,
+  }).ok === true,
+  "desktop_rail_v3_prod_geometry_pass"
+);
+must(
+  evaluateDesktopRightColumnGate({
+    isDesktopBp: true,
+    asidePaddingTopPx: 0,
+    asideTopY: 92,
+    mindMenuVisible: false,
+    mindMenuTopY: 0,
+    qrVisible: false,
+    railVisible: false,
+    horizontalOverflow: false,
+  }).ok === false,
+  "desktop_rail_missing_content_fail"
+);
+must(
+  evaluateDesktopRightColumnGate({
+    isDesktopBp: true,
+    asidePaddingTopPx: 4,
+    asideTopY: 92,
+    mindMenuVisible: false,
+    qrVisible: true,
+    qrTopY: 92,
+    railVisible: true,
+    railHeightPx: 568,
+    horizontalOverflow: false,
+    leftSilverTopY: 92,
+  }).ok === false,
+  "desktop_aside_padding_fail"
+);
+must(
+  evaluateDesktopRightColumnGate({
+    isDesktopBp: true,
+    asidePaddingTopPx: 0,
+    asideTopY: 92,
+    mindMenuVisible: true,
+    mindMenuTopY: 110,
+    qrVisible: false,
+    railVisible: false,
+    horizontalOverflow: false,
+  }).ok === false,
+  "mindmenu_visible_strip_fail"
+);
+
+must(/evaluateDesktopRightColumnGate/.test(hardProof), "hard_proof_desktop_right_gate");
+must(
+  /iu-prod-hard-proof-desktop-right-column-readiness\.mjs/.test(hardProof),
+  "hard_proof_imports_desktop_right_module"
+);
 
 console.log(
   "IU_PROD_HARD_PROOF_SILVER_FLEX_REMAINDER_READINESS_SELFTEST_PASS=" + (fails.length === 0)

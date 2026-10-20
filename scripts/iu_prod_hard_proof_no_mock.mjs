@@ -5,6 +5,7 @@ import {
   evaluateSilverFlexRemainderGate,
   silverSlotMaxHeightCapIsActive,
 } from "./iu-prod-hard-proof-silver-flex-remainder-readiness.mjs";
+import { evaluateDesktopRightColumnGate } from "./iu-prod-hard-proof-desktop-right-column-readiness.mjs";
 const NO_CACHE = process.argv.includes("--no-cache");
 const BASE = process.env.IU_PROOF_BASE?.trim() || "https://infouzel.cz/projects/";
 const viewports = [
@@ -202,9 +203,27 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
     let gapDelta = null;
     let rightColumnAlignedWithLeftSilverGap = null;
     let rightColumnWrapperAligned = null;
+    let desktopRightColumnBp = false;
+    let mindMenuVisible = false;
+    let desktopQrVisible = false;
+    let desktopQrTopY = null;
+    let desktopRailVisible = false;
+    let desktopRailTopY = null;
+    let desktopRailHeightPx = null;
+    let desktopRightColumnAnchorId = null;
+    let wrapperExtraAboveVisibleAnchor = null;
+
+    const layoutElVisible = (el) => {
+      if (!el) return false;
+      const cs = getComputedStyle(el);
+      if (cs.display === "none" || cs.visibility === "hidden") return false;
+      const r = el.getBoundingClientRect();
+      return r.width > 1 && r.height > 1;
+    };
 
     try {
       if (aside && window.matchMedia && window.matchMedia("(min-width: 901px)").matches) {
+        desktopRightColumnBp = true;
         asideMarginTopPx = parseFloat(getComputedStyle(aside).marginTop) || 0;
         asidePaddingTopPx = parseFloat(getComputedStyle(aside).paddingTop) || 0;
         const root = document.documentElement;
@@ -215,7 +234,36 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
         const extra = asidePaddingTopPx - tbVar;
         rightColumnMovedDownBy15px = extra >= 14 && extra <= 16;
         rightColumnAtBaseline = extra >= -1 && extra <= 1;
-        if (mind) {
+
+        mindMenuVisible = mind ? layoutElVisible(mind) : false;
+        const qr = document.getElementById("iuDesktopQrBanner");
+        const rail = document.getElementById("iuDesktopRightRailCards");
+        desktopQrVisible = layoutElVisible(qr);
+        desktopRailVisible = layoutElVisible(rail);
+        if (desktopQrVisible && qr) {
+          desktopQrTopY = Math.round(qr.getBoundingClientRect().top * 100) / 100;
+        }
+        if (desktopRailVisible && rail) {
+          const rr = rail.getBoundingClientRect();
+          desktopRailTopY = Math.round(rr.top * 100) / 100;
+          desktopRailHeightPx = Math.round(rr.height);
+        }
+
+        if (mindMenuVisible && mindMenuTopY !== null && asideTopY !== null) {
+          desktopRightColumnAnchorId = "iuMindMenuView";
+          wrapperExtraAboveVisibleAnchor =
+            Math.round((mindMenuTopY - asideTopY) * 100) / 100;
+        } else if (desktopQrVisible && desktopQrTopY !== null && asideTopY !== null) {
+          desktopRightColumnAnchorId = "iuDesktopQrBanner";
+          wrapperExtraAboveVisibleAnchor =
+            Math.round((desktopQrTopY - asideTopY) * 100) / 100;
+        } else if (desktopRailVisible && desktopRailTopY !== null && asideTopY !== null) {
+          desktopRightColumnAnchorId = "iuDesktopRightRailCards";
+          wrapperExtraAboveVisibleAnchor =
+            Math.round((desktopRailTopY - asideTopY) * 100) / 100;
+        }
+
+        if (mindMenuVisible && mind) {
           leftGap = Math.round((st.top - tb.bottom) * 100) / 100;
           rightGap = Math.round((mt.top - tb.bottom) * 100) / 100;
           gapDelta = Math.round((rightGap - leftGap) * 100) / 100;
@@ -223,30 +271,11 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
             Math.abs(gapDelta) <= 1 && mt.top >= tb.bottom - 1;
         }
 
-        if (asidePaddingTopPx > 0) {
-          throw new Error(
-            "RIGHT COLUMN BROKEN: aside padding-top > 0 (wrapper silver strip risk)"
-          );
-        }
-
-        if (
-          wrapperExtraSilverAboveMindMenu !== null &&
-          Math.abs(wrapperExtraSilverAboveMindMenu) > 1
-        ) {
-          throw new Error(
-            "RIGHT COLUMN BROKEN: silver background above MindMenu detected (wrapperExtraSilverAboveMindMenu=" +
-              wrapperExtraSilverAboveMindMenu +
-              ")"
-          );
-        }
-
         rightColumnWrapperAligned =
-          wrapperExtraSilverAboveMindMenu !== null &&
-          Math.abs(wrapperExtraSilverAboveMindMenu) <= 1;
+          wrapperExtraAboveVisibleAnchor !== null &&
+          Math.abs(wrapperExtraAboveVisibleAnchor) <= 1;
       }
-    } catch (e) {
-      throw e;
-    }
+    } catch (_) {}
 
     const ndWish = document.querySelector(".iu-nameday-wish");
     const ndFlow = document.querySelector(".iu-nameday-flowers");
@@ -531,17 +560,34 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
       mindMenuTopY,
       rightColumnTopY,
       wrapperExtraSilverAboveMindMenu,
+      wrapperExtraAboveVisibleAnchor,
+      desktopRightColumnBp,
+      mindMenuVisible,
+      desktopQrVisible,
+      desktopQrTopY,
+      desktopRailVisible,
+      desktopRailTopY,
+      desktopRailHeightPx,
+      desktopRightColumnAnchorId,
       rightColumnWrapperAligned,
       deltaMainVsRightColumnTop: Math.round((mt.top - st.top) * 100) / 100,
       leftGap,
       rightGap,
       gapDelta,
-      rightColumnStartsUnderTopbar: aside && mind ? mt.top >= tb.bottom - 1 : true,
+      rightColumnStartsUnderTopbar:
+        desktopRightColumnBp && desktopQrVisible
+          ? desktopQrTopY != null && desktopQrTopY >= tb.bottom - 1
+          : aside && mind && mindMenuVisible
+            ? mt.top >= tb.bottom - 1
+            : true,
       rightColumnAlignedWithMainContentFlow:
-        aside &&
-        mind &&
-        Math.abs(mt.top - st.top) <= 14 &&
-        mt.top >= tb.bottom - 1,
+        desktopRightColumnBp && desktopQrVisible && desktopQrTopY != null
+          ? Math.abs(desktopQrTopY - st.top) <= 3 && desktopQrTopY >= tb.bottom - 1
+          : aside &&
+              mind &&
+              mindMenuVisible &&
+              Math.abs(mt.top - st.top) <= 14 &&
+              mt.top >= tb.bottom - 1,
       rightColumnAlignedWithLeftSilverGap,
       asideMarginTopPx,
       asidePaddingTopPx,
@@ -610,6 +656,33 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
       /* iuSilverMobileStackFitApply: document scroll — stack may exceed one viewport. */
       data.silverStackFitsViewport = true;
       data.silverStackOverflowDeltaPx = 0;
+    }
+  }
+
+  if (data.desktopRightColumnBp === true) {
+    const rcGate = evaluateDesktopRightColumnGate({
+      isDesktopBp: true,
+      asidePaddingTopPx: data.asidePaddingTopPx,
+      asideTopY: data.asideTopY,
+      mindMenuVisible: data.mindMenuVisible === true,
+      mindMenuTopY: data.mindMenuTopY,
+      qrVisible: data.desktopQrVisible === true,
+      qrTopY: data.desktopQrTopY,
+      railVisible: data.desktopRailVisible === true,
+      railHeightPx: data.desktopRailHeightPx,
+      railTopY: data.desktopRailTopY,
+      horizontalOverflow: data.overflowX === true,
+      leftSilverTopY: data.leftSilverTopY,
+      wrapperExtraAboveVisibleAnchor: data.wrapperExtraAboveVisibleAnchor,
+    });
+    data.desktopRightColumnMode = rcGate.mode;
+    data.desktopRightColumnOk = rcGate.ok === true;
+    if (rcGate.ok !== true) {
+      await context.close();
+      if (closeBrowserOnFatal) await browser.close();
+      throw new Error(
+        `PROOF FAIL: ${rcGate.reason} (viewport=${vp.name}, engine=${engineTag}, anchor=${String(data.desktopRightColumnAnchorId)}, wrapperExtra=${String(data.wrapperExtraAboveVisibleAnchor)}, mindVisible=${String(data.mindMenuVisible)}, qrTop=${String(data.desktopQrTopY)}, asideTop=${String(data.asideTopY)}, railH=${String(data.desktopRailHeightPx)})`
+      );
     }
   }
 
