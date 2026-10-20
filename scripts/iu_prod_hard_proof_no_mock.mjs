@@ -49,6 +49,12 @@ function webkitRecordsAreOnlyLoadFailed(records) {
   });
 }
 
+/** Chromium logs Permissions-Policy clipboard blocks as console errors; not an app regression. */
+function isNamedayHarnessBenignConsoleText(text) {
+  const t = String(text || "");
+  return /Permissions policy violation.*Clipboard API/i.test(t);
+}
+
 async function collectSwAndAssetsDiag(page) {
   return page.evaluate(async () => {
     const cssLink =
@@ -1496,14 +1502,18 @@ try {
   const namedayConsoleErrorRecords = [];
   page.on("console", (msg) => {
     if (msg.type() !== "error") return;
+    const text = msg.text();
+    if (isNamedayHarnessBenignConsoleText(text)) return;
     ne += 1;
-    namedayConsoleErrorRecords.push({ source: "console", text: msg.text(), location: msg.location() });
+    namedayConsoleErrorRecords.push({ source: "console", text, location: msg.location() });
   });
   page.on("pageerror", (err) => {
+    const text = String(err && err.message ? err.message : err);
+    if (isNamedayHarnessBenignConsoleText(text)) return;
     ne += 1;
     namedayConsoleErrorRecords.push({
       source: "pageerror",
-      text: String(err && err.message ? err.message : err),
+      text,
       stack: String(err && err.stack ? err.stack : ""),
     });
   });
