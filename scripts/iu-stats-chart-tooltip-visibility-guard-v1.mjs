@@ -43,7 +43,7 @@ function staticContract() {
     if (src.indexOf("shellRect.height") < 0) fail("static_missing_vertical_clamp");
   }
   if (pkg.indexOf("iu-stats-chart-tooltip-visibility-guard") < 0) fail("package_missing_script");
-  const { guardWiredInSmokeCi } = require("./guards/iu-smoke-ci-wiring-v1.cjs");
+  const { guardWiredInSmokeCi } = require(path.join(ROOT, "scripts/guards/iu-smoke-ci-wiring-v1.cjs"));
   if (!guardWiredInSmokeCi(ROOT, "iu-stats-chart-tooltip-visibility-guard")) fail("smoke_missing_guard");
 }
 
