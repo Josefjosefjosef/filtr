@@ -88,6 +88,14 @@ function staticGate() {
   must(/iu-terms-icentrum-read/.test(gate), "static:icentrum_read_flag");
   must(/iu-terms-icentrum-read/.test(gateCss) || /iu-terms-icentrum-read/.test(infoCss), "static:icentrum_stack_css");
   must(/iuTermsGate__confirm/.test(gateCss), "static:confirm_css");
+  must(
+    /html\.iu-terms-gate-open[\s\S]{0,120}scrollbar-gutter:\s*stable/.test(gateCss),
+    "static:terms_gate_scrollbar_gutter"
+  );
+  must(
+    /html\s*\{[\s\S]{0,220}scrollbar-gutter:\s*stable/.test(index),
+    "static:inline_html_scrollbar_gutter"
+  );
   must(/iu:terms-accepted/.test(layer), "static:consent_waits_terms");
   must(/iuConsentLayerShowIfNeeded/.test(layer), "static:consent_export_show");
   must(/showConsentLayerIfNeeded/.test(layer), "static:consent_deferred_helper");

@@ -1121,6 +1121,12 @@ require-trusted-types-for 'script';
         Proof (Playwright after-commit): without this, html had background-image none while only the
         inline stylesheet was present — default canvas white, then gradient → visible chroma flash.
       */
+      html {
+        /* Match assets/app.css before hashed CSS loads — avoids terms-gate scrollbar CLS on cold start. */
+        scrollbar-gutter: stable;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
       html,
       body {
         background: linear-gradient(180deg, #e5eef6 0%, #f2f6fa 100%);
