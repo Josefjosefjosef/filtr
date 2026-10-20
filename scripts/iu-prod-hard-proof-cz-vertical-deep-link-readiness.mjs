@@ -36,9 +36,42 @@ export async function applyCzVerticalDeepLinkReadiness(page) {
   }, IU_TERMS_ACCEPTED_VERSION_V1);
 }
 
+export async function probePublishedMediaArticlesAvailableFromNode(baseUrl) {
+  try {
+    const origin = new URL(baseUrl).origin;
+    try {
+      const cutRes = await fetch(origin + "/projects/data/info_events/cutover_state.json", {
+        cache: "no-store",
+      });
+      if (cutRes.ok) {
+        const cut = await cutRes.json();
+        if (cut && cut.commercialAggregationActive === false) {
+          return { articlesRequired: false, reason: "commercialAggregationActive_false" };
+        }
+      }
+    } catch (_) {}
+    try {
+      const artRes = await fetch(origin + "/projects/data/articles.json", { cache: "no-store" });
+      if (!artRes.ok) return { articlesRequired: false, reason: "articles_fetch_failed" };
+      const arts = await artRes.json();
+      const list = Array.isArray(arts) ? arts : arts.articles || [];
+      if (!list.length) return { articlesRequired: false, reason: "articles_empty" };
+      return { articlesRequired: true, reason: "articles_present", count: list.length };
+    } catch (_) {
+      return { articlesRequired: false, reason: "articles_probe_error" };
+    }
+  } catch (_) {
+    return { articlesRequired: false, reason: "probe_exception" };
+  }
+}
+
 export async function probePublishedMediaArticlesAvailable(page, baseUrl) {
   try {
     const origin = new URL(baseUrl).origin;
+    const host = new URL(baseUrl).hostname;
+    if (host === "localhost" || host === "127.0.0.1") {
+      return probePublishedMediaArticlesAvailableFromNode(baseUrl);
+    }
     return await page.evaluate(async (originUrl) => {
       try {
         const cutRes = await fetch(originUrl + "/projects/data/info_events/cutover_state.json", {
