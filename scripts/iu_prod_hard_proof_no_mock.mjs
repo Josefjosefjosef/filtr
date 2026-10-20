@@ -1,5 +1,6 @@
 /** PROD hard proof — NO Date mock. Flags: --no-cache (fresh network, no SW) */
 import { chromium, webkit } from "playwright";
+import { applySilverFlexRemainderReadiness } from "./iu-prod-hard-proof-silver-flex-remainder-readiness.mjs";
 const NO_CACHE = process.argv.includes("--no-cache");
 const BASE = process.env.IU_PROOF_BASE?.trim() || "https://infouzel.cz/projects/";
 const viewports = [
@@ -138,6 +139,8 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
       window.scrollTo(0, 0);
     } catch (_) {}
   });
+  await applySilverFlexRemainderReadiness(page, vp);
+  await page.waitForTimeout(500);
   /* Po ustálení vynulovat CLS a měřit jen následné posuny (early feed/img mimo Silver jinak přidává ~0.035). */
   await page.evaluate(() => {
     try {

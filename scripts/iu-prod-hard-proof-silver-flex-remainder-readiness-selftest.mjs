@@ -1,0 +1,64 @@
+#!/usr/bin/env node
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import {
+  evaluateFlexRemainderInfoCardsReadiness,
+  isMobileOrTabletHardProofViewport,
+} from "./iu-prod-hard-proof-silver-flex-remainder-readiness.mjs";
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const hardProof = fs.readFileSync(
+  path.join(ROOT, "scripts", "iu_prod_hard_proof_no_mock.mjs"),
+  "utf8"
+);
+const readiness = fs.readFileSync(
+  path.join(ROOT, "scripts", "iu-prod-hard-proof-silver-flex-remainder-readiness.mjs"),
+  "utf8"
+);
+
+const fails = [];
+function must(cond, id) {
+  if (!cond) fails.push(id);
+}
+
+must(
+  evaluateFlexRemainderInfoCardsReadiness({
+    infoCardsDisplay: "flex",
+    calendarHeightPx: 52,
+    tasksHeightPx: 48,
+  }).ok === true,
+  "expanded_cards_pass"
+);
+must(
+  evaluateFlexRemainderInfoCardsReadiness({
+    infoCardsDisplay: "none",
+    calendarHeightPx: 0,
+    tasksHeightPx: 0,
+  }).ok === false,
+  "collapsed_cards_fail"
+);
+must(
+  evaluateFlexRemainderInfoCardsReadiness({
+    infoCardsDisplay: "block",
+    calendarHeightPx: 0,
+    tasksHeightPx: 40,
+  }).ok === false,
+  "zero_calendar_fail"
+);
+
+must(isMobileOrTabletHardProofViewport({ group: "mobile", name: "mobileShort" }), "vp_mobile");
+must(!isMobileOrTabletHardProofViewport({ name: "desktop" }), "vp_desktop_not");
+
+must(/applySilverFlexRemainderReadiness/.test(hardProof), "hard_proof_calls_readiness");
+must(/iu-prod-hard-proof-silver-flex-remainder-readiness\.mjs/.test(hardProof), "hard_proof_imports_module");
+must(/data-iu-info-cards-expanded/.test(readiness), "readiness_expanded_attr");
+must(/iu\.infoCards\.expanded\.v1/.test(readiness), "readiness_ls_key");
+
+console.log(
+  "IU_PROD_HARD_PROOF_SILVER_FLEX_REMAINDER_READINESS_SELFTEST_PASS=" + (fails.length === 0)
+);
+if (fails.length) {
+  console.log("IU_PROD_HARD_PROOF_SILVER_FLEX_REMAINDER_READINESS_SELFTEST_FAILS=" + fails.join(","));
+  process.exitCode = 1;
+}
