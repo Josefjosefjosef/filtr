@@ -308,6 +308,10 @@ jobs:
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.jr_section_header_line_color_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run iu-silver-layout-cls-guard-selftest
 
+      - name: Prod hard proof Silver third box min-height contract selftest
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.jr_section_header_line_color_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
+        run: npm run iu-prod-hard-proof-silver-third-box-contract-selftest
+
       - name: Silver speech bubble stable privacy + 4px down-shift guard
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.jr_section_header_line_color_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'
         run: npm run silver-bubble-stable-privacy-guard-checkout
