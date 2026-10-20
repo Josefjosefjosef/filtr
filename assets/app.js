@@ -8479,6 +8479,10 @@ try {
 
     /* P0 section switch stability: eager feed filter+render — idle deferral kept stale articles/header visible up to ~500ms. */
     if (usesFeed) {
+      /* P0 cold ?section=hry|kultura|…: inline boot sets data-iu-cold-section=1; must clear once feed nav applies. */
+      try {
+        iuPwaClearColdSectionAttrsForHub();
+      } catch (_) {}
       /* scroll restore (back/forward): do not arm scroll-to-section-start — the restore layer brings
          the user back to the saved position instead. Forward navigation keeps arming as before. */
       try{
