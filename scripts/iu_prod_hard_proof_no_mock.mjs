@@ -1,6 +1,5 @@
 /** PROD hard proof — NO Date mock. Flags: --no-cache (fresh network, no SW) */
 import { chromium, webkit } from "playwright";
-
 const NO_CACHE = process.argv.includes("--no-cache");
 const BASE = process.env.IU_PROOF_BASE?.trim() || "https://infouzel.cz/projects/";
 const viewports = [
@@ -331,10 +330,16 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
           const minHPx = parseFloat(cs3.minHeight) || 0;
           const maxHS = String(cs3.maxHeight || "");
           const heightHS = String(cs3.height || "");
-          const badVh =
-            /\b(?:min|max)?(?:[slvd])?vh\b/i.test(maxHS) ||
-            /\b(?:min|max)?(?:[slvd])?vh\b/i.test(heightHS);
-          silverThirdBoxHasNoFixedHeightOk = minHPx < 0.5 && !badVh;
+          const vhUnit = /(?:^|[^a-z])(?:min-|max-)?(?:[\d.]+\s*)?(?:[slvd])?vh\b/i;
+          const badVh = vhUnit.test(maxHS) || vhUnit.test(heightHS);
+          /* Keep in sync with iu-prod-hard-proof-silver-third-box-contract.mjs (app.css 180px floor). */
+          const floorLo = 178;
+          const floorHi = 182;
+          const maxAllowPx = 220;
+          const contentDriven = minHPx < 0.5;
+          const atFloor = minHPx >= floorLo && minHPx <= floorHi;
+          const notExcessive = minHPx <= maxAllowPx;
+          silverThirdBoxHasNoFixedHeightOk = !badVh && notExcessive && (contentDriven || atFloor);
         } else {
           silverThirdBoxHasNoFixedHeightOk = false;
         }
@@ -449,7 +454,7 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
             ? Math.round(inputEl.getBoundingClientRect().height * 100) / 100
             : 0,
         };
-        /* Slot cap: JS sets --iu-silver-slot-max-h from visualViewport (single source; third box uses flex only, no CSS viewport min-height). */
+        /* Slot cap: JS sets --iu-silver-slot-max-h from visualViewport; third box also has 180px min-height floor in app.css (mobile/tablet). */
         if (slot) {
           try {
             const raw = getComputedStyle(slot).getPropertyValue("--iu-silver-slot-max-h").trim();
@@ -578,7 +583,7 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
     await context.close();
     if (closeBrowserOnFatal) await browser.close();
     throw new Error(
-      `PROOF FAIL: third box must have no fixed floor / no vh height (computed min-height < 0.5px, no vh on height/max-height) viewport=${vp.name}, engine=${engineTag}`
+      `PROOF FAIL: third box min-height contract (content-driven <0.5px OR authoritative 180px±2px, no vh on height/max-height, max min-height 220px) viewport=${vp.name}, engine=${engineTag}`
     );
   }
 
