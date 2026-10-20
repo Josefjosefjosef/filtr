@@ -43,7 +43,16 @@ npm run dev:ci-timing 12123
 ## CI optimalizace (bezpečné)
 
 - **npm cache** v `smoke.yml` a `layout-guard.yml` (`setup-node` + oba lockfile).
+- **Playwright guard suite (parallel pool)** — stejné příkazy jako dříve sekvenční kroky v `smoke.yml`, manifest `scripts/ci/smoke-guard-manifest-v1.json`, runner `scripts/ci/run-smoke-guards-parallel-v1.mjs`, default `IU_SMOKE_GUARD_PARALLEL=4`.
+- **Prefetch** `cloudflare/iu-ads` npm jednou před premium visual kroky (bez druhého `npm ci` v kroku).
 - Existující **data-only / info-panel / iu-ads** fast paths v `smoke-data-only-scope.mjs` — neměnit význam, jen využívat při úzkém diffu.
+
+Regenerace manifestu po úpravě guard kroků v `smoke.yml`:
+
+```powershell
+node scripts/ci/extract-smoke-guard-manifest-v1.mjs
+node scripts/ci/smoke-workflow-parallelize-apply-v1.mjs
+```
 
 ## Co záměrně nezrychlit
 
