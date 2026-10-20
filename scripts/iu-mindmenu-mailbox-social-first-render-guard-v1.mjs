@@ -56,7 +56,8 @@ function staticContract() {
     fail("static_default_items_still_null_social");
   }
   if (pkg.indexOf("iu-mindmenu-mailbox-social-first-render-guard") < 0) fail("package_missing_script");
-  if (smoke.indexOf("iu-mindmenu-mailbox-social-first-render-guard") < 0) fail("smoke_missing_guard");
+  const { guardWiredInSmokeCi } = require("./guards/iu-smoke-ci-wiring-v1.cjs");
+  if (!guardWiredInSmokeCi(ROOT, "iu-mindmenu-mailbox-social-first-render-guard")) fail("smoke_missing_guard");
   if (!/mindmenu-social-first-render-v1-20260914/.test(app)) fail("app_js_cachebust_missing");
   if (!/mindmenu-social-first-render-v1-20260914/.test(shell)) fail("shell_cachebust_missing");
 }

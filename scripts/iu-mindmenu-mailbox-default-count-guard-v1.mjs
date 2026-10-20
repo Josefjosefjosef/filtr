@@ -67,7 +67,8 @@ function staticContract() {
     fail("static_render_truncates_to_4");
   }
   if (pkg.indexOf("iu-mindmenu-mailbox-default-count-guard") < 0) fail("package_missing_script");
-  if (smoke.indexOf("iu-mindmenu-mailbox-default-count-guard") < 0) fail("smoke_missing_guard");
+  const { guardWiredInSmokeCi } = require("./guards/iu-smoke-ci-wiring-v1.cjs");
+  if (!guardWiredInSmokeCi(ROOT, "iu-mindmenu-mailbox-default-count-guard")) fail("smoke_missing_guard");
 }
 
 function seedItems(n, labels) {

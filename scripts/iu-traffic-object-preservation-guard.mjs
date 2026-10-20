@@ -178,7 +178,7 @@ ok(
   String(kmPres.placeLine || "")
 );
 
-const smokeSrc = fs.readFileSync(path.join(root, ".github/workflows/smoke.yml"), "utf8");
+const { guardWiredInSmokeCi } = require("./guards/iu-smoke-ci-wiring-v1.cjs");
 const pkgSrc = fs.readFileSync(path.join(root, "package.json"), "utf8");
 ok(
   "OBJECT_PRESERVATION_GUARD_IN_PACKAGE",
@@ -186,7 +186,7 @@ ok(
 );
 ok(
   "OBJECT_PRESERVATION_GUARD_IN_SMOKE",
-  /iu-traffic-object-preservation-guard/.test(smokeSrc)
+  guardWiredInSmokeCi(root, "iu-traffic-object-preservation-guard")
 );
 
 console.log(

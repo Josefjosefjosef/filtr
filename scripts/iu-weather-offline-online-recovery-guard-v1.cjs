@@ -80,7 +80,8 @@ function staticContract(pipeline, smokeYml) {
   if (pipeline.indexOf('reason: "visibility"') < 0 && pipeline.indexOf("reason: 'visibility'") < 0) {
     fails.push("static_visibility_reconnect_missing");
   }
-  if (String(smokeYml || "").indexOf("iu-weather-offline-online-recovery-guard") < 0) {
+  const { guardWiredInSmokeCi } = require("./guards/iu-smoke-ci-wiring-v1.cjs");
+  if (!guardWiredInSmokeCi(REPO, "iu-weather-offline-online-recovery-guard")) {
     fails.push("static_smoke_yml_missing_guard");
   }
   return fails;

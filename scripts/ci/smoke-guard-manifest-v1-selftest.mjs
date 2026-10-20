@@ -42,6 +42,12 @@ const scopeFalse = Object.fromEntries(
 const defaultSelected = manifest.guards.filter((g) => evalIf(g.ifGha, scopeFalse)).length;
 if (defaultSelected < 389) fail.push("default_scope_selected:" + defaultSelected);
 if (manifest.guards.some((g) => g.ifGha === ">")) fail.push("manifest_ifGha_corrupt");
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const { guardWiredInSmokeCi } = require("../guards/iu-smoke-ci-wiring-v1.cjs");
+if (!guardWiredInSmokeCi(REPO, "iu-reload-visual-stability-contract-guard")) {
+  fail.push("manifest_wiring_sample_missing");
+}
 if (fail.length) {
   console.error(JSON.stringify({ IU_SMOKE_GUARD_MANIFEST_SELFTEST: "FAIL", fail }));
   process.exit(1);

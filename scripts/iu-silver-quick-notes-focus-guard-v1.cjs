@@ -68,7 +68,8 @@ function staticContract(panel, app, smokeYml) {
   if (app.indexOf("#iuSilverQuickPanel") < 0) {
     fails.push("static_app_missing_quickpanel_clickhold_exclude");
   }
-  if (String(smokeYml || "").indexOf("iu-silver-quick-notes-focus-guard") < 0) {
+  const { guardWiredInSmokeCi } = require("./guards/iu-smoke-ci-wiring-v1.cjs");
+  if (!guardWiredInSmokeCi(REPO, "iu-silver-quick-notes-focus-guard")) {
     fails.push("static_smoke_yml_missing_guard");
   }
   return fails;

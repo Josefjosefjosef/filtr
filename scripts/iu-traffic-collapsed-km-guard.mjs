@@ -7,6 +7,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { createRequire } from "module";
 import {
   buildPlaceAndDirectionLine,
   buildTrafficCardPresentation,
@@ -20,6 +21,8 @@ import {
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
+const require = createRequire(import.meta.url);
+const { guardWiredInSmokeCi } = require("./guards/iu-smoke-ci-wiring-v1.cjs");
 
 const fails = [];
 const results = [];
@@ -300,14 +303,13 @@ for (const c of CLASS_CASES) {
 // --- Guard file wired in package.json + smoke.yml ---
 {
   const pkg = fs.readFileSync(path.join(root, "package.json"), "utf8");
-  const smoke = fs.readFileSync(path.join(root, ".github/workflows/smoke.yml"), "utf8");
   ok(
     "COLLAPSED_KM_GUARD_IN_PACKAGE",
     /iu-traffic-collapsed-km-guard/.test(pkg)
   );
   ok(
     "COLLAPSED_KM_GUARD_IN_SMOKE",
-    /iu-traffic-collapsed-km-guard/.test(smoke)
+    guardWiredInSmokeCi(root, "iu-traffic-collapsed-km-guard")
   );
 }
 
@@ -343,14 +345,10 @@ console.log(
       fails,
       COLLAPSED_KM_GUARD_IMPLEMENTED: "YES",
       COLLAPSED_KM_GUARD_REQUIRED: "YES",
-      COLLAPSED_KM_GUARD_CI_BLOCKING: /iu-traffic-collapsed-km-guard/.test(
-        fs.readFileSync(path.join(root, ".github/workflows/smoke.yml"), "utf8")
-      )
+      COLLAPSED_KM_GUARD_CI_BLOCKING: guardWiredInSmokeCi(root, "iu-traffic-collapsed-km-guard")
         ? "YES"
         : "NO",
-      COLLAPSED_KM_GUARD_IN_CI: /iu-traffic-collapsed-km-guard/.test(
-        fs.readFileSync(path.join(root, ".github/workflows/smoke.yml"), "utf8")
-      )
+      COLLAPSED_KM_GUARD_IN_CI: guardWiredInSmokeCi(root, "iu-traffic-collapsed-km-guard")
         ? "YES"
         : "NO",
       gates: Object.fromEntries(
