@@ -32,8 +32,8 @@ export function classifyTimeWindow(startRaw, endRaw, ref) {
   if (end && end < ref) return "expired";
   if (start && start > ref) return "future";
   if (start && end && start <= ref && ref <= end) return "time_active";
-  if (start && !end && start <= ref) return "time_active";
-  if (!start && end && end >= ref) return "time_active";
+  if (start && !end && start <= ref) return "time_open_end_missing";
+  if (!start && end) return "time_unverified";
   return "time_unverified";
 }
 
@@ -118,6 +118,7 @@ export function assessOffer(link, ref, opts = {}) {
 
   if (timeWindow === "expired" || timeWindow === "future") hardBlockers.push("time_window");
   if (timeWindow === "time_unverified") hardBlockers.push("time_not_proven");
+  if (timeWindow === "time_open_end_missing") hardBlockers.push("promotion_end_not_documented");
 
   let couponReady = false;
   let conditionsSufficient = false;

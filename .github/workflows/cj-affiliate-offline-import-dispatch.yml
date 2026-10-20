@@ -1,0 +1,64 @@
+name: CJ Affiliate unattended import (offline dispatch only)
+
+on:
+  workflow_dispatch:
+    inputs:
+      mock_product_feed:
+        description: "Run mock product feed probe (offline)"
+        required: false
+        default: "1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cj-affiliate-unattended-import-offline
+  cancel-in-progress: false
+
+jobs:
+  unattended-offline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: CJ offline selftests (banner permission + unattended + dataflow)
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/iu-cj-affiliate-phase2-banner-permission-selftest.mjs
+          node scripts/iu-cj-affiliate-phase2-media-inventory-selftest.mjs
+          node scripts/iu-cj-affiliate-phase2-unattended-import-cycle-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-phase2-offers-dataflow-offline-selftest.mjs
+          node scripts/iu-cj-affiliate-phase2-offline-pipeline-e2e-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-phase2-preview-security-selftest.mjs
+
+      - name: Run unattended import runner (offline — no live CJ/FORPSI)
+        shell: bash
+        env:
+          IU_CJ_UNATTENDED_IMPORT_OFFLINE: "1"
+          IU_CJ_UNATTENDED_SKIP_EMAIL_INGEST: "1"
+          PRODUCTION_SIGNING_ENABLED: "false"
+          IU_CJ_UNATTENDED_MOCK_PRODUCT_FEED: ${{ github.event.inputs.mock_product_feed || '1' }}
+        run: |
+          set -euo pipefail
+          node scripts/iu-cj-affiliate-phase2-unattended-import-runner-v1.mjs
+
+      - name: Live unattended gate (NOT ENABLED)
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Live unattended import requires ALL of:"
+          echo "  IU_CJ_LIVE_UNATTENDED_IMPORT=1"
+          echo "  IU_CJ_LIVE_INGEST_APPROVED=1"
+          echo "  IU_FORPSI_IMAP_CONNECT_APPROVED=1 + IMAP secrets"
+          echo "  IU_CJ_D1_BACKEND=worker + worker URL + ingest token"
+          echo "  IU_CJ_CJ_API_HTTP_EXECUTE=1 + infra PAT"
+          echo "  IU_CJ_UNATTENDED_IMPORT_OFFLINE=0"
+          echo "No cron schedule on this workflow until explicit production GO."
