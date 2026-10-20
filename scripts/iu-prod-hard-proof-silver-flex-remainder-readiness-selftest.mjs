@@ -174,6 +174,8 @@ must(
 must(/evaluateDesktopRightColumnGate/.test(hardProof), "hard_proof_desktop_right_gate");
 must(/webkit-silver-shell-base/.test(hardProof), "hard_proof_webkit_localhost_prod_fallback");
 must(/PROD_WEBKIT_SILVER_READONLY_BASE/.test(hardProof), "hard_proof_webkit_prod_readonly_base");
+must(/iu-prod-hard-proof-weather-dual-state-readiness/.test(hardProof), "hard_proof_weather_dual_state_module");
+must(/compactPromptVisible/.test(hardProof), "hard_proof_weather_first_visit_compact_prompt");
 must(
   /iu-prod-hard-proof-desktop-right-column-readiness\.mjs/.test(hardProof),
   "hard_proof_imports_desktop_right_module"

@@ -12,6 +12,11 @@ import {
   evaluateMediaTopicZpravyReferenceGate,
   probePublishedMediaArticlesAvailable,
 } from "./iu-prod-hard-proof-cz-vertical-deep-link-readiness.mjs";
+import {
+  evaluateWeatherReadyStateGate,
+  evaluateWeatherSetupStateGate,
+  evaluateWeatherSetupToReadyReallocationOk,
+} from "./iu-prod-hard-proof-weather-dual-state-readiness.mjs";
 const NO_CACHE = process.argv.includes("--no-cache");
 const BASE = process.env.IU_PROOF_BASE?.trim() || "https://infouzel.cz/projects/";
 const viewports = [
@@ -938,6 +943,8 @@ async function runWeatherDualStateStackProof(browser) {
   await page.setViewportSize({ width: vp.width, height: vp.height });
   await page.goto(BASE, { waitUntil: "load", timeout: 120000 });
   await page.waitForTimeout(6000);
+  await applySilverFlexRemainderReadiness(page, vp);
+  await page.waitForTimeout(500);
   await page.evaluate(() => {
     try {
       window.scrollTo(0, 0);
@@ -998,20 +1005,58 @@ async function runWeatherDualStateStackProof(browser) {
       ) / 100;
     }
     const overflowDelta = Math.round(Math.max(overflow, Math.max(0, bleed)) * 100) / 100;
-    const stackFitsViewport = overflowDelta <= 2;
-    let actionsVisible = false;
+    let slotClientHeightPx = null;
+    let slotMaxHeightPx = null;
+    if (slot) {
+      try {
+        slotClientHeightPx = slot.clientHeight;
+        slotMaxHeightPx = parseFloat(getComputedStyle(slot).maxHeight);
+      } catch (_) {}
+    }
+    const vhPx = window.innerHeight;
+    let slotMaxHeightCapActive = false;
+    if (slotClientHeightPx != null && slotMaxHeightPx != null) {
+      const ch = Number(slotClientHeightPx);
+      const maxPx = Number(slotMaxHeightPx);
+      if (Number.isFinite(ch) && ch > 0 && Number.isFinite(maxPx) && maxPx > 0 && ch <= maxPx + 4) {
+        if (!(Number.isFinite(vhPx) && vhPx > 0 && ch > vhPx + 96)) slotMaxHeightCapActive = true;
+      }
+    }
+    const stackFitsViewportStrict = overflowDelta <= 2;
+    const stackFitsViewport = slotMaxHeightCapActive ? stackFitsViewportStrict : foldOk;
+    let actionsFallbackVisible = false;
     if (actions) {
       const cs = getComputedStyle(actions);
-      actionsVisible = cs.display !== "none" && cs.visibility !== "hidden";
+      const r = actions.getBoundingClientRect();
+      actionsFallbackVisible =
+        !actions.hidden &&
+        cs.display !== "none" &&
+        cs.visibility !== "hidden" &&
+        r.height > 8 &&
+        r.width > 8;
     }
+    const line1 = document.getElementById("iuSilverWeatherLine1");
+    const line2 = document.getElementById("iuSilverWeatherLine2");
+    const l1h = line1 ? line1.getBoundingClientRect().height : 0;
+    const l2h = line2 ? line2.getBoundingClientRect().height : 0;
+    const phase = card ? card.getAttribute("data-iu-silver-wx-phase") : null;
+    const compactPromptVisible = phase === "firstVisit" && l1h > 8 && l2h > 8;
+    const deniedPromptVisible = phase === "denied" && l1h > 8 && l2h > 8;
     return {
       layout: card ? card.getAttribute("data-iu-silver-wx-layout") : null,
-      phase: card ? card.getAttribute("data-iu-silver-wx-phase") : null,
+      phase,
       wxH: wxEl ? Math.round(wxEl.getBoundingClientRect().height * 100) / 100 : 0,
       thirdH: tallEl ? Math.round(tallEl.getBoundingClientRect().height * 100) / 100 : 0,
+      overflowDelta,
+      slotClientHeightPx,
+      slotMaxHeightPx: Number.isFinite(Number(slotMaxHeightPx)) ? slotMaxHeightPx : null,
+      slotMaxHeightCapActive,
+      stackFitsViewportStrict,
       stackFitsViewport,
       foldOk,
-      actionsVisible,
+      actionsFallbackVisible,
+      compactPromptVisible,
+      deniedPromptVisible,
     };
   };
 
@@ -1065,19 +1110,12 @@ async function runWeatherDualStateStackProof(browser) {
     );
   }
 
-  const weatherSetupStateFitsViewport =
-    setupProbe.layout === "setup" &&
-    setupProbe.actionsVisible === true &&
-    setupProbe.stackFitsViewport === true &&
-    setupProbe.foldOk === true;
-  const weatherReadyStateFitsViewport =
-    readyProbe.layout === "ready" &&
-    readyProbe.actionsVisible === false &&
-    readyProbe.stackFitsViewport === true &&
-    readyProbe.foldOk === true;
-  const weatherSetupToReadyReallocationOk =
-    setupProbe.wxH > readyProbe.wxH + 5 &&
-    readyProbe.thirdH > setupProbe.thirdH + 5;
+  const weatherSetupStateFitsViewport = evaluateWeatherSetupStateGate(setupProbe);
+  const weatherReadyStateFitsViewport = evaluateWeatherReadyStateGate(readyProbe);
+  const weatherSetupToReadyReallocationOk = evaluateWeatherSetupToReadyReallocationOk(
+    setupProbe,
+    readyProbe
+  );
 
   if (!weatherSetupStateFitsViewport) {
     await context.close();
