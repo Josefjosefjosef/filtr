@@ -88,7 +88,25 @@ async function collectSwAndAssetsDiag(page) {
   });
 }
 
-async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal = true) {
+function isLocalProofHost(baseUrl) {
+  try {
+    const h = new URL(baseUrl).hostname;
+    return h === "localhost" || h === "127.0.0.1";
+  } catch (_) {
+    return false;
+  }
+}
+
+const PROD_WEBKIT_SILVER_READONLY_BASE = "https://infouzel.cz/projects/";
+
+async function runLayoutMetricsPass(
+  browser,
+  vp,
+  engineTag,
+  closeBrowserOnFatal = true,
+  baseOverride = null
+) {
+  const proofBase = baseOverride || BASE;
   const context = await browser.newContext({
     serviceWorkers: NO_CACHE ? "block" : "allow",
     ...(vp && vp.group === "mobile"
@@ -138,7 +156,7 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
   });
 
   await page.setViewportSize({ width: vp.width, height: vp.height });
-  await page.goto(BASE, { waitUntil: "load", timeout: 120000 });
+  await page.goto(proofBase, { waitUntil: "load", timeout: 120000 });
   if (engineTag === "webkit") {
     try {
       await page.waitForLoadState("networkidle", { timeout: 120000 });
@@ -848,7 +866,8 @@ async function runLayoutMetricsPass(browser, vp, engineTag, closeBrowserOnFatal 
     layoutEngine: engineTag,
     noCacheMode: NO_CACHE,
     viewport: vp.name,
-    base: BASE,
+    base: proofBase,
+    configuredProofBase: BASE,
     dateMock: false,
     CLS: cls,
     consoleErrorsCount: webkitLoadFailedHarnessSuppressed ? 0 : consoleErrorsCount,
@@ -1410,7 +1429,21 @@ await runCzVerticalDeepLinkProof(browser);
 
 const webkitBrowser = await webkit.launch({ headless: true });
 try {
-  await runLayoutMetricsPass(webkitBrowser, viewports[0], "webkit", false);
+  const webkitMetricsBase = isLocalProofHost(BASE)
+    ? PROD_WEBKIT_SILVER_READONLY_BASE
+    : BASE;
+  console.log(
+    JSON.stringify({
+      _proofPass: "webkit-silver-shell-base",
+      configuredBase: BASE,
+      webkitMetricsBase,
+      prodReadonlyFallback: isLocalProofHost(BASE),
+      note: isLocalProofHost(BASE)
+        ? "Playwright WebKit on localhost does not apply mobile flex shell CSS; silver WebKit pass uses prod read-only."
+        : "WebKit metrics use configured base.",
+    })
+  );
+  await runLayoutMetricsPass(webkitBrowser, viewports[0], "webkit", false, webkitMetricsBase);
 } finally {
   await webkitBrowser.close();
 }
