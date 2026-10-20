@@ -68,7 +68,7 @@ function staticContract() {
   }
   if (pkg.indexOf("iu-mindmenu-mailbox-default-count-guard") < 0) fail("package_missing_script");
   const { guardWiredInSmokeCi } = require(path.join(REPO, "scripts/guards/iu-smoke-ci-wiring-v1.cjs"));
-  if (!guardWiredInSmokeCi(ROOT, "iu-mindmenu-mailbox-default-count-guard")) fail("smoke_missing_guard");
+  if (!guardWiredInSmokeCi(REPO, "iu-mindmenu-mailbox-default-count-guard")) fail("smoke_missing_guard");
 }
 
 function seedItems(n, labels) {
