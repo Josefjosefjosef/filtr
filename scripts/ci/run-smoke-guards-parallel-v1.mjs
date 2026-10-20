@@ -22,20 +22,24 @@ function scopeEnv() {
 
 function evalIf(ifGha, scope) {
   if (!ifGha || ifGha === "true") return true;
-  let expr = ifGha;
-  expr = expr.replace(/steps\.scope\.outputs\.([a-z0-9_]+)/gi, (_, key) => {
-    const val = scope[key.toLowerCase()] ?? "";
-    return JSON.stringify(val);
-  });
-  expr = expr.replace(/!=\s*'true'/g, "!== 'true'");
-  expr = expr.replace(/==\s*'true'/g, "=== 'true'");
-  try {
-    // eslint-disable-next-line no-new-func
-    return Boolean(new Function(`return (${expr});`)());
-  } catch (err) {
-    console.error("IF_EVAL_FAIL", ifGha, err.message);
-    return false;
+  const parts = ifGha.split("&&").map((p) => p.trim()).filter(Boolean);
+  for (const part of parts) {
+    const m = part.match(/^steps\.scope\.outputs\.([a-z0-9_]+)\s*(!==|!=|==)\s*'true'$/i);
+    if (!m) {
+      console.error("IF_EVAL_UNKNOWN", ifGha, part);
+      return false;
+    }
+    const key = m[1].toLowerCase();
+    const val = scope[key] ?? "";
+    const isTrue = val === "true";
+    const op = m[2];
+    if (op === "==") {
+      if (!isTrue) return false;
+    } else if (isTrue) {
+      return false;
+    }
   }
+  return true;
 }
 
 function runCmd(name, run, env, timeoutMinutes) {
@@ -83,6 +87,21 @@ async function main() {
   const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
   const scope = scopeEnv();
   const selected = manifest.guards.filter((g) => evalIf(g.ifGha, scope));
+  const dataOnly = scope.data_only === "true";
+  const minSelected = dataOnly ? 1 : 300;
+  if (selected.length < minSelected) {
+    console.error(
+      JSON.stringify({
+        IU_SMOKE_GUARDS_PARALLEL: "FAIL",
+        reason: "selected_below_minimum",
+        dataOnly,
+        minSelected,
+        selected: selected.length,
+        total: manifest.guards.length,
+      })
+    );
+    process.exit(1);
+  }
   console.log(
     JSON.stringify({
       IU_SMOKE_GUARDS_PARALLEL: "START",
