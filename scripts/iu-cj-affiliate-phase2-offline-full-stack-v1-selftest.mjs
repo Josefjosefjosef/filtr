@@ -17,6 +17,8 @@ const suites = [
   "iu-cj-affiliate-phase2-offline-pipeline-e2e-v1-selftest.mjs",
   "iu-cj-affiliate-phase2-offers-dataflow-offline-selftest.mjs",
   "iu-cj-affiliate-phase2-banner-permission-selftest.mjs",
+  "iu-cj-affiliate-phase2-banner-creative-registry-v1-selftest.mjs",
+  "iu-cj-affiliate-phase2-banner-negative-v1-selftest.mjs",
   "iu-cj-affiliate-phase2-preview-security-selftest.mjs",
   "iu-cj-affiliate-phase2-catalog-graphql-response-selftest.mjs",
   "iu-cj-affiliate-phase2-offer-landing-selftest.mjs",
