@@ -54,6 +54,7 @@ export function classifyProductFeedHttpStatus(status) {
   const code = Number(status);
   if (code === 401) return { ok: false, reason: "cj_api_unauthorized", stopRun: true, httpStatus: code };
   if (code === 403) return { ok: false, reason: "cj_api_forbidden", stopRun: true, httpStatus: code };
+  if (code === 429) return { ok: false, reason: "cj_api_rate_limited", stopRun: false, retry: true, httpStatus: code };
   if (code >= 500) return { ok: false, reason: "cj_api_server_error", stopRun: false, retry: true, httpStatus: code };
   if (code >= 400) return { ok: false, reason: "cj_api_client_error", stopRun: true, httpStatus: code };
   return { ok: true, httpStatus: code };

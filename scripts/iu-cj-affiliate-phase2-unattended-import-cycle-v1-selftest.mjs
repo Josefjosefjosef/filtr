@@ -35,6 +35,12 @@ if (auth401.ok !== false || auth401.reason !== "cj_api_unauthorized") fail("http
 const auth403 = classifyProductFeedHttpStatus(403);
 if (auth403.ok !== false || auth403.reason !== "cj_api_forbidden") fail("http_403", auth403);
 
+const rate429 = classifyProductFeedHttpStatus(429);
+if (rate429.ok !== false || rate429.reason !== "cj_api_rate_limited" || rate429.retry !== true) fail("http_429", rate429);
+
+const srv500 = classifyProductFeedHttpStatus(500);
+if (srv500.ok !== false || srv500.reason !== "cj_api_server_error" || srv500.retry !== true) fail("http_500", srv500);
+
 const zero = evaluateZeroProductResult(0);
 if (!zero.ok || zero.emptyFeed !== true) fail("zero_products", zero);
 
