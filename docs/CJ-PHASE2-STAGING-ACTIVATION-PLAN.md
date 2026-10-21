@@ -38,6 +38,21 @@ Approved feeds┘
 | Ingest token | `IU_CJ_D1_WORKER_INGEST_TOKEN` via `wrangler secret put` | separate secret |
 | Queues / cron | optional later; start with `workflow_dispatch` + manual Worker triggers only | no prod cron |
 
+## Offline code modules (repo, no Cloudflare GO)
+
+| Module | Purpose |
+|--------|---------|
+| `iu-cj-affiliate-phase2-approved-product-feed-http-import-lib.mjs` | Mock-first approved feed HTTP import (SSRF, redirects, dedupe, audit) |
+| `iu-cj-affiliate-phase2-banner-staging-r2-lib.mjs` | In-memory R2 stand-in + banner archive metadata |
+| `iu-cj-affiliate-phase2-staging-env-guard-lib.mjs` | Wrangler staging naming / D1 isolation audit |
+| `iu-cj-affiliate-phase2-staging-scheduler-contract-lib.mjs` | Assert CJ workflows have no `schedule` cron |
+| `iu-cj-affiliate-phase2-staging-ops-monitor-lib.mjs` | Audit JSONL ops snapshot (redacted) |
+| `iu-cj-affiliate-phase2-staging-worker-bindings-lib.mjs` | Worker `DB` / `BANNER_ASSETS` contract + mocks |
+
+Detailed Cloudflare commands: **`docs/CJ-PHASE2-CLOUDFLARE-STAGING-RUNBOOK.md`** (S0–S4, document-only).
+
+Selftests: `*-selftest.mjs` above + `iu-cj-affiliate-phase2-staging-isolation-v1-selftest.mjs` (orchestrated in offline full-stack).
+
 ## Phase S0 — staging account prep (no live calls)
 
 1. Create **staging** D1 database; replace placeholder `database_id` in wrangler; run migrations **only** against staging D1 (`wrangler d1 migrations apply … --env staging` or local miniflare).

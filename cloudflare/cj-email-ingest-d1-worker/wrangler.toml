@@ -14,3 +14,19 @@ database_id = "00000000-0000-0000-0000-000000000000"
 migrations_dir = "migrations"
 
 # Secret (not in repo): wrangler secret put IU_CJ_D1_WORKER_INGEST_TOKEN
+
+# Optional isolated staging env (requires Cloudflare GO to create D1/R2 resources).
+[env.staging]
+name = "iu-cj-email-ingest-d1-staging"
+vars = { ENVIRONMENT = "staging", IU_CJ_STAGING_ONLY = "1" }
+
+[[env.staging.d1_databases]]
+binding = "DB"
+database_name = "iu-cj-email-ingest-staging"
+database_id = "00000000-0000-0000-0000-000000000000"
+migrations_dir = "migrations"
+
+[[env.staging.r2_buckets]]
+binding = "BANNER_ASSETS"
+bucket_name = "iu-cj-banner-assets-staging"
+preview_bucket_name = "iu-cj-banner-assets-staging-preview"
