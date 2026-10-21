@@ -3,7 +3,17 @@ const GENERATED_AT_RE = /"generatedAt"\s*:\s*"([^"]+)"/;
 
 export function extractGeneratedAtFromPrefix(text: string): string | null {
   const m = text.match(GENERATED_AT_RE);
-  return m && m[1] ? m[1] : null;
+  if (!m || !m[1]) return null;
+  return normalizeGeneratedAtIso(m[1]);
+}
+
+/** Reject malformed timestamps so decideWatchdog stays fail-closed. */
+export function normalizeGeneratedAtIso(raw: string | null | undefined): string | null {
+  if (!raw || typeof raw !== "string") return null;
+  const trimmed = raw.trim();
+  if (!trimmed) return null;
+  const t = Date.parse(trimmed);
+  return Number.isFinite(t) ? trimmed : null;
 }
 
 /** Read until generatedAt is found or maxBytes consumed; cancels the body when possible. */
@@ -13,9 +23,9 @@ export async function readGeneratedAtFromResponse(
 ): Promise<string | null> {
   if (!res.ok) return null;
   const body = res.body;
+  // Never res.text() here — null-body edge case must not pull the full multi-MB feed.
   if (!body) {
-    const text = await res.text();
-    return extractGeneratedAtFromPrefix(text.slice(0, maxBytes));
+    return null;
   }
   const reader = body.getReader();
   const decoder = new TextDecoder();

@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
   extractGeneratedAtFromPrefix,
+  normalizeGeneratedAtIso,
   productionCountsFromMonitoring,
   readGeneratedAtFromResponse,
 } from "./freshness.ts";
@@ -25,6 +26,18 @@ describe("freshness lightweight parse", () => {
     const res = new Response(stream, { status: 200 });
     const at = await readGeneratedAtFromResponse(res, 8192);
     assert.equal(at, "2020-01-01T00:00:00.000Z");
+  });
+
+  it("rejects invalid ISO generatedAt", () => {
+    assert.equal(extractGeneratedAtFromPrefix('{"generatedAt":"not-a-date","items":[]}'), null);
+    assert.equal(normalizeGeneratedAtIso("2026-10-16T14:26:06.271Z"), "2026-10-16T14:26:06.271Z");
+    assert.equal(normalizeGeneratedAtIso(""), null);
+  });
+
+  it("null response body is fail-closed (no full feed read)", async () => {
+    const res = new Response(null, { status: 200 });
+    const at = await readGeneratedAtFromResponse(res);
+    assert.equal(at, null);
   });
 
   it("maps monitoring.chmiCapV2 counts", () => {
