@@ -28,8 +28,10 @@ jobs:
         working-directory: cloudflare/cj-email-ingest-d1-worker
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: "577868e9aac9c289e9323100f68fad16"
       D1_NAME: iu-cj-email-ingest-staging
       R2_NAME: iu-cj-banner-assets-staging
+      PROD_D1_BLOCKLIST: "iu-ads|iu-analytics"
       WRANGLER_SEND_METRICS: "false"
     steps:
       - name: Checkout
@@ -40,7 +42,7 @@ jobs:
         with:
           node-version: "22"
 
-      - name: S0 — Auth and inventory (no secret output)
+      - name: S0 — Security preflight (account + inventory)
         shell: bash
         run: |
           set -euo pipefail
@@ -48,13 +50,42 @@ jobs:
             echo "BLOCKER=CLOUDFLARE_API_TOKEN_MISSING"
             exit 1
           fi
-          npx --yes wrangler@4 whoami | sed -E 's/(token|Token|Bearer)[^[:space:]]+/[REDACTED]/g'
+          if [ "${D1_NAME}" != "iu-cj-email-ingest-staging" ] || [ "${R2_NAME}" != "iu-cj-banner-assets-staging" ]; then
+            echo "BLOCKER=STAGING_NAME_MISMATCH"
+            exit 1
+          fi
+          WHO="$(npx --yes wrangler@4 whoami 2>&1 | sed -E 's/(token|Token|Bearer)[^[:space:]]+/[REDACTED]/g')"
+          echo "$WHO"
+          ACC="$(echo "$WHO" | sed -n 's/.*Account ID: //p' | tr -d '[:space:]' | head -n1)"
+          if [ -z "$ACC" ]; then
+            echo "BLOCKER=ACCOUNT_ID_UNRESOLVED"
+            exit 1
+          fi
+          if [ "$ACC" != "${CLOUDFLARE_ACCOUNT_ID}" ]; then
+            echo "BLOCKER=ACCOUNT_ID_MISMATCH expected_len=${#CLOUDFLARE_ACCOUNT_ID} got_len=${#ACC}"
+            exit 1
+          fi
+          echo "PREFLIGHT_ACCOUNT_OK=1"
           echo "--- D1 list (names/uuids only) ---"
           npx wrangler@4 d1 list
+          D1_JSON="$(npx wrangler@4 d1 list --json)"
+          echo "$D1_JSON" | node -e "
+            const rows=JSON.parse(require('fs').readFileSync(0,'utf8'));
+            const prod=/(iu-ads|iu-analytics)/;
+            for (const r of rows||[]) {
+              if (prod.test(r.name||'') && !String(r.name).includes('staging')) {
+                console.log('PROD_D1_PRESENT='+r.name);
+              }
+            }
+          "
           echo "--- R2 buckets ---"
           npx wrangler@4 r2 bucket list
-          echo "--- Workers (grep staging) ---"
-          npx wrangler@4 deployments list 2>/dev/null | head -n 20 || true
+          if grep -q '^\[triggers\]' wrangler.toml 2>/dev/null; then
+            echo "BLOCKER=CRON_TRIGGERS_IN_WRANGLER"
+            exit 1
+          fi
+          grep -q 'IU_CJ_STAGING_ONLY' wrangler.toml
+          echo "PREFLIGHT_WRANGLER_OK=1"
 
       - name: S1 — Ensure staging D1
         id: d1
@@ -68,6 +99,10 @@ jobs:
             process.stdout.write(hit&&hit.uuid?hit.uuid:'');
           ")"
           if [ -z "$ID" ]; then
+            if [ "${D1_NAME}" != "iu-cj-email-ingest-staging" ]; then
+              echo "BLOCKER=D1_CREATE_NAME_GUARD"
+              exit 1
+            fi
             echo "Creating D1 ${D1_NAME}..."
             OUT="$(npx wrangler@4 d1 create "${D1_NAME}")"
             echo "$OUT"
@@ -140,6 +175,10 @@ jobs:
           printf '%s' "$TOKEN" | npx wrangler@4 secret put IU_CJ_D1_WORKER_INGEST_TOKEN --env staging
           install -m 600 /dev/null /tmp/iu_cj_staging_token
           printf '%s' "$TOKEN" > /tmp/iu_cj_staging_token
+          if ! grep -q '\[env.staging\]' wrangler.toml; then
+            echo "BLOCKER=STAGING_ENV_MISSING"
+            exit 1
+          fi
           OUT="$(npx wrangler@4 deploy --env staging 2>&1)"
           echo "$OUT"
           URL="$(echo "$OUT" | grep -Eo 'https://[a-zA-Z0-9.-]+\.workers\.dev' | head -n1 || true)"
@@ -160,9 +199,14 @@ jobs:
           curl -fsS "${WORKER_URL}/health" | tee /tmp/health.json
           python3 -c "import json; h=json.load(open('/tmp/health.json')); assert h.get('stagingOnly') is True; assert h.get('d1Binding')=='present'; assert h.get('r2Binding')=='present'; assert h.get('ingestTokenConfigured') is True"
           curl -fsS -H "Authorization: Bearer ${TOKEN}" "${WORKER_URL}/v1/staging/d1-ping"
+          curl -fsS -X POST -H "Authorization: Bearer ${TOKEN}" "${WORKER_URL}/v1/staging/d1-write-probe"
           curl -fsS -X POST -H "Authorization: Bearer ${TOKEN}" "${WORKER_URL}/v1/staging/r2-probe"
           curl -fsS -X POST -H "Authorization: Bearer ${TOKEN}" "${WORKER_URL}/v1/staging/ingest-blocked"
           CODE="$(curl -s -o /dev/null -w '%{http_code}' -X POST "${WORKER_URL}/v1/ingest/rpc" -H 'Content-Type: application/json' -d '{}')"
           test "$CODE" = "401" -o "$CODE" = "403"
+          CODE_BAD="$(curl -s -o /dev/null -w '%{http_code}' -X POST "${WORKER_URL}/v1/ingest/rpc" -H 'Authorization: Bearer invalid-token' -H 'Content-Type: application/json' -d '{"op":"noop"}')"
+          test "$CODE_BAD" = "401" -o "$CODE_BAD" = "403"
+          CODE_ST="$(curl -s -o /dev/null -w '%{http_code}' -X GET "${WORKER_URL}/v1/staging/d1-ping")"
+          test "$CODE_ST" = "401" -o "$CODE_ST" = "403"
           rm -f /tmp/iu_cj_staging_token
           echo "SYNTHETIC_STAGING=PASS"
