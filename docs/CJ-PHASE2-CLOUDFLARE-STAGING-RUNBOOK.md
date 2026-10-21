@@ -14,6 +14,7 @@ Binding contract: `scripts/iu-cj-affiliate-phase2-staging-worker-bindings-lib.mj
 | List D1 | `wrangler d1 list` | No duplicate `iu-cj-email-ingest-staging` unless intentional |
 | List R2 | `wrangler r2 bucket list` | No public ACL on staging bucket names |
 | Repo audit | `node scripts/iu-cj-affiliate-phase2-staging-isolation-v1-selftest.mjs` | `IU_CJ_STAGING_ISOLATION_V1_SELFTEST: OK` |
+| GHA bootstrap token | GitHub secret `CLOUDFLARE_CJ_STAGING_API_TOKEN` (staging-only; D1/R2/Workers Scripts Edit) | Used only by `cj-affiliate-staging-bootstrap.yml` on `workflow_dispatch` |
 
 Rollback: none (read-only).
 
