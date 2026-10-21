@@ -101,18 +101,58 @@ async function main() {
     );
     process.exit(1);
   }
+  const selectedIndexed = selected.map((g) => {
+    const manifestIndex = manifest.guards.indexOf(g);
+    return { guard: g, manifestIndex: manifestIndex >= 0 ? manifestIndex : 0 };
+  });
+  const parallelItems = selectedIndexed.filter((item) => !item.guard.serialBucket);
+  const serialItems = selectedIndexed.filter((item) => item.guard.serialBucket);
+
   console.log(
     JSON.stringify({
       IU_SMOKE_GUARDS_PARALLEL: "START",
       parallel,
       total: manifest.guards.length,
       selected: selected.length,
+      parallelPool: parallelItems.length,
+      serialBucket: serialItems.length,
     })
   );
-  const tasks = selected.map(
-    (g, taskIndex) => () => runCmd(g.name, g.run, g.env || {}, g.timeoutMinutes || null, taskIndex)
+  const parallelTasks = parallelItems.map(
+    (item) => () =>
+      runCmd(
+        item.guard.name,
+        item.guard.run,
+        item.guard.env || {},
+        item.guard.timeoutMinutes || null,
+        item.manifestIndex
+      )
   );
-  const results = await poolRun(tasks, parallel);
+  const results = await poolRun(parallelTasks, parallel);
+
+  if (serialItems.length) {
+    console.log(JSON.stringify({ IU_SMOKE_GUARDS_SERIAL: "START", count: serialItems.length }));
+    for (const item of serialItems) {
+      results.push(
+        await runCmd(
+          item.guard.name,
+          item.guard.run,
+          item.guard.env || {},
+          item.guard.timeoutMinutes || null,
+          item.manifestIndex
+        )
+      );
+    }
+    const serialFailed = results.slice(-serialItems.length).filter((r) => !r.ok);
+    console.log(
+      JSON.stringify({
+        IU_SMOKE_GUARDS_SERIAL: serialFailed.length ? "FAIL" : "OK",
+        failed: serialFailed.map((f) => ({ name: f.name, code: f.code, sec: f.sec })),
+        passCount: serialItems.length - serialFailed.length,
+        completedCount: serialItems.length,
+      })
+    );
+  }
   const failed = results.filter((r) => !r.ok);
   const doneCount = results.filter(Boolean).length;
   if (doneCount !== selected.length) {

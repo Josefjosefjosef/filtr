@@ -28,6 +28,7 @@
       "ifGha": "steps.scope.outputs.data_only != 'true'",
       "run": "npm run iu-pwa-mindmenu-external-return-guard",
       "timeoutMinutes": null,
+      "serialBucket": true,
       "env": {}
     },
     {
@@ -119,6 +120,7 @@
       "ifGha": "steps.scope.outputs.data_only != 'true'",
       "run": "npm run iu-pwa-export119-shell-boot-race-guard",
       "timeoutMinutes": null,
+      "serialBucket": true,
       "env": {}
     },
     {
@@ -819,6 +821,7 @@
       "ifGha": "steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'",
       "run": "npm run iu-prehled-dne-settings-v6-guard",
       "timeoutMinutes": null,
+      "serialBucket": true,
       "env": {}
     },
     {
@@ -1528,6 +1531,7 @@
       "ifGha": "steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true'",
       "run": "npm run iu-menu-nav-scroll-restore-guard",
       "timeoutMinutes": 15,
+      "serialBucket": true,
       "env": {}
     },
     {

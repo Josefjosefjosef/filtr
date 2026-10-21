@@ -2,6 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { createRequire } from "module";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const manifest = JSON.parse(
@@ -42,7 +43,8 @@ const scopeFalse = Object.fromEntries(
 const defaultSelected = manifest.guards.filter((g) => evalIf(g.ifGha, scopeFalse)).length;
 if (defaultSelected < 389) fail.push("default_scope_selected:" + defaultSelected);
 if (manifest.guards.some((g) => g.ifGha === ">")) fail.push("manifest_ifGha_corrupt");
-import { createRequire } from "module";
+const serialBucket = manifest.guards.filter((g) => g.serialBucket === true).length;
+if (serialBucket > 32) fail.push("serial_bucket_too_large:" + serialBucket);
 const require = createRequire(import.meta.url);
 const { guardWiredInSmokeCi } = require("../guards/iu-smoke-ci-wiring-v1.cjs");
 if (!guardWiredInSmokeCi(REPO, "iu-reload-visual-stability-contract-guard")) {
