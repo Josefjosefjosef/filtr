@@ -54,12 +54,31 @@ jobs:
             echo "BLOCKER=STAGING_NAME_MISMATCH"
             exit 1
           fi
+          export CLOUDFLARE_ACCOUNT_ID
           WHO="$(npx --yes wrangler@4 whoami 2>&1 | sed -E 's/(token|Token|Bearer)[^[:space:]]+/[REDACTED]/g')"
           echo "$WHO"
-          ACC="$(echo "$WHO" | sed -n 's/.*Account ID: //p' | tr -d '[:space:]' | head -n1)"
+          ACC=""
+          WHO_JSON="$(npx --yes wrangler@4 whoami --json 2>/dev/null || true)"
+          if [ -n "$WHO_JSON" ]; then
+            ACC="$(echo "$WHO_JSON" | node -e "
+              const exp=process.env.CLOUDFLARE_ACCOUNT_ID;
+              let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{
+                try {
+                  const j=JSON.parse(d);
+                  const ids=(j.accounts||[]).map(a=>a&&a.id).filter(Boolean);
+                  if(ids.includes(exp)){process.stdout.write(exp);return;}
+                  if(ids.length===1){process.stdout.write(ids[0]);return;}
+                } catch(e) {}
+                process.exit(2);
+              });
+            " || true)"
+          fi
           if [ -z "$ACC" ]; then
-            echo "BLOCKER=ACCOUNT_ID_UNRESOLVED"
-            exit 1
+            if ! echo "$WHO" | grep -q "${CLOUDFLARE_ACCOUNT_ID}"; then
+              echo "BLOCKER=ACCOUNT_ID_NOT_IN_WHOAMI"
+              exit 1
+            fi
+            ACC="${CLOUDFLARE_ACCOUNT_ID}"
           fi
           if [ "$ACC" != "${CLOUDFLARE_ACCOUNT_ID}" ]; then
             echo "BLOCKER=ACCOUNT_ID_MISMATCH expected_len=${#CLOUDFLARE_ACCOUNT_ID} got_len=${#ACC}"
