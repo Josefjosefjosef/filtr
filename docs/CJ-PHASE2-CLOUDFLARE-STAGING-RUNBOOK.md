@@ -76,6 +76,15 @@ Prerequisites: `IU_CJ_LIVE_INGEST_APPROVED=1`, offline flags cleared per connect
 
 Burn-in: manual `workflow_dispatch` on `cj-affiliate-offline-import-dispatch.yml` with staging env vars; monitor `staging-ops-monitor-lib` snapshot.
 
+### First CJ API probe (plan only — do not run until operator GO)
+
+1. Confirm Worker secret **`CJ_API_PAT`** exists (Dashboard → Variables; never print value).
+2. Set non-secret vars **`IU_CJ_PUBLISHER_CID`**, **`IU_CJ_WEBSITE_PID`** on staging Worker.
+3. `curl -sS -H "Authorization: Bearer $INGEST_TOKEN" "$STAGING_URL/v1/staging/cj-api/readiness"` — expect `mayExecuteHttp:false`, `hasPatSecret:true` after PAT set.
+4. Only after written GO: set `IU_CJ_STAGING_CJ_API_PROBE_APPROVED=1`, `IU_CJ_CJ_API_HTTP_EXECUTE=1`, `IU_CJ_STAGING_CJ_API_PROBE_EXECUTE=1` (Worker vars), redeploy staging.
+5. POST `/v1/staging/cj-api/probe` with ingest token — max `IU_CJ_CJ_API_MAX_REQUESTS_PER_PROBE` (default 1); archive metadata to staging D1 only; `publishable` must stay false.
+6. On 401/403/429/5xx or identity mismatch: STOP, revoke execute flags, audit without PAT.
+
 Rollback: set `IU_CJ_*_OFFLINE=1`, revoke PAT/IMAP, disable dispatch schedules (must remain absent until GO).
 
 ---
