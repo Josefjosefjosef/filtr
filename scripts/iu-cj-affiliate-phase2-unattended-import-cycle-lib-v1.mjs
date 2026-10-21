@@ -1,8 +1,12 @@
-/** Unattended CJ import cycle (offline-first): lock, audit log, auth/zero-feed guards, optional email ingest. */
+/** Unattended CJ import cycle (offline-first): lock, audit, product feed guards, FORPSI mock ingest. */
 import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
 import { PRODUCTION_SIGNING_ENABLED } from "./iu-cj-affiliate-phase2-email-ingest-lib.mjs";
+import { readCjCredentialSourceMeta } from "./iu-cj-affiliate-credentials-interface.mjs";
+import { resolveLiveIngestGate } from "./iu-cj-affiliate-phase2-github-actions-ingest-live-gate.mjs";
+import { runGithubActionsIngestCycle } from "./iu-cj-affiliate-phase2-github-actions-ingest-lib.mjs";
+import { resolveOfflineIngestFixture } from "./iu-cj-affiliate-phase2-offline-ingest-fixtures.mjs";
 
 export function defaultUnattendedStateDir(env = process.env) {
   return env.IU_CJ_UNATTENDED_STATE_DIR || path.join(os.tmpdir(), "iu-cj-unattended-import");
@@ -77,45 +81,32 @@ export function appendUnattendedAuditLog(logPath, entry) {
 }
 
 export function resolveUnattendedImportRuntime(env = process.env) {
-  const offlineForced =
-    env.IU_CJ_UNATTENDED_IMPORT_OFFLINE !== "0" ||
-    env.IU_CJ_EMAIL_INGEST_OFFLINE === "1" ||
-    env.IU_CJ_GITHUB_INGEST_DRY_RUN === "1";
+  const liveGate = resolveLiveIngestGate(env);
+  const credMeta = readCjCredentialSourceMeta();
   const liveUnattendedRequested = env.IU_CJ_LIVE_UNATTENDED_IMPORT === "1";
-  const liveIngestAllowed =
-    !offlineForced &&
-    env.IU_CJ_LIVE_INGEST_APPROVED === "1" &&
-    env.IU_FORPSI_IMAP_CONNECT_APPROVED === "1" &&
-    Boolean(String(env.IU_FORPSI_IMAP_USER || "").trim()) &&
-    env.IU_CJ_D1_BACKEND === "worker";
   return {
-    offlineForced,
+    offlineForced: liveGate.offlineForced,
     liveUnattendedRequested,
-    liveIngestAllowed,
+    liveIngestAllowed: liveGate.allowed,
     productionSigningEnabled: PRODUCTION_SIGNING_ENABLED,
-    credentialMeta: {
-      source: String(env.IU_CJ_CREDENTIAL_SOURCE || "process_env"),
-      hasPat: Boolean(String(env.IU_CJ_PAT || env.CJ_PERSONAL_ACCESS_TOKEN || "").trim()),
-    },
+    credentialMeta: credMeta,
     publishable: false,
+    liveGateSummary: liveGate.gates,
   };
 }
 
-async function maybeRunEmailIngest(env, options) {
-  if (env.IU_CJ_UNATTENDED_SKIP_EMAIL_INGEST === "1" || env.IU_CJ_UNATTENDED_EMAIL_INGEST !== "1") {
-    return null;
-  }
-  try {
-    const { runGithubActionsIngestCycle } = await import("./iu-cj-affiliate-phase2-github-actions-ingest-lib.mjs");
-    return await runGithubActionsIngestCycle({
-      env,
-      d1PersistPath: options.d1PersistPath,
-      mockFixture: options.mockFixture,
-      ...(options.ingestOptions || {}),
-    });
-  } catch (err) {
-    return { ok: false, phase: "email_ingest", reason: "ingest_module_unavailable", detail: String(err?.message || err) };
-  }
+async function runForpsiEmailIngest(env, options) {
+  const d1Path =
+    options.d1PersistPath ||
+    env.IU_CJ_D1_MOCK_PATH ||
+    path.join(env.GITHUB_WORKSPACE || os.tmpdir(), "iu-cj-unattended-d1-checkpoint.json");
+  const mockFixture = options.mockFixture ?? (env.IU_CJ_EMAIL_INGEST_OFFLINE === "1" ? resolveOfflineIngestFixture(env) : undefined);
+  return runGithubActionsIngestCycle({
+    env,
+    d1PersistPath: d1Path,
+    mockFixture,
+    ...(options.ingestOptions || {}),
+  });
 }
 
 export async function runUnattendedImportCycle(options = {}) {
@@ -177,17 +168,20 @@ export async function runUnattendedImportCycle(options = {}) {
     }
 
     let ingestResult = null;
-    const mayRunEmail =
-      env.IU_CJ_UNATTENDED_EMAIL_INGEST === "1" &&
-      (runtime.offlineForced || options.forceOfflineIngest === true || runtime.liveIngestAllowed);
+    const skipEmail = env.IU_CJ_UNATTENDED_SKIP_EMAIL_INGEST === "1";
+    const wantEmail = env.IU_CJ_UNATTENDED_EMAIL_INGEST === "1" || options.runForpsiEmailIngest === true;
+    const mayRunEmail = wantEmail && !skipEmail && (runtime.offlineForced || runtime.liveIngestAllowed);
     if (mayRunEmail) {
-      ingestResult = await maybeRunEmailIngest(env, options);
+      ingestResult = await runForpsiEmailIngest(env, options);
       appendUnattendedAuditLog(auditPath, {
         event: "email_ingest",
         ok: ingestResult?.ok === true,
         phase: ingestResult?.phase || null,
         publishable: ingestResult?.publishable === true,
       });
+      if (ingestResult?.publishable === true) {
+        return { ok: false, phase: "email_ingest", reason: "unexpected_publishable_true", publishable: true, auditPath };
+      }
       if (ingestResult && !ingestResult.ok) {
         return { ok: false, publishable: false, auditPath, ...ingestResult };
       }

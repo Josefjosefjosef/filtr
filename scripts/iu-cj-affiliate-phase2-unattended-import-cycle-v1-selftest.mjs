@@ -103,6 +103,21 @@ const runLive = await runUnattendedImportCycle({
 });
 if (runLive.ok !== false || runLive.reason !== "live_unattended_not_allowed") fail("live_gate_block", runLive);
 
+const stateForpsi = path.join(baseDir, "run-forpsi");
+const envForpsi = offlineEnv({
+  IU_CJ_UNATTENDED_STATE_DIR: stateForpsi,
+  IU_CJ_UNATTENDED_EMAIL_INGEST: "1",
+  IU_CJ_OFFLINE_FIXTURE: "default",
+});
+const forpsiRun = await runUnattendedImportCycle({
+  env: envForpsi,
+  stateDir: stateForpsi,
+  mockProductFeedResponse: { status: 200, total: 1 },
+});
+if (!forpsiRun.ok || forpsiRun.publishable !== false) fail("forpsi_offline_unattended", forpsiRun);
+if (!forpsiRun.ingestResult || forpsiRun.ingestResult.ok !== true) fail("forpsi_ingest_ok", forpsiRun.ingestResult);
+if (forpsiRun.ingestResult.publishable === true) fail("forpsi_not_publishable", {});
+
 console.log(
   JSON.stringify({
     IU_CJ_UNATTENDED_IMPORT_CYCLE_V1_SELFTEST: failures.length ? "FAIL" : "OK",

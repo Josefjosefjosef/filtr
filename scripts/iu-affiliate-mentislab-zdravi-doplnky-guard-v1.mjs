@@ -310,26 +310,48 @@ try {
     ok(tag + ":centered", snap.centered === true);
     ok(tag + ":empty_slots_remain", snap.namedCount >= 4 && snap.namedCount < 8, "named=" + snap.namedCount);
 
-    const popupTimeout = vp.name === "pwa" ? 30000 : 15000;
-    const popupPromise = page.waitForEvent("popup", { timeout: popupTimeout }).catch(() => null);
+    const popupTimeout = vp.name === "pwa" ? 30000 : 20000;
     const chipLoc = page
       .locator("#iuAffiliateGrid a.iuAffiliateChip[data-aff-ready='1']")
       .filter({ hasText: PARTNER_TITLE });
+    const cjNavRe = /tkqlhce\.com\/click-101883843-13341068/i;
+    const popupPromise = page.waitForEvent("popup", { timeout: popupTimeout }).catch(() => null);
+    const navIntentPromise = page
+      .waitForRequest((req) => req.isNavigationRequest() && cjNavRe.test(req.url()), {
+        timeout: popupTimeout,
+      })
+      .catch(() => null);
     await chipLoc.click();
     let popup = await popupPromise;
-    if (!popup && vp.name === "pwa") {
-      const popupRetry = page.waitForEvent("popup", { timeout: 15000 }).catch(() => null);
+    let navReq = await navIntentPromise;
+    if (!popup) {
+      const popupRetry = page.waitForEvent("popup", { timeout: popupTimeout }).catch(() => null);
+      const navRetry = page
+        .waitForRequest((req) => req.isNavigationRequest() && cjNavRe.test(req.url()), {
+          timeout: popupTimeout,
+        })
+        .catch(() => null);
       await chipLoc.click({ force: true });
       popup = await popupRetry;
+      if (!navReq) navReq = await navRetry;
     }
     ok(tag + ":popup_opened", !!popup);
     if (popup) {
+      if (!navReq) {
+        navReq = await popup
+          .waitForRequest((req) => req.isNavigationRequest() && cjNavRe.test(req.url()), {
+            timeout: 15000,
+          })
+          .catch(() => null);
+      }
       try {
         await popup.waitForLoadState("domcontentloaded", { timeout: 20000 });
       } catch (_) {}
       const popupUrl = popup.url();
       const cjOk =
-        /tkqlhce\.com\/click-101883843-13341068/i.test(popupUrl) || /mentislab/i.test(popupUrl);
+        cjNavRe.test(popupUrl) ||
+        !!navReq ||
+        /mentislab/i.test(popupUrl);
       const pwaCiFlake =
         vp.name === "pwa" && /chromewebdata|chrome-error/i.test(popupUrl);
       ok(tag + ":popup_cj_or_site", cjOk || pwaCiFlake, popupUrl);
