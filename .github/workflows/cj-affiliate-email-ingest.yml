@@ -1,0 +1,74 @@
+name: CJ Affiliate email ingest (offline gate)
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "ingest mode (periodic|historical)"
+        required: false
+        default: periodic
+      run_forpsi_offline_cycle:
+        description: "Also run FORPSI mock ingest via unattended runner (1=yes)"
+        required: false
+        default: "0"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cj-affiliate-email-ingest
+  cancel-in-progress: false
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Run ingest runner (offline until secrets + approval)
+        shell: bash
+        env:
+          IU_CJ_EMAIL_INGEST_OFFLINE: "1"
+          IU_CJ_GITHUB_INGEST_DRY_RUN: "1"
+          IU_CJ_EMAIL_INGEST_MODE: ${{ github.event.inputs.mode || 'periodic' }}
+          IU_CJ_OFFLINE_FIXTURE: "default"
+          IU_CJ_D1_BACKEND: "mock"
+          IU_CJ_D1_MOCK_PATH: ${{ github.workspace }}/.iu-cj-email-d1-checkpoint.json
+          PRODUCTION_SIGNING_ENABLED: "false"
+        run: |
+          set -euo pipefail
+          node scripts/iu-cj-affiliate-phase2-github-actions-ingest-runner.mjs
+
+      - name: Optional FORPSI mock via unattended runner
+        if: github.event.inputs.run_forpsi_offline_cycle == '1'
+        shell: bash
+        env:
+          IU_CJ_UNATTENDED_IMPORT_OFFLINE: "1"
+          IU_CJ_UNATTENDED_RUN_FORPSI_OFFLINE: "1"
+          IU_CJ_EMAIL_INGEST_OFFLINE: "1"
+          IU_CJ_GITHUB_INGEST_DRY_RUN: "1"
+          IU_CJ_D1_BACKEND: "mock"
+          PRODUCTION_SIGNING_ENABLED: "false"
+        run: |
+          set -euo pipefail
+          node scripts/iu-cj-affiliate-phase2-unattended-import-runner-v1.mjs
+
+      - name: Live ingest gate (multi-flag — NOT ENABLED in this phase)
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Live ingest requires ALL of:"
+          echo "  IU_CJ_LIVE_INGEST_APPROVED=1"
+          echo "  IU_FORPSI_IMAP_CONNECT_APPROVED=1"
+          echo "  IU_FORPSI_IMAP_USER + IU_FORPSI_IMAP_SECRET"
+          echo "  IU_CJ_D1_BACKEND=worker + IU_CJ_D1_WORKER_ENABLED=1 + IU_CJ_D1_WORKER_URL + IU_CJ_D1_WORKER_INGEST_TOKEN"
+          echo "  IU_CJ_EMAIL_INGEST_OFFLINE unset, IU_CJ_GITHUB_INGEST_DRY_RUN unset"
+          echo "No cron schedule on this workflow until explicit production GO."
+          echo "No silent fallback to mock D1. Production signing remains false."

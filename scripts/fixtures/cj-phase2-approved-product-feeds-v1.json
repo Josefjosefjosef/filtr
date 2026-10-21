@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "feeds": [
+    {
+      "feedId": "cj-shopping-products-offline-fixture",
+      "partnerKey": "autohotarek",
+      "partnerIdentity": { "advertiserId": "5124968", "publisherCid": "7991692", "websitePid": "101883843" },
+      "sourceUrl": "https://ads.api.cj.com/query",
+      "format": "cj_graphql_shopping_products",
+      "allowedUsage": ["normalization", "evidence", "internal_archive"],
+      "publishableByDefault": false,
+      "allowedHostSuffixes": ["cj.com"]
+    }
+  ]
+}

@@ -18,6 +18,10 @@ const suites = [
   "iu-cj-affiliate-phase2-offers-dataflow-offline-selftest.mjs",
   "iu-cj-affiliate-phase2-banner-permission-selftest.mjs",
   "iu-cj-affiliate-phase2-preview-security-selftest.mjs",
+  "iu-cj-affiliate-phase2-catalog-graphql-response-selftest.mjs",
+  "iu-cj-affiliate-phase2-offer-landing-selftest.mjs",
+  "iu-cj-affiliate-phase2-approved-product-feed-selftest.mjs",
+  "iu-cj-affiliate-phase2-server-negative-v1-selftest.mjs",
 ];
 
 const results = [];
