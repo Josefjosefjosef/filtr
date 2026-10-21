@@ -24,7 +24,8 @@ const sample = {
   linkName: "Banner 120x600",
   linkType: "Banner",
   adContent: "https://cdn.example.com/banner.jpg",
-  clickUrl: "https://track.example.com/click",
+  clickUrl:
+    "https://www.dpbolvw.net/click-101883843-17365226?url=https%3A%2F%2Fwww.yves-rocher.cz%2F",
   promotionStartDate: "2026-10-12 22:00:00.0",
   promotionEndDate: "2026-10-18 21:59:00.0",
   relationshipStatus: "joined",
@@ -35,6 +36,8 @@ expect("schema", rec.schemaVersion === BANNER_CREATIVE_SCHEMA);
 expect("role_classified", rec.bannerRole !== "U_unknown_unclassified_banner");
 const val = validateBannerCreativeForLocalPreview(rec);
 expect("local_preview_structural_ok", val.ok === true);
+expect("publishable_false", rec.publishable === false);
+expect("content_kind_banner", rec.contentKind === "banner");
 
 const bad = buildBannerCreativeRecord(
   { ...sample, clickUrl: "http://127.0.0.1/evil", adContent: "http://127.0.0.1/img" },

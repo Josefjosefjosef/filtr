@@ -28,6 +28,20 @@ Mailbox target (future): `affiliate@infouzel.cz` (FORPSI IMAP). Publisher CID `7
 | Production cron / 24×7 scheduler | **BLOKOVÁNO** | Workflows are `workflow_dispatch` only in this phase |
 | Public offer publish from ingest | **BLOKOVÁNO** | All pipelines force `publishable: false` |
 
+## CJ grafické bannery (offline audit)
+
+| Oblast | Stav | Důkaz |
+|--------|------|--------|
+| Příjem bannerů | **ČÁSTEČNĚ** | CJ Link Search row → `buildBannerCreativeRecord` (`banner-creative-registry-v1.mjs`); live import **BLOCKED** bez PAT/execute |
+| Normalizace | **HOTOVO** | `classifyCjAffiliateContentKind`, role `classifyBannerRole`, rozměry `parseBannerDimensions` |
+| Evidence oprávnění | **HOTOVO** | `banner-permission-lib.mjs` + selftest **56** checks |
+| Validace | **HOTOVO** | asset security (magic bytes, SSRF URL), JS/HTML creative block, PID/click URL |
+| Archiv | **ČÁSTEČNĚ** | `archive` pole + affiliate archive worker (admin); produkční D1 **BLOKOVÁNO** |
+| Publikační rozhodnutí | **HOTOVO** | `evaluatePublicationGates`, vždy `publishable: false` v ingest |
+| Automatické stažení | **ČÁSTEČNĚ** | `assessBannerWithdrawalDecision` (offline); veřejné stažení netestováno live |
+
+Testy: `iu-cj-affiliate-phase2-banner-negative-v1-selftest.mjs`, registry + permission v full-stack orchestrátoru.
+
 ## Offline stack (run locally or CI)
 
 ```text
