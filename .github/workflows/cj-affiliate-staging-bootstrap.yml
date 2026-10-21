@@ -1,0 +1,168 @@
+name: CJ Affiliate staging bootstrap (S0-S3)
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply_migrations:
+        description: "Apply D1 migrations to remote staging (1=yes)"
+        required: false
+        default: "1"
+      run_synthetic:
+        description: "Run post-deploy synthetic probes (1=yes)"
+        required: false
+        default: "1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cj-affiliate-staging-bootstrap
+  cancel-in-progress: false
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: cloudflare/cj-email-ingest-d1-worker
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      D1_NAME: iu-cj-email-ingest-staging
+      R2_NAME: iu-cj-banner-assets-staging
+      WRANGLER_SEND_METRICS: "false"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: S0 — Auth and inventory (no secret output)
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${CLOUDFLARE_API_TOKEN:-}" ]; then
+            echo "BLOCKER=CLOUDFLARE_API_TOKEN_MISSING"
+            exit 1
+          fi
+          npx --yes wrangler@4 whoami | sed -E 's/(token|Token|Bearer)[^[:space:]]+/[REDACTED]/g'
+          echo "--- D1 list (names/uuids only) ---"
+          npx wrangler@4 d1 list
+          echo "--- R2 buckets ---"
+          npx wrangler@4 r2 bucket list
+          echo "--- Workers (grep staging) ---"
+          npx wrangler@4 deployments list 2>/dev/null | head -n 20 || true
+
+      - name: S1 — Ensure staging D1
+        id: d1
+        shell: bash
+        run: |
+          set -euo pipefail
+          JSON="$(npx wrangler@4 d1 list --json)"
+          ID="$(echo "$JSON" | node -e "
+            const rows=JSON.parse(require('fs').readFileSync(0,'utf8'));
+            const hit=(rows||[]).find(r=>r.name==='${D1_NAME}');
+            process.stdout.write(hit&&hit.uuid?hit.uuid:'');
+          ")"
+          if [ -z "$ID" ]; then
+            echo "Creating D1 ${D1_NAME}..."
+            OUT="$(npx wrangler@4 d1 create "${D1_NAME}")"
+            echo "$OUT"
+            ID="$(echo "$OUT" | sed -n 's/.*database_id = "\([^"]*\)".*/\1/p' | head -n1)"
+          fi
+          if [ -z "$ID" ]; then
+            echo "BLOCKER=D1_ID_UNRESOLVED"
+            exit 1
+          fi
+          echo "D1_DATABASE_ID=$ID" >> "$GITHUB_OUTPUT"
+          echo "Resolved staging D1 id length=${#ID}"
+
+      - name: S1 — Patch wrangler staging database_id (staging only)
+        shell: bash
+        env:
+          ID: ${{ steps.d1.outputs.D1_DATABASE_ID }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import re, os
+          p = "wrangler.toml"
+          id = os.environ["ID"]
+          text = open(p, encoding="utf-8").read()
+          marker = "[[env.staging.d1_databases]]"
+          if marker not in text:
+              raise SystemExit("staging d1 block missing")
+          head, tail = text.split(marker, 1)
+          if "iu-cj-email-ingest-staging" not in tail:
+              raise SystemExit("staging d1 name missing")
+          tail = re.sub(r'database_id = "[^"]*"', f'database_id = "{id}"', tail, count=1)
+          open(p, "w", encoding="utf-8").write(head + marker + tail)
+          PY
+
+      - name: S1 — Apply staging migrations (remote)
+        if: github.event.inputs.apply_migrations == '1'
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx wrangler@4 d1 migrations apply "${D1_NAME}" --env staging --remote
+
+      - name: S1 — Verify staging schema
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx wrangler@4 d1 execute "${D1_NAME}" --env staging --remote --command "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name LIMIT 20;"
+
+      - name: S2 — Ensure private R2 bucket
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! npx wrangler@4 r2 bucket list | grep -q "${R2_NAME}"; then
+            npx wrangler@4 r2 bucket create "${R2_NAME}"
+          fi
+          npx wrangler@4 r2 bucket list | grep "${R2_NAME}" || (echo "BLOCKER=R2_MISSING"; exit 1)
+
+      - name: S3 — Staging ingest token + deploy Worker
+        id: deploy
+        shell: bash
+        env:
+          IU_CJ_STAGING_D1_WORKER_INGEST_TOKEN: ${{ secrets.IU_CJ_STAGING_D1_WORKER_INGEST_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -n "${IU_CJ_STAGING_D1_WORKER_INGEST_TOKEN:-}" ]; then
+            TOKEN="$IU_CJ_STAGING_D1_WORKER_INGEST_TOKEN"
+            echo "token_source=repo_secret"
+          else
+            TOKEN="$(openssl rand -hex 32)"
+            echo "token_source=ephemeral_generated"
+          fi
+          printf '%s' "$TOKEN" | npx wrangler@4 secret put IU_CJ_D1_WORKER_INGEST_TOKEN --env staging
+          install -m 600 /dev/null /tmp/iu_cj_staging_token
+          printf '%s' "$TOKEN" > /tmp/iu_cj_staging_token
+          OUT="$(npx wrangler@4 deploy --env staging 2>&1)"
+          echo "$OUT"
+          URL="$(echo "$OUT" | grep -Eo 'https://[a-zA-Z0-9.-]+\.workers\.dev' | head -n1 || true)"
+          if [ -z "$URL" ]; then
+            echo "BLOCKER=WORKER_URL_NOT_PARSED"
+            exit 1
+          fi
+          echo "worker_url=$URL" >> "$GITHUB_OUTPUT"
+
+      - name: S3/S7 — Synthetic probes
+        if: github.event.inputs.run_synthetic == '1'
+        shell: bash
+        env:
+          WORKER_URL: ${{ steps.deploy.outputs.worker_url }}
+        run: |
+          set -euo pipefail
+          TOKEN="$(cat /tmp/iu_cj_staging_token)"
+          curl -fsS "${WORKER_URL}/health" | tee /tmp/health.json
+          python3 -c "import json; h=json.load(open('/tmp/health.json')); assert h.get('stagingOnly') is True; assert h.get('d1Binding')=='present'; assert h.get('r2Binding')=='present'; assert h.get('ingestTokenConfigured') is True"
+          curl -fsS -H "Authorization: Bearer ${TOKEN}" "${WORKER_URL}/v1/staging/d1-ping"
+          curl -fsS -X POST -H "Authorization: Bearer ${TOKEN}" "${WORKER_URL}/v1/staging/r2-probe"
+          curl -fsS -X POST -H "Authorization: Bearer ${TOKEN}" "${WORKER_URL}/v1/staging/ingest-blocked"
+          CODE="$(curl -s -o /dev/null -w '%{http_code}' -X POST "${WORKER_URL}/v1/ingest/rpc" -H 'Content-Type: application/json' -d '{}')"
+          test "$CODE" = "401" -o "$CODE" = "403"
+          rm -f /tmp/iu_cj_staging_token
+          echo "SYNTHETIC_STAGING=PASS"

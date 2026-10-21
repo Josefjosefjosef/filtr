@@ -3,22 +3,22 @@
  */
 import { handleIngestRpcHttpRequest } from "./ingest-rpc-service.mjs";
 import { createD1SqlIngestApi } from "./ingest-d1-sql-api.mjs";
+import {
+  buildHealthPayload,
+  handleStagingSyntheticRequest,
+  stagingSyntheticEnabled,
+} from "./staging-synthetic-routes.mjs";
 
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (url.pathname === "/health") {
-      const d1Bound = Boolean(env.DB);
-      return new Response(
-        JSON.stringify({
-          ok: d1Bound,
-          service: "cj-email-ingest-d1-worker",
-          rpcVersion: 1,
-          d1Binding: d1Bound ? "present" : "missing",
-          memoryMock: false,
-        }),
-        { headers: { "Content-Type": "application/json", "Cache-Control": "no-store" } }
-      );
+      return new Response(JSON.stringify(buildHealthPayload(env)), {
+        headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
+      });
+    }
+    if (url.pathname.startsWith("/v1/staging/") && stagingSyntheticEnabled(env)) {
+      return handleStagingSyntheticRequest(request, env);
     }
     if (!env.DB) {
       return new Response(JSON.stringify({ ok: false, reason: "d1_binding_missing", rpcVersion: 1 }), {
