@@ -9,6 +9,7 @@ import http from "node:http";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import { bootstrapGuardContext, bootstrapGuardPage } from "./guards/guard-playwright-bootstrap.mjs";
+import { waitForPort } from "./guards/guard-playwright-lifecycle.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
@@ -50,24 +51,6 @@ function auditStatic() {
     "index:info_center_css_cache",
     /iu-info-center\.css\?v=terms-preaccept-icentrum-v1-20260909/.test(index)
   );
-}
-
-function waitForPort(host, port, timeoutMs) {
-  const deadline = Date.now() + timeoutMs;
-  return new Promise((resolve, reject) => {
-    const tryOnce = () => {
-      const req = http.request({ host, port, path: "/projects/", method: "HEAD", timeout: 800 }, (res) => {
-        res.resume();
-        resolve();
-      });
-      req.on("error", () => {
-        if (Date.now() > deadline) reject(new Error("port_timeout"));
-        else setTimeout(tryOnce, 120);
-      });
-      req.end();
-    };
-    tryOnce();
-  });
 }
 
 async function dismissConsent(page) {
@@ -165,7 +148,6 @@ if (fails.length) {
   process.exit(1);
 }
 
-const PORT = parseInt(process.env.IU_GUARD_PORT || "8943", 10);
 const server = http.createServer((req, res) => {
   try {
     let p = decodeURIComponent(new URL(req.url, "http://x").pathname);
@@ -192,7 +174,22 @@ const server = http.createServer((req, res) => {
   }
 });
 
-await new Promise((resolve) => server.listen(PORT, "127.0.0.1", resolve));
+const PORT = await new Promise((resolve, reject) => {
+  if (process.env.IU_GUARD_PORT) {
+    const fixed = parseInt(process.env.IU_GUARD_PORT, 10);
+    server.once("error", reject);
+    server.listen(fixed, "127.0.0.1", () => {
+      server.removeListener("error", reject);
+      resolve(fixed);
+    });
+    return;
+  }
+  server.once("error", reject);
+  server.listen(0, "127.0.0.1", () => {
+    server.removeListener("error", reject);
+    resolve(server.address().port);
+  });
+});
 await waitForPort("127.0.0.1", PORT, 10000);
 
 const browser = await chromium.launch({ headless: true });

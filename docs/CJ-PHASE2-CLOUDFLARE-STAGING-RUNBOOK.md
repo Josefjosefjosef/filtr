@@ -52,6 +52,9 @@ Rollback: delete staging bucket after emptying (operator GO).
 | Step | Command | Expected |
 |------|---------|----------|
 | Secret | `wrangler secret put IU_CJ_D1_WORKER_INGEST_TOKEN --env staging` | Prompt only in terminal, not in repo |
+| CJ PAT (after operator GO) | Cloudflare Dashboard → Workers → `iu-cj-email-ingest-d1-staging` → Settings → Variables → Encrypt → name **`CJ_API_PAT`** | Value never in repo, chat, or CI logs; not the same as `CLOUDFLARE_CJ_STAGING_API_TOKEN` |
+| CJ PAT (CLI alternative) | `cd cloudflare/cj-email-ingest-d1-worker` then `wrangler secret put CJ_API_PAT --env staging` | Paste at prompt only; terminal history risk — prefer Dashboard |
+| Publisher IDs | Worker vars (non-secret): `IU_CJ_PUBLISHER_CID`, `IU_CJ_WEBSITE_PID` | Publisher CID ≠ advertiser CID |
 | Deploy | `wrangler deploy --env staging` | Worker URL `*.workers.dev` or staging route |
 | Health | `curl -sS "$STAGING_URL/health"` | `{"ok":true,"d1Binding":"present",...}` no secrets |
 | Fail-closed | POST ingest without token | 401/403 |
@@ -67,11 +70,20 @@ Prerequisites: `IU_CJ_LIVE_INGEST_APPROVED=1`, offline flags cleared per connect
 | Connector | Enable flags | Verify |
 |-----------|--------------|--------|
 | FORPSI IMAP | `IU_FORPSI_IMAP_CONNECT_APPROVED=1` | Audit JSONL `email_ingest`, no `publishable: true` |
-| CJ API | `IU_CJ_CJ_API_HTTP_EXECUTE=1` | 401/429 classified; GraphQL `res.json.data` |
+| CJ API | `CJ_STAGING_ARCHIVE_ONLY=1` (default on staging) + secrets `CJ_API_PAT` + vars CID/PID; GO flags `IU_CJ_STAGING_CJ_API_PROBE_APPROVED=1`, `IU_CJ_CJ_API_HTTP_EXECUTE=1`, `IU_CJ_STAGING_CJ_API_PROBE_EXECUTE=1` | GET `/v1/staging/cj-api/readiness` (ingest token); POST `/v1/staging/cj-api/probe` blocked until all GO flags; 401/429 fail-closed |
 | Link Search / banners | PAT + execute flags | R2 object keys under `staging/banners/` |
 | Product feeds | `IU_CJ_APPROVED_FEED_HTTP_EXECUTE=1` | Registry-only URLs; import audit counts |
 
 Burn-in: manual `workflow_dispatch` on `cj-affiliate-offline-import-dispatch.yml` with staging env vars; monitor `staging-ops-monitor-lib` snapshot.
+
+### First CJ API probe (plan only — do not run until operator GO)
+
+1. Confirm Worker secret **`CJ_API_PAT`** exists (Dashboard → Variables; never print value).
+2. Set non-secret vars **`IU_CJ_PUBLISHER_CID`**, **`IU_CJ_WEBSITE_PID`** on staging Worker.
+3. `curl -sS -H "Authorization: Bearer $INGEST_TOKEN" "$STAGING_URL/v1/staging/cj-api/readiness"` — expect `mayExecuteHttp:false`, `hasPatSecret:true` after PAT set.
+4. Only after written GO: set `IU_CJ_STAGING_CJ_API_PROBE_APPROVED=1`, `IU_CJ_CJ_API_HTTP_EXECUTE=1`, `IU_CJ_STAGING_CJ_API_PROBE_EXECUTE=1` (Worker vars), redeploy staging.
+5. POST `/v1/staging/cj-api/probe` with ingest token — max `IU_CJ_CJ_API_MAX_REQUESTS_PER_PROBE` (default 1); archive metadata to staging D1 only; `publishable` must stay false.
+6. On 401/403/429/5xx or identity mismatch: STOP, revoke execute flags, audit without PAT.
 
 Rollback: set `IU_CJ_*_OFFLINE=1`, revoke PAT/IMAP, disable dispatch schedules (must remain absent until GO).
 

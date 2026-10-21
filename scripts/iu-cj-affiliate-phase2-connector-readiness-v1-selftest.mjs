@@ -3,6 +3,7 @@
 import { resolveLiveIngestGate } from "./iu-cj-affiliate-phase2-github-actions-ingest-live-gate.mjs";
 import { resolveCjApiConfig } from "./iu-cj-affiliate-phase2-cj-api-adapter.mjs";
 import { isForpsiImapLiveConnectApproved } from "./iu-forpsi-imap-credentials-interface.mjs";
+import { resolveStagingCjArchiveGate } from "./iu-cj-affiliate-phase2-staging-archive-only-gate.mjs";
 
 const env = {
   ...process.env,
@@ -27,6 +28,13 @@ expect("prod_signing_off", live.gates.productionSigningOff === true);
 
 const cj = resolveCjApiConfig(env);
 expect("cj_api_no_live_without_pat", cj.enabled === false || cj.mode !== "live");
+
+const archive = resolveStagingCjArchiveGate({
+  ENVIRONMENT: "staging",
+  IU_CJ_STAGING_ONLY: "1",
+  CJ_STAGING_ARCHIVE_ONLY: "1",
+});
+expect("staging_archive_live_api_off", archive.mayExecuteHttp === false);
 
 console.log(
   JSON.stringify({
