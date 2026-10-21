@@ -55,7 +55,7 @@ function staticContract() {
     }
   }
   if (pkg.indexOf("iu-silver-wx-boot-no-flash-guard") < 0) fails.push("package_json_missing_script");
-  const { guardWiredInSmokeCi } = require("./guards/iu-smoke-ci-wiring-v1.cjs");
+  const { guardWiredInSmokeCi } = require(path.join(REPO, "scripts/guards/iu-smoke-ci-wiring-v1.cjs"));
   if (!guardWiredInSmokeCi(REPO, "iu-silver-wx-boot-no-flash-guard")) fails.push("smoke_yml_missing_guard");
   return fails;
 }

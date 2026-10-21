@@ -41,7 +41,7 @@ function runCmd(name, run, env, timeoutMinutes, taskIndex) {
     const started = Date.now();
     const guardPort =
       env.IU_GUARD_PORT ||
-      String(8600 + (Number.isFinite(taskIndex) ? taskIndex % 400 : 0));
+      String(8600 + (Number.isFinite(taskIndex) ? taskIndex : 0));
     const child = spawn(run, {
       cwd: REPO,
       shell: true,

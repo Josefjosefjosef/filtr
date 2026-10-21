@@ -10,7 +10,9 @@ const path = require("path");
 const { spawn, spawnSync } = require("child_process");
 const http = require("http");
 
-const PORT = Number(process.env.SILVER_LAYOUT_GUARD_LOCAL_PORT || 8080);
+const PORT = Number(
+  process.env.SILVER_LAYOUT_GUARD_LOCAL_PORT || process.env.IU_GUARD_PORT || 8080
+);
 const GUARD_URL = `http://127.0.0.1:${PORT}/projects/`;
 const SERVER_SCRIPT = path.join(__dirname, "..", "server", "projects-static.mjs");
 

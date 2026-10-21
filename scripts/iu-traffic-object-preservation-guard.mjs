@@ -8,6 +8,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { createRequire } from "module";
 import {
   buildTrafficCardPresentation,
   buildTrafficSituationSummary,
@@ -20,6 +21,7 @@ import {
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
+const require = createRequire(import.meta.url);
 
 const fails = [];
 const results = [];
@@ -197,7 +199,7 @@ console.log(
       fail: fails.length,
       fails,
       OBJECT_PRESERVATION_GUARD_IMPLEMENTED: "YES",
-      OBJECT_PRESERVATION_GUARD_CI_BLOCKING: /iu-traffic-object-preservation-guard/.test(smokeSrc)
+      OBJECT_PRESERVATION_GUARD_CI_BLOCKING: guardWiredInSmokeCi(root, "iu-traffic-object-preservation-guard")
         ? "YES"
         : "NO",
       P7454_COLLAPSED_SUMMARY: collapsed,
