@@ -18,6 +18,7 @@ migrations_dir = "migrations"
 # Optional isolated staging env (requires Cloudflare GO to create D1/R2 resources).
 [env.staging]
 name = "iu-cj-email-ingest-d1-staging"
+account_id = "577868e9aac9c289e9323100f68fad16"
 vars = { ENVIRONMENT = "staging", IU_CJ_STAGING_ONLY = "1" }
 
 [[env.staging.d1_databases]]
