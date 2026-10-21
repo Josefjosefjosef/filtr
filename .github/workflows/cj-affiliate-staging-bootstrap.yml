@@ -216,8 +216,39 @@ jobs:
         run: |
           set -euo pipefail
           TOKEN="$(cat /tmp/iu_cj_staging_token)"
-          curl -fsS "${WORKER_URL}/health" | tee /tmp/health.json
-          python3 -c "import json; h=json.load(open('/tmp/health.json')); assert h.get('stagingOnly') is True; assert h.get('d1Binding')=='present'; assert h.get('r2Binding')=='present'; assert h.get('ingestTokenConfigured') is True"
+          wait_staging_health_ready() {
+            local base="$1"
+            local attempt=1
+            local max_attempts=15
+            local sleep_s=2
+            while [ "$attempt" -le "$max_attempts" ]; do
+              code="$(curl -s -o /tmp/health.json -w '%{http_code}' "${base}/health" || true)"
+              if [ "$code" = "401" ] || [ "$code" = "403" ]; then
+                echo "BLOCKER=HEALTH_AUTH_FAIL code=$code"
+                exit 1
+              fi
+              if [ "$code" = "200" ]; then
+                if python3 -c "import json; h=json.load(open('/tmp/health.json')); assert h.get('stagingOnly') is True; assert h.get('d1Binding')=='present'; assert h.get('r2Binding')=='present'; assert h.get('ingestTokenConfigured') is True"; then
+                  echo "STAGING_HEALTH_READY attempt=$attempt"
+                  return 0
+                fi
+                echo "BLOCKER=HEALTH_PAYLOAD_INVALID attempt=$attempt"
+                exit 1
+              fi
+              if [ "$code" = "404" ] || [ "$code" = "502" ] || [ "$code" = "503" ] || [ "$code" = "000" ]; then
+                echo "HEALTH_RETRY attempt=$attempt code=$code sleep=${sleep_s}s"
+                sleep "$sleep_s"
+                attempt=$((attempt + 1))
+                continue
+              fi
+              echo "BLOCKER=HEALTH_UNEXPECTED code=$code"
+              exit 1
+            done
+            echo "BLOCKER=HEALTH_TIMEOUT max_attempts=$max_attempts"
+            exit 1
+          }
+          wait_staging_health_ready "${WORKER_URL}"
+          cat /tmp/health.json
           curl -fsS -H "Authorization: Bearer ${TOKEN}" "${WORKER_URL}/v1/staging/d1-ping"
           curl -fsS -X POST -H "Authorization: Bearer ${TOKEN}" "${WORKER_URL}/v1/staging/d1-write-probe"
           curl -fsS -X POST -H "Authorization: Bearer ${TOKEN}" "${WORKER_URL}/v1/staging/r2-probe"

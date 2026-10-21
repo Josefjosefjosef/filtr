@@ -18,6 +18,8 @@ Binding contract: `scripts/iu-cj-affiliate-phase2-staging-worker-bindings-lib.mj
 
 Rollback: none (read-only).
 
+Post-deploy `/health` on `*.workers.dev` can return **404 for a few seconds** while the route propagates. Bootstrap synthetic step uses bounded retry (404/502/503 only; 401/403 fail closed).
+
 ---
 
 ## S1 — Staging D1
