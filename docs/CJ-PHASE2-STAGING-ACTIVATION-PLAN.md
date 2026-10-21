@@ -47,6 +47,9 @@ Approved feeds┘
 | `iu-cj-affiliate-phase2-staging-env-guard-lib.mjs` | Wrangler staging naming / D1 isolation audit |
 | `iu-cj-affiliate-phase2-staging-scheduler-contract-lib.mjs` | Assert CJ workflows have no `schedule` cron |
 | `iu-cj-affiliate-phase2-staging-ops-monitor-lib.mjs` | Audit JSONL ops snapshot (redacted) |
+| `iu-cj-affiliate-phase2-staging-worker-bindings-lib.mjs` | Worker `DB` / `BANNER_ASSETS` contract + mocks |
+
+Detailed Cloudflare commands: **`docs/CJ-PHASE2-CLOUDFLARE-STAGING-RUNBOOK.md`** (S0–S4, document-only).
 
 Selftests: `*-selftest.mjs` above + `iu-cj-affiliate-phase2-staging-isolation-v1-selftest.mjs` (orchestrated in offline full-stack).
 

@@ -1,5 +1,9 @@
 #!/usr/bin/env node
 import { auditStagingWranglerConfig } from "./iu-cj-affiliate-phase2-staging-env-guard-lib.mjs";
+import {
+  assertStagingWorkerBindings,
+  createMockStagingWorkerEnv,
+} from "./iu-cj-affiliate-phase2-staging-worker-bindings-lib.mjs";
 import { auditCjIngestSchedulerContract } from "./iu-cj-affiliate-phase2-staging-scheduler-contract-lib.mjs";
 import { ingestBannerAssetToStagingR2, createInMemoryBannerR2Store } from "./iu-cj-affiliate-phase2-banner-staging-r2-lib.mjs";
 
@@ -14,6 +18,10 @@ expect("wrangler_publishable_false", wranglerAudit.publishable === false);
 
 const scheduler = auditCjIngestSchedulerContract();
 expect("no_cron_on_cj_workflows", scheduler.ok === true && scheduler.cronArmed === false);
+
+const mockEnv = createMockStagingWorkerEnv();
+const bindingAudit = assertStagingWorkerBindings(mockEnv);
+expect("worker_bindings_contract", bindingAudit.ok === true);
 
 const tinyPng = Buffer.from(
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
