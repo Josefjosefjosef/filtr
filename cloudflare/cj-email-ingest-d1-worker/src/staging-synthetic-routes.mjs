@@ -1,5 +1,9 @@
 /** Token-gated staging-only probes (synthetic data). No live ingest. */
 import { verifyBearerToken, jsonResponse } from "./ingest-rpc-service.mjs";
+import {
+  buildStagingCjApiReadiness,
+  resolveStagingCjArchiveGate,
+} from "./staging-cj-api-archive-gate.mjs";
 
 export function stagingSyntheticEnabled(env) {
   return env?.IU_CJ_STAGING_ONLY === "1" && env?.ENVIRONMENT === "staging";
@@ -113,6 +117,33 @@ export async function handleStagingSyntheticRequest(request, env) {
     });
   }
 
+  if (url.pathname === "/v1/staging/cj-api/readiness" && request.method === "GET") {
+    return jsonResponse(buildStagingCjApiReadiness(env));
+  }
+
+  if (url.pathname === "/v1/staging/cj-api/probe" && request.method === "POST") {
+    const gate = resolveStagingCjArchiveGate(env);
+    if (!gate.mayExecuteHttp) {
+      return jsonResponse(
+        {
+          ok: false,
+          blocked: true,
+          phase: "cj_api_probe",
+          reason: gate.blockReason,
+          publishable: false,
+        },
+        403
+      );
+    }
+    return jsonResponse({
+      ok: false,
+      blocked: true,
+      phase: "cj_api_probe",
+      reason: "probe_route_requires_operator_go",
+      publishable: false,
+    }, 403);
+  }
+
   return jsonResponse({ ok: false, reason: "not_found", publishable: false }, 404);
 }
 
@@ -120,12 +151,16 @@ export function buildHealthPayload(env) {
   const d1Bound = Boolean(env.DB);
   const r2Bound = Boolean(env.BANNER_ASSETS);
   const tokenConfigured = Boolean(String(env.IU_CJ_D1_WORKER_INGEST_TOKEN || "").trim());
+  const archiveGate = resolveStagingCjArchiveGate(env);
   return {
     ok: d1Bound,
     service: "cj-email-ingest-d1-worker",
     rpcVersion: 1,
     environment: env.ENVIRONMENT || null,
     stagingOnly: env.IU_CJ_STAGING_ONLY === "1",
+    cjArchiveOnly: archiveGate.archiveOnly,
+    cjPatConfigured: archiveGate.hasPatSecret,
+    cjLiveApiRequestsAllowed: archiveGate.mayExecuteHttp,
     d1Binding: d1Bound ? "present" : "missing",
     r2Binding: r2Bound ? "present" : "missing",
     ingestTokenConfigured: tokenConfigured,

@@ -28,11 +28,13 @@ import {
 
 } from "./iu-cj-affiliate-phase1-lib.mjs";
 
+import { canExecuteStagingCjHttpRequest, trimPat as trimPatGate } from "./iu-cj-affiliate-phase2-staging-archive-only-gate.mjs";
+
 
 
 export const CJ_API_SECRET_NAMES = Object.freeze({
 
-  pat: ["IU_CJ_PAT", "CJ_PERSONAL_ACCESS_TOKEN"],
+  pat: ["CJ_API_PAT", "IU_CJ_PAT", "CJ_PERSONAL_ACCESS_TOKEN"],
 
   publisherCid: "IU_CJ_PUBLISHER_CID",
 
@@ -42,11 +44,27 @@ export const CJ_API_SECRET_NAMES = Object.freeze({
 
 
 
+export function readCjPatFromEnv(env = process.env) {
+
+  for (const key of CJ_API_SECRET_NAMES.pat) {
+
+    const v = trimPatGate(env[key]);
+
+    if (v) return v;
+
+  }
+
+  return "";
+
+}
+
+
+
 export function resolveCjApiConfig(env = process.env) {
 
   const offline = env.IU_CJ_EMAIL_INGEST_OFFLINE === "1" || env.IU_CJ_GITHUB_INGEST_DRY_RUN === "1";
 
-  const pat = trimPat(env.IU_CJ_PAT) || trimPat(env.CJ_PERSONAL_ACCESS_TOKEN) || null;
+  const pat = readCjPatFromEnv(env) || null;
 
   const enabled = env.IU_CJ_CJ_API_ENABLED === "1" && !offline && pat;
 
@@ -78,7 +96,7 @@ export function resolveCjApiConfig(env = process.env) {
 
       githubActions: ["IU_CJ_PAT", "IU_CJ_PUBLISHER_CID", "IU_CJ_WEBSITE_PID"],
 
-      cloudflareWorker: "only if Worker must enrich feeds at edge; else keep PAT on GHA only",
+      cloudflareWorker: ["CJ_API_PAT", "IU_CJ_PUBLISHER_CID", "IU_CJ_WEBSITE_PID"],
 
       never: ["source code", "audit ZIP", "chat", "workflow logs"],
 
@@ -92,7 +110,7 @@ export function resolveCjApiConfig(env = process.env) {
 
 export function probeCjPatFormat(env = process.env) {
 
-  const pat = trimPat(env.IU_CJ_PAT) || trimPat(env.CJ_PERSONAL_ACCESS_TOKEN) || "";
+  const pat = readCjPatFromEnv(env) || "";
 
   if (!pat) {
 
@@ -128,7 +146,19 @@ export async function cjApiHttpGet(url, env = process.env, options = {}) {
 
   }
 
-  const pat = trimPat(env.IU_CJ_PAT) || trimPat(env.CJ_PERSONAL_ACCESS_TOKEN) || options.testPat || "";
+  if (env.CJ_STAGING_ARCHIVE_ONLY === "1" || env.ENVIRONMENT === "staging") {
+
+    const stagingGate = canExecuteStagingCjHttpRequest(env);
+
+    if (!stagingGate.allowed) {
+
+      return { ok: false, blocked: true, reason: stagingGate.reason || "staging_cj_api_blocked" };
+
+    }
+
+  }
+
+  const pat = readCjPatFromEnv(env) || options.testPat || "";
 
   const fmt = validatePatFormat(pat);
 

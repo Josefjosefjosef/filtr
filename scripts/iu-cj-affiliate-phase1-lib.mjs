@@ -407,6 +407,7 @@ export const CJ_PROMOTION_TYPES = [
 
 export function clearCjEnvFromProcess() {
   for (const key of [
+    "CJ_API_PAT",
     "IU_CJ_PAT",
     "CJ_PERSONAL_ACCESS_TOKEN",
     "CJ_ACCESS_TOKEN",

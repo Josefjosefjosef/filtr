@@ -29,6 +29,7 @@ const suites = [
   "iu-cj-affiliate-phase2-staging-worker-routes-selftest.mjs",
   "iu-cj-affiliate-phase2-staging-health-retry-policy-selftest.mjs",
   "iu-cj-affiliate-phase2-connector-readiness-v1-selftest.mjs",
+  "iu-cj-affiliate-phase2-cj-api-security-v1-selftest.mjs",
   "iu-cj-affiliate-phase2-server-negative-v1-selftest.mjs",
 ];
 

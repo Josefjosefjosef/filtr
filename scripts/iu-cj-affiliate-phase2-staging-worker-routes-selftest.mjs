@@ -18,6 +18,7 @@ expect("staging_disabled_missing_flag", stagingSyntheticEnabled({ ENVIRONMENT: "
 const health = buildHealthPayload({
   ENVIRONMENT: "staging",
   IU_CJ_STAGING_ONLY: "1",
+  CJ_STAGING_ARCHIVE_ONLY: "1",
   DB: {},
   BANNER_ASSETS: {},
   IU_CJ_D1_WORKER_INGEST_TOKEN: "test-token",
@@ -26,6 +27,8 @@ expect("health_staging_only", health.stagingOnly === true);
 expect("health_publishable_false", health.publishable === false);
 expect("health_bindings", health.d1Binding === "present" && health.r2Binding === "present");
 expect("health_no_secret_leak", !JSON.stringify(health).includes("test-token"));
+expect("health_cj_archive_default", health.cjArchiveOnly === true);
+expect("health_cj_live_api_off", health.cjLiveApiRequestsAllowed === false);
 
 const reqMissing = new Request("http://localhost/v1/ingest/rpc", { method: "POST" });
 const miss = verifyBearerToken(reqMissing, "secret");
