@@ -91,7 +91,8 @@ function staticContract() {
   if (pkg.indexOf("iu-reload-visual-stability-contract-guard") < 0) {
     fails.push("package_json_missing_script");
   }
-  if (smoke.indexOf("iu-reload-visual-stability-contract-guard") < 0) {
+  const { guardWiredInSmokeCi } = require("./guards/iu-smoke-ci-wiring-v1.cjs");
+  if (!guardWiredInSmokeCi(REPO, "iu-reload-visual-stability-contract-guard")) {
     fails.push("smoke_yml_missing_guard");
   }
 

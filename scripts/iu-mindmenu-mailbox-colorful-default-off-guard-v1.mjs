@@ -67,7 +67,8 @@ function staticContract() {
     fail("static_migration_write_omits_colorful");
   }
   if (pkg.indexOf("iu-mindmenu-mailbox-colorful-default-off-guard") < 0) fail("package_missing_script");
-  if (smoke.indexOf("iu-mindmenu-mailbox-colorful-default-off-guard") < 0) fail("smoke_missing_guard");
+  const { guardWiredInSmokeCi } = require(path.join(REPO, "scripts/guards/iu-smoke-ci-wiring-v1.cjs"));
+  if (!guardWiredInSmokeCi(REPO, "iu-mindmenu-mailbox-colorful-default-off-guard")) fail("smoke_missing_guard");
   if (!/mindmenu-colorful-default-off-v1-20260914/.test(app)) fail("app_js_cachebust_missing");
   if (!/mindmenu-colorful-default-off-v1-20260914/.test(shell)) fail("shell_cachebust_missing");
 }

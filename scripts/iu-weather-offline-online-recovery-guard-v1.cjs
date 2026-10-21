@@ -14,7 +14,7 @@ const REPO = path.resolve(__dirname, "..");
 const req = createRequire(path.join(REPO, "package.json"));
 const { chromium } = req("playwright");
 const OUT = path.join(process.env.TEMP || process.env.TMPDIR || "/tmp", "iu_weather_offline_online_recovery_guard.json");
-const PORT = 8847;
+const PORT = parseInt(process.env.IU_GUARD_PORT || "8847", 10);
 const PIPELINE_REL = "assets/iu-app-feed-pipeline-v1.js";
 const SMOKE_REL = path.join(".github", "workflows", "smoke.yml");
 
@@ -80,7 +80,8 @@ function staticContract(pipeline, smokeYml) {
   if (pipeline.indexOf('reason: "visibility"') < 0 && pipeline.indexOf("reason: 'visibility'") < 0) {
     fails.push("static_visibility_reconnect_missing");
   }
-  if (String(smokeYml || "").indexOf("iu-weather-offline-online-recovery-guard") < 0) {
+  const { guardWiredInSmokeCi } = require("./guards/iu-smoke-ci-wiring-v1.cjs");
+  if (!guardWiredInSmokeCi(REPO, "iu-weather-offline-online-recovery-guard")) {
     fails.push("static_smoke_yml_missing_guard");
   }
   return fails;

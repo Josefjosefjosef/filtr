@@ -3,6 +3,11 @@
   "private": true,
   "scripts": {
     "check-site": "node scripts/check_site.js",
+    "dev:verify": "node scripts/iu-dev-verify-fast-v1.mjs",
+    "dev:pr-status": "node scripts/iu-dev-pr-tracker-v1.mjs",
+    "dev:ci-timing": "node scripts/iu-dev-ci-timing-v1.mjs",
+    "ci:smoke-step-timing": "node scripts/iu-smoke-step-timing-audit-v1.mjs",
+    "ci:regenerate-smoke-guard-manifest": "node scripts/ci/extract-smoke-guard-manifest-v1.mjs",
     "smoke": "node scripts/smoke.mjs",
     "section-cz-guard": "node scripts/section-cz-guard.mjs",
     "iu-cz-vertical-cold-section-clear-selftest": "node scripts/iu-cz-vertical-cold-section-clear-selftest.mjs",

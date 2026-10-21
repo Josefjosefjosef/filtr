@@ -155,7 +155,8 @@ function staticContract(pipeline, indexHtml, smokeYml) {
   }
   if (silver && /open-meteo\.com/i.test(silver)) fails.push("static_Silver_independent_open_meteo");
 
-  if (String(smokeYml || "").indexOf("iu-weather-location-resolve-guard") < 0) {
+  const { guardWiredInSmokeCi } = require("./guards/iu-smoke-ci-wiring-v1.cjs");
+  if (!guardWiredInSmokeCi(REPO, "iu-weather-location-resolve-guard")) {
     fails.push("static_smoke_yml_missing_guard");
   }
 
