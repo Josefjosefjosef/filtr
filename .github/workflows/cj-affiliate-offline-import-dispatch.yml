@@ -28,16 +28,24 @@ jobs:
         with:
           node-version: "22"
 
-      - name: CJ offline selftests (banner permission + unattended + dataflow)
+      - name: CJ offline full stack selftest (FORPSI mock + unattended + gates)
+        shell: bash
+        env:
+          IU_CJ_EMAIL_INGEST_OFFLINE: "1"
+          IU_CJ_GITHUB_INGEST_DRY_RUN: "1"
+          IU_CJ_D1_BACKEND: "mock"
+          PRODUCTION_SIGNING_ENABLED: "false"
+        run: |
+          set -euo pipefail
+          node scripts/iu-cj-affiliate-phase2-offline-full-stack-v1-selftest.mjs
+
+      - name: Archive publication negative (vitest)
         shell: bash
         run: |
           set -euo pipefail
-          node scripts/iu-cj-affiliate-phase2-banner-permission-selftest.mjs
-          node scripts/iu-cj-affiliate-phase2-media-inventory-selftest.mjs
-          node scripts/iu-cj-affiliate-phase2-unattended-import-cycle-v1-selftest.mjs
-          node scripts/iu-cj-affiliate-phase2-offers-dataflow-offline-selftest.mjs
-          node scripts/iu-cj-affiliate-phase2-offline-pipeline-e2e-v1-selftest.mjs
-          node scripts/iu-cj-affiliate-phase2-preview-security-selftest.mjs
+          npm ci
+          node scripts/iu-cj-affiliate-phase2-affiliate-archive-publication-negative-selftest.mjs
+        working-directory: cloudflare/iu-ads
 
       - name: Run unattended import runner (offline — no live CJ/FORPSI)
         shell: bash

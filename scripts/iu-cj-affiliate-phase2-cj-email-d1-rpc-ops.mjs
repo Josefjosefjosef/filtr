@@ -1,0 +1,15 @@
+export const D1_WORKER_RPC_OPS = Object.freeze([
+  "acquireRunLease",
+  "releaseRunLease",
+  "getSyncCheckpoint",
+  "applyUidValidityChange",
+  "isUidCompleted",
+  "beginMessage",
+  "transitionStage",
+  "markFailed",
+  "finalizeCompleted",
+  "persistRawSnapshot",
+  "persistResults",
+  "recordIngestJob",
+  "getLifecycle",
+]);

@@ -4,7 +4,15 @@ import { runUnattendedImportCycle } from "./iu-cj-affiliate-phase2-unattended-im
 
 const env = { ...process.env };
 env.IU_CJ_UNATTENDED_IMPORT_OFFLINE = env.IU_CJ_UNATTENDED_IMPORT_OFFLINE || "1";
-env.IU_CJ_UNATTENDED_SKIP_EMAIL_INGEST = env.IU_CJ_UNATTENDED_SKIP_EMAIL_INGEST || "1";
+if (env.IU_CJ_UNATTENDED_RUN_FORPSI_OFFLINE === "1") {
+  env.IU_CJ_UNATTENDED_EMAIL_INGEST = "1";
+  env.IU_CJ_EMAIL_INGEST_OFFLINE = "1";
+  env.IU_CJ_GITHUB_INGEST_DRY_RUN = "1";
+  env.IU_CJ_D1_BACKEND = env.IU_CJ_D1_BACKEND || "mock";
+  env.IU_CJ_UNATTENDED_SKIP_EMAIL_INGEST = "0";
+} else {
+  env.IU_CJ_UNATTENDED_SKIP_EMAIL_INGEST = env.IU_CJ_UNATTENDED_SKIP_EMAIL_INGEST || "1";
+}
 env.PRODUCTION_SIGNING_ENABLED = env.PRODUCTION_SIGNING_ENABLED || "false";
 
 const result = await runUnattendedImportCycle({
