@@ -19,5 +19,6 @@ enabled = true
 GITHUB_REPOSITORY = "Josefjosefjosef/filtr"
 WORKFLOW_FILE = "update-chmi-cap-v2.yml"
 FRESHNESS_URL = "https://infouzel.cz/projects/data/info_events/feed.json"
+MONITORING_URL = "https://infouzel.cz/projects/data/info_events/monitoring.json"
 # Keep headroom for fetch+CI+merge+Pages under 15m E2E SLA target.
 STALE_AFTER_MINUTES = "8"

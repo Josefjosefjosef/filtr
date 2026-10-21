@@ -8,6 +8,7 @@ import worker, { type Env } from "./index.ts";
 
 const SECRET = "test-manual-trigger-secret";
 const FRESHNESS_URL = "https://infouzel.cz/projects/data/info_events/feed.json";
+const MONITORING_URL = "https://infouzel.cz/projects/data/info_events/monitoring.json";
 const STALE_GENERATED_AT = "2020-01-01T00:00:00.000Z";
 
 const env: Env = {
@@ -15,6 +16,7 @@ const env: Env = {
   GITHUB_REPOSITORY: "Josefjosefjosef/filtr",
   WORKFLOW_FILE: "update-chmi-cap-v2.yml",
   FRESHNESS_URL,
+  MONITORING_URL,
   STALE_AFTER_MINUTES: "8",
   MANUAL_TRIGGER_SECRET: SECRET,
 };
@@ -40,6 +42,15 @@ function makeMockFetch(tracker: { calls: Call[] }) {
         JSON.stringify({
           generatedAt: STALE_GENERATED_AT,
           items: [{ sourceId: "chmi", status: "aktivni" }],
+        }),
+        { status: 200, headers: { "content-type": "application/json" } },
+      );
+    }
+
+    if (url === MONITORING_URL || url.startsWith(MONITORING_URL)) {
+      return new Response(
+        JSON.stringify({
+          chmiCapV2: { totalItems: 1, activeCount: 1, scheduledCount: 0 },
         }),
         { status: 200, headers: { "content-type": "application/json" } },
       );

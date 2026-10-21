@@ -4,12 +4,18 @@
  * Does not write production data directly — GitHub workflow remains the engine.
  */
 import { decideWatchdog, parseIsoToMs } from "./decision.ts";
+import {
+  productionCountsFromMonitoring,
+  readGeneratedAtFromResponse,
+} from "./freshness.ts";
 
 export interface Env {
   GITHUB_TOKEN: string;
   GITHUB_REPOSITORY: string;
   WORKFLOW_FILE: string;
   FRESHNESS_URL: string;
+  /** Small ops snapshot for CHMI counts (avoids scanning feed.items on Workers). */
+  MONITORING_URL?: string;
   STALE_AFTER_MINUTES: string;
   MANUAL_TRIGGER_SECRET?: string;
 }
@@ -53,28 +59,49 @@ function requireManualTriggerAuth(env: Env, request: Request): Response | null {
   return null;
 }
 
-async function fetchFreshnessSnapshot(url: string): Promise<{
+async function fetchMonitoringCounts(monitoringUrl: string | undefined): Promise<{
+  chmiCount: number | null;
+  activeCount: number | null;
+  futureCount: number | null;
+}> {
+  const url = (monitoringUrl || "").trim();
+  if (!url) return { chmiCount: null, activeCount: null, futureCount: null };
+  const res = await fetch(url, {
+    headers: { Accept: "application/json", "Cache-Control": "no-cache" },
+  });
+  if (!res.ok) {
+    console.log(`[chmi-cap-watchdog] monitoring fetch failed: ${res.status}`);
+    return { chmiCount: null, activeCount: null, futureCount: null };
+  }
+  try {
+    const json = await res.json();
+    return productionCountsFromMonitoring(json);
+  } catch {
+    return { chmiCount: null, activeCount: null, futureCount: null };
+  }
+}
+
+async function fetchFreshnessSnapshot(env: Env): Promise<{
   generatedAt: string | null;
   chmiCount: number | null;
   activeCount: number | null;
   futureCount: number | null;
 }> {
-  const res = await fetch(url, {
-    headers: { Accept: "application/json", "Cache-Control": "no-cache" },
-  });
-  if (!res.ok) {
-    console.log(`[chmi-cap-watchdog] freshness fetch failed: ${res.status}`);
-    return { generatedAt: null, chmiCount: null, activeCount: null, futureCount: null };
+  const [feedRes, counts] = await Promise.all([
+    fetch(env.FRESHNESS_URL, {
+      headers: { Accept: "application/json", "Cache-Control": "no-cache" },
+    }),
+    fetchMonitoringCounts(env.MONITORING_URL),
+  ]);
+  if (!feedRes.ok) {
+    console.log(`[chmi-cap-watchdog] freshness fetch failed: ${feedRes.status}`);
+    return { generatedAt: null, ...counts };
   }
-  const json = (await res.json()) as {
-    generatedAt?: string;
-    items?: Array<{ sourceId?: string; status?: string }>;
-  };
-  const generatedAt = typeof json.generatedAt === "string" && json.generatedAt ? json.generatedAt : null;
-  const chmi = (json.items || []).filter((i) => i && i.sourceId === "chmi");
-  const activeCount = chmi.filter((i) => i.status === "aktivni").length;
-  const futureCount = chmi.filter((i) => i.status === "naplanovano").length;
-  return { generatedAt, chmiCount: chmi.length, activeCount, futureCount };
+  const generatedAt = await readGeneratedAtFromResponse(feedRes);
+  if (!generatedAt) {
+    console.log("[chmi-cap-watchdog] freshness generatedAt missing in feed prefix");
+  }
+  return { generatedAt, ...counts };
 }
 
 async function listRuns(env: Env): Promise<GhRun[]> {
@@ -180,7 +207,7 @@ export async function runCycle(
 ): Promise<Record<string, unknown>> {
   const allowMutations = opts.allowMutations !== false;
   const staleAfter = Math.max(1, Number(env.STALE_AFTER_MINUTES) || 8);
-  const snap = await fetchFreshnessSnapshot(env.FRESHNESS_URL);
+  const snap = await fetchFreshnessSnapshot(env);
   const generatedAt = snap.generatedAt;
   const runs = await listRuns(env);
   if (allowMutations) {
