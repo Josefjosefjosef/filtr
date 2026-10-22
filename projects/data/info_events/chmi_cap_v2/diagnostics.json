@@ -1,6 +1,6 @@
 {
-  "runId": "be7c92a090ce7b35",
-  "started": "2026-10-22T01:36:04.754Z",
+  "runId": "fc023aad84c97d49",
+  "started": "2026-10-22T01:41:17.867Z",
   "mode": "active",
   "discovery": {
     "type": "opendata_active_streams",
@@ -18,38 +18,25 @@
     {
       "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_210802.xml",
       "productKey": "50",
-      "status": 200,
-      "action": "process",
-      "cacheHit": false
+      "status": 304,
+      "action": "not_modified",
+      "cacheHit": true
     },
     {
       "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_201200.xml",
       "productKey": "70",
-      "status": 200,
-      "action": "process",
-      "cacheHit": false
+      "status": 304,
+      "action": "not_modified",
+      "cacheHit": true
     }
   ],
-  "parser": {
-    "loaded": 2,
-    "valid": 2,
-    "rejected": 0,
-    "duplicates": 0,
-    "quarantine": 0,
-    "cancels": 0,
-    "updates": 0,
-    "newThreads": 2,
-    "status": "healthy",
-    "alert": 0,
-    "update": 2,
-    "cancel": 0
-  },
+  "parser": null,
   "publish": {
     "publish": true,
     "reason": "ok",
     "completeness": {
-      "capMessages": 2,
-      "infoBlocks": 24,
+      "capMessages": null,
+      "infoBlocks": null,
       "logicalAlerts": 3,
       "uniqueEvents": [
         "Stav sucha",
@@ -75,7 +62,7 @@
     "alarms": [],
     "productionVerified": false
   },
-  "status": "healthy",
+  "status": "not_modified",
   "error": null,
   "onsetSplit": {
     "before": 3,
@@ -83,8 +70,8 @@
     "ledgerKeys": 2,
     "ledgerFingerprint": "78312eef579e2ffa",
     "history": {
-      "fetched": 4,
-      "cached": 28,
+      "fetched": 2,
+      "cached": 30,
       "skipped": 0,
       "urls": [
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_071200.xml",
@@ -121,7 +108,7 @@
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_210802.xml"
       ],
       "recentCount": 32,
-      "refCount": 4,
+      "refCount": 0,
       "window": 16
     },
     "chainSteps": [
@@ -332,8 +319,8 @@
     "visibleCount": 3
   },
   "completeness": {
-    "capMessages": 2,
-    "infoBlocks": 24,
+    "capMessages": null,
+    "infoBlocks": null,
     "logicalAlerts": 3,
     "uniqueEvents": [
       "Stav sucha",
@@ -369,6 +356,6 @@
     "unresolvedReferences": null,
     "snapshotContractValid": true
   },
-  "finished": "2026-10-22T01:36:25.843Z",
-  "runMs": 21089
+  "finished": "2026-10-22T01:41:24.599Z",
+  "runMs": 6732
 }
