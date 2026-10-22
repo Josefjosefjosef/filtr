@@ -163,6 +163,15 @@ jobs:
           node scripts/iu-cj-affiliate-staging-worker-cf-settings-v1-selftest.mjs
           node scripts/iu-cj-affiliate-staging-cj-api-probe-workflow-v1-selftest.mjs
           echo "CJ_STAGING_D1_CID_PID_FIX_SMOKE=PASS"
+      - name: CJ staging wrangler identity vars smoke (offline)
+        if: steps.scope.outputs.cj_staging_wrangler_identity_vars_only == 'true'
+        run: |
+          set -euo pipefail
+          node scripts/iu-cj-affiliate-staging-wrangler-identity-vars-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-phase2-staging-isolation-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-phase2-staging-cj-api-probe-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-phase2-cj-api-security-v1-selftest.mjs
+          echo "CJ_STAGING_WRANGLER_IDENTITY_VARS_SMOKE=PASS"
       - name: Data-only smoke fast path (skip unrelated UI guards)
         if: steps.scope.outputs.data_only == 'true'
         run: |

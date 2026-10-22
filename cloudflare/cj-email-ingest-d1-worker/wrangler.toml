@@ -19,10 +19,10 @@ migrations_dir = "migrations"
 [env.staging]
 name = "iu-cj-email-ingest-d1-staging"
 account_id = "577868e9aac9c289e9323100f68fad16"
-vars = { ENVIRONMENT = "staging", IU_CJ_STAGING_ONLY = "1", CJ_STAGING_ARCHIVE_ONLY = "1" }
+vars = { ENVIRONMENT = "staging", IU_CJ_STAGING_ONLY = "1", CJ_STAGING_ARCHIVE_ONLY = "1", IU_CJ_PUBLISHER_CID = "7667828", IU_CJ_WEBSITE_PID = "101883843" }
 
 # Secrets (Dashboard or wrangler secret put --env staging): IU_CJ_D1_WORKER_INGEST_TOKEN, CJ_API_PAT
-# Optional vars after GO: IU_CJ_PUBLISHER_CID, IU_CJ_WEBSITE_PID
+# Plain-text identity (non-secret): IU_CJ_PUBLISHER_CID, IU_CJ_WEBSITE_PID — deployed via vars above
 # Probe GO flags (default unset/false): IU_CJ_STAGING_CJ_API_PROBE_APPROVED, IU_CJ_CJ_API_HTTP_EXECUTE, IU_CJ_STAGING_CJ_API_PROBE_EXECUTE
 
 [[env.staging.d1_databases]]

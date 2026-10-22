@@ -41,6 +41,8 @@ jobs:
           grep -q 'name = "iu-cj-email-ingest-d1-staging"' wrangler.toml
           grep -q 'IU_CJ_STAGING_ONLY' wrangler.toml
           grep -q 'CJ_STAGING_ARCHIVE_ONLY' wrangler.toml
+          grep -q 'IU_CJ_PUBLISHER_CID' wrangler.toml
+          grep -q 'IU_CJ_WEBSITE_PID' wrangler.toml
           if grep -q '^\[triggers\]' wrangler.toml 2>/dev/null; then
             echo "BLOCKER=CRON_TRIGGERS_IN_WRANGLER"
             exit 1
