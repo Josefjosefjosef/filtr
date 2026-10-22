@@ -4,6 +4,7 @@ import {
   buildStagingCjApiReadiness,
   resolveStagingCjArchiveGate,
 } from "./staging-cj-api-archive-gate.mjs";
+import { executeStagingCjLinkSearchProbe } from "./staging-cj-api-probe-execute.mjs";
 
 export function stagingSyntheticEnabled(env) {
   return env?.IU_CJ_STAGING_ONLY === "1" && env?.ENVIRONMENT === "staging";
@@ -122,26 +123,22 @@ export async function handleStagingSyntheticRequest(request, env) {
   }
 
   if (url.pathname === "/v1/staging/cj-api/probe" && request.method === "POST") {
-    const gate = resolveStagingCjArchiveGate(env);
-    if (!gate.mayExecuteHttp) {
+    const probe = await executeStagingCjLinkSearchProbe(env);
+    if (probe.blocked) {
       return jsonResponse(
         {
           ok: false,
           blocked: true,
           phase: "cj_api_probe",
-          reason: gate.blockReason,
+          reason: probe.reason,
           publishable: false,
+          httpRequestCount: probe.httpRequestCount ?? 0,
         },
-        403
+        probe.status || 403
       );
     }
-    return jsonResponse({
-      ok: false,
-      blocked: true,
-      phase: "cj_api_probe",
-      reason: "probe_route_requires_operator_go",
-      publishable: false,
-    }, 403);
+    const status = probe.ok ? 200 : 422;
+    return jsonResponse(probe, status);
   }
 
   return jsonResponse({ ok: false, reason: "not_found", publishable: false }, 404);

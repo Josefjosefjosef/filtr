@@ -106,7 +106,7 @@ jobs:
       - run: npm ci
 
       - name: Prefetch cloudflare/iu-ads npm (premium visual guards)
-        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.iu_ads_deploy_unblock_only != 'true' && steps.scope.outputs.cj_affiliate_phase2_offline_only != 'true'
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.iu_ads_deploy_unblock_only != 'true' && steps.scope.outputs.cj_affiliate_phase2_offline_only != 'true' && steps.scope.outputs.cj_staging_api_probe_only != 'true'
         run: npm ci
         working-directory: cloudflare/iu-ads
 
@@ -130,7 +130,18 @@ jobs:
           node scripts/iu-cj-affiliate-phase2-connector-readiness-v1-selftest.mjs
           node scripts/iu-cj-affiliate-phase2-cj-api-security-v1-selftest.mjs
           node scripts/iu-cj-affiliate-phase2-staging-isolation-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-phase2-staging-cj-api-probe-v1-selftest.mjs
           echo "CJ_AFFILIATE_PHASE2_OFFLINE_SMOKE=PASS"
+      - name: CJ staging API probe scope smoke (offline selftests)
+        if: steps.scope.outputs.cj_staging_api_probe_only == 'true'
+        run: |
+          set -euo pipefail
+          node scripts/iu-cj-affiliate-phase2-staging-cj-api-probe-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-phase2-staging-isolation-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-phase2-cj-api-security-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-phase2-connector-readiness-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-phase2-smoke-scope-v1-selftest.mjs
+          echo "CJ_STAGING_API_PROBE_SCOPE_SMOKE=PASS"
       - name: Data-only smoke fast path (skip unrelated UI guards)
         if: steps.scope.outputs.data_only == 'true'
         run: |
@@ -261,12 +272,13 @@ jobs:
         run: node scripts/ci/smoke-guard-manifest-v1-selftest.mjs
 
       - name: Playwright guard suite (parallel pool, manifest v1)
-        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.cj_affiliate_phase2_offline_only != 'true'
+        if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.cj_affiliate_phase2_offline_only != 'true' && steps.scope.outputs.cj_staging_api_probe_only != 'true'
         timeout-minutes: 90
         env:
           IU_SMOKE_GUARD_PARALLEL: "4"
           SCOPE_data_only: ${{ steps.scope.outputs.data_only }}
           SCOPE_cj_affiliate_phase2_offline_only: ${{ steps.scope.outputs.cj_affiliate_phase2_offline_only }}
+          SCOPE_cj_staging_api_probe_only: ${{ steps.scope.outputs.cj_staging_api_probe_only }}
           SCOPE_skip_browser: ${{ steps.scope.outputs.skip_browser }}
           SCOPE_run_info_events_contract: ${{ steps.scope.outputs.run_info_events_contract }}
           SCOPE_vault_runtime_scope: ${{ steps.scope.outputs.vault_runtime_scope }}

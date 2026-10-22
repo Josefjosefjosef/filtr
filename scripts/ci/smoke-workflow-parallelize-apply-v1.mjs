@@ -38,6 +38,7 @@ const SCOPE_KEYS = [
   "chmi_cap_watchdog_deploy_only",
   "chmi_cap_v2_prod_verify_only",
   "cj_affiliate_phase2_offline_only",
+  "cj_staging_api_probe_only",
 ];
 
 const parallelBlock = `      - name: Playwright guard suite (parallel pool, manifest v1)

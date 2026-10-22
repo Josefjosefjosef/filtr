@@ -127,7 +127,8 @@ export function allowsDataOnlyFastPath(files) {
     isIuAdsDeployUnblockScope(files) ||
     isChmiCapWatchdogDeployScope(files) ||
     isChmiCapV2ProdVerifyScope(files) ||
-    isCjAffiliatePhase2OfflineOnlyScope(files)
+    isCjAffiliatePhase2OfflineOnlyScope(files) ||
+    isCjStagingApiProbeOnlyScope(files)
   );
 }
 
@@ -220,6 +221,37 @@ export function isCjAffiliatePhase2OfflineOnlyScope(files) {
     if (p === "scripts/ci/smoke-guard-manifest-v1.json") return true;
     if (p === "scripts/ci/smoke-guard-manifest-v1-selftest.mjs") return true;
     if (p === "scripts/ci/smoke-workflow-parallelize-apply-v1.mjs") return true;
+    if (p === ".github/workflows/smoke.yml") return true;
+    return false;
+  };
+  return paths.every((f) => allowed(f));
+}
+
+/** Staging CJ API probe worker diff — skip unrelated Playwright guards; run CJ selftests. */
+export const CJ_STAGING_API_PROBE_EXECUTE =
+  "cloudflare/cj-email-ingest-d1-worker/src/staging-cj-api-probe-execute.mjs";
+
+export function isCjStagingApiProbeOnlyScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  const feature = CJ_STAGING_API_PROBE_EXECUTE;
+  if (!paths.some((f) => normalizeRepoPath(f) === feature)) return false;
+  const allowed = (f) => {
+    const p = normalizeRepoPath(f);
+    if (!p) return false;
+    if (p === feature) return true;
+    if (p.startsWith("cloudflare/cj-email-ingest-d1-worker/")) {
+      if (p.includes("/.wrangler/")) return false;
+      return true;
+    }
+    if (p === "scripts/iu-cj-affiliate-phase2-staging-cj-api-probe-v1-selftest.mjs") return true;
+    if (p === "scripts/iu-cj-affiliate-phase2-smoke-scope-v1-selftest.mjs") return true;
+    if (p === "scripts/smoke-data-only-scope.mjs") return true;
+    if (p === "scripts/smoke_data_only_scope_proof.mjs") return true;
+    if (p === "scripts/ci/smoke-guard-manifest-v1.json") return true;
+    if (p === "scripts/ci/smoke-guard-manifest-v1-selftest.mjs") return true;
+    if (p === "scripts/ci/smoke-workflow-parallelize-apply-v1.mjs") return true;
+    if (p === ".github/workflows/cj-affiliate-staging-worker-deploy.yml") return true;
     if (p === ".github/workflows/smoke.yml") return true;
     return false;
   };
@@ -705,6 +737,7 @@ function main() {
   const chmiCapWatchdogDeployOnly = isChmiCapWatchdogDeployScope(files);
   const chmiCapV2ProdVerifyOnly = isChmiCapV2ProdVerifyScope(files);
   const cjAffiliatePhase2OfflineOnly = isCjAffiliatePhase2OfflineOnlyScope(files);
+  const cjStagingApiProbeOnly = isCjStagingApiProbeOnlyScope(files);
   const allowFastPath =
     !vaultRuntime &&
     (dataOnly ||
@@ -714,6 +747,7 @@ function main() {
     chmiCapWatchdogDeployOnly ||
     chmiCapV2ProdVerifyOnly ||
     cjAffiliatePhase2OfflineOnly ||
+    cjStagingApiProbeOnly ||
     (fastPoolBranch && isDataOnlyScope(files.length ? files : ["projects/data/_probe.txt"])));
 
   console.log(`[smoke-data-only-scope] files=${files.length} vault_runtime=${vaultRuntime ? "YES" : "NO"} head_commit_data_only=${headCommitDataOnly ? "YES" : "NO"} push_range_data_only=${pushRangeDataOnly ? "YES" : "NO"} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"} workflow_only=${workflowOnly ? "YES" : "NO"} info_panel_only=${infoPanelOnly ? "YES" : "NO"} fin_calc_header_only=${finCalcHeaderOnly ? "YES" : "NO"} datovka_overlay_only=${datovkaOverlayOnly ? "YES" : "NO"} custom_buttons_scroll_only=${customButtonsScrollOnly ? "YES" : "NO"} quicktools_mobile_visibility_only=${quicktoolsMobileVisibilityOnly ? "YES" : "NO"} user_data_backup_only=${userDataBackupOnly ? "YES" : "NO"} data_mgmt_restore_overlay_mobile_only=${dataMgmtRestoreOverlayMobileOnly ? "YES" : "NO"} pc_left_rail_same_window_tabs_only=${pcLeftRailSameWindowTabsOnly ? "YES" : "NO"} pc_tool_window_left_rail_layout_only=${pcToolWindowLeftRailLayoutOnly ? "YES" : "NO"} legal_doc_section_bar_only=${legalDocSectionBarOnly ? "YES" : "NO"} legal_docs_form_state_only=${legalDocsFormStateOnly ? "YES" : "NO"} pc_svatek_label_pill_gap_only=${pcSvatekLabelPillGapOnly ? "YES" : "NO"} calendar_allday_pinned_limit_only=${calendarAllDayPinnedLimitOnly ? "YES" : "NO"} desktop_article_read_mark_only=${desktopArticleReadMarkOnly ? "YES" : "NO"} jr_section_header_line_color_only=${jrSectionHeaderLineColorOnly ? "YES" : "NO"} info_panel_cnb_rates_only=${infoPanelCnbRatesOnly ? "YES" : "NO"}`);
@@ -752,8 +786,10 @@ function main() {
   writeOutput("chmi_cap_watchdog_deploy_only", chmiCapWatchdogDeployOnly ? "true" : "false");
   writeOutput("chmi_cap_v2_prod_verify_only", chmiCapV2ProdVerifyOnly ? "true" : "false");
   writeOutput("cj_affiliate_phase2_offline_only", cjAffiliatePhase2OfflineOnly ? "true" : "false");
+  writeOutput("cj_staging_api_probe_only", cjStagingApiProbeOnly ? "true" : "false");
   console.log(`SMOKE_DATA_ONLY_SCOPE=${allowFastPath ? "YES" : "NO"}`);
   console.log(`SMOKE_CJ_AFFILIATE_PHASE2_OFFLINE_ONLY_SCOPE=${cjAffiliatePhase2OfflineOnly ? "YES" : "NO"}`);
+  console.log(`SMOKE_CJ_STAGING_API_PROBE_ONLY_SCOPE=${cjStagingApiProbeOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_IU_ADS_DEPLOY_UNBLOCK_ONLY_SCOPE=${iuAdsDeployUnblockOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_CHMI_CAP_WATCHDOG_DEPLOY_ONLY_SCOPE=${chmiCapWatchdogDeployOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_CHMI_CAP_V2_PROD_VERIFY_ONLY_SCOPE=${chmiCapV2ProdVerifyOnly ? "YES" : "NO"}`);
