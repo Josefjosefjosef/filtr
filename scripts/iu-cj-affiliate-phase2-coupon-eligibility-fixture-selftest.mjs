@@ -186,7 +186,10 @@ const poisonCard = {
 expect("fixture_unknown_in_display_rejected", validatePublicationCard(poisonCard, refDate).ok === false);
 
 const goodCard = {
-  validity: { promotionEndDate: FIXTURE_LINK.promotionEndDate },
+  validity: {
+    promotionStartDate: FIXTURE_LINK.promotionStartDate,
+    promotionEndDate: FIXTURE_LINK.promotionEndDate,
+  },
   couponCzPublish: couponEval,
   displayProducts: [evDocumented],
 };
