@@ -17,6 +17,8 @@ import {
   isIuAdsDeployUnblockScope,
   isChmiCapWatchdogDeployScope,
   isChmiCapV2ProdVerifyScope,
+  isCjAffiliatePhase2OfflineOnlyScope,
+  CJ_AFFILIATE_PHASE2_OFFLINE_FIXTURE_SELFTEST,
   isWorkflowOnlyScope,
   normalizeRepoPath,
   touchesInfoEventsGeneratedData,
@@ -212,6 +214,25 @@ assert(
 assert(
   /CHMI CAP v2 prod verify scope guards/.test(fs.readFileSync(path.join(REPO, ".github", "workflows", "smoke.yml"), "utf8")),
   "smoke.yml defines CHMI prod verify scope guard step"
+);
+assert(
+  isCjAffiliatePhase2OfflineOnlyScope([CJ_AFFILIATE_PHASE2_OFFLINE_FIXTURE_SELFTEST]),
+  "cj fixture-only is offline scope"
+);
+assert(
+  allowsDataOnlyFastPath([CJ_AFFILIATE_PHASE2_OFFLINE_FIXTURE_SELFTEST]),
+  "cj fixture-only allows smoke fast path"
+);
+assert(
+  !isCjAffiliatePhase2OfflineOnlyScope([
+    CJ_AFFILIATE_PHASE2_OFFLINE_FIXTURE_SELFTEST,
+    "scripts/iu-cj-affiliate-phase2-coupon-eligibility.mjs",
+  ]),
+  "cj fixture+validator rejects offline scope"
+);
+assert(
+  /CJ Affiliate Phase 2 offline selftest smoke/.test(fs.readFileSync(path.join(REPO, ".github", "workflows", "smoke.yml"), "utf8")),
+  "smoke.yml defines CJ offline selftest step"
 );
 assert(isFastPoolPipelineScope(["package.json", "projects/data/publishable_pool.json"]), "data + package.json is pipeline scope");
 assert(!isFastPoolPipelineScope(["package.json", "projects/data/evil.js"]), "pipeline rejects evil.js data path");
