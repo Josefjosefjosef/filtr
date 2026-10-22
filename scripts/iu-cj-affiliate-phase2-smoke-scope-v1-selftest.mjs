@@ -1,18 +1,21 @@
 #!/usr/bin/env node
 /**
- * Regression tests for cj_affiliate_phase2_offline_only smoke scope (fail-closed).
+ * Regression tests for CJ smoke scopes (fail-closed): offline fixture + staging API probe.
  */
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import {
   CJ_AFFILIATE_PHASE2_OFFLINE_FIXTURE_SELFTEST,
+  CJ_STAGING_API_PROBE_EXECUTE,
   allowsDataOnlyFastPath,
   isCjAffiliatePhase2OfflineOnlyScope,
+  isCjStagingApiProbeOnlyScope,
 } from "./smoke-data-only-scope.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const FIXTURE = CJ_AFFILIATE_PHASE2_OFFLINE_FIXTURE_SELFTEST;
+const PROBE = CJ_STAGING_API_PROBE_EXECUTE;
 const failures = [];
 function expect(name, cond) {
   if (!cond) failures.push(name);
@@ -55,6 +58,24 @@ expect(
   isCjAffiliatePhase2OfflineOnlyScope(["scripts/smoke-data-only-scope.mjs"]) === false
 );
 
+expect("probe_execute_only_scoped", isCjStagingApiProbeOnlyScope([PROBE]) === true);
+expect("probe_execute_only_fast_path", allowsDataOnlyFastPath([PROBE]) === true);
+expect(
+  "probe_plus_assets_full_smoke",
+  isCjStagingApiProbeOnlyScope([PROBE, "assets/app.js"]) === false
+);
+expect(
+  "probe_wiring_without_execute_full_smoke",
+  isCjStagingApiProbeOnlyScope(["scripts/smoke-data-only-scope.mjs"]) === false
+);
+expect(
+  "probe_plus_prod_ingest_workflow_full_smoke",
+  isCjStagingApiProbeOnlyScope([
+    PROBE,
+    ".github/workflows/cj-affiliate-email-ingest.yml",
+  ]) === false
+);
+
 const smokeYml = fs.readFileSync(path.join(REPO, ".github", "workflows", "smoke.yml"), "utf8");
 expect(
   "smoke_yml_cj_offline_step",
@@ -67,8 +88,18 @@ expect(
   )
 );
 expect(
+  "smoke_yml_cj_probe_scope_step",
+  /cj_staging_api_probe_only == 'true'[\s\S]*staging-cj-api-probe-v1-selftest/.test(smokeYml)
+);
+expect(
   "smoke_yml_parallel_pool_skips_cj_scope",
   /Playwright guard suite \(parallel pool, manifest v1\)[\s\S]*cj_affiliate_phase2_offline_only != 'true'/.test(
+    smokeYml
+  )
+);
+expect(
+  "smoke_yml_parallel_pool_skips_probe_scope",
+  /Playwright guard suite \(parallel pool, manifest v1\)[\s\S]*cj_staging_api_probe_only != 'true'/.test(
     smokeYml
   )
 );
@@ -79,7 +110,11 @@ const manifest = JSON.parse(
 const missingCjGate = manifest.guards.filter(
   (g) => !String(g.ifGha || "").includes("cj_affiliate_phase2_offline_only")
 );
-expect("manifest_all_guards_cj_gate", missingCjGate.length === 0);
+expect("manifest_all_guards_cj_offline_gate", missingCjGate.length === 0);
+const missingProbeGate = manifest.guards.filter(
+  (g) => !String(g.ifGha || "").includes("cj_staging_api_probe_only")
+);
+expect("manifest_all_guards_cj_probe_gate", missingProbeGate.length === 0);
 
 console.log(
   JSON.stringify({

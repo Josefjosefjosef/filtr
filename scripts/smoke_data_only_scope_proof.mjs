@@ -18,7 +18,9 @@ import {
   isChmiCapWatchdogDeployScope,
   isChmiCapV2ProdVerifyScope,
   isCjAffiliatePhase2OfflineOnlyScope,
+  isCjStagingApiProbeOnlyScope,
   CJ_AFFILIATE_PHASE2_OFFLINE_FIXTURE_SELFTEST,
+  CJ_STAGING_API_PROBE_EXECUTE,
   isWorkflowOnlyScope,
   normalizeRepoPath,
   touchesInfoEventsGeneratedData,
@@ -233,6 +235,22 @@ assert(
 assert(
   /CJ Affiliate Phase 2 offline selftest smoke/.test(fs.readFileSync(path.join(REPO, ".github", "workflows", "smoke.yml"), "utf8")),
   "smoke.yml defines CJ offline selftest step"
+);
+assert(
+  isCjStagingApiProbeOnlyScope([CJ_STAGING_API_PROBE_EXECUTE]),
+  "cj staging probe execute-only is probe scope"
+);
+assert(
+  allowsDataOnlyFastPath([CJ_STAGING_API_PROBE_EXECUTE]),
+  "cj staging probe execute-only allows smoke fast path"
+);
+assert(
+  !isCjStagingApiProbeOnlyScope([CJ_STAGING_API_PROBE_EXECUTE, "assets/app.js"]),
+  "cj staging probe rejects mixed UI diff"
+);
+assert(
+  /CJ staging API probe scope smoke/.test(fs.readFileSync(path.join(REPO, ".github", "workflows", "smoke.yml"), "utf8")),
+  "smoke.yml defines CJ staging probe scope step"
 );
 assert(isFastPoolPipelineScope(["package.json", "projects/data/publishable_pool.json"]), "data + package.json is pipeline scope");
 assert(!isFastPoolPipelineScope(["package.json", "projects/data/evil.js"]), "pipeline rejects evil.js data path");
