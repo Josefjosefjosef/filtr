@@ -27,6 +27,8 @@ expect("patch_script_in_disarm", (wf.match(/patch-staging-cj-d1-wrangler-v1\.sh/
 expect("no_wrangler_d1_create", !/d1 create/i.test(wf));
 expect("no_cj_pat_secret_put", !/secret put (IU_CJ|CJ_API)/i.test(wf));
 expect("ingest_github_secret_name", /IU_CJ_STAGING_D1_WORKER_INGEST_TOKEN/.test(wf));
+expect("cf_identity_audit_script", wf.includes("iu-cj-affiliate-staging-worker-identity-cf-audit-v1.mjs"));
+expect("no_inline_plain_text_filter", !wf.includes("filter(x=>x.type==='plain_text')"));
 expect("concurrency_group", /cj-affiliate-staging-cj-api-probe-once/.test(wf));
 expect("live_probe_gated", /execute_live_cj_probe == '1'/.test(wf));
 

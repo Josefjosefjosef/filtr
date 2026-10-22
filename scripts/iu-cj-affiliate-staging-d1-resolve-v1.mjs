@@ -27,12 +27,35 @@ export function resolveStagingD1IdFromList(rows, expectedName = STAGING_D1_NAME)
   return { ok: true, reason: "ok", count: 1, expectedName, id: id.toLowerCase() };
 }
 
+export function readStagingBlockDatabaseId(wranglerText) {
+  if (!wranglerText.includes(STAGING_D1_MARKER)) {
+    return { ok: false, reason: "staging_d1_block_missing" };
+  }
+  const parts = wranglerText.split(STAGING_D1_MARKER);
+  if (parts.length < 2) {
+    return { ok: false, reason: "staging_d1_block_missing" };
+  }
+  const tail = parts.slice(1).join(STAGING_D1_MARKER);
+  if (!tail.includes(`database_name = "${STAGING_D1_NAME}"`)) {
+    return { ok: false, reason: "staging_d1_name_missing" };
+  }
+  const match = tail.match(/database_id\s*=\s*"([^"]*)"/);
+  if (!match) {
+    return { ok: false, reason: "database_id_line_missing" };
+  }
+  return { ok: true, id: String(match[1]).trim().toLowerCase() };
+}
+
 export function patchWranglerStagingD1DatabaseId(wranglerText, id) {
   if (!wranglerText.includes(STAGING_D1_MARKER)) {
     return { ok: false, reason: "staging_d1_block_missing" };
   }
   if (!STAGING_D1_NAME) {
     return { ok: false, reason: "internal" };
+  }
+  const target = String(id || "").trim().toLowerCase();
+  if (!/^[0-9a-f-]{36}$/.test(target) || target === PLACEHOLDER_D1_ID) {
+    return { ok: false, reason: "d1_invalid_uuid" };
   }
   const parts = wranglerText.split(STAGING_D1_MARKER);
   if (parts.length < 2) {
@@ -43,11 +66,22 @@ export function patchWranglerStagingD1DatabaseId(wranglerText, id) {
   if (!tail.includes(`database_name = "${STAGING_D1_NAME}"`)) {
     return { ok: false, reason: "staging_d1_name_missing" };
   }
-  const patched = tail.replace(/database_id\s*=\s*"[^"]*"/, `database_id = "${id}"`);
+  const currentRead = readStagingBlockDatabaseId(wranglerText);
+  if (!currentRead.ok) {
+    return { ok: false, reason: currentRead.reason };
+  }
+  const current = currentRead.id;
+  if (current === target) {
+    return { ok: true, reason: "already_patched", text: wranglerText, changed: false };
+  }
+  if (current !== PLACEHOLDER_D1_ID && current !== target) {
+    return { ok: false, reason: "d1_id_mismatch", currentId: current, expectedId: target };
+  }
+  const patched = tail.replace(/database_id\s*=\s*"[^"]*"/, `database_id = "${target}"`);
   if (patched === tail) {
     return { ok: false, reason: "database_id_line_missing" };
   }
-  return { ok: true, reason: "ok", text: head + STAGING_D1_MARKER + patched };
+  return { ok: true, reason: "ok", text: head + STAGING_D1_MARKER + patched, changed: true };
 }
 
 function parseArgs(argv) {
@@ -122,7 +156,9 @@ async function main() {
     if (!opts.dryRun) {
       fs.writeFileSync(opts.patchPath, patched.text);
     }
-    console.error(JSON.stringify({ IU_CJ_STAGING_D1_PATCH: "OK", D1_ID_PATCHED: opts.dryRun ? "dry_run" : "yes" }));
+    const patchLabel =
+      patched.reason === "already_patched" ? "already" : opts.dryRun ? "dry_run" : "yes";
+    console.error(JSON.stringify({ IU_CJ_STAGING_D1_PATCH: "OK", D1_ID_PATCHED: patchLabel }));
     return;
   }
   process.stdout.write(resolved.id);
