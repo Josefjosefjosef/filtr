@@ -31,6 +31,13 @@ expect("cf_identity_audit_script", wf.includes("iu-cj-affiliate-staging-worker-i
 expect("no_inline_plain_text_filter", !wf.includes("filter(x=>x.type==='plain_text')"));
 expect("concurrency_group", /cj-affiliate-staging-cj-api-probe-once/.test(wf));
 expect("live_probe_gated", /execute_live_cj_probe == '1'/.test(wf));
+expect(
+  "offline_probe_post_no_curl_fail_on_403",
+  /curl -sS -o \/tmp\/probe_blocked\.json/.test(wf) && !/curl -fsS[^\n]*\/v1\/staging\/cj-api\/probe/.test(wf)
+);
+expect("offline_probe_expect_http_403", wf.includes("expected=403 actual="));
+expect("offline_probe_json_diagnostics", wf.includes("BLOCKER=PROBE_BLOCKED_JSON_INVALID"));
+expect("offline_probe_body_missing_guard", wf.includes("BLOCKER=PROBE_BLOCKED_BODY_MISSING"));
 
 expect("patch_sh_exists", fs.existsSync(PATCH_SH));
 expect("patch_sh_uses_resolver", fs.readFileSync(PATCH_SH, "utf8").includes("iu-cj-affiliate-staging-d1-resolve-v1.mjs"));
