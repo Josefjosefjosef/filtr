@@ -29,11 +29,30 @@ const usd = IU_INFO_PANEL_CATALOG.find((i) => i.id === "usd_czk");
 assert(!!eur && !!usd, "catalog eur/usd missing");
 
 async function fetchLiveCnbSample() {
-  const res = await fetch(CNB_DAILY_RATES_URL, {
-    headers: { Accept: "text/plain", "Accept-Language": "cs" },
-  });
-  assert(res.ok, "live CNB HTTP must succeed");
-  return res.text();
+  const maxAttempts = 3;
+  let lastDetail = "no_response";
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      const res = await fetch(CNB_DAILY_RATES_URL, {
+        headers: { Accept: "text/plain", "Accept-Language": "cs" },
+        signal: AbortSignal.timeout(20_000),
+      });
+      if (res.ok) return res.text();
+      lastDetail = "http_" + res.status;
+      if (res.status >= 500 && attempt < maxAttempts) {
+        await new Promise((resolve) => setTimeout(resolve, attempt * 750));
+        continue;
+      }
+      break;
+    } catch (err) {
+      lastDetail = String(err?.message || "network_error").slice(0, 80);
+      if (attempt < maxAttempts) {
+        await new Promise((resolve) => setTimeout(resolve, attempt * 750));
+        continue;
+      }
+    }
+  }
+  assert(false, "live CNB HTTP must succeed:" + lastDetail);
 }
 
 function auditBuildScript() {
