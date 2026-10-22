@@ -26,10 +26,14 @@ expect("reject_placeholder", resolveStagingD1IdFromList([{ name: STAGING_D1_NAME
 const toml = fs.readFileSync(WRANGLER, "utf8");
 expect("repo_placeholder_staging_block", toml.includes(PLACEHOLDER_D1_ID));
 const patched = patchWranglerStagingD1DatabaseId(toml, realId);
-expect("patch_ok", patched.ok === true);
+expect("patch_ok", patched.ok === true && patched.changed === true);
 expect("patch_only_staging_env", (patched.text.match(/database_id = "/g) || []).length === 2);
 expect("top_level_still_placeholder", patched.text.includes(`database_id = "${PLACEHOLDER_D1_ID}"`));
 expect("staging_block_has_real_id", patched.text.includes(`database_id = "${realId}"`));
+const repatch = patchWranglerStagingD1DatabaseId(patched.text, realId);
+expect("patch_idempotent", repatch.ok === true && repatch.reason === "already_patched" && repatch.changed === false);
+const badRepatch = patchWranglerStagingD1DatabaseId(patched.text, "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
+expect("patch_reject_mismatch", badRepatch.ok === false && badRepatch.reason === "d1_id_mismatch");
 
 const cfg = parseWranglerStagingConfig(toml);
 expect("guard_allows_placeholder_in_repo", cfg.d1DatabaseId === PLACEHOLDER_D1_ID);

@@ -131,24 +131,7 @@ jobs:
           set -euo pipefail
           SETTINGS="$(curl -fsS -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
             "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/workers/scripts/iu-cj-email-ingest-d1-staging/settings")"
-          echo "$SETTINGS" | node -e "
-          const expCid=process.env.EXPECT_CID;
-          const expPid=process.env.EXPECT_PID;
-          let s='';process.stdin.on('data',c=>s+=c);process.stdin.on('end',()=>{
-            const j=JSON.parse(s);
-            if(!j.success){console.error('BLOCKER=CF_SETTINGS_FAIL');process.exit(1);}
-            const bindings=(j.result&&j.result.bindings)||j.result||[];
-            const plain=(Array.isArray(bindings)?bindings:[]).filter(x=>x.type==='plain_text');
-            const get=(n)=>{const h=plain.find(x=>x.name===n);return h&&h.text?String(h.text).trim():'';};
-            const cid=get('IU_CJ_PUBLISHER_CID');
-            const pid=get('IU_CJ_WEBSITE_PID');
-            const cidOk=cid===expCid;
-            const pidOk=pid===expPid;
-            console.log('CJ_PUBLISHER_CID='+(cidOk?'PASS':'FAIL'));
-            console.log('CJ_WEBSITE_PID='+(pidOk?'PASS':'FAIL'));
-            if(!cidOk||!pidOk) process.exit(1);
-          });
-          "
+          echo "$SETTINGS" | node scripts/iu-cj-affiliate-staging-worker-identity-cf-audit-v1.mjs
 
       - name: Patch staging D1 id (arm deploy)
         if: inputs.execute_live_cj_probe == '1'

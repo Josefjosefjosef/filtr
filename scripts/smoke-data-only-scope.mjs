@@ -129,7 +129,8 @@ export function allowsDataOnlyFastPath(files) {
     isChmiCapV2ProdVerifyScope(files) ||
     isCjAffiliatePhase2OfflineOnlyScope(files) ||
     isCjStagingApiProbeOnlyScope(files) ||
-    isCjStagingProbeWorkflowFixScope(files)
+    isCjStagingProbeWorkflowFixScope(files) ||
+    isCjStagingD1CidPidFixScope(files)
   );
 }
 
@@ -253,6 +254,33 @@ export function isCjStagingProbeWorkflowFixScope(files) {
     if (p === "scripts/ci/smoke-workflow-parallelize-apply-v1.mjs") return true;
     if (p === ".github/workflows/smoke.yml") return true;
     if (p === "docs/CJ-PHASE2-CLOUDFLARE-STAGING-RUNBOOK.md") return true;
+    if (p === "scripts/iu-cj-affiliate-staging-worker-cf-settings-lib.mjs") return true;
+    if (p === "scripts/iu-cj-affiliate-staging-worker-cf-settings-v1-selftest.mjs") return true;
+    if (p === "scripts/iu-cj-affiliate-staging-worker-identity-cf-audit-v1.mjs") return true;
+    if (p === "scripts/iu-cj-affiliate-staging-readonly-audit-v1.mjs") return true;
+    return false;
+  };
+  return paths.every((f) => allowed(f));
+}
+
+/** D1 idempotent resolver + CF CID/PID audit (scripts/workflows only). */
+export function isCjStagingD1CidPidFixScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  const allowed = (f) => {
+    const p = normalizeRepoPath(f);
+    if (!p) return false;
+    if (p === "scripts/iu-cj-affiliate-staging-d1-resolve-v1.mjs") return true;
+    if (p === "scripts/iu-cj-affiliate-staging-d1-resolve-v1-selftest.mjs") return true;
+    if (p === "scripts/iu-cj-affiliate-staging-worker-cf-settings-lib.mjs") return true;
+    if (p === "scripts/iu-cj-affiliate-staging-worker-cf-settings-v1-selftest.mjs") return true;
+    if (p === "scripts/iu-cj-affiliate-staging-worker-identity-cf-audit-v1.mjs") return true;
+    if (p === "scripts/iu-cj-affiliate-staging-readonly-audit-v1.mjs") return true;
+    if (p === "scripts/iu-cj-affiliate-staging-cj-api-probe-workflow-v1-selftest.mjs") return true;
+    if (p === ".github/workflows/cj-affiliate-staging-cj-api-probe-once.yml") return true;
+    if (p === "scripts/smoke-data-only-scope.mjs") return true;
+    if (p === "scripts/smoke_data_only_scope_proof.mjs") return true;
+    if (p === ".github/workflows/smoke.yml") return true;
     return false;
   };
   return paths.every((f) => allowed(f));
@@ -771,6 +799,7 @@ function main() {
   const cjAffiliatePhase2OfflineOnly = isCjAffiliatePhase2OfflineOnlyScope(files);
   const cjStagingApiProbeOnly = isCjStagingApiProbeOnlyScope(files);
   const cjStagingProbeWorkflowFix = isCjStagingProbeWorkflowFixScope(files);
+  const cjStagingD1CidPidFix = isCjStagingD1CidPidFixScope(files);
   const allowFastPath =
     !vaultRuntime &&
     (dataOnly ||
@@ -782,6 +811,7 @@ function main() {
     cjAffiliatePhase2OfflineOnly ||
     cjStagingApiProbeOnly ||
     cjStagingProbeWorkflowFix ||
+    cjStagingD1CidPidFix ||
     (fastPoolBranch && isDataOnlyScope(files.length ? files : ["projects/data/_probe.txt"])));
 
   console.log(`[smoke-data-only-scope] files=${files.length} vault_runtime=${vaultRuntime ? "YES" : "NO"} head_commit_data_only=${headCommitDataOnly ? "YES" : "NO"} push_range_data_only=${pushRangeDataOnly ? "YES" : "NO"} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"} workflow_only=${workflowOnly ? "YES" : "NO"} info_panel_only=${infoPanelOnly ? "YES" : "NO"} fin_calc_header_only=${finCalcHeaderOnly ? "YES" : "NO"} datovka_overlay_only=${datovkaOverlayOnly ? "YES" : "NO"} custom_buttons_scroll_only=${customButtonsScrollOnly ? "YES" : "NO"} quicktools_mobile_visibility_only=${quicktoolsMobileVisibilityOnly ? "YES" : "NO"} user_data_backup_only=${userDataBackupOnly ? "YES" : "NO"} data_mgmt_restore_overlay_mobile_only=${dataMgmtRestoreOverlayMobileOnly ? "YES" : "NO"} pc_left_rail_same_window_tabs_only=${pcLeftRailSameWindowTabsOnly ? "YES" : "NO"} pc_tool_window_left_rail_layout_only=${pcToolWindowLeftRailLayoutOnly ? "YES" : "NO"} legal_doc_section_bar_only=${legalDocSectionBarOnly ? "YES" : "NO"} legal_docs_form_state_only=${legalDocsFormStateOnly ? "YES" : "NO"} pc_svatek_label_pill_gap_only=${pcSvatekLabelPillGapOnly ? "YES" : "NO"} calendar_allday_pinned_limit_only=${calendarAllDayPinnedLimitOnly ? "YES" : "NO"} desktop_article_read_mark_only=${desktopArticleReadMarkOnly ? "YES" : "NO"} jr_section_header_line_color_only=${jrSectionHeaderLineColorOnly ? "YES" : "NO"} info_panel_cnb_rates_only=${infoPanelCnbRatesOnly ? "YES" : "NO"}`);
@@ -822,6 +852,7 @@ function main() {
   writeOutput("cj_affiliate_phase2_offline_only", cjAffiliatePhase2OfflineOnly ? "true" : "false");
   writeOutput("cj_staging_api_probe_only", cjStagingApiProbeOnly ? "true" : "false");
   writeOutput("cj_staging_probe_workflow_fix_only", cjStagingProbeWorkflowFix ? "true" : "false");
+  writeOutput("cj_staging_d1_cid_pid_fix_only", cjStagingD1CidPidFix ? "true" : "false");
   console.log(`SMOKE_DATA_ONLY_SCOPE=${allowFastPath ? "YES" : "NO"}`);
   console.log(`SMOKE_CJ_AFFILIATE_PHASE2_OFFLINE_ONLY_SCOPE=${cjAffiliatePhase2OfflineOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_CJ_STAGING_API_PROBE_ONLY_SCOPE=${cjStagingApiProbeOnly ? "YES" : "NO"}`);

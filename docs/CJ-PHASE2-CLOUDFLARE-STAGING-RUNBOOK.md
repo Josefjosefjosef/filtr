@@ -54,7 +54,7 @@ Rollback: delete staging bucket after emptying (operator GO).
 | Secret | `wrangler secret put IU_CJ_D1_WORKER_INGEST_TOKEN --env staging` | Prompt only in terminal, not in repo |
 | CJ PAT (after operator GO) | Cloudflare Dashboard → Workers → `iu-cj-email-ingest-d1-staging` → Settings → Variables → Encrypt → name **`CJ_API_PAT`** | Value never in repo, chat, or CI logs; not the same as `CLOUDFLARE_CJ_STAGING_API_TOKEN` |
 | CJ PAT (CLI alternative) | `cd cloudflare/cj-email-ingest-d1-worker` then `wrangler secret put CJ_API_PAT --env staging` | Paste at prompt only; terminal history risk — prefer Dashboard |
-| Publisher IDs | Worker vars (non-secret): `IU_CJ_PUBLISHER_CID`, `IU_CJ_WEBSITE_PID` | Publisher CID ≠ advertiser CID |
+| Publisher IDs | Worker vars (non-secret): `IU_CJ_PUBLISHER_CID`, `IU_CJ_WEBSITE_PID` | Publisher CID ≠ advertiser CID; staging probe expects **7667828** / **101883843** unless operator documents otherwise |
 | Deploy | `wrangler deploy --env staging` | Worker URL `*.workers.dev` or staging route |
 | Health | `curl -sS "$STAGING_URL/health"` | `{"ok":true,"d1Binding":"present",...}` no secrets |
 | Fail-closed | POST ingest without token | 401/403 |
