@@ -1,0 +1,84 @@
+name: CJ Affiliate staging worker deploy (code only)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cj-affiliate-staging-worker-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy-staging-worker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: cloudflare/cj-email-ingest-d1-worker
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_CJ_STAGING_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: "577868e9aac9c289e9323100f68fad16"
+      WRANGLER_SEND_METRICS: "false"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Preflight (staging name guard, no secret rotation)
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${CLOUDFLARE_API_TOKEN:-}" ]; then
+            echo "BLOCKER=CLOUDFLARE_CJ_STAGING_API_TOKEN_MISSING"
+            exit 1
+          fi
+          grep -q 'name = "iu-cj-email-ingest-d1-staging"' wrangler.toml
+          grep -q 'IU_CJ_STAGING_ONLY' wrangler.toml
+          grep -q 'CJ_STAGING_ARCHIVE_ONLY' wrangler.toml
+          if grep -q '^\[triggers\]' wrangler.toml 2>/dev/null; then
+            echo "BLOCKER=CRON_TRIGGERS_IN_WRANGLER"
+            exit 1
+          fi
+          echo "PREFLIGHT_OK=1"
+          echo "NOTE=This workflow does not run wrangler secret put (PAT/ingest token preserved)."
+
+      - name: Apply staging D1 migrations (remote)
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx --yes wrangler@4 d1 migrations apply iu-cj-email-ingest-staging --env staging --remote
+
+      - name: Deploy staging worker (no CJ API probe call)
+        id: deploy
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="$(npx --yes wrangler@4 deploy --env staging 2>&1)"
+          echo "$OUT" | sed -E 's/(token|Token|Bearer|pat|PAT)[^[:space:]]+/[REDACTED]/g'
+          URL="$(echo "$OUT" | grep -Eo 'https://[a-zA-Z0-9.-]+\.workers\.dev' | head -n1 || true)"
+          if [ -z "$URL" ]; then
+            echo "BLOCKER=WORKER_URL_NOT_PARSED"
+            exit 1
+          fi
+          echo "worker_url=$URL" >> "$GITHUB_OUTPUT"
+
+      - name: Post-deploy health (no CJ probe)
+        shell: bash
+        env:
+          WORKER_URL: ${{ steps.deploy.outputs.worker_url }}
+        run: |
+          set -euo pipefail
+          curl -fsS "${WORKER_URL}/health" | python3 -c "
+          import json,sys
+          h=json.load(sys.stdin)
+          assert h.get('stagingOnly') is True
+          assert h.get('publishable') is False
+          assert h.get('cjLiveApiRequestsAllowed') is False
+          print('STAGING_DEPLOY_HEALTH_OK=1')
+          "
