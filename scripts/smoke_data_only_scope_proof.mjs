@@ -33,18 +33,50 @@ function assert(cond, msg) {
 function assertSmokeYmlDataOnlyGatesPlaywrightUiSteps() {
   const smokePath = path.join(REPO, ".github", "workflows", "smoke.yml");
   const text = fs.readFileSync(smokePath, "utf8");
-  const required = [
-    "Install Playwright browsers",
+  const manifestPath = path.join(REPO, "scripts", "ci", "smoke-guard-manifest-v1.json");
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+  const guardsByName = new Map(manifest.guards.map((g) => [g.name, g]));
+
+  function assertDataOnlyGateInSmokeStep(stepName) {
+    const re = new RegExp(
+      String.raw`- name:\s*${stepName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\s*\n\s*if:\s*steps\.scope\.outputs\.data_only\s*!=\s*'true'`,
+      "m"
+    );
+    return re.test(text);
+  }
+
+  function assertDataOnlyGateInManifest(stepName) {
+    const guard = guardsByName.get(stepName);
+    if (!guard || typeof guard.ifGha !== "string") return false;
+    return /steps\.scope\.outputs\.data_only\s*!=\s*'true'/.test(guard.ifGha);
+  }
+
+  /** Playwright install must stay an explicit workflow step (skipped before manifest pool). */
+  assert(
+    assertDataOnlyGateInSmokeStep("Install Playwright browsers"),
+    'smoke.yml step "Install Playwright browsers" must gate on data_only != true (Playwright binary skip path)'
+  );
+
+  const manifestPoolGated = /Playwright guard suite \(parallel pool, manifest v1\)[\s\S]*?if:\s*steps\.scope\.outputs\.data_only\s*!=\s*'true'/.test(
+    text
+  );
+  assert(
+    manifestPoolGated,
+    "smoke.yml parallel Playwright guard pool must gate on data_only != true"
+  );
+
+  for (const name of [
     "Desktop cold-start FOUC guard",
     "Mobile iCentrum boot FOUC guard",
     "Traffic auto background full hydrate guard",
-  ];
-  for (const name of required) {
-    const re = new RegExp(
-      String.raw`- name:\s*${name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\s*\n\s*if:\s*steps\.scope\.outputs\.data_only\s*!=\s*'true'`,
-      "m"
+  ]) {
+    const ok =
+      assertDataOnlyGateInSmokeStep(name) ||
+      (manifestPoolGated && assertDataOnlyGateInManifest(name));
+    assert(
+      ok,
+      `guard "${name}" must gate on data_only != true via smoke.yml step or manifest v1 pool`
     );
-    assert(re.test(text), `smoke.yml step "${name}" must gate on data_only != true (Playwright binary skip path)`);
   }
   assert(
     /name:\s*Info events \/ CHMI data-contract suite \(non-browser\)/.test(text),
