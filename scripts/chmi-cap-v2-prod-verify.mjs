@@ -14,7 +14,18 @@ import { listCapXmlFromIndex } from "./iu-info-events-lib.mjs";
 import { selectLatestPerProductStream, capProductKeyFromUrl } from "./chmi-cap-v2/discovery-adapter.mjs";
 import { parseCapAlertXml } from "./chmi-cap-v2/parse-cap.mjs";
 import { processCapDocuments } from "./chmi-cap-v2/sync-core.mjs";
-import { revisionsToFeed, mergeFeedItemsById, isPublishableChmiItem } from "./chmi-cap-v2/normalize-feed.mjs";
+import {
+  revisionsToFeed,
+  mergeFeedItemsById,
+  isPublishableChmiItem,
+  refreshItemLocalityPresentation,
+  refreshItemTemporalFields,
+  updateOpenEndedOrpOnsetLedger,
+} from "./chmi-cap-v2/normalize-feed.mjs";
+import {
+  applyTerritoryOnsetLedgerToFeed,
+  canonicalizeLedgerOrpKeys,
+} from "./chmi-cap-v2/territory-onset-ledger.mjs";
 import { createGeoRegistry } from "./chmi-cap-v2/geo-registry.mjs";
 import { latestRevisionForThread } from "./chmi-cap-v2/revisions.mjs";
 import { CHMI_OPENDATA_CAP_INDEX, CHMI_SYNC_UA, getChmiCapV2Config } from "./chmi-cap-v2/config.mjs";
@@ -72,6 +83,24 @@ async function loadFeed(feedSpec) {
   return { feed: JSON.parse(fs.readFileSync(p, "utf8")), source: p };
 }
 
+function defaultSyncStateSpec(feedSpec) {
+  if (/^https?:\/\//i.test(feedSpec)) {
+    return feedSpec.replace(/\/feed\.json(\?.*)?$/i, "/chmi_cap_v2/sync_state.json");
+  }
+  const p = path.isAbsolute(feedSpec) ? feedSpec : path.join(REPO, feedSpec);
+  return path.join(path.dirname(p), "chmi_cap_v2", "sync_state.json");
+}
+
+async function loadSyncState(syncSpec) {
+  if (/^https?:\/\//i.test(syncSpec)) {
+    const res = await fetchText(syncSpec);
+    if (res.status < 200 || res.status >= 300) throw new Error("sync_state_http_" + res.status);
+    return JSON.parse(res.body);
+  }
+  const p = path.isAbsolute(syncSpec) ? syncSpec : path.join(REPO, syncSpec);
+  return JSON.parse(fs.readFileSync(p, "utf8"));
+}
+
 async function main() {
   const feedSpec = argVal("feed", DEFAULT_FEED);
   const out = {
@@ -95,12 +124,27 @@ async function main() {
     streams: streams.map((s) => ({ productKey: s.productKey, name: s.name, mtime: s.mtime })),
   };
 
+  const feedSpecResolved = feedSpec;
+  const { feed, source } = await loadFeed(feedSpecResolved);
+  out.feedSource = source;
+
+  const syncStateSpec = argVal("sync-state", defaultSyncStateSpec(feedSpecResolved));
+  let syncState = {};
+  try {
+    syncState = await loadSyncState(syncStateSpec);
+    out.syncStateSource = syncStateSpec;
+  } catch (e) {
+    out.alarms.push({ code: "SYNC_STATE_LOAD_FAIL", detail: String(e && e.message ? e.message : e) });
+  }
+
   const config = getChmiCapV2Config({ IU_CHMI_CAP_V2_MODE: "active" });
   const registry = createGeoRegistry();
   const allItems = [];
   let infoBlocks = 0;
   let totalAreas = 0;
   const events = new Set();
+  const nowIso = new Date().toISOString();
+  const nowMs = Date.parse(nowIso) || Date.now();
 
   for (const stream of streams) {
     const xmlRes = await fetchText(stream.url);
@@ -118,22 +162,30 @@ async function main() {
         if (h.event && !/^žádn|^no warning/i.test(h.event)) events.add(h.event);
       }
     }
-    allItems.push(...revisionsToFeed(revs));
+    allItems.push(...revisionsToFeed(revs, { nowIso }));
   }
 
-  const expected = mergeFeedItemsById(allItems).filter((i) => isPublishableChmiItem(i));
+  const headPublishable = mergeFeedItemsById(allItems)
+    .map((i) => refreshItemLocalityPresentation(refreshItemTemporalFields(i, nowMs)))
+    .filter((i) => isPublishableChmiItem(i));
+
+  let chainLedger = canonicalizeLedgerOrpKeys((syncState && syncState.openEndedOrpOnset) || {});
+  if ((feed.items || []).length) {
+    chainLedger = canonicalizeLedgerOrpKeys(updateOpenEndedOrpOnsetLedger(chainLedger, feed.items || []));
+  }
+  const onsetSplit = applyTerritoryOnsetLedgerToFeed(feed.items || [], headPublishable, chainLedger, { nowIso });
+  const expected = (onsetSplit.items || []).filter((i) => isPublishableChmiItem(i));
   out.parser = {
     streamsProcessed: streams.length,
     infoBlocks,
     totalAreas,
     uniqueEvents: [...events],
+    headPublishable: headPublishable.length,
+    ledgerKeys: Object.keys(chainLedger || {}).length,
     expectedActive: expected.filter((i) => i.status === "aktivni").length,
     expectedPublishable: expected.length,
     expectedTitles: expected.map((i) => i.title),
   };
-
-  const { feed, source } = await loadFeed(feedSpec);
-  out.feedSource = source;
   const chmi = (feed.items || []).filter((i) => String(i.sourceId) === "chmi" && isPublishableChmiItem(i));
   out.production = {
     generatedAt: feed.generatedAt || null,
@@ -183,6 +235,7 @@ async function main() {
         "PROD_EMPTY_SOURCE_NONEMPTY",
         "PROD_ACTIVE_DROP",
         "STREAM_FETCH_FAIL",
+        "SYNC_STATE_LOAD_FAIL",
         "CITY_FILTER_MISS",
         "CANONICAL_AREA_MISMATCH",
       ].includes(a.code)
@@ -191,16 +244,22 @@ async function main() {
   // Canonical content gate — count equality alone is insufficient.
   const areaMismatch = [];
   for (const exp of expected) {
-    const prod =
-      chmi.find((i) => i.id === exp.id) ||
-      chmi.find((i) => (i.capV2 && i.capV2.event) === (exp.capV2 && exp.capV2.event) && (i.capV2 && i.capV2.severity) === (exp.capV2 && exp.capV2.severity));
+    const prod = chmi.find((i) => i.id === exp.id);
     if (!prod) continue;
     const eOrps = new Set((exp.region && exp.region.orpIds) || []);
     const pOrps = new Set((prod.region && prod.region.orpIds) || []);
     if (!eOrps.size) continue;
     const missing = [...eOrps].filter((x) => !pOrps.has(x));
-    if (missing.length && missing.length === eOrps.size) {
-      areaMismatch.push({ id: exp.id, missing: missing.slice(0, 8) });
+    const extra = [...pOrps].filter((x) => !eOrps.has(x));
+    if (missing.length || extra.length) {
+      areaMismatch.push({
+        id: exp.id,
+        title: exp.title,
+        missing: missing.slice(0, 8),
+        extra: extra.slice(0, 8),
+        expectedOrpCount: eOrps.size,
+        productionOrpCount: pOrps.size,
+      });
     }
   }
   if (areaMismatch.length) {
