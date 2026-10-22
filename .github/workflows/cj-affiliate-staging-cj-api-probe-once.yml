@@ -2,6 +2,15 @@ name: CJ Affiliate staging CJ API probe (once)
 
 on:
   workflow_dispatch:
+    inputs:
+      execute_live_cj_probe:
+        description: "Operator GO — max 1 live CJ HTTP (requires GitHub ingest secret + D1 lock free)"
+        required: true
+        default: "0"
+        type: choice
+        options:
+          - "0"
+          - "1"
 
 permissions:
   contents: read
@@ -11,7 +20,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  probe-once:
+  staging-cj-probe:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
@@ -22,9 +31,7 @@ jobs:
       EXPECT_CID: "7667828"
       EXPECT_PID: "101883843"
       WRANGLER_SEND_METRICS: "false"
-    defaults:
-      run:
-        working-directory: cloudflare/cj-email-ingest-d1-worker
+      EXECUTE_LIVE: ${{ inputs.execute_live_cj_probe }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -34,12 +41,17 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Preflight (token + public health)
+      - name: Preflight (CF token + public health)
         shell: bash
         run: |
           set -euo pipefail
           if [ -z "${CLOUDFLARE_API_TOKEN:-}" ]; then echo "BLOCKER=CF_TOKEN_MISSING"; exit 1; fi
-          if [ -z "${INGEST_TOKEN:-}" ]; then echo "BLOCKER=INGEST_TOKEN_MISSING"; exit 1; fi
+          if [ -z "${INGEST_TOKEN:-}" ]; then
+            echo "CJ_GITHUB_INGEST_SECRET=MISSING"
+            if [ "${EXECUTE_LIVE}" = "1" ]; then echo "BLOCKER=INGEST_TOKEN_MISSING"; exit 1; fi
+          else
+            echo "CJ_GITHUB_INGEST_SECRET=CONFIGURED"
+          fi
           curl -fsS "${WORKER_URL}/health" | python3 -c "
           import json,sys
           h=json.load(sys.stdin)
@@ -49,17 +61,18 @@ jobs:
           assert h.get('publishable') is False
           assert h.get('cjLiveApiRequestsAllowed') is False
           assert h.get('cjPatConfigured') is True
-          assert h.get('ingestTokenConfigured') is True
+          itc=h.get('ingestTokenConfigured') is True
+          print('CJ_WORKER_INGEST_SECRET=' + ('CONFIGURED' if itc else 'MISSING'))
           print('CJ_STAGING_ISOLATION=PASS')
-          print('CJ_PAT_CONFIGURED=PASS')
+          print('CJ_PAT_PRESERVED=PASS')
           "
 
       - name: Resolve staging D1 + lock precheck (read-only)
         shell: bash
+        working-directory: cloudflare/cj-email-ingest-d1-worker
         run: |
           set -euo pipefail
-          JSON="$(npx --yes wrangler@4 d1 list --json)"
-          echo "$JSON" | node ../../scripts/iu-cj-affiliate-staging-d1-resolve-v1.mjs --patch wrangler.toml --expect-name iu-cj-email-ingest-staging 1>&2
+          bash ../../scripts/ci/patch-staging-cj-d1-wrangler-v1.sh iu-cj-email-ingest-staging
           OUT="$(npx --yes wrangler@4 d1 execute iu-cj-email-ingest-staging --env staging --remote --json --command "SELECT lock_key, finished_at, http_status, record_count, connection_state FROM staging_cj_api_probe_lock WHERE lock_key = 'link_search_coupon_v1' LIMIT 1;")"
           echo "$OUT" | node -e "
           let s='';process.stdin.on('data',c=>s+=c);process.stdin.on('end',()=>{
@@ -71,11 +84,17 @@ jobs:
             console.log('CJ_D1_LOCK_READY=FAIL');console.log('CJ_D1_LOCK_CONSUMED=UNVERIFIED');process.exit(1);
           });
           "
+          if [ "${EXECUTE_LIVE}" = "1" ]; then echo "CJ_ONE_SHOT_LOCK=PASS"; fi
 
       - name: Readiness + identity (no CJ HTTP)
         shell: bash
         run: |
           set -euo pipefail
+          if [ -z "${INGEST_TOKEN:-}" ]; then
+            echo "CJ_PROBE_AUTHORIZATION=SKIP_NO_GITHUB_INGEST"
+            echo "CJ_LIVE_HTTP_REQUESTS=0"
+            exit 0
+          fi
           curl -fsS -H "Authorization: Bearer ${INGEST_TOKEN}" "${WORKER_URL}/v1/staging/cj-api/readiness" > /tmp/readiness.json
           python3 -c "
           import json,os
@@ -94,9 +113,19 @@ jobs:
           assert b.get('blocked') is True
           print('CJ_PROBE_BLOCKED_WHEN_GO_OFF=PASS status='+c)
           "
+          echo "CJ_LIVE_HTTP_REQUESTS=0"
+
+      - name: Offline mode (no arm, no live CJ HTTP)
+        if: inputs.execute_live_cj_probe != '1'
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "CJ_PROBE_MODE=OFFLINE_VERIFY"
+          echo "CJ_HTTP_REQUEST_COUNT=0"
+          echo "CJ_PAT_AUTHENTICATION=NOT_TESTED"
+          echo "CJ_LIVE_HTTP_REQUESTS=0"
 
       - name: Verify Worker plain-text vars (CID/PID)
-        id: identity
         shell: bash
         run: |
           set -euo pipefail
@@ -121,8 +150,15 @@ jobs:
           });
           "
 
-      - name: Arm GO flags (keep-vars deploy, no secret rotation)
+      - name: Patch staging D1 id (arm deploy)
+        if: inputs.execute_live_cj_probe == '1'
         shell: bash
+        run: bash scripts/ci/patch-staging-cj-d1-wrangler-v1.sh iu-cj-email-ingest-staging
+
+      - name: Arm GO flags (keep-vars deploy, no secret rotation)
+        if: inputs.execute_live_cj_probe == '1'
+        shell: bash
+        working-directory: cloudflare/cj-email-ingest-d1-worker
         run: |
           set -euo pipefail
           npx --yes wrangler@4 deploy --env staging --keep-vars \
@@ -136,9 +172,11 @@ jobs:
           assert r.get('mayExecuteHttp') is True, r
           assert r.get('identityOk') is True
           print('CJ_READINESS_ARMED=PASS')
+          print('CJ_ARM_D1_RESOLVE=PASS')
           "
 
       - name: One authorized CJ API probe POST
+        if: inputs.execute_live_cj_probe == '1'
         id: probe
         shell: bash
         run: |
@@ -183,31 +221,13 @@ jobs:
               print("CJ_API_CONNECTION=INCONCLUSIVE")
           PY
 
-      - name: Disarm GO flags (always)
-        if: always()
-        shell: bash
-        run: |
-          set -euo pipefail
-          npx --yes wrangler@4 deploy --env staging --keep-vars \
-            --var "IU_CJ_STAGING_CJ_API_PROBE_APPROVED:0" \
-            --var "IU_CJ_CJ_API_HTTP_EXECUTE:0" \
-            --var "IU_CJ_STAGING_CJ_API_PROBE_EXECUTE:0" 2>&1 | sed -E 's/(token|Token|Bearer|pat|PAT)[^[:space:]]+/[REDACTED]/g'
-          curl -fsS "${WORKER_URL}/health" | python3 -c "
-          import json,sys
-          h=json.load(sys.stdin)
-          assert h.get('cjLiveApiRequestsAllowed') is False
-          assert h.get('publishable') is False
-          print('CJ_GO_FLAGS_DISABLED=PASS')
-          print('CJ_PUBLISHING_DISABLED=PASS')
-          "
-
       - name: Post probe lock audit (read-only)
         if: always()
         shell: bash
+        working-directory: cloudflare/cj-email-ingest-d1-worker
         run: |
           set -euo pipefail
-          JSON="$(npx --yes wrangler@4 d1 list --json)"
-          echo "$JSON" | node ../../scripts/iu-cj-affiliate-staging-d1-resolve-v1.mjs --patch wrangler.toml --expect-name iu-cj-email-ingest-staging 1>&2
+          bash ../../scripts/ci/patch-staging-cj-d1-wrangler-v1.sh iu-cj-email-ingest-staging
           OUT="$(npx --yes wrangler@4 d1 execute iu-cj-email-ingest-staging --env staging --remote --json --command "SELECT lock_key, finished_at, http_status, record_count, connection_state FROM staging_cj_api_probe_lock WHERE lock_key = 'link_search_coupon_v1' LIMIT 1;")"
           echo "$OUT" | node -e "
           let s='';process.stdin.on('data',c=>s+=c);process.stdin.on('end',()=>{
@@ -221,5 +241,52 @@ jobs:
             console.log('CJ_D1_LOCK_CONNECTION_STATE='+(r.connection_state||'unknown'));
           });
           "
-          echo "CJ_PAT_SECRET_PRESERVED=PASS"
           echo "PRODUCTION_UNCHANGED=PASS"
+
+  disarm-failsafe:
+    needs: staging-cj-probe
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_CJ_STAGING_API_TOKEN }}
+      WORKER_URL: "https://iu-cj-email-ingest-d1-staging.josef-zmrhal.workers.dev"
+      WRANGLER_SEND_METRICS: "false"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Patch staging D1 id (disarm deploy)
+        shell: bash
+        run: bash scripts/ci/patch-staging-cj-d1-wrangler-v1.sh iu-cj-email-ingest-staging
+
+      - name: Disarm GO flags (keep-vars, no secret rotation)
+        shell: bash
+        working-directory: cloudflare/cj-email-ingest-d1-worker
+        run: |
+          set -euo pipefail
+          npx --yes wrangler@4 deploy --env staging --keep-vars \
+            --var "IU_CJ_STAGING_CJ_API_PROBE_APPROVED:0" \
+            --var "IU_CJ_CJ_API_HTTP_EXECUTE:0" \
+            --var "IU_CJ_STAGING_CJ_API_PROBE_EXECUTE:0" 2>&1 | sed -E 's/(token|Token|Bearer|pat|PAT)[^[:space:]]+/[REDACTED]/g'
+          echo "CJ_DISARM_D1_RESOLVE=PASS"
+
+      - name: Verify GO off + publishing disabled
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS "${WORKER_URL}/health" | python3 -c "
+          import json,sys
+          h=json.load(sys.stdin)
+          assert h.get('cjLiveApiRequestsAllowed') is False
+          assert h.get('publishable') is False
+          print('CJ_GO_FLAGS_DISABLED=PASS')
+          print('CJ_PUBLISHING_DISABLED=PASS')
+          print('CJ_DISARM_FAILSAFE=PASS')
+          print('CJ_LIVE_HTTP_REQUESTS=0')
+          "
