@@ -124,7 +124,9 @@ export function allowsDataOnlyFastPath(files) {
     isDataOnlyScope(files) ||
     isWorkflowOnlyScope(files) ||
     isFastPoolPipelineScope(files) ||
-    isIuAdsDeployUnblockScope(files)
+    isIuAdsDeployUnblockScope(files) ||
+    isChmiCapWatchdogDeployScope(files) ||
+    isChmiCapV2ProdVerifyScope(files)
   );
 }
 
@@ -154,6 +156,42 @@ export function isIuAdsDeployUnblockScope(files) {
     if (p.startsWith("scripts/lib/iu-invoice-pdf-qr-decode.mjs")) return true;
     if (p === "scripts/iu-commercial-register-ares-verify.mjs") return true;
     if (p === "scripts/iu-premium-approve-publish-e2e-prod.mjs") return true;
+    if (p === "scripts/smoke-data-only-scope.mjs") return true;
+    if (p === "scripts/smoke_data_only_scope_proof.mjs") return true;
+    if (p === ".github/workflows/smoke.yml") return true;
+    return false;
+  };
+  return paths.every(allowed);
+}
+
+/** CHMI CAP watchdog worker-only diff — no infoUzel.cz UI; worker unit tests in smoke. */
+export function isChmiCapWatchdogDeployScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  const allowed = (f) => {
+    const p = normalizeRepoPath(f);
+    if (!p) return false;
+    if (p.startsWith("cloudflare/chmi-cap-watchdog/")) {
+      if (p.includes("/.wrangler/")) return false;
+      return true;
+    }
+    if (p === ".github/workflows/deploy-chmi-cap-watchdog.yml") return true;
+    if (p === "scripts/smoke-data-only-scope.mjs") return true;
+    if (p === "scripts/smoke_data_only_scope_proof.mjs") return true;
+    if (p === ".github/workflows/smoke.yml") return true;
+    return false;
+  };
+  return paths.every(allowed);
+}
+
+/** CHMI prod verify script-only — CAP/geo contract guards + live prod verify (no Playwright). */
+export function isChmiCapV2ProdVerifyScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  const allowed = (f) => {
+    const p = normalizeRepoPath(f);
+    if (!p) return false;
+    if (p === "scripts/chmi-cap-v2-prod-verify.mjs") return true;
     if (p === "scripts/smoke-data-only-scope.mjs") return true;
     if (p === "scripts/smoke_data_only_scope_proof.mjs") return true;
     if (p === ".github/workflows/smoke.yml") return true;
@@ -638,12 +676,16 @@ function main() {
   const calendarAllDayPinnedLimitOnly = isCalendarAllDayPinnedLimitScope(files);
   const desktopArticleReadMarkOnly = isDesktopArticleReadMarkOnlyScope(files);
   const iuAdsDeployUnblockOnly = isIuAdsDeployUnblockScope(files);
+  const chmiCapWatchdogDeployOnly = isChmiCapWatchdogDeployScope(files);
+  const chmiCapV2ProdVerifyOnly = isChmiCapV2ProdVerifyScope(files);
   const allowFastPath =
     !vaultRuntime &&
     (dataOnly ||
     workflowOnly ||
     pipelineOnly ||
     iuAdsDeployUnblockOnly ||
+    chmiCapWatchdogDeployOnly ||
+    chmiCapV2ProdVerifyOnly ||
     (fastPoolBranch && isDataOnlyScope(files.length ? files : ["projects/data/_probe.txt"])));
 
   console.log(`[smoke-data-only-scope] files=${files.length} vault_runtime=${vaultRuntime ? "YES" : "NO"} head_commit_data_only=${headCommitDataOnly ? "YES" : "NO"} push_range_data_only=${pushRangeDataOnly ? "YES" : "NO"} fast_pool_branch=${fastPoolBranch ? "YES" : "NO"} workflow_only=${workflowOnly ? "YES" : "NO"} info_panel_only=${infoPanelOnly ? "YES" : "NO"} fin_calc_header_only=${finCalcHeaderOnly ? "YES" : "NO"} datovka_overlay_only=${datovkaOverlayOnly ? "YES" : "NO"} custom_buttons_scroll_only=${customButtonsScrollOnly ? "YES" : "NO"} quicktools_mobile_visibility_only=${quicktoolsMobileVisibilityOnly ? "YES" : "NO"} user_data_backup_only=${userDataBackupOnly ? "YES" : "NO"} data_mgmt_restore_overlay_mobile_only=${dataMgmtRestoreOverlayMobileOnly ? "YES" : "NO"} pc_left_rail_same_window_tabs_only=${pcLeftRailSameWindowTabsOnly ? "YES" : "NO"} pc_tool_window_left_rail_layout_only=${pcToolWindowLeftRailLayoutOnly ? "YES" : "NO"} legal_doc_section_bar_only=${legalDocSectionBarOnly ? "YES" : "NO"} legal_docs_form_state_only=${legalDocsFormStateOnly ? "YES" : "NO"} pc_svatek_label_pill_gap_only=${pcSvatekLabelPillGapOnly ? "YES" : "NO"} calendar_allday_pinned_limit_only=${calendarAllDayPinnedLimitOnly ? "YES" : "NO"} desktop_article_read_mark_only=${desktopArticleReadMarkOnly ? "YES" : "NO"} jr_section_header_line_color_only=${jrSectionHeaderLineColorOnly ? "YES" : "NO"} info_panel_cnb_rates_only=${infoPanelCnbRatesOnly ? "YES" : "NO"}`);
@@ -679,8 +721,12 @@ function main() {
   writeOutput("calendar_allday_pinned_limit_only", calendarAllDayPinnedLimitOnly ? "true" : "false");
   writeOutput("desktop_article_read_mark_only", desktopArticleReadMarkOnly ? "true" : "false");
   writeOutput("iu_ads_deploy_unblock_only", iuAdsDeployUnblockOnly ? "true" : "false");
+  writeOutput("chmi_cap_watchdog_deploy_only", chmiCapWatchdogDeployOnly ? "true" : "false");
+  writeOutput("chmi_cap_v2_prod_verify_only", chmiCapV2ProdVerifyOnly ? "true" : "false");
   console.log(`SMOKE_DATA_ONLY_SCOPE=${allowFastPath ? "YES" : "NO"}`);
   console.log(`SMOKE_IU_ADS_DEPLOY_UNBLOCK_ONLY_SCOPE=${iuAdsDeployUnblockOnly ? "YES" : "NO"}`);
+  console.log(`SMOKE_CHMI_CAP_WATCHDOG_DEPLOY_ONLY_SCOPE=${chmiCapWatchdogDeployOnly ? "YES" : "NO"}`);
+  console.log(`SMOKE_CHMI_CAP_V2_PROD_VERIFY_ONLY_SCOPE=${chmiCapV2ProdVerifyOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_SKIP_BROWSER=${allowFastPath ? "YES" : "NO"}`);
   console.log(`SMOKE_RUN_INFO_EVENTS_CONTRACT=${runInfoEventsContract ? "YES" : "NO"}`);
   console.log(`SMOKE_VAULT_RUNTIME_SCOPE=${vaultRuntime ? "YES" : "NO"}`);

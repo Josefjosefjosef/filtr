@@ -15,6 +15,8 @@ import {
   isFastPoolPipelineScope,
   isVaultSecurityRuntimeScope,
   isIuAdsDeployUnblockScope,
+  isChmiCapWatchdogDeployScope,
+  isChmiCapV2ProdVerifyScope,
   isWorkflowOnlyScope,
   normalizeRepoPath,
   touchesInfoEventsGeneratedData,
@@ -178,6 +180,38 @@ assert(
 assert(
   /IU Ads deploy unblock guards \(vitest \+ freeze contract\)/.test(fs.readFileSync(path.join(REPO, ".github", "workflows", "smoke.yml"), "utf8")),
   "smoke.yml defines IU Ads deploy unblock guard step"
+);
+assert(
+  isChmiCapWatchdogDeployScope(["cloudflare/chmi-cap-watchdog/src/freshness.ts"]),
+  "chmi watchdog worker-only is deploy scope"
+);
+assert(
+  allowsDataOnlyFastPath(["cloudflare/chmi-cap-watchdog/src/freshness.ts"]),
+  "chmi watchdog worker-only allows smoke fast path"
+);
+assert(
+  !isChmiCapWatchdogDeployScope(["cloudflare/chmi-cap-watchdog/src/index.ts", "assets/app.js"]),
+  "chmi watchdog deploy rejects mixed UI diff"
+);
+assert(
+  isChmiCapV2ProdVerifyScope(["scripts/chmi-cap-v2-prod-verify.mjs"]),
+  "chmi prod verify script-only scope"
+);
+assert(
+  allowsDataOnlyFastPath(["scripts/chmi-cap-v2-prod-verify.mjs"]),
+  "chmi prod verify script-only allows smoke fast path"
+);
+assert(
+  !isChmiCapV2ProdVerifyScope(["scripts/chmi-cap-v2-prod-verify.mjs", "assets/app.js"]),
+  "chmi prod verify rejects mixed UI diff"
+);
+assert(
+  /CHMI CAP watchdog deploy guards \(worker unit tests\)/.test(fs.readFileSync(path.join(REPO, ".github", "workflows", "smoke.yml"), "utf8")),
+  "smoke.yml defines CHMI watchdog deploy guard step"
+);
+assert(
+  /CHMI CAP v2 prod verify scope guards/.test(fs.readFileSync(path.join(REPO, ".github", "workflows", "smoke.yml"), "utf8")),
+  "smoke.yml defines CHMI prod verify scope guard step"
 );
 assert(isFastPoolPipelineScope(["package.json", "projects/data/publishable_pool.json"]), "data + package.json is pipeline scope");
 assert(!isFastPoolPipelineScope(["package.json", "projects/data/evil.js"]), "pipeline rejects evil.js data path");
