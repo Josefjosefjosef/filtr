@@ -302,5 +302,13 @@ for (const g of passGuards) {
   console.log("IU_INFO_EVENTS_CONTRACT_FAIL_FIXTURE=PASS");
 }
 
+{
+  const rD1 = spawnSync("node", ["scripts/iu-cj-affiliate-staging-d1-resolve-v1-selftest.mjs"], {
+    cwd: REPO,
+    encoding: "utf8",
+  });
+  assert(rD1.status === 0, "iu-cj-affiliate-staging-d1-resolve-v1-selftest must PASS");
+}
+
 console.log("SMOKE_DATA_ONLY_SCOPE_PROOF=" + (failed === 0 ? "PASS" : "FAIL"));
 process.exit(failed === 0 ? 0 : 1);

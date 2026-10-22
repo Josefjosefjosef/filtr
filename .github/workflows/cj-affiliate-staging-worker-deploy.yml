@@ -48,6 +48,30 @@ jobs:
           echo "PREFLIGHT_OK=1"
           echo "NOTE=This workflow does not run wrangler secret put (PAT/ingest token preserved)."
 
+      - name: Resolve staging D1 database_id (exact name, fail-closed)
+        id: d1
+        shell: bash
+        env:
+          D1_NAME: iu-cj-email-ingest-staging
+        run: |
+          set -euo pipefail
+          if [ "${D1_NAME}" != "iu-cj-email-ingest-staging" ]; then
+            echo "BLOCKER=STAGING_D1_NAME_GUARD"
+            exit 1
+          fi
+          JSON="$(npx --yes wrangler@4 d1 list --json)"
+          echo "$JSON" | node ../../scripts/iu-cj-affiliate-staging-d1-resolve-v1.mjs --patch wrangler.toml --expect-name "${D1_NAME}" 1>&2
+          ID="$(echo "$JSON" | node ../../scripts/iu-cj-affiliate-staging-d1-resolve-v1.mjs --expect-name "${D1_NAME}")"
+          echo "D1_DATABASE_ID_RESOLVED=PASS"
+          echo "d1_id_length=${#ID}" >> "$GITHUB_OUTPUT"
+
+      - name: List staging D1 migrations (remote, pre-apply audit)
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx --yes wrangler@4 d1 migrations list iu-cj-email-ingest-staging --env staging --remote || true
+          echo "D1_MIGRATION_LIST_AUDIT=OK"
+
       - name: Apply staging D1 migrations (remote)
         shell: bash
         run: |

@@ -253,6 +253,8 @@ export function isCjStagingApiProbeOnlyScope(files) {
     if (p === "scripts/ci/smoke-workflow-parallelize-apply-v1.mjs") return true;
     if (p === ".github/workflows/cj-affiliate-staging-worker-deploy.yml") return true;
     if (p === ".github/workflows/smoke.yml") return true;
+    if (p === "scripts/iu-cj-affiliate-staging-d1-resolve-v1.mjs") return true;
+    if (p === "scripts/iu-cj-affiliate-staging-d1-resolve-v1-selftest.mjs") return true;
     return false;
   };
   return paths.every((f) => allowed(f));
@@ -266,6 +268,9 @@ export function isWorkflowOnlyScope(files) {
     f.startsWith("scripts/ci/") ||
     f === "scripts/smoke-data-only-scope.mjs" ||
     f === "scripts/smoke_data_only_scope_proof.mjs" ||
+    f === "scripts/iu-cj-affiliate-staging-d1-resolve-v1.mjs" ||
+    f === "scripts/iu-cj-affiliate-staging-d1-resolve-v1-selftest.mjs" ||
+    f === ".github/workflows/cj-affiliate-staging-worker-deploy.yml" ||
     // Ads post-migration verify / Admin E2E tooling (no app UI surface)
     f === "scripts/iu-ads-post-migration-prod-verify.mjs" ||
     f.startsWith("cloudflare/iu-ads/scripts/");

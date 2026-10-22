@@ -141,6 +141,7 @@ jobs:
           node scripts/iu-cj-affiliate-phase2-cj-api-security-v1-selftest.mjs
           node scripts/iu-cj-affiliate-phase2-connector-readiness-v1-selftest.mjs
           node scripts/iu-cj-affiliate-phase2-smoke-scope-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-staging-d1-resolve-v1-selftest.mjs
           echo "CJ_STAGING_API_PROBE_SCOPE_SMOKE=PASS"
       - name: Data-only smoke fast path (skip unrelated UI guards)
         if: steps.scope.outputs.data_only == 'true'
