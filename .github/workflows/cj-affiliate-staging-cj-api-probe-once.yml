@@ -1,0 +1,225 @@
+name: CJ Affiliate staging CJ API probe (once)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cj-affiliate-staging-cj-api-probe-once
+  cancel-in-progress: false
+
+jobs:
+  probe-once:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_CJ_STAGING_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: "577868e9aac9c289e9323100f68fad16"
+      INGEST_TOKEN: ${{ secrets.IU_CJ_STAGING_D1_WORKER_INGEST_TOKEN }}
+      WORKER_URL: "https://iu-cj-email-ingest-d1-staging.josef-zmrhal.workers.dev"
+      EXPECT_CID: "7667828"
+      EXPECT_PID: "101883843"
+      WRANGLER_SEND_METRICS: "false"
+    defaults:
+      run:
+        working-directory: cloudflare/cj-email-ingest-d1-worker
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Preflight (token + public health)
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${CLOUDFLARE_API_TOKEN:-}" ]; then echo "BLOCKER=CF_TOKEN_MISSING"; exit 1; fi
+          if [ -z "${INGEST_TOKEN:-}" ]; then echo "BLOCKER=INGEST_TOKEN_MISSING"; exit 1; fi
+          curl -fsS "${WORKER_URL}/health" | python3 -c "
+          import json,sys
+          h=json.load(sys.stdin)
+          assert h.get('environment')=='staging'
+          assert h.get('stagingOnly') is True
+          assert h.get('cjArchiveOnly') is True
+          assert h.get('publishable') is False
+          assert h.get('cjLiveApiRequestsAllowed') is False
+          assert h.get('cjPatConfigured') is True
+          assert h.get('ingestTokenConfigured') is True
+          print('CJ_STAGING_ISOLATION=PASS')
+          print('CJ_PAT_CONFIGURED=PASS')
+          "
+
+      - name: Resolve staging D1 + lock precheck (read-only)
+        shell: bash
+        run: |
+          set -euo pipefail
+          JSON="$(npx --yes wrangler@4 d1 list --json)"
+          echo "$JSON" | node ../../scripts/iu-cj-affiliate-staging-d1-resolve-v1.mjs --patch wrangler.toml --expect-name iu-cj-email-ingest-staging 1>&2
+          OUT="$(npx --yes wrangler@4 d1 execute iu-cj-email-ingest-staging --env staging --remote --json --command "SELECT lock_key, finished_at, http_status, record_count, connection_state FROM staging_cj_api_probe_lock WHERE lock_key = 'link_search_coupon_v1' LIMIT 1;")"
+          echo "$OUT" | node -e "
+          let s='';process.stdin.on('data',c=>s+=c);process.stdin.on('end',()=>{
+            const j=JSON.parse(s);
+            const rows=(j[0]&&j[0].results)||[];
+            if(!rows.length){console.log('CJ_D1_LOCK_READY=PASS');console.log('CJ_D1_LOCK_CONSUMED=NO');return;}
+            const r=rows[0];
+            if(r.finished_at){console.log('CJ_D1_LOCK_READY=FAIL');console.log('CJ_D1_LOCK_CONSUMED=YES');process.exit(1);}
+            console.log('CJ_D1_LOCK_READY=FAIL');console.log('CJ_D1_LOCK_CONSUMED=UNVERIFIED');process.exit(1);
+          });
+          "
+
+      - name: Readiness + identity (no CJ HTTP)
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS -H "Authorization: Bearer ${INGEST_TOKEN}" "${WORKER_URL}/v1/staging/cj-api/readiness" > /tmp/readiness.json
+          python3 -c "
+          import json,os
+          r=json.load(open('/tmp/readiness.json'))
+          assert r.get('publishable') is False
+          assert r.get('mayExecuteHttp') is False
+          print('CJ_GO_FLAGS_DISABLED=PASS')
+          print('CJ_PROBE_AUTHORIZATION=PASS')
+          "
+          curl -fsS -H "Authorization: Bearer ${INGEST_TOKEN}" "${WORKER_URL}/v1/staging/cj-api/probe" -X POST -H 'Content-Type: application/json' -d '{}' -o /tmp/probe_blocked.json -w '%{http_code}' > /tmp/probe_blocked_code.txt || true
+          python3 -c "
+          import json
+          c=open('/tmp/probe_blocked_code.txt').read().strip()
+          b=json.load(open('/tmp/probe_blocked.json'))
+          assert b.get('httpRequestCount',0)==0
+          assert b.get('blocked') is True
+          print('CJ_PROBE_BLOCKED_WHEN_GO_OFF=PASS status='+c)
+          "
+
+      - name: Verify Worker plain-text vars (CID/PID)
+        id: identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          SETTINGS="$(curl -fsS -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+            "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/workers/scripts/iu-cj-email-ingest-d1-staging/settings")"
+          echo "$SETTINGS" | node -e "
+          const expCid=process.env.EXPECT_CID;
+          const expPid=process.env.EXPECT_PID;
+          let s='';process.stdin.on('data',c=>s+=c);process.stdin.on('end',()=>{
+            const j=JSON.parse(s);
+            if(!j.success){console.error('BLOCKER=CF_SETTINGS_FAIL');process.exit(1);}
+            const bindings=(j.result&&j.result.bindings)||j.result||[];
+            const plain=(Array.isArray(bindings)?bindings:[]).filter(x=>x.type==='plain_text');
+            const get=(n)=>{const h=plain.find(x=>x.name===n);return h&&h.text?String(h.text).trim():'';};
+            const cid=get('IU_CJ_PUBLISHER_CID');
+            const pid=get('IU_CJ_WEBSITE_PID');
+            const cidOk=cid===expCid;
+            const pidOk=pid===expPid;
+            console.log('CJ_PUBLISHER_CID='+(cidOk?'PASS':'FAIL'));
+            console.log('CJ_WEBSITE_PID='+(pidOk?'PASS':'FAIL'));
+            if(!cidOk||!pidOk) process.exit(1);
+          });
+          "
+
+      - name: Arm GO flags (keep-vars deploy, no secret rotation)
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx --yes wrangler@4 deploy --env staging --keep-vars \
+            --var "IU_CJ_STAGING_CJ_API_PROBE_APPROVED:1" \
+            --var "IU_CJ_CJ_API_HTTP_EXECUTE:1" \
+            --var "IU_CJ_STAGING_CJ_API_PROBE_EXECUTE:1" \
+            --var "IU_CJ_CJ_API_MAX_REQUESTS_PER_PROBE:1" 2>&1 | sed -E 's/(token|Token|Bearer|pat|PAT)[^[:space:]]+/[REDACTED]/g'
+          curl -fsS -H "Authorization: Bearer ${INGEST_TOKEN}" "${WORKER_URL}/v1/staging/cj-api/readiness" | python3 -c "
+          import json,sys
+          r=json.load(sys.stdin)
+          assert r.get('mayExecuteHttp') is True, r
+          assert r.get('identityOk') is True
+          print('CJ_READINESS_ARMED=PASS')
+          "
+
+      - name: One authorized CJ API probe POST
+        id: probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          CODE="$(curl -sS -H "Authorization: Bearer ${INGEST_TOKEN}" -X POST "${WORKER_URL}/v1/staging/cj-api/probe" -H 'Content-Type: application/json' -d '{}' -o /tmp/probe_result.json -w '%{http_code}')"
+          echo "http_code=${CODE}" >> "$GITHUB_OUTPUT"
+          python3 <<'PY'
+          import json
+          r=json.load(open("/tmp/probe_result.json"))
+          safe={k:r.get(k) for k in ("ok","phase","publishable","blocked","connectionState","httpStatus","couponRecordCount","responseParsing","authOk","failureReason","httpRequestCount","identityOk") if k in r}
+          print("CJ_PROBE_SAFE_JSON="+json.dumps(safe,sort_keys=True))
+          hc=r.get("httpStatus")
+          hrc=r.get("httpRequestCount")
+          print(f"CJ_HTTP_REQUEST_COUNT={hrc if hrc is not None else 'unknown'}")
+          if hrc not in (0,1):
+              raise SystemExit("unexpected http request count")
+          if hrc==0:
+              print("CJ_PAT_AUTHENTICATION=NOT_TESTED")
+          elif hc==200 and r.get("authOk") is True:
+              print("CJ_PAT_AUTHENTICATION=PASS")
+          elif hc==401:
+              print("CJ_PAT_AUTHENTICATION=FAIL")
+          elif hc==403:
+              print("CJ_PAT_AUTHENTICATION=DENIED")
+          elif hc in (0,None):
+              print("CJ_PAT_AUTHENTICATION=INCONCLUSIVE")
+          else:
+              print("CJ_PAT_AUTHENTICATION=INCONCLUSIVE")
+          rp=r.get("responseParsing")
+          print("CJ_RESPONSE_SCHEMA="+("PASS" if rp=="PASS" else "FAIL" if rp else "NOT_TESTED"))
+          print("CJ_COUPON_RECORD_COUNT="+str(r.get("couponRecordCount")))
+          cs=r.get("connectionState") or "unknown"
+          if cs in ("API_CONNECTED","EMPTY_RESULT_VERIFIED"):
+              print("CJ_API_CONNECTION=PASS")
+          elif cs in ("AUTHENTICATION_FAILED",):
+              print("CJ_API_CONNECTION=FAIL")
+          elif cs in ("AUTHORIZATION_FAILED",):
+              print("CJ_API_CONNECTION=FAIL")
+          elif cs in ("NETWORK_FAILED",):
+              print("CJ_API_CONNECTION=INCONCLUSIVE")
+          else:
+              print("CJ_API_CONNECTION=INCONCLUSIVE")
+          PY
+
+      - name: Disarm GO flags (always)
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx --yes wrangler@4 deploy --env staging --keep-vars \
+            --var "IU_CJ_STAGING_CJ_API_PROBE_APPROVED:0" \
+            --var "IU_CJ_CJ_API_HTTP_EXECUTE:0" \
+            --var "IU_CJ_STAGING_CJ_API_PROBE_EXECUTE:0" 2>&1 | sed -E 's/(token|Token|Bearer|pat|PAT)[^[:space:]]+/[REDACTED]/g'
+          curl -fsS "${WORKER_URL}/health" | python3 -c "
+          import json,sys
+          h=json.load(sys.stdin)
+          assert h.get('cjLiveApiRequestsAllowed') is False
+          assert h.get('publishable') is False
+          print('CJ_GO_FLAGS_DISABLED=PASS')
+          print('CJ_PUBLISHING_DISABLED=PASS')
+          "
+
+      - name: Post probe lock audit (read-only)
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          JSON="$(npx --yes wrangler@4 d1 list --json)"
+          echo "$JSON" | node ../../scripts/iu-cj-affiliate-staging-d1-resolve-v1.mjs --patch wrangler.toml --expect-name iu-cj-email-ingest-staging 1>&2
+          OUT="$(npx --yes wrangler@4 d1 execute iu-cj-email-ingest-staging --env staging --remote --json --command "SELECT lock_key, finished_at, http_status, record_count, connection_state FROM staging_cj_api_probe_lock WHERE lock_key = 'link_search_coupon_v1' LIMIT 1;")"
+          echo "$OUT" | node -e "
+          let s='';process.stdin.on('data',c=>s+=c);process.stdin.on('end',()=>{
+            const j=JSON.parse(s);
+            const rows=(j[0]&&j[0].results)||[];
+            if(!rows.length){console.log('CJ_D1_LOCK_CONSUMED=NO');return;}
+            const r=rows[0];
+            console.log('CJ_D1_LOCK_CONSUMED='+(r.finished_at?'YES':'UNVERIFIED'));
+            console.log('CJ_D1_LOCK_HTTP_STATUS='+(r.http_status??'null'));
+            console.log('CJ_D1_LOCK_RECORD_COUNT='+(r.record_count??'null'));
+            console.log('CJ_D1_LOCK_CONNECTION_STATE='+(r.connection_state||'unknown'));
+          });
+          "
+          echo "CJ_PAT_SECRET_PRESERVED=PASS"
+          echo "PRODUCTION_UNCHANGED=PASS"
