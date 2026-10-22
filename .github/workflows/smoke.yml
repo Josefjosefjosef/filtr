@@ -143,6 +143,18 @@ jobs:
           node scripts/iu-cj-affiliate-phase2-smoke-scope-v1-selftest.mjs
           node scripts/iu-cj-affiliate-staging-d1-resolve-v1-selftest.mjs
           echo "CJ_STAGING_API_PROBE_SCOPE_SMOKE=PASS"
+      - name: CJ staging probe workflow arm/disarm smoke (offline)
+        if: steps.scope.outputs.cj_staging_probe_workflow_fix_only == 'true'
+        run: |
+          set -euo pipefail
+          node scripts/iu-cj-affiliate-staging-cj-api-probe-workflow-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-staging-ingest-token-sync-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-staging-d1-resolve-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-phase2-staging-cj-api-probe-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-phase2-staging-isolation-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-phase2-cj-api-security-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-phase2-connector-readiness-v1-selftest.mjs
+          echo "CJ_STAGING_PROBE_WORKFLOW_FIX_SMOKE=PASS"
       - name: Data-only smoke fast path (skip unrelated UI guards)
         if: steps.scope.outputs.data_only == 'true'
         run: |

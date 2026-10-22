@@ -43,6 +43,16 @@ expect("deploy_wf_no_secret_put", !/secret put (IU_CJ|CJ_API)/i.test(wf));
 expect("deploy_wf_uses_d1_list", /d1 list --json/.test(wf));
 expect("deploy_wf_no_d1_create", !/d1 create/i.test(wf));
 
+const probeWf = fs.readFileSync(
+  path.join(REPO, ".github", "workflows", "cj-affiliate-staging-cj-api-probe-once.yml"),
+  "utf8"
+);
+expect("probe_wf_disarm_job", /disarm-failsafe:/.test(probeWf));
+expect("probe_wf_patch_before_arm", /Patch staging D1 id \(arm deploy\)/.test(probeWf));
+expect("probe_wf_patch_before_disarm", /Patch staging D1 id \(disarm deploy\)/.test(probeWf));
+expect("probe_wf_live_default_off", /execute_live_cj_probe[\s\S]*default:\s*["']0["']/.test(probeWf));
+expect("probe_wf_no_d1_create", !/d1 create/i.test(probeWf));
+
 console.log(
   JSON.stringify({
     IU_CJ_STAGING_D1_RESOLVE_V1_SELFTEST: failures.length ? "FAIL" : "OK",

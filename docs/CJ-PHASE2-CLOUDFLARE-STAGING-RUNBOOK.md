@@ -61,6 +61,18 @@ Rollback: delete staging bucket after emptying (operator GO).
 
 Rollback: `wrangler delete iu-cj-email-ingest-d1-staging` (staging name only); revoke token.
 
+### GitHub Actions ingest token (probe workflow only)
+
+| Store | Name | Worker binding name |
+|-------|------|---------------------|
+| Cloudflare Worker secret (staging) | *(value in operator vault only)* | `IU_CJ_D1_WORKER_INGEST_TOKEN` |
+| GitHub Actions secret (repo) | `IU_CJ_STAGING_D1_WORKER_INGEST_TOKEN` | Same **value** as Worker secret |
+
+- Never commit, log, or paste the token in chat/CI output.
+- Do **not** rotate `CJ_API_PAT` when fixing GitHub ↔ Worker ingest sync.
+- If the original value is lost: operator generates a new random token, sets **both** stores in one maintenance window, then verifies `POST /v1/staging/cj-api/readiness` with Bearer auth (no CJ HTTP).
+- Staging email ingest and bootstrap may use the same Worker secret; changing it without updating all consumers breaks authorized ingest until aligned.
+
 ---
 
 ## S4 — Connectors (one at a time)
