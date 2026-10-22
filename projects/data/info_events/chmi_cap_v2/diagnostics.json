@@ -1,6 +1,6 @@
 {
-  "runId": "ec6fcf939d002757",
-  "started": "2026-10-22T08:08:06.594Z",
+  "runId": "8845db9cae342303",
+  "started": "2026-10-22T08:10:14.524Z",
   "mode": "active",
   "discovery": {
     "type": "opendata_active_streams",
@@ -16,11 +16,11 @@
   },
   "http": [
     {
-      "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_210802.xml",
+      "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_220808.xml",
       "productKey": "50",
-      "status": 304,
-      "action": "not_modified",
-      "cacheHit": true
+      "status": 200,
+      "action": "process",
+      "cacheHit": false
     },
     {
       "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_201200.xml",
@@ -30,13 +30,26 @@
       "cacheHit": true
     }
   ],
-  "parser": null,
+  "parser": {
+    "loaded": 1,
+    "valid": 1,
+    "rejected": 0,
+    "duplicates": 0,
+    "quarantine": 0,
+    "cancels": 0,
+    "updates": 0,
+    "newThreads": 1,
+    "status": "healthy",
+    "alert": 0,
+    "update": 1,
+    "cancel": 0
+  },
   "publish": {
     "publish": true,
     "reason": "ok",
     "completeness": {
-      "capMessages": null,
-      "infoBlocks": null,
+      "capMessages": 1,
+      "infoBlocks": 18,
       "logicalAlerts": 3,
       "uniqueEvents": [
         "Stav sucha",
@@ -56,13 +69,13 @@
       "streamCount": 2,
       "missingStreamCache": 0,
       "invalidCount": 0,
-      "expiredCount": 1,
+      "expiredCount": 0,
       "cancelledCount": 0
     },
     "alarms": [],
     "productionVerified": false
   },
-  "status": "not_modified",
+  "status": "healthy",
   "error": null,
   "onsetSplit": {
     "before": 3,
@@ -87,7 +100,6 @@
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_151200.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_221200.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_291200.xml",
-        "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_030751.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_040746.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_050905.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_060759.xml",
@@ -105,10 +117,11 @@
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_190805.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_200815.xml",
         "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_201200.xml",
-        "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_210802.xml"
+        "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_210802.xml",
+        "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_220808.xml"
       ],
       "recentCount": 32,
-      "refCount": 0,
+      "refCount": 2,
       "window": 16
     },
     "chainSteps": [
@@ -189,12 +202,6 @@
         "msgType": "Update",
         "openEndedCount": 3,
         "sourceUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_291200.xml"
-      },
-      {
-        "sent": "2026-10-03T09:51:57+02:00",
-        "msgType": "Update",
-        "openEndedCount": 0,
-        "sourceUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_030751.xml"
       },
       {
         "sent": "2026-10-04T09:46:48+02:00",
@@ -303,24 +310,30 @@
         "msgType": "Update",
         "openEndedCount": 0,
         "sourceUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_210802.xml"
+      },
+      {
+        "sent": "2026-10-22T10:08:08+02:00",
+        "msgType": "Update",
+        "openEndedCount": 0,
+        "sourceUrl": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_220808.xml"
       }
     ],
     "fixtureSeed": false,
     "referencesTraversal": true
   },
   "temporalCounts": {
-    "totalItems": 4,
+    "totalItems": 3,
     "activeCount": 3,
     "scheduledCount": 0,
-    "expiredCount": 1,
+    "expiredCount": 0,
     "cancelledCount": 0,
     "invalidCount": 0,
     "publishableCount": 3,
     "visibleCount": 3
   },
   "completeness": {
-    "capMessages": null,
-    "infoBlocks": null,
+    "capMessages": 1,
+    "infoBlocks": 18,
     "logicalAlerts": 3,
     "uniqueEvents": [
       "Stav sucha",
@@ -340,7 +353,7 @@
     "streamCount": 2,
     "missingStreamCache": 0,
     "invalidCount": 0,
-    "expiredCount": 1,
+    "expiredCount": 0,
     "cancelledCount": 0
   },
   "alarms": [],
@@ -356,6 +369,6 @@
     "unresolvedReferences": null,
     "snapshotContractValid": true
   },
-  "finished": "2026-10-22T08:08:13.628Z",
-  "runMs": 7034
+  "finished": "2026-10-22T08:10:20.564Z",
+  "runMs": 6040
 }
