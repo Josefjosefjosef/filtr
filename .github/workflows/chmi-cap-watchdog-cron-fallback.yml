@@ -1,18 +1,25 @@
 # GitHub-side fallback when Cloudflare cron is intermittent.
-# Calls /probe?dispatch=1 so the CHMI CAP sync loop self-sustains.
+# Observe-only /probe first; dispatch update-chmi-cap-v2 only when prod feed is stale (not after every CHMI run).
 name: CHMI CAP watchdog cron fallback
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      force_probe_dispatch:
+        description: "Ops only — authorized worker /probe?dispatch=1 (ignores freshness)"
+        required: false
+        default: false
+        type: boolean
   schedule:
     - cron: "3,18,33,48 * * * *"
-  workflow_run:
-    workflows: ["Update CHMI CAP v2"]
-    types: [completed]
 
 concurrency:
   group: chmi-cap-watchdog-cron-fallback
   cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: write
 
 env:
   WATCHDOG_PROBE_URL: "https://infouzel-chmi-cap-watchdog.josef-zmrhal.workers.dev/probe"
@@ -22,7 +29,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Probe CHMI CAP watchdog (worker decides dispatch)
+      - name: Force probe dispatch (manual ops)
+        if: github.event_name == 'workflow_dispatch' && inputs.force_probe_dispatch == true
         env:
           MANUAL_TRIGGER_SECRET: ${{ secrets.CHMI_CAP_WATCHDOG_MANUAL_TRIGGER_SECRET }}
         run: |
@@ -56,3 +64,34 @@ jobs:
             exit 1
           fi
           echo "WATCHDOG_PROBE_OK"
+
+      - name: Stale-gated CHMI recovery (schedule + default manual)
+        if: github.event_name != 'workflow_dispatch' || inputs.force_probe_dispatch != true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          OUT="${RUNNER_TEMP}/chmi_cap_watchdog_observe.json"
+          code=$(curl -sS -m 40 -o "$OUT" -w "%{http_code}" \
+            "${WATCHDOG_PROBE_URL}" || true)
+          echo "observe_http=$code"
+          head -c 4000 "$OUT" || true
+          echo ""
+          if [ "$code" != "200" ] && [ "$code" != "503" ]; then
+            echo "WATCHDOG_OBSERVE_UNEXPECTED_HTTP=$code"
+            exit 1
+          fi
+          action=$(jq -r '.decision.action // empty' "$OUT")
+          reason=$(jq -r '.decision.reason // empty' "$OUT")
+          echo "watchdog_decision action=${action} reason=${reason}"
+          if [ "$action" = "dispatch" ] && [ "$reason" = "stale" ]; then
+            gh workflow run update-chmi-cap-v2.yml --ref main -f mode=active
+            echo "WATCHDOG_STALE_RECOVERY_DISPATCH=gh"
+            exit 0
+          fi
+          if grep -q '"ok":false' "$OUT" && grep -q 'workflow_disabled' "$OUT"; then
+            echo "WATCHDOG_WORKFLOW_DISABLED"
+            echo "CHMI_CAP_FIX=gh workflow enable update-chmi-cap-v2.yml"
+            exit 1
+          fi
+          echo "WATCHDOG_OBSERVE_OK"

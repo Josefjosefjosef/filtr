@@ -259,6 +259,15 @@ jobs:
           npm run iu-chmi-cap-v2-merge-window-guardian-v1-selftest
           echo "CHMI_CAP_V2_MERGE_WINDOW_GUARDIAN_SCOPE_SMOKE=PASS"
 
+      - name: CHMI CAP watchdog fallback no-loop (offline guards)
+        if: steps.scope.outputs.chmi_cap_watchdog_fallback_no_loop_only == 'true'
+        run: |
+          set -euo pipefail
+          npm run iu-chmi-cap-watchdog-fallback-no-loop-guard-v1
+          npm run iu-chmi-cap-watchdog-fallback-no-loop-guard-v1-selftest
+          npm run iu-chmi-redundant-trigger-guard
+          echo "CHMI_CAP_WATCHDOG_FALLBACK_NO_LOOP_SCOPE_SMOKE=PASS"
+
       - name: CHMI CAP v2 prod verify scope guards
         if: steps.scope.outputs.chmi_cap_v2_prod_verify_only == 'true'
         run: |
