@@ -17,7 +17,7 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-pneu-pneuservis-v1-20260921";
-const CATALOG_BUST = "affiliate-4kids-deti-hracky-v1-20260930";
+const CATALOG_BUST = "affiliate-phase2c-dynamic-v1-20261023";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-pneu-pneuservis";
 const SECTION_TITLE = "Pneu a pneuservis";
@@ -61,13 +61,16 @@ function auditStatic() {
   ok("catalog:icon_wheel", catalog.includes('id: "' + SECTION + '"') && catalog.includes('icon: "iu-aff-wheel"'));
   ok("catalog:after_auto_moto", catalog.indexOf('id: "' + SECTION + '"') > catalog.indexOf('id: "aff-auto-moto"'));
   ok("catalog:before_pojisteni", catalog.indexOf('id: "aff-pojisteni"') > catalog.indexOf('id: "' + SECTION + '"'));
-  ok("catalog:auto_moto_bestdrive", /id:\s*"aff-auto-moto"[\s\S]*?affItem\("", "bestdrive"\)/.test(catalog));
+  ok("catalog:auto_moto_section", catalog.includes('id: "aff-auto-moto"'));
 
   const blockStart = catalog.indexOf('id: "' + SECTION + '"');
   const blockEnd = catalog.indexOf('id: "aff-pojisteni"', blockStart);
   const block = blockStart >= 0 && blockEnd > blockStart ? catalog.slice(blockStart, blockEnd) : "";
   const slotCalls = (block.match(/aff(?:Item|Partner)\(/g) || []).length;
-  ok("catalog:slots_8", slotCalls === 8, "n=" + slotCalls);
+    const partnerCalls = (block.match(/affPartner\(/g) || []).length;
+  const emptySlotsReady = (block.match(/affItem\(""/g) || []).length;
+  ok("catalog:slots_ready_eq_partners", slotCalls === partnerCalls && partnerCalls >= 1, "n=" + slotCalls + " partners=" + partnerCalls);
+  ok("catalog:empty_visible_0", emptySlotsReady === 0, "n=" + emptySlotsReady);
   ok("catalog:cj_url_exact", block.includes(CJ_URL));
   ok(
     "catalog:slot1_bestdrive",
@@ -75,9 +78,7 @@ function auditStatic() {
   );
   ok("catalog:ready_partners_1", (block.match(/affPartner\(/g) || []).length === 1);
   ok("catalog:no_named_affItem", !/affItem\(\s*"[^"]+"/.test(block));
-  for (let i = 2; i <= 8; i++) {
-    ok("catalog:slot_slug_" + i, block.includes('affItem("", "pneu-pneuservis-empty-' + i + '")'));
-  }
+  ok("catalog:no_empty_placeholders", !/affItem\(\s*""/.test(block));
 
   ok("catalog:booking_preserved", /affPartner\(\s*"Booking\.com"[\s\S]*?13323565/.test(catalog));
   ok("catalog:leo_preserved", /affPartner\(\s*"Leo Express"[\s\S]*?15736211/.test(catalog));
@@ -272,7 +273,8 @@ try {
     ok(tag + ":title", snap.title === SECTION_TITLE, snap.title);
     ok(tag + ":intro", snap.intro.includes("prodejce pneumatik"), snap.intro);
     ok(tag + ":disclosure", snap.disclosureOk);
-    ok(tag + ":slots_8", snap.slots === 8, "n=" + snap.slots);
+    ok(tag + ":slots_ready_ge_1", snap.slots >= 1, "n=" + snap.slots);
+    ok(tag + ":empty_visible_0", (snap.emptyVisible != null ? snap.emptyVisible : 0) === 0, "empty=" + (snap.emptyVisible != null ? snap.emptyVisible : 0));
     ok(tag + ":bestdrive_slot1", snap.firstText === PARTNER_TITLE, snap.firstText);
     ok(tag + ":bestdrive_href", snap.firstHref === CJ_URL, snap.firstHref);
     ok(tag + ":bestdrive_target", snap.firstTarget === "_blank", snap.firstTarget);

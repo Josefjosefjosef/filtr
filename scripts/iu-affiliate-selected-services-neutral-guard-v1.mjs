@@ -15,7 +15,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const CATALOG_BUST = "affiliate-4kids-deti-hracky-v1-20260930";
+const CATALOG_BUST = "affiliate-phase2c-dynamic-v1-20261023";
 const SECTION_TITLE = "Vybrané služby a odkazy";
 const DISCLOSURE =
   "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
@@ -163,8 +163,7 @@ function auditStatic() {
   ok("catalog:placeholder_urls_intact", catalog.includes('url: "#affiliate-placeholder-" + slug'));
   ok(
     "catalog:cedok_slot",
-    catalog.includes('affItem("", "cedok")') ||
-      /affPartner\(\s*"Cedok\.cz"\s*,\s*"https:\/\/www\.anrdoezrs\.net\/click-101883843-15686662"\s*\)/.test(
+    /affPartner\(\s*"Cedok\.cz"\s*,\s*"https:\/\/www\.anrdoezrs\.net\/click-101883843-15686662"\s*\)/.test(
         catalog
       )
   );

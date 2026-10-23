@@ -17,7 +17,7 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-letenky-letecka-doprava-v1-20260921";
-const CATALOG_BUST = "affiliate-4kids-deti-hracky-v1-20260930";
+const CATALOG_BUST = "affiliate-phase2c-dynamic-v1-20261023";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-letenky-letecka-doprava";
 const SECTION_TITLE = "Letenky a letecká doprava";
@@ -66,7 +66,10 @@ function auditStatic() {
   const blockEnd = catalog.indexOf('id: "aff-cestovni-pojisteni"', blockStart);
   const block = blockStart >= 0 && blockEnd > blockStart ? catalog.slice(blockStart, blockEnd) : "";
   const slotCalls = (block.match(/aff(?:Item|Partner)\(/g) || []).length;
-  ok("catalog:slots_8", slotCalls === 8, "n=" + slotCalls);
+    const partnerCalls = (block.match(/affPartner\(/g) || []).length;
+  const emptySlotsReady = (block.match(/affItem\(""/g) || []).length;
+  ok("catalog:slots_ready_eq_partners", slotCalls === partnerCalls && partnerCalls >= 1, "n=" + slotCalls + " partners=" + partnerCalls);
+  ok("catalog:empty_visible_0", emptySlotsReady === 0, "n=" + emptySlotsReady);
   ok("catalog:cj_url_exact", block.includes(CJ_URL));
   ok(
     "catalog:slot1_skytours",
@@ -272,7 +275,8 @@ try {
     ok(tag + ":title", snap.title === SECTION_TITLE, snap.title);
     ok(tag + ":intro", snap.intro.includes("letenky a leteckou dopravu"), snap.intro);
     ok(tag + ":disclosure", snap.disclosureOk);
-    ok(tag + ":slots_8", snap.slots === 8, "n=" + snap.slots);
+    ok(tag + ":slots_ready_ge_1", snap.slots >= 1, "n=" + snap.slots);
+    ok(tag + ":empty_visible_0", (snap.emptyVisible != null ? snap.emptyVisible : 0) === 0, "empty=" + (snap.emptyVisible != null ? snap.emptyVisible : 0));
     ok(tag + ":skytours_slot1", snap.firstText === PARTNER_TITLE, snap.firstText);
     ok(tag + ":skytours_href", snap.firstHref === CJ_URL, snap.firstHref);
     ok(tag + ":skytours_target", snap.firstTarget === "_blank", snap.firstTarget);

@@ -17,7 +17,7 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-lekarna-lekarny-v1-20260922";
-const CATALOG_BUST = "affiliate-4kids-deti-hracky-v1-20260930";
+const CATALOG_BUST = "affiliate-phase2c-dynamic-v1-20261023";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-lekarny";
 const SECTION_TITLE = "Lékárny";
@@ -73,7 +73,10 @@ function auditStatic() {
 
   const block = lekarnyBlock(catalog);
   const slotCalls = (block.match(/aff(?:Item|Partner)\(/g) || []).length;
-  ok("catalog:slots_8", slotCalls === 8, "n=" + slotCalls);
+    const partnerCalls = (block.match(/affPartner\(/g) || []).length;
+  const emptySlotsReady = (block.match(/affItem\(""/g) || []).length;
+  ok("catalog:slots_ready_eq_partners", slotCalls === partnerCalls && partnerCalls >= 1, "n=" + slotCalls + " partners=" + partnerCalls);
+  ok("catalog:empty_visible_0", emptySlotsReady === 0, "n=" + emptySlotsReady);
   ok("catalog:lekarna_in_block", block.includes("15734937"));
   ok("catalog:not_in_zdravi", !/id:\s*"aff-zdravi-doplnky"[\s\S]*?15734937/.test(catalog));
 
@@ -243,7 +246,8 @@ try {
 
     const tag = vp.name;
     ok(tag + ":title", snap.title === SECTION_TITLE, snap.title);
-    ok(tag + ":slots_8", snap.slots === 8, "n=" + snap.slots);
+    ok(tag + ":slots_ready_ge_1", snap.slots >= 1, "n=" + snap.slots);
+    ok(tag + ":empty_visible_0", (snap.emptyVisible != null ? snap.emptyVisible : 0) === 0, "empty=" + (snap.emptyVisible != null ? snap.emptyVisible : 0));
     ok(tag + ":first_slot_lekarna", snap.firstText === PARTNER_TITLE, snap.firstText);
     ok(tag + ":lekarna_text", snap.lekText === PARTNER_TITLE, snap.lekText);
     ok(tag + ":lekarna_href", snap.lekHref === CJ_URL, snap.lekHref);

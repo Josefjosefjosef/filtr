@@ -67,9 +67,9 @@ function auditStatic() {
   const blockEnd = catalog.indexOf('id: "aff-letenky"', blockStart);
   const block = blockStart >= 0 && blockEnd > blockStart ? catalog.slice(blockStart, blockEnd) : "";
   const slotCalls = (block.match(/aff(?:Item|Partner)\(/g) || []).length;
-  ok("catalog:slots_8", slotCalls === 8, "n=" + slotCalls);
-  const emptySlots = (block.match(/affItem\(""/g) || []).length;
-  ok("catalog:empty_slots_max_7", emptySlots <= 7, "n=" + emptySlots);
+    const partnerCalls = (block.match(/affPartner\(/g) || []).length;
+  ok("catalog:slots_ready_eq_partners", slotCalls === (block.split('affPartner(').length - 1) && (block.split('affPartner(').length - 1) >= 1, "n=" + slotCalls);
+  ok("catalog:empty_visible_0", (block.split('affItem("")').length - 1) === 0);
   ok("catalog:ready_partners_min_1", (block.match(/affPartner\(/g) || []).length >= 1);
 
   ok("index:marker", index.includes(MARKER));
@@ -251,6 +251,7 @@ try {
           const href = c.getAttribute("href") || "";
           return t === "" && ready === "0" && (href === "#" || href === "");
         }),
+        emptyVisible: chips.filter((c) => (c.getAttribute("data-aff-ready") || "0") !== "1").length,
         hasImg,
         centered,
         tagName: first ? first.tagName : "",
@@ -260,7 +261,8 @@ try {
     const tag = vp.name;
     ok(tag + ":title", snap.title === SECTION_TITLE, snap.title);
     ok(tag + ":disclosure", snap.disclosureOk);
-    ok(tag + ":slots_8", snap.slots === 8, "n=" + snap.slots);
+    ok(tag + ":slots_ready_ge_1", snap.slots >= 1, "n=" + snap.slots);
+    ok(tag + ":empty_visible_0", (snap.emptyVisible != null ? snap.emptyVisible : 0) === 0, "empty=" + (snap.emptyVisible != null ? snap.emptyVisible : 0));
     ok(tag + ":slot1_text", snap.firstText === PARTNER_TITLE, snap.firstText);
     ok(tag + ":slot1_href", snap.firstHref === CJ_URL, snap.firstHref);
     ok(tag + ":slot1_target", snap.firstTarget === "_blank", snap.firstTarget);

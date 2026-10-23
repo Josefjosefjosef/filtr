@@ -17,7 +17,7 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-kalkulator-pojisteni-v1-20260922";
-const CATALOG_BUST = "affiliate-4kids-deti-hracky-v1-20260930";
+const CATALOG_BUST = "affiliate-phase2c-dynamic-v1-20261023";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-pojisteni";
 const SECTION_TITLE = "Pojištění";
@@ -80,7 +80,10 @@ function auditStatic() {
 
   const block = pojisteniBlock(catalog);
   const slotCalls = (block.match(/aff(?:Item|Partner)\(/g) || []).length;
-  ok("catalog:slots_8", slotCalls === 8, "n=" + slotCalls);
+    const partnerCalls = (block.match(/affPartner\(/g) || []).length;
+  const emptySlotsReady = (block.match(/affItem\(""/g) || []).length;
+  ok("catalog:slots_ready_eq_partners", slotCalls === partnerCalls && partnerCalls >= 1, "n=" + slotCalls + " partners=" + partnerCalls);
+  ok("catalog:empty_visible_0", emptySlotsReady === 0, "n=" + emptySlotsReady);
   ok("catalog:kalkulator_in_pojisteni", block.includes("15616442"));
   ok("catalog:not_in_finance", !/id:\s*"aff-finance"[\s\S]*?15616442/.test(catalog));
   ok("catalog:not_in_energie", !/id:\s*"aff-energie-uspor"[\s\S]*?15616442/.test(catalog));
@@ -250,7 +253,8 @@ try {
     }, PARTNER_TITLE);
 
     const tag = vp.name;
-    ok(tag + ":slots_8", snap.slots === 8, "n=" + snap.slots);
+    ok(tag + ":slots_ready_ge_1", snap.slots >= 1, "n=" + snap.slots);
+    ok(tag + ":empty_visible_0", (snap.emptyVisible != null ? snap.emptyVisible : 0) === 0, "empty=" + (snap.emptyVisible != null ? snap.emptyVisible : 0));
     ok(tag + ":first_slot_klik", snap.firstText === "Klik.cz", snap.firstText);
     ok(tag + ":second_slot_kalkulator", snap.secondText === PARTNER_TITLE, snap.secondText);
     ok(tag + ":kalkulator_text", snap.kalkText === PARTNER_TITLE, snap.kalkText);
