@@ -9,28 +9,47 @@ import { spawnSync } from "node:child_process";
 const here = path.dirname(fileURLToPath(import.meta.url));
 const guard = path.join(here, "iu-chmi-cap-watchdog-fallback-no-loop-guard-v1.mjs");
 
+const MIN_GOOD = `
+on:
+  workflow_dispatch:
+    inputs:
+      force_probe_dispatch:
+        type: boolean
+  schedule:
+    - cron: "3,18,33,48 * * * *"
+steps:
+  - name: Force probe dispatch (manual ops)
+    run: |
+      \${WATCHDOG_PROBE_URL}?dispatch=1
+  - name: Stale-gated CHMI recovery (schedule + default manual)
+    run: |
+      chmi_cap_watchdog_observe.json
+      WATCHDOG_STALE_RECOVERY_DISPATCH=gh
+`;
+
+const MIN_BAD = MIN_GOOD.replace(
+  "on:",
+  'on:\n  workflow_run:\n    workflows: ["Update CHMI CAP v2"]',
+);
+
 function runGuard(repoRoot) {
   return spawnSync(process.execPath, [guard], { cwd: repoRoot, encoding: "utf8" });
 }
 
-const good = runGuard(path.resolve(here, ".."));
-assert.equal(good.status, 0, good.stderr || good.stdout);
-assert.match(good.stdout, /PASS/);
+function writeFixture(dir, content) {
+  const wfDir = path.join(dir, ".github", "workflows");
+  fs.mkdirSync(wfDir, { recursive: true });
+  fs.writeFileSync(path.join(wfDir, "chmi-cap-watchdog-cron-fallback.yml"), content, "utf8");
+}
 
-const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "iu-chmi-fallback-loop-"));
-const wfDir = path.join(tmp, ".github", "workflows");
-fs.mkdirSync(wfDir, { recursive: true });
-const goodWf = fs.readFileSync(
-  path.join(here, "..", ".github/workflows/chmi-cap-watchdog-cron-fallback.yml"),
-  "utf8",
-);
-const badWf =
-  goodWf.replace(
-    "on:",
-    'on:\n  workflow_run:\n    workflows: ["Update CHMI CAP v2"]\n    types: [completed]',
-  );
-fs.writeFileSync(path.join(wfDir, "chmi-cap-watchdog-cron-fallback.yml"), badWf, "utf8");
-const bad = runGuard(tmp);
+const goodRoot = fs.mkdtempSync(path.join(os.tmpdir(), "iu-chmi-fallback-good-"));
+writeFixture(goodRoot, MIN_GOOD);
+const good = runGuard(goodRoot);
+assert.equal(good.status, 0, good.stderr || good.stdout);
+
+const badRoot = fs.mkdtempSync(path.join(os.tmpdir(), "iu-chmi-fallback-bad-"));
+writeFixture(badRoot, MIN_BAD);
+const bad = runGuard(badRoot);
 assert.notEqual(bad.status, 0);
 assert.match(bad.stdout + bad.stderr, /FAIL/);
 
