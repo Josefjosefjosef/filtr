@@ -106,15 +106,22 @@ Burn-in: manual `workflow_dispatch` on `cj-affiliate-offline-import-dispatch.yml
 
 Worker var: `IU_CJ_STAGING_PROBE_LOCK_KEY` (default / disarm reset = `link_search_coupon_v1`). Unknown or empty values are fail-closed (no HTTP, no D1 insert).
 
+### GO flags — single source of truth
+
+Staging plain-text GO flags live only in `cloudflare/cj-email-ingest-d1-worker/wrangler.toml` under `[env.staging.vars]` (defaults OFF). Arm/disarm patches that table via `scripts/iu-cj-affiliate-staging-go-flags-patch-v1.mjs`, then deploys **without** `--keep-vars` / `--var` for GO. All Worker mutate workflows share concurrency group `cj-affiliate-staging-worker-mutate` so arm/disarm cannot race a code deploy.
+
 ### MANUAL_DISARM — ruční obnovení GO OFF (nouzové vypnutí)
 
 Use when GHA `disarm-failsafe` is cancelled, skipped, or the Actions runner dies mid-arm.
 
-1. From `cloudflare/cj-email-ingest-d1-worker` with staging CF token:
-   `npx wrangler@4 deploy --env staging --keep-vars --var "IU_CJ_STAGING_CJ_API_PROBE_APPROVED:0" --var "IU_CJ_CJ_API_HTTP_EXECUTE:0" --var "IU_CJ_STAGING_CJ_API_PROBE_EXECUTE:0" --var "IU_CJ_STAGING_PROBE_LOCK_KEY:link_search_coupon_v1"`
+1. From repo root with staging CF token (and D1 id already resolved in wrangler.toml):
+   `node scripts/iu-cj-affiliate-staging-go-flags-patch-v1.mjs --mode disarm`
+   `npx wrangler@4 deploy --config cloudflare/cj-email-ingest-d1-worker/wrangler.toml --env staging`
 2. Verify: `curl -fsS "$STAGING_URL/health"` → `cjLiveApiRequestsAllowed=false`, `publishable=false`.
 3. Verify: `GET /v1/staging/cj-api/readiness` with ingest Bearer → `mayExecuteHttp=false`.
 4. If disarm cannot be confirmed: mark future live probe **CJ_DISARM_FAILSAFE=BLOCKED** (kritický) — not SAFE — until manual recovery succeeds. Do not arm again.
+
+Do **not** use `--keep-vars --var` for GO OFF — that recreates the dual-source failure mode.
 
 Disarm job in `cj-affiliate-staging-cj-api-probe-once.yml` uses `if: always()` so probe success, HTTP 4xx/5xx, timeout, or validation failure still attempt GO OFF.
 

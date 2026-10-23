@@ -1,9 +1,10 @@
-name: CJ Affiliate staging worker code deploy (keep-vars, no migrations)
+name: CJ Affiliate staging worker code deploy (toml vars, no migrations)
 
 # Safe staging-only code deploy for v2 lock support.
 # - No D1 migrations apply
 # - No secret rotation
-# - --keep-vars + explicit GO OFF
+# - toml [env.staging.vars] authoritative (GO OFF defaults)
+# - Shared mutate concurrency with probe arm/disarm
 # - No live CJ HTTP probe
 # - Read-only D1 lock SELECT only
 
@@ -14,7 +15,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: cj-affiliate-staging-worker-code-deploy-keep-vars
+  group: cj-affiliate-staging-worker-mutate
   cancel-in-progress: false
 
 jobs:
@@ -120,17 +121,18 @@ jobs:
           });
           "
 
-      - name: Deploy staging worker (--keep-vars, GO OFF, no probe)
-        id: deploy
+      - name: Ensure GO flags disarmed in toml (single source of truth)
         shell: bash
-        working-directory: cloudflare/cj-email-ingest-d1-worker
         run: |
           set -euo pipefail
-          OUT="$(npx --yes wrangler@4 deploy --env staging --keep-vars \
-            --var "IU_CJ_STAGING_CJ_API_PROBE_APPROVED:0" \
-            --var "IU_CJ_CJ_API_HTTP_EXECUTE:0" \
-            --var "IU_CJ_STAGING_CJ_API_PROBE_EXECUTE:0" \
-            --var "IU_CJ_STAGING_PROBE_LOCK_KEY:link_search_coupon_v1" 2>&1)"
+          node scripts/iu-cj-affiliate-staging-go-flags-patch-v1.mjs --mode disarm
+
+      - name: Deploy staging worker (toml-authoritative, GO OFF, no probe)
+        id: deploy
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="$(npx --yes wrangler@4 deploy --config cloudflare/cj-email-ingest-d1-worker/wrangler.toml --env staging 2>&1)"
           echo "$OUT" | sed -E 's/(token|Token|Bearer|pat|PAT)[^[:space:]]+/[REDACTED]/g'
           URL="$(echo "$OUT" | grep -Eo 'https://[a-zA-Z0-9.-]+\.workers\.dev' | head -n1 || true)"
           VER="$(echo "$OUT" | grep -Eo 'Current Version ID:[[:space:]]*[a-f0-9-]+' | head -n1 | awk '{print $NF}' || true)"
@@ -141,6 +143,7 @@ jobs:
           echo "worker_url=$URL" >> "$GITHUB_OUTPUT"
           echo "version_id=${VER:-unknown}" >> "$GITHUB_OUTPUT"
           echo "CJ_STAGING_DEPLOY=DONE"
+          echo "CJ_GO_FLAGS_SOURCE=toml_env_staging_vars"
           echo "CJ_LIVE_HTTP_REQUESTS=0"
 
       - name: Post-deploy health

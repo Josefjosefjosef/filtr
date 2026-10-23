@@ -24,7 +24,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: cj-affiliate-staging-cj-api-probe-once
+  # Shared with staging worker code/deploy workflows — prevents GO flag overwrite races.
+  group: cj-affiliate-staging-worker-mutate
   cancel-in-progress: false
 
 jobs:
@@ -183,19 +184,18 @@ jobs:
         shell: bash
         run: bash scripts/ci/patch-staging-cj-d1-wrangler-v1.sh iu-cj-email-ingest-staging
 
-      - name: Arm GO flags (keep-vars deploy, no secret rotation)
+      - name: Arm GO flags (toml-authoritative deploy, no secret rotation)
         if: inputs.execute_live_cj_probe == '1'
         shell: bash
-        working-directory: cloudflare/cj-email-ingest-d1-worker
         run: |
           set -euo pipefail
-          npx --yes wrangler@4 deploy --env staging --keep-vars \
-            --var "IU_CJ_STAGING_CJ_API_PROBE_APPROVED:1" \
-            --var "IU_CJ_CJ_API_HTTP_EXECUTE:1" \
-            --var "IU_CJ_STAGING_CJ_API_PROBE_EXECUTE:1" \
-            --var "IU_CJ_CJ_API_MAX_REQUESTS_PER_PROBE:1" \
-            --var "IU_CJ_STAGING_PROBE_LOCK_KEY:${PROBE_LOCK_KEY}" 2>&1 | sed -E 's/(token|Token|Bearer|pat|PAT)[^[:space:]]+/[REDACTED]/g'
-          # Workers plain-text var propagation can lag briefly after deploy.
+          node scripts/iu-cj-affiliate-staging-go-flags-patch-v1.mjs --mode arm --lock-key "${PROBE_LOCK_KEY}"
+          OUT="$(npx --yes wrangler@4 deploy --config cloudflare/cj-email-ingest-d1-worker/wrangler.toml --env staging 2>&1)"
+          echo "$OUT" | sed -E 's/(token|Token|Bearer|pat|PAT)[^[:space:]]+/[REDACTED]/g'
+          VER="$(echo "$OUT" | grep -Eo 'Current Version ID:[[:space:]]*[a-f0-9-]+' | head -n1 | awk '{print $NF}' || true)"
+          echo "CJ_ARM_VERSION_ID=${VER:-unknown}"
+          echo "CJ_GO_FLAGS_SOURCE=toml_env_staging_vars"
+          # Wait only for the new deployment to become the live Worker (not a dual-source workaround).
           armed=0
           for _try in 1 2 3 4 5 6 7 8 9 10; do
             if curl -fsS -H "Authorization: Bearer ${INGEST_TOKEN}" "${WORKER_URL}/v1/staging/cj-api/readiness" > /tmp/readiness_armed.json; then
@@ -208,32 +208,14 @@ jobs:
                 break
               fi
             fi
-            echo "CJ_ARM_READINESS_RETRY=${_try}"
-            sleep 3
+            echo "CJ_ARM_DEPLOY_LIVE_WAIT=${_try}"
+            sleep 2
           done
           if [ "${armed}" != "1" ]; then
-            echo "BLOCKER=ARM_READINESS_NOT_PROPAGATED"
+            echo "BLOCKER=ARM_TOML_DEPLOY_NOT_LIVE"
             python3 -c "import json; print(json.load(open('/tmp/readiness_armed.json')))" || true
             exit 1
           fi
-          # Require 3 consecutive armed readiness samples (anti-flake across isolates).
-          stable=0
-          for _stab in 1 2 3; do
-            sleep 2
-            curl -fsS -H "Authorization: Bearer ${INGEST_TOKEN}" "${WORKER_URL}/v1/staging/cj-api/readiness" > /tmp/readiness_armed.json
-            if python3 -c "
-          import json,sys
-          r=json.load(open('/tmp/readiness_armed.json'))
-          sys.exit(0 if r.get('mayExecuteHttp') is True and r.get('identityOk') is True else 1)
-          "; then
-              stable=$((stable+1))
-              echo "CJ_ARM_READINESS_STABLE=${stable}"
-            else
-              echo "BLOCKER=ARM_READINESS_UNSTABLE"
-              python3 -c "import json; print(json.load(open('/tmp/readiness_armed.json')))" || true
-              exit 1
-            fi
-          done
           python3 -c "
           import json
           r=json.load(open('/tmp/readiness_armed.json'))
@@ -250,43 +232,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          # Retry ONLY gate-propagation blocks (0 HTTP). Never retry after a real CJ HTTP attempt.
-          export GATE_REASONS='probe_not_approved|http_execute_not_armed|probe_execute_not_armed|staging_archive_default_deny'
-          CODE=""
-          for _try in 1 2 3 4 5 6; do
-            CODE="$(curl -sS -H "Authorization: Bearer ${INGEST_TOKEN}" -X POST "${WORKER_URL}/v1/staging/cj-api/probe" -H 'Content-Type: application/json' -d '{}' -o /tmp/probe_result.json -w '%{http_code}')"
-            set +e
-            python3 - <<'PY'
-          import json, sys, os, re
-          r = json.load(open("/tmp/probe_result.json"))
-          hrc = r.get("httpRequestCount")
-          if hrc not in (0, 1, None):
-              raise SystemExit("unexpected http request count")
-          if hrc == 1:
-              sys.exit(10)
-          if r.get("blocked") is True and hrc in (0, None):
-              reason = str(r.get("reason") or "")
-              if re.search(os.environ["GATE_REASONS"], reason):
-                  sys.exit(20)
-          sys.exit(0)
-          PY
-            ec=$?
-            set -e
-            if [ "${ec}" = "10" ]; then
-              echo "CJ_PROBE_HTTP_ATTEMPTED=1"
-              break
-            fi
-            if [ "${ec}" = "20" ]; then
-              echo "CJ_PROBE_GATE_RETRY=${_try}"
-              sleep 3
-              continue
-            fi
-            if [ "${ec}" != "0" ]; then
-              echo "BLOCKER=PROBE_CLASSIFY_FAILED ec=${ec}"
-              exit "${ec}"
-            fi
-            break
-          done
+          # Exactly one probe POST after toml-authoritative arm (no gate-retry loop).
+          CODE="$(curl -sS -H "Authorization: Bearer ${INGEST_TOKEN}" -X POST "${WORKER_URL}/v1/staging/cj-api/probe" -H 'Content-Type: application/json' -d '{}' -o /tmp/probe_result.json -w '%{http_code}')"
           echo "http_code=${CODE}" >> "$GITHUB_OUTPUT"
           python3 <<'PY'
           import json
@@ -388,17 +335,14 @@ jobs:
         shell: bash
         run: bash scripts/ci/patch-staging-cj-d1-wrangler-v1.sh iu-cj-email-ingest-staging
 
-      - name: Disarm GO flags (keep-vars, no secret rotation)
+      - name: Disarm GO flags (toml-authoritative deploy, no secret rotation)
         shell: bash
-        working-directory: cloudflare/cj-email-ingest-d1-worker
         run: |
           set -euo pipefail
-          npx --yes wrangler@4 deploy --env staging --keep-vars \
-            --var "IU_CJ_STAGING_CJ_API_PROBE_APPROVED:0" \
-            --var "IU_CJ_CJ_API_HTTP_EXECUTE:0" \
-            --var "IU_CJ_STAGING_CJ_API_PROBE_EXECUTE:0" \
-            --var "IU_CJ_STAGING_PROBE_LOCK_KEY:link_search_coupon_v1" 2>&1 | sed -E 's/(token|Token|Bearer|pat|PAT)[^[:space:]]+/[REDACTED]/g'
+          node scripts/iu-cj-affiliate-staging-go-flags-patch-v1.mjs --mode disarm
+          npx --yes wrangler@4 deploy --config cloudflare/cj-email-ingest-d1-worker/wrangler.toml --env staging 2>&1 | sed -E 's/(token|Token|Bearer|pat|PAT)[^[:space:]]+/[REDACTED]/g'
           echo "CJ_DISARM_D1_RESOLVE=PASS"
+          echo "CJ_GO_FLAGS_SOURCE=toml_env_staging_vars"
 
       - name: Verify GO off + publishing disabled
         shell: bash
