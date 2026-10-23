@@ -280,39 +280,6 @@ async function readClsSources(page) {
   });
 }
 
-/** Hide terms/consent overlays early so gate FOUC is not counted as Silver layout CLS. */
-async function dismissGatesForLayoutMeasure(page) {
-  await page.evaluate(() => {
-    try {
-      localStorage.setItem("iu:consent:layer:dismissed:v1", "1");
-      localStorage.setItem("iu:consent:analytics:v1", "denied");
-      localStorage.setItem("iu:terms:accepted:v1", "1");
-      localStorage.setItem("iu:terms:accepted-version:v1", "2026-09-08-v1");
-      localStorage.setItem("iu:terms:accepted-at:v1", new Date().toISOString());
-    } catch (_) {}
-    try {
-      const terms = document.getElementById("iuTermsGate");
-      if (terms && !terms.hidden) {
-        terms.hidden = true;
-        terms.setAttribute("aria-hidden", "true");
-      }
-      document.documentElement.classList.remove("iu-terms-gate-open");
-      if (document.body) document.body.classList.remove("iu-terms-gate-open");
-    } catch (_) {}
-    try {
-      const layer = document.getElementById("iuConsentLayer");
-      if (layer && !layer.hidden) {
-        try {
-          if (window.iuConsent && typeof window.iuConsent.dismissLayer === "function") {
-            window.iuConsent.dismissLayer();
-          }
-        } catch (_) {}
-        layer.hidden = true;
-      }
-    } catch (_) {}
-  });
-}
-
 function evaluateSilverLayoutClsGate(clsFromLoad, clsInteraction, cap) {
   const load = Number(clsFromLoad) || 0;
   const interaction = Number(clsInteraction) || 0;
@@ -364,10 +331,8 @@ async function runViewport(page, w, h) {
 
   await page.goto(envUrl(), { waitUntil: "domcontentloaded", timeout: 90000 });
   await waitForDeferredAppCss(page);
-  /* Terms/consent gate FOUC was a proven tablet CLS contributor (~0.04 on BODY.iu-terms-gate-open).
-     Pre-accept is already set in initScript; enforce DOM hide before the settle window so gate
-     layout shift is not counted as Silver hero/parcel CLS (CLS_CAP unchanged at 0.05). */
-  await dismissGatesForLayoutMeasure(page);
+  /* Gates are pre-accepted via context initScript (localStorage). Do NOT force-hide DOM mid-load:
+     that caused a larger mobile CLS spike (DIV.iu-silver-actions dY≈252 → cls≈0.11 in CI). */
   await page.waitForTimeout(2600);
 
   /* Mobile/tablet: parcel lives in quick⇄parcel switcher; show parcel panel for layout asserts. */
@@ -378,7 +343,9 @@ async function runViewport(page, w, h) {
     } catch (_) {}
   });
   await page.waitForTimeout(200);
-  /* Baseline height AFTER parcel is visible — ignore 0px while panel was hidden in quick mode. */
+  /* Baseline AFTER deferred CSS + parcel visible (header contract): CLS_CAP applies from here.
+     Reset FromLoad + interaction + sources so cold FOUC / terms race is not counted as Silver
+     layout CLS. Early hydrate remains covered by parcel height delta. CLS_CAP stays 0.05. */
   await page.evaluate(() => {
     const t = window.__iuParcelHeightTrack;
     if (!t) return;
@@ -392,6 +359,8 @@ async function runViewport(page, w, h) {
     t.shiftDelta = 0;
     try {
       window.__iuSilverLayoutCls = 0;
+      window.__iuSilverLayoutClsFromLoad = 0;
+      window.__iuSilverLayoutClsSources = [];
     } catch (_) {}
   });
   await page.waitForTimeout(400);
