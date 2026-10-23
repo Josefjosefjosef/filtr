@@ -290,6 +290,9 @@ export function isCjStagingProbeWorkflowFixScope(files) {
     if (p === "scripts/iu-cj-affiliate-staging-go-flags-lib.mjs") return true;
     if (p === "scripts/iu-cj-affiliate-staging-go-flags-patch-v1.mjs") return true;
     if (p === "scripts/iu-cj-affiliate-staging-go-flags-v1-selftest.mjs") return true;
+    if (p === "scripts/iu-cj-affiliate-staging-postdeploy-health-lib.mjs") return true;
+    if (p === "scripts/iu-cj-affiliate-staging-postdeploy-health-v1.mjs") return true;
+    if (p === "scripts/iu-cj-affiliate-staging-postdeploy-health-v1-selftest.mjs") return true;
     if (p === "scripts/ci/patch-staging-cj-d1-wrangler-v1.sh") return true;
     if (p === "scripts/iu-cj-affiliate-staging-cj-api-probe-workflow-v1-selftest.mjs") return true;
     if (p === CJ_STAGING_API_PROBE_EXECUTE) return true;

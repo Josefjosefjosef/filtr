@@ -112,17 +112,14 @@ jobs:
           echo "worker_url=$URL" >> "$GITHUB_OUTPUT"
           echo "CJ_GO_FLAGS_SOURCE=toml_env_staging_vars"
 
-      - name: Post-deploy health (no CJ probe)
+      - name: Post-deploy health (full assert retry, no CJ probe)
         shell: bash
         env:
           WORKER_URL: ${{ steps.deploy.outputs.worker_url }}
         run: |
           set -euo pipefail
-          curl -fsS "${WORKER_URL}/health" | python3 -c "
-          import json,sys
-          h=json.load(sys.stdin)
-          assert h.get('stagingOnly') is True
-          assert h.get('publishable') is False
-          assert h.get('cjLiveApiRequestsAllowed') is False
-          print('STAGING_DEPLOY_HEALTH_OK=1')
-          "
+          node scripts/iu-cj-affiliate-staging-postdeploy-health-v1.mjs \
+            --url "${WORKER_URL}" \
+            --max-attempts 12 \
+            --sleep-ms 2500
+          echo "STAGING_DEPLOY_HEALTH_OK=1"
