@@ -212,16 +212,29 @@ jobs:
           print("CJ_RESPONSE_SCHEMA="+("PASS" if rp=="PASS" else "FAIL" if rp else "NOT_TESTED"))
           print("CJ_COUPON_RECORD_COUNT="+str(r.get("couponRecordCount")))
           cs=r.get("connectionState") or "unknown"
+          probe_failed=False
+          if r.get("ok") is not True:
+              print("CJ_PROBE_OUTCOME=FAIL")
+              probe_failed=True
+          else:
+              print("CJ_PROBE_OUTCOME=PASS")
           if cs in ("API_CONNECTED","EMPTY_RESULT_VERIFIED"):
               print("CJ_API_CONNECTION=PASS")
-          elif cs in ("AUTHENTICATION_FAILED",):
+          elif cs in ("AUTHENTICATION_FAILED","AUTHORIZATION_FAILED","HTTP_CLIENT_ERROR"):
               print("CJ_API_CONNECTION=FAIL")
-          elif cs in ("AUTHORIZATION_FAILED",):
-              print("CJ_API_CONNECTION=FAIL")
+              probe_failed=True
           elif cs in ("NETWORK_FAILED",):
               print("CJ_API_CONNECTION=INCONCLUSIVE")
+              probe_failed=True
           else:
               print("CJ_API_CONNECTION=INCONCLUSIVE")
+              probe_failed=True
+          hc_num=hc if isinstance(hc,int) else None
+          if hc_num is not None and hc_num>=400:
+              print("CJ_HTTP_STATUS_FAIL=status="+str(hc_num))
+              probe_failed=True
+          if probe_failed:
+              raise SystemExit("CJ live probe did not succeed")
           PY
 
       - name: Post probe lock audit (read-only)

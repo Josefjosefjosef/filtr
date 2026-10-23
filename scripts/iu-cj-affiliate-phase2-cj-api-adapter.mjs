@@ -28,6 +28,10 @@ import {
 
 } from "./iu-cj-affiliate-phase1-lib.mjs";
 
+import { buildCjLinkSearchQueryParams } from "./iu-cj-affiliate-cj-link-search-query-v1.mjs";
+
+export { buildCjLinkSearchQueryParams };
+
 import { canExecuteStagingCjHttpRequest, trimPat as trimPatGate } from "./iu-cj-affiliate-phase2-staging-archive-only-gate.mjs";
 
 
@@ -222,18 +226,10 @@ export async function cjLinkSearchPage(pageNumber, env = process.env, options = 
 
   }
 
-  const qs = new URLSearchParams({
-
-    "website-id": config.websitePid || "test-pid",
-
-    "advertiser-ids": "joined",
-
-    "link-type": options.linkType || "coupon",
-
-    "page-number": String(pageNumber),
-
-    "records-per-page": "10",
-
+  const qs = buildCjLinkSearchQueryParams(config.websitePid || "test-pid", pageNumber, {
+    recordsPerPage: 10,
+    promotionType: options.promotionType,
+    linkType: options.linkType,
   });
 
   const url = CJ_LINK_SEARCH_BASE + "?" + qs.toString();
@@ -264,7 +260,7 @@ export function describeCjApiDomains() {
 
     productFeedsAndLinks: "link-search API — product deep links, not customer discounts by default",
 
-    coupons: "link-search with linkType=coupon — verify customer-facing discount vs publisher commission",
+    coupons: "link-search with promotion-type=coupon — verify customer-facing discount vs publisher commission",
 
     commissions: "reporting APIs — publisher revenue, not storefront price",
 
