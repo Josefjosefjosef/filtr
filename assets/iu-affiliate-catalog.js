@@ -2,7 +2,7 @@
  * infoUzel.cz — Affiliate services catalog (UI + data).
  * Partner URLs are placeholders until affiliate programs are approved.
  */
-/* iu-affiliate-catalog-bust: cj-phase2-fill-free-slots-v1-20261023 */
+/* iu-affiliate-catalog-bust: affiliate-4kids-deti-hracky-v1-20260930 */
 (function iuAffiliateCatalog() {
   "use strict";
 
@@ -350,17 +350,14 @@
       icon: "iu-aff-suitcase",
       description: "Odkazy na vybrané cestovní kanceláře a služby související s cestováním.",
       items: [
-        affPartner("Čedok.cz", "https://www.anrdoezrs.net/click-101883843-15686662"),
+        affPartner("Cedok.cz", "https://www.anrdoezrs.net/click-101883843-15686662"),
         affPartner("Blue-style.cz", "https://www.dpbolvw.net/click-101883843-14358779"),
         affItem("", "fischer"),
-        affItem("", "exim-tours"),
+        affPartner("Eximtours.cz", "https://www.dpbolvw.net/click-101883843-15043859"),
         affItem("", "nev-dama"),
         affPartner("Tui.cz", "https://www.kqzyfj.com/click-101883843-15704921"),
         affItem("", "invia"),
         affItem("", "dovolena-cz"),
-        affPartner("Cestovnakancelariadaka.sk", "https://www.tkqlhce.com/click-101883843-13148950"),
-        affPartner("Ergo-cestovni.cz", "https://www.jdoqocy.com/click-101883843-17269644"),
-        affPartner("Eximtours.cz", "https://www.dpbolvw.net/click-101883843-15043859")
       ],
     },
     {
@@ -369,14 +366,17 @@
       icon: "iu-aff-hotel",
       description: "Odkazy na vybrané služby pro ubytování a hotely.",
       items: [
-        affPartner( "Booking.com", "https://www.anrdoezrs.net/click-101883843-13323565" ),
+        affPartner(
+          "Booking.com",
+          "https://www.anrdoezrs.net/click-101883843-13323565"
+        ),
         affItem("", "agoda"),
         affItem("", "hotels-com"),
         affPartner("Spa.cz", "https://www.kqzyfj.com/click-101883843-14446400"),
         affItem("", "slevomat-pobyty"),
         affItem("", "travelking"),
         affItem("", "hotel-cz"),
-        affItem("", "megaubytka")
+        affItem("", "megaubytka"),
       ],
     },
     {
@@ -385,7 +385,10 @@
       icon: "iu-aff-transport",
       description: "Odkazy na vybrané služby související s dopravou a cestováním.",
       items: [
-        affPartner( "Leo Express", "https://www.jdoqocy.com/click-101883843-15736211" ),
+        affPartner(
+          "Leo Express",
+          "https://www.jdoqocy.com/click-101883843-15736211"
+        ),
         affItem("", "airhelp"),
         affItem("", "refundio"),
         affItem("", "kiwi"),
@@ -393,8 +396,6 @@
         affItem("", "pelikan"),
         affItem("", "lot"),
         affItem("", "flixbus"),
-        affPartner("Arangrant", "https://www.kqzyfj.com/click-101883843-17039663"),
-        affPartner("Svelt", "https://www.dpbolvw.net/click-101883843-17323349")
       ],
     },
     {
@@ -404,13 +405,13 @@
       description: "Odkazy na vybrané služby pro letenky a leteckou dopravu.",
       items: [
         affPartner("Skytours", "https://www.jdoqocy.com/click-101883843-15733491"),
+        affPartner("Arangrant", "https://www.kqzyfj.com/click-101883843-17039663"),
         affPartner("Cheapvuelos", "https://www.jdoqocy.com/click-101883843-17322005"),
-        affItem("", "letenky-letecka-empty-3"),
         affItem("", "letenky-letecka-empty-4"),
         affItem("", "letenky-letecka-empty-5"),
         affItem("", "letenky-letecka-empty-6"),
         affItem("", "letenky-letecka-empty-7"),
-        affItem("", "letenky-letecka-empty-8")
+        affItem("", "letenky-letecka-empty-8"),
       ],
     },
     {
@@ -480,16 +481,20 @@
       icon: "iu-aff-shield",
       description: "Odkazy na vybrané pojišťovny a srovnávací služby.",
       items: [
-        affPartner( "Klik.cz", "https://www.dpbolvw.net/click-101883843-15024026" ),
-        affPartner( "Kalkulator.cz", "https://www.kqzyfj.com/click-101883843-15616442" ),
+        affPartner(
+          "Klik.cz",
+          "https://www.dpbolvw.net/click-101883843-15024026"
+        ),
+        affPartner(
+          "Kalkulator.cz",
+          "https://www.kqzyfj.com/click-101883843-15616442"
+        ),
         affItem("", "kalkulator-pojisteni"),
         affItem("", "generali-pojisteni"),
         affItem("", "csob-pojisteni"),
         affItem("", "slavia-pojisteni"),
         affItem("", "pillow"),
         affItem("", "uniqa"),
-        affPartner("Direct.cz", "https://www.kqzyfj.com/click-101883843-14550106"),
-        affPartner("GeneraliCeska.cz", "https://www.jdoqocy.com/click-101883843-13930623")
       ],
     },
     {
@@ -530,16 +535,20 @@
       icon: "iu-aff-cross",
       description: "Odkazy na vybrané externí lékárny a související obchody.",
       items: [
-        affPartner( "Lékárna.cz", "https://www.kqzyfj.com/click-101883843-15734937" ),
-        affPartner( "Lékárna Lemon", "https://www.jdoqocy.com/click-101883843-14563148" ),
+        affPartner(
+          "Lékárna.cz",
+          "https://www.kqzyfj.com/click-101883843-15734937"
+        ),
+        affPartner(
+          "Lékárna Lemon",
+          "https://www.jdoqocy.com/click-101883843-14563148"
+        ),
         affItem("", "lekarna-cz"),
         affItem("", "benu"),
         affItem("", "lekarna-lemon"),
         affItem("", "unizdrav"),
         affItem("", "moje-lekarna"),
         affItem("", "gigalekarna"),
-        affPartner("DRMAX.CZ", "https://www.jdoqocy.com/click-101883843-12838531"),
-        affPartner("GSKlub.cz", "https://www.dpbolvw.net/click-101883843-13452077")
       ],
     },
     {
@@ -548,18 +557,35 @@
       icon: "iu-health",
       description: "Odkazy na vybrané obchody se sortimentem zdraví a doplňků.",
       items: [
-        affPartner( "Klub zdraví", "https://www.dpbolvw.net/click-101883843-13884010" ),
-        affPartner( "BodyWorld", "https://www.tkqlhce.com/click-101883843-15735791" ),
-        affPartner( "Unizdrav", "https://www.kqzyfj.com/click-101883843-15735719" ),
-        affPartner( "MentisLab", "https://www.tkqlhce.com/click-101883843-13341068" ),
-        affPartner( "NaZuby.cz", "https://www.anrdoezrs.net/click-101883843-11883390" ),
-        affPartner( "Nature\u2019s Finest", "https://www.dpbolvw.net/click-101883843-15037573" ),
-        affPartner( "BrainMarket", "https://www.anrdoezrs.net/click-101883843-17053829" ),
+        affPartner(
+          "Klub zdraví",
+          "https://www.dpbolvw.net/click-101883843-13884010"
+        ),
+        affPartner(
+          "BodyWorld",
+          "https://www.tkqlhce.com/click-101883843-15735791"
+        ),
+        affPartner(
+          "Unizdrav",
+          "https://www.kqzyfj.com/click-101883843-15735719"
+        ),
+        affPartner(
+          "MentisLab",
+          "https://www.tkqlhce.com/click-101883843-13341068"
+        ),
+        affPartner(
+          "NaZuby.cz",
+          "https://www.anrdoezrs.net/click-101883843-11883390"
+        ),
+        affPartner(
+          "Nature\u2019s Finest",
+          "https://www.dpbolvw.net/click-101883843-15037573"
+        ),
+        affPartner(
+          "BrainMarket",
+          "https://www.anrdoezrs.net/click-101883843-17053829"
+        ),
         affItem("", "brainmarket"),
-        affPartner("Amix-store.cz", "https://www.kqzyfj.com/click-101883843-14545972"),
-        affPartner("Ezshop.cz", "https://www.jdoqocy.com/click-101883843-14486512"),
-        affPartner("Rehabilitacnipomucky.cz", "https://www.tkqlhce.com/click-101883843-15421726"),
-        affPartner("Sensilab", "https://www.kqzyfj.com/click-101883843-15056966")
       ],
     },
     {
@@ -568,21 +594,29 @@
       icon: "iu-aff-perfume",
       description: "Odkazy na vybrané obchody s kosmetikou a parfémy.",
       items: [
-        affPartner( "SEPHORA.cz", "https://www.anrdoezrs.net/click-101883843-13212014" ),
-        affPartner( "Dermacol", "https://www.jdoqocy.com/click-101883843-17173455" ),
-        affPartner( "FOREO", "https://www.anrdoezrs.net/click-101883843-15527432" ),
-        affPartner( "Yves Rocher", "https://www.dpbolvw.net/click-101883843-15734904" ),
-        affPartner( "Brasty.cz", "https://www.kqzyfj.com/click-101883843-14095529" ),
+        affPartner(
+          "SEPHORA.cz",
+          "https://www.anrdoezrs.net/click-101883843-13212014"
+        ),
+        affPartner(
+          "Dermacol",
+          "https://www.jdoqocy.com/click-101883843-17173455"
+        ),
+        affPartner(
+          "FOREO",
+          "https://www.anrdoezrs.net/click-101883843-15527432"
+        ),
+        affPartner(
+          "Yves Rocher",
+          "https://www.dpbolvw.net/click-101883843-15734904"
+        ),
+        affPartner(
+          "Brasty.cz",
+          "https://www.kqzyfj.com/click-101883843-14095529"
+        ),
         affItem("", "loccitane"),
         affItem("", "brasty"),
         affItem("", "pinkpanda"),
-        affPartner("Byrokko", "https://www.dpbolvw.net/click-101883843-15885523"),
-        affPartner("Obchod.dermalogica.cz", "https://www.jdoqocy.com/click-101883843-13971612"),
-        affPartner("FANN.CZ", "https://www.jdoqocy.com/click-101883843-12918759"),
-        affPartner("Nefertitis.cz", "https://www.kqzyfj.com/click-101883843-15064659"),
-        affPartner("Obchod.salononline.cz", "https://www.anrdoezrs.net/click-101883843-14099303"),
-        affPartner("SvetKadernictvi.cz", "https://www.anrdoezrs.net/click-101883843-14386407"),
-        affPartner("Tierraverde.cz", "https://www.anrdoezrs.net/click-101883843-17274085")
       ],
     },
     {
@@ -599,7 +633,6 @@
         affItem("", "econea"),
         affItem("", "vmd-drogerie"),
         affItem("", "country-life-drogerie"),
-        affPartner("Puellavune.cz", "https://www.dpbolvw.net/click-101883843-17203359")
       ],
     },
     {
@@ -615,18 +648,7 @@
         affPartner("VIP-pradlo.cz", "https://www.jdoqocy.com/click-101883843-15769149"),
         affItem("", "bushman"),
         affItem("", "prm"),
-        affPartner("T", "https://www.kqzyfj.com/click-101883843-13457303"),
-        affPartner("Answear.cz", "https://www.jdoqocy.com/click-101883843-11845756"),
-        affPartner("Factcool", "https://www.jdoqocy.com/click-101883843-14017743"),
-        affPartner("GUNSANDTUXEDOS.COM", "https://www.dpbolvw.net/click-101883843-13219632"),
-        affPartner("Imoda.sk", "https://www.dpbolvw.net/click-101883843-15484835"),
-        affPartner("Instamo.cz", "https://www.anrdoezrs.net/click-101883843-15753113"),
-        affPartner("Jeans-shop.cz", "https://www.dpbolvw.net/click-101883843-15377778"),
-        affPartner("Kings Camo", "https://www.jdoqocy.com/click-101883843-15774549"),
-        affPartner("Lelosi.cz", "https://www.kqzyfj.com/click-101883843-15356564"),
-        affPartner("Monkeymum.com", "https://www.kqzyfj.com/click-101883843-15361176"),
-        affPartner("Vivantis.cz", "https://www.tkqlhce.com/click-101883843-12411812"),
-        affPartner("Wearmedicine.cz", "https://www.kqzyfj.com/click-101883843-17213743")
+        affItem("", "gant"),
       ],
     },
     {
@@ -643,9 +665,6 @@
         affItem("", "belenka"),
         affItem("", "barebarics"),
         affItem("", "skinners"),
-        affPartner("Bohempia", "https://www.kqzyfj.com/click-101883843-15127254"),
-        affPartner("Shapenbarefoot.com", "https://www.jdoqocy.com/click-101883843-17258753"),
-        affPartner("Warsawsneakerstore.com", "https://www.tkqlhce.com/click-101883843-15699570")
       ],
     },
     {
@@ -657,14 +676,11 @@
         affPartner("Bambule.cz", "https://www.jdoqocy.com/click-101883843-12990634"),
         affPartner("Feedo.cz", "https://www.anrdoezrs.net/click-101883843-12984087"),
         affPartner("4KIDS.cz", "https://www.kqzyfj.com/click-101883843-14299748"),
-        affItem("", "deti-hracky-4"),
-        affItem("", "deti-hracky-5"),
-        affItem("", "deti-hracky-6"),
+        affPartner("Bruderland.cz", "https://www.dpbolvw.net/click-101883843-17073660"),
+        affPartner("Monkeymum.com", "https://www.kqzyfj.com/click-101883843-15361176"),
+        affPartner("Rajhraciek.sk", "https://www.kqzyfj.com/click-101883843-17015008"),
         affItem("", "deti-hracky-7"),
         affItem("", "deti-hracky-8"),
-        affPartner("Bruderland.cz", "https://www.dpbolvw.net/click-101883843-17073660"),
-        affPartner("hero", "https://www.anrdoezrs.net/click-101883843-17106963"),
-        affPartner("Rajhraciek.sk", "https://www.kqzyfj.com/click-101883843-17015008")
       ],
     },
     {
@@ -673,14 +689,14 @@
       icon: "iu-aff-jersey",
       description: "Odkazy na vybrané obchody se sportovním oblečením.",
       items: [
-        affPartner("Hs-sport.cz", "https://www.dpbolvw.net/click-101883843-14353861"),
+        affPartner("Sportisimo.cz", "https://www.tkqlhce.com/click-101883843-13592781"),
         affItem("", "decathlon"),
         affItem("", "bezvasport"),
         affItem("", "meatfly"),
         affPartner("Horsefeathers", "https://www.anrdoezrs.net/click-101883843-15064848"),
         affItem("", "husky"),
         affItem("", "jd-sports"),
-        affItem("", "top4sport")
+        affItem("", "top4sport"),
       ],
     },
     {
@@ -697,11 +713,6 @@
         affPartner("Urbane.cz", "https://www.kqzyfj.com/click-101883843-15359455"),
         affItem("", "chytapust"),
         affItem("", "parys"),
-        affPartner("Bezvasport.cz", "https://www.tkqlhce.com/click-101883843-13760331"),
-        affPartner("E-sportshop.cz", "https://www.anrdoezrs.net/click-101883843-15473642"),
-        affPartner("Huskycz.cz", "https://www.anrdoezrs.net/click-101883843-14024803"),
-        affPartner("Sportisimo.cz", "https://www.tkqlhce.com/click-101883843-13592781"),
-        affPartner("Velocity Outdoor", "https://www.kqzyfj.com/click-101883843-15747470")
       ],
     },
     {
@@ -718,18 +729,6 @@
         affItem("", "siko"),
         affItem("", "dumzahrada"),
         affItem("", "mountfield"),
-        affPartner("Argos.cz", "https://www.anrdoezrs.net/click-101883843-17366260"),
-        affPartner("DECODOMA.CZ", "https://www.jdoqocy.com/click-101883843-12863118"),
-        affPartner("Dedoma.sk", "https://www.jdoqocy.com/click-101883843-13219578"),
-        affPartner("Dopplershop.cz", "https://www.jdoqocy.com/click-101883843-15319222"),
-        affPartner("Dormeo.cz", "https://www.dpbolvw.net/click-101883843-15806382"),
-        affPartner("Dvere-Erkado.cz", "https://www.jdoqocy.com/click-101883843-13234841"),
-        affPartner("Gavri.cz", "https://www.anrdoezrs.net/click-101883843-14393799"),
-        affPartner("Hezkakoupelna.cz", "https://www.anrdoezrs.net/click-101883843-17240342"),
-        affPartner("KÄRCHER.CZ", "https://www.dpbolvw.net/click-101883843-12975597"),
-        affPartner("Vladeko.cz", "https://www.anrdoezrs.net/click-101883843-15273907"),
-        affPartner("Zahradajezek.cz", "https://www.anrdoezrs.net/click-101883843-14298731"),
-        affPartner("Zepter.cz", "https://www.kqzyfj.com/click-101883843-17074303")
       ],
     },
     {
@@ -746,20 +745,6 @@
         affPartner("Diablochairs", "https://www.dpbolvw.net/click-101883843-16955725"),
         affItem("", "dormeo"),
         affItem("", "beliani"),
-        affPartner("Butlers.cz", "https://www.jdoqocy.com/click-101883843-12070029"),
-        affPartner("Decoronline.cz", "https://www.kqzyfj.com/click-101883843-13628208"),
-        affPartner("Dx-racer.cz", "https://www.tkqlhce.com/click-101883843-14303779"),
-        affPartner("Jan Nowak EU", "https://www.tkqlhce.com/click-101883843-17269525"),
-        affPartner("Kancelarskestolicky.com", "https://www.jdoqocy.com/click-101883843-14303854"),
-        affPartner("Nabytekpaul.cz", "https://www.kqzyfj.com/click-101883843-14307225"),
-        affPartner("Scandishop.cz", "https://www.dpbolvw.net/click-101883843-15041103"),
-        affPartner("SIKO.CZ", "https://www.tkqlhce.com/click-101883843-12948215"),
-        affPartner("SoftCotton", "https://www.jdoqocy.com/click-101883843-13101742"),
-        affPartner("Veneti.cz", "https://www.anrdoezrs.net/click-101883843-17258140"),
-        affPartner("VidaXL", "https://www.anrdoezrs.net/click-101883843-17070510"),
-        affPartner("Vitapur-home.cz", "https://www.jdoqocy.com/click-101883843-17237812"),
-        affPartner("Vyprodejpovleceni.cz", "https://www.jdoqocy.com/click-101883843-15245795"),
-        affPartner("XXXLutz.cz", "https://www.tkqlhce.com/click-101883843-13966880")
       ],
     },
     {
@@ -776,10 +761,6 @@
         affItem("", "karcher"),
         affItem("", "mediashop"),
         affItem("", "lauben"),
-        affPartner("Gorenje.cz", "https://www.jdoqocy.com/click-101883843-15409134"),
-        affPartner("GrilyKrby.cz", "https://www.kqzyfj.com/click-101883843-12522011"),
-        affPartner("Homeandcook.cz", "https://www.kqzyfj.com/click-101883843-14371269"),
-        affPartner("KitchenShop", "https://www.tkqlhce.com/click-101883843-17094894")
       ],
     },
     {
@@ -796,9 +777,6 @@
         affItem("", "djishop"),
         affItem("", "gorenje"),
         affItem("", "truelife"),
-        affPartner("Eshop.ledvance.cz", "https://www.dpbolvw.net/click-101883843-15607577"),
-        affPartner("KVelektro.cz", "https://www.anrdoezrs.net/click-101883843-13812779"),
-        affPartner("TIPA.EU", "https://www.kqzyfj.com/click-101883843-12972203")
       ],
     },
     {
@@ -814,7 +792,7 @@
         affItem("", "rcobchod"),
         affItem("", "allegro"),
         affItem("", "temu"),
-        affItem("", "mobil-pohotovost")
+        affItem("", "mobil-pohotovost"),
       ],
     },
     {
@@ -830,7 +808,7 @@
         affItem("", "nordvpn"),
         affPartner("Surfshark", "https://www.kqzyfj.com/click-101883843-15438560"),
         affItem("", "cyberghost"),
-        affPartner("Paragon Software Group", "https://www.anrdoezrs.net/click-101883843-12643722")
+        affPartner("Paragon Software Group", "https://www.anrdoezrs.net/click-101883843-12643722"),
       ],
     },
     {
@@ -847,10 +825,6 @@
         affItem("", "bambule"),
         affPartner("DVD-premiery.cz", "https://www.anrdoezrs.net/click-101883843-13452100"),
         affItem("", "skyshowtime"),
-        affPartner("Gorila.sk", "https://www.jdoqocy.com/click-101883843-13785660"),
-        affPartner("Imago.cz", "https://www.anrdoezrs.net/click-101883843-15811153"),
-        affPartner("Kytary.cz", "https://www.tkqlhce.com/click-101883843-15156146"),
-        affPartner("Supraphonline.cz", "https://www.anrdoezrs.net/click-101883843-14093131")
       ],
     },
     {
@@ -867,11 +841,6 @@
         affItem("", "bam-cokolada"),
         affItem("", "country-life"),
         affItem("", "aktin"),
-        affPartner("BAMchocolate", "https://www.anrdoezrs.net/click-101883843-17072824"),
-        affPartner("Lidl.cz", "https://www.tkqlhce.com/click-101883843-17169067"),
-        affPartner("Yummybox.cz", "https://www.jdoqocy.com/click-101883843-17298730"),
-        affPartner("Zivina.cz", "https://www.jdoqocy.com/click-101883843-15852097"),
-        affPartner("Zlatezrnko.cz", "https://www.dpbolvw.net/click-101883843-13992103")
       ],
     },
     {
@@ -887,7 +856,7 @@
         affItem("", "dogbarkode"),
         affPartner("Reedog.cz", "https://www.tkqlhce.com/click-101883843-14394849"),
         affItem("", "demix"),
-        affItem("", "zoohit")
+        affItem("", "zoohit"),
       ],
     },
     {
@@ -903,7 +872,7 @@
         affPartner("Manboxeo.cz", "https://www.jdoqocy.com/click-101883843-17033008"),
         affItem("", "kvetiny-empty-6"),
         affItem("", "kvetiny-empty-7"),
-        affItem("", "kvetiny-empty-8")
+        affItem("", "kvetiny-empty-8"),
       ],
     },
     {
@@ -944,14 +913,14 @@
       icon: "iu-aff-hammer",
       description: "Odkazy na vybrané obchody s nářadím a vybavením dílny.",
       items: [
+        affPartner("Expondo GMBH", "https://www.tkqlhce.com/click-101883843-14015762"),
         affPartner("Mojedilna.cz", "https://www.jdoqocy.com/click-101883843-14310928"),
-        affItem("", "dilna-empty-2"),
         affItem("", "dilna-empty-3"),
         affItem("", "dilna-empty-4"),
         affItem("", "dilna-empty-5"),
         affItem("", "dilna-empty-6"),
         affItem("", "dilna-empty-7"),
-        affItem("", "dilna-empty-8")
+        affItem("", "dilna-empty-8"),
       ],
     },
     {
@@ -967,7 +936,7 @@
         affItem("", "inzerce-empty-5"),
         affItem("", "inzerce-empty-6"),
         affItem("", "inzerce-empty-7"),
-        affItem("", "inzerce-empty-8")
+        affItem("", "inzerce-empty-8"),
       ],
     },
     {
@@ -1010,12 +979,12 @@
       items: [
         affPartner("Obchod.activa.cz", "https://www.anrdoezrs.net/click-101883843-15037752"),
         affPartner("Eobaly.cz", "https://www.anrdoezrs.net/click-101883843-15756667"),
-        affPartner("Expondo GMBH", "https://www.tkqlhce.com/click-101883843-14015762"),
+        affItem("", "kancelarske-empty-3"),
         affItem("", "kancelarske-empty-4"),
         affItem("", "kancelarske-empty-5"),
         affItem("", "kancelarske-empty-6"),
         affItem("", "kancelarske-empty-7"),
-        affItem("", "kancelarske-empty-8")
+        affItem("", "kancelarske-empty-8"),
       ],
     },
   ];
