@@ -1,0 +1,204 @@
+name: CJ Affiliate staging worker code deploy (keep-vars, no migrations)
+
+# Safe staging-only code deploy for v2 lock support.
+# - No D1 migrations apply
+# - No secret rotation
+# - --keep-vars + explicit GO OFF
+# - No live CJ HTTP probe
+# - Read-only D1 lock SELECT only
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cj-affiliate-staging-worker-code-deploy-keep-vars
+  cancel-in-progress: false
+
+jobs:
+  deploy-staging-worker-keep-vars:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_CJ_STAGING_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: "577868e9aac9c289e9323100f68fad16"
+      WRANGLER_SEND_METRICS: "false"
+      WORKER_URL: "https://iu-cj-email-ingest-d1-staging.josef-zmrhal.workers.dev"
+      WORKER_NAME: "iu-cj-email-ingest-d1-staging"
+      D1_NAME: "iu-cj-email-ingest-staging"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Preflight (staging-only, no cron, token present)
+        shell: bash
+        working-directory: cloudflare/cj-email-ingest-d1-worker
+        run: |
+          set -euo pipefail
+          if [ -z "${CLOUDFLARE_API_TOKEN:-}" ]; then
+            echo "BLOCKER=CLOUDFLARE_CJ_STAGING_API_TOKEN_MISSING"
+            exit 1
+          fi
+          grep -q 'name = "iu-cj-email-ingest-d1-staging"' wrangler.toml
+          grep -q 'IU_CJ_STAGING_ONLY' wrangler.toml
+          grep -q 'CJ_STAGING_ARCHIVE_ONLY' wrangler.toml
+          if grep -q '^\[triggers\]' wrangler.toml 2>/dev/null; then
+            echo "BLOCKER=CRON_TRIGGERS_IN_WRANGLER"
+            exit 1
+          fi
+          if ! grep -q 'link_search_coupon_v2' src/staging-cj-api-probe-execute.mjs; then
+            echo "BLOCKER=V2_LOCK_CODE_MISSING"
+            exit 1
+          fi
+          echo "CJ_DEPLOY_PREFLIGHT=PASS"
+          echo "CJ_SECRET_ROTATION=SKIPPED"
+          echo "CJ_D1_MIGRATIONS_APPLY=SKIPPED"
+
+      - name: Pre-deploy public health (GO must be OFF)
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS "${WORKER_URL}/health" | python3 -c "
+          import json,sys
+          h=json.load(sys.stdin)
+          assert h.get('environment')=='staging'
+          assert h.get('stagingOnly') is True
+          assert h.get('cjArchiveOnly') is True
+          assert h.get('cjLiveApiRequestsAllowed') is False
+          assert h.get('publishable') is False
+          print('CJ_PREDEPLOY_HEALTH=PASS')
+          print('CJ_GO_FLAGS_DISABLED=PASS')
+          "
+
+      - name: Patch staging D1 id (local wrangler.toml only)
+        shell: bash
+        run: bash scripts/ci/patch-staging-cj-d1-wrangler-v1.sh iu-cj-email-ingest-staging
+
+      - name: Migrations list gate only (no apply)
+        shell: bash
+        working-directory: cloudflare/cj-email-ingest-d1-worker
+        run: |
+          set -euo pipefail
+          OUT="$(mktemp)"
+          set +e
+          npx --yes wrangler@4 d1 migrations list iu-cj-email-ingest-staging --env staging --remote > "$OUT" 2>&1
+          EC=$?
+          set -e
+          node ../../scripts/iu-cj-affiliate-staging-d1-migrations-list-gate-v1.mjs --exit-code "$EC" --file "$OUT"
+          echo "CJ_STAGING_D1_MIGRATIONS_GATE=PASS"
+          echo "CJ_D1_MIGRATIONS_APPLY=SKIPPED"
+
+      - name: Read-only D1 lock audit (before deploy)
+        shell: bash
+        working-directory: cloudflare/cj-email-ingest-d1-worker
+        run: |
+          set -euo pipefail
+          OUT="$(npx --yes wrangler@4 d1 execute iu-cj-email-ingest-staging --env staging --remote --json --command "SELECT lock_key, started_at, finished_at, http_status, record_count, connection_state, publishable FROM staging_cj_api_probe_lock WHERE lock_key IN ('link_search_coupon_v1','link_search_coupon_v2') ORDER BY lock_key;")"
+          echo "$OUT" | node -e "
+          let s='';process.stdin.on('data',c=>s+=c);process.stdin.on('end',()=>{
+            const j=JSON.parse(s);
+            const rows=(j[0]&&j[0].results)||[];
+            const by=Object.fromEntries(rows.map(r=>[r.lock_key,r]));
+            const v1=by['link_search_coupon_v1'];
+            const v2=by['link_search_coupon_v2'];
+            if(!v1){console.log('CJ_D1_V1_LOCK_BEFORE=MISSING'); process.exit(1);}
+            if(!v1.finished_at){console.log('CJ_D1_V1_LOCK_BEFORE=NOT_CONSUMED'); process.exit(1);}
+            console.log('CJ_D1_V1_LOCK_BEFORE=CONSUMED');
+            console.log('CJ_D1_V1_HTTP_STATUS='+(v1.http_status??'null'));
+            console.log('CJ_D1_V1_CONNECTION_STATE='+(v1.connection_state||'unknown'));
+            console.log('CJ_D1_V1_PUBLISHABLE='+(v1.publishable??'null'));
+            if(v2){console.log('CJ_D1_V2_LOCK_BEFORE=EXISTS_UNEXPECTED'); process.exit(1);}
+            console.log('CJ_D1_V2_LOCK_BEFORE=ABSENT');
+            console.log('CJ_D1_LOCK_AUDIT_BEFORE=PASS');
+          });
+          "
+
+      - name: Deploy staging worker (--keep-vars, GO OFF, no probe)
+        id: deploy
+        shell: bash
+        working-directory: cloudflare/cj-email-ingest-d1-worker
+        run: |
+          set -euo pipefail
+          OUT="$(npx --yes wrangler@4 deploy --env staging --keep-vars \
+            --var "IU_CJ_STAGING_CJ_API_PROBE_APPROVED:0" \
+            --var "IU_CJ_CJ_API_HTTP_EXECUTE:0" \
+            --var "IU_CJ_STAGING_CJ_API_PROBE_EXECUTE:0" \
+            --var "IU_CJ_STAGING_PROBE_LOCK_KEY:link_search_coupon_v1" 2>&1)"
+          echo "$OUT" | sed -E 's/(token|Token|Bearer|pat|PAT)[^[:space:]]+/[REDACTED]/g'
+          URL="$(echo "$OUT" | grep -Eo 'https://[a-zA-Z0-9.-]+\.workers\.dev' | head -n1 || true)"
+          VER="$(echo "$OUT" | grep -Eo 'Current Version ID:[[:space:]]*[a-f0-9-]+' | head -n1 | awk '{print $NF}' || true)"
+          if [ -z "$URL" ]; then
+            echo "BLOCKER=WORKER_URL_NOT_PARSED"
+            exit 1
+          fi
+          echo "worker_url=$URL" >> "$GITHUB_OUTPUT"
+          echo "version_id=${VER:-unknown}" >> "$GITHUB_OUTPUT"
+          echo "CJ_STAGING_DEPLOY=DONE"
+          echo "CJ_LIVE_HTTP_REQUESTS=0"
+
+      - name: Post-deploy health
+        shell: bash
+        run: |
+          set -euo pipefail
+          # brief route propagation
+          for _try in 1 2 3 4 5; do
+            if curl -fsS "${WORKER_URL}/health" > /tmp/health.json; then break; fi
+            sleep 2
+            echo "health_retry=${_try}"
+          done
+          python3 -c "
+          import json
+          h=json.load(open('/tmp/health.json'))
+          assert h.get('ok') is True
+          assert h.get('environment')=='staging'
+          assert h.get('stagingOnly') is True
+          assert h.get('cjArchiveOnly') is True
+          assert h.get('cjLiveApiRequestsAllowed') is False
+          assert h.get('publishable') is False
+          assert h.get('d1Binding')=='present'
+          assert h.get('r2Binding')=='present'
+          assert h.get('cjPatConfigured') is True
+          print('CJ_POSTDEPLOY_HEALTH=PASS')
+          print('CJ_GO_FLAGS_DISABLED=PASS')
+          print('CJ_PUBLISHING_DISABLED=PASS')
+          print('CJ_PAT_CONFIGURED=true')
+          "
+
+      - name: Read-only D1 lock audit (after deploy)
+        shell: bash
+        working-directory: cloudflare/cj-email-ingest-d1-worker
+        run: |
+          set -euo pipefail
+          OUT="$(npx --yes wrangler@4 d1 execute iu-cj-email-ingest-staging --env staging --remote --json --command "SELECT lock_key, started_at, finished_at, http_status, record_count, connection_state, publishable FROM staging_cj_api_probe_lock WHERE lock_key IN ('link_search_coupon_v1','link_search_coupon_v2') ORDER BY lock_key;")"
+          echo "$OUT" | node -e "
+          let s='';process.stdin.on('data',c=>s+=c);process.stdin.on('end',()=>{
+            const j=JSON.parse(s);
+            const rows=(j[0]&&j[0].results)||[];
+            const by=Object.fromEntries(rows.map(r=>[r.lock_key,r]));
+            const v1=by['link_search_coupon_v1'];
+            const v2=by['link_search_coupon_v2'];
+            if(!v1 || !v1.finished_at){console.log('CJ_D1_V1_LOCK_AFTER=CHANGED_OR_MISSING'); process.exit(1);}
+            console.log('CJ_D1_V1_LOCK_AFTER=CONSUMED_UNCHANGED_SHAPE');
+            console.log('CJ_D1_V1_HTTP_STATUS='+(v1.http_status??'null'));
+            console.log('CJ_D1_V1_CONNECTION_STATE='+(v1.connection_state||'unknown'));
+            if(v2){console.log('CJ_D1_V2_LOCK_AFTER=EXISTS_UNEXPECTED'); process.exit(1);}
+            console.log('CJ_D1_V2_LOCK_AFTER=ABSENT');
+            console.log('CJ_D1_LOCK_AUDIT_AFTER=PASS');
+            console.log('CJ_LIVE_HTTP_REQUESTS=0');
+          });
+          "
+
+      - name: Deployment list (read-only)
+        shell: bash
+        working-directory: cloudflare/cj-email-ingest-d1-worker
+        run: |
+          set -euo pipefail
+          npx --yes wrangler@4 deployments list --name "${WORKER_NAME}" --env staging 2>&1 | head -n 20 | sed -E 's/(token|Token|Bearer|pat|PAT)[^[:space:]]+/[REDACTED]/g' || true
+          echo "CJ_DEPLOY_VERSION_ID=${{ steps.deploy.outputs.version_id }}"
