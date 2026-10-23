@@ -20,11 +20,16 @@ assert.match(good.stdout, /PASS/);
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "iu-chmi-fallback-loop-"));
 const wfDir = path.join(tmp, ".github", "workflows");
 fs.mkdirSync(wfDir, { recursive: true });
-fs.writeFileSync(
-  path.join(wfDir, "chmi-cap-watchdog-cron-fallback.yml"),
-  `on:\n  workflow_run:\n    workflows: ["Update CHMI CAP v2"]\n`,
+const goodWf = fs.readFileSync(
+  path.join(here, "..", ".github/workflows/chmi-cap-watchdog-cron-fallback.yml"),
   "utf8",
 );
+const badWf =
+  goodWf.replace(
+    "on:",
+    'on:\n  workflow_run:\n    workflows: ["Update CHMI CAP v2"]\n    types: [completed]',
+  );
+fs.writeFileSync(path.join(wfDir, "chmi-cap-watchdog-cron-fallback.yml"), badWf, "utf8");
 const bad = runGuard(tmp);
 assert.notEqual(bad.status, 0);
 assert.match(bad.stdout + bad.stderr, /FAIL/);
