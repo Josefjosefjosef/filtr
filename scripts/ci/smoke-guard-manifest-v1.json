@@ -2512,6 +2512,7 @@
       "ifGha": "steps.scope.outputs.data_only != 'true' && steps.scope.outputs.info_panel_cnb_rates_only != 'true' && steps.scope.outputs.desktop_article_read_mark_only != 'true' && steps.scope.outputs.cj_affiliate_phase2_offline_only != 'true' && steps.scope.outputs.cj_staging_api_probe_only != 'true'",
       "run": "npm run iu-affiliate-natures-finest-zdravi-doplnky-guard",
       "timeoutMinutes": null,
+      "serialBucket": true,
       "env": {}
     },
     {
