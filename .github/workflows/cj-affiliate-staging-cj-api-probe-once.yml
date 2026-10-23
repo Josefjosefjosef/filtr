@@ -216,6 +216,24 @@ jobs:
             python3 -c "import json; print(json.load(open('/tmp/readiness_armed.json')))" || true
             exit 1
           fi
+          # Require 3 consecutive armed readiness samples (anti-flake across isolates).
+          stable=0
+          for _stab in 1 2 3; do
+            sleep 2
+            curl -fsS -H "Authorization: Bearer ${INGEST_TOKEN}" "${WORKER_URL}/v1/staging/cj-api/readiness" > /tmp/readiness_armed.json
+            if python3 -c "
+          import json,sys
+          r=json.load(open('/tmp/readiness_armed.json'))
+          sys.exit(0 if r.get('mayExecuteHttp') is True and r.get('identityOk') is True else 1)
+          "; then
+              stable=$((stable+1))
+              echo "CJ_ARM_READINESS_STABLE=${stable}"
+            else
+              echo "BLOCKER=ARM_READINESS_UNSTABLE"
+              python3 -c "import json; print(json.load(open('/tmp/readiness_armed.json')))" || true
+              exit 1
+            fi
+          done
           python3 -c "
           import json
           r=json.load(open('/tmp/readiness_armed.json'))
@@ -232,13 +250,51 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          CODE="$(curl -sS -H "Authorization: Bearer ${INGEST_TOKEN}" -X POST "${WORKER_URL}/v1/staging/cj-api/probe" -H 'Content-Type: application/json' -d '{}' -o /tmp/probe_result.json -w '%{http_code}')"
+          # Retry ONLY gate-propagation blocks (0 HTTP). Never retry after a real CJ HTTP attempt.
+          export GATE_REASONS='probe_not_approved|http_execute_not_armed|probe_execute_not_armed|staging_archive_default_deny'
+          CODE=""
+          for _try in 1 2 3 4 5 6; do
+            CODE="$(curl -sS -H "Authorization: Bearer ${INGEST_TOKEN}" -X POST "${WORKER_URL}/v1/staging/cj-api/probe" -H 'Content-Type: application/json' -d '{}' -o /tmp/probe_result.json -w '%{http_code}')"
+            set +e
+            python3 - <<'PY'
+          import json, sys, os, re
+          r = json.load(open("/tmp/probe_result.json"))
+          hrc = r.get("httpRequestCount")
+          if hrc not in (0, 1, None):
+              raise SystemExit("unexpected http request count")
+          if hrc == 1:
+              sys.exit(10)
+          if r.get("blocked") is True and hrc in (0, None):
+              reason = str(r.get("reason") or "")
+              if re.search(os.environ["GATE_REASONS"], reason):
+                  sys.exit(20)
+          sys.exit(0)
+          PY
+            ec=$?
+            set -e
+            if [ "${ec}" = "10" ]; then
+              echo "CJ_PROBE_HTTP_ATTEMPTED=1"
+              break
+            fi
+            if [ "${ec}" = "20" ]; then
+              echo "CJ_PROBE_GATE_RETRY=${_try}"
+              sleep 3
+              continue
+            fi
+            if [ "${ec}" != "0" ]; then
+              echo "BLOCKER=PROBE_CLASSIFY_FAILED ec=${ec}"
+              exit "${ec}"
+            fi
+            break
+          done
           echo "http_code=${CODE}" >> "$GITHUB_OUTPUT"
           python3 <<'PY'
           import json
           r=json.load(open("/tmp/probe_result.json"))
-          safe={k:r.get(k) for k in ("ok","phase","publishable","blocked","connectionState","httpStatus","couponRecordCount","responseParsing","authOk","failureReason","httpRequestCount","identityOk","probeLockKey") if k in r}
+          safe={k:r.get(k) for k in ("ok","phase","publishable","blocked","reason","connectionState","httpStatus","couponRecordCount","responseParsing","authOk","failureReason","httpRequestCount","identityOk","probeLockKey") if k in r}
           print("CJ_PROBE_SAFE_JSON="+json.dumps(safe,sort_keys=True))
+          if r.get("reason"):
+              print("CJ_PROBE_BLOCK_REASON="+str(r.get("reason")))
           hc=r.get("httpStatus")
           hrc=r.get("httpRequestCount")
           print(f"CJ_HTTP_REQUEST_COUNT={hrc if hrc is not None else 'unknown'}")
@@ -246,6 +302,8 @@ jobs:
               raise SystemExit("unexpected http request count")
           if hrc==0:
               print("CJ_PAT_AUTHENTICATION=NOT_TESTED")
+              if r.get("blocked") is True:
+                  print("CJ_PROBE_BLOCKED_NO_HTTP=1")
           elif hc==200 and r.get("authOk") is True:
               print("CJ_PAT_AUTHENTICATION=PASS")
           elif hc==401:
