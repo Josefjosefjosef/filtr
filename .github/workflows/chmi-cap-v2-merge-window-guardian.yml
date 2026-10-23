@@ -1,0 +1,94 @@
+# Merge-window safety net: re-enable CHMI automation after operator pause.
+# Does NOT disable CHMI, does NOT merge PRs, does NOT write data or dispatch Pages.
+# DO NOT disable this workflow during a merge window — only pause update-chmi-cap-v2 + cron fallback.
+name: CHMI CAP v2 merge window guardian
+
+on:
+  workflow_dispatch:
+    inputs:
+      wait_minutes:
+        description: "Wait before enable (1-15 min). Start guardian BEFORE pausing CHMI."
+        required: true
+        default: "10"
+        type: string
+      incident_ref:
+        description: "Optional label for logs (e.g. pr-12652)"
+        required: false
+        default: ""
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: chmi-cap-v2-merge-window-guardian
+  cancel-in-progress: false
+
+env:
+  IU_CHMI_GUARDIAN_MAX_ATTEMPTS: "4"
+  IU_CHMI_GUARDIAN_RETRY_DELAY_MS: "2500"
+
+jobs:
+  wait-window:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    outputs:
+      wait_minutes: ${{ steps.wait.outputs.wait_minutes }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
+      - name: Validate wait_minutes (1-15)
+        id: wait
+        run: |
+          set -euo pipefail
+          node scripts/iu-chmi-cap-v2-merge-window-guardian-v1.mjs --validate-wait "${{ github.event.inputs.wait_minutes }}"
+          WM=$(node --input-type=module -e "import { clampWaitMinutes } from './scripts/iu-chmi-cap-v2-merge-window-guardian-v1.mjs'; const m=clampWaitMinutes(process.argv[1]); if(m==null) process.exit(1); process.stdout.write(String(m));" "${{ github.event.inputs.wait_minutes }}")
+          echo "wait_minutes=$WM" >> "$GITHUB_OUTPUT"
+          echo "IU_CHMI_GUARDIAN_INCIDENT=${{ github.event.inputs.incident_ref }}"
+          echo "IU_CHMI_GUARDIAN_WAIT_START_UTC=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+      - name: Static guardian workflow guard
+        run: node scripts/iu-chmi-cap-v2-merge-window-guardian-v1.mjs --static-guard
+
+      - name: Wait merge window
+        run: |
+          set -euo pipefail
+          SEC=$(( ${{ steps.wait.outputs.wait_minutes }} * 60 ))
+          echo "IU_CHMI_GUARDIAN_SLEEP_SECONDS=$SEC"
+          sleep "$SEC"
+          echo "IU_CHMI_GUARDIAN_WAIT_END_UTC=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  restore-workflows:
+    needs: wait-window
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
+      - name: Enable CHMI target workflows (allowlist only)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          node scripts/iu-chmi-cap-v2-merge-window-guardian-v1.mjs --restore
+
+      - name: Restore outcome
+        if: always()
+        run: |
+          echo "IU_CHMI_GUARDIAN_RESTORE_JOB_CONCLUSION=${{ job.status }}"
+          echo "Targets: update-chmi-cap-v2.yml, chmi-cap-watchdog-cron-fallback.yml"
+          echo "If BLOCKED: manually gh workflow enable both files, then verify freshness watchdog."

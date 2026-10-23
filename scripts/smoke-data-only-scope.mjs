@@ -126,6 +126,7 @@ export function allowsDataOnlyFastPath(files) {
     isFastPoolPipelineScope(files) ||
     isIuAdsDeployUnblockScope(files) ||
     isChmiCapWatchdogDeployScope(files) ||
+    isChmiCapV2MergeWindowGuardianScope(files) ||
     isChmiCapV2ProdVerifyScope(files) ||
     isCjAffiliatePhase2OfflineOnlyScope(files) ||
     isCjStagingApiProbeOnlyScope(files) ||
@@ -170,6 +171,25 @@ export function isIuAdsDeployUnblockScope(files) {
 }
 
 /** CHMI CAP watchdog worker-only diff — no infoUzel.cz UI; worker unit tests in smoke. */
+/** CHMI merge-window guardian — workflow + offline restore selftests only (no UI). */
+export function isChmiCapV2MergeWindowGuardianScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  const allowed = (f) => {
+    const p = normalizeRepoPath(f);
+    if (!p) return false;
+    if (p === ".github/workflows/chmi-cap-v2-merge-window-guardian.yml") return true;
+    if (p === "scripts/iu-chmi-cap-v2-merge-window-guardian-v1.mjs") return true;
+    if (p === "scripts/iu-chmi-cap-v2-merge-window-guardian-v1-selftest.mjs") return true;
+    if (p === "scripts/smoke-data-only-scope.mjs") return true;
+    if (p === "scripts/smoke_data_only_scope_proof.mjs") return true;
+    if (p === ".github/workflows/smoke.yml") return true;
+    if (p === "package.json") return true;
+    return false;
+  };
+  return paths.every(allowed);
+}
+
 export function isChmiCapWatchdogDeployScope(files) {
   const paths = files.map((f) => f.trim()).filter(Boolean);
   if (!paths.length) return false;
@@ -827,6 +847,7 @@ function main() {
   const desktopArticleReadMarkOnly = isDesktopArticleReadMarkOnlyScope(files);
   const iuAdsDeployUnblockOnly = isIuAdsDeployUnblockScope(files);
   const chmiCapWatchdogDeployOnly = isChmiCapWatchdogDeployScope(files);
+  const chmiCapV2MergeWindowGuardianOnly = isChmiCapV2MergeWindowGuardianScope(files);
   const chmiCapV2ProdVerifyOnly = isChmiCapV2ProdVerifyScope(files);
   const cjAffiliatePhase2OfflineOnly = isCjAffiliatePhase2OfflineOnlyScope(files);
   const cjStagingApiProbeOnly = isCjStagingApiProbeOnlyScope(files);
@@ -840,6 +861,7 @@ function main() {
     pipelineOnly ||
     iuAdsDeployUnblockOnly ||
     chmiCapWatchdogDeployOnly ||
+    chmiCapV2MergeWindowGuardianOnly ||
     chmiCapV2ProdVerifyOnly ||
     cjAffiliatePhase2OfflineOnly ||
     cjStagingApiProbeOnly ||
@@ -882,6 +904,7 @@ function main() {
   writeOutput("desktop_article_read_mark_only", desktopArticleReadMarkOnly ? "true" : "false");
   writeOutput("iu_ads_deploy_unblock_only", iuAdsDeployUnblockOnly ? "true" : "false");
   writeOutput("chmi_cap_watchdog_deploy_only", chmiCapWatchdogDeployOnly ? "true" : "false");
+  writeOutput("chmi_cap_v2_merge_window_guardian_only", chmiCapV2MergeWindowGuardianOnly ? "true" : "false");
   writeOutput("chmi_cap_v2_prod_verify_only", chmiCapV2ProdVerifyOnly ? "true" : "false");
   writeOutput("cj_affiliate_phase2_offline_only", cjAffiliatePhase2OfflineOnly ? "true" : "false");
   writeOutput("cj_staging_api_probe_only", cjStagingApiProbeOnly ? "true" : "false");
