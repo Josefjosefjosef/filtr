@@ -46,6 +46,11 @@ expect("deploy_wf_resolves_d1", /Resolve staging D1 database_id/.test(wf));
 expect("deploy_wf_no_secret_put", !/secret put (IU_CJ|CJ_API)/i.test(wf));
 expect("deploy_wf_uses_d1_list", /d1 list --json/.test(wf));
 expect("deploy_wf_no_d1_create", !/d1 create/i.test(wf));
+expect("deploy_wf_migration_gate", wf.includes("iu-cj-affiliate-staging-d1-migrations-list-gate-v1.mjs"));
+expect(
+  "deploy_wf_no_list_or_true",
+  !wf.split("\n").some((line) => /migrations list/.test(line) && /\|\| true/.test(line))
+);
 
 const probeWf = fs.readFileSync(
   path.join(REPO, ".github", "workflows", "cj-affiliate-staging-cj-api-probe-once.yml"),

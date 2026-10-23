@@ -282,6 +282,10 @@ export function isCjStagingWranglerIdentityVarsScope(files) {
     if (p === "scripts/iu-cj-affiliate-phase2-staging-cj-api-probe-v1-selftest.mjs") return true;
     if (p === "scripts/iu-cj-affiliate-phase2-cj-api-security-v1-selftest.mjs") return true;
     if (p === ".github/workflows/cj-affiliate-staging-worker-deploy.yml") return true;
+    if (p === "scripts/iu-cj-affiliate-staging-d1-migrations-list-gate-v1.mjs") return true;
+    if (p === "scripts/iu-cj-affiliate-staging-d1-migrations-list-gate-v1-selftest.mjs") return true;
+    if (p === "scripts/iu-cj-affiliate-staging-d1-resolve-v1.mjs") return true;
+    if (p === "scripts/iu-cj-affiliate-staging-d1-resolve-v1-selftest.mjs") return true;
     if (p === "scripts/smoke-data-only-scope.mjs") return true;
     if (p === "scripts/smoke_data_only_scope_proof.mjs") return true;
     if (p === ".github/workflows/smoke.yml") return true;
@@ -358,6 +362,8 @@ export function isWorkflowOnlyScope(files) {
     f === "scripts/iu-cj-affiliate-staging-d1-resolve-v1.mjs" ||
     f === "scripts/iu-cj-affiliate-staging-d1-resolve-v1-selftest.mjs" ||
     f === ".github/workflows/cj-affiliate-staging-worker-deploy.yml" ||
+    f === "scripts/iu-cj-affiliate-staging-d1-migrations-list-gate-v1.mjs" ||
+    f === "scripts/iu-cj-affiliate-staging-d1-migrations-list-gate-v1-selftest.mjs" ||
     // Ads post-migration verify / Admin E2E tooling (no app UI surface)
     f === "scripts/iu-ads-post-migration-prod-verify.mjs" ||
     f.startsWith("cloudflare/iu-ads/scripts/");
