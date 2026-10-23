@@ -22,11 +22,13 @@ expect("input_live_default_off", /execute_live_cj_probe[\s\S]*default:\s*["']0["
 expect("input_probe_lock_key", /probe_lock_key:/.test(wf));
 expect("input_probe_lock_default_v1", /probe_lock_key:[\s\S]*default:\s*["']link_search_coupon_v1["']/.test(wf));
 expect("input_probe_lock_allowlist_v2", wf.includes("link_search_coupon_v2"));
-expect("arm_sets_lock_key_var", wf.includes("IU_CJ_STAGING_PROBE_LOCK_KEY:${PROBE_LOCK_KEY}"));
-expect("disarm_resets_lock_key_v1", wf.includes("IU_CJ_STAGING_PROBE_LOCK_KEY:link_search_coupon_v1"));
-expect("arm_readiness_retry", wf.includes("CJ_ARM_READINESS_RETRY=") && wf.includes("BLOCKER=ARM_READINESS_NOT_PROPAGATED"));
-expect("arm_readiness_stable", wf.includes("CJ_ARM_READINESS_STABLE=") && wf.includes("BLOCKER=ARM_READINESS_UNSTABLE"));
-expect("probe_gate_retry_only", wf.includes("CJ_PROBE_GATE_RETRY=") && wf.includes("CJ_PROBE_HTTP_ATTEMPTED=1"));
+expect("arm_uses_go_flags_patch", wf.includes("iu-cj-affiliate-staging-go-flags-patch-v1.mjs"));
+expect("arm_sets_lock_key_via_patch", wf.includes('--mode arm --lock-key "${PROBE_LOCK_KEY}"'));
+expect("disarm_uses_go_flags_patch", /go-flags-patch-v1\.mjs --mode disarm/.test(wf));
+expect("arm_toml_deploy_no_keep_vars", /wrangler@4 deploy --config cloudflare\/cj-email-ingest-d1-worker\/wrangler\.toml --env staging/.test(wf));
+expect("arm_no_keep_vars_go_cli", !/deploy[^\n]*--keep-vars[^\n]*IU_CJ_STAGING_CJ_API_PROBE_APPROVED:1/.test(wf));
+expect("arm_deploy_live_wait", wf.includes("CJ_ARM_DEPLOY_LIVE_WAIT=") && wf.includes("BLOCKER=ARM_TOML_DEPLOY_NOT_LIVE"));
+expect("probe_single_post_no_gate_retry", wf.includes("Exactly one probe POST") && !wf.includes("CJ_PROBE_GATE_RETRY="));
 expect("probe_logs_block_reason", wf.includes("CJ_PROBE_BLOCK_REASON="));
 expect("disarm_health_retry", wf.includes("CJ_DISARM_HEALTH_RETRY=") && wf.includes("CJ_DISARM_FAILSAFE=BLOCKED"));
 expect("disarm_separate_job", /disarm-failsafe:/.test(wf));
@@ -41,7 +43,7 @@ expect("no_cj_pat_secret_put", !/secret put (IU_CJ|CJ_API)/i.test(wf));
 expect("ingest_github_secret_name", /IU_CJ_STAGING_D1_WORKER_INGEST_TOKEN/.test(wf));
 expect("cf_identity_audit_script", wf.includes("iu-cj-affiliate-staging-worker-identity-cf-audit-v1.mjs"));
 expect("no_inline_plain_text_filter", !wf.includes("filter(x=>x.type==='plain_text')"));
-expect("concurrency_group", /cj-affiliate-staging-cj-api-probe-once/.test(wf));
+expect("concurrency_group", /group:\s*cj-affiliate-staging-worker-mutate/.test(wf));
 expect("live_probe_gated", /execute_live_cj_probe == '1'/.test(wf));
 expect(
   "offline_probe_post_no_curl_fail_on_403",

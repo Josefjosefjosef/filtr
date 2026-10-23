@@ -507,8 +507,8 @@ expect("default_resolve_v1", resolveStagingCjProbeLockKey({}).lockKey === STAGIN
   expect("workflow_probe_lock_key_input", /probe_lock_key:/.test(wf));
   expect("workflow_default_v1", /probe_lock_key:[\s\S]*default:\s*"link_search_coupon_v1"/.test(wf));
   expect("workflow_no_auto_v2", /execute_live_cj_probe[\s\S]*default:\s*"0"/.test(wf));
-  expect("workflow_arm_sets_lock_var", wf.includes("IU_CJ_STAGING_PROBE_LOCK_KEY:${PROBE_LOCK_KEY}"));
-  expect("workflow_disarm_resets_v1", wf.includes("IU_CJ_STAGING_PROBE_LOCK_KEY:link_search_coupon_v1"));
+  expect("workflow_arm_sets_lock_via_patch", wf.includes('--mode arm --lock-key "${PROBE_LOCK_KEY}"'));
+  expect("workflow_disarm_resets_v1", /go-flags-patch-v1\.mjs --mode disarm/.test(wf));
 }
 
 const failedScenarios = Object.entries(scenario)

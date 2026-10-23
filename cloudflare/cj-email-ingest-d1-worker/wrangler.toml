@@ -19,11 +19,23 @@ migrations_dir = "migrations"
 [env.staging]
 name = "iu-cj-email-ingest-d1-staging"
 account_id = "577868e9aac9c289e9323100f68fad16"
-vars = { ENVIRONMENT = "staging", IU_CJ_STAGING_ONLY = "1", CJ_STAGING_ARCHIVE_ONLY = "1", IU_CJ_PUBLISHER_CID = "7667828", IU_CJ_WEBSITE_PID = "101883843" }
+
+# Single source of truth for staging plain-text vars (including GO flags).
+# Arm/disarm patches this table then deploys WITHOUT --keep-vars.
+# Secrets (PAT/ingest) are never listed here and are preserved by wrangler.
+[env.staging.vars]
+ENVIRONMENT = "staging"
+IU_CJ_STAGING_ONLY = "1"
+CJ_STAGING_ARCHIVE_ONLY = "1"
+IU_CJ_PUBLISHER_CID = "7667828"
+IU_CJ_WEBSITE_PID = "101883843"
+IU_CJ_STAGING_CJ_API_PROBE_APPROVED = "0"
+IU_CJ_CJ_API_HTTP_EXECUTE = "0"
+IU_CJ_STAGING_CJ_API_PROBE_EXECUTE = "0"
+IU_CJ_CJ_API_MAX_REQUESTS_PER_PROBE = "1"
+IU_CJ_STAGING_PROBE_LOCK_KEY = "link_search_coupon_v1"
 
 # Secrets (Dashboard or wrangler secret put --env staging): IU_CJ_D1_WORKER_INGEST_TOKEN, CJ_API_PAT
-# Plain-text identity (non-secret): IU_CJ_PUBLISHER_CID, IU_CJ_WEBSITE_PID — deployed via vars above
-# Probe GO flags (default unset/false): IU_CJ_STAGING_CJ_API_PROBE_APPROVED, IU_CJ_CJ_API_HTTP_EXECUTE, IU_CJ_STAGING_CJ_API_PROBE_EXECUTE
 
 [[env.staging.d1_databases]]
 binding = "DB"

@@ -7,7 +7,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: cj-affiliate-staging-worker-deploy
+  group: cj-affiliate-staging-worker-mutate
   cancel-in-progress: false
 
 jobs:
@@ -86,7 +86,14 @@ jobs:
           set -euo pipefail
           npx --yes wrangler@4 d1 migrations apply iu-cj-email-ingest-staging --env staging --remote
 
-      - name: Deploy staging worker (no CJ API probe call)
+      - name: Ensure GO flags disarmed in toml (single source of truth)
+        shell: bash
+        working-directory: ${{ github.workspace }}
+        run: |
+          set -euo pipefail
+          node scripts/iu-cj-affiliate-staging-go-flags-patch-v1.mjs --mode disarm
+
+      - name: Deploy staging worker (toml vars, GO OFF, no CJ API probe call)
         id: deploy
         shell: bash
         run: |
@@ -99,6 +106,7 @@ jobs:
             exit 1
           fi
           echo "worker_url=$URL" >> "$GITHUB_OUTPUT"
+          echo "CJ_GO_FLAGS_SOURCE=toml_env_staging_vars"
 
       - name: Post-deploy health (no CJ probe)
         shell: bash
