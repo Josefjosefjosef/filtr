@@ -143,6 +143,7 @@ jobs:
           node scripts/iu-cj-affiliate-phase2-connector-readiness-v1-selftest.mjs
           node scripts/iu-cj-affiliate-phase2-smoke-scope-v1-selftest.mjs
           node scripts/iu-cj-affiliate-staging-d1-resolve-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-staging-d1-migrations-list-gate-v1-selftest.mjs
           echo "CJ_STAGING_API_PROBE_SCOPE_SMOKE=PASS"
       - name: CJ staging probe workflow arm/disarm smoke (offline)
         if: steps.scope.outputs.cj_staging_probe_workflow_fix_only == 'true'
@@ -151,6 +152,7 @@ jobs:
           node scripts/iu-cj-affiliate-staging-cj-api-probe-workflow-v1-selftest.mjs
           node scripts/iu-cj-affiliate-staging-ingest-token-sync-v1-selftest.mjs
           node scripts/iu-cj-affiliate-staging-d1-resolve-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-staging-d1-migrations-list-gate-v1-selftest.mjs
           node scripts/iu-cj-affiliate-cj-link-search-query-v1-selftest.mjs
           node scripts/iu-cj-affiliate-phase2-staging-cj-api-probe-v1-selftest.mjs
           node scripts/iu-cj-affiliate-phase2-staging-isolation-v1-selftest.mjs
@@ -162,6 +164,7 @@ jobs:
         run: |
           set -euo pipefail
           node scripts/iu-cj-affiliate-staging-d1-resolve-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-staging-d1-migrations-list-gate-v1-selftest.mjs
           node scripts/iu-cj-affiliate-staging-worker-cf-settings-v1-selftest.mjs
           node scripts/iu-cj-affiliate-staging-cj-api-probe-workflow-v1-selftest.mjs
           echo "CJ_STAGING_D1_CID_PID_FIX_SMOKE=PASS"
