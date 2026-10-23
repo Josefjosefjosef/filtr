@@ -294,6 +294,10 @@ export function isCjStagingProbeWorkflowFixScope(files) {
     if (p === "scripts/iu-cj-affiliate-staging-cj-api-probe-workflow-v1-selftest.mjs") return true;
     if (p === CJ_STAGING_API_PROBE_EXECUTE) return true;
     if (p === "scripts/iu-cj-affiliate-phase2-staging-cj-api-probe-v1-selftest.mjs") return true;
+    if (p === "scripts/iu-cj-affiliate-phase2-staging-cj-api-probe-lock-v2-selftest.mjs") return true;
+    if (p === "scripts/iu-cj-affiliate-phase2-staging-isolation-v1-selftest.mjs") return true;
+    if (p === "scripts/iu-cj-affiliate-phase2-cj-api-security-v1-selftest.mjs") return true;
+    if (p === "scripts/iu-cj-affiliate-phase2-connector-readiness-v1-selftest.mjs") return true;
     if (p === "scripts/iu-cj-affiliate-cj-link-search-query-v1.mjs") return true;
     if (p === "scripts/iu-cj-affiliate-cj-link-search-query-v1-selftest.mjs") return true;
     if (p === "scripts/iu-cj-affiliate-phase2-cj-api-adapter.mjs") return true;
