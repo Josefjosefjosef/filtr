@@ -39,13 +39,18 @@ jobs:
           set -euo pipefail
           node scripts/iu-cj-affiliate-phase2-offline-full-stack-v1-selftest.mjs
 
+      - name: Archive publication negative (vitest deps)
+        shell: bash
+        working-directory: cloudflare/iu-ads
+        run: |
+          set -euo pipefail
+          npm ci
+
       - name: Archive publication negative (vitest)
         shell: bash
         run: |
           set -euo pipefail
-          npm ci
           node scripts/iu-cj-affiliate-phase2-affiliate-archive-publication-negative-selftest.mjs
-        working-directory: cloudflare/iu-ads
 
       - name: Run unattended import runner (offline — no live CJ/FORPSI)
         shell: bash
