@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "description": "Explicit infoUzel.cz publication-approval registry. CJ joined merchants are NOT auto-approved. Phase A planner only — never mutate public catalog.",
+  "publishableByDefault": false,
+  "partners": [
+    {
+      "partnerId": "iu-ah-5124968",
+      "advertiserId": "5124968",
+      "displayName": "Autohotarek.cz",
+      "partnerSlug": "autohotarek",
+      "primarySectionId": "aff-auto-moto",
+      "officialDomains": ["autohotarek.cz"],
+      "aliases": ["Autohotarek"],
+      "cjLinkId": "15802025",
+      "affiliateUrl": "https://www.dpbolvw.net/click-101883843-15802025",
+      "affiliateUrlSource": "assets/iu-affiliate-catalog.js",
+      "approvalState": "approved_live",
+      "notes": "Already has public button — planner must not duplicate."
+    },
+    {
+      "partnerId": "iu-synth-xlmoto-900001",
+      "advertiserId": "900001001",
+      "displayName": "XL-Moto Fixture",
+      "partnerSlug": "xl-moto-fixture",
+      "primarySectionId": "aff-auto-moto",
+      "officialDomains": ["xl-moto-fixture.test"],
+      "aliases": [],
+      "cjLinkId": "90000011",
+      "affiliateUrl": "https://www.anrdoezrs.net/click-101883843-90000011",
+      "affiliateUrlSource": "synthetic_approved_fixture",
+      "approvalState": "approved_pending_button",
+      "notes": "Synthetic approved partner without button; aff-auto-moto has no empty-* free slots → expect no_free_slot."
+    },
+    {
+      "partnerId": "iu-synth-pneuleader-900002",
+      "advertiserId": "900001002",
+      "displayName": "PneuLeader Fixture",
+      "partnerSlug": "pneuleader-fixture",
+      "primarySectionId": "aff-pneu-pneuservis",
+      "officialDomains": ["pneuleader-fixture.test"],
+      "aliases": [],
+      "cjLinkId": "90000012",
+      "affiliateUrl": "https://www.kqzyfj.com/click-101883843-90000012",
+      "affiliateUrlSource": "synthetic_approved_fixture",
+      "approvalState": "approved_pending_button",
+      "notes": "Synthetic — targets section with free empty-* slots."
+    },
+    {
+      "partnerId": "iu-unapproved-cj-only",
+      "advertiserId": "6112132",
+      "displayName": "Gorenje.cz CJ-only",
+      "partnerSlug": null,
+      "primarySectionId": null,
+      "officialDomains": ["cz.gorenje.com"],
+      "aliases": ["Gorenje"],
+      "cjLinkId": null,
+      "affiliateUrl": null,
+      "affiliateUrlSource": null,
+      "approvalState": "cj_joined_not_publication_approved",
+      "notes": "CJ-joined example — must remain unmapped for public buttons."
+    },
+    {
+      "partnerId": "iu-ambiguous-dual-domain",
+      "advertiserId": "900001003",
+      "displayName": "Dual Domain Fixture",
+      "partnerSlug": "dual-domain",
+      "primarySectionId": null,
+      "officialDomains": ["shop-a-fixture.test", "shop-b-fixture.test"],
+      "aliases": ["Shop A", "Shop B"],
+      "cjLinkId": "90000013",
+      "affiliateUrl": "https://www.jdoqocy.com/click-101883843-90000013",
+      "affiliateUrlSource": "synthetic_approved_fixture",
+      "approvalState": "manual_review",
+      "notes": "Two domains / ambiguous section — Phase A must not auto-slot."
+    }
+  ]
+}

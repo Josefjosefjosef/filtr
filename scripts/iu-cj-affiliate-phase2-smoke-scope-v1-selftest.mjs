@@ -8,16 +8,19 @@ import { fileURLToPath } from "url";
 import {
   CJ_AFFILIATE_PHASE2_OFFLINE_FIXTURE_SELFTEST,
   CJ_OFFLINE_CATALOG_NORMALIZE_SELFTEST,
+  CJ_PARTNER_SLOT_PLANNER_SELFTEST,
   CJ_STAGING_API_PROBE_EXECUTE,
   allowsDataOnlyFastPath,
   isCjAffiliatePhase2OfflineOnlyScope,
   isCjOfflineCatalogNormalizeScope,
+  isCjPartnerSlotPlannerPhaseAScope,
   isCjStagingApiProbeOnlyScope,
 } from "./smoke-data-only-scope.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const FIXTURE = CJ_AFFILIATE_PHASE2_OFFLINE_FIXTURE_SELFTEST;
 const CATALOG = CJ_OFFLINE_CATALOG_NORMALIZE_SELFTEST;
+const SLOT = CJ_PARTNER_SLOT_PLANNER_SELFTEST;
 const PROBE = CJ_STAGING_API_PROBE_EXECUTE;
 const failures = [];
 function expect(name, cond) {
@@ -84,6 +87,22 @@ expect(
   isCjOfflineCatalogNormalizeScope([CATALOG, "assets/app.js"]) === false
 );
 
+expect(
+  "slot_planner_scoped",
+  isCjPartnerSlotPlannerPhaseAScope([
+    SLOT,
+    "scripts/iu-cj-affiliate-phase2-partner-slot-planner-v1.mjs",
+    "scripts/iu-cj-affiliate-phase2-partner-slot-inventory-v1.mjs",
+    "scripts/fixtures/cj-phase2-approved-partners-v1.json",
+    "scripts/smoke-data-only-scope.mjs",
+    ".github/workflows/smoke.yml",
+  ]) === true
+);
+expect(
+  "slot_planner_plus_catalog_js_full_smoke",
+  isCjPartnerSlotPlannerPhaseAScope([SLOT, "assets/iu-affiliate-catalog.js"]) === false
+);
+
 expect("probe_execute_only_scoped", isCjStagingApiProbeOnlyScope([PROBE]) === true);
 expect("probe_execute_only_fast_path", allowsDataOnlyFastPath([PROBE]) === true);
 expect(
@@ -111,6 +130,11 @@ expect(
   "smoke_yml_cj_catalog_normalize_step",
   /CJ offline catalog normalize smoke/.test(smokeYml) &&
     /cj_offline_catalog_normalize_only == 'true'/.test(smokeYml)
+);
+expect(
+  "smoke_yml_cj_slot_planner_step",
+  /CJ partner slot planner Phase A smoke/.test(smokeYml) &&
+    /cj_partner_slot_planner_phase_a_only == 'true'/.test(smokeYml)
 );
 expect(
   "smoke_yml_cj_step_fail_closed",
