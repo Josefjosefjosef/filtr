@@ -18,7 +18,7 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-brasty-kosmetika-v1-20260925";
-const CATALOG_BUST = "affiliate-phase2c-dynamic-v1-20261023";
+const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-kosmetika";
 const SECTION_TITLE = "Kosmetika a parfémy";
@@ -174,7 +174,7 @@ async function openAff(page, baseUrl) {
     }
   });
   await page.waitForFunction(
-    () => document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip").length === 8,
+    () => document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip").length >= 1,
     null,
     { timeout: 90000 }
   );

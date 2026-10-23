@@ -17,7 +17,7 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-letenky-letecka-doprava-v1-20260921";
-const CATALOG_BUST = "affiliate-phase2c-dynamic-v1-20261023";
+const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-letenky-letecka-doprava";
 const SECTION_TITLE = "Letenky a letecká doprava";
@@ -80,9 +80,13 @@ function auditStatic() {
     (block.match(/affPartner\(/g) || []).length >= 1
   );
   ok("catalog:no_named_affItem", !/affItem\(\s*"[^"]+"/.test(block));
-  // Remaining free slots keep empty slug pattern; filled slots may be affPartner (Phase 2B).
+  // Phase 2E: no fixed 8-slot ceiling; no public empty placeholders.
   const emptySlugHits = (block.match(/affItem\("", "letenky-letecka-empty-\d+"\)/g) || []).length;
-  ok("catalog:empty_slugs_remain_or_filled", emptySlugHits + (block.match(/affPartner\(/g) || []).length === 8);
+  ok(
+    "catalog:empty_slugs_remain_or_filled",
+    emptySlugHits === 0 && (block.match(/affPartner\(/g) || []).length >= 1,
+    "empty=" + emptySlugHits + " partners=" + (block.match(/affPartner\(/g) || []).length
+  );
 
   ok("catalog:booking_preserved", /affPartner\(\s*"Booking\.com"[\s\S]*?13323565/.test(catalog));
   ok("catalog:leo_preserved", /affPartner\(\s*"Leo Express"[\s\S]*?15736211/.test(catalog));

@@ -164,7 +164,7 @@ async function openAff(page, baseUrl) {
     }
   });
   await page.waitForFunction(
-    () => document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip").length === 8,
+    () => document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip").length >= 1,
     null,
     { timeout: 90000 }
   );

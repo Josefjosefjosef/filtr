@@ -1,16 +1,17 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-23T18:30:31.949Z",
+  "generatedAt": "2026-10-23T19:13:53.234Z",
   "rules": {
     "MANUAL_PROTECTED": "Immutable title/url/section; sync must not hide or move",
     "PAID_RESERVED": "Commercial reserved; sync must not overwrite",
-    "CJ_MANAGED": "May be auto-published/hidden by Phase 2C sync after publish gate"
+    "CJ_MANAGED": "May be auto-published/hidden by sync after publish gate"
   },
   "exceptions": {
     "klikDualKeepBoth": true,
     "royalfashionElenysNoDuplicate": true,
     "lidlNeedsReview": "5954793"
   },
+  "presenceRule": "exact_url_OR_exact_advertiserId_only",
   "partners": [
     {
       "sectionId": "aff-cestovni-kancelare",
@@ -193,6 +194,15 @@
       "management": "CJ_MANAGED"
     },
     {
+      "sectionId": "aff-pojisteni",
+      "sectionTitle": "Pojištění",
+      "slotIndex": 3,
+      "title": "Direct.cz",
+      "url": "https://www.kqzyfj.com/click-101883843-14550106",
+      "advertiserId": "5812291",
+      "management": "CJ_MANAGED"
+    },
+    {
       "sectionId": "aff-lekarny",
       "sectionTitle": "Lékárny",
       "slotIndex": 0,
@@ -217,6 +227,15 @@
       "title": "GSKlub.cz",
       "url": "https://www.dpbolvw.net/click-101883843-13452077",
       "advertiserId": "5146426",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-lekarny",
+      "sectionTitle": "Lékárny",
+      "slotIndex": 3,
+      "title": "DRMAX.CZ",
+      "url": "https://www.jdoqocy.com/click-101883843-12838531",
+      "advertiserId": "4883722",
       "management": "CJ_MANAGED"
     },
     {
@@ -292,6 +311,33 @@
       "management": "CJ_MANAGED"
     },
     {
+      "sectionId": "aff-zdravi-doplnky",
+      "sectionTitle": "Zdraví a doplňky",
+      "slotIndex": 8,
+      "title": "Amix-store.cz",
+      "url": "https://www.kqzyfj.com/click-101883843-14545972",
+      "advertiserId": "5706839",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-zdravi-doplnky",
+      "sectionTitle": "Zdraví a doplňky",
+      "slotIndex": 9,
+      "title": "Rehabilitacnipomucky.cz",
+      "url": "https://www.tkqlhce.com/click-101883843-15421726",
+      "advertiserId": "6294181",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-zdravi-doplnky",
+      "sectionTitle": "Zdraví a doplňky",
+      "slotIndex": 10,
+      "title": "Sensilab",
+      "url": "https://www.kqzyfj.com/click-101883843-15056966",
+      "advertiserId": "5408233",
+      "management": "CJ_MANAGED"
+    },
+    {
       "sectionId": "aff-kosmetika",
       "sectionTitle": "Kosmetika a parfémy",
       "slotIndex": 0,
@@ -337,6 +383,69 @@
       "management": "MANUAL_PROTECTED"
     },
     {
+      "sectionId": "aff-kosmetika",
+      "sectionTitle": "Kosmetika a parfémy",
+      "slotIndex": 5,
+      "title": "Byrokko",
+      "url": "https://www.dpbolvw.net/click-101883843-15885523",
+      "advertiserId": "7133039",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-kosmetika",
+      "sectionTitle": "Kosmetika a parfémy",
+      "slotIndex": 6,
+      "title": "Obchod.dermalogica.cz",
+      "url": "https://www.jdoqocy.com/click-101883843-13971612",
+      "advertiserId": "5381657",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-kosmetika",
+      "sectionTitle": "Kosmetika a parfémy",
+      "slotIndex": 7,
+      "title": "FANN.CZ",
+      "url": "https://www.jdoqocy.com/click-101883843-12918759",
+      "advertiserId": "4904877",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-kosmetika",
+      "sectionTitle": "Kosmetika a parfémy",
+      "slotIndex": 8,
+      "title": "Nefertitis.cz",
+      "url": "https://www.kqzyfj.com/click-101883843-15064659",
+      "advertiserId": "5894154",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-kosmetika",
+      "sectionTitle": "Kosmetika a parfémy",
+      "slotIndex": 9,
+      "title": "Obchod.salononline.cz",
+      "url": "https://www.anrdoezrs.net/click-101883843-14099303",
+      "advertiserId": "5482931",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-kosmetika",
+      "sectionTitle": "Kosmetika a parfémy",
+      "slotIndex": 10,
+      "title": "SvetKadernictvi.cz",
+      "url": "https://www.anrdoezrs.net/click-101883843-14386407",
+      "advertiserId": "5611262",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-kosmetika",
+      "sectionTitle": "Kosmetika a parfémy",
+      "slotIndex": 11,
+      "title": "Tierraverde.cz",
+      "url": "https://www.anrdoezrs.net/click-101883843-17274085",
+      "advertiserId": "7612998",
+      "management": "CJ_MANAGED"
+    },
+    {
       "sectionId": "aff-drogerie",
       "sectionTitle": "Drogerie",
       "slotIndex": 0,
@@ -353,6 +462,15 @@
       "url": "https://www.dpbolvw.net/click-101883843-17204802",
       "advertiserId": null,
       "management": "MANUAL_PROTECTED"
+    },
+    {
+      "sectionId": "aff-drogerie",
+      "sectionTitle": "Drogerie",
+      "slotIndex": 2,
+      "title": "Puellavune.cz",
+      "url": "https://www.dpbolvw.net/click-101883843-17203359",
+      "advertiserId": "7643241",
+      "management": "CJ_MANAGED"
     },
     {
       "sectionId": "aff-moda",
@@ -418,6 +536,87 @@
       "management": "CJ_MANAGED"
     },
     {
+      "sectionId": "aff-moda",
+      "sectionTitle": "Móda a doplňky",
+      "slotIndex": 7,
+      "title": "Answear.cz",
+      "url": "https://www.jdoqocy.com/click-101883843-11845756",
+      "advertiserId": "4327375",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-moda",
+      "sectionTitle": "Móda a doplňky",
+      "slotIndex": 8,
+      "title": "Factcool",
+      "url": "https://www.jdoqocy.com/click-101883843-14017743",
+      "advertiserId": "5402439",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-moda",
+      "sectionTitle": "Móda a doplňky",
+      "slotIndex": 9,
+      "title": "GUNSANDTUXEDOS.COM",
+      "url": "https://www.dpbolvw.net/click-101883843-13219632",
+      "advertiserId": "5043902",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-moda",
+      "sectionTitle": "Móda a doplňky",
+      "slotIndex": 10,
+      "title": "Imoda.sk",
+      "url": "https://www.dpbolvw.net/click-101883843-15484835",
+      "advertiserId": "6306286",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-moda",
+      "sectionTitle": "Móda a doplňky",
+      "slotIndex": 11,
+      "title": "Jeans-shop.cz",
+      "url": "https://www.dpbolvw.net/click-101883843-15377778",
+      "advertiserId": "6258510",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-moda",
+      "sectionTitle": "Móda a doplňky",
+      "slotIndex": 12,
+      "title": "Kings Camo",
+      "url": "https://www.jdoqocy.com/click-101883843-15774549",
+      "advertiserId": "7016567",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-moda",
+      "sectionTitle": "Móda a doplňky",
+      "slotIndex": 13,
+      "title": "T",
+      "url": "https://www.kqzyfj.com/click-101883843-13457303",
+      "advertiserId": "5147910",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-moda",
+      "sectionTitle": "Móda a doplňky",
+      "slotIndex": 14,
+      "title": "Vivantis.cz",
+      "url": "https://www.tkqlhce.com/click-101883843-12411812",
+      "advertiserId": "4384608",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-moda",
+      "sectionTitle": "Móda a doplňky",
+      "slotIndex": 15,
+      "title": "Wearmedicine.cz",
+      "url": "https://www.kqzyfj.com/click-101883843-17213743",
+      "advertiserId": "7726276",
+      "management": "CJ_MANAGED"
+    },
+    {
       "sectionId": "aff-boty",
       "sectionTitle": "Boty a tenisky",
       "slotIndex": 0,
@@ -451,6 +650,15 @@
       "title": "Warsawsneakerstore.com",
       "url": "https://www.tkqlhce.com/click-101883843-15699570",
       "advertiserId": "6796197",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-boty",
+      "sectionTitle": "Boty a tenisky",
+      "slotIndex": 4,
+      "title": "Shapenbarefoot.com",
+      "url": "https://www.jdoqocy.com/click-101883843-17258753",
+      "advertiserId": "6659563",
       "management": "CJ_MANAGED"
     },
     {
@@ -598,6 +806,33 @@
       "management": "CJ_MANAGED"
     },
     {
+      "sectionId": "aff-sport-outdoor",
+      "sectionTitle": "Sport a outdoor",
+      "slotIndex": 7,
+      "title": "Bezvasport.cz",
+      "url": "https://www.tkqlhce.com/click-101883843-13760331",
+      "advertiserId": "5277391",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-sport-outdoor",
+      "sectionTitle": "Sport a outdoor",
+      "slotIndex": 8,
+      "title": "Huskycz.cz",
+      "url": "https://www.anrdoezrs.net/click-101883843-14024803",
+      "advertiserId": "5404810",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-sport-outdoor",
+      "sectionTitle": "Sport a outdoor",
+      "slotIndex": 9,
+      "title": "Velocity Outdoor",
+      "url": "https://www.kqzyfj.com/click-101883843-15747470",
+      "advertiserId": "6038648",
+      "management": "CJ_MANAGED"
+    },
+    {
       "sectionId": "aff-dum-zahrada",
       "sectionTitle": "Dům a zahrada",
       "slotIndex": 0,
@@ -640,6 +875,96 @@
       "title": "Zepter.cz",
       "url": "https://www.kqzyfj.com/click-101883843-17074303",
       "advertiserId": "7341377",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-dum-zahrada",
+      "sectionTitle": "Dům a zahrada",
+      "slotIndex": 5,
+      "title": "Argos.cz",
+      "url": "https://www.anrdoezrs.net/click-101883843-17366260",
+      "advertiserId": "8010554",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-dum-zahrada",
+      "sectionTitle": "Dům a zahrada",
+      "slotIndex": 6,
+      "title": "DECODOMA.CZ",
+      "url": "https://www.jdoqocy.com/click-101883843-12863118",
+      "advertiserId": "4882378",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-dum-zahrada",
+      "sectionTitle": "Dům a zahrada",
+      "slotIndex": 7,
+      "title": "Dedoma.sk",
+      "url": "https://www.jdoqocy.com/click-101883843-13219578",
+      "advertiserId": "5000412",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-dum-zahrada",
+      "sectionTitle": "Dům a zahrada",
+      "slotIndex": 8,
+      "title": "Dopplershop.cz",
+      "url": "https://www.jdoqocy.com/click-101883843-15319222",
+      "advertiserId": "6065245",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-dum-zahrada",
+      "sectionTitle": "Dům a zahrada",
+      "slotIndex": 9,
+      "title": "Dvere-Erkado.cz",
+      "url": "https://www.jdoqocy.com/click-101883843-13234841",
+      "advertiserId": "5027071",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-dum-zahrada",
+      "sectionTitle": "Dům a zahrada",
+      "slotIndex": 10,
+      "title": "Gavri.cz",
+      "url": "https://www.anrdoezrs.net/click-101883843-14393799",
+      "advertiserId": "5614135",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-dum-zahrada",
+      "sectionTitle": "Dům a zahrada",
+      "slotIndex": 11,
+      "title": "Hezkakoupelna.cz",
+      "url": "https://www.anrdoezrs.net/click-101883843-17240342",
+      "advertiserId": "7816491",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-dum-zahrada",
+      "sectionTitle": "Dům a zahrada",
+      "slotIndex": 12,
+      "title": "KÄRCHER.CZ",
+      "url": "https://www.dpbolvw.net/click-101883843-12975597",
+      "advertiserId": "4927529",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-dum-zahrada",
+      "sectionTitle": "Dům a zahrada",
+      "slotIndex": 13,
+      "title": "Vladeko.cz",
+      "url": "https://www.anrdoezrs.net/click-101883843-15273907",
+      "advertiserId": "5723506",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-dum-zahrada",
+      "sectionTitle": "Dům a zahrada",
+      "slotIndex": 14,
+      "title": "Zahradajezek.cz",
+      "url": "https://www.anrdoezrs.net/click-101883843-14298731",
+      "advertiserId": "5444910",
       "management": "CJ_MANAGED"
     },
     {
@@ -697,6 +1022,105 @@
       "management": "CJ_MANAGED"
     },
     {
+      "sectionId": "aff-nabytek",
+      "sectionTitle": "Bydlení a vybavení",
+      "slotIndex": 6,
+      "title": "Butlers.cz",
+      "url": "https://www.jdoqocy.com/click-101883843-12070029",
+      "advertiserId": "4432968",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-nabytek",
+      "sectionTitle": "Bydlení a vybavení",
+      "slotIndex": 7,
+      "title": "Jan Nowak EU",
+      "url": "https://www.tkqlhce.com/click-101883843-17269525",
+      "advertiserId": "7859657",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-nabytek",
+      "sectionTitle": "Bydlení a vybavení",
+      "slotIndex": 8,
+      "title": "Kancelarskestolicky.com",
+      "url": "https://www.jdoqocy.com/click-101883843-14303854",
+      "advertiserId": "5493235",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-nabytek",
+      "sectionTitle": "Bydlení a vybavení",
+      "slotIndex": 9,
+      "title": "Nabytekpaul.cz",
+      "url": "https://www.kqzyfj.com/click-101883843-14307225",
+      "advertiserId": "5381727",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-nabytek",
+      "sectionTitle": "Bydlení a vybavení",
+      "slotIndex": 10,
+      "title": "Scandishop.cz",
+      "url": "https://www.dpbolvw.net/click-101883843-15041103",
+      "advertiserId": "5884820",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-nabytek",
+      "sectionTitle": "Bydlení a vybavení",
+      "slotIndex": 11,
+      "title": "SIKO.CZ",
+      "url": "https://www.tkqlhce.com/click-101883843-12948215",
+      "advertiserId": "4932883",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-nabytek",
+      "sectionTitle": "Bydlení a vybavení",
+      "slotIndex": 12,
+      "title": "SoftCotton",
+      "url": "https://www.jdoqocy.com/click-101883843-13101742",
+      "advertiserId": "5005974",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-nabytek",
+      "sectionTitle": "Bydlení a vybavení",
+      "slotIndex": 13,
+      "title": "VidaXL",
+      "url": "https://www.anrdoezrs.net/click-101883843-17070510",
+      "advertiserId": "5889034",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-nabytek",
+      "sectionTitle": "Bydlení a vybavení",
+      "slotIndex": 14,
+      "title": "Vitapur-home.cz",
+      "url": "https://www.jdoqocy.com/click-101883843-17237812",
+      "advertiserId": "6511227",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-nabytek",
+      "sectionTitle": "Bydlení a vybavení",
+      "slotIndex": 15,
+      "title": "Vyprodejpovleceni.cz",
+      "url": "https://www.jdoqocy.com/click-101883843-15245795",
+      "advertiserId": "6109393",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-nabytek",
+      "sectionTitle": "Bydlení a vybavení",
+      "slotIndex": 16,
+      "title": "XXXLutz.cz",
+      "url": "https://www.tkqlhce.com/click-101883843-13966880",
+      "advertiserId": "5335380",
+      "management": "CJ_MANAGED"
+    },
+    {
       "sectionId": "aff-kuchyn",
       "sectionTitle": "Kuchyně a domácnost",
       "slotIndex": 0,
@@ -724,6 +1148,15 @@
       "management": "CJ_MANAGED"
     },
     {
+      "sectionId": "aff-kuchyn",
+      "sectionTitle": "Kuchyně a domácnost",
+      "slotIndex": 3,
+      "title": "Homeandcook.cz",
+      "url": "https://www.kqzyfj.com/click-101883843-14371269",
+      "advertiserId": "5598091",
+      "management": "CJ_MANAGED"
+    },
+    {
       "sectionId": "aff-elektro",
       "sectionTitle": "Elektro a chytrá domácnost",
       "slotIndex": 0,
@@ -748,6 +1181,24 @@
       "title": "KVelektro.cz",
       "url": "https://www.anrdoezrs.net/click-101883843-13812779",
       "advertiserId": "5303370",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-elektro",
+      "sectionTitle": "Elektro a chytrá domácnost",
+      "slotIndex": 3,
+      "title": "Svelt",
+      "url": "https://www.dpbolvw.net/click-101883843-17323349",
+      "advertiserId": "7995512",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-elektro",
+      "sectionTitle": "Elektro a chytrá domácnost",
+      "slotIndex": 4,
+      "title": "TIPA.EU",
+      "url": "https://www.kqzyfj.com/click-101883843-12972203",
+      "advertiserId": "4921612",
       "management": "CJ_MANAGED"
     },
     {
@@ -841,6 +1292,33 @@
       "management": "CJ_MANAGED"
     },
     {
+      "sectionId": "aff-knihy",
+      "sectionTitle": "Knihy, hudba a hry",
+      "slotIndex": 6,
+      "title": "Hero Wars",
+      "url": "https://www.anrdoezrs.net/click-101883843-17106963",
+      "advertiserId": "7520433",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-knihy",
+      "sectionTitle": "Knihy, hudba a hry",
+      "slotIndex": 7,
+      "title": "Imago.cz",
+      "url": "https://www.anrdoezrs.net/click-101883843-15811153",
+      "advertiserId": "6972484",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-knihy",
+      "sectionTitle": "Knihy, hudba a hry",
+      "slotIndex": 8,
+      "title": "Supraphonline.cz",
+      "url": "https://www.anrdoezrs.net/click-101883843-14093131",
+      "advertiserId": "5477885",
+      "management": "CJ_MANAGED"
+    },
+    {
       "sectionId": "aff-jidlo",
       "sectionTitle": "Jídlo a potraviny",
       "slotIndex": 0,
@@ -874,6 +1352,24 @@
       "title": "Zlatezrnko.cz",
       "url": "https://www.dpbolvw.net/click-101883843-13992103",
       "advertiserId": "5393861",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-jidlo",
+      "sectionTitle": "Jídlo a potraviny",
+      "slotIndex": 4,
+      "title": "BAMchocolate",
+      "url": "https://www.anrdoezrs.net/click-101883843-17072824",
+      "advertiserId": "7416299",
+      "management": "CJ_MANAGED"
+    },
+    {
+      "sectionId": "aff-jidlo",
+      "sectionTitle": "Jídlo a potraviny",
+      "slotIndex": 5,
+      "title": "Zivina.cz",
+      "url": "https://www.jdoqocy.com/click-101883843-15852097",
+      "advertiserId": "5929753",
       "management": "CJ_MANAGED"
     },
     {
@@ -1004,9 +1500,9 @@
     }
   ],
   "counts": {
-    "total": 110,
+    "total": 165,
     "MANUAL_PROTECTED": 43,
-    "CJ_MANAGED": 67,
+    "CJ_MANAGED": 122,
     "PAID_RESERVED": 0
   }
 }

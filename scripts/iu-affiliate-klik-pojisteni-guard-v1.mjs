@@ -17,7 +17,7 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-klik-pojisteni-v1-20260922";
-const CATALOG_BUST = "affiliate-phase2c-dynamic-v1-20261023";
+const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-pojisteni";
 const SECTION_TITLE = "Pojištění";
@@ -339,7 +339,7 @@ try {
       v.removeAttribute("hidden");
     }
   });
-  await page.waitForFunction(() => document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip").length === 8);
+  await page.waitForFunction(() => document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip").length >= 1);
   const travel = await page.evaluate((cj) => {
     const chips = Array.from(document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip"));
     const chipText = (c) => ((c.querySelector(".iuRadioChipTitle") || c).textContent || "").trim();

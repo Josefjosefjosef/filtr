@@ -41,16 +41,18 @@ export function parseAffiliateCatalogOrdered(catalogSrc) {
     const itemsBlock = sm[3];
     const items = [];
     const tokenRe =
-      /affPartner\(\s*"((?:\\.|[^"\\])*)"\s*,\s*"(https:\/\/[^"]+)"\s*\)|affItem\(\s*"((?:\\.|[^"\\])*)"\s*,\s*"([^"]+)"\s*\)/g;
+      /affPartner\(\s*"((?:\\.|[^"\\])*)"\s*,\s*"(https:\/\/[^"]+)"(?:\s*,\s*"([^"]*)")?\s*\)|affItem\(\s*"((?:\\.|[^"\\])*)"\s*,\s*"([^"]+)"\s*\)/g;
     let tm;
     while ((tm = tokenRe.exec(itemsBlock)) !== null) {
       if (tm[1] != null && tm[2] != null) {
         const title = tm[1].replace(/\\u2019/g, "'").replace(/\\"/g, '"');
         const url = tm[2];
+        const advertiserId = tm[3] && String(tm[3]).trim() ? String(tm[3]).trim() : null;
         items.push({
           kind: "partner",
           title,
           url,
+          advertiserId,
           slug: null,
           cjLinkId: extractCjLinkIdFromClickUrl(url),
           affiliateUrlReady: true,
@@ -58,9 +60,9 @@ export function parseAffiliateCatalogOrdered(catalogSrc) {
       } else {
         items.push({
           kind: "placeholder",
-          title: tm[3] || "",
+          title: tm[4] || "",
           url: null,
-          slug: tm[4],
+          slug: tm[5],
           cjLinkId: null,
           affiliateUrlReady: false,
         });
