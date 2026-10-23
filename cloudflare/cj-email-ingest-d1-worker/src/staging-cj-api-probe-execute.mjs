@@ -1,5 +1,6 @@
 /**
  * Staging-only CJ Link Search probe (coupon page 1). Uses Worker runtime PAT — never logged.
+ * One-shot D1 lock keys are allowlisted; v2 is never auto-selected.
  */
 import { buildCjLinkSearchProbePage1QueryString } from "../../../scripts/iu-cj-affiliate-cj-link-search-query-v1.mjs";
 import {
@@ -12,6 +13,12 @@ export { buildCjLinkSearchProbePage1QueryString };
 
 export const CJ_LINK_SEARCH_BASE = "https://link-search.api.cj.com/v2/link-search";
 export const STAGING_CJ_PROBE_LOCK_KEY = "link_search_coupon_v1";
+export const STAGING_CJ_PROBE_LOCK_KEY_V2 = "link_search_coupon_v2";
+export const STAGING_CJ_PROBE_LOCK_KEYS_ALLOWED = Object.freeze([
+  STAGING_CJ_PROBE_LOCK_KEY,
+  STAGING_CJ_PROBE_LOCK_KEY_V2,
+]);
+const ALLOWED_LOCK_KEY_SET = new Set(STAGING_CJ_PROBE_LOCK_KEYS_ALLOWED);
 
 const PAT_KEYS = ["CJ_API_PAT", "IU_CJ_PAT", "CJ_PERSONAL_ACCESS_TOKEN"];
 const RFC6750_B64TOKEN_RE = /^[A-Za-z0-9\-._~+/]+=*$/;
@@ -40,6 +47,43 @@ export function validatePatFormat(patTrimmed) {
   return { ok: true };
 }
 
+/**
+ * Resolve probe lock key from Worker env (or explicit raw string).
+ * - Missing env field / null / undefined → default v1 (no auto v2).
+ * - Explicit empty or whitespace-only → reject (fail-closed).
+ * - Unknown key → reject.
+ */
+export function resolveStagingCjProbeLockKey(envOrRaw) {
+  let raw;
+  if (envOrRaw != null && typeof envOrRaw === "object") {
+    if (!Object.prototype.hasOwnProperty.call(envOrRaw, "IU_CJ_STAGING_PROBE_LOCK_KEY")) {
+      return { ok: true, lockKey: STAGING_CJ_PROBE_LOCK_KEY, source: "default_v1" };
+    }
+    raw = envOrRaw.IU_CJ_STAGING_PROBE_LOCK_KEY;
+  } else {
+    raw = envOrRaw;
+  }
+
+  if (raw === undefined || raw === null) {
+    return { ok: true, lockKey: STAGING_CJ_PROBE_LOCK_KEY, source: "default_v1" };
+  }
+  if (typeof raw !== "string") {
+    return { ok: false, reason: "probe_lock_key_invalid_type", status: 403 };
+  }
+  const trimmed = raw.trim();
+  if (!trimmed) {
+    return { ok: false, reason: "probe_lock_key_empty", status: 403 };
+  }
+  if (!ALLOWED_LOCK_KEY_SET.has(trimmed)) {
+    return { ok: false, reason: "probe_lock_key_not_allowed", status: 403 };
+  }
+  return {
+    ok: true,
+    lockKey: trimmed,
+    source: trimmed === STAGING_CJ_PROBE_LOCK_KEY ? "v1" : "v2",
+  };
+}
+
 export function classifyCjXmlAuth(text, httpStatus) {
   const body = String(text || "");
   const lower = body.toLowerCase();
@@ -48,6 +92,12 @@ export function classifyCjXmlAuth(text, httpStatus) {
   }
   if (httpStatus === 403 || /not authorized/i.test(body)) {
     return { authenticated: false, reason: "not_authorized", httpStatus };
+  }
+  if (httpStatus === 429) {
+    return { authenticated: false, reason: "rate_limit", httpStatus };
+  }
+  if (httpStatus >= 500) {
+    return { authenticated: false, reason: "http_server_error", httpStatus };
   }
   if (httpStatus >= 400) {
     return { authenticated: false, reason: "http_error", httpStatus };
@@ -59,7 +109,7 @@ export function classifyCjXmlAuth(text, httpStatus) {
     return { authenticated: false, reason: "bad_resource_url", httpStatus };
   }
   return {
-    authenticated: httpStatus >= 200 && httpStatus < 300,
+    authenticated: false,
     reason: "unknown_shape",
     httpStatus,
   };
@@ -85,8 +135,9 @@ export function mapProbeConnectionState({
   if (redirectStatus) return "RESPONSE_FORMAT_FAILED";
   if (httpStatus === 401) return "AUTHENTICATION_FAILED";
   if (httpStatus === 403) return "AUTHORIZATION_FAILED";
+  if (httpStatus === 429) return "RATE_LIMIT_FAILED";
+  if (httpStatus >= 500) return "HTTP_SERVER_ERROR";
   if (httpStatus >= 400 && httpStatus < 500) return "HTTP_CLIENT_ERROR";
-  if (httpStatus >= 500) return "HTTP_CLIENT_ERROR";
   if (!auth?.authenticated) {
     if (auth?.reason === "unknown_shape") return "RESPONSE_FORMAT_FAILED";
     return "RESPONSE_FORMAT_FAILED";
@@ -101,9 +152,14 @@ export function mapProbeConnectionState({
 }
 
 export async function acquireStagingCjProbeLock(db, lockKey = STAGING_CJ_PROBE_LOCK_KEY) {
+  const resolved = resolveStagingCjProbeLockKey(lockKey);
+  if (!resolved.ok) {
+    return { ok: false, reason: resolved.reason, status: resolved.status || 403 };
+  }
+  const key = resolved.lockKey;
   const existing = await db
     .prepare("SELECT lock_key, finished_at FROM staging_cj_api_probe_lock WHERE lock_key = ? LIMIT 1")
-    .bind(lockKey)
+    .bind(key)
     .first();
   if (existing?.lock_key) {
     return { ok: false, reason: "probe_already_executed", status: 409 };
@@ -113,9 +169,9 @@ export async function acquireStagingCjProbeLock(db, lockKey = STAGING_CJ_PROBE_L
       .prepare(
         "INSERT INTO staging_cj_api_probe_lock (lock_key, started_at, connection_state, publishable) VALUES (?, ?, ?, 0)"
       )
-      .bind(lockKey, new Date().toISOString(), "pending")
+      .bind(key, new Date().toISOString(), "pending")
       .run();
-    return { ok: true };
+    return { ok: true, lockKey: key };
   } catch {
     return { ok: false, reason: "probe_lock_conflict", status: 409 };
   }
@@ -153,12 +209,13 @@ export function buildSafeProbeResponse(fields) {
     failureReason: fields.failureReason || null,
     httpRequestCount: fields.httpRequestCount ?? 0,
     identityOk: fields.identityOk === true,
+    probeLockKey: fields.probeLockKey || null,
   };
 }
 
 /**
  * @param {object} env Worker env (includes CJ_API_PAT secret binding)
- * @param {{ fetch?: typeof fetch }} deps inject mock fetch in tests
+ * @param {{ fetch?: typeof fetch, lockKeyBound?: string }} deps inject mock fetch in tests
  */
 export async function executeStagingCjLinkSearchProbe(env, deps = {}) {
   const fetchImpl = deps.fetch || globalThis.fetch;
@@ -171,6 +228,22 @@ export async function executeStagingCjLinkSearchProbe(env, deps = {}) {
       httpRequestCount: 0,
     };
   }
+
+  const lockResolved =
+    deps.lockKeyBound != null
+      ? resolveStagingCjProbeLockKey(deps.lockKeyBound)
+      : resolveStagingCjProbeLockKey(env);
+  if (!lockResolved.ok) {
+    return {
+      blocked: true,
+      reason: lockResolved.reason,
+      publishable: false,
+      httpRequestCount: 0,
+      status: lockResolved.status || 403,
+    };
+  }
+  // Bind once — later env mutation must not change the in-flight lock key.
+  const lockKey = lockResolved.lockKey;
 
   const publisherCid = String(env.IU_CJ_PUBLISHER_CID || "").trim();
   const websitePid = String(env.IU_CJ_WEBSITE_PID || "").trim();
@@ -188,7 +261,7 @@ export async function executeStagingCjLinkSearchProbe(env, deps = {}) {
     return { blocked: true, reason: "d1_binding_missing", publishable: false, httpRequestCount: 0 };
   }
 
-  const lock = await acquireStagingCjProbeLock(env.DB);
+  const lock = await acquireStagingCjProbeLock(env.DB, lockKey);
   if (!lock.ok) {
     return {
       blocked: true,
@@ -196,13 +269,14 @@ export async function executeStagingCjLinkSearchProbe(env, deps = {}) {
       publishable: false,
       httpRequestCount: 0,
       status: lock.status || 409,
+      probeLockKey: lockKey,
     };
   }
 
   const pat = readCjPatFromWorkerEnv(env);
   const patFmt = validatePatFormat(pat);
   if (!patFmt.ok) {
-    await finalizeStagingCjProbeLock(env.DB, STAGING_CJ_PROBE_LOCK_KEY, {
+    await finalizeStagingCjProbeLock(env.DB, lockKey, {
       httpStatus: 0,
       recordCount: 0,
       connectionState: "RESPONSE_FORMAT_FAILED",
@@ -216,12 +290,13 @@ export async function executeStagingCjLinkSearchProbe(env, deps = {}) {
       failureReason: "pat_format_invalid",
       httpRequestCount: 0,
       identityOk: true,
+      probeLockKey: lockKey,
     });
   }
 
   const maxReq = Math.min(5, Math.max(1, Number(env.IU_CJ_CJ_API_MAX_REQUESTS_PER_PROBE || 1)));
   if (maxReq !== 1) {
-    await finalizeStagingCjProbeLock(env.DB, STAGING_CJ_PROBE_LOCK_KEY, {
+    await finalizeStagingCjProbeLock(env.DB, lockKey, {
       httpStatus: 0,
       recordCount: 0,
       connectionState: "RESPONSE_FORMAT_FAILED",
@@ -232,6 +307,7 @@ export async function executeStagingCjLinkSearchProbe(env, deps = {}) {
       publishable: false,
       httpRequestCount: 0,
       status: 403,
+      probeLockKey: lockKey,
     };
   }
 
@@ -254,7 +330,7 @@ export async function executeStagingCjLinkSearchProbe(env, deps = {}) {
     });
 
     if (res.status >= 300 && res.status < 400) {
-      await finalizeStagingCjProbeLock(env.DB, STAGING_CJ_PROBE_LOCK_KEY, {
+      await finalizeStagingCjProbeLock(env.DB, lockKey, {
         httpStatus: res.status,
         recordCount: 0,
         connectionState: "RESPONSE_FORMAT_FAILED",
@@ -268,6 +344,7 @@ export async function executeStagingCjLinkSearchProbe(env, deps = {}) {
         failureReason: "redirect_not_followed",
         httpRequestCount: 1,
         identityOk: true,
+        probeLockKey: lockKey,
       });
     }
 
@@ -293,7 +370,7 @@ export async function executeStagingCjLinkSearchProbe(env, deps = {}) {
           ? "NOT_APPLICABLE"
           : "PASS";
 
-    await finalizeStagingCjProbeLock(env.DB, STAGING_CJ_PROBE_LOCK_KEY, {
+    await finalizeStagingCjProbeLock(env.DB, lockKey, {
       httpStatus: res.status,
       recordCount,
       connectionState,
@@ -311,10 +388,11 @@ export async function executeStagingCjLinkSearchProbe(env, deps = {}) {
           : auth.reason || connectionState.toLowerCase(),
       httpRequestCount: 1,
       identityOk: true,
+      probeLockKey: lockKey,
     });
   } catch (e) {
     const networkError = e?.name === "AbortError" ? "timeout" : "network_error";
-    await finalizeStagingCjProbeLock(env.DB, STAGING_CJ_PROBE_LOCK_KEY, {
+    await finalizeStagingCjProbeLock(env.DB, lockKey, {
       httpStatus: 0,
       recordCount: 0,
       connectionState: "NETWORK_FAILED",
@@ -328,6 +406,7 @@ export async function executeStagingCjLinkSearchProbe(env, deps = {}) {
       failureReason: networkError,
       httpRequestCount: httpRequestCount || 0,
       identityOk: true,
+      probeLockKey: lockKey,
     });
   } finally {
     clearTimeout(timer);

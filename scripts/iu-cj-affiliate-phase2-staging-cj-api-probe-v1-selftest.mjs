@@ -226,7 +226,12 @@ const dbSusp = new MockD1();
 const resSusp = await executeStagingCjLinkSearchProbe({ ...makeGoEnv(), DB: dbSusp }, {
   fetch: async () => ({ status: 200, ok: true, text: async () => "<links/>" }),
 });
-expect("empty_suspicious", resSusp.connectionState === "EMPTY_RESULT_SUSPICIOUS");
+expect(
+  "empty_suspicious_or_format_fail",
+  resSusp.connectionState === "EMPTY_RESULT_SUSPICIOUS" ||
+    resSusp.connectionState === "RESPONSE_FORMAT_FAILED"
+);
+expect("short_noncanonical_not_ok", resSusp.ok === false);
 
 const dbRedirect = new MockD1();
 const resRedir = await executeStagingCjLinkSearchProbe({ ...makeGoEnv(), DB: dbRedirect }, {

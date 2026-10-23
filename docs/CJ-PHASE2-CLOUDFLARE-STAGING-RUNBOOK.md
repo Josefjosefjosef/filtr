@@ -97,6 +97,27 @@ Burn-in: manual `workflow_dispatch` on `cj-affiliate-offline-import-dispatch.yml
 5. POST `/v1/staging/cj-api/probe` with ingest token — max `IU_CJ_CJ_API_MAX_REQUESTS_PER_PROBE` (default 1); archive metadata to staging D1 only; `publishable` must stay false.
 6. On 401/403/429/5xx or identity mismatch: STOP, revoke execute flags, audit without PAT.
 
+### One-shot probe lock keys (allowlist)
+
+| Key | Meaning |
+|-----|---------|
+| `link_search_coupon_v1` | First live probe (consumed after HTTP 400 run; **do not reset**) |
+| `link_search_coupon_v2` | Next authorized probe only — selected via workflow input `probe_lock_key` (never auto) |
+
+Worker var: `IU_CJ_STAGING_PROBE_LOCK_KEY` (default / disarm reset = `link_search_coupon_v1`). Unknown or empty values are fail-closed (no HTTP, no D1 insert).
+
+### MANUAL_DISARM — ruční obnovení GO OFF (nouzové vypnutí)
+
+Use when GHA `disarm-failsafe` is cancelled, skipped, or the Actions runner dies mid-arm.
+
+1. From `cloudflare/cj-email-ingest-d1-worker` with staging CF token:
+   `npx wrangler@4 deploy --env staging --keep-vars --var "IU_CJ_STAGING_CJ_API_PROBE_APPROVED:0" --var "IU_CJ_CJ_API_HTTP_EXECUTE:0" --var "IU_CJ_STAGING_CJ_API_PROBE_EXECUTE:0" --var "IU_CJ_STAGING_PROBE_LOCK_KEY:link_search_coupon_v1"`
+2. Verify: `curl -fsS "$STAGING_URL/health"` → `cjLiveApiRequestsAllowed=false`, `publishable=false`.
+3. Verify: `GET /v1/staging/cj-api/readiness` with ingest Bearer → `mayExecuteHttp=false`.
+4. If disarm cannot be confirmed: mark future live probe **CJ_DISARM_FAILSAFE=BLOCKED** (kritický) — not SAFE — until manual recovery succeeds. Do not arm again.
+
+Disarm job in `cj-affiliate-staging-cj-api-probe-once.yml` uses `if: always()` so probe success, HTTP 4xx/5xx, timeout, or validation failure still attempt GO OFF.
+
 Rollback: set `IU_CJ_*_OFFLINE=1`, revoke PAT/IMAP, disable dispatch schedules (must remain absent until GO).
 
 ---
