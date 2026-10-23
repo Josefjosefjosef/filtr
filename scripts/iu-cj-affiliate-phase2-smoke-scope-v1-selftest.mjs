@@ -7,14 +7,17 @@ import path from "path";
 import { fileURLToPath } from "url";
 import {
   CJ_AFFILIATE_PHASE2_OFFLINE_FIXTURE_SELFTEST,
+  CJ_OFFLINE_CATALOG_NORMALIZE_SELFTEST,
   CJ_STAGING_API_PROBE_EXECUTE,
   allowsDataOnlyFastPath,
   isCjAffiliatePhase2OfflineOnlyScope,
+  isCjOfflineCatalogNormalizeScope,
   isCjStagingApiProbeOnlyScope,
 } from "./smoke-data-only-scope.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const FIXTURE = CJ_AFFILIATE_PHASE2_OFFLINE_FIXTURE_SELFTEST;
+const CATALOG = CJ_OFFLINE_CATALOG_NORMALIZE_SELFTEST;
 const PROBE = CJ_STAGING_API_PROBE_EXECUTE;
 const failures = [];
 function expect(name, cond) {
@@ -58,6 +61,29 @@ expect(
   isCjAffiliatePhase2OfflineOnlyScope(["scripts/smoke-data-only-scope.mjs"]) === false
 );
 
+expect(
+  "catalog_normalize_scoped",
+  isCjOfflineCatalogNormalizeScope([
+    CATALOG,
+    "scripts/iu-cj-affiliate-phase2-cj-link-search-catalog-normalize-v1.mjs",
+    "scripts/fixtures/cj-link-search-coupon-offline-anonymized-v1.xml",
+    "scripts/smoke-data-only-scope.mjs",
+    ".github/workflows/smoke.yml",
+  ]) === true
+);
+expect(
+  "catalog_normalize_fast_path",
+  allowsDataOnlyFastPath([
+    CATALOG,
+    "scripts/iu-cj-affiliate-phase2-cj-link-search-catalog-normalize-v1.mjs",
+    "scripts/fixtures/cj-link-search-coupon-offline-anonymized-v1.xml",
+  ]) === true
+);
+expect(
+  "catalog_plus_assets_full_smoke",
+  isCjOfflineCatalogNormalizeScope([CATALOG, "assets/app.js"]) === false
+);
+
 expect("probe_execute_only_scoped", isCjStagingApiProbeOnlyScope([PROBE]) === true);
 expect("probe_execute_only_fast_path", allowsDataOnlyFastPath([PROBE]) === true);
 expect(
@@ -80,6 +106,11 @@ const smokeYml = fs.readFileSync(path.join(REPO, ".github", "workflows", "smoke.
 expect(
   "smoke_yml_cj_offline_step",
   /CJ Affiliate Phase 2 offline selftest smoke/.test(smokeYml)
+);
+expect(
+  "smoke_yml_cj_catalog_normalize_step",
+  /CJ offline catalog normalize smoke/.test(smokeYml) &&
+    /cj_offline_catalog_normalize_only == 'true'/.test(smokeYml)
 );
 expect(
   "smoke_yml_cj_step_fail_closed",
