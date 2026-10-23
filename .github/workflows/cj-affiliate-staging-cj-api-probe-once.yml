@@ -104,14 +104,34 @@ jobs:
           print('CJ_GO_FLAGS_DISABLED=PASS')
           print('CJ_PROBE_AUTHORIZATION=PASS')
           "
-          curl -fsS -H "Authorization: Bearer ${INGEST_TOKEN}" "${WORKER_URL}/v1/staging/cj-api/probe" -X POST -H 'Content-Type: application/json' -d '{}' -o /tmp/probe_blocked.json -w '%{http_code}' > /tmp/probe_blocked_code.txt || true
+          PROBE_HTTP="$(curl -sS -o /tmp/probe_blocked.json -w '%{http_code}' \
+            -H "Authorization: Bearer ${INGEST_TOKEN}" \
+            -X POST "${WORKER_URL}/v1/staging/cj-api/probe" \
+            -H 'Content-Type: application/json' -d '{}')"
+          printf '%s' "${PROBE_HTTP}" > /tmp/probe_blocked_code.txt
           python3 -c "
-          import json
-          c=open('/tmp/probe_blocked_code.txt').read().strip()
-          b=json.load(open('/tmp/probe_blocked.json'))
-          assert b.get('httpRequestCount',0)==0
-          assert b.get('blocked') is True
-          print('CJ_PROBE_BLOCKED_WHEN_GO_OFF=PASS status='+c)
+          import json, os, sys
+          body_path = '/tmp/probe_blocked.json'
+          if not os.path.isfile(body_path):
+            print('BLOCKER=PROBE_BLOCKED_BODY_MISSING')
+            sys.exit(1)
+          code = open('/tmp/probe_blocked_code.txt').read().strip()
+          if code != '403':
+            print('BLOCKER=PROBE_BLOCKED_HTTP_STATUS expected=403 actual=' + str(code))
+            sys.exit(1)
+          try:
+            b = json.load(open(body_path))
+          except json.JSONDecodeError as exc:
+            print('BLOCKER=PROBE_BLOCKED_JSON_INVALID detail=' + str(exc)[:120])
+            sys.exit(1)
+          if b.get('blocked') is not True:
+            print('BLOCKER=PROBE_BLOCKED_FLAG expected=true actual=' + repr(b.get('blocked')))
+            sys.exit(1)
+          hrc = b.get('httpRequestCount')
+          if hrc != 0:
+            print('BLOCKER=PROBE_HTTP_REQUEST_COUNT expected=0 actual=' + repr(hrc))
+            sys.exit(1)
+          print('CJ_PROBE_BLOCKED_WHEN_GO_OFF=PASS status=' + code)
           "
           echo "CJ_LIVE_HTTP_REQUESTS=0"
 
