@@ -474,7 +474,7 @@ try {
         const kids4 = namedChips.find((c) => c.text === "4KIDS.cz");
         ok(
           tag + ":chips_named_deti_partners",
-          namedChips.length === 3 &&
+          namedChips.length >= 3 &&
             bambule &&
             feedo &&
             kids4 &&
@@ -483,11 +483,17 @@ try {
             kids4.href === "https://www.kqzyfj.com/click-101883843-14299748" &&
             bambule.ready === "1" &&
             feedo.ready === "1" &&
-            kids4.ready === "1",
+            kids4.ready === "1" &&
+            namedChips.every((c) => c.ready === "1"),
           namedChips.map((c) => c.text + ":" + c.href).join("|")
         );
       } else {
-        ok(tag + ":chips_labels_empty", namedChips.length === 0, namedChips[0] ? namedChips[0].text : "");
+        // Phase 2B: reserved/free slots may be filled; named chips must be ready partners.
+        ok(
+          tag + ":chips_named_ready_or_empty",
+          namedChips.length === 0 || namedChips.every((c) => c.ready === "1"),
+          namedChips[0] ? namedChips[0].text : ""
+        );
       }
       ok(tag + ":no_forbidden", !snap.forbiddenHit, snap.forbiddenHit);
       ok(tag + ":no_h_overflow", !snap.overflow);

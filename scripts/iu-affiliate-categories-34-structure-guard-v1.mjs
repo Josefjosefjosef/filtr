@@ -663,7 +663,7 @@ try {
       ok(vp.name + ":" + section + ":view", snap.hasBackHint);
       if (NEW_IDS.includes(section)) {
         ok(vp.name + ":" + section + ":slots_8", snap.slots === 8, "n=" + snap.slots);
-        ok(vp.name + ":" + section + ":partners_0", snap.emptyTitles === true && snap.noHttps === true && snap.allNeutral === true);
+        // Phase 2B may fill free empties with ready partners; keep 8-slot grid + SEO.
         ok(vp.name + ":" + section + ":seo_after_slots", snap.seoAfterGrid === true && snap.seoVisible === true);
       }
       if (section === "aff-letenky-letecka-doprava") {
@@ -674,7 +674,11 @@ try {
           snap.firstHref === "https://www.jdoqocy.com/click-101883843-15733491",
           snap.firstHref
         );
-        ok(vp.name + ":" + section + ":tail_empty", snap.tailEmpty === true && snap.tailNoHttps === true && snap.tailNeutral === true);
+        ok(
+          vp.name + ":" + section + ":slot1_protected",
+          snap.firstText === "Skytours" &&
+            snap.firstHref === "https://www.jdoqocy.com/click-101883843-15733491"
+        );
         ok(vp.name + ":" + section + ":seo_after_slots", snap.seoAfterGrid === true && snap.seoVisible === true);
       }
       if (section === "aff-cestovni-kancelare") {
