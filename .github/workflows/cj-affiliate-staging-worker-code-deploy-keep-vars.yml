@@ -148,9 +148,10 @@ jobs:
         run: |
           set -euo pipefail
           # brief route propagation
-          for i in 1 2 3 4 5; do
+          for _try in 1 2 3 4 5; do
             if curl -fsS "${WORKER_URL}/health" > /tmp/health.json; then break; fi
             sleep 2
+            echo "health_retry=${_try}"
           done
           python3 -c "
           import json
