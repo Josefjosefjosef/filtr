@@ -155,33 +155,18 @@ jobs:
           echo "CJ_GO_FLAGS_SOURCE=toml_env_staging_vars"
           echo "CJ_LIVE_HTTP_REQUESTS=0"
 
-      - name: Post-deploy health
+      - name: Post-deploy health (full assert retry, read-only)
         shell: bash
+        env:
+          EXPECTED_VERSION_ID: ${{ steps.deploy.outputs.version_id }}
         run: |
           set -euo pipefail
-          # brief route propagation
-          for _try in 1 2 3 4 5; do
-            if curl -fsS "${WORKER_URL}/health" > /tmp/health.json; then break; fi
-            sleep 2
-            echo "health_retry=${_try}"
-          done
-          python3 -c "
-          import json
-          h=json.load(open('/tmp/health.json'))
-          assert h.get('ok') is True
-          assert h.get('environment')=='staging'
-          assert h.get('stagingOnly') is True
-          assert h.get('cjArchiveOnly') is True
-          assert h.get('cjLiveApiRequestsAllowed') is False
-          assert h.get('publishable') is False
-          assert h.get('d1Binding')=='present'
-          assert h.get('r2Binding')=='present'
-          assert h.get('cjPatConfigured') is True
-          print('CJ_POSTDEPLOY_HEALTH=PASS')
-          print('CJ_GO_FLAGS_DISABLED=PASS')
-          print('CJ_PUBLISHING_DISABLED=PASS')
-          print('CJ_PAT_CONFIGURED=true')
-          "
+          # Retries HTTP + JSON parse + ALL assertions (not curl-only). No CJ API.
+          node scripts/iu-cj-affiliate-staging-postdeploy-health-v1.mjs \
+            --url "${WORKER_URL}" \
+            --expected-version-id "${EXPECTED_VERSION_ID}" \
+            --max-attempts 12 \
+            --sleep-ms 2500
 
       - name: Read-only D1 lock audit (after deploy)
         shell: bash

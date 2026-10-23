@@ -155,6 +155,7 @@ jobs:
           set -euo pipefail
           node scripts/iu-cj-affiliate-staging-cj-api-probe-workflow-v1-selftest.mjs
           node scripts/iu-cj-affiliate-staging-go-flags-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-staging-postdeploy-health-v1-selftest.mjs
           node scripts/iu-cj-affiliate-staging-ingest-token-sync-v1-selftest.mjs
           node scripts/iu-cj-affiliate-staging-d1-resolve-v1-selftest.mjs
           node scripts/iu-cj-affiliate-staging-d1-migrations-list-gate-v1-selftest.mjs

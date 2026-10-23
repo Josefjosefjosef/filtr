@@ -110,6 +110,10 @@ Worker var: `IU_CJ_STAGING_PROBE_LOCK_KEY` (default / disarm reset = `link_searc
 
 Staging plain-text GO flags live only in `cloudflare/cj-email-ingest-d1-worker/wrangler.toml` under `[env.staging.vars]` (defaults OFF). Arm/disarm patches that table via `scripts/iu-cj-affiliate-staging-go-flags-patch-v1.mjs`, then deploys **without** `--keep-vars` / `--var` for GO. All Worker mutate workflows share concurrency group `cj-affiliate-staging-worker-mutate` so arm/disarm cannot race a code deploy.
 
+### Post-deploy health (assert retry)
+
+Staging code/deploy workflows call `scripts/iu-cj-affiliate-staging-postdeploy-health-v1.mjs`, which retries the **full** cycle (HTTP GET `/health` → JSON parse → assertions: `ok`, staging flags, GO OFF, D1/R2 present). Curl-only success is not enough — a stale Worker version that returns HTTP 200 with `ok=false` / missing bindings must keep retrying until the new version is live or attempts are exhausted (fail-closed).
+
 ### MANUAL_DISARM — ruční obnovení GO OFF (nouzové vypnutí)
 
 Use when GHA `disarm-failsafe` is cancelled, skipped, or the Actions runner dies mid-arm.
