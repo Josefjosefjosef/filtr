@@ -240,7 +240,10 @@ function auditStatic() {
     "letenky_skytours_slot1",
     /items:\s*\[\s*affPartner\(\s*"Skytours"\s*,\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-15733491"\s*\)/.test(letBlock)
   );
-  ok("letenky_ready_partners_1", (letBlock.match(/affPartner\(/g) || []).length === 1);
+  ok(
+    "letenky_ready_partners_min_1",
+    (letBlock.match(/affPartner\(/g) || []).length >= 1
+  );
   ok("letenky_after_doprava", catalog.indexOf('id: "aff-letenky-letecka-doprava"') > catalog.indexOf('id: "aff-letenky"'));
   ok("pneu_icon", catalog.includes('id: "aff-pneu-pneuservis"') && catalog.includes('icon: "iu-aff-wheel"'));
   ok("pneu_after_auto", catalog.indexOf('id: "aff-pneu-pneuservis"') > catalog.indexOf('id: "aff-auto-moto"'));
@@ -257,21 +260,24 @@ function auditStatic() {
     const start = catalog.indexOf('id: "' + id + '"');
     const next = catalog.indexOf("\n    {", start + 10);
     const block = start >= 0 ? catalog.slice(start, next > start ? next : start + 1200) : "";
-    const n = (block.match(/affItem\(/g) || []).length;
+    const n = (block.match(/aff(?:Item|Partner)\(/g) || []).length;
     ok("slots8:" + id, n === 8, "n=" + n);
-    ok("slots_no_https:" + id, !/https:\/\//i.test(block));
-    ok("slots_no_named_partner:" + id, !/affItem\(\s*"[^"]+"/.test(block));
+    ok("slots_no_named_placeholder:" + id, !/affItem\(\s*"[^"]+"/.test(block));
     ok("slots_wrapper:" + id, /items:\s*\[/.test(block));
-    let i = 1;
-    while (i <= 8) {
-      ok("slot_slug:" + id + ":" + i, block.includes('affItem("", "' + prefix + i + '")'));
-      i += 1;
-    }
+    // Free slots keep empty-* slug; filled partners may replace some empties (Phase 2B).
+    const emptyLeft = (block.match(new RegExp('affItem\\("", "' + prefix + '\\d+"\\)', "g")) || [])
+      .length;
+    const partners = (block.match(/affPartner\(/g) || []).length;
+    ok(
+      "slots_empty_or_partner:" + id,
+      emptyLeft + partners === 8,
+      "empty=" + emptyLeft + " partners=" + partners
+    );
   }
   const travelStart = catalog.indexOf('id: "aff-cestovni-kancelare"');
   const travelEnd = catalog.indexOf('id: "aff-ubytovani-hotely"');
   const travelBlock = travelStart >= 0 && travelEnd > travelStart ? catalog.slice(travelStart, travelEnd) : "";
-  const travelItems = (travelBlock.match(/affItem\(/g) || []).length;
+  const travelItems = (travelBlock.match(/aff(?:Item|Partner)\(/g) || []).length;
   ok("reference_slots_8", travelItems === 8, "n=" + travelItems);
 }
 

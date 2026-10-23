@@ -161,7 +161,13 @@ function auditStatic() {
   const itemCount = (catalog.match(/affItem\(/g) || []).length;
   ok("catalog:items_present", itemCount >= 25, "items=" + itemCount);
   ok("catalog:placeholder_urls_intact", catalog.includes('url: "#affiliate-placeholder-" + slug'));
-  ok("catalog:cedok_slug", catalog.includes('affItem("", "cedok")'));
+  ok(
+    "catalog:cedok_slot",
+    catalog.includes('affItem("", "cedok")') ||
+      /affPartner\(\s*"Cedok\.cz"\s*,\s*"https:\/\/www\.anrdoezrs\.net\/click-101883843-15686662"\s*\)/.test(
+        catalog
+      )
+  );
   const namedPlaceholders = (catalog.match(/affItem\("([^"]*)",/g) || [])
     .map((s) => {
       const m = s.match(/affItem\("([^"]*)",/);

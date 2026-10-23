@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Letenky a letecká doprava — Skytours slot 1 + 7 empty slots.
+ * Freeze guard: Letenky a letecká doprava — Skytours slot 1 protected.
  * Protects Booking.com + Leo Express slot regression. Future partners in slots 2–8 allowed.
  * Run: npm run iu-affiliate-letenky-letecka-doprava-guard
  */
@@ -72,11 +72,14 @@ function auditStatic() {
     "catalog:slot1_skytours",
     /items:\s*\[\s*affPartner\(\s*"Skytours"\s*,\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-15733491"\s*\)/.test(block)
   );
-  ok("catalog:ready_partners_1", (block.match(/affPartner\(/g) || []).length === 1);
+  ok(
+    "catalog:ready_partners_min_1",
+    (block.match(/affPartner\(/g) || []).length >= 1
+  );
   ok("catalog:no_named_affItem", !/affItem\(\s*"[^"]+"/.test(block));
-  for (let i = 2; i <= 8; i++) {
-    ok("catalog:slot_slug_" + i, block.includes('affItem("", "letenky-letecka-empty-' + i + '")'));
-  }
+  // Remaining free slots keep empty slug pattern; filled slots may be affPartner (Phase 2B).
+  const emptySlugHits = (block.match(/affItem\("", "letenky-letecka-empty-\d+"\)/g) || []).length;
+  ok("catalog:empty_slugs_remain_or_filled", emptySlugHits + (block.match(/affPartner\(/g) || []).length === 8);
 
   ok("catalog:booking_preserved", /affPartner\(\s*"Booking\.com"[\s\S]*?13323565/.test(catalog));
   ok("catalog:leo_preserved", /affPartner\(\s*"Leo Express"[\s\S]*?15736211/.test(catalog));
@@ -275,7 +278,8 @@ try {
     ok(tag + ":skytours_target", snap.firstTarget === "_blank", snap.firstTarget);
     ok(tag + ":skytours_rel", snap.firstRel === "sponsored noopener", snap.firstRel);
     ok(tag + ":skytours_ready", snap.firstReady === "1", snap.firstReady);
-    ok(tag + ":empty_tail_slots", snap.tailEmpty && snap.tailNoHttps && snap.tailNeutral);
+    // Slots 2–8 may hold future partners; only require Skytours remains slot 1.
+    ok(tag + ":slot1_protected", snap.firstText === PARTNER_TITLE && snap.firstHref === CJ_URL);
     ok(tag + ":seo_after_slots", snap.seoAfterGrid && snap.seoVisible && snap.seoHasP1);
     samples.push({ vp: vp.name, slots: snap.slots, title: snap.title });
     await context.close();
