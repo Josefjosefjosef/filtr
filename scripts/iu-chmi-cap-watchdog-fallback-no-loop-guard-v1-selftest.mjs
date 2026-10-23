@@ -33,7 +33,11 @@ const MIN_BAD = MIN_GOOD.replace(
 );
 
 function runGuard(repoRoot) {
-  return spawnSync(process.execPath, [guard], { cwd: repoRoot, encoding: "utf8" });
+  return spawnSync(process.execPath, [guard], {
+    cwd: repoRoot,
+    encoding: "utf8",
+    env: { ...process.env, IU_CHMI_GUARD_REPO_ROOT: repoRoot },
+  });
 }
 
 function writeFixture(dir, content) {

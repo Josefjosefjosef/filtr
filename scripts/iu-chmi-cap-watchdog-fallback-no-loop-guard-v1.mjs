@@ -6,7 +6,9 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const ROOT = process.env.IU_CHMI_GUARD_REPO_ROOT
+  ? path.resolve(process.env.IU_CHMI_GUARD_REPO_ROOT)
+  : path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const fallback = fs.readFileSync(
   path.join(ROOT, ".github/workflows/chmi-cap-watchdog-cron-fallback.yml"),
   "utf8",
