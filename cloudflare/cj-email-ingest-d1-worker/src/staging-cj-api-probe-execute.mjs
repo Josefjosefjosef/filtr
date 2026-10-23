@@ -1,11 +1,14 @@
 /**
  * Staging-only CJ Link Search probe (coupon page 1). Uses Worker runtime PAT — never logged.
  */
+import { buildCjLinkSearchProbePage1QueryString } from "../../../scripts/iu-cj-affiliate-cj-link-search-query-v1.mjs";
 import {
   resolveStagingCjArchiveGate,
   trimPat,
   validateCjPublisherIdentityFields,
 } from "./staging-cj-api-archive-gate.mjs";
+
+export { buildCjLinkSearchProbePage1QueryString };
 
 export const CJ_LINK_SEARCH_BASE = "https://link-search.api.cj.com/v2/link-search";
 export const STAGING_CJ_PROBE_LOCK_KEY = "link_search_coupon_v1";
@@ -82,6 +85,8 @@ export function mapProbeConnectionState({
   if (redirectStatus) return "RESPONSE_FORMAT_FAILED";
   if (httpStatus === 401) return "AUTHENTICATION_FAILED";
   if (httpStatus === 403) return "AUTHORIZATION_FAILED";
+  if (httpStatus >= 400 && httpStatus < 500) return "HTTP_CLIENT_ERROR";
+  if (httpStatus >= 500) return "HTTP_CLIENT_ERROR";
   if (!auth?.authenticated) {
     if (auth?.reason === "unknown_shape") return "RESPONSE_FORMAT_FAILED";
     return "RESPONSE_FORMAT_FAILED";
@@ -230,14 +235,7 @@ export async function executeStagingCjLinkSearchProbe(env, deps = {}) {
     };
   }
 
-  const qs = new URLSearchParams({
-    "website-id": websitePid,
-    "advertiser-ids": "joined",
-    "link-type": "coupon",
-    "page-number": "1",
-    "records-per-page": "10",
-  });
-  const url = `${CJ_LINK_SEARCH_BASE}?${qs.toString()}`;
+  const url = `${CJ_LINK_SEARCH_BASE}?${buildCjLinkSearchProbePage1QueryString(websitePid)}`;
   const timeoutMs = Math.min(35000, Math.max(5000, Number(env.IU_CJ_FETCH_TIMEOUT_MS || 30000)));
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -291,8 +289,8 @@ export async function executeStagingCjLinkSearchProbe(env, deps = {}) {
     const responseParsing =
       auth.reason === "unknown_shape" || emptySuspicious
         ? "FAIL"
-        : res.status === 401 || res.status === 403
-          ? "PASS"
+        : res.status >= 400
+          ? "NOT_APPLICABLE"
           : "PASS";
 
     await finalizeStagingCjProbeLock(env.DB, STAGING_CJ_PROBE_LOCK_KEY, {

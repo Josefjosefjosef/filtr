@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 /** Offline tests for staging CJ API probe (mock fetch + mock D1, no live CJ). */
+import { buildCjLinkSearchProbePage1QueryString } from "./iu-cj-affiliate-cj-link-search-query-v1.mjs";
 import {
   acquireStagingCjProbeLock,
   buildSafeProbeResponse,
@@ -106,6 +107,28 @@ expect(
   "map_network",
   mapProbeConnectionState({ httpStatus: 0, auth: {}, recordCount: 0, networkError: true }) === "NETWORK_FAILED"
 );
+expect(
+  "map_400_client_error",
+  mapProbeConnectionState({
+    httpStatus: 400,
+    auth: { authenticated: false, reason: "http_error" },
+    recordCount: 0,
+    networkError: false,
+  }) === "HTTP_CLIENT_ERROR"
+);
+expect(
+  "map_unknown_shape_parse_fail",
+  mapProbeConnectionState({
+    httpStatus: 200,
+    auth: { authenticated: false, reason: "unknown_shape" },
+    recordCount: 0,
+    networkError: false,
+  }) === "RESPONSE_FORMAT_FAILED"
+);
+
+const probeQuery = buildCjLinkSearchProbePage1QueryString("101883843");
+expect("query_promotion_type", probeQuery.includes("promotion-type=coupon"));
+expect("query_no_bad_link_type", !probeQuery.includes("link-type=coupon"));
 
 const gateOff = resolveStagingCjArchiveGate(makeGoEnv({ IU_CJ_CJ_API_HTTP_EXECUTE: "0" }));
 expect("go_flags_off", gateOff.mayExecuteHttp === false);
@@ -119,9 +142,15 @@ expect("bad_identity_gate", gateBadId.mayExecuteHttp === false);
 const mockDb = new MockD1();
 const xmlOk = `<cj-api><links total-matched="1"><link><link-id>9</link-id><link-type>coupon</link-type></link></links></cj-api>`;
 
+let capturedUrl = "";
 const resOk2 = await executeStagingCjLinkSearchProbe({ ...makeGoEnv(), DB: mockDb }, {
-  fetch: async () => ({ status: 200, ok: true, text: async () => xmlOk }),
+  fetch: async (url) => {
+    capturedUrl = String(url);
+    return { status: 200, ok: true, text: async () => xmlOk };
+  },
 });
+expect("fetch_url_promotion_type", capturedUrl.includes("promotion-type=coupon"));
+expect("fetch_url_no_link_type_coupon", !capturedUrl.includes("link-type=coupon"));
 expect("live_http_mock_connected", resOk2.ok === true && resOk2.connectionState === "API_CONNECTED");
 expect("live_http_one_request", resOk2.httpRequestCount === 1);
 expect("coupon_count", resOk2.couponRecordCount === 1);
@@ -139,6 +168,28 @@ const res403 = await executeStagingCjLinkSearchProbe({ ...makeGoEnv(), DB: db403
   fetch: async () => ({ status: 403, ok: false, text: async () => "not authorized" }),
 });
 expect("http_403_fail", res403.connectionState === "AUTHORIZATION_FAILED");
+
+const db400 = new MockD1();
+const res400 = await executeStagingCjLinkSearchProbe({ ...makeGoEnv(), DB: db400 }, {
+  fetch: async () => ({ status: 400, ok: false, text: async () => "<error>bad request</error>" }),
+});
+expect("http_400_client_error", res400.ok === false && res400.connectionState === "HTTP_CLIENT_ERROR");
+expect("http_400_failure_reason", res400.failureReason === "http_error");
+
+expect(
+  "auth_unknown_shape_reason",
+  classifyCjXmlAuth("not-xml-garbage-body-without-cj-tags", 200).reason === "unknown_shape"
+);
+
+const dbBadXml = new MockD1();
+const resBadXml = await executeStagingCjLinkSearchProbe({ ...makeGoEnv(), DB: dbBadXml }, {
+  fetch: async () => ({
+    status: 200,
+    ok: true,
+    text: async () => "incorrect resource url in cj error payload",
+  }),
+});
+expect("bad_cj_shape_not_client_error", resBadXml.connectionState === "RESPONSE_FORMAT_FAILED");
 
 const dbNet = new MockD1();
 const resNet = await executeStagingCjLinkSearchProbe({ ...makeGoEnv(), DB: dbNet }, {

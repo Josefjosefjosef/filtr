@@ -38,6 +38,10 @@ expect(
 expect("offline_probe_expect_http_403", wf.includes("expected=403 actual="));
 expect("offline_probe_json_diagnostics", wf.includes("BLOCKER=PROBE_BLOCKED_JSON_INVALID"));
 expect("offline_probe_body_missing_guard", wf.includes("BLOCKER=PROBE_BLOCKED_BODY_MISSING"));
+expect("live_probe_outcome_gate", wf.includes("CJ_PROBE_OUTCOME=FAIL"));
+expect("live_probe_http_client_fail", wf.includes("HTTP_CLIENT_ERROR"));
+expect("live_probe_exit_on_fail", wf.includes("CJ live probe did not succeed"));
+expect("live_probe_http_400_gate", wf.includes("CJ_HTTP_STATUS_FAIL"));
 
 expect("patch_sh_exists", fs.existsSync(PATCH_SH));
 expect("patch_sh_uses_resolver", fs.readFileSync(PATCH_SH, "utf8").includes("iu-cj-affiliate-staging-d1-resolve-v1.mjs"));
@@ -119,6 +123,30 @@ async function runOfflineProbeMocks() {
 }
 
 await runOfflineProbeMocks();
+
+function simulateWorkflowProbeGate(probeResult) {
+  let probeFailed = false;
+  if (probeResult.ok !== true) {
+    probeFailed = true;
+  }
+  const cs = probeResult.connectionState || "unknown";
+  if (cs === "AUTHENTICATION_FAILED" || cs === "AUTHORIZATION_FAILED" || cs === "HTTP_CLIENT_ERROR") {
+    probeFailed = true;
+  } else if (cs !== "API_CONNECTED" && cs !== "EMPTY_RESULT_VERIFIED") {
+    probeFailed = true;
+  }
+  const hc = probeResult.httpStatus;
+  if (typeof hc === "number" && hc >= 400) {
+    probeFailed = true;
+  }
+  return probeFailed;
+}
+
+expect("workflow_gate_pass", simulateWorkflowProbeGate({ ok: true, connectionState: "API_CONNECTED", httpStatus: 200 }) === false);
+expect(
+  "workflow_gate_fail_400",
+  simulateWorkflowProbeGate({ ok: false, connectionState: "HTTP_CLIENT_ERROR", httpStatus: 400 }) === true
+);
 
 console.log(
   JSON.stringify({

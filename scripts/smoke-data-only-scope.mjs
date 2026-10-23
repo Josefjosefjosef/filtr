@@ -244,6 +244,11 @@ export function isCjStagingProbeWorkflowFixScope(files) {
     if (p === ".github/workflows/cj-affiliate-staging-cj-api-probe-once.yml") return true;
     if (p === "scripts/ci/patch-staging-cj-d1-wrangler-v1.sh") return true;
     if (p === "scripts/iu-cj-affiliate-staging-cj-api-probe-workflow-v1-selftest.mjs") return true;
+    if (p === CJ_STAGING_API_PROBE_EXECUTE) return true;
+    if (p === "scripts/iu-cj-affiliate-phase2-staging-cj-api-probe-v1-selftest.mjs") return true;
+    if (p === "scripts/iu-cj-affiliate-cj-link-search-query-v1.mjs") return true;
+    if (p === "scripts/iu-cj-affiliate-cj-link-search-query-v1-selftest.mjs") return true;
+    if (p === "scripts/iu-cj-affiliate-phase2-cj-api-adapter.mjs") return true;
     if (p === "scripts/iu-cj-affiliate-staging-ingest-token-sync-v1-selftest.mjs") return true;
     if (p === "scripts/iu-cj-affiliate-staging-d1-resolve-v1.mjs") return true;
     if (p === "scripts/iu-cj-affiliate-staging-d1-resolve-v1-selftest.mjs") return true;
@@ -322,6 +327,11 @@ export function isCjStagingApiProbeOnlyScope(files) {
       return true;
     }
     if (p === "scripts/iu-cj-affiliate-phase2-staging-cj-api-probe-v1-selftest.mjs") return true;
+    if (p === "scripts/iu-cj-affiliate-cj-link-search-query-v1.mjs") return true;
+    if (p === "scripts/iu-cj-affiliate-cj-link-search-query-v1-selftest.mjs") return true;
+    if (p === "scripts/iu-cj-affiliate-phase2-cj-api-adapter.mjs") return true;
+    if (p === ".github/workflows/cj-affiliate-staging-cj-api-probe-once.yml") return true;
+    if (p === "scripts/iu-cj-affiliate-staging-cj-api-probe-workflow-v1-selftest.mjs") return true;
     if (p === "scripts/iu-cj-affiliate-phase2-smoke-scope-v1-selftest.mjs") return true;
     if (p === "scripts/smoke-data-only-scope.mjs") return true;
     if (p === "scripts/smoke_data_only_scope_proof.mjs") return true;
