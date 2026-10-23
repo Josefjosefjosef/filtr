@@ -188,6 +188,7 @@ async function installClsObserver(context) {
     try {
       window.__iuSilverLayoutCls = 0;
       window.__iuSilverLayoutClsFromLoad = 0;
+      window.__iuSilverLayoutClsSources = [];
       new PerformanceObserver(function (list) {
         const entries = list.getEntries();
         for (let i = 0; i < entries.length; i++) {
@@ -195,6 +196,49 @@ async function installClsObserver(context) {
           if (!e.hadRecentInput && e.value) {
             window.__iuSilverLayoutClsFromLoad = (window.__iuSilverLayoutClsFromLoad || 0) + e.value;
             window.__iuSilverLayoutCls = (window.__iuSilverLayoutCls || 0) + e.value;
+            const sources = [];
+            try {
+              if (e.sources) {
+                for (let j = 0; j < e.sources.length; j++) {
+                  const s = e.sources[j];
+                  let nodeDesc = null;
+                  try {
+                    const n = s.node;
+                    if (n) {
+                      const tag = (n.tagName || "").toString();
+                      const id = n.id ? "#" + n.id : "";
+                      let cls = "";
+                      try {
+                        if (n.classList && n.classList.length) {
+                          cls = "." + Array.from(n.classList).slice(0, 4).join(".");
+                        }
+                      } catch (_) {}
+                      nodeDesc = tag + id + cls;
+                    }
+                  } catch (_) {}
+                  const prev = s.previousRect;
+                  const curr = s.currentRect;
+                  sources.push({
+                    node: nodeDesc,
+                    prev: prev
+                      ? { w: prev.width, h: prev.height, y: prev.y }
+                      : null,
+                    curr: curr
+                      ? { w: curr.width, h: curr.height, y: curr.y }
+                      : null,
+                    dH: prev && curr ? curr.height - prev.height : null,
+                    dY: prev && curr ? curr.y - prev.y : null,
+                  });
+                }
+              }
+            } catch (_) {}
+            try {
+              window.__iuSilverLayoutClsSources.push({
+                value: e.value,
+                startTime: e.startTime,
+                sources: sources,
+              });
+            } catch (_) {}
           }
         }
       }).observe({ type: "layout-shift", buffered: true });
@@ -208,6 +252,65 @@ async function readCls(page) {
 
 async function readClsFromLoad(page) {
   return page.evaluate(() => Number(window.__iuSilverLayoutClsFromLoad || 0));
+}
+
+async function readClsSources(page) {
+  return page.evaluate(() => {
+    const list = Array.isArray(window.__iuSilverLayoutClsSources)
+      ? window.__iuSilverLayoutClsSources.slice()
+      : [];
+    list.sort(function (a, b) {
+      return (b.value || 0) - (a.value || 0);
+    });
+    return list.slice(0, 8).map(function (e) {
+      return {
+        value: e.value,
+        startTime: e.startTime,
+        nodes: (e.sources || []).map(function (s) {
+          return {
+            node: s.node,
+            dH: s.dH,
+            dY: s.dY,
+            prev: s.prev,
+            curr: s.curr,
+          };
+        }),
+      };
+    });
+  });
+}
+
+/** Hide terms/consent overlays early so gate FOUC is not counted as Silver layout CLS. */
+async function dismissGatesForLayoutMeasure(page) {
+  await page.evaluate(() => {
+    try {
+      localStorage.setItem("iu:consent:layer:dismissed:v1", "1");
+      localStorage.setItem("iu:consent:analytics:v1", "denied");
+      localStorage.setItem("iu:terms:accepted:v1", "1");
+      localStorage.setItem("iu:terms:accepted-version:v1", "2026-09-08-v1");
+      localStorage.setItem("iu:terms:accepted-at:v1", new Date().toISOString());
+    } catch (_) {}
+    try {
+      const terms = document.getElementById("iuTermsGate");
+      if (terms && !terms.hidden) {
+        terms.hidden = true;
+        terms.setAttribute("aria-hidden", "true");
+      }
+      document.documentElement.classList.remove("iu-terms-gate-open");
+      if (document.body) document.body.classList.remove("iu-terms-gate-open");
+    } catch (_) {}
+    try {
+      const layer = document.getElementById("iuConsentLayer");
+      if (layer && !layer.hidden) {
+        try {
+          if (window.iuConsent && typeof window.iuConsent.dismissLayer === "function") {
+            window.iuConsent.dismissLayer();
+          }
+        } catch (_) {}
+        layer.hidden = true;
+      }
+    } catch (_) {}
+  });
 }
 
 function evaluateSilverLayoutClsGate(clsFromLoad, clsInteraction, cap) {
@@ -261,6 +364,10 @@ async function runViewport(page, w, h) {
 
   await page.goto(envUrl(), { waitUntil: "domcontentloaded", timeout: 90000 });
   await waitForDeferredAppCss(page);
+  /* Terms/consent gate FOUC was a proven tablet CLS contributor (~0.04 on BODY.iu-terms-gate-open).
+     Pre-accept is already set in initScript; enforce DOM hide before the settle window so gate
+     layout shift is not counted as Silver hero/parcel CLS (CLS_CAP unchanged at 0.05). */
+  await dismissGatesForLayoutMeasure(page);
   await page.waitForTimeout(2600);
 
   /* Mobile/tablet: parcel lives in quick⇄parcel switcher; show parcel panel for layout asserts. */
@@ -650,6 +757,7 @@ async function runViewport(page, w, h) {
 
   const clsFromLoad = await readClsFromLoad(page);
   const clsInteraction = await readCls(page);
+  const clsSources = await readClsSources(page);
   const clsGate = evaluateSilverLayoutClsGate(clsFromLoad, clsInteraction, CLS_CAP);
 
   const ignorableOpts = {
@@ -726,6 +834,7 @@ async function runViewport(page, w, h) {
     cls_from_load_pass: clsGate.cls_from_load_pass,
     cls_interaction_pass: clsGate.cls_interaction_pass,
     cls_pass: clsPass,
+    cls_sources_top: clsSources,
     parcel_height_first_px: parcelTrack.first,
     parcel_height_last_px: parcelTrack.last,
     parcel_height_min_px: parcelTrack.min,
@@ -771,6 +880,9 @@ function formatBlock(label, o) {
     "  cls_interaction_pass: " + o.cls_interaction_pass,
     "  cls: " + o.cls,
     "  cls_pass: " + o.cls_pass,
+    o.cls_sources_top && o.cls_sources_top.length
+      ? "  cls_sources_top: " + JSON.stringify(o.cls_sources_top)
+      : null,
     "  parcel_height_first_px: " + o.parcel_height_first_px,
     "  parcel_height_last_px: " + o.parcel_height_last_px,
     "  parcel_height_delta_px: " + o.parcel_height_delta_px,
