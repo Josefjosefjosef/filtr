@@ -23,7 +23,8 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Ads-freeze wait + required-check poll (same budget class as CHMI post-write).
+    timeout-minutes: 35
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -99,19 +100,6 @@ jobs:
           git push --force origin "HEAD:${{ env.AUTOMATION_BRANCH }}"
           echo "pushed=true" >> "$GITHUB_OUTPUT"
 
-      - name: Dispatch required checks
-        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
-          REF="${{ env.AUTOMATION_BRANCH }}"
-          REPO="${{ github.repository }}"
-          gh workflow run smoke.yml --ref "$REF" --repo "$REPO"
-          gh workflow run layout-guard.yml --ref "$REF" --repo "$REPO"
-          gh workflow run repo-guard.yml --ref "$REF" --repo "$REPO"
-          echo "[CHECKS] Dispatched on $REF"
-
       - name: Create or update PR
         if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
         id: pr
@@ -135,7 +123,7 @@ jobs:
           echo "pr_url=https://github.com/${{ github.repository }}/pull/$NUM" >> "$GITHUB_OUTPUT"
           echo "[PR] Created PR #$NUM"
 
-      - name: Merge latest main into PR head if behind (unblock auto-merge)
+      - name: Merge latest main into PR head if behind
         if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true'
         continue-on-error: true
         env:
@@ -153,9 +141,19 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          CHANGED=$(git diff --name-only origin/main...HEAD)
-          echo "[SCOPE] Changed files:"
+          NUM="${{ steps.pr.outputs.pr_number }}"
+          [ -z "$NUM" ] && { echo "data_only=false" >> "$GITHUB_OUTPUT"; exit 1; }
+          BASE=$(gh pr view "$NUM" --json baseRefOid -q .baseRefOid)
+          HEAD=$(gh pr view "$NUM" --json headRefOid -q .headRefOid)
+          echo "[SCOPE] pr=$NUM base=$BASE head=$HEAD"
+          CHANGED=$(gh pr diff "$NUM" --name-only)
+          echo "[SCOPE] PR changed files:"
           echo "$CHANGED"
+          if [ -z "$(echo "$CHANGED" | tr -d '[:space:]')" ]; then
+            echo "[SCOPE] empty PR diff — FAIL (no auto-merge)"
+            echo "data_only=false" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
           DATA_ONLY=true
           while IFS= read -r f; do
             [ -z "$f" ] && continue
@@ -169,8 +167,59 @@ jobs:
             echo "[SCOPE] data-only — auto-merge allowed"
           else
             echo "data_only=false" >> "$GITHUB_OUTPUT"
-            echo "[SCOPE] non-data change — auto-merge disabled"
+            echo "[SCOPE] non-data change — auto-merge disabled (FAIL)"
+            exit 1
           fi
+
+      - name: Dispatch required checks
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true' && steps.scope.outputs.data_only == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          REF="${{ env.AUTOMATION_BRANCH }}"
+          REPO="${{ github.repository }}"
+          gh workflow run smoke.yml --ref "$REF" --repo "$REPO"
+          gh workflow run layout-guard.yml --ref "$REF" --repo "$REPO"
+          gh workflow run repo-guard.yml --ref "$REF" --repo "$REPO"
+          echo "[CHECKS] Dispatched smoke, layout-guard, repo-guard on $REF"
+
+      - name: Dispatch iu-ads-regression-freeze (bot PR workflow_dispatch)
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true' && steps.scope.outputs.data_only == 'true'
+        id: ensure_ads
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NUM="${{ steps.pr.outputs.pr_number }}"
+          REPO="${{ github.repository }}"
+          REF="${{ env.AUTOMATION_BRANCH }}"
+          SHA=$(gh pr view "$NUM" --json headRefOid -q .headRefOid)
+          echo "[ADS] dispatch pr=$NUM ref=$REF head=$SHA"
+          gh workflow run iu-ads-regression-freeze.yml --ref "$REF" --repo "$REPO" -f "pr_number=${NUM}"
+          for i in $(seq 1 36); do
+            SHA=$(gh pr view "$NUM" --json headRefOid -q .headRefOid)
+            echo "[ADS] wait attempt=$i sha=$SHA"
+            CR=$(gh api "repos/${REPO}/commits/${SHA}/check-runs" \
+              --jq '[.check_runs[] | select(.name=="iu-ads-regression-freeze")] | sort_by(.started_at) | last // empty')
+            if [ -n "$CR" ] && [ "$CR" != "null" ]; then
+              APP=$(echo "$CR" | jq -r '.app.slug // ""')
+              ST=$(echo "$CR" | jq -r '.status // ""')
+              CO=$(echo "$CR" | jq -r '.conclusion // ""')
+              echo "[ADS] check app=$APP status=$ST conclusion=$CO"
+              if [ "$CO" = "success" ] && [ "$APP" = "github-actions" ]; then
+                echo "ads_ok=true" >> "$GITHUB_OUTPUT"
+                exit 0
+              fi
+              if [ "$CO" = "failure" ] || [ "$CO" = "timed_out" ]; then
+                echo "[ADS] check failed"
+                exit 1
+              fi
+            fi
+            sleep 15
+          done
+          echo "[ADS] timeout waiting for GHA iu-ads-regression-freeze on PR head"
+          exit 1
 
       - name: Enable auto-merge (squash) when data-only
         if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true' && steps.scope.outputs.data_only == 'true'
@@ -183,9 +232,79 @@ jobs:
           gh pr merge "$NUM" --auto --squash
           echo "[AUTO-MERGE] Enabled for PR #$NUM"
 
+      - name: Wait for required checks (fail if missing/failing)
+        if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true' && steps.scope.outputs.data_only == 'true'
+        id: wait_merge
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          NUM="${{ steps.pr.outputs.pr_number }}"
+          [ -z "$NUM" ] && exit 0
+          SHA=$(gh pr view "$NUM" --json headRefOid -q .headRefOid)
+          echo "[WAIT] PR #$NUM sha=$SHA"
+          for i in $(seq 1 48); do
+            MERGED=$(gh pr view "$NUM" --json state -q .state)
+            if [ "$MERGED" = "MERGED" ]; then
+              echo "[WAIT] PR already merged"
+              echo "merged=true" >> "$GITHUB_OUTPUT"
+              echo "mergedAt_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            SHA=$(gh pr view "$NUM" --json headRefOid -q .headRefOid)
+            REPO="${{ github.repository }}"
+            ROLLUP=$(gh pr view "$NUM" --json mergeStateStatus,statusCheckRollup -q '{m:.mergeStateStatus,c:[.statusCheckRollup[]? | {name:(.name // .context), conclusion:(.conclusion // .state)}]}')
+            echo "[WAIT] attempt=$i sha=$SHA $ROLLUP"
+            FAIL=$(echo "$ROLLUP" | jq -r '[.c[] | select(((.conclusion // "")|ascii_downcase) == "failure" or ((.conclusion // "")|ascii_downcase) == "cancelled" or ((.conclusion // "")|ascii_downcase) == "error")] | length')
+            ADS_FAIL=$(gh api "repos/${REPO}/commits/${SHA}/check-runs" --jq '[.check_runs[] | select(.name=="iu-ads-regression-freeze" and (.conclusion=="failure" or .conclusion=="timed_out"))] | length')
+            if [ "$FAIL" != "0" ] || [ "$ADS_FAIL" != "0" ]; then
+              echo "[WAIT] required check failed rollup_fail=$FAIL ads_fail=$ADS_FAIL"
+              gh pr checks "$NUM" || true
+              exit 1
+            fi
+            HAVE=0
+            for ctx in repo-guard smoke layout-guard; do
+              HIT=$(echo "$ROLLUP" | jq -r --arg n "$ctx" '[.c[] | select((.name|ascii_downcase) == ($n|ascii_downcase) and ((.conclusion|ascii_downcase)=="success"))] | length')
+              if [ "$HIT" != "0" ]; then HAVE=$((HAVE + 1)); fi
+            done
+            ADS_OK=$(gh api "repos/${REPO}/commits/${SHA}/check-runs" --jq '[.check_runs[] | select(.name=="iu-ads-regression-freeze" and .conclusion=="success" and .app.slug=="github-actions")] | length')
+            if [ "$ADS_OK" != "0" ]; then HAVE=$((HAVE + 1)); fi
+            echo "[WAIT] required contexts ready ($HAVE/4) ads_ok=$ADS_OK"
+            if [ "$HAVE" -lt 4 ]; then
+              if [ "$ADS_OK" = "0" ] && [ "$i" = "6" ]; then
+                echo "[WAIT] re-dispatch iu-ads-regression-freeze"
+                gh workflow run iu-ads-regression-freeze.yml --ref "${{ env.AUTOMATION_BRANCH }}" --repo "$REPO" -f "pr_number=${NUM}" || true
+              fi
+              sleep 15
+              continue
+            fi
+            echo "[WAIT] all 4 required contexts satisfied (iu-ads via check-runs API)"
+            for _try in $(seq 1 36); do
+              ST=$(gh pr view "$NUM" --json state -q .state)
+              if [ "$ST" = "MERGED" ]; then
+                echo "[WAIT] auto-merge completed (try=$_try)"
+                echo "merged=true" >> "$GITHUB_OUTPUT"
+                echo "mergedAt_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
+                exit 0
+              fi
+              sleep 10
+            done
+            MS=$(echo "$ROLLUP" | jq -r .m)
+            echo "[WAIT] checks satisfied but PR not merged (mergeState=$MS) — leaving auto-merge enabled"
+            echo "merged=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          done
+          echo "[WAIT] timeout waiting for checks"
+          gh pr checks "$NUM" || true
+          exit 1
+
       - name: Deploy summary
         if: always()
         shell: bash
         run: |
           set -euo pipefail
           echo "[DEPLOY] data_changed=${{ steps.no_diff.outputs.data_changed }}"
+          echo "[DEPLOY] pushed=${{ steps.commit_push.outputs.pushed }}"
+          echo "[DEPLOY] data_only=${{ steps.scope.outputs.data_only }}"
+          echo "[DEPLOY] ads_ok=${{ steps.ensure_ads.outputs.ads_ok }}"
+          echo "[DEPLOY] merged=${{ steps.wait_merge.outputs.merged }}"
