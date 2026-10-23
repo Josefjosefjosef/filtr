@@ -19,9 +19,16 @@ function expect(name, cond) {
 const wf = fs.readFileSync(WF, "utf8");
 expect("workflow_exists", wf.length > 100);
 expect("input_live_default_off", /execute_live_cj_probe[\s\S]*default:\s*["']0["']/.test(wf));
+expect("input_probe_lock_key", /probe_lock_key:/.test(wf));
+expect("input_probe_lock_default_v1", /probe_lock_key:[\s\S]*default:\s*["']link_search_coupon_v1["']/.test(wf));
+expect("input_probe_lock_allowlist_v2", wf.includes("link_search_coupon_v2"));
+expect("arm_sets_lock_key_var", wf.includes("IU_CJ_STAGING_PROBE_LOCK_KEY:${PROBE_LOCK_KEY}"));
+expect("disarm_resets_lock_key_v1", wf.includes("IU_CJ_STAGING_PROBE_LOCK_KEY:link_search_coupon_v1"));
 expect("disarm_separate_job", /disarm-failsafe:/.test(wf));
 expect("disarm_needs_probe_job", /needs:\s*staging-cj-probe/.test(wf));
 expect("disarm_if_always", /disarm-failsafe:[\s\S]*if:\s*always\(\)/.test(wf));
+expect("live_probe_rate_limit_gate", wf.includes("RATE_LIMIT_FAILED"));
+expect("live_probe_server_error_gate", wf.includes("HTTP_SERVER_ERROR"));
 expect("patch_script_in_arm", /patch-staging-cj-d1-wrangler-v1\.sh/.test(wf));
 expect("patch_script_in_disarm", (wf.match(/patch-staging-cj-d1-wrangler-v1\.sh/g) || []).length >= 2);
 expect("no_wrangler_d1_create", !/d1 create/i.test(wf));
@@ -130,7 +137,13 @@ function simulateWorkflowProbeGate(probeResult) {
     probeFailed = true;
   }
   const cs = probeResult.connectionState || "unknown";
-  if (cs === "AUTHENTICATION_FAILED" || cs === "AUTHORIZATION_FAILED" || cs === "HTTP_CLIENT_ERROR") {
+  if (
+    cs === "AUTHENTICATION_FAILED" ||
+    cs === "AUTHORIZATION_FAILED" ||
+    cs === "HTTP_CLIENT_ERROR" ||
+    cs === "RATE_LIMIT_FAILED" ||
+    cs === "HTTP_SERVER_ERROR"
+  ) {
     probeFailed = true;
   } else if (cs !== "API_CONNECTED" && cs !== "EMPTY_RESULT_VERIFIED") {
     probeFailed = true;
@@ -147,6 +160,35 @@ expect(
   "workflow_gate_fail_400",
   simulateWorkflowProbeGate({ ok: false, connectionState: "HTTP_CLIENT_ERROR", httpStatus: 400 }) === true
 );
+expect(
+  "workflow_gate_fail_429",
+  simulateWorkflowProbeGate({ ok: false, connectionState: "RATE_LIMIT_FAILED", httpStatus: 429 }) === true
+);
+expect(
+  "workflow_gate_fail_500",
+  simulateWorkflowProbeGate({ ok: false, connectionState: "HTTP_SERVER_ERROR", httpStatus: 500 }) === true
+);
+
+// Offline: v2 selected + GO off → 0 HTTP / 0 lock rows
+{
+  const db = new MockD1Double();
+  let fetches = 0;
+  const blocked = await executeStagingCjLinkSearchProbe(
+    {
+      ...goOff,
+      IU_CJ_STAGING_PROBE_LOCK_KEY: "link_search_coupon_v2",
+      DB: db,
+    },
+    {
+      fetch: async () => {
+        fetches += 1;
+        return { status: 200, text: async () => "<links/>" };
+      },
+    }
+  );
+  expect("v2_go_off_no_http", blocked.blocked === true && fetches === 0 && blocked.httpRequestCount === 0);
+  expect("v2_go_off_no_lock_row", db.locks.size === 0);
+}
 
 console.log(
   JSON.stringify({

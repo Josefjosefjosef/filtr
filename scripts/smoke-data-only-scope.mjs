@@ -373,11 +373,13 @@ export function isCjStagingApiProbeOnlyScope(files) {
       return true;
     }
     if (p === "scripts/iu-cj-affiliate-phase2-staging-cj-api-probe-v1-selftest.mjs") return true;
+    if (p === "scripts/iu-cj-affiliate-phase2-staging-cj-api-probe-lock-v2-selftest.mjs") return true;
     if (p === "scripts/iu-cj-affiliate-cj-link-search-query-v1.mjs") return true;
     if (p === "scripts/iu-cj-affiliate-cj-link-search-query-v1-selftest.mjs") return true;
     if (p === "scripts/iu-cj-affiliate-phase2-cj-api-adapter.mjs") return true;
     if (p === ".github/workflows/cj-affiliate-staging-cj-api-probe-once.yml") return true;
     if (p === "scripts/iu-cj-affiliate-staging-cj-api-probe-workflow-v1-selftest.mjs") return true;
+    if (p === "docs/CJ-PHASE2-CLOUDFLARE-STAGING-RUNBOOK.md") return true;
     if (p === "scripts/iu-cj-affiliate-phase2-smoke-scope-v1-selftest.mjs") return true;
     if (p === "scripts/smoke-data-only-scope.mjs") return true;
     if (p === "scripts/smoke_data_only_scope_proof.mjs") return true;

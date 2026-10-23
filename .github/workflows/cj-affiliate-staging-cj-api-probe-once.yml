@@ -11,6 +11,14 @@ on:
         options:
           - "0"
           - "1"
+      probe_lock_key:
+        description: "One-shot D1 lock key (allowlist only; v2 never auto-selected)"
+        required: true
+        default: "link_search_coupon_v1"
+        type: choice
+        options:
+          - "link_search_coupon_v1"
+          - "link_search_coupon_v2"
 
 permissions:
   contents: read
@@ -32,6 +40,7 @@ jobs:
       EXPECT_PID: "101883843"
       WRANGLER_SEND_METRICS: "false"
       EXECUTE_LIVE: ${{ inputs.execute_live_cj_probe }}
+      PROBE_LOCK_KEY: ${{ inputs.probe_lock_key }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -40,6 +49,21 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
+
+      - name: Allowlist probe lock key (fail-closed)
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "${PROBE_LOCK_KEY}" in
+            link_search_coupon_v1|link_search_coupon_v2)
+              echo "CJ_PROBE_LOCK_KEY=${PROBE_LOCK_KEY}"
+              echo "CJ_PROBE_LOCK_KEY_ALLOWLIST=PASS"
+              ;;
+            *)
+              echo "BLOCKER=PROBE_LOCK_KEY_NOT_ALLOWED value=${PROBE_LOCK_KEY}"
+              exit 1
+              ;;
+          esac
 
       - name: Preflight (CF token + public health)
         shell: bash
@@ -73,12 +97,12 @@ jobs:
         run: |
           set -euo pipefail
           bash ../../scripts/ci/patch-staging-cj-d1-wrangler-v1.sh iu-cj-email-ingest-staging
-          OUT="$(npx --yes wrangler@4 d1 execute iu-cj-email-ingest-staging --env staging --remote --json --command "SELECT lock_key, finished_at, http_status, record_count, connection_state FROM staging_cj_api_probe_lock WHERE lock_key = 'link_search_coupon_v1' LIMIT 1;")"
+          OUT="$(npx --yes wrangler@4 d1 execute iu-cj-email-ingest-staging --env staging --remote --json --command "SELECT lock_key, finished_at, http_status, record_count, connection_state FROM staging_cj_api_probe_lock WHERE lock_key = '${PROBE_LOCK_KEY}' LIMIT 1;")"
           echo "$OUT" | node -e "
           let s='';process.stdin.on('data',c=>s+=c);process.stdin.on('end',()=>{
             const j=JSON.parse(s);
             const rows=(j[0]&&j[0].results)||[];
-            if(!rows.length){console.log('CJ_D1_LOCK_READY=PASS');console.log('CJ_D1_LOCK_CONSUMED=NO');return;}
+            if(!rows.length){console.log('CJ_D1_LOCK_READY=PASS');console.log('CJ_D1_LOCK_CONSUMED=NO');console.log('CJ_D1_LOCK_KEY='+process.env.PROBE_LOCK_KEY);return;}
             const r=rows[0];
             if(r.finished_at){console.log('CJ_D1_LOCK_READY=FAIL');console.log('CJ_D1_LOCK_CONSUMED=YES');process.exit(1);}
             console.log('CJ_D1_LOCK_READY=FAIL');console.log('CJ_D1_LOCK_CONSUMED=UNVERIFIED');process.exit(1);
@@ -144,6 +168,7 @@ jobs:
           echo "CJ_HTTP_REQUEST_COUNT=0"
           echo "CJ_PAT_AUTHENTICATION=NOT_TESTED"
           echo "CJ_LIVE_HTTP_REQUESTS=0"
+          echo "CJ_D1_LOCK_NOT_CREATED_WHEN_GO_OFF=PASS key=${PROBE_LOCK_KEY}"
 
       - name: Verify Worker plain-text vars (CID/PID)
         shell: bash
@@ -168,7 +193,8 @@ jobs:
             --var "IU_CJ_STAGING_CJ_API_PROBE_APPROVED:1" \
             --var "IU_CJ_CJ_API_HTTP_EXECUTE:1" \
             --var "IU_CJ_STAGING_CJ_API_PROBE_EXECUTE:1" \
-            --var "IU_CJ_CJ_API_MAX_REQUESTS_PER_PROBE:1" 2>&1 | sed -E 's/(token|Token|Bearer|pat|PAT)[^[:space:]]+/[REDACTED]/g'
+            --var "IU_CJ_CJ_API_MAX_REQUESTS_PER_PROBE:1" \
+            --var "IU_CJ_STAGING_PROBE_LOCK_KEY:${PROBE_LOCK_KEY}" 2>&1 | sed -E 's/(token|Token|Bearer|pat|PAT)[^[:space:]]+/[REDACTED]/g'
           curl -fsS -H "Authorization: Bearer ${INGEST_TOKEN}" "${WORKER_URL}/v1/staging/cj-api/readiness" | python3 -c "
           import json,sys
           r=json.load(sys.stdin)
@@ -176,6 +202,7 @@ jobs:
           assert r.get('identityOk') is True
           print('CJ_READINESS_ARMED=PASS')
           print('CJ_ARM_D1_RESOLVE=PASS')
+          print('CJ_PROBE_LOCK_KEY_ARMED=' + '''${PROBE_LOCK_KEY}''')
           "
 
       - name: One authorized CJ API probe POST
@@ -189,7 +216,7 @@ jobs:
           python3 <<'PY'
           import json
           r=json.load(open("/tmp/probe_result.json"))
-          safe={k:r.get(k) for k in ("ok","phase","publishable","blocked","connectionState","httpStatus","couponRecordCount","responseParsing","authOk","failureReason","httpRequestCount","identityOk") if k in r}
+          safe={k:r.get(k) for k in ("ok","phase","publishable","blocked","connectionState","httpStatus","couponRecordCount","responseParsing","authOk","failureReason","httpRequestCount","identityOk","probeLockKey") if k in r}
           print("CJ_PROBE_SAFE_JSON="+json.dumps(safe,sort_keys=True))
           hc=r.get("httpStatus")
           hrc=r.get("httpRequestCount")
@@ -220,7 +247,7 @@ jobs:
               print("CJ_PROBE_OUTCOME=PASS")
           if cs in ("API_CONNECTED","EMPTY_RESULT_VERIFIED"):
               print("CJ_API_CONNECTION=PASS")
-          elif cs in ("AUTHENTICATION_FAILED","AUTHORIZATION_FAILED","HTTP_CLIENT_ERROR"):
+          elif cs in ("AUTHENTICATION_FAILED","AUTHORIZATION_FAILED","HTTP_CLIENT_ERROR","RATE_LIMIT_FAILED","HTTP_SERVER_ERROR"):
               print("CJ_API_CONNECTION=FAIL")
               probe_failed=True
           elif cs in ("NETWORK_FAILED",):
@@ -244,14 +271,15 @@ jobs:
         run: |
           set -euo pipefail
           bash ../../scripts/ci/patch-staging-cj-d1-wrangler-v1.sh iu-cj-email-ingest-staging
-          OUT="$(npx --yes wrangler@4 d1 execute iu-cj-email-ingest-staging --env staging --remote --json --command "SELECT lock_key, finished_at, http_status, record_count, connection_state FROM staging_cj_api_probe_lock WHERE lock_key = 'link_search_coupon_v1' LIMIT 1;")"
+          OUT="$(npx --yes wrangler@4 d1 execute iu-cj-email-ingest-staging --env staging --remote --json --command "SELECT lock_key, finished_at, http_status, record_count, connection_state FROM staging_cj_api_probe_lock WHERE lock_key = '${PROBE_LOCK_KEY}' LIMIT 1;")"
           echo "$OUT" | node -e "
           let s='';process.stdin.on('data',c=>s+=c);process.stdin.on('end',()=>{
             const j=JSON.parse(s);
             const rows=(j[0]&&j[0].results)||[];
-            if(!rows.length){console.log('CJ_D1_LOCK_CONSUMED=NO');return;}
+            if(!rows.length){console.log('CJ_D1_LOCK_CONSUMED=NO');console.log('CJ_D1_LOCK_KEY='+process.env.PROBE_LOCK_KEY);return;}
             const r=rows[0];
             console.log('CJ_D1_LOCK_CONSUMED='+(r.finished_at?'YES':'UNVERIFIED'));
+            console.log('CJ_D1_LOCK_KEY='+(r.lock_key||process.env.PROBE_LOCK_KEY));
             console.log('CJ_D1_LOCK_HTTP_STATUS='+(r.http_status??'null'));
             console.log('CJ_D1_LOCK_RECORD_COUNT='+(r.record_count??'null'));
             console.log('CJ_D1_LOCK_CONNECTION_STATE='+(r.connection_state||'unknown'));
@@ -289,7 +317,8 @@ jobs:
           npx --yes wrangler@4 deploy --env staging --keep-vars \
             --var "IU_CJ_STAGING_CJ_API_PROBE_APPROVED:0" \
             --var "IU_CJ_CJ_API_HTTP_EXECUTE:0" \
-            --var "IU_CJ_STAGING_CJ_API_PROBE_EXECUTE:0" 2>&1 | sed -E 's/(token|Token|Bearer|pat|PAT)[^[:space:]]+/[REDACTED]/g'
+            --var "IU_CJ_STAGING_CJ_API_PROBE_EXECUTE:0" \
+            --var "IU_CJ_STAGING_PROBE_LOCK_KEY:link_search_coupon_v1" 2>&1 | sed -E 's/(token|Token|Bearer|pat|PAT)[^[:space:]]+/[REDACTED]/g'
           echo "CJ_DISARM_D1_RESOLVE=PASS"
 
       - name: Verify GO off + publishing disabled
