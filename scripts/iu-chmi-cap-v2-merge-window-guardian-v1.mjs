@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+´¬¬#!/usr/bin/env node
 /**
  * CHMI merge-window guardian: enable-only restore for two target workflows.
  * Does not disable workflows, merge PRs, or touch repo data.
@@ -133,6 +133,11 @@ function githubRepoFromEnv() {
   return repo;
 }
 
+/** GitHub REST: PUT .../actions/workflows/{filename}/enable (not bare workflow PUT). */
+export function workflowEnablePathSuffix(workflowFile) {
+  return `${assertRestorableWorkflowFile(workflowFile)}/enable`;
+}
+
 async function ghFetch(pathSuffix, { method = "GET", token }) {
   const repo = githubRepoFromEnv();
   if (!repo) throw new Error("GITHUB_REPOSITORY_missing");
@@ -167,7 +172,7 @@ async function runRestoreLive() {
     maxAttempts: Number(process.env.IU_CHMI_GUARDIAN_MAX_ATTEMPTS || DEFAULT_MAX_ATTEMPTS),
     retryDelayMs: Number(process.env.IU_CHMI_GUARDIAN_RETRY_DELAY_MS || DEFAULT_RETRY_DELAY_MS),
     enableWorkflow: async (file) => {
-      const r = await ghFetch(file, { method: "PUT", token });
+      const r = await ghFetch(workflowEnablePathSuffix(file), { method: "PUT", token });
       return { ok: r.ok || r.status === 204, status: r.status, body: r.text?.slice(0, 200) };
     },
     fetchState: async (file) => {

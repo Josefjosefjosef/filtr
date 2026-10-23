@@ -8,6 +8,7 @@ import {
   clampWaitMinutes,
   restoreTargetWorkflows,
   validateGuardianWorkflowStatic,
+  workflowEnablePathSuffix,
 } from "./iu-chmi-cap-v2-merge-window-guardian-v1.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -29,6 +30,16 @@ const wfSrc = fs.readFileSync(
 );
 expect("static_guard_ok", validateGuardianWorkflowStatic(wfSrc).length === 0);
 expect("guardian_not_in_targets", !TARGET_WORKFLOW_FILES.includes(GUARDIAN_WORKFLOW_BASENAME));
+
+expect(
+  "enable_api_path_suffix",
+  workflowEnablePathSuffix("update-chmi-cap-v2.yml") === "update-chmi-cap-v2.yml/enable",
+);
+expect(
+  "enable_api_path_fallback",
+  workflowEnablePathSuffix("chmi-cap-watchdog-cron-fallback.yml") ===
+    "chmi-cap-watchdog-cron-fallback.yml/enable",
+);
 
 {
   const r = await restoreTargetWorkflows({
