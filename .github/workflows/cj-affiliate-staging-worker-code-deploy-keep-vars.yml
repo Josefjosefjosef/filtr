@@ -134,6 +134,15 @@ jobs:
           set -euo pipefail
           OUT="$(npx --yes wrangler@4 deploy --config cloudflare/cj-email-ingest-d1-worker/wrangler.toml --env staging 2>&1)"
           echo "$OUT" | sed -E 's/(token|Token|Bearer|pat|PAT)[^[:space:]]+/[REDACTED]/g'
+          # Fail-closed: GO-flags toml patch must not swallow [[env.staging.d1_databases]] into plain vars.
+          if echo "$OUT" | grep -F 'exists at the top level, but not on "env.staging"' | grep -Fq 'd1_databases'; then
+            echo "BLOCKER=STAGING_D1_BINDINGS_MISSING_FROM_TOML"
+            exit 1
+          fi
+          if echo "$OUT" | grep -Eq 'env\.database_id \(|env\.bucket_name \(|env\.binding \('; then
+            echo "BLOCKER=STAGING_BINDINGS_FLATTENED_TO_VARS"
+            exit 1
+          fi
           URL="$(echo "$OUT" | grep -Eo 'https://[a-zA-Z0-9.-]+\.workers\.dev' | head -n1 || true)"
           VER="$(echo "$OUT" | grep -Eo 'Current Version ID:[[:space:]]*[a-f0-9-]+' | head -n1 | awk '{print $NF}' || true)"
           if [ -z "$URL" ]; then
