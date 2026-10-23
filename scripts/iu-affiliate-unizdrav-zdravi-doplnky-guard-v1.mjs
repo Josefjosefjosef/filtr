@@ -278,7 +278,7 @@ try {
     ok(tag + ":unizdrav_no_img", snap.hasImg === false);
     ok(tag + ":unizdrav_no_direct", !/^https?:\/\/(?:www\.)?unizdrav\.cz/i.test(snap.uzHref));
     ok(tag + ":centered", snap.centered === true);
-    ok(tag + ":empty_slots_remain", snap.namedCount >= 3 && snap.namedCount < 8, "named=" + snap.namedCount);
+    ok(tag + ":empty_slots_remain", snap.namedCount >= 3, "named=" + snap.namedCount);
 
     const popupPromise = page.waitForEvent("popup", { timeout: 15000 }).catch(() => null);
     await page

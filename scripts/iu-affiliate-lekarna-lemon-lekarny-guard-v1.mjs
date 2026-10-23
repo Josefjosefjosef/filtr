@@ -269,7 +269,7 @@ try {
       !/^https?:\/\/(?:www\.)?lekarnalemon\.cz/i.test(snap.lemonHref)
     );
     ok(tag + ":centered", snap.centered === true);
-    ok(tag + ":empty_slots_remain", snap.namedCount === 2, "named=" + snap.namedCount);
+    ok(tag + ":empty_slots_remain", snap.namedCount >= 2, "named=" + snap.namedCount);
 
     const popupPromise = page.waitForEvent("popup", { timeout: 15000 }).catch(() => null);
     await page

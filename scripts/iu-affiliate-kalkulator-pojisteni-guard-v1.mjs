@@ -268,7 +268,8 @@ try {
     ok(tag + ":kalkulator_no_img", snap.hasImg === false);
     ok(tag + ":kalkulator_no_direct", !/^https?:\/\/(www\.)?kalkulator\.cz/i.test(snap.kalkHref));
     ok(tag + ":centered", snap.centered === true);
-    ok(tag + ":empty_slots_remain", snap.namedCount === 2, "named=" + snap.namedCount);
+    /* Phase 2G: ready-only — section may hold >2 ready partners; no empty placeholders. */
+    ok(tag + ":empty_slots_remain", snap.namedCount >= 2, "named=" + snap.namedCount);
 
     const popupPromise = page.waitForEvent("popup", { timeout: 15000 }).catch(() => null);
     await page

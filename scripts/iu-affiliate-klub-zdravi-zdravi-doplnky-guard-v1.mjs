@@ -266,7 +266,7 @@ try {
     ok(tag + ":centered", snap.centered === true);
     ok(
       tag + ":empty_slots_remain",
-      snap.namedCount >= 1 && snap.namedCount < 8,
+      snap.namedCount >= 1,
       "named=" + snap.namedCount
     );
 

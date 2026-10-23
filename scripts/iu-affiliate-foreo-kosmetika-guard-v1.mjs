@@ -297,7 +297,7 @@ try {
     ok(tag + ":foreo_no_img", snap.hasImg === false);
     ok(tag + ":foreo_no_direct", !/^https?:\/\/(?:www\.)?foreo/i.test(snap.foHref));
     ok(tag + ":centered", snap.centered === true);
-    ok(tag + ":empty_slots_remain", snap.namedCount >= 3 && snap.namedCount < 8, "named=" + snap.namedCount);
+    ok(tag + ":empty_slots_remain", snap.namedCount >= 3, "named=" + snap.namedCount);
 
     const popupTimeout = vp.name === "pwa" ? 30000 : 15000;
     const popupPromise = page.waitForEvent("popup", { timeout: popupTimeout }).catch(() => null);

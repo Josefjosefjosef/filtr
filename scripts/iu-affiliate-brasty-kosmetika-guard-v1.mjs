@@ -318,7 +318,7 @@ try {
     ok(tag + ":brasty_no_img", snap.hasImg === false);
     ok(tag + ":brasty_no_direct", !/^https?:\/\/(?:www\.)?brasty\.cz/i.test(snap.brHref));
     ok(tag + ":centered", snap.centered === true);
-    ok(tag + ":empty_slots_remain", snap.namedCount >= 5 && snap.namedCount < 8, "named=" + snap.namedCount);
+    ok(tag + ":empty_slots_remain", snap.namedCount >= 5, "named=" + snap.namedCount);
 
     const popupTimeout = vp.name === "pwa" ? 30000 : 15000;
     const popupPromise = page.waitForEvent("popup", { timeout: popupTimeout }).catch(() => null);

@@ -312,7 +312,7 @@ try {
     ok(tag + ":mentislab_no_img", snap.hasImg === false);
     ok(tag + ":mentislab_no_direct", !/^https?:\/\/(?:www\.)?mentislab/i.test(snap.mlHref));
     ok(tag + ":centered", snap.centered === true);
-    ok(tag + ":empty_slots_remain", snap.namedCount >= 4 && snap.namedCount < 8, "named=" + snap.namedCount);
+    ok(tag + ":empty_slots_remain", snap.namedCount >= 4, "named=" + snap.namedCount);
 
     const popupTimeout = vp.name === "pwa" ? 30000 : 20000;
     const chipLoc = page
