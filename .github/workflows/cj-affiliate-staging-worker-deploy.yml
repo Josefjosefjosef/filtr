@@ -67,12 +67,18 @@ jobs:
           echo "D1_DATABASE_ID_RESOLVED=PASS"
           echo "d1_id_length=${#ID}" >> "$GITHUB_OUTPUT"
 
-      - name: List staging D1 migrations (remote, pre-apply audit)
+      - name: Gate staging D1 migrations (remote, fail-closed)
+        id: migrations_gate
         shell: bash
         run: |
           set -euo pipefail
-          npx --yes wrangler@4 d1 migrations list iu-cj-email-ingest-staging --env staging --remote || true
-          echo "D1_MIGRATION_LIST_AUDIT=OK"
+          OUT="$(mktemp)"
+          set +e
+          npx --yes wrangler@4 d1 migrations list iu-cj-email-ingest-staging --env staging --remote > "$OUT" 2>&1
+          EC=$?
+          set -e
+          node ../../scripts/iu-cj-affiliate-staging-d1-migrations-list-gate-v1.mjs --exit-code "$EC" --file "$OUT"
+          echo "CJ_STAGING_D1_MIGRATIONS_GATE=PASS"
 
       - name: Apply staging D1 migrations (remote)
         shell: bash
