@@ -130,6 +130,7 @@ export function allowsDataOnlyFastPath(files) {
     isChmiCapWatchdogFallbackNoLoopScope(files) ||
     isChmiCapV2ProdVerifyScope(files) ||
     isCjAffiliatePhase2OfflineOnlyScope(files) ||
+    isCjOfflineCatalogNormalizeScope(files) ||
     isCjStagingApiProbeOnlyScope(files) ||
     isCjStagingProbeWorkflowFixScope(files) ||
     isCjStagingD1CidPidFixScope(files) ||
@@ -251,6 +252,10 @@ export function isChmiCapV2ProdVerifyScope(files) {
 export const CJ_AFFILIATE_PHASE2_OFFLINE_FIXTURE_SELFTEST =
   "scripts/iu-cj-affiliate-phase2-coupon-eligibility-fixture-selftest.mjs";
 
+/** Offline CJ Link Search XML → catalog normalize (no live CJ HTTP). */
+export const CJ_OFFLINE_CATALOG_NORMALIZE_SELFTEST =
+  "scripts/iu-cj-affiliate-phase2-cj-link-search-catalog-normalize-v1-selftest.mjs";
+
 export function isCjAffiliatePhase2OfflineOnlyScope(files) {
   const paths = files.map((f) => f.trim()).filter(Boolean);
   if (!paths.length) return false;
@@ -266,6 +271,30 @@ export function isCjAffiliatePhase2OfflineOnlyScope(files) {
     if (p === "scripts/ci/smoke-guard-manifest-v1.json") return true;
     if (p === "scripts/ci/smoke-guard-manifest-v1-selftest.mjs") return true;
     if (p === "scripts/ci/smoke-workflow-parallelize-apply-v1.mjs") return true;
+    if (p === ".github/workflows/smoke.yml") return true;
+    return false;
+  };
+  return paths.every((f) => allowed(f));
+}
+
+/** CJ offline catalog normalize pipeline — skip unrelated Playwright; run CJ offline selftests. */
+export function isCjOfflineCatalogNormalizeScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  const feature = CJ_OFFLINE_CATALOG_NORMALIZE_SELFTEST;
+  if (!paths.some((f) => normalizeRepoPath(f) === feature)) return false;
+  const allowed = (f) => {
+    const p = normalizeRepoPath(f);
+    if (!p) return false;
+    if (p === feature) return true;
+    if (p === "scripts/iu-cj-affiliate-phase2-cj-link-search-catalog-normalize-v1.mjs") return true;
+    if (p === "scripts/fixtures/cj-link-search-coupon-offline-anonymized-v1.xml") return true;
+    if (p === "scripts/iu-cj-affiliate-phase2-catalog-coupon-product-cards-v1.mjs") return true;
+    if (p === "scripts/smoke-data-only-scope.mjs") return true;
+    if (p === "scripts/smoke_data_only_scope_proof.mjs") return true;
+    if (p === "scripts/iu-cj-affiliate-phase2-smoke-scope-v1-selftest.mjs") return true;
+    if (p === "scripts/ci/smoke-guard-manifest-v1.json") return true;
+    if (p === "scripts/ci/smoke-guard-manifest-v1-selftest.mjs") return true;
     if (p === ".github/workflows/smoke.yml") return true;
     return false;
   };
@@ -901,6 +930,7 @@ function main() {
   const chmiCapWatchdogFallbackNoLoopOnly = isChmiCapWatchdogFallbackNoLoopScope(files);
   const chmiCapV2ProdVerifyOnly = isChmiCapV2ProdVerifyScope(files);
   const cjAffiliatePhase2OfflineOnly = isCjAffiliatePhase2OfflineOnlyScope(files);
+  const cjOfflineCatalogNormalizeOnly = isCjOfflineCatalogNormalizeScope(files);
   const cjStagingApiProbeOnly = isCjStagingApiProbeOnlyScope(files);
   const cjStagingProbeWorkflowFix = isCjStagingProbeWorkflowFixScope(files);
   const cjStagingD1CidPidFix = isCjStagingD1CidPidFixScope(files);
@@ -916,6 +946,7 @@ function main() {
     chmiCapWatchdogFallbackNoLoopOnly ||
     chmiCapV2ProdVerifyOnly ||
     cjAffiliatePhase2OfflineOnly ||
+    cjOfflineCatalogNormalizeOnly ||
     cjStagingApiProbeOnly ||
     cjStagingProbeWorkflowFix ||
     cjStagingD1CidPidFix ||
@@ -960,12 +991,14 @@ function main() {
   writeOutput("chmi_cap_watchdog_fallback_no_loop_only", chmiCapWatchdogFallbackNoLoopOnly ? "true" : "false");
   writeOutput("chmi_cap_v2_prod_verify_only", chmiCapV2ProdVerifyOnly ? "true" : "false");
   writeOutput("cj_affiliate_phase2_offline_only", cjAffiliatePhase2OfflineOnly ? "true" : "false");
+  writeOutput("cj_offline_catalog_normalize_only", cjOfflineCatalogNormalizeOnly ? "true" : "false");
   writeOutput("cj_staging_api_probe_only", cjStagingApiProbeOnly ? "true" : "false");
   writeOutput("cj_staging_probe_workflow_fix_only", cjStagingProbeWorkflowFix ? "true" : "false");
   writeOutput("cj_staging_d1_cid_pid_fix_only", cjStagingD1CidPidFix ? "true" : "false");
   writeOutput("cj_staging_wrangler_identity_vars_only", cjStagingWranglerIdentityVars ? "true" : "false");
   console.log(`SMOKE_DATA_ONLY_SCOPE=${allowFastPath ? "YES" : "NO"}`);
   console.log(`SMOKE_CJ_AFFILIATE_PHASE2_OFFLINE_ONLY_SCOPE=${cjAffiliatePhase2OfflineOnly ? "YES" : "NO"}`);
+  console.log(`SMOKE_CJ_OFFLINE_CATALOG_NORMALIZE_ONLY_SCOPE=${cjOfflineCatalogNormalizeOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_CJ_STAGING_API_PROBE_ONLY_SCOPE=${cjStagingApiProbeOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_IU_ADS_DEPLOY_UNBLOCK_ONLY_SCOPE=${iuAdsDeployUnblockOnly ? "YES" : "NO"}`);
   console.log(`SMOKE_CHMI_CAP_WATCHDOG_DEPLOY_ONLY_SCOPE=${chmiCapWatchdogDeployOnly ? "YES" : "NO"}`);
