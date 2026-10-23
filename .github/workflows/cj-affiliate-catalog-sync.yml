@@ -26,9 +26,18 @@ on:
         options:
           - "0"
           - "1"
+      promote_managed_public:
+        description: "Open data-only PR to main with managed-public JSON (same-origin Pages; infra GO)"
+        required: true
+        default: "0"
+        type: choice
+        options:
+          - "0"
+          - "1"
 
 permissions:
   contents: write
+  pull-requests: write
 
 concurrency:
   group: cj-affiliate-catalog-sync
@@ -47,6 +56,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-catalog-sync-v1-selftest.mjs
       - name: E2E overlay selftest (fixtures)
         run: node scripts/iu-cj-affiliate-catalog-sync-e2e-overlay-selftest.mjs
+      - name: Promote selftest (fixtures, disarmed default)
+        run: node scripts/iu-cj-affiliate-catalog-sync-promote-selftest.mjs
 
   fetch-staging:
     needs: selftest
@@ -172,3 +183,77 @@ jobs:
           if [ -f projects/data/iu-affiliate-cj-sync-audit-v1.json ]; then
             python3 -c "import json; a=json.load(open('projects/data/iu-affiliate-cj-sync-audit-v1.json')); print(json.dumps(a.get('plan',a) if isinstance(a,dict) else {}, indent=2)[:2000])"
           fi
+
+  promote-data-pr:
+    needs: publish-gate
+    if: github.event_name == 'workflow_dispatch' && inputs.promote_managed_public == '1' && inputs.arm_publish == '1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Fetch managed-public from sync branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          SYNC_BRANCH="data/cj-affiliate-catalog-sync"
+          git fetch origin "${SYNC_BRANCH}"
+          git show "origin/${SYNC_BRANCH}:projects/data/iu-affiliate-cj-managed-public-v1.json" > /tmp/iu-managed-public-incoming.json
+      - name: Validate incoming managed-public (promote write stays disarmed)
+        shell: bash
+        env:
+          IU_CJ_MANAGED_PUBLIC_PROMOTE_ARMED: "0"
+        run: |
+          set -euo pipefail
+          mkdir -p projects/data
+          cp /tmp/iu-managed-public-incoming.json projects/data/iu-affiliate-cj-managed-public-v1.json
+          node scripts/iu-cj-affiliate-catalog-sync-promote-managed-public-v1.mjs
+      - name: Open data-only PR to main (required checks still apply; no auto-merge)
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          BR="data/cj-managed-public-promote-${GITHUB_RUN_ID}"
+          git config user.name "iu-cj-catalog-sync-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "${BR}"
+          mkdir -p projects/data
+          cp /tmp/iu-managed-public-incoming.json projects/data/iu-affiliate-cj-managed-public-v1.json
+          git add projects/data/iu-affiliate-cj-managed-public-v1.json
+          if git diff --cached --quiet; then
+            echo "NO_PUBLIC_CHANGES"
+            exit 0
+          fi
+          if git diff --cached --name-only | grep -Ev '^projects/data/iu-affiliate-cj-managed-public-v1\.json$'; then
+            echo "BLOCKER=UNEXPECTED_PROMOTE_PATHS"
+            git diff --cached --name-only
+            exit 1
+          fi
+          git commit -m "chore(data): promote CJ managed-public overlay (data-only)"
+          git push origin "HEAD:${BR}"
+          gh pr create \
+            --base main \
+            --head "${BR}" \
+            --title "chore(data): promote CJ managed-public overlay" \
+            --body "## Summary
+          - Data-only promote of \`projects/data/iu-affiliate-cj-managed-public-v1.json\`
+          - No code/guard/workflow changes
+          - Required checks must pass; no auto-merge
+
+          ## What does NOT change
+          - Catalog JS, slot policy, MANUAL_PROTECTED partners, secrets
+
+          ## Verification checklist
+          - [ ] Only one file changed
+          - [ ] Overlay schema validates
+          - [ ] No live CJ fetch in this PR
+          "
+          echo "PROMOTE_PR_OPENED=true"
+          echo "NO_AUTO_MERGE=true"
+          echo "NO_PROD_DEPLOY_FROM_THIS_JOB=true"
