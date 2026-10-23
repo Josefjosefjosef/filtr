@@ -1175,6 +1175,9 @@
         if (ctrl) ctrl.abort();
       } catch (_) {}
     }, 2500);
+    /* PWA/cache: bust query from clock; response also cache: no-store */
+    if (src.indexOf("?") === -1) src = src + "?v=" + String(Date.now());
+    else src = src + "&v=" + String(Date.now());
     var fetchOpts = { credentials: "same-origin", cache: "no-store" };
     if (ctrl) fetchOpts.signal = ctrl.signal;
     fetch(src, fetchOpts)
