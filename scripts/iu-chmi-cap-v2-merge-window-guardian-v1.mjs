@@ -1,4 +1,4 @@
-´¬¬#!/usr/bin/env node
+Â´Â¬Â¬#!/usr/bin/env node
 /**
  * CHMI merge-window guardian: enable-only restore for two target workflows.
  * Does not disable workflows, merge PRs, or touch repo data.
