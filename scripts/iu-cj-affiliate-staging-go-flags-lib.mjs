@@ -81,8 +81,24 @@ export function diagnoseGoFlagsSourceOfTruth(tomlVars = {}, runtime = {}) {
 }
 
 /**
+ * Match a TOML table header line: `[table]` or array-of-tables `[[table]]`.
+ * IMPORTANT: `^\[[^\]]+\]$` does NOT match `[[env.staging.d1_databases]]` (trailing `]`),
+ * which previously caused vars patch to swallow D1/R2 sections into plain env vars.
+ */
+export const TOML_TABLE_HEADER_RE = /^\[{1,2}[^\[\]]+\]{1,2}\s*$/m;
+
+/**
+ * @param {string} text
+ * @returns {number} index of next header or -1
+ */
+export function findNextTomlTableHeader(text) {
+  const m = TOML_TABLE_HEADER_RE.exec(String(text || ""));
+  return m ? m.index : -1;
+}
+
+/**
  * Apply/replace keys inside a TOML [env.staging.vars] table body (multiline).
- * Returns full file text.
+ * Returns full file text. Preserves following `[[env.staging.*]]` array tables.
  * @param {string} wranglerToml
  * @param {Record<string, string>} patch
  */
@@ -95,7 +111,7 @@ export function applyEnvStagingVarsPatch(wranglerToml, patch) {
   }
   const start = tableMatch.index + tableMatch[0].length;
   const rest = text.slice(start);
-  const nextHeader = rest.search(/^\[[^\]]+\]\s*$/m);
+  const nextHeader = findNextTomlTableHeader(rest);
   const body = nextHeader === -1 ? rest : rest.slice(0, nextHeader);
   const after = nextHeader === -1 ? "" : rest.slice(nextHeader);
 
@@ -130,7 +146,7 @@ export function parseEnvStagingVars(wranglerToml) {
   if (!tableMatch) return {};
   const start = tableMatch.index + tableMatch[0].length;
   const rest = text.slice(start);
-  const nextHeader = rest.search(/^\[[^\]]+\]\s*$/m);
+  const nextHeader = findNextTomlTableHeader(rest);
   const body = nextHeader === -1 ? rest : rest.slice(0, nextHeader);
   const out = {};
   for (const line of body.split(/\r?\n/)) {

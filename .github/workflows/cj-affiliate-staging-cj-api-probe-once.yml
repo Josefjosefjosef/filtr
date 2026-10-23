@@ -192,6 +192,10 @@ jobs:
           node scripts/iu-cj-affiliate-staging-go-flags-patch-v1.mjs --mode arm --lock-key "${PROBE_LOCK_KEY}"
           OUT="$(npx --yes wrangler@4 deploy --config cloudflare/cj-email-ingest-d1-worker/wrangler.toml --env staging 2>&1)"
           echo "$OUT" | sed -E 's/(token|Token|Bearer|pat|PAT)[^[:space:]]+/[REDACTED]/g'
+          if echo "$OUT" | grep -Eq 'env\.database_id \(|env\.bucket_name \(|env\.binding \('; then
+            echo "BLOCKER=STAGING_BINDINGS_FLATTENED_TO_VARS"
+            exit 1
+          fi
           VER="$(echo "$OUT" | grep -Eo 'Current Version ID:[[:space:]]*[a-f0-9-]+' | head -n1 | awk '{print $NF}' || true)"
           echo "CJ_ARM_VERSION_ID=${VER:-unknown}"
           echo "CJ_GO_FLAGS_SOURCE=toml_env_staging_vars"
@@ -340,7 +344,12 @@ jobs:
         run: |
           set -euo pipefail
           node scripts/iu-cj-affiliate-staging-go-flags-patch-v1.mjs --mode disarm
-          npx --yes wrangler@4 deploy --config cloudflare/cj-email-ingest-d1-worker/wrangler.toml --env staging 2>&1 | sed -E 's/(token|Token|Bearer|pat|PAT)[^[:space:]]+/[REDACTED]/g'
+          OUT="$(npx --yes wrangler@4 deploy --config cloudflare/cj-email-ingest-d1-worker/wrangler.toml --env staging 2>&1)"
+          echo "$OUT" | sed -E 's/(token|Token|Bearer|pat|PAT)[^[:space:]]+/[REDACTED]/g'
+          if echo "$OUT" | grep -Eq 'env\.database_id \(|env\.bucket_name \(|env\.binding \('; then
+            echo "BLOCKER=STAGING_BINDINGS_FLATTENED_TO_VARS"
+            exit 1
+          fi
           echo "CJ_DISARM_D1_RESOLVE=PASS"
           echo "CJ_GO_FLAGS_SOURCE=toml_env_staging_vars"
 
