@@ -127,6 +127,7 @@ export function allowsDataOnlyFastPath(files) {
     isIuAdsDeployUnblockScope(files) ||
     isChmiCapWatchdogDeployScope(files) ||
     isChmiCapV2MergeWindowGuardianScope(files) ||
+    isChmiCapWatchdogFallbackNoLoopScope(files) ||
     isChmiCapV2ProdVerifyScope(files) ||
     isCjAffiliatePhase2OfflineOnlyScope(files) ||
     isCjStagingApiProbeOnlyScope(files) ||
@@ -185,6 +186,27 @@ export function isChmiCapV2MergeWindowGuardianScope(files) {
     if (p === "scripts/smoke_data_only_scope_proof.mjs") return true;
     if (p === ".github/workflows/smoke.yml") return true;
     if (p === "package.json") return true;
+    return false;
+  };
+  return paths.every(allowed);
+}
+
+/** CHMI CAP watchdog GitHub fallback no-loop — workflow + offline guards only. */
+export function isChmiCapWatchdogFallbackNoLoopScope(files) {
+  const paths = files.map((f) => f.trim()).filter(Boolean);
+  if (!paths.length) return false;
+  const allowed = (f) => {
+    const p = normalizeRepoPath(f);
+    if (!p) return false;
+    if (p === ".github/workflows/chmi-cap-watchdog-cron-fallback.yml") return true;
+    if (p === "scripts/iu-chmi-cap-watchdog-fallback-no-loop-guard-v1.mjs") return true;
+    if (p === "scripts/iu-chmi-cap-watchdog-fallback-no-loop-guard-v1-selftest.mjs") return true;
+    if (p === "scripts/iu-chmi-redundant-trigger-guard.mjs") return true;
+    if (p === "scripts/ci/smoke-guard-manifest-v1.json") return true;
+    if (p === "package.json") return true;
+    if (p === "scripts/smoke-data-only-scope.mjs") return true;
+    if (p === "scripts/smoke_data_only_scope_proof.mjs") return true;
+    if (p === ".github/workflows/smoke.yml") return true;
     return false;
   };
   return paths.every(allowed);
@@ -854,6 +876,7 @@ function main() {
   const iuAdsDeployUnblockOnly = isIuAdsDeployUnblockScope(files);
   const chmiCapWatchdogDeployOnly = isChmiCapWatchdogDeployScope(files);
   const chmiCapV2MergeWindowGuardianOnly = isChmiCapV2MergeWindowGuardianScope(files);
+  const chmiCapWatchdogFallbackNoLoopOnly = isChmiCapWatchdogFallbackNoLoopScope(files);
   const chmiCapV2ProdVerifyOnly = isChmiCapV2ProdVerifyScope(files);
   const cjAffiliatePhase2OfflineOnly = isCjAffiliatePhase2OfflineOnlyScope(files);
   const cjStagingApiProbeOnly = isCjStagingApiProbeOnlyScope(files);
@@ -868,6 +891,7 @@ function main() {
     iuAdsDeployUnblockOnly ||
     chmiCapWatchdogDeployOnly ||
     chmiCapV2MergeWindowGuardianOnly ||
+    chmiCapWatchdogFallbackNoLoopOnly ||
     chmiCapV2ProdVerifyOnly ||
     cjAffiliatePhase2OfflineOnly ||
     cjStagingApiProbeOnly ||
@@ -911,6 +935,7 @@ function main() {
   writeOutput("iu_ads_deploy_unblock_only", iuAdsDeployUnblockOnly ? "true" : "false");
   writeOutput("chmi_cap_watchdog_deploy_only", chmiCapWatchdogDeployOnly ? "true" : "false");
   writeOutput("chmi_cap_v2_merge_window_guardian_only", chmiCapV2MergeWindowGuardianOnly ? "true" : "false");
+  writeOutput("chmi_cap_watchdog_fallback_no_loop_only", chmiCapWatchdogFallbackNoLoopOnly ? "true" : "false");
   writeOutput("chmi_cap_v2_prod_verify_only", chmiCapV2ProdVerifyOnly ? "true" : "false");
   writeOutput("cj_affiliate_phase2_offline_only", cjAffiliatePhase2OfflineOnly ? "true" : "false");
   writeOutput("cj_staging_api_probe_only", cjStagingApiProbeOnly ? "true" : "false");

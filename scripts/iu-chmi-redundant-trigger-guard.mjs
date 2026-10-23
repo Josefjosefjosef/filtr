@@ -41,6 +41,8 @@ ok(
   "fallback_probe_auth_bearer",
   /Authorization: Bearer/.test(fallback) && /CHMI_CAP_WATCHDOG_MANUAL_TRIGGER_SECRET/.test(fallback),
 );
+ok("fallback_no_chmi_completion_workflow_run", !/^\s*workflow_run:/m.test(fallback));
+ok("fallback_stale_gated_recovery", /WATCHDOG_STALE_RECOVERY_DISPATCH/.test(fallback));
 ok("cap_workflow_dispatch", /workflow_dispatch/.test(capWf));
 
 if (fails.length) {
