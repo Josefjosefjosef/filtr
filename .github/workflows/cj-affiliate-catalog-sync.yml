@@ -27,7 +27,15 @@ on:
           - "0"
           - "1"
       promote_managed_public:
-        description: "Open data-only PR to main with managed-public JSON (same-origin Pages; infra GO)"
+        description: "Open data-only PR to main with managed-public JSON (legacy Pages path; infra GO)"
+        required: true
+        default: "0"
+        type: choice
+        options:
+          - "0"
+          - "1"
+      publish_managed_public_r2:
+        description: "Unattended R2 publish via site-redirects worker (no git merge; requires infra GO + secrets)"
         required: true
         default: "0"
         type: choice
@@ -58,6 +66,15 @@ jobs:
         run: node scripts/iu-cj-affiliate-catalog-sync-e2e-overlay-selftest.mjs
       - name: Promote selftest (fixtures, disarmed default)
         run: node scripts/iu-cj-affiliate-catalog-sync-promote-selftest.mjs
+      - name: R2 auto-publish selftest (fixtures; no prod; proves no git merge)
+        run: node scripts/iu-cj-affiliate-catalog-sync-r2-publish-selftest.mjs
+      - name: R2 → overlay E2E selftest (fixtures; no git merge)
+        run: node scripts/iu-cj-affiliate-catalog-sync-r2-e2e-overlay-selftest.mjs
+      - name: Site-redirects CJ managed-public unit tests
+        working-directory: cloudflare/iu-site-redirects
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+          npm test -- --run src/cj-managed-public.test.ts
 
   fetch-staging:
     needs: selftest
@@ -257,3 +274,52 @@ jobs:
           echo "PROMOTE_PR_OPENED=true"
           echo "NO_AUTO_MERGE=true"
           echo "NO_PROD_DEPLOY_FROM_THIS_JOB=true"
+
+  # Phase 2H: unattended public overlay via Worker/R2 (no PR merge, no commit to main).
+  # DISARMED unless workflow_dispatch publish_managed_public_r2=1 AND arm_publish=1 AND secrets set.
+  # Live CF binding creation is INFRA_PENDING — job fails closed if endpoint/token missing when armed.
+  publish-managed-public-r2:
+    needs: publish-gate
+    if: github.event_name == 'workflow_dispatch' && inputs.publish_managed_public_r2 == '1' && inputs.arm_publish == '1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      IU_CJ_MANAGED_PUBLIC_R2_PUBLISH_ARMED: "1"
+      IU_CJ_MANAGED_PUBLIC_PUBLISH_URL: ${{ secrets.IU_CJ_MANAGED_PUBLIC_PUBLISH_URL }}
+      IU_CJ_MANAGED_PUBLIC_PUBLISH_TOKEN: ${{ secrets.IU_CJ_MANAGED_PUBLIC_PUBLISH_TOKEN }}
+      IU_CJ_WEBSITE_PID: ${{ secrets.IU_CJ_WEBSITE_PID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Fetch managed-public from sync branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          SYNC_BRANCH="data/cj-affiliate-catalog-sync"
+          git fetch origin "${SYNC_BRANCH}"
+          mkdir -p projects/data
+          git show "origin/${SYNC_BRANCH}:projects/data/iu-affiliate-cj-managed-public-v1.json" > projects/data/iu-affiliate-cj-managed-public-v1.json
+      - name: Preflight R2 publish secrets (no values)
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -n "${IU_CJ_MANAGED_PUBLIC_PUBLISH_URL:-}" ]; then echo "PUBLISH_URL=CONFIGURED"; else echo "PUBLISH_URL=MISSING"; fi
+          if [ -n "${IU_CJ_MANAGED_PUBLIC_PUBLISH_TOKEN:-}" ]; then echo "PUBLISH_TOKEN=CONFIGURED"; else echo "PUBLISH_TOKEN=MISSING"; fi
+          if [ -z "${IU_CJ_MANAGED_PUBLIC_PUBLISH_URL:-}" ] || [ -z "${IU_CJ_MANAGED_PUBLIC_PUBLISH_TOKEN:-}" ]; then
+            echo "BLOCKER=INFRA_PENDING_R2_PUBLISH_SECRETS"
+            echo "NO_PROD_DEPLOY=true"
+            exit 1
+          fi
+      - name: Publish validated overlay to Worker/R2 (no git merge)
+        run: node scripts/iu-cj-affiliate-catalog-sync-r2-publish-v1.mjs
+      - name: Summary
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "NO_GIT_MERGE=true"
+          echo "NO_MAIN_COMMIT=true"
+          echo "NO_AUTO_MERGE_PR=true"
+          echo "CHANNEL=cloudflare_r2_via_site_redirects"
+          echo "LIVE_ARM_REQUIRES_INFRA_GO=true"
