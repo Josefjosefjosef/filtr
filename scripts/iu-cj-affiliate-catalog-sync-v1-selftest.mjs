@@ -8,6 +8,7 @@ import {
   decidePublishAction,
   verifyCjLinkOwnership,
   assertAllowedDataWrite,
+  materializeManagedPublic,
   PARTNER_STATE,
   WEBSITE_PID,
 } from "./iu-cj-affiliate-catalog-sync-publish-gate-v1.mjs";
@@ -184,6 +185,51 @@ function expect(name, cond) {
   expect(
     "allow_staging",
     assertAllowedDataWrite("projects/data/iu-affiliate-cj-staging-v1.json") === true
+  );
+  expect(
+    "allow_managed_public",
+    assertAllowedDataWrite("projects/data/iu-affiliate-cj-managed-public-v1.json") === true
+  );
+}
+
+// Explicit ENDED → active:false in slice (overlay hide signal)
+{
+  const plan = buildPublishPlan({
+    candidates: [
+      {
+        advertiserId: "400",
+        title: "Bye",
+        url: goodUrl,
+        sectionId: "aff-moda",
+      },
+    ],
+    policyPartners: [{ advertiserId: "400", management: "CJ_MANAGED" }],
+    linkMetaByAdvertiser: {
+      400: {
+        websitePid: PID,
+        advertiserId: "400",
+        linkBelongsToAdvertiser: true,
+        programAvailable: false,
+        programStatus: "ENDED",
+      },
+    },
+    lastKnownGood: [
+      {
+        advertiserId: "400",
+        title: "Bye",
+        url: goodUrl,
+        sectionId: "aff-moda",
+        management: "CJ_MANAGED",
+        active: true,
+      },
+    ],
+  });
+  const row = plan.publishSlice.find((p) => p.advertiserId === "400");
+  expect("ended_active_false", plan.ok === true && row && row.active === false);
+  const pub = materializeManagedPublic(plan.publishSlice);
+  expect(
+    "ended_public_inactive",
+    pub.partners.some((p) => p.advertiserId === "400" && p.active === false)
   );
 }
 

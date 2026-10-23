@@ -45,6 +45,8 @@ jobs:
           node-version: "22"
       - name: Publish-gate selftest
         run: node scripts/iu-cj-affiliate-catalog-sync-v1-selftest.mjs
+      - name: E2E overlay selftest (fixtures)
+        run: node scripts/iu-cj-affiliate-catalog-sync-e2e-overlay-selftest.mjs
 
   fetch-staging:
     needs: selftest
@@ -133,7 +135,7 @@ jobs:
           path: projects/data
       - name: Publish gate (CJ_MANAGED only; LKG on outage)
         run: node scripts/iu-cj-affiliate-catalog-sync-publish-v1.mjs
-      - name: Commit managed registry if armed (data/cj-affiliate-catalog-sync only)
+      - name: Commit managed registry + public overlay if armed (sync branch only)
         if: env.IU_CJ_SYNC_PUBLISH_ARMED == '1'
         shell: bash
         run: |
@@ -143,17 +145,20 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin "${SYNC_BRANCH}" || true
           git checkout -B "${SYNC_BRANCH}" "origin/${SYNC_BRANCH}" 2>/dev/null || git checkout -B "${SYNC_BRANCH}"
-          git add projects/data/iu-affiliate-cj-managed-registry-v1.json projects/data/iu-affiliate-cj-sync-audit-v1.json || true
+          git add \
+            projects/data/iu-affiliate-cj-managed-registry-v1.json \
+            projects/data/iu-affiliate-cj-managed-public-v1.json \
+            projects/data/iu-affiliate-cj-sync-audit-v1.json || true
           if git diff --cached --quiet; then
             echo "NO_REGISTRY_CHANGES"
             exit 0
           fi
-          if git diff --cached --name-only | grep -Ev '^projects/data/iu-affiliate-cj-(managed-registry|sync-audit)-v1\.json$'; then
+          if git diff --cached --name-only | grep -Ev '^projects/data/iu-affiliate-cj-(managed-registry|managed-public|sync-audit)-v1\.json$'; then
             echo "BLOCKER=UNEXPECTED_PUBLISH_PATHS"
             git diff --cached --name-only
             exit 1
           fi
-          git commit -m "chore(data): CJ_MANAGED registry publish (gate pass, sync branch)"
+          git commit -m "chore(data): CJ_MANAGED registry+public overlay (gate pass, sync branch)"
           git push origin "HEAD:${SYNC_BRANCH}"
       - name: Summary (no merge / no prod)
         shell: bash
@@ -162,6 +167,8 @@ jobs:
           echo "NO_MERGE=true"
           echo "NO_PROD_DEPLOY=true"
           echo "FETCH_NE_PUBLISH=true"
+          echo "MANAGED_PUBLIC_OVERLAY=projects/data/iu-affiliate-cj-managed-public-v1.json"
+          echo "PROMOTE_TO_MAIN=DISARMED_REQUIRES_INFRA_GO"
           if [ -f projects/data/iu-affiliate-cj-sync-audit-v1.json ]; then
             python3 -c "import json; a=json.load(open('projects/data/iu-affiliate-cj-sync-audit-v1.json')); print(json.dumps(a.get('plan',a) if isinstance(a,dict) else {}, indent=2)[:2000])"
           fi

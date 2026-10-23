@@ -229,14 +229,21 @@ export function buildPublishPlan({
       existingManagedIds: managedIds,
       blockedAdvertiserIds,
     });
-    decisions.push({ advertiserId, ...decision, title: candidate.title, sectionId: candidate.sectionId });
+    decisions.push({
+      advertiserId,
+      ...decision,
+      title: candidate.title,
+      url: candidate.url || decision.url,
+      sectionId: candidate.sectionId || decision.sectionId,
+    });
 
     if (decision.state === PARTNER_STATE.API_OUTAGE) apiOutage = true;
     if (decision.state === PARTNER_STATE.ENDED && isManaged) endedManaged += 1;
   }
 
   const endedRatio = managedConsidered > 0 ? endedManaged / managedConsidered : 0;
-  const massEndedStop = endedRatio > massEndedRatioStop;
+  /* Require a meaningful cohort so a single verified ENDED partner can still hide. */
+  const massEndedStop = managedConsidered >= 4 && endedRatio > massEndedRatioStop;
 
   /** @type {object[]} */
   let publishSlice = [];
@@ -259,9 +266,21 @@ export function buildPublishPlan({
           url: d.url,
           sectionId: d.sectionId,
           management: "CJ_MANAGED",
+          active: true,
         });
       } else if (d.state === PARTNER_STATE.ENDED && d.hideManagedOnly) {
-        byId.delete(d.advertiserId);
+        /* Explicit active:false so public overlay can hide baked CJ_MANAGED chips.
+           Deleting from slice would leave baked catalog showing the partner (LKG keep-if-missing). */
+        const prev = byId.get(d.advertiserId) || {};
+        byId.set(d.advertiserId, {
+          advertiserId: d.advertiserId,
+          title: d.title || prev.title,
+          url: d.url || prev.url,
+          sectionId: d.sectionId || prev.sectionId,
+          management: "CJ_MANAGED",
+          active: false,
+          endedReason: d.reason || "program_ended",
+        });
       }
     }
     publishSlice = [...byId.values()];
@@ -301,8 +320,46 @@ export function buildPublishPlan({
     allowedWritePaths: [
       "projects/data/iu-affiliate-cj-staging-v1.json",
       "projects/data/iu-affiliate-cj-managed-registry-v1.json",
+      "projects/data/iu-affiliate-cj-managed-public-v1.json",
       "projects/data/iu-affiliate-cj-sync-audit-v1.json",
     ],
+  };
+}
+
+/**
+ * Materialize browser-facing overlay JSON from managed registry slice.
+ * Schema consumed by assets/iu-affiliate-catalog.js applyManagedPublicOverlay.
+ */
+export function materializeManagedPublic(registryOrSlice, opts = {}) {
+  const partnersIn = Array.isArray(registryOrSlice)
+    ? registryOrSlice
+    : Array.isArray(registryOrSlice?.partners)
+      ? registryOrSlice.partners
+      : [];
+  const partners = [];
+  const seen = new Set();
+  for (const p of partnersIn) {
+    if (!p || p.advertiserId == null) continue;
+    const id = String(p.advertiserId);
+    if (seen.has(id)) continue;
+    seen.add(id);
+    const active = p.active !== false;
+    const url = String(p.url || "");
+    if (active && !isCjTrackingUrl(url)) continue;
+    partners.push({
+      advertiserId: id,
+      sectionId: p.sectionId || null,
+      title: p.title || "",
+      url: url || null,
+      active,
+    });
+  }
+  return {
+    schema: "iu-affiliate-cj-managed-public-v1",
+    version: 1,
+    updatedAt: opts.updatedAt || new Date().toISOString(),
+    websitePid: String(opts.websitePid || WEBSITE_PID),
+    partners,
   };
 }
 
@@ -311,6 +368,7 @@ export function assertAllowedDataWrite(filePath) {
   const allowed = [
     "projects/data/iu-affiliate-cj-staging-v1.json",
     "projects/data/iu-affiliate-cj-managed-registry-v1.json",
+    "projects/data/iu-affiliate-cj-managed-public-v1.json",
     "projects/data/iu-affiliate-cj-sync-audit-v1.json",
   ];
   if (!allowed.some((a) => norm.endsWith(a) || norm.includes("/" + a))) {
