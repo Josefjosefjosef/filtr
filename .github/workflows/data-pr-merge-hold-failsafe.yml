@@ -1,0 +1,71 @@
+# Failsafe: clear IU_DATA_PR_MERGE_HOLD after a timed feature-merge window.
+# Does NOT disable CHMI acquisition. Does NOT merge feature PRs.
+# Start this AFTER setting IU_DATA_PR_MERGE_HOLD=1 so a forgotten hold cannot stick.
+name: Data PR merge hold failsafe
+
+on:
+  workflow_dispatch:
+    inputs:
+      wait_minutes:
+        description: "Minutes before clearing IU_DATA_PR_MERGE_HOLD (15-180)"
+        required: true
+        default: "120"
+        type: string
+      incident_ref:
+        description: "Optional label for logs (e.g. phase-2s)"
+        required: false
+        default: ""
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: data-pr-merge-hold-failsafe
+  cancel-in-progress: false
+
+jobs:
+  wait-then-clear:
+    runs-on: ubuntu-latest
+    timeout-minutes: 200
+    steps:
+      - name: Validate and wait
+        id: wait
+        run: |
+          set -euo pipefail
+          RAW="${{ github.event.inputs.wait_minutes }}"
+          if ! [[ "$RAW" =~ ^[0-9]+$ ]]; then
+            echo "INVALID wait_minutes=$RAW"
+            exit 1
+          fi
+          WM="$RAW"
+          if [ "$WM" -lt 15 ]; then WM=15; fi
+          if [ "$WM" -gt 180 ]; then WM=180; fi
+          echo "wait_minutes=$WM" >> "$GITHUB_OUTPUT"
+          echo "IU_DATA_PR_MERGE_HOLD_FAILSAFE_INCIDENT=${{ github.event.inputs.incident_ref }}"
+          echo "IU_DATA_PR_MERGE_HOLD_FAILSAFE_WAIT_START_UTC=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          SEC=$(( WM * 60 ))
+          echo "IU_DATA_PR_MERGE_HOLD_FAILSAFE_SLEEP_SECONDS=$SEC"
+          sleep "$SEC"
+          echo "IU_DATA_PR_MERGE_HOLD_FAILSAFE_WAIT_END_UTC=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+      - name: Clear merge hold variable
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          REPO="${{ github.repository }}"
+          CUR=$(gh api "repos/${REPO}/actions/variables/IU_DATA_PR_MERGE_HOLD" --jq .value 2>/dev/null || echo "MISSING")
+          echo "IU_DATA_PR_MERGE_HOLD_BEFORE=$CUR"
+          if [ "$CUR" = "MISSING" ]; then
+            echo "IU_DATA_PR_MERGE_HOLD_FAILSAFE=NOOP_VAR_MISSING"
+            exit 0
+          fi
+          gh api --method PATCH "repos/${REPO}/actions/variables/IU_DATA_PR_MERGE_HOLD" -f value='0' -f name='IU_DATA_PR_MERGE_HOLD'
+          AFTER=$(gh api "repos/${REPO}/actions/variables/IU_DATA_PR_MERGE_HOLD" --jq .value)
+          echo "IU_DATA_PR_MERGE_HOLD_AFTER=$AFTER"
+          if [ "$AFTER" != "0" ]; then
+            echo "IU_DATA_PR_MERGE_HOLD_FAILSAFE=FAIL_CLEAR"
+            exit 1
+          fi
+          echo "IU_DATA_PR_MERGE_HOLD_FAILSAFE=CLEARED"
