@@ -1022,6 +1022,16 @@
     } catch (_) {}
     renderAffiliateSeo(cat);
     ensureAffiliateViewMountPoint();
+    /* Phase 3B: coupon/product cards — gated by offers-public liveEnabled (default false). */
+    try {
+      ensurePhase2OffersScript(function () {
+        try {
+          if (typeof window.iuAffiliatePhase2OffersRender === "function") {
+            window.iuAffiliatePhase2OffersRender(cat.id);
+          }
+        } catch (_) {}
+      });
+    } catch (_) {}
     return true;
   }
 
@@ -1089,7 +1099,61 @@
 
 
   var IU_AFF_MANAGED_PUBLIC_PATH = "/projects/data/iu-affiliate-cj-managed-public-v1.json";
+  var IU_AFF_PHASE2_OFFERS_SRC = "/assets/iu-affiliate-phase2-offers-v1.js?v=cj-phase2c-offers-v3";
   var __iuAffManagedOverlayApplied = false;
+  var __iuAffPhase2OffersLoading = false;
+  var __iuAffPhase2OffersLoaded = false;
+
+  function ensurePhase2OffersScript(done) {
+    if (__iuAffPhase2OffersLoaded || (window.iuAffiliatePhase2OffersRender && window.__iuAffiliatePhase2OffersBooted)) {
+      __iuAffPhase2OffersLoaded = true;
+      if (typeof done === "function") done(true);
+      return;
+    }
+    if (document.querySelector('script[data-iu-aff-phase2-offers="1"]')) {
+      if (typeof done === "function") {
+        var waitN = 0;
+        var t = setInterval(function () {
+          waitN++;
+          if (window.iuAffiliatePhase2OffersRender || waitN > 40) {
+            clearInterval(t);
+            __iuAffPhase2OffersLoaded = Boolean(window.iuAffiliatePhase2OffersRender);
+            done(__iuAffPhase2OffersLoaded);
+          }
+        }, 50);
+      }
+      return;
+    }
+    if (__iuAffPhase2OffersLoading) {
+      if (typeof done === "function") {
+        var waitN2 = 0;
+        var t2 = setInterval(function () {
+          waitN2++;
+          if (__iuAffPhase2OffersLoaded || waitN2 > 40) {
+            clearInterval(t2);
+            done(__iuAffPhase2OffersLoaded);
+          }
+        }, 50);
+      }
+      return;
+    }
+    __iuAffPhase2OffersLoading = true;
+    var s = document.createElement("script");
+    s.src = IU_AFF_PHASE2_OFFERS_SRC;
+    s.async = true;
+    s.setAttribute("data-iu-aff-phase2-offers", "1");
+    s.onload = function () {
+      __iuAffPhase2OffersLoading = false;
+      __iuAffPhase2OffersLoaded = true;
+      if (typeof done === "function") done(true);
+    };
+    s.onerror = function () {
+      __iuAffPhase2OffersLoading = false;
+      __iuAffPhase2OffersLoaded = false;
+      if (typeof done === "function") done(false);
+    };
+    (document.head || document.documentElement).appendChild(s);
+  }
 
   function __iuAffIsProtectedItem(it) {
     if (!it) return false;
