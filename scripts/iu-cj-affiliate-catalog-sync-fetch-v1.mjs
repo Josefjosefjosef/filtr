@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Phase 2C PR B — Job 1: fetch CJ Advertiser Lookup + Link Search → staging JSON only.
- * Never writes public catalog / policy / guards / main.
+ * Phase 2C / 3C — Job 1: fetch CJ Advertiser Lookup + Link Search → staging JSON only.
+ * Uses XML Accept + pagination (CJ APIs are XML). Never writes public catalog / policy / guards / main.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -12,6 +12,17 @@ import {
   CJ_API_SECRET_NAMES,
 } from "./iu-cj-affiliate-phase2-cj-api-adapter.mjs";
 import { assertAllowedDataWrite, WEBSITE_PID } from "./iu-cj-affiliate-catalog-sync-publish-gate-v1.mjs";
+import {
+  CJ_ADVERTISER_LOOKUP_BASE,
+  CJ_LINK_SEARCH_BASE,
+  CJ_DEFAULT_RECORDS_PER_PAGE,
+  cjGet,
+  parseAdvertiserBlocks,
+  parseAdvertiserRecord,
+  parseLinkBlocks,
+  parseLinkRecord,
+  parseListMeta,
+} from "./iu-cj-affiliate-phase1-lib.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -21,25 +32,61 @@ function redact(s) {
   return String(s || "").split(pat).join("[REDACTED_PAT]");
 }
 
-function sleep(ms) {
-  return new Promise((r) => setTimeout(r, ms));
-}
+async function fetchPagedXml({ baseUrl, queryBase, pat, parseBlocks, parseRecord, kind, maxPages, audit }) {
+  const records = [];
+  let page = 1;
+  let totalMatched = null;
+  const limit = Math.max(1, Math.min(60, Number(maxPages) || 40));
 
-async function fetchJson(url, pat) {
-  const res = await fetch(url, {
-    headers: {
-      Authorization: "Bearer " + pat,
-      Accept: "application/json",
-    },
-  });
-  const text = await res.text();
-  let body = null;
-  try {
-    body = text ? JSON.parse(text) : null;
-  } catch {
-    body = { raw: text.slice(0, 200) };
+  while (page <= limit) {
+    const url =
+      baseUrl +
+      "?" +
+      queryBase +
+      "&page-number=" +
+      page +
+      "&records-per-page=" +
+      CJ_DEFAULT_RECORDS_PER_PAGE;
+    const res = await cjGet(url, pat);
+    audit.http.push({
+      kind,
+      page,
+      status: res.status,
+      ok: res.ok,
+      networkError: Boolean(res.networkError),
+      authReason: res.auth?.reason || null,
+    });
+    if (res.networkError) {
+      return { ok: false, reason: "network_error", records, totalMatched, incomplete: true };
+    }
+    if (res.status === 401 || res.status === 403) {
+      return { ok: false, reason: "auth_" + res.status, records, totalMatched, incomplete: true };
+    }
+    if (!res.ok || res.status >= 400) {
+      return { ok: false, reason: "http_" + res.status, records, totalMatched, incomplete: true };
+    }
+    const meta = parseListMeta(res.body || "");
+    if (totalMatched == null) totalMatched = meta.totalMatched;
+    const pageRecords = parseBlocks(res.body || "").map(parseRecord);
+    records.push(...pageRecords);
+    if (pageRecords.length === 0) {
+      if ((totalMatched || 0) > 0 && records.length < totalMatched) {
+        return { ok: false, reason: "empty_page_before_complete", records, totalMatched, incomplete: true };
+      }
+      break;
+    }
+    if (totalMatched != null && records.length >= totalMatched) break;
+    if (pageRecords.length < CJ_DEFAULT_RECORDS_PER_PAGE) break;
+    page += 1;
   }
-  return { status: res.status, ok: res.ok, body };
+
+  if (totalMatched != null && records.length < totalMatched) {
+    return { ok: false, reason: "pagination_incomplete", records, totalMatched, incomplete: true };
+  }
+  if (totalMatched === 0 && records.length === 0) {
+    return { ok: true, reason: "empty_result_verified", records, totalMatched: 0, incomplete: false, emptySuccess: true };
+  }
+  return { ok: true, reason: "complete", records, totalMatched, incomplete: false };
 }
 
 export async function runCatalogSyncFetch(opts = {}) {
@@ -51,65 +98,81 @@ export async function runCatalogSyncFetch(opts = {}) {
   assertAllowedDataWrite(stagingPath);
   assertAllowedDataWrite(auditPath);
 
-  const execute = env.IU_CJ_SYNC_HTTP_EXECUTE === "1" && cfg.hasPat;
-  const spacingMs = Number(env.IU_CJ_SYNC_REQ_SPACING_MS || 2400);
+  const execute = env.IU_CJ_SYNC_HTTP_EXECUTE === "1" && Boolean(readCjPatFromEnv(env));
+  const maxAdvPages = Number(env.IU_CJ_SYNC_MAX_ADV_PAGES || 40);
+  const maxLinkPages = Number(env.IU_CJ_SYNC_MAX_LINK_PAGES || 40);
 
   const audit = {
-    version: 1,
+    version: 2,
     at: new Date().toISOString(),
-    mode: execute ? "live_fetch" : "dry_staging_shape",
+    mode: execute ? "live_fetch_xml_paginated" : "dry_staging_shape",
     websitePid: env.IU_CJ_WEBSITE_PID || WEBSITE_PID,
     publisherCidConfigured: Boolean(env.IU_CJ_PUBLISHER_CID || cfg.publisherCid),
-    patConfigured: cfg.hasPat,
+    patConfigured: Boolean(readCjPatFromEnv(env) || cfg.hasPat),
     secretNames: CJ_API_SECRET_NAMES,
     http: [],
     errors: [],
-    note: "PAT never logged; fetch writes staging only (not public catalog).",
+    note: "PAT never logged; fetch writes staging only (not public catalog). XML Accept + pagination.",
   };
 
   let advertisers = [];
   let links = [];
   let apiOutage = false;
+  let emptyVerified = false;
 
   if (!execute) {
     audit.errors.push("dry_run_no_http");
   } else {
     const pat = readCjPatFromEnv(env);
+    const publisherCid = String(env.IU_CJ_PUBLISHER_CID || cfg.publisherCid || "");
+    const websitePid = String(env.IU_CJ_WEBSITE_PID || WEBSITE_PID);
     try {
-      const advUrl =
-        (cfg.bases?.advertiserLookup || "https://advertiser-lookup.api.cj.com/v3/advertiser-lookup") +
-        "?requestor-cid=" +
-        encodeURIComponent(String(env.IU_CJ_PUBLISHER_CID || cfg.publisherCid || "")) +
-        "&records-per-page=100";
-      const adv = await fetchJson(advUrl, pat);
-      audit.http.push({ kind: "advertiser_lookup", status: adv.status, ok: adv.ok });
-      if (!adv.ok || adv.status >= 500 || adv.status === 401) {
+      const adv = await fetchPagedXml({
+        baseUrl: CJ_ADVERTISER_LOOKUP_BASE,
+        queryBase:
+          "requestor-cid=" +
+          encodeURIComponent(publisherCid) +
+          "&advertiser-ids=joined",
+        pat,
+        parseBlocks: parseAdvertiserBlocks,
+        parseRecord: parseAdvertiserRecord,
+        kind: "advertiser_lookup_joined",
+        maxPages: maxAdvPages,
+        audit,
+      });
+      if (!adv.ok) {
         apiOutage = true;
-        audit.errors.push("advertiser_lookup_outage:" + adv.status);
+        audit.errors.push("advertiser_lookup:" + adv.reason);
       } else {
-        advertisers = Array.isArray(adv.body?.advertisers)
-          ? adv.body.advertisers
-          : Array.isArray(adv.body)
-            ? adv.body
-            : [];
+        advertisers = adv.records;
+        if (adv.emptySuccess) emptyVerified = true;
+        audit.advertiserTotalMatched = adv.totalMatched;
       }
-      await sleep(spacingMs);
 
-      const linkUrl =
-        (cfg.bases?.linkSearch || "https://link-search.api.cj.com/v2/link-search") +
-        "?website-id=" +
-        encodeURIComponent(String(env.IU_CJ_WEBSITE_PID || WEBSITE_PID)) +
-        "&records-per-page=100";
-      const ls = await fetchJson(linkUrl, pat);
-      audit.http.push({ kind: "link_search", status: ls.status, ok: ls.ok });
-      if (!ls.ok || ls.status >= 500 || ls.status === 401 || !ls.body) {
+      const ls = await fetchPagedXml({
+        baseUrl: CJ_LINK_SEARCH_BASE,
+        queryBase:
+          "website-id=" +
+          encodeURIComponent(websitePid) +
+          "&advertiser-ids=joined&promotion-type=coupon",
+        pat,
+        parseBlocks: parseLinkBlocks,
+        parseRecord: parseLinkRecord,
+        kind: "link_search_coupon_joined",
+        maxPages: maxLinkPages,
+        audit,
+      });
+      if (!ls.ok) {
         apiOutage = true;
-        audit.errors.push("link_search_outage:" + ls.status);
+        audit.errors.push("link_search:" + ls.reason);
       } else {
-        links = Array.isArray(ls.body?.links) ? ls.body.links : [];
-        if (links.length === 0 && ls.ok) {
+        links = ls.records;
+        audit.linkTotalMatched = ls.totalMatched;
+        if (ls.emptySuccess && emptyVerified) {
+          audit.errors.push("empty_result_verified_both");
+        } else if (!ls.emptySuccess && links.length === 0 && (ls.totalMatched || 0) > 0) {
           apiOutage = true;
-          audit.errors.push("link_search_empty_response");
+          audit.errors.push("link_search_empty_but_total_matched");
         }
       }
     } catch (e) {
@@ -119,13 +182,14 @@ export async function runCatalogSyncFetch(opts = {}) {
   }
 
   const staging = {
-    version: 1,
+    version: 2,
     generatedAt: new Date().toISOString(),
     websitePid: String(env.IU_CJ_WEBSITE_PID || WEBSITE_PID),
     apiOutage,
     advertisers,
     links,
-    source: execute ? "cj_api" : "dry_run",
+    source: execute ? "cj_api_xml" : "dry_run",
+    transport: "application/xml",
   };
 
   fs.mkdirSync(outDir, { recursive: true });
@@ -133,7 +197,7 @@ export async function runCatalogSyncFetch(opts = {}) {
   fs.writeFileSync(auditPath, JSON.stringify(audit, null, 2) + "\n", "utf8");
 
   return {
-    ok: true,
+    ok: !execute || !apiOutage,
     apiOutage,
     stagingPath,
     auditPath,
@@ -149,7 +213,7 @@ if (isMain) {
   runCatalogSyncFetch()
     .then((r) => {
       console.log(JSON.stringify(r, null, 2));
-      process.exit(0);
+      process.exit(r.ok ? 0 : 1);
     })
     .catch((e) => {
       console.error(redact(e && e.stack ? e.stack : String(e)));
