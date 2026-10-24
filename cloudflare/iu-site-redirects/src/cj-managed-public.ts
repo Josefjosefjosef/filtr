@@ -90,7 +90,13 @@ export function validateCjManagedPublicDoc(doc: unknown): {
     if (p.active === false) continue;
     activeCount += 1;
     const url = String(p.url || "");
-    if (!/^https:\/\/(www\.)?(anrdoezrs|dpbolvw|jdoqocy|tkqlhce|qksrv)\.net\//i.test(url)) {
+    // Align with scripts/iu-cj-affiliate-catalog-sync-publish-gate-v1.mjs isCjTrackingUrl:
+    // CJ deep links use www.<network>.(com|net)/click-<PID>-<linkId> (incl. kqzyfj.com).
+    if (
+      !/^https:\/\/www\.(anrdoezrs|jdoqocy|dpbolvw|kqzyfj|tkqlhce)\.(com|net)\/click-\d+-\d+/i.test(
+        url
+      )
+    ) {
       errors.push("active_url_not_cj:" + id);
     }
     if (!p.sectionId) errors.push("active_missing_section:" + id);

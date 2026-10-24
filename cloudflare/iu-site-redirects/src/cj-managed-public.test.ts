@@ -75,6 +75,37 @@ describe("validateCjManagedPublicDoc", () => {
     expect(v.activeCount).toBe(1);
   });
 
+  it("accepts CJ .com tracking hosts used in production overlay (kqzyfj/jdoqocy/tkqlhce)", () => {
+    const v = validateCjManagedPublicDoc(
+      sampleDoc([
+        {
+          advertiserId: "6785595",
+          title: "Tui.cz",
+          sectionId: "aff-cestovni-kancelare",
+          url: "https://www.kqzyfj.com/click-101883843-15704921",
+          active: true,
+        },
+        {
+          advertiserId: "6767085",
+          title: "Ergo",
+          sectionId: "aff-cestovni-kancelare",
+          url: "https://www.jdoqocy.com/click-101883843-17269644",
+          active: true,
+        },
+        {
+          advertiserId: "5006846",
+          title: "Daka",
+          sectionId: "aff-cestovni-kancelare",
+          url: "https://www.tkqlhce.com/click-101883843-13148950",
+          active: true,
+        },
+      ])
+    );
+    expect(v.ok).toBe(true);
+    expect(v.activeCount).toBe(3);
+    expect(v.errors).toEqual([]);
+  });
+
   it("rejects non-CJ active URL", () => {
     const v = validateCjManagedPublicDoc(
       sampleDoc([
