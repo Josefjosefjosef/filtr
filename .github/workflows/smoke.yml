@@ -133,6 +133,9 @@ jobs:
           node scripts/iu-cj-affiliate-phase2-staging-cj-api-probe-v1-selftest.mjs
           node scripts/iu-cj-affiliate-phase2-staging-cj-api-probe-lock-v2-selftest.mjs
           node scripts/iu-cj-affiliate-phase2-cj-link-search-catalog-normalize-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-offers-public-build-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-phase2-offers-preview-ui-selftest.mjs
+          node scripts/iu-cj-affiliate-phase2-offers-prod-gate-selftest.mjs
           echo "CJ_AFFILIATE_PHASE2_OFFLINE_SMOKE=PASS"
       - name: CJ offline catalog normalize smoke
         if: steps.scope.outputs.cj_offline_catalog_normalize_only == 'true'
