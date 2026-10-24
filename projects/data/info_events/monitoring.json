@@ -414,8 +414,8 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-10-24T20:34:12.490Z",
-    "lastSuccessAt": "2026-10-24T20:34:17.747Z",
+    "lastRunAt": "2026-10-24T20:46:15.898Z",
+    "lastSuccessAt": "2026-10-24T20:46:19.801Z",
     "lastChangedAt": "2026-10-24T20:34:16.834Z",
     "lastError": null,
     "status": "not_modified",
@@ -434,10 +434,10 @@
     "sourceCount": 2,
     "activeSourceCount": 1,
     "updateCount": 0,
-    "alertCount": 1,
+    "alertCount": 0,
     "cancelMsgCount": 0,
     "quarantineCount": 0,
-    "validCount": 1,
+    "validCount": 0,
     "rejectedCount": 0,
     "discoveryType": "opendata_active_streams",
     "discoveryRole": "open_data_file_distribution_discovery_not_api",
@@ -450,8 +450,8 @@
     ],
     "streamCount": 2,
     "completeness": {
-      "capMessages": 1,
-      "infoBlocks": 21,
+      "capMessages": null,
+      "infoBlocks": null,
       "logicalAlerts": 4,
       "uniqueEvents": [
         "Silný vítr",
@@ -481,19 +481,19 @@
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 7502,
+    "runMs": 8090,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-10-24T20:34:12.490Z",
+    "lastSnapshotAt": "2026-10-24T20:46:15.898Z",
     "freshness": {
       "slaLimitMs": 900000,
       "officialFirstSeenAt": "2026-10-24T20:34:12.490Z",
       "officialLatestSentAt": "2026-10-24T09:41:20+02:00",
       "officialLatestValidFrom": "2026-10-25T04:00:00+01:00",
-      "discoveredAt": "2026-10-24T20:34:12.490Z",
-      "fetchedAt": "2026-10-24T20:34:12.490Z",
-      "transformedAt": "2026-10-24T20:34:19.992Z",
-      "validatedAt": "2026-10-24T20:34:19.992Z",
-      "publishedAt": "2026-10-24T20:34:12.490Z",
+      "discoveredAt": "2026-10-24T20:46:15.898Z",
+      "fetchedAt": "2026-10-24T20:46:15.898Z",
+      "transformedAt": "2026-10-24T20:46:23.988Z",
+      "validatedAt": "2026-10-24T20:46:23.988Z",
+      "publishedAt": "2026-10-24T20:46:15.898Z",
       "endToEndLagMs": 46372490
     },
     "audit": {
@@ -501,9 +501,9 @@
         {
           "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_240741.xml",
           "productKey": "50",
-          "status": 200,
-          "action": "process",
-          "cacheHit": false
+          "status": 304,
+          "action": "not_modified",
+          "cacheHit": true
         },
         {
           "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_201200.xml",
@@ -517,8 +517,8 @@
         "publish": true,
         "reason": "ok",
         "completeness": {
-          "capMessages": 1,
-          "infoBlocks": 21,
+          "capMessages": null,
+          "infoBlocks": null,
           "logicalAlerts": 4,
           "uniqueEvents": [
             "Silný vítr",
@@ -545,22 +545,20 @@
         "alarms": [],
         "productionVerified": false
       },
-      "parser": {
-        "loaded": 1,
-        "valid": 1,
-        "rejected": 0,
-        "duplicates": 0,
-        "quarantine": 0,
-        "cancels": 0,
-        "updates": 0,
-        "newThreads": 1,
-        "status": "healthy",
-        "alert": 1,
-        "update": 0,
-        "cancel": 0
-      }
+      "parser": null
     },
     "runHistory": [
+      {
+        "at": "2026-10-24T20:46:15.898Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 8090,
+        "error": null,
+        "activeCount": 3,
+        "scheduledCount": 1,
+        "publishableCount": 4
+      },
       {
         "at": "2026-10-24T20:34:12.490Z",
         "status": "not_modified",
@@ -1073,17 +1071,6 @@
         "mode": "active",
         "publish": true,
         "runMs": 4716,
-        "error": null,
-        "activeCount": 3,
-        "scheduledCount": 0,
-        "publishableCount": 3
-      },
-      {
-        "at": "2026-10-23T21:41:11.109Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 5497,
         "error": null,
         "activeCount": 3,
         "scheduledCount": 0,
