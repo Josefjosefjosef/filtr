@@ -75,6 +75,12 @@ jobs:
         run: |
           if [ -f package-lock.json ]; then npm ci; else npm install; fi
           npm test -- --run src/cj-managed-public.test.ts
+      - name: Offers public build selftest (fixture; liveEnabled disarmed)
+        run: node scripts/iu-cj-affiliate-offers-public-build-v1-selftest.mjs
+      - name: Offers UI + production feature-flag gate selftest
+        run: |
+          node scripts/iu-cj-affiliate-phase2-offers-preview-ui-selftest.mjs
+          node scripts/iu-cj-affiliate-phase2-offers-prod-gate-selftest.mjs
 
   fetch-staging:
     needs: selftest
@@ -105,6 +111,8 @@ jobs:
               exit 1
             fi
           fi
+      - name: Offers public dry-build from fixture (never arms liveEnabled)
+        run: node scripts/iu-cj-affiliate-offers-public-build-v1.mjs
       - name: Fetch → staging JSON
         run: node scripts/iu-cj-affiliate-catalog-sync-fetch-v1.mjs
       - name: Upload staging artifact
