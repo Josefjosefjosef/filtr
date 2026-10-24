@@ -346,7 +346,11 @@ async function runViewport(browser, vp) {
     const restoredBlur = await readNavState(page);
     const restoreBlurMs = restoredBlurWait.elapsedMs;
 
-    /* B: close WITHOUT blur — input stays focused, VV returns → instant restore */
+    /* B: close WITHOUT blur — input stays focused, VV returns → instant restore.
+       Proven CI flake class: openBeforeWait.ok=false while restore stays ≤0.2ms.
+       Stabilize idle/visible before focus+type+open (no deadline increase). */
+    await blurActive(page);
+    const idleBeforeB = await assertKeyboardHideIdle(page, () => readNavState(page), isVisible);
     await page.focus("#iuKbHideA");
     await page.type("#iuKbHideA", "x");
     const openBeforeWait = await inPageWaitNav(page, {
@@ -370,7 +374,8 @@ async function runViewport(browser, vp) {
     const restoreNoBlurWithinDeadline =
       closeWait.ok === true &&
       openBeforeWait.ok === true &&
-      restoreNoBlurMs <= RESTORE_DEADLINE_MS;
+      restoreNoBlurMs <= RESTORE_DEADLINE_MS &&
+      idleBeforeB.ok === true;
 
     /* Opening grace (iosZeroGap within grace) → hide without VV gap.
        Focus + mock MUST be same turn: a later iosZeroGap resize while open===true
@@ -606,6 +611,20 @@ async function runViewport(browser, vp) {
       listenerCleanupOk,
       scrollPreserved,
       restoreDelayOk: restoreNoBlurWithinDeadline,
+      idleBeforeBOk: idleBeforeB.ok === true,
+      openBeforeWait: {
+        ok: openBeforeWait.ok === true,
+        elapsedMs: openBeforeWait.elapsedMs,
+        timedOut: openBeforeWait.timedOut === true,
+        state: openBeforeWait.state || null,
+      },
+      closeWait: {
+        ok: closeWait.ok === true,
+        elapsedMs: closeWait.elapsedMs,
+        timedOut: closeWait.timedOut === true,
+        state: closeWait.state || null,
+      },
+      stillFocused,
       readonlyOk: !readonlyOpen.hasClass,
       checkboxOk: !checkboxOpen.hasClass,
       fileOk: !fileOpen.hasClass,

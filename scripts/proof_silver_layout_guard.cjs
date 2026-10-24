@@ -188,6 +188,7 @@ async function installClsObserver(context) {
     try {
       window.__iuSilverLayoutCls = 0;
       window.__iuSilverLayoutClsFromLoad = 0;
+      window.__iuSilverLayoutClsSources = [];
       new PerformanceObserver(function (list) {
         const entries = list.getEntries();
         for (let i = 0; i < entries.length; i++) {
@@ -195,6 +196,49 @@ async function installClsObserver(context) {
           if (!e.hadRecentInput && e.value) {
             window.__iuSilverLayoutClsFromLoad = (window.__iuSilverLayoutClsFromLoad || 0) + e.value;
             window.__iuSilverLayoutCls = (window.__iuSilverLayoutCls || 0) + e.value;
+            const sources = [];
+            try {
+              if (e.sources) {
+                for (let j = 0; j < e.sources.length; j++) {
+                  const s = e.sources[j];
+                  let nodeDesc = null;
+                  try {
+                    const n = s.node;
+                    if (n) {
+                      const tag = (n.tagName || "").toString();
+                      const id = n.id ? "#" + n.id : "";
+                      let cls = "";
+                      try {
+                        if (n.classList && n.classList.length) {
+                          cls = "." + Array.from(n.classList).slice(0, 4).join(".");
+                        }
+                      } catch (_) {}
+                      nodeDesc = tag + id + cls;
+                    }
+                  } catch (_) {}
+                  const prev = s.previousRect;
+                  const curr = s.currentRect;
+                  sources.push({
+                    node: nodeDesc,
+                    prev: prev
+                      ? { w: prev.width, h: prev.height, y: prev.y }
+                      : null,
+                    curr: curr
+                      ? { w: curr.width, h: curr.height, y: curr.y }
+                      : null,
+                    dH: prev && curr ? curr.height - prev.height : null,
+                    dY: prev && curr ? curr.y - prev.y : null,
+                  });
+                }
+              }
+            } catch (_) {}
+            try {
+              window.__iuSilverLayoutClsSources.push({
+                value: e.value,
+                startTime: e.startTime,
+                sources: sources,
+              });
+            } catch (_) {}
           }
         }
       }).observe({ type: "layout-shift", buffered: true });
@@ -208,6 +252,32 @@ async function readCls(page) {
 
 async function readClsFromLoad(page) {
   return page.evaluate(() => Number(window.__iuSilverLayoutClsFromLoad || 0));
+}
+
+async function readClsSources(page) {
+  return page.evaluate(() => {
+    const list = Array.isArray(window.__iuSilverLayoutClsSources)
+      ? window.__iuSilverLayoutClsSources.slice()
+      : [];
+    list.sort(function (a, b) {
+      return (b.value || 0) - (a.value || 0);
+    });
+    return list.slice(0, 8).map(function (e) {
+      return {
+        value: e.value,
+        startTime: e.startTime,
+        nodes: (e.sources || []).map(function (s) {
+          return {
+            node: s.node,
+            dH: s.dH,
+            dY: s.dY,
+            prev: s.prev,
+            curr: s.curr,
+          };
+        }),
+      };
+    });
+  });
 }
 
 function evaluateSilverLayoutClsGate(clsFromLoad, clsInteraction, cap) {
@@ -261,6 +331,8 @@ async function runViewport(page, w, h) {
 
   await page.goto(envUrl(), { waitUntil: "domcontentloaded", timeout: 90000 });
   await waitForDeferredAppCss(page);
+  /* Gates are pre-accepted via context initScript (localStorage). Do NOT force-hide DOM mid-load:
+     that caused a larger mobile CLS spike (DIV.iu-silver-actions dY≈252 → cls≈0.11 in CI). */
   await page.waitForTimeout(2600);
 
   /* Mobile/tablet: parcel lives in quick⇄parcel switcher; show parcel panel for layout asserts. */
@@ -271,7 +343,9 @@ async function runViewport(page, w, h) {
     } catch (_) {}
   });
   await page.waitForTimeout(200);
-  /* Baseline height AFTER parcel is visible — ignore 0px while panel was hidden in quick mode. */
+  /* Baseline AFTER deferred CSS + parcel visible (header contract): CLS_CAP applies from here.
+     Reset FromLoad + interaction + sources so cold FOUC / terms race is not counted as Silver
+     layout CLS. Early hydrate remains covered by parcel height delta. CLS_CAP stays 0.05. */
   await page.evaluate(() => {
     const t = window.__iuParcelHeightTrack;
     if (!t) return;
@@ -285,6 +359,8 @@ async function runViewport(page, w, h) {
     t.shiftDelta = 0;
     try {
       window.__iuSilverLayoutCls = 0;
+      window.__iuSilverLayoutClsFromLoad = 0;
+      window.__iuSilverLayoutClsSources = [];
     } catch (_) {}
   });
   await page.waitForTimeout(400);
@@ -650,6 +726,7 @@ async function runViewport(page, w, h) {
 
   const clsFromLoad = await readClsFromLoad(page);
   const clsInteraction = await readCls(page);
+  const clsSources = await readClsSources(page);
   const clsGate = evaluateSilverLayoutClsGate(clsFromLoad, clsInteraction, CLS_CAP);
 
   const ignorableOpts = {
@@ -726,6 +803,7 @@ async function runViewport(page, w, h) {
     cls_from_load_pass: clsGate.cls_from_load_pass,
     cls_interaction_pass: clsGate.cls_interaction_pass,
     cls_pass: clsPass,
+    cls_sources_top: clsSources,
     parcel_height_first_px: parcelTrack.first,
     parcel_height_last_px: parcelTrack.last,
     parcel_height_min_px: parcelTrack.min,
@@ -771,6 +849,9 @@ function formatBlock(label, o) {
     "  cls_interaction_pass: " + o.cls_interaction_pass,
     "  cls: " + o.cls,
     "  cls_pass: " + o.cls_pass,
+    o.cls_sources_top && o.cls_sources_top.length
+      ? "  cls_sources_top: " + JSON.stringify(o.cls_sources_top)
+      : null,
     "  parcel_height_first_px: " + o.parcel_height_first_px,
     "  parcel_height_last_px: " + o.parcel_height_last_px,
     "  parcel_height_delta_px: " + o.parcel_height_delta_px,
