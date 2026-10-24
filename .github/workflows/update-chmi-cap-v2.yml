@@ -357,12 +357,25 @@ jobs:
 
       - name: Enable auto-merge (squash) when data-only
         if: steps.scope.outputs.data_only == 'true'
+        id: auto_merge
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Temporary feature-merge window: keep prep/shared-write/PR/checks; defer landing on main.
+          # Set repo variable IU_DATA_PR_MERGE_HOLD=1 only for a short operator window, then clear to 0.
+          IU_DATA_PR_MERGE_HOLD: ${{ vars.IU_DATA_PR_MERGE_HOLD || '0' }}
         run: |
           set -euo pipefail
           NUM="${{ steps.pr.outputs.pr_number }}"
           [ -z "$NUM" ] && exit 0
+          if [ "${IU_DATA_PR_MERGE_HOLD}" = "1" ]; then
+            echo "IU_DATA_PR_MERGE_HOLD=1"
+            echo "[AUTO-MERGE] HELD — sync/PR/checks continue; main land deferred"
+            echo "held=true" >> "$GITHUB_OUTPUT"
+            # Ensure a previously armed auto-merge cannot land during the hold window.
+            gh pr merge "$NUM" --disable-auto 2>/dev/null || true
+            exit 0
+          fi
+          echo "held=false" >> "$GITHUB_OUTPUT"
           gh pr merge "$NUM" --auto --squash
           echo "[AUTO-MERGE] Enabled for PR #$NUM"
 
@@ -371,10 +384,17 @@ jobs:
         id: wait_merge
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IU_DATA_PR_MERGE_HOLD: ${{ vars.IU_DATA_PR_MERGE_HOLD || '0' }}
         run: |
           set -euo pipefail
           NUM="${{ steps.pr.outputs.pr_number }}"
           [ -z "$NUM" ] && exit 0
+          if [ "${IU_DATA_PR_MERGE_HOLD}" = "1" ] || [ "${{ steps.auto_merge.outputs.held }}" = "true" ]; then
+            echo "IU_DATA_PR_MERGE_HOLD=1 — skip wait-for-main-merge (data PR left open)"
+            echo "merged=false" >> "$GITHUB_OUTPUT"
+            echo "held=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           SHA=$(gh pr view "$NUM" --json headRefOid -q .headRefOid)
           echo "[WAIT] PR #$NUM sha=$SHA"
           for i in $(seq 1 48); do
