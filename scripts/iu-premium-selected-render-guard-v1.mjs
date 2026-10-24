@@ -302,7 +302,8 @@ try {
   ok("render:active_visible", snap.premVisible === 1, "vis=" + snap.premVisible);
   ok("render:no_free_public", snap.freePublic === 0, "free=" + snap.freePublic);
   ok("render:sales_link", snap.salesLink);
-  ok("render:chips_8", snap.chipCount === 8, "n=" + snap.chipCount);
+  // Phase 2G: section grew beyond legacy 8 free/affiliate chips after CJ fill.
+  ok("render:chips_min_8", snap.chipCount >= 8, "n=" + snap.chipCount);
   ok("render:prem_before_standard", snap.orderOk);
   ok("render:section_key", snap.section === SECTION, snap.section);
   ok("render:p1_live_href", snap.p1Href === "https://example.test/ad-p1", snap.p1Href);

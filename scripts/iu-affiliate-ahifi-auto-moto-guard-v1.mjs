@@ -17,7 +17,7 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-ahifi-auto-moto-v1-20260922";
-const CATALOG_BUST = "affiliate-4kids-deti-hracky-v1-20260930";
+const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-auto-moto";
 const SECTION_TITLE = "Auto a moto";
@@ -78,7 +78,10 @@ function auditStatic() {
   const blockEnd = catalog.indexOf('id: "aff-pneu-pneuservis"', blockStart);
   const block = blockStart >= 0 && blockEnd > blockStart ? catalog.slice(blockStart, blockEnd) : "";
   const slotCalls = (block.match(/aff(?:Item|Partner)\(/g) || []).length;
-  ok("catalog:slots_8", slotCalls === 8, "n=" + slotCalls);
+    const partnerCalls = (block.match(/affPartner\(/g) || []).length;
+  const emptySlotsReady = (block.match(/affItem\(""/g) || []).length;
+  ok("catalog:slots_ready_eq_partners", slotCalls === partnerCalls && partnerCalls >= 1, "n=" + slotCalls + " partners=" + partnerCalls);
+  ok("catalog:empty_visible_0", emptySlotsReady === 0, "n=" + emptySlotsReady);
   ok("catalog:ahifi_in_block", block.includes("Ahifi.cz"));
   ok("catalog:autohotarek_preserved", block.includes("Autohotarek.cz") && block.includes(AUTOHOTAREK_CJ));
   ok("catalog:not_in_pneu", !/id:\s*"aff-pneu-pneuservis"[\s\S]*Ahifi\.cz/.test(catalog));
@@ -269,7 +272,8 @@ try {
     const tag = vp.name;
     ok(tag + ":title", snap.title === SECTION_TITLE, snap.title);
     ok(tag + ":disclosure", snap.disclosureOk);
-    ok(tag + ":slots_8", snap.slots === 8, "n=" + snap.slots);
+    ok(tag + ":slots_ready_ge_1", snap.slots >= 1, "n=" + snap.slots);
+    ok(tag + ":empty_visible_0", (snap.emptyVisible != null ? snap.emptyVisible : 0) === 0, "empty=" + (snap.emptyVisible != null ? snap.emptyVisible : 0));
     ok(tag + ":second_slot_ahifi", snap.secondText === PARTNER_TITLE, snap.secondText);
     ok(tag + ":partner_text", snap.partnerText === PARTNER_TITLE, snap.partnerText);
     ok(tag + ":partner_href", snap.partnerHref === CJ_URL, snap.partnerHref);

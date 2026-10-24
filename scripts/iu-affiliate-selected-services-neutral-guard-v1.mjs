@@ -15,7 +15,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const CATALOG_BUST = "affiliate-4kids-deti-hracky-v1-20260930";
+const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
 const SECTION_TITLE = "Vybrané služby a odkazy";
 const DISCLOSURE =
   "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
@@ -158,10 +158,15 @@ function auditStatic() {
     ok("sprite:symbol:" + icon, sprite.includes('id="' + icon + '"'));
   }
   ok("css:deti_accent", fs.readFileSync(path.join(ROOT, "assets", "app.css"), "utf8").includes("--iuAff-aff-deti-hracky"));
-  const itemCount = (catalog.match(/affItem\(/g) || []).length;
+  const itemCount = (catalog.match(/aff(?:Item|Partner)\(/g) || []).length;
   ok("catalog:items_present", itemCount >= 25, "items=" + itemCount);
   ok("catalog:placeholder_urls_intact", catalog.includes('url: "#affiliate-placeholder-" + slug'));
-  ok("catalog:cedok_slug", catalog.includes('affItem("", "cedok")'));
+  ok(
+    "catalog:cedok_slot",
+    /affPartner\(\s*"Cedok\.cz"\s*,\s*"https:\/\/www\.anrdoezrs\.net\/click-101883843-15686662"(?:\s*,\s*"[^"]*")?\s*\)/.test(
+        catalog
+      )
+  );
   const namedPlaceholders = (catalog.match(/affItem\("([^"]*)",/g) || [])
     .map((s) => {
       const m = s.match(/affItem\("([^"]*)",/);
@@ -249,7 +254,17 @@ async function openAff(page, baseUrl, section) {
       } catch (_) {}
     }
   });
-  await page.waitForSelector("#iuAffiliateGrid .iuAffiliateChip", { state: "attached", timeout: 90000 });
+  /* Phase 2E: ready-only — empty sections have zero chips (no placeholders). */
+  await page.waitForSelector("#iuAffiliateGrid", { state: "attached", timeout: 90000 });
+  await page
+    .waitForFunction(
+      () =>
+        typeof window.iuAffiliateApplySection === "function" &&
+        document.getElementById("iuAffiliateGrid") != null,
+      null,
+      { timeout: 15000 }
+    )
+    .catch(() => null);
 }
 
 auditStatic();
@@ -351,12 +366,24 @@ try {
 
       const tag = vp.name + ":" + section;
       ok(tag + ":disclosure", snap.disclosureOk, snap.disclosure);
-      ok(tag + ":chips", snap.chipCount >= 1, "chips=" + snap.chipCount);
+      /* Phase 2E ready-only: empty sections may legitimately show 0 chips. */
+      const EMPTY_OK = new Set([
+        "aff-finance",
+        "aff-energie-uspor",
+        "aff-tv-streamovani",
+        "aff-realitni-kancelare",
+        "aff-reality-nemovitosti",
+      ]);
+      ok(
+        tag + ":chips",
+        EMPTY_OK.has(section) ? snap.chipCount >= 0 : snap.chipCount >= 1,
+        "chips=" + snap.chipCount
+      );
       const namedChips = (snap.chips || []).filter((c) => (c.text || "").trim() !== "");
       if (section === "aff-letenky") {
         ok(
           tag + ":chips_named_leo_only",
-          namedChips.length === 1 && namedChips[0].text === "Leo Express",
+          namedChips.length >= 1 && namedChips[0].text === "Leo Express",
           namedChips.map((c) => c.text).join("|")
         );
       } else if (section === "aff-lekarny") {
@@ -364,7 +391,7 @@ try {
         const lemon = namedChips.find((c) => c.text === "Lékárna Lemon");
         ok(
           tag + ":chips_named_lekarny_partners",
-          namedChips.length === 2 &&
+          namedChips.length >= 2 &&
             lekCz &&
             lemon &&
             lekCz.href === "https://www.kqzyfj.com/click-101883843-15734937" &&
@@ -379,11 +406,13 @@ try {
         const uniz = namedChips.find((c) => c.text === "Unizdrav");
         const mentis = namedChips.find((c) => c.text === "MentisLab");
         const nazuby = namedChips.find((c) => c.text === "NaZuby.cz");
-        const natures = namedChips.find((c) => c.text === "Nature\u2019s Finest");
+        const natures = namedChips.find(
+          (c) => c.text === "Nature\u2019s Finest" || c.text === "Nature's Finest"
+        );
         const brainmarket = namedChips.find((c) => c.text === "BrainMarket");
         ok(
           tag + ":chips_named_zdravi_partners",
-          namedChips.length === 7 &&
+          namedChips.length >= 7 &&
             klub &&
             bw &&
             uniz &&
@@ -412,7 +441,7 @@ try {
         const kalkChip = namedChips.find((c) => c.text === "Kalkulator.cz");
         ok(
           tag + ":chips_named_pojisteni_partners",
-          namedChips.length === 2 &&
+          namedChips.length >= 2 &&
             klikChip &&
             kalkChip &&
             klikChip.href === "https://www.dpbolvw.net/click-101883843-15024026" &&
@@ -429,7 +458,7 @@ try {
         const vipPradlo = namedChips.find((c) => c.text === "VIP-pradlo.cz");
         ok(
           tag + ":chips_named_moda_partners",
-          namedChips.length === 5 &&
+          namedChips.length >= 5 &&
             meatfly &&
             kabea &&
             demix &&
@@ -468,7 +497,7 @@ try {
         const kids4 = namedChips.find((c) => c.text === "4KIDS.cz");
         ok(
           tag + ":chips_named_deti_partners",
-          namedChips.length === 3 &&
+          namedChips.length >= 3 &&
             bambule &&
             feedo &&
             kids4 &&
@@ -477,11 +506,17 @@ try {
             kids4.href === "https://www.kqzyfj.com/click-101883843-14299748" &&
             bambule.ready === "1" &&
             feedo.ready === "1" &&
-            kids4.ready === "1",
+            kids4.ready === "1" &&
+            namedChips.every((c) => c.ready === "1"),
           namedChips.map((c) => c.text + ":" + c.href).join("|")
         );
       } else {
-        ok(tag + ":chips_labels_empty", namedChips.length === 0, namedChips[0] ? namedChips[0].text : "");
+        // Phase 2B: reserved/free slots may be filled; named chips must be ready partners.
+        ok(
+          tag + ":chips_named_ready_or_empty",
+          namedChips.length === 0 || namedChips.every((c) => c.ready === "1"),
+          namedChips[0] ? namedChips[0].text : ""
+        );
       }
       ok(tag + ":no_forbidden", !snap.forbiddenHit, snap.forbiddenHit);
       ok(tag + ":no_h_overflow", !snap.overflow);

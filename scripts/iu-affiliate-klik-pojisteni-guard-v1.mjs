@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Pojištění → Klik.cz deeplink (CJ 15024026), first free partner slot.
- * Does not change Cestovní pojištění Klik (15024030). Section stays at 8 slots.
+ * Freeze guard: Pojištění → Klik.cz deeplink (CJ 15024026), slot 1 protected.
+ * Does not change Cestovní pojištění Klik (15024030). Dual placement must stay exact.
+ * Ready-only: no fixed 8-slot ceiling; still asserts exact Klik identity/order/URL.
  * Run: npm run iu-affiliate-klik-pojisteni-guard
  */
 import fs from "node:fs";
@@ -17,7 +18,7 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-klik-pojisteni-v1-20260922";
-const CATALOG_BUST = "affiliate-4kids-deti-hracky-v1-20260930";
+const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-pojisteni";
 const SECTION_TITLE = "Pojištění";
@@ -59,7 +60,7 @@ function auditStatic() {
   );
   ok(
     "catalog:klik_partner",
-    /id:\s*"aff-pojisteni"[\s\S]*?affPartner\(\s*"Klik\.cz"\s*,\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-15024026"\s*\)/.test(
+    /id:\s*"aff-pojisteni"[\s\S]*?affPartner\(\s*"Klik\.cz"\s*,\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-15024026"(?:\s*,\s*"[^"]*")?\s*\)/.test(
       catalog
     )
   );
@@ -67,6 +68,21 @@ function auditStatic() {
     "catalog:slot1_klik",
     /id:\s*"aff-pojisteni"[\s\S]*?items:\s*\[\s*affPartner\(\s*"Klik\.cz"/.test(catalog)
   );
+  /* Exact dual placement: one pojisteni URL + one cestovni URL; no cross-swap. */
+  const klikPojisteniHits = (
+    catalog.match(
+      /affPartner\(\s*"Klik\.cz"\s*,\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-15024026"(?:\s*,\s*"[^"]*")?\s*\)/g
+    ) || []
+  ).length;
+  const klikCestovniHits = (
+    catalog.match(
+      /affPartner\(\s*"Klik\.cz"\s*,\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-15024030"(?:\s*,\s*"[^"]*")?\s*\)/g
+    ) || []
+  ).length;
+  const klikAnyHits = (catalog.match(/affPartner\(\s*"Klik\.cz"/g) || []).length;
+  ok("catalog:klik_pojisteni_url_count_1", klikPojisteniHits === 1, "n=" + klikPojisteniHits);
+  ok("catalog:klik_cestovni_url_count_1", klikCestovniHits === 1, "n=" + klikCestovniHits);
+  ok("catalog:klik_total_placements_2", klikAnyHits === 2, "n=" + klikAnyHits);
   ok(
     "catalog:ready_rel",
     catalog.includes('rel="sponsored noopener"') &&
@@ -78,7 +94,10 @@ function auditStatic() {
   const blockEnd = catalog.indexOf('id: "aff-finance"', blockStart);
   const block = blockStart >= 0 && blockEnd > blockStart ? catalog.slice(blockStart, blockEnd) : "";
   const slotCalls = (block.match(/aff(?:Item|Partner)\(/g) || []).length;
-  ok("catalog:slots_8", slotCalls === 8, "n=" + slotCalls);
+    const partnerCalls = (block.match(/affPartner\(/g) || []).length;
+  const emptySlotsReady = (block.match(/affItem\(""/g) || []).length;
+  ok("catalog:slots_ready_eq_partners", slotCalls === partnerCalls && partnerCalls >= 1, "n=" + slotCalls + " partners=" + partnerCalls);
+  ok("catalog:empty_visible_0", emptySlotsReady === 0, "n=" + emptySlotsReady);
   ok("catalog:klik_in_pojisteni_block", block.includes("15024026"));
   ok("catalog:no_travel_cj_in_pojisteni", !block.includes("15024030"));
   ok(
@@ -244,7 +263,8 @@ try {
         const t = c.querySelector(".iuRadioChipTitle");
         return ((t ? t.textContent : c.textContent) || "").replace(/\s+/g, " ").trim();
       };
-      const klik = chips.find((c) => chipText(c) === args.partner) || null;
+      const klikChips = chips.filter((c) => chipText(c) === args.partner);
+      const klik = klikChips[0] || null;
       const firstChip = chips[0] || null;
       let centered = false;
       if (klik) {
@@ -259,12 +279,14 @@ try {
         title: (title ? title.textContent : "").replace(/\s+/g, " ").trim(),
         disclosureOk: !!(disc && (disc.textContent || "").includes(args.disclosure)),
         slots: chips.length,
+        klikCount: klikChips.length,
         klikText: klik ? chipText(klik) : "",
         klikHref: klik ? klik.getAttribute("href") || "" : "",
         klikTarget: klik ? klik.getAttribute("target") || "" : "",
         klikRel: klik ? klik.getAttribute("rel") || "" : "",
         klikReady: klik ? klik.getAttribute("data-aff-ready") || "" : "",
         firstText: firstChip ? chipText(firstChip) : "",
+        emptyVisible: chips.filter((c) => (c.getAttribute("data-aff-ready") || "0") !== "1").length,
         hasImg,
         centered,
         tagName: klik ? klik.tagName : "",
@@ -274,7 +296,9 @@ try {
     const tag = vp.name;
     ok(tag + ":title", snap.title === SECTION_TITLE, snap.title);
     ok(tag + ":disclosure", snap.disclosureOk);
-    ok(tag + ":slots_8", snap.slots === 8, "n=" + snap.slots);
+    ok(tag + ":slots_ready_ge_1", snap.slots >= 1, "n=" + snap.slots);
+    ok(tag + ":klik_present_count_1", snap.klikCount === 1, "n=" + snap.klikCount);
+    ok(tag + ":empty_visible_0", (snap.emptyVisible != null ? snap.emptyVisible : 0) === 0, "empty=" + (snap.emptyVisible != null ? snap.emptyVisible : 0));
     ok(tag + ":first_slot_klik", snap.firstText === PARTNER_TITLE, snap.firstText);
     ok(tag + ":klik_text", snap.klikText === PARTNER_TITLE, snap.klikText);
     ok(tag + ":klik_href", snap.klikHref === CJ_URL, snap.klikHref);
@@ -335,14 +359,32 @@ try {
       v.removeAttribute("hidden");
     }
   });
-  await page.waitForFunction(() => document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip").length === 8);
+  await page.waitForFunction(
+    (expected) => {
+      const chips = Array.from(document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip"));
+      const chipText = (c) => ((c.querySelector(".iuRadioChipTitle") || c).textContent || "").trim();
+      const k = chips.find((c) => chipText(c) === "Klik.cz");
+      return !!(k && (k.getAttribute("href") || "") === expected);
+    },
+    CESTOVNI_KLIK_CJ,
+    { timeout: 90000 }
+  );
   const travel = await page.evaluate((cj) => {
     const chips = Array.from(document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip"));
     const chipText = (c) => ((c.querySelector(".iuRadioChipTitle") || c).textContent || "").trim();
-    const k = chips.find((c) => chipText(c) === "Klik.cz");
-    return { href: k ? k.getAttribute("href") : "" };
+    const kliks = chips.filter((c) => chipText(c) === "Klik.cz");
+    const k = kliks[0];
+    return {
+      href: k ? k.getAttribute("href") : "",
+      klikCount: kliks.length,
+      noPojisteniUrl: !chips.some(
+        (c) => (c.getAttribute("href") || "").includes("15024026")
+      ),
+    };
   }, CESTOVNI_KLIK_CJ);
   ok("regression:cestovni_klik_href", travel.href === CESTOVNI_KLIK_CJ, travel.href);
+  ok("regression:cestovni_klik_count_1", travel.klikCount === 1, "n=" + travel.klikCount);
+  ok("regression:cestovni_no_pojisteni_url", travel.noPojisteniUrl === true);
   await ctx.close();
 } catch (err) {
   fails.push("runtime_exception:" + (err && err.message ? err.message : String(err)));

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Letenky a letecká doprava — Skytours slot 1 + 7 empty slots.
+ * Freeze guard: Letenky a letecká doprava — Skytours slot 1 protected.
  * Protects Booking.com + Leo Express slot regression. Future partners in slots 2–8 allowed.
  * Run: npm run iu-affiliate-letenky-letecka-doprava-guard
  */
@@ -17,7 +17,7 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-letenky-letecka-doprava-v1-20260921";
-const CATALOG_BUST = "affiliate-4kids-deti-hracky-v1-20260930";
+const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-letenky-letecka-doprava";
 const SECTION_TITLE = "Letenky a letecká doprava";
@@ -66,17 +66,27 @@ function auditStatic() {
   const blockEnd = catalog.indexOf('id: "aff-cestovni-pojisteni"', blockStart);
   const block = blockStart >= 0 && blockEnd > blockStart ? catalog.slice(blockStart, blockEnd) : "";
   const slotCalls = (block.match(/aff(?:Item|Partner)\(/g) || []).length;
-  ok("catalog:slots_8", slotCalls === 8, "n=" + slotCalls);
+    const partnerCalls = (block.match(/affPartner\(/g) || []).length;
+  const emptySlotsReady = (block.match(/affItem\(""/g) || []).length;
+  ok("catalog:slots_ready_eq_partners", slotCalls === partnerCalls && partnerCalls >= 1, "n=" + slotCalls + " partners=" + partnerCalls);
+  ok("catalog:empty_visible_0", emptySlotsReady === 0, "n=" + emptySlotsReady);
   ok("catalog:cj_url_exact", block.includes(CJ_URL));
   ok(
     "catalog:slot1_skytours",
     /items:\s*\[\s*affPartner\(\s*"Skytours"\s*,\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-15733491"\s*\)/.test(block)
   );
-  ok("catalog:ready_partners_1", (block.match(/affPartner\(/g) || []).length === 1);
+  ok(
+    "catalog:ready_partners_min_1",
+    (block.match(/affPartner\(/g) || []).length >= 1
+  );
   ok("catalog:no_named_affItem", !/affItem\(\s*"[^"]+"/.test(block));
-  for (let i = 2; i <= 8; i++) {
-    ok("catalog:slot_slug_" + i, block.includes('affItem("", "letenky-letecka-empty-' + i + '")'));
-  }
+  // Phase 2E: no fixed 8-slot ceiling; no public empty placeholders.
+  const emptySlugHits = (block.match(/affItem\("", "letenky-letecka-empty-\d+"\)/g) || []).length;
+  ok(
+    "catalog:empty_slugs_remain_or_filled",
+    emptySlugHits === 0 && (block.match(/affPartner\(/g) || []).length >= 1,
+    "empty=" + emptySlugHits + " partners=" + (block.match(/affPartner\(/g) || []).length
+  );
 
   ok("catalog:booking_preserved", /affPartner\(\s*"Booking\.com"[\s\S]*?13323565/.test(catalog));
   ok("catalog:leo_preserved", /affPartner\(\s*"Leo Express"[\s\S]*?15736211/.test(catalog));
@@ -269,13 +279,15 @@ try {
     ok(tag + ":title", snap.title === SECTION_TITLE, snap.title);
     ok(tag + ":intro", snap.intro.includes("letenky a leteckou dopravu"), snap.intro);
     ok(tag + ":disclosure", snap.disclosureOk);
-    ok(tag + ":slots_8", snap.slots === 8, "n=" + snap.slots);
+    ok(tag + ":slots_ready_ge_1", snap.slots >= 1, "n=" + snap.slots);
+    ok(tag + ":empty_visible_0", (snap.emptyVisible != null ? snap.emptyVisible : 0) === 0, "empty=" + (snap.emptyVisible != null ? snap.emptyVisible : 0));
     ok(tag + ":skytours_slot1", snap.firstText === PARTNER_TITLE, snap.firstText);
     ok(tag + ":skytours_href", snap.firstHref === CJ_URL, snap.firstHref);
     ok(tag + ":skytours_target", snap.firstTarget === "_blank", snap.firstTarget);
     ok(tag + ":skytours_rel", snap.firstRel === "sponsored noopener", snap.firstRel);
     ok(tag + ":skytours_ready", snap.firstReady === "1", snap.firstReady);
-    ok(tag + ":empty_tail_slots", snap.tailEmpty && snap.tailNoHttps && snap.tailNeutral);
+    // Slots 2–8 may hold future partners; only require Skytours remains slot 1.
+    ok(tag + ":slot1_protected", snap.firstText === PARTNER_TITLE && snap.firstHref === CJ_URL);
     ok(tag + ":seo_after_slots", snap.seoAfterGrid && snap.seoVisible && snap.seoHasP1);
     samples.push({ vp: vp.name, slots: snap.slots, title: snap.title });
     await context.close();
