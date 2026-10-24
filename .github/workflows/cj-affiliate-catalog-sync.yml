@@ -81,6 +81,8 @@ jobs:
         run: |
           node scripts/iu-cj-affiliate-phase2-offers-preview-ui-selftest.mjs
           node scripts/iu-cj-affiliate-phase2-offers-prod-gate-selftest.mjs
+      - name: Phase 3C live-audit harness selftest (offline; no live HTTP)
+        run: node scripts/iu-cj-affiliate-phase3c-live-readonly-audit-v1-selftest.mjs
 
   fetch-staging:
     needs: selftest
