@@ -225,10 +225,16 @@ jobs:
         if: steps.no_diff.outputs.data_changed == 'true' && steps.commit_push.outputs.pushed == 'true' && steps.scope.outputs.data_only == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          IU_DATA_PR_MERGE_HOLD: ${{ vars.IU_DATA_PR_MERGE_HOLD || '0' }}
         run: |
           set -euo pipefail
           NUM="${{ steps.pr.outputs.pr_number }}"
           [ -z "$NUM" ] && exit 0
+          if [ "${IU_DATA_PR_MERGE_HOLD}" = "1" ]; then
+            echo "IU_DATA_PR_MERGE_HOLD=1 — skip CNB data auto-merge (main land deferred)"
+            gh pr merge "$NUM" --disable-auto 2>/dev/null || true
+            exit 0
+          fi
           gh pr merge "$NUM" --auto --squash
           echo "[AUTO-MERGE] Enabled for PR #$NUM"
 

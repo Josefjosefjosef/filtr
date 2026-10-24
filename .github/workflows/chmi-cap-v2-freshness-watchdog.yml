@@ -36,6 +36,9 @@ jobs:
           PROD_STALE_MINUTES: "20"
           WORKFLOW_FILE: update-chmi-cap-v2.yml
           PROD_FEED_URL: https://infouzel.cz/projects/data/info_events/feed.json
+          # When feature PRs need a stable main, operators set IU_DATA_PR_MERGE_HOLD=1.
+          # Acquisition keeps running; only main/prod land is deferred — skip prod-lag FAIL.
+          IU_DATA_PR_MERGE_HOLD: ${{ vars.IU_DATA_PR_MERGE_HOLD || '0' }}
         run: |
           set -euo pipefail
           OWNER="${GITHUB_REPOSITORY%%/*}"
@@ -48,6 +51,12 @@ jobs:
             echo "CHMI_CAP_FRESHNESS_WATCHDOG=FAIL state=WORKFLOW_DISABLED workflowState=$WF_STATE"
             echo "CHMI_CAP_FIX=gh workflow enable $WORKFLOW_FILE"
             exit 1
+          fi
+          if [ "${IU_DATA_PR_MERGE_HOLD}" = "1" ]; then
+            echo "CHMI_CAP_FRESHNESS_WATCHDOG_REPORT={\"state\":\"MERGE_HOLD_ACTIVE\",\"workflowFile\":\"$WORKFLOW_FILE\",\"workflowState\":\"$WF_STATE\",\"note\":\"acquisition continues; main land deferred\"}"
+            echo "CHMI_CAP_FRESHNESS_WATCHDOG=PASS state=MERGE_HOLD_ACTIVE"
+            echo "IU_DATA_PR_MERGE_HOLD=1"
+            exit 0
           fi
           runs_json="$(gh api "repos/$OWNER/$REPO/actions/workflows/$WORKFLOW_FILE/runs?per_page=20")"
           printf '%s' "$runs_json" > /tmp/chmi-cap-runs.json
