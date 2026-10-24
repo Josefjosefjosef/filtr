@@ -1,0 +1,325 @@
+name: CJ Affiliate catalog sync (fetch ≠ publish)
+
+# Phase 2C PR B: daily fetch → staging artifacts; publish only CJ_MANAGED via gate.
+# Never force-pushes main. Never rewrites catalog JS / freeze guards / slot policy.
+# Prod deploy remains Pages/PR merge after human approval.
+
+on:
+  schedule:
+    # Off-peak UTC (~03:17) — ~25 req/min spacing enforced in fetch script
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+    inputs:
+      execute_live_fetch:
+        description: "GO live CJ HTTP fetch (requires IU_CJ_PAT + CID + PID secrets)"
+        required: true
+        default: "0"
+        type: choice
+        options:
+          - "0"
+          - "1"
+      arm_publish:
+        description: "Arm publish gate write to managed registry (infra-approved only)"
+        required: true
+        default: "0"
+        type: choice
+        options:
+          - "0"
+          - "1"
+      promote_managed_public:
+        description: "Open data-only PR to main with managed-public JSON (legacy Pages path; infra GO)"
+        required: true
+        default: "0"
+        type: choice
+        options:
+          - "0"
+          - "1"
+      publish_managed_public_r2:
+        description: "Unattended R2 publish via site-redirects worker (no git merge; requires infra GO + secrets)"
+        required: true
+        default: "0"
+        type: choice
+        options:
+          - "0"
+          - "1"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: cj-affiliate-catalog-sync
+  cancel-in-progress: false
+
+jobs:
+  selftest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Publish-gate selftest
+        run: node scripts/iu-cj-affiliate-catalog-sync-v1-selftest.mjs
+      - name: E2E overlay selftest (fixtures)
+        run: node scripts/iu-cj-affiliate-catalog-sync-e2e-overlay-selftest.mjs
+      - name: Promote selftest (fixtures, disarmed default)
+        run: node scripts/iu-cj-affiliate-catalog-sync-promote-selftest.mjs
+      - name: R2 auto-publish selftest (fixtures; no prod; proves no git merge)
+        run: node scripts/iu-cj-affiliate-catalog-sync-r2-publish-selftest.mjs
+      - name: R2 → overlay E2E selftest (fixtures; no git merge)
+        run: node scripts/iu-cj-affiliate-catalog-sync-r2-e2e-overlay-selftest.mjs
+      - name: Site-redirects CJ managed-public unit tests
+        working-directory: cloudflare/iu-site-redirects
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+          npm test -- --run src/cj-managed-public.test.ts
+
+  fetch-staging:
+    needs: selftest
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      IU_CJ_PAT: ${{ secrets.IU_CJ_PAT }}
+      IU_CJ_PUBLISHER_CID: ${{ secrets.IU_CJ_PUBLISHER_CID }}
+      IU_CJ_WEBSITE_PID: ${{ secrets.IU_CJ_WEBSITE_PID }}
+      IU_CJ_SYNC_HTTP_EXECUTE: ${{ github.event_name == 'workflow_dispatch' && inputs.execute_live_fetch || '0' }}
+      IU_CJ_SYNC_REQ_SPACING_MS: "2400"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Preflight secrets (no values)
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -n "${IU_CJ_PAT:-}" ]; then echo "IU_CJ_PAT=CONFIGURED"; else echo "IU_CJ_PAT=MISSING"; fi
+          if [ -n "${IU_CJ_PUBLISHER_CID:-}" ]; then echo "IU_CJ_PUBLISHER_CID=CONFIGURED"; else echo "IU_CJ_PUBLISHER_CID=MISSING"; fi
+          if [ -n "${IU_CJ_WEBSITE_PID:-}" ]; then echo "IU_CJ_WEBSITE_PID=CONFIGURED"; else echo "IU_CJ_WEBSITE_PID=MISSING"; fi
+          echo "HTTP_EXECUTE=${IU_CJ_SYNC_HTTP_EXECUTE}"
+          if [ "${IU_CJ_SYNC_HTTP_EXECUTE}" = "1" ]; then
+            if [ -z "${IU_CJ_PAT:-}" ] || [ -z "${IU_CJ_PUBLISHER_CID:-}" ] || [ -z "${IU_CJ_WEBSITE_PID:-}" ]; then
+              echo "BLOCKER=SECRETS_MISSING_FOR_LIVE_FETCH"
+              exit 1
+            fi
+          fi
+      - name: Fetch → staging JSON
+        run: node scripts/iu-cj-affiliate-catalog-sync-fetch-v1.mjs
+      - name: Upload staging artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: iu-affiliate-cj-staging
+          path: |
+            projects/data/iu-affiliate-cj-staging-v1.json
+            projects/data/iu-affiliate-cj-sync-audit-v1.json
+          if-no-files-found: error
+      - name: Commit staging to data/cj-affiliate-catalog-sync (never main)
+        shell: bash
+        run: |
+          set -euo pipefail
+          SYNC_BRANCH="data/cj-affiliate-catalog-sync"
+          STASH="${RUNNER_TEMP}/iu-cj-staging"
+          mkdir -p "${STASH}"
+          cp projects/data/iu-affiliate-cj-staging-v1.json "${STASH}/"
+          cp projects/data/iu-affiliate-cj-sync-audit-v1.json "${STASH}/"
+          git config user.name "iu-cj-catalog-sync-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "${SYNC_BRANCH}" || true
+          git checkout -B "${SYNC_BRANCH}" "origin/${SYNC_BRANCH}" 2>/dev/null || git checkout -B "${SYNC_BRANCH}"
+          mkdir -p projects/data
+          cp "${STASH}/iu-affiliate-cj-staging-v1.json" projects/data/
+          cp "${STASH}/iu-affiliate-cj-sync-audit-v1.json" projects/data/
+          git add projects/data/iu-affiliate-cj-staging-v1.json projects/data/iu-affiliate-cj-sync-audit-v1.json
+          if git diff --cached --quiet; then
+            echo "NO_STAGING_CHANGES"
+            exit 0
+          fi
+          if git diff --cached --name-only | grep -Ev '^projects/data/iu-affiliate-cj-(staging|sync-audit)-v1\.json$'; then
+            echo "BLOCKER=UNEXPECTED_STAGED_PATHS"
+            git diff --cached --name-only
+            exit 1
+          fi
+          git commit -m "chore(data): CJ affiliate staging fetch (sync branch only)"
+          git push origin "HEAD:${SYNC_BRANCH}"
+
+  publish-gate:
+    needs: fetch-staging
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      IU_CJ_SYNC_PUBLISH_ARMED: ${{ github.event_name == 'workflow_dispatch' && inputs.arm_publish || '0' }}
+      IU_CJ_WEBSITE_PID: ${{ secrets.IU_CJ_WEBSITE_PID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Download staging artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: iu-affiliate-cj-staging
+          path: projects/data
+      - name: Publish gate (CJ_MANAGED only; LKG on outage)
+        run: node scripts/iu-cj-affiliate-catalog-sync-publish-v1.mjs
+      - name: Commit managed registry + public overlay if armed (sync branch only)
+        if: env.IU_CJ_SYNC_PUBLISH_ARMED == '1'
+        shell: bash
+        run: |
+          set -euo pipefail
+          SYNC_BRANCH="data/cj-affiliate-catalog-sync"
+          git config user.name "iu-cj-catalog-sync-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "${SYNC_BRANCH}" || true
+          git checkout -B "${SYNC_BRANCH}" "origin/${SYNC_BRANCH}" 2>/dev/null || git checkout -B "${SYNC_BRANCH}"
+          git add \
+            projects/data/iu-affiliate-cj-managed-registry-v1.json \
+            projects/data/iu-affiliate-cj-managed-public-v1.json \
+            projects/data/iu-affiliate-cj-sync-audit-v1.json || true
+          if git diff --cached --quiet; then
+            echo "NO_REGISTRY_CHANGES"
+            exit 0
+          fi
+          if git diff --cached --name-only | grep -Ev '^projects/data/iu-affiliate-cj-(managed-registry|managed-public|sync-audit)-v1\.json$'; then
+            echo "BLOCKER=UNEXPECTED_PUBLISH_PATHS"
+            git diff --cached --name-only
+            exit 1
+          fi
+          git commit -m "chore(data): CJ_MANAGED registry+public overlay (gate pass, sync branch)"
+          git push origin "HEAD:${SYNC_BRANCH}"
+      - name: Summary (no merge / no prod)
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "NO_MERGE=true"
+          echo "NO_PROD_DEPLOY=true"
+          echo "FETCH_NE_PUBLISH=true"
+          echo "MANAGED_PUBLIC_OVERLAY=projects/data/iu-affiliate-cj-managed-public-v1.json"
+          echo "PROMOTE_TO_MAIN=DISARMED_REQUIRES_INFRA_GO"
+          if [ -f projects/data/iu-affiliate-cj-sync-audit-v1.json ]; then
+            python3 -c "import json; a=json.load(open('projects/data/iu-affiliate-cj-sync-audit-v1.json')); print(json.dumps(a.get('plan',a) if isinstance(a,dict) else {}, indent=2)[:2000])"
+          fi
+
+  promote-data-pr:
+    needs: publish-gate
+    if: github.event_name == 'workflow_dispatch' && inputs.promote_managed_public == '1' && inputs.arm_publish == '1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Fetch managed-public from sync branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          SYNC_BRANCH="data/cj-affiliate-catalog-sync"
+          git fetch origin "${SYNC_BRANCH}"
+          git show "origin/${SYNC_BRANCH}:projects/data/iu-affiliate-cj-managed-public-v1.json" > /tmp/iu-managed-public-incoming.json
+      - name: Validate incoming managed-public (promote write stays disarmed)
+        shell: bash
+        env:
+          IU_CJ_MANAGED_PUBLIC_PROMOTE_ARMED: "0"
+        run: |
+          set -euo pipefail
+          mkdir -p projects/data
+          cp /tmp/iu-managed-public-incoming.json projects/data/iu-affiliate-cj-managed-public-v1.json
+          node scripts/iu-cj-affiliate-catalog-sync-promote-managed-public-v1.mjs
+      - name: Open data-only PR to main (required checks still apply; no auto-merge)
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          BR="data/cj-managed-public-promote-${GITHUB_RUN_ID}"
+          git config user.name "iu-cj-catalog-sync-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "${BR}"
+          mkdir -p projects/data
+          cp /tmp/iu-managed-public-incoming.json projects/data/iu-affiliate-cj-managed-public-v1.json
+          git add projects/data/iu-affiliate-cj-managed-public-v1.json
+          if git diff --cached --quiet; then
+            echo "NO_PUBLIC_CHANGES"
+            exit 0
+          fi
+          if git diff --cached --name-only | grep -Ev '^projects/data/iu-affiliate-cj-managed-public-v1\.json$'; then
+            echo "BLOCKER=UNEXPECTED_PROMOTE_PATHS"
+            git diff --cached --name-only
+            exit 1
+          fi
+          git commit -m "chore(data): promote CJ managed-public overlay (data-only)"
+          git push origin "HEAD:${BR}"
+          gh pr create \
+            --base main \
+            --head "${BR}" \
+            --title "chore(data): promote CJ managed-public overlay" \
+            --body "## Summary
+          - Data-only promote of \`projects/data/iu-affiliate-cj-managed-public-v1.json\`
+          - No code/guard/workflow changes
+          - Required checks must pass; no auto-merge
+
+          ## What does NOT change
+          - Catalog JS, slot policy, MANUAL_PROTECTED partners, secrets
+
+          ## Verification checklist
+          - [ ] Only one file changed
+          - [ ] Overlay schema validates
+          - [ ] No live CJ fetch in this PR
+          "
+          echo "PROMOTE_PR_OPENED=true"
+          echo "NO_AUTO_MERGE=true"
+          echo "NO_PROD_DEPLOY_FROM_THIS_JOB=true"
+
+  # Phase 2H: unattended public overlay via Worker/R2 (no PR merge, no commit to main).
+  # DISARMED unless workflow_dispatch publish_managed_public_r2=1 AND arm_publish=1 AND secrets set.
+  # Live CF binding creation is INFRA_PENDING — job fails closed if endpoint/token missing when armed.
+  publish-managed-public-r2:
+    needs: publish-gate
+    if: github.event_name == 'workflow_dispatch' && inputs.publish_managed_public_r2 == '1' && inputs.arm_publish == '1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      IU_CJ_MANAGED_PUBLIC_R2_PUBLISH_ARMED: "1"
+      IU_CJ_MANAGED_PUBLIC_PUBLISH_URL: ${{ secrets.IU_CJ_MANAGED_PUBLIC_PUBLISH_URL }}
+      IU_CJ_MANAGED_PUBLIC_PUBLISH_TOKEN: ${{ secrets.IU_CJ_MANAGED_PUBLIC_PUBLISH_TOKEN }}
+      IU_CJ_WEBSITE_PID: ${{ secrets.IU_CJ_WEBSITE_PID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Fetch managed-public from sync branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          SYNC_BRANCH="data/cj-affiliate-catalog-sync"
+          git fetch origin "${SYNC_BRANCH}"
+          mkdir -p projects/data
+          git show "origin/${SYNC_BRANCH}:projects/data/iu-affiliate-cj-managed-public-v1.json" > projects/data/iu-affiliate-cj-managed-public-v1.json
+      - name: Preflight R2 publish secrets (no values)
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -n "${IU_CJ_MANAGED_PUBLIC_PUBLISH_URL:-}" ]; then echo "PUBLISH_URL=CONFIGURED"; else echo "PUBLISH_URL=MISSING"; fi
+          if [ -n "${IU_CJ_MANAGED_PUBLIC_PUBLISH_TOKEN:-}" ]; then echo "PUBLISH_TOKEN=CONFIGURED"; else echo "PUBLISH_TOKEN=MISSING"; fi
+          if [ -z "${IU_CJ_MANAGED_PUBLIC_PUBLISH_URL:-}" ] || [ -z "${IU_CJ_MANAGED_PUBLIC_PUBLISH_TOKEN:-}" ]; then
+            echo "BLOCKER=INFRA_PENDING_R2_PUBLISH_SECRETS"
+            echo "NO_PROD_DEPLOY=true"
+            exit 1
+          fi
+      - name: Publish validated overlay to Worker/R2 (no git merge)
+        run: node scripts/iu-cj-affiliate-catalog-sync-r2-publish-v1.mjs
+      - name: Summary
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "NO_GIT_MERGE=true"
+          echo "NO_MAIN_COMMIT=true"
+          echo "NO_AUTO_MERGE_PR=true"
+          echo "CHANNEL=cloudflare_r2_via_site_redirects"
+          echo "LIVE_ARM_REQUIRES_INFRA_GO=true"

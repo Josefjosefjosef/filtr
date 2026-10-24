@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "at": "2026-10-23T18:45:34.248Z",
+  "mode": "dry_staging_shape",
+  "websitePid": "101883843",
+  "publisherCidConfigured": false,
+  "patConfigured": false,
+  "secretNames": {
+    "pat": [
+      "CJ_API_PAT",
+      "IU_CJ_PAT",
+      "CJ_PERSONAL_ACCESS_TOKEN"
+    ],
+    "publisherCid": "IU_CJ_PUBLISHER_CID",
+    "websitePid": "IU_CJ_WEBSITE_PID"
+  },
+  "http": [],
+  "errors": [
+    "dry_run_no_http"
+  ],
+  "note": "publish_not_armed — dry plan only; registry unchanged",
+  "publishAt": "2026-10-23T18:45:34.314Z",
+  "publishArmed": false,
+  "plan": {
+    "ok": true,
+    "apiOutage": false,
+    "massEndedStop": false,
+    "publishBlockedReason": null,
+    "counts": {
+      "candidates": 0,
+      "published": 0,
+      "needs_review": 0,
+      "protected": 0,
+      "ended_managed": 0,
+      "managed_considered": 0,
+      "publish_slice": 0
+    },
+    "endedRatio": 0
+  },
+  "noMergeNoProd": true,
+  "forbiddenWritePaths": [
+    "assets/",
+    "scripts/",
+    ".github/workflows/",
+    "projects/index.html",
+    "projects/data/iu-affiliate-slot-policy-v1.json"
+  ],
+  "allowedWritePaths": [
+    "projects/data/iu-affiliate-cj-staging-v1.json",
+    "projects/data/iu-affiliate-cj-managed-registry-v1.json",
+    "projects/data/iu-affiliate-cj-sync-audit-v1.json"
+  ]
+}

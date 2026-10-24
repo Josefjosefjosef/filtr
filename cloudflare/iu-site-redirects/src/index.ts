@@ -10,8 +10,19 @@
  * Live traffic overlay (optional R2):
  *   GET  .../ndic_datex_v1/traffic_offline_snapshot.json → R2 current when LIVE_TRAFFIC_ENABLED
  *   POST .../ndic_datex_v1/__iu_live_publish → authenticated atomic publish to R2
+ *
+ * CJ managed-public overlay (optional R2 — INFRA GO required to arm):
+ *   GET  .../iu-affiliate-cj-managed-public-v1.json → R2 when CJ_MANAGED_PUBLIC_LIVE_ENABLED
+ *   POST .../iu-affiliate-cj-managed-public/__iu_live_publish → authenticated atomic publish
  */
 import { isHtmlDocumentPath, promoteHtmlCsp } from "./csp-promote";
+import {
+  CJ_MANAGED_PUBLIC_PATH,
+  CJ_MANAGED_PUBLIC_PUBLISH_PATH,
+  handleCjManagedPublicPublish,
+  serveCjManagedPublic,
+  type CjManagedPublicEnv,
+} from "./cj-managed-public";
 
 const TRAFFIC_SNAPSHOT_PATH =
   "/projects/data/info_events/ndic_datex_v1/traffic_offline_snapshot.json";
@@ -32,7 +43,7 @@ export type Env = {
   TRAFFIC_LIVE?: R2Bucket;
   LIVE_TRAFFIC_ENABLED?: string;
   LIVE_PUBLISH_TOKEN?: string;
-};
+} & CjManagedPublicEnv;
 
 async function fetchOrigin(request: Request): Promise<Response> {
   return fetch(request);
@@ -440,6 +451,21 @@ export default {
       }
     }
 
+    if (pathname === CJ_MANAGED_PUBLIC_PUBLISH_PATH && request.method === "POST") {
+      try {
+        return await handleCjManagedPublicPublish(env, request);
+      } catch (err) {
+        return json(
+          {
+            ok: false,
+            reason: "CJ_WORKER_PUBLISH_THROW",
+            detail: String((err && (err as Error).message) || err).slice(0, 120),
+          },
+          500
+        );
+      }
+    }
+
     if (
       pathname === TRAFFIC_LIVE_META_PATH &&
       (request.method === "GET" || request.method === "HEAD")
@@ -456,6 +482,15 @@ export default {
       const live = await serveLiveSnapshot(env, request);
       if (live) return live;
       // fall through to origin Pages
+      return fetchOrigin(request);
+    }
+
+    if (
+      pathname === CJ_MANAGED_PUBLIC_PATH &&
+      (request.method === "GET" || request.method === "HEAD")
+    ) {
+      const cjLive = await serveCjManagedPublic(env, request);
+      if (cjLive) return cjLive;
       return fetchOrigin(request);
     }
 
