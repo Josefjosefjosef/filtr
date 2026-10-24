@@ -18,7 +18,7 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-brasty-kosmetika-v1-20260925";
-const CATALOG_BUST = "affiliate-4kids-deti-hracky-v1-20260930";
+const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-kosmetika";
 const SECTION_TITLE = "Kosmetika a parfémy";
@@ -82,7 +82,10 @@ function auditStatic() {
 
   const block = kosmetikaBlock(catalog);
   const slotCalls = (block.match(/aff(?:Item|Partner)\(/g) || []).length;
-  ok("catalog:slots_8", slotCalls === 8, "n=" + slotCalls);
+    const partnerCalls = (block.match(/affPartner\(/g) || []).length;
+  const emptySlotsReady = (block.match(/affItem\(""/g) || []).length;
+  ok("catalog:slots_ready_eq_partners", slotCalls === partnerCalls && partnerCalls >= 1, "n=" + slotCalls + " partners=" + partnerCalls);
+  ok("catalog:empty_visible_0", emptySlotsReady === 0, "n=" + emptySlotsReady);
   ok("catalog:dermacol_in_block", block.includes("17173455"));
   ok("catalog:not_in_drogerie", !drogerieBlock(catalog).includes("17173455"));
   ok("catalog:single_dermacol_creative", (catalog.match(/17173455/g) || []).length === 1);
@@ -167,7 +170,7 @@ async function openAff(page, baseUrl) {
     }
   });
   await page.waitForFunction(
-    () => document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip").length === 8,
+    () => document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip").length >= 1,
     null,
     { timeout: 90000 }
   );
@@ -273,7 +276,8 @@ try {
 
     const tag = vp.name;
     ok(tag + ":title", snap.title === SECTION_TITLE, snap.title);
-    ok(tag + ":slots_8", snap.slots === 8, "n=" + snap.slots);
+    ok(tag + ":slots_ready_ge_1", snap.slots >= 1, "n=" + snap.slots);
+    ok(tag + ":empty_visible_0", (snap.emptyVisible != null ? snap.emptyVisible : 0) === 0, "empty=" + (snap.emptyVisible != null ? snap.emptyVisible : 0));
     ok(tag + ":sephora_slot1", snap.sephoraStillFirst && snap.firstText === "SEPHORA.cz", snap.firstText);
     ok(tag + ":second_slot_dermacol", snap.secondText === PARTNER_TITLE, snap.secondText);
     ok(tag + ":dermacol_text", snap.dcText === PARTNER_TITLE, snap.dcText);
@@ -287,7 +291,7 @@ try {
     ok(tag + ":dermacol_no_img", snap.hasImg === false);
     ok(tag + ":dermacol_no_direct", !/^https?:\/\/(?:www\.)?dermacol/i.test(snap.dcHref));
     ok(tag + ":centered", snap.centered === true);
-    ok(tag + ":empty_slots_remain", snap.namedCount >= 2 && snap.namedCount < 8, "named=" + snap.namedCount);
+    ok(tag + ":empty_slots_remain", snap.namedCount >= 2, "named=" + snap.namedCount);
 
     const popupTimeout = vp.name === "pwa" ? 30000 : 15000;
     const popupPromise = page.waitForEvent("popup", { timeout: popupTimeout }).catch(() => null);

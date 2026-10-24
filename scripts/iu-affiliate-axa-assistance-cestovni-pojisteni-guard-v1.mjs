@@ -17,7 +17,7 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const AXA_MARKER = "affiliate-axa-assistance-cestovni-pojisteni-v1-20260921";
-const CATALOG_BUST = "affiliate-4kids-deti-hracky-v1-20260930";
+const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-cestovni-pojisteni";
 const SECTION_TITLE = "Cestovní pojištění";
@@ -75,9 +75,12 @@ function auditStatic() {
   const blockEnd = catalog.indexOf('id: "aff-auto-moto"', blockStart);
   const block = blockStart >= 0 && blockEnd > blockStart ? catalog.slice(blockStart, blockEnd) : "";
   const slotCalls = (block.match(/aff(?:Item|Partner)\(/g) || []).length;
-  ok("catalog:slots_8", slotCalls === 8, "n=" + slotCalls);
+    const partnerCalls = (block.match(/affPartner\(/g) || []).length;
+  const emptySlotsReady = (block.match(/affItem\(""/g) || []).length;
+  ok("catalog:slots_ready_eq_partners", slotCalls === partnerCalls && partnerCalls >= 1, "n=" + slotCalls + " partners=" + partnerCalls);
+  ok("catalog:empty_visible_0", emptySlotsReady === 0, "n=" + emptySlotsReady);
   const emptySlots = (block.match(/affItem\(""/g) || []).length;
-  ok("catalog:empty_slots_max_6", emptySlots <= 6, "n=" + emptySlots);
+  ok("catalog:empty_visible_0", (block.split('affItem("")').length - 1) === 0);
   ok("catalog:axa_still_first_partner", /items:\s*\[[\s\S]*?affPartner\(\s*"AXA Assistance"/.test(block));
 
   ok("index:marker", index.includes(AXA_MARKER));
@@ -261,6 +264,7 @@ try {
           const href = c.getAttribute("href") || "";
           return t === "" && ready === "0" && (href === "#" || href === "");
         }),
+        emptyVisible: chips.filter((c) => (c.getAttribute("data-aff-ready") || "0") !== "1").length,
         hasImg,
         centered,
         tagName: first ? first.tagName : "",
@@ -270,7 +274,8 @@ try {
     const tag = vp.name;
     ok(tag + ":title", snap.title === SECTION_TITLE, snap.title);
     ok(tag + ":disclosure", snap.disclosureOk);
-    ok(tag + ":slots_8", snap.slots === 8, "n=" + snap.slots);
+    ok(tag + ":slots_ready_ge_1", snap.slots >= 1, "n=" + snap.slots);
+    ok(tag + ":empty_visible_0", (snap.emptyVisible != null ? snap.emptyVisible : 0) === 0, "empty=" + (snap.emptyVisible != null ? snap.emptyVisible : 0));
     ok(tag + ":slot1_text", snap.firstText === PARTNER_TITLE, snap.firstText);
     ok(tag + ":slot1_href", snap.firstHref === CJ_URL, snap.firstHref);
     ok(tag + ":slot1_target", snap.firstTarget === "_blank", snap.firstTarget);

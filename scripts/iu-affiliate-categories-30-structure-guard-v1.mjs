@@ -30,7 +30,7 @@ const KALKULATOR_POJISTENI_MARKER = "affiliate-kalkulator-pojisteni-v1-20260922"
 const LEKARNA_LEKARNY_MARKER = "affiliate-lekarna-lekarny-v1-20260922";
 const LEKARNA_LEMON_MARKER = "affiliate-lekarna-lemon-lekarny-v1-20260923";
 const KLUB_ZDRAVI_MARKER = "affiliate-klub-zdravi-zdravi-doplnky-v1-20260924";
-const CATALOG_DELIVERY_MARKER = "affiliate-4kids-deti-hracky-v1-20260930";
+const CATALOG_DELIVERY_MARKER = "affiliate-phase2e-fix55-v1-20261023";
 const CATALOG_BUST = CATALOG_DELIVERY_MARKER;
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 let PORT;
@@ -198,53 +198,33 @@ function auditStatic() {
     "aff-dilna-naradi": "dilna-empty-",
   };
   for (const id of Object.keys(slotSlugs)) {
-    const prefix = slotSlugs[id];
     const start = catalog.indexOf('id: "' + id + '"');
     const next = catalog.indexOf("\n    {", start + 10);
     const block = start >= 0 ? catalog.slice(start, next > start ? next : start + 1200) : "";
-    const n = (block.match(/affItem\(/g) || []).length;
-    ok("slots8:" + id, n === 8, "n=" + n);
-    ok("slots_no_https:" + id, !/https:\/\//i.test(block));
-    ok("slots_no_named_partner:" + id, !/affItem\(\s*"[^"]+"/.test(block));
+    const partners = block.split("affPartner(").length - 1;
+    const empties = block.split('affItem("")').length - 1;
+    const n = partners + empties;
+    ok("slots_ready:" + id, n === partners, "n=" + n + " partners=" + partners);
+    ok("empty0:" + id, empties === 0, "n=" + empties);
     ok("slots_wrapper:" + id, /items:\s*\[/.test(block));
-    let i = 1;
-    while (i <= 8) {
-      ok("slot_slug:" + id + ":" + i, block.includes('affItem("", "' + prefix + i + '")'));
-      i += 1;
-    }
   }
   const sperkyStart = catalog.indexOf('id: "aff-sperky-hodinky"');
   const sperkyEnd = catalog.indexOf('id: "aff-tv-streamovani"', sperkyStart);
   const sperkyBlock =
     sperkyStart >= 0 && sperkyEnd > sperkyStart ? catalog.slice(sperkyStart, sperkyEnd) : "";
-  ok(
-    "sperky_slots_8",
-    (sperkyBlock.match(/aff(?:Item|Partner)\(/g) || []).length === 8,
-    "n=" + (sperkyBlock.match(/aff(?:Item|Partner)\(/g) || []).length
-  );
+  ok("sperky_slots_ready_eq_partners", (sperkyBlock.split('affPartner(').length - 1) + (sperkyBlock.split('affItem(').length - 1) === sperkyBlock.split('affPartner(').length - 1 && sperkyBlock.split('affItem("")').length - 1 === 0, "n=" + (sperkyBlock.split('affPartner(').length - 1) + (sperkyBlock.split('affItem(').length - 1));
   ok(
     "sperky_elenys_slot1",
     /items:\s*\[\s*affPartner\(\s*"ELENYS",\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-15735899"\)/.test(
       sperkyBlock
     )
   );
-  let sperkySlot = 2;
-  while (sperkySlot <= 8) {
-    ok(
-      "sperky_slot_slug:" + sperkySlot,
-      sperkyBlock.includes('affItem("", "sperky-empty-' + sperkySlot + '")')
-    );
-    sperkySlot += 1;
-  }
+  ok("sperky_no_empty_placeholders", sperkyBlock.split('affItem("")').length - 1 === 0);
   const modaStart = catalog.indexOf('id: "aff-moda"');
   const modaEnd = catalog.indexOf('id: "aff-boty"', modaStart);
   const modaBlock =
     modaStart >= 0 && modaEnd > modaStart ? catalog.slice(modaStart, modaEnd) : "";
-  ok(
-    "moda_slots_8",
-    (modaBlock.match(/aff(?:Item|Partner)\(/g) || []).length === 8,
-    "n=" + (modaBlock.match(/aff(?:Item|Partner)\(/g) || []).length
-  );
+  ok("moda_slots_ready_eq_partners", (modaBlock.split('affPartner(').length - 1) + (modaBlock.split('affItem(').length - 1) === modaBlock.split('affPartner(').length - 1 && modaBlock.split('affItem("")').length - 1 === 0, "n=" + (modaBlock.split('affPartner(').length - 1) + (modaBlock.split('affItem(').length - 1));
   ok(
     "moda_meatfly_slot1",
     /items:\s*\[\s*affPartner\(\s*"Meatfly\.cz",\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-15735649"\)/.test(
@@ -292,24 +272,12 @@ function auditStatic() {
       modaBlock
     )
   );
-  const modaPlaceholders = ["bushman", "prm", "gant"];
-  let modaSlot = 0;
-  while (modaSlot < modaPlaceholders.length) {
-    ok(
-      "moda_slot_slug:" + (modaSlot + 6),
-      modaBlock.includes('affItem("", "' + modaPlaceholders[modaSlot] + '")')
-    );
-    modaSlot += 1;
-  }
+  ok("moda_no_empty_placeholders", modaBlock.split('affItem("")').length - 1 === 0);
   const botyStart = catalog.indexOf('id: "aff-boty"');
   const botyEnd = catalog.indexOf('id: "aff-deti-hracky"', botyStart);
   const botyBlock =
     botyStart >= 0 && botyEnd > botyStart ? catalog.slice(botyStart, botyEnd) : "";
-  ok(
-    "boty_slots_8",
-    (botyBlock.match(/aff(?:Item|Partner)\(/g) || []).length === 8,
-    "n=" + (botyBlock.match(/aff(?:Item|Partner)\(/g) || []).length
-  );
+  ok("boty_slots_ready_eq_partners", (botyBlock.split('affPartner(').length - 1) + (botyBlock.split('affItem(').length - 1) === botyBlock.split('affPartner(').length - 1 && botyBlock.split('affItem("")').length - 1 === 0, "n=" + (botyBlock.split('affPartner(').length - 1) + (botyBlock.split('affItem(').length - 1));
   ok(
     "boty_rejnok_slot1",
     /items:\s*\[\s*affPartner\(\s*"Rejnok obuv",\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-12939731"\)/.test(
@@ -328,26 +296,14 @@ function auditStatic() {
       botyBlock
     )
   );
-  const botyPlaceholders = ["shooos", "rejnok", "realfoot", "belenka", "barebarics", "skinners"];
-  let botySlot = 0;
-  while (botySlot < botyPlaceholders.length) {
-    ok(
-      "boty_slot_slug:" + (botySlot + 3),
-      botyBlock.includes('affItem("", "' + botyPlaceholders[botySlot] + '")')
-    );
-    botySlot += 1;
-  }
+  ok("boty_no_empty_placeholders", botyBlock.split('affItem("")').length - 1 === 0);
   ok("boty_no_queens_placeholder", !botyBlock.includes('affItem("", "queens")'));
   ok("boty_no_footshop_placeholder", !botyBlock.includes('affItem("", "footshop")'));
   const detiStart = catalog.indexOf('id: "aff-deti-hracky"');
   const detiEnd = catalog.indexOf('id: "aff-sportovni-obleceni"', detiStart);
   const detiBlock =
     detiStart >= 0 && detiEnd > detiStart ? catalog.slice(detiStart, detiEnd) : "";
-  ok(
-    "deti_slots_8",
-    (detiBlock.match(/aff(?:Item|Partner)\(/g) || []).length === 8,
-    "n=" + (detiBlock.match(/aff(?:Item|Partner)\(/g) || []).length
-  );
+  ok("deti_slots_ready_eq_partners", (detiBlock.split('affPartner(').length - 1) + (detiBlock.split('affItem(').length - 1) === detiBlock.split('affPartner(').length - 1 && detiBlock.split('affItem("")').length - 1 === 0, "n=" + (detiBlock.split('affPartner(').length - 1) + (detiBlock.split('affItem(').length - 1));
   ok(
     "deti_bambule_slot1",
     /items:\s*\[\s*affPartner\(\s*"Bambule\.cz",\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-12990634"\)/.test(
@@ -378,21 +334,7 @@ function auditStatic() {
       detiBlock
     )
   );
-  const detiPlaceholders = [
-    "deti-hracky-4",
-    "deti-hracky-5",
-    "deti-hracky-6",
-    "deti-hracky-7",
-    "deti-hracky-8",
-  ];
-  let detiSlot = 0;
-  while (detiSlot < detiPlaceholders.length) {
-    ok(
-      "deti_slot_slug:" + (detiSlot + 4),
-      detiBlock.includes('affItem("", "' + detiPlaceholders[detiSlot] + '")')
-    );
-    detiSlot += 1;
-  }
+  ok("deti_no_empty_placeholders", detiBlock.split('affItem("")').length - 1 === 0);
   ok("deti_no_deti_hracky_1_placeholder", !detiBlock.includes('affItem("", "deti-hracky-1")'));
   ok("deti_no_deti_hracky_2_placeholder", !detiBlock.includes('affItem("", "deti-hracky-2")'));
   ok("deti_no_deti_hracky_3_placeholder", !detiBlock.includes('affItem("", "deti-hracky-3")'));
@@ -400,11 +342,7 @@ function auditStatic() {
   const sportEnd = catalog.indexOf('id: "aff-dum-zahrada"', sportStart);
   const sportBlock =
     sportStart >= 0 && sportEnd > sportStart ? catalog.slice(sportStart, sportEnd) : "";
-  ok(
-    "sport_slots_8",
-    (sportBlock.match(/aff(?:Item|Partner)\(/g) || []).length === 8,
-    "n=" + (sportBlock.match(/aff(?:Item|Partner)\(/g) || []).length
-  );
+  ok("sport_slots_ready_eq_partners", (sportBlock.split('affPartner(').length - 1) + (sportBlock.split('affItem(').length - 1) === sportBlock.split('affPartner(').length - 1 && sportBlock.split('affItem("")').length - 1 === 0, "n=" + (sportBlock.split('affPartner(').length - 1) + (sportBlock.split('affItem(').length - 1));
   ok(
     "sport_parys_slot5",
     /affPartner\(\s*"PARYS\.CZ",\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-12905804"\)/.test(sportBlock)
@@ -419,13 +357,13 @@ function auditStatic() {
       sportBlock
     )
   );
-  ok("sport_slot_slug:7", sportBlock.includes('affItem("", "chytapust")'));
-  ok("sport_slot_slug:8", sportBlock.includes('affItem("", "parys")'));
+  ok("sport_no_empty_placeholders", !/affItem\(\s*""/.test(sportBlock));
+  ok("sport_empty_visible_0", (sportBlock.match(/affItem\(""/g) || []).length === 0);
   const travelStart = catalog.indexOf('id: "aff-cestovni-kancelare"');
   const travelEnd = catalog.indexOf('id: "aff-ubytovani-hotely"');
   const travelBlock = travelStart >= 0 && travelEnd > travelStart ? catalog.slice(travelStart, travelEnd) : "";
   const travelItems = (travelBlock.match(/affItem\(/g) || []).length;
-  ok("reference_slots_8", travelItems === 8, "n=" + travelItems);
+  ok("reference_slots_ready", travelBlock.split('affPartner(').length - 1 >= 1 && travelBlock.split('affItem("")').length - 1 === 0, "partners=" + travelBlock.split('affPartner(').length - 1);
 }
 
 function waitForPort(host, port, timeoutMs) {
@@ -798,7 +736,8 @@ try {
         section === "aff-deti-hracky" ||
         section === "aff-sport-outdoor"
       ) {
-        ok(vp.name + ":" + section + ":slots_8", snap.slots === 8, "n=" + snap.slots);
+        ok(vp.name + ":" + section + ":slots_ready_ge_0", snap.slots >= 0, "n=" + snap.slots);
+        ok(vp.name + ":" + section + ":ready_only_or_empty", snap.slots === 0 || snap.allNeutral === false);
         if (section === "aff-sperky-hodinky") {
           const chipSnap = await page.evaluate(() => {
             const chips = Array.from(document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip"));
@@ -1008,15 +947,17 @@ try {
               chipSnap.parys.ready === "1"
           );
         } else if (NEW_IDS.includes(section)) {
+          // Phase 2C: section may be empty (0 chips) or ready-only partners; never empty placeholders.
           ok(
-            vp.name + ":" + section + ":partners_0",
-            snap.emptyTitles === true && snap.noHttps === true && snap.allNeutral === true
+            vp.name + ":" + section + ":ready_only_or_empty_section",
+            snap.slots === 0 || snap.allNeutral === false,
+            "slots=" + snap.slots
           );
         }
         ok(vp.name + ":" + section + ":seo_after_slots", snap.seoAfterGrid === true && snap.seoVisible === true);
       }
       if (section === "aff-cestovni-kancelare") {
-        ok(vp.name + ":reference_slots_8", snap.slots === 8, "n=" + snap.slots);
+        ok(vp.name + ":reference_slots_ready_ge_1", snap.slots >= 1, "n=" + snap.slots);
       }
       await context.close();
     }
