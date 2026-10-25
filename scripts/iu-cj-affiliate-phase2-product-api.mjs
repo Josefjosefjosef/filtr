@@ -11,7 +11,13 @@ export const CJ_GRAPHQL_PRODUCT_URL = "https://ads.api.cj.com/query";
 /** Legacy REST host; DNS ENOTFOUND in current CJ infra — do not use for new probes. */
 export const CJ_LEGACY_PRODUCT_SEARCH_HOST = "product-search.api.cj.com";
 
-const CLICK_URL_RE = /^https?:\/\/[^/]+\/click-(\d+)-(\d+)(?:[/?]|$)/i;
+/**
+ * CJ click paths observed in production:
+ * - /click-{websitePid}-{linkId}
+ * - /click-{websitePid}-{advertiserId}-{linkId} (Link Search live XML)
+ * Optional query/path suffix after the numeric id trail is allowed.
+ */
+const CLICK_URL_RE = /^https?:\/\/[^/]+\/click-(\d+)-(\d+)(?:-(\d+))?(?:[/?]|$)/i;
 
 /** Documented CJ click redirect host suffixes (not arbitrary third-party domains). */
 export const CJ_TRUSTED_CLICK_HOST_SUFFIXES = [
@@ -43,6 +49,7 @@ export function parseAffiliateClickUrl(clickUrl, expectedWebsitePid) {
       documentedFormat: false,
       trustedClickHost: false,
       websitePidInUrl: null,
+      advertiserIdInUrl: null,
       linkIdInUrl: null,
       matchesExpectedWebsitePid: false,
     };
@@ -55,12 +62,15 @@ export function parseAffiliateClickUrl(clickUrl, expectedWebsitePid) {
       documentedFormat: false,
       trustedClickHost,
       websitePidInUrl: null,
+      advertiserIdInUrl: null,
       linkIdInUrl: null,
       matchesExpectedWebsitePid: false,
     };
   }
   const pid = m[1];
-  const linkId = m[2];
+  const threeSegment = Boolean(m[3]);
+  const advertiserIdInUrl = threeSegment ? m[2] : null;
+  const linkId = threeSegment ? m[3] : m[2];
   const exp = String(expectedWebsitePid || "").trim();
   const structureOk = true;
   return {
@@ -68,6 +78,7 @@ export function parseAffiliateClickUrl(clickUrl, expectedWebsitePid) {
     documentedFormat: structureOk && trustedClickHost,
     trustedClickHost,
     websitePidInUrl: pid,
+    advertiserIdInUrl,
     linkIdInUrl: linkId,
     matchesExpectedWebsitePid: Boolean(exp && pid === exp),
   };

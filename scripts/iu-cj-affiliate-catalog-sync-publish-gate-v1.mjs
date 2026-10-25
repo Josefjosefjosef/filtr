@@ -27,9 +27,12 @@ export function isCjTrackingUrl(url) {
 }
 
 export function extractLinkIdFromUrl(url) {
-  const m = String(url || "").match(/click-(\d+)-(\d+)/i);
-  if (!m) return null;
-  return { pid: m[1], linkId: m[2] };
+  // Prefer 3-segment Link Search form, else classic 2-segment.
+  const three = String(url || "").match(/click-(\d+)-(\d+)-(\d+)/i);
+  if (three) return { pid: three[1], advertiserId: three[2], linkId: three[3] };
+  const two = String(url || "").match(/click-(\d+)-(\d+)/i);
+  if (!two) return null;
+  return { pid: two[1], advertiserId: null, linkId: two[2] };
 }
 
 /**
