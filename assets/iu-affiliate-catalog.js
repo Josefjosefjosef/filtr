@@ -710,7 +710,8 @@
         affPartner("Yummybox.cz", "https://www.jdoqocy.com/click-101883843-17298730", "7899391"),
         affPartner("Zlatezrnko.cz", "https://www.dpbolvw.net/click-101883843-13992103", "5393861"),
         affPartner("BAMchocolate", "https://www.anrdoezrs.net/click-101883843-17072824", "7416299"),
-        affPartner("Zivina.cz", "https://www.jdoqocy.com/click-101883843-15852097", "5929753")
+        affPartner("Zivina.cz", "https://www.jdoqocy.com/click-101883843-15852097", "5929753"),
+        affPartner("lidl-shop.cz", "https://www.anrdoezrs.net/click-101883843-17367825", "5954793")
       ],
     },
     {

@@ -99,6 +99,10 @@ jobs:
       - name: Phase 3G E2E renderer wire selftest (catalog.js overlay; DISARMED)
         run: |
           node scripts/iu-cj-affiliate-phase3g-e2e-renderer-wire-v1-selftest.mjs
+      - name: Phase 3H coverage reconcile + auth 14/14 matrix (DISARMED)
+        run: |
+          node scripts/iu-cj-affiliate-phase3h-coverage-reconcile-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-phase3d-complete-validation-v1-selftest.mjs
 
   fetch-staging:
     needs: selftest

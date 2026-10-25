@@ -44,9 +44,55 @@ import {
   SLOT_KIND,
 } from "./iu-cj-affiliate-phase2-partner-slot-inventory-v1.mjs";
 import { auditCjManagedPublicR2Readiness } from "./iu-cj-affiliate-phase3d-r2-infra-readiness-v1.mjs";
+import { syncUnlimitedDynamicCatalog } from "./iu-cj-affiliate-phase3f-dynamic-catalog-v1.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const WEBSITE_PID_DEFAULT = "101883843";
+
+/**
+ * Auth/credentials outage must keep last-known-good managed partners and stay DISARMED.
+ * Simulates 401/missing-PAT by apiOutage + incomplete fetch (no live HTTP).
+ */
+export function runAuthErrorKeepsDisarmedInline() {
+  const previous = [
+    {
+      advertiserId: "6179554",
+      sectionId: "aff-cestovni-kancelare",
+      title: "Cedok.cz",
+      url: "https://www.anrdoezrs.net/click-101883843-15686662",
+      active: true,
+    },
+  ];
+  const before = JSON.stringify(previous);
+  const sync = syncUnlimitedDynamicCatalog({
+    joined: [],
+    previousManaged: previous,
+    fetchComplete: false,
+    apiOutage: true,
+  });
+  const active = (sync.nextManagedPublic?.partners || []).filter((p) => p.active !== false);
+  const lkgIntact =
+    sync.removed.length === 0 &&
+    active.some((p) => String(p.advertiserId) === "6179554") &&
+    JSON.stringify(previous) === before;
+  const pass =
+    sync.ok === false &&
+    sync.liveEnabled === false &&
+    sync.publishArmed === false &&
+    lkgIntact &&
+    (sync.reason === "api_outage_keep_lkg" || sync.reason === "fetch_incomplete_keep_lkg");
+  return {
+    pass,
+    detail: {
+      reason: sync.reason,
+      removed: sync.removed.length,
+      liveEnabled: sync.liveEnabled,
+      publishArmed: sync.publishArmed,
+      lkgIntact,
+      simulated: "apiOutage+incomplete_fetch_as_auth_failure",
+    },
+  };
+}
 
 export const PUB_STATE = Object.freeze({
   PUBLICATION_READY: "PUBLICATION_READY",
@@ -435,12 +481,9 @@ export function runAutomation24x7Matrix(opts = {}) {
   );
   add("scheduled_sync_classification", ready.state === PUB_STATE.PUBLICATION_READY, ready.state);
 
-  // Auth failure paths must never arm publish; matrix always asserts disarmed contract.
-  add(
-    "auth_error_keeps_disarmed",
-    true,
-    opts.env?.IU_CJ_PAT ? "creds_present_but_publish_remains_disarmed" : "credentials_missing_or_simulated"
-  );
+  // Auth / credentials failure: keep LKG, never arm publish (real syncUnlimited path).
+  const auth = runAuthErrorKeepsDisarmedInline();
+  add("auth_error_keeps_disarmed", auth.pass === true, auth.detail);
 
   const incomplete = classifyOfferPublicationState(
     { ...base, linkId: "ops-incomplete", couponCode: "", clickUrl: "" },
