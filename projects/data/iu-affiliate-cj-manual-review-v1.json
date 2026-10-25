@@ -1,19 +1,20 @@
 {
   "schema": "iu-affiliate-cj-manual-review-v1",
-  "version": 3,
-  "updatedAt": "2026-10-25T12:15:00.000Z",
+  "version": 4,
+  "updatedAt": "2026-10-25T15:45:00.000Z",
   "liveEnabled": false,
   "publishArmed": false,
-  "note": "DISARMED. Phase 3G E2E verified catalog.js overlay wire. Ambiguous partners stay MANUAL_REVIEW. Do not auto-remove managedNotJoined without confirmed ENDED.",
-  "phase3gE2e": {
+  "note": "DISARMED. Phase 3H coverage reconcile. Baked catalog buttons counted as coverage (no overlay duplicates). Ambiguous partners stay MANUAL_REVIEW.",
+  "phase3hCoverage": {
     "verified": true,
-    "renderer": "assets/iu-affiliate-catalog.js#applyManagedPublicOverlay",
-    "livePack": "%TEMP%/iu-cj-phase3e-validation/readiness (neveřejné)",
     "joined": 166,
-    "assignedWithSection": 163,
-    "renderedChips": 165,
-    "stillManualReview": 3,
-    "cjLivePublishing": "DISARMED"
+    "withSection": 164,
+    "withButtonIncludingBaked": 162,
+    "managedButtonsAmongJoined": 122,
+    "bakedOnlyButtons": 40,
+    "missingButton": 4,
+    "missingButtonIds": ["5938081", "5578976", "5819507", "7804601"],
+    "note": "lidl-shop.cz CJ_MANAGED added; Royalfashion section mapped (Jewelry) but no stable deeplink yet; Trenyrkarna mapped but no URL; Novakid/GearUP MANUAL_REVIEW"
   },
   "resolvedInPhase3F": [
     {
@@ -22,6 +23,22 @@
       "sectionId": "aff-pojisteni",
       "evidence": "explicit_primary_section_pojisteni_phase3f",
       "note": "Dual baked buttons remain; primary section for dynamic/offers map is Pojištění"
+    }
+  ],
+  "resolvedInPhase3H": [
+    {
+      "advertiserId": "5819507",
+      "partnerName": "Royalfashion.cz",
+      "sectionId": "aff-sperky-hodinky",
+      "evidence": "cj_primary_category_accessories_jewelry",
+      "note": "Official CJ child category Jewelry → aff-sperky-hodinky; do not use moda solely from brand name"
+    },
+    {
+      "advertiserId": "5954793",
+      "partnerName": "lidl-shop.cz",
+      "sectionId": "aff-jidlo",
+      "evidence": "section_map_plus_cj_offer_deeplink",
+      "note": "No prior baked button; CJ_MANAGED overlay chip added with stable click URL"
     }
   ],
   "remainingManualReview": [
@@ -34,20 +51,12 @@
       "note": "No education section; children toys is only a weak option — do not invent"
     },
     {
-      "advertiserId": "5819507",
-      "partnerName": "Royalfashion.cz",
-      "reason": "unmapped_no_trusted_section",
-      "primaryCategory": "Accessories / Jewelry",
-      "candidateSections": ["aff-moda", "aff-sperky-hodinky"],
-      "note": "Name suggests fashion; CJ child is Jewelry — ambiguous"
-    },
-    {
       "advertiserId": "7804601",
       "partnerName": "GearUP",
       "reason": "unmapped_no_trusted_section",
       "primaryCategory": "Games & Toys / Electronic Games",
       "candidateSections": ["aff-knihy"],
-      "note": "No dedicated gaming section; books/media/games is weak"
+      "note": "No dedicated gaming section; books/media is weak — do not invent"
     }
   ],
   "managedNotJoined": [
@@ -63,6 +72,6 @@
     "dynamicModel": "unlimited_overlay",
     "freeEmptyGateActive": false,
     "overflowRetired": true,
-    "note": "Dynamic CJ_MANAGED chips append without freeEmpty / overflow limits; MANUAL_PROTECTED untouched"
+    "note": "Dynamic CJ_MANAGED chips append without freeEmpty / overflow limits; MANUAL_PROTECTED / baked buttons untouched"
   }
 }
