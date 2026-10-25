@@ -1,10 +1,20 @@
 {
   "schema": "iu-affiliate-cj-manual-review-v1",
-  "version": 2,
-  "updatedAt": "2026-10-25T10:40:00.000Z",
+  "version": 3,
+  "updatedAt": "2026-10-25T12:15:00.000Z",
   "liveEnabled": false,
   "publishArmed": false,
-  "note": "DISARMED. Phase 3F unlimited dynamic model. Ambiguous partners stay MANUAL_REVIEW. Do not auto-remove managedNotJoined without confirmed ENDED.",
+  "note": "DISARMED. Phase 3G E2E verified catalog.js overlay wire. Ambiguous partners stay MANUAL_REVIEW. Do not auto-remove managedNotJoined without confirmed ENDED.",
+  "phase3gE2e": {
+    "verified": true,
+    "renderer": "assets/iu-affiliate-catalog.js#applyManagedPublicOverlay",
+    "livePack": "%TEMP%/iu-cj-phase3e-validation/readiness (neveřejné)",
+    "joined": 166,
+    "assignedWithSection": 163,
+    "renderedChips": 165,
+    "stillManualReview": 3,
+    "cjLivePublishing": "DISARMED"
+  },
   "resolvedInPhase3F": [
     {
       "advertiserId": "5871720",
