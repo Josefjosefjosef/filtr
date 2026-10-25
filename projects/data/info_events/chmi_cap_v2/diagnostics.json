@@ -1,6 +1,6 @@
 {
-  "runId": "bf909f17530dbd9d",
-  "started": "2026-10-25T17:46:22.837Z",
+  "runId": "37910469bcbc94a6",
+  "started": "2026-10-25T18:01:12.214Z",
   "mode": "active",
   "discovery": {
     "type": "opendata_active_streams",
@@ -37,19 +37,18 @@
     "completeness": {
       "capMessages": null,
       "infoBlocks": null,
-      "logicalAlerts": 4,
+      "logicalAlerts": 3,
       "uniqueEvents": [
-        "Silný vítr",
         "Stav sucha",
         "Hydrologické sucho"
       ],
-      "totalAreas": 164,
-      "mappedAreas": 175,
+      "totalAreas": 160,
+      "mappedAreas": 160,
       "unmappedAreas": 0,
       "mappingCoveragePercent": 100,
-      "publishedActive": 4,
+      "publishedActive": 3,
       "publishedScheduled": 0,
-      "publishableCount": 4,
+      "publishableCount": 3,
       "productStreams": [
         "50",
         "70"
@@ -57,7 +56,7 @@
       "streamCount": 2,
       "missingStreamCache": 0,
       "invalidCount": 0,
-      "expiredCount": 0,
+      "expiredCount": 1,
       "cancelledCount": 0
     },
     "alarms": [],
@@ -66,8 +65,8 @@
   "status": "not_modified",
   "error": null,
   "onsetSplit": {
-    "before": 4,
-    "after": 4,
+    "before": 3,
+    "after": 3,
     "ledgerKeys": 2,
     "ledgerFingerprint": "78312eef579e2ffa",
     "history": {
@@ -311,30 +310,29 @@
   },
   "temporalCounts": {
     "totalItems": 4,
-    "activeCount": 4,
+    "activeCount": 3,
     "scheduledCount": 0,
-    "expiredCount": 0,
+    "expiredCount": 1,
     "cancelledCount": 0,
     "invalidCount": 0,
-    "publishableCount": 4,
-    "visibleCount": 4
+    "publishableCount": 3,
+    "visibleCount": 3
   },
   "completeness": {
     "capMessages": null,
     "infoBlocks": null,
-    "logicalAlerts": 4,
+    "logicalAlerts": 3,
     "uniqueEvents": [
-      "Silný vítr",
       "Stav sucha",
       "Hydrologické sucho"
     ],
-    "totalAreas": 164,
-    "mappedAreas": 175,
+    "totalAreas": 160,
+    "mappedAreas": 160,
     "unmappedAreas": 0,
     "mappingCoveragePercent": 100,
-    "publishedActive": 4,
+    "publishedActive": 3,
     "publishedScheduled": 0,
-    "publishableCount": 4,
+    "publishableCount": 3,
     "productStreams": [
       "50",
       "70"
@@ -342,7 +340,7 @@
     "streamCount": 2,
     "missingStreamCache": 0,
     "invalidCount": 0,
-    "expiredCount": 0,
+    "expiredCount": 1,
     "cancelledCount": 0
   },
   "alarms": [],
@@ -350,7 +348,7 @@
     "model": "chmi_product_supersession",
     "streamCount": 2,
     "headDocuments": 2,
-    "headAreas": 175,
+    "headAreas": 160,
     "historyReplayWarnings": 0,
     "headWarnings": 0,
     "historyReplayAreas": null,
@@ -358,6 +356,6 @@
     "unresolvedReferences": null,
     "snapshotContractValid": true
   },
-  "finished": "2026-10-25T17:46:28.412Z",
-  "runMs": 5575
+  "finished": "2026-10-25T18:01:17.095Z",
+  "runMs": 4881
 }
