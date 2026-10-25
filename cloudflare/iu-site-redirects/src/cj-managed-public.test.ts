@@ -268,4 +268,32 @@ describe("CJ managed-public R2 publish/serve", () => {
     );
     expect(res).toBeNull();
   });
+
+  it("allows authenticated publish while live disabled (staging write, no public serve)", async () => {
+    const bucket = new MemoryR2();
+    const env: CjManagedPublicEnv = {
+      CJ_MANAGED_PUBLIC: bucket as unknown as R2Bucket,
+      CJ_MANAGED_PUBLIC_LIVE_ENABLED: "false",
+      CJ_MANAGED_PUBLIC_PUBLISH_TOKEN: "test-token",
+    };
+    const doc = sampleDoc([{ advertiserId: "9", sectionId: "aff-moda", title: "T", url: "https://www.kqzyfj.com/click-1-2", active: true }]);
+    const pubReq = new Request("https://infouzel.cz" + CJ_MANAGED_PUBLIC_PUBLISH_PATH, {
+      method: "POST",
+      headers: {
+        authorization: "Bearer test-token",
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ document: doc, meta: { contentSha256: "abc" } }),
+    });
+    const pub = await handleCjManagedPublicPublish(env, pubReq);
+    expect(pub.status).toBe(200);
+    const body = await pub.json();
+    expect(body.ok).toBe(true);
+    expect(bucket.store.has(R2_CJ_CURRENT_KEY)).toBe(true);
+    const served = await serveCjManagedPublic(
+      env,
+      new Request("https://infouzel.cz" + CJ_MANAGED_PUBLIC_PATH)
+    );
+    expect(served).toBeNull();
+  });
 });

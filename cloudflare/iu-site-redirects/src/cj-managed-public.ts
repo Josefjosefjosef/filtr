@@ -151,9 +151,8 @@ export async function handleCjManagedPublicPublish(
   if (!env.CJ_MANAGED_PUBLIC) {
     return json({ ok: false, reason: "R2_NOT_BOUND" }, 503);
   }
-  if (!cjManagedPublicLiveEnabled(env)) {
-    return json({ ok: false, reason: "LIVE_DISABLED" }, 503);
-  }
+  /* Authenticated publish allowed while LIVE_ENABLED=false (staging/LKG write).
+   * Public GET remains gated by cjManagedPublicLiveEnabled() — DISARMED serve. */
   const token = String(env.CJ_MANAGED_PUBLIC_PUBLISH_TOKEN || "");
   if (!token) return json({ ok: false, reason: "TOKEN_NOT_CONFIGURED" }, 503);
   const auth = request.headers.get("authorization") || "";
