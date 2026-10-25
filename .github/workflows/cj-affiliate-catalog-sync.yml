@@ -96,6 +96,9 @@ jobs:
         run: |
           node scripts/iu-cj-affiliate-phase3f-dynamic-catalog-v1-selftest.mjs
           node scripts/iu-cj-affiliate-phase3f-dynamic-catalog-v1.mjs
+      - name: Phase 3G E2E renderer wire selftest (catalog.js overlay; DISARMED)
+        run: |
+          node scripts/iu-cj-affiliate-phase3g-e2e-renderer-wire-v1-selftest.mjs
 
   fetch-staging:
     needs: selftest
