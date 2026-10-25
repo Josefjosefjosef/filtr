@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Phase 3D — R2 infrastructure readiness audit (repo-only).
- * Never creates buckets, never sets Cloudflare secrets, never publishes.
+ * Phase 3D/3I — R2 infrastructure readiness audit (repo-only + secrets presence).
+ * Never creates buckets, never prints secret values, never arms LIVE_ENABLED.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -15,6 +15,7 @@ export function auditCjManagedPublicR2Readiness(opts = {}) {
   const srcPath = path.join(root, "cloudflare", "iu-site-redirects", "src", "cj-managed-public.ts");
   const publishScript = path.join(root, "scripts", "iu-cj-affiliate-catalog-sync-r2-publish-v1.mjs");
   const workflow = path.join(root, ".github", "workflows", "cj-affiliate-catalog-sync.yml");
+  const ensureWf = path.join(root, ".github", "workflows", "ensure-cj-managed-public-r2-bucket.yml");
 
   const findings = [];
   const blockers = [];
@@ -32,23 +33,32 @@ export function auditCjManagedPublicR2Readiness(opts = {}) {
   note(
     "live_flag_false",
     /CJ_MANAGED_PUBLIC_LIVE_ENABLED\s*=\s*"false"/.test(wrangler),
-    "CJ_MANAGED_PUBLIC_LIVE_ENABLED must stay false until GO"
+    "CJ_MANAGED_PUBLIC_LIVE_ENABLED must stay false until public GO"
   );
+
+  const bindingActive =
+    /\[\[r2_buckets\]\][\s\S]*?binding\s*=\s*"CJ_MANAGED_PUBLIC"[\s\S]*?bucket_name\s*=\s*"iu-cj-managed-public-live"/.test(
+      wrangler
+    ) && !/#\s*binding\s*=\s*"CJ_MANAGED_PUBLIC"/.test(wrangler);
+  const bindingCommented =
+    /#\s*\[\[r2_buckets\]\][\s\S]*?#\s*binding\s*=\s*"CJ_MANAGED_PUBLIC"/.test(wrangler) ||
+    (/#\s*binding\s*=\s*"CJ_MANAGED_PUBLIC"/.test(wrangler) && /INFRA_PENDING/.test(wrangler));
+
   note(
-    "binding_commented_infra_pending",
-    /INFRA_PENDING[\s\S]*#\s*\[\[r2_buckets\]\][\s\S]*#\s*binding\s*=\s*"CJ_MANAGED_PUBLIC"/.test(wrangler) ||
-      (/#\s*binding\s*=\s*"CJ_MANAGED_PUBLIC"/.test(wrangler) && /INFRA_PENDING/.test(wrangler)),
-    "CJ_MANAGED_PUBLIC R2 binding remains commented"
+    "binding_cj_managed_public",
+    bindingActive || bindingCommented,
+    bindingActive ? "ACTIVE_DISARMED" : bindingCommented ? "COMMENTED_INFRA_PENDING" : "MISSING"
   );
-  note(
-    "bucket_name_documented",
-    /iu-cj-managed-public-live/.test(wrangler),
-    "intended bucket name documented in comments"
-  );
+  note("bucket_name_documented", /iu-cj-managed-public-live/.test(wrangler), "iu-cj-managed-public-live");
   note(
     "publish_token_not_committed",
     !/CJ_MANAGED_PUBLIC_PUBLISH_TOKEN\s*=\s*"[^"]+"/.test(wrangler),
     "no plaintext publish token in wrangler.toml"
+  );
+  note(
+    "ndic_traffic_binding_intact",
+    /binding\s*=\s*"TRAFFIC_LIVE"/.test(wrangler) && /iu-ndic-traffic-live/.test(wrangler),
+    "NDIC TRAFFIC_LIVE unchanged"
   );
 
   const src = fs.existsSync(srcPath) ? fs.readFileSync(srcPath, "utf8") : "";
@@ -71,45 +81,61 @@ export function auditCjManagedPublicR2Readiness(opts = {}) {
     /publish_managed_public_r2:[\s\S]*?default:\s*"0"/.test(wf),
     "workflow R2 arm default 0"
   );
+  note("ensure_bucket_workflow_present", fs.existsSync(ensureWf), ensureWf);
 
   const secretsPresence = opts.secretsPresence || {};
-  const r2Url = secretsPresence.IU_CJ_MANAGED_PUBLIC_R2_PUBLISH_URL === "PRESENT";
-  const r2Tok = secretsPresence.IU_CJ_MANAGED_PUBLIC_R2_PUBLISH_TOKEN === "PRESENT";
-  note("secret_r2_publish_url", !r2Url ? false : true, r2Url ? "PRESENT" : "MISSING");
-  note("secret_r2_publish_token", !r2Tok ? false : true, r2Tok ? "PRESENT" : "MISSING");
-  // Missing secrets are expected INFRA_PENDING — not a code defect
-  const infraPending = !(r2Url && r2Tok) || blockers.includes("binding_commented_infra_pending");
+  const r2Url =
+    secretsPresence.IU_CJ_MANAGED_PUBLIC_R2_PUBLISH_URL === "PRESENT" ||
+    secretsPresence.IU_CJ_MANAGED_PUBLIC_PUBLISH_URL === "PRESENT";
+  const r2Tok =
+    secretsPresence.IU_CJ_MANAGED_PUBLIC_R2_PUBLISH_TOKEN === "PRESENT" ||
+    secretsPresence.IU_CJ_MANAGED_PUBLIC_PUBLISH_TOKEN === "PRESENT";
+  note("secret_r2_publish_url", r2Url, r2Url ? "PRESENT" : "MISSING");
+  note("secret_r2_publish_token", r2Tok, r2Tok ? "PRESENT" : "MISSING");
 
+  const bucketKnown = opts.bucketExists === true;
+  if (opts.bucketExists === true || opts.bucketExists === false) {
+    note("bucket_exists_remote", bucketKnown, bucketKnown ? "EXISTS" : "MISSING_REMOTE");
+  }
+
+  const infraPending = !(bindingActive && r2Url && r2Tok) || opts.bucketExists === false;
   const codeReady = [
     "wrangler_present",
     "live_flag_false",
-    "binding_commented_infra_pending",
+    "binding_cj_managed_public",
     "publish_token_not_committed",
     "worker_handler_present",
     "r2_publish_script_disarmed_default",
     "r2_publish_validates_payload",
     "workflow_r2_input_default_zero",
+    "ndic_traffic_binding_intact",
   ].every((id) => readyChecks.includes(id));
 
   return {
     schema: "iu-cj-phase3d-r2-infra-readiness-v1",
     at: new Date().toISOString(),
     ok: codeReady,
-    infraPending: true,
+    infraPending,
     productionPublishAllowed: false,
     codeReady,
     secretsReady: r2Url && r2Tok,
+    bindingActive,
+    bindingCommented,
+    liveEnabled: false,
+    publishArmed: false,
     findings,
-    blockers: blockers.filter((id) => !["secret_r2_publish_url", "secret_r2_publish_token"].includes(id)),
+    blockers: blockers.filter(
+      (id) => !["secret_r2_publish_url", "secret_r2_publish_token", "bucket_exists_remote"].includes(id)
+    ),
     remainingGoSteps: [
-      "Create R2 bucket iu-cj-managed-public-live (manual Cloudflare GO)",
-      "Uncomment CJ_MANAGED_PUBLIC binding in wrangler.toml after GO",
-      "Set CJ_MANAGED_PUBLIC_PUBLISH_TOKEN worker secret (never commit)",
-      "Set GitHub secrets IU_CJ_MANAGED_PUBLIC_R2_PUBLISH_URL + TOKEN",
-      "Deploy worker with CJ_MANAGED_PUBLIC_LIVE_ENABLED still false until final GO",
-      "Arm publish only via workflow input after validated staging",
-    ],
-    note: "Repo-only audit. No bucket created. No Cloudflare mutations performed.",
+      bindingActive ? null : "Uncomment CJ_MANAGED_PUBLIC binding in wrangler.toml",
+      bucketKnown ? null : "Create/ensure R2 bucket iu-cj-managed-public-live",
+      r2Url && r2Tok ? null : "Set GitHub secrets IU_CJ_MANAGED_PUBLIC_R2_PUBLISH_URL + TOKEN",
+      "Deploy worker with CJ_MANAGED_PUBLIC_LIVE_ENABLED=false (sets worker secret)",
+      "Staging burn-in with publish_managed_public_r2=1 (non-public keys)",
+      "Public LIVE_ENABLED=true only after separate final GO",
+    ].filter(Boolean),
+    note: "Public CJ live stays DISARMED. NDIC/CHMI/CNB bindings untouched.",
   };
 }
 
@@ -121,7 +147,10 @@ if (isMain) {
     IU_CJ_MANAGED_PUBLIC_R2_PUBLISH_URL: process.env.IU_CJ_R2_URL_PRESENT === "1" ? "PRESENT" : "MISSING",
     IU_CJ_MANAGED_PUBLIC_R2_PUBLISH_TOKEN: process.env.IU_CJ_R2_TOKEN_PRESENT === "1" ? "PRESENT" : "MISSING",
   };
-  const r = auditCjManagedPublicR2Readiness({ secretsPresence });
+  const r = auditCjManagedPublicR2Readiness({
+    secretsPresence,
+    bucketExists: process.env.IU_CJ_R2_BUCKET_EXISTS === "1" ? true : undefined,
+  });
   console.log(JSON.stringify({ IU_CJ_PHASE3D_R2_INFRA_READINESS: r.ok ? "OK" : "FAIL", ...r }));
   process.exit(r.ok ? 0 : 1);
 }

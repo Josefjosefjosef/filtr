@@ -83,10 +83,10 @@ CJ_MANAGED_PUBLIC_LIVE_ENABLED = "false"
 binding = "TRAFFIC_LIVE"
 bucket_name = "iu-ndic-traffic-live"
 
-# INFRA_PENDING (do NOT uncomment / create without user GO):
-# [[r2_buckets]]
-# binding = "CJ_MANAGED_PUBLIC"
-# bucket_name = "iu-cj-managed-public-live"
+# Phase 3I: dedicated CJ managed-public R2 (public serve stays DISARMED via LIVE_ENABLED=false).
+[[r2_buckets]]
+binding = "CJ_MANAGED_PUBLIC"
+bucket_name = "iu-cj-managed-public-live"
 # Secret (wrangler secret / dashboard, never commit): CJ_MANAGED_PUBLIC_PUBLISH_TOKEN
 
 # NOTE: [limits] cpu_ms is Paid-only; Free plan rejects deploy (API 100328).

@@ -1,20 +1,18 @@
 {
   "schema": "iu-affiliate-cj-manual-review-v1",
-  "version": 4,
-  "updatedAt": "2026-10-25T15:45:00.000Z",
+  "version": 5,
+  "updatedAt": "2026-10-25T19:15:00.000Z",
   "liveEnabled": false,
   "publishArmed": false,
-  "note": "DISARMED. Phase 3H coverage reconcile. Baked catalog buttons counted as coverage (no overlay duplicates). Ambiguous partners stay MANUAL_REVIEW.",
-  "phase3hCoverage": {
+  "note": "DISARMED. Phase 3I: Trenýrkárna CID attached to existing baked button; Royalfashion stable deeplink added. Novakid/GearUP stay MANUAL_REVIEW (weak section fit). R2 infra prepared with LIVE_ENABLED=false.",
+  "phase3iCoverage": {
     "verified": true,
     "joined": 166,
     "withSection": 164,
-    "withButtonIncludingBaked": 162,
-    "managedButtonsAmongJoined": 122,
-    "bakedOnlyButtons": 40,
-    "missingButton": 4,
-    "missingButtonIds": ["5938081", "5578976", "5819507", "7804601"],
-    "note": "lidl-shop.cz CJ_MANAGED added; Royalfashion section mapped (Jewelry) but no stable deeplink yet; Trenyrkarna mapped but no URL; Novakid/GearUP MANUAL_REVIEW"
+    "withButtonIncludingBaked": 164,
+    "missingButton": 2,
+    "missingButtonIds": ["5578976", "7804601"],
+    "note": "Trenýrkárna.cz baked CID 5938081; Royalfashion.cz aff-sperky-hodinky URL click-15027011; Novakid/GearUP MR"
   },
   "resolvedInPhase3F": [
     {
@@ -31,14 +29,32 @@
       "partnerName": "Royalfashion.cz",
       "sectionId": "aff-sperky-hodinky",
       "evidence": "cj_primary_category_accessories_jewelry",
-      "note": "Official CJ child category Jewelry → aff-sperky-hodinky; do not use moda solely from brand name"
+      "note": "Section mapped in 3H; stable deeplink attached in 3I"
     },
     {
       "advertiserId": "5954793",
       "partnerName": "lidl-shop.cz",
       "sectionId": "aff-jidlo",
       "evidence": "section_map_plus_cj_offer_deeplink",
-      "note": "No prior baked button; CJ_MANAGED overlay chip added with stable click URL"
+      "note": "CJ_MANAGED + baked chip with stable click URL"
+    }
+  ],
+  "resolvedInPhase3I": [
+    {
+      "advertiserId": "5938081",
+      "partnerName": "Trenýrkárna.cz",
+      "sectionId": "aff-moda",
+      "evidence": "existing_baked_button_plus_cj_advertiser_cid",
+      "url": "https://www.dpbolvw.net/click-101883843-15736041",
+      "note": "No duplicate chip — attach CID to existing MANUAL-style baked button; managed overlay upserts same CID"
+    },
+    {
+      "advertiserId": "5819507",
+      "partnerName": "Royalfashion.cz",
+      "sectionId": "aff-sperky-hodinky",
+      "evidence": "cj_promotions_deeplink_stripped_timestamp",
+      "url": "https://www.kqzyfj.com/click-101883843-15027011",
+      "note": "Official CJ Text Link Royalfashion.cz_deeplink; Jewelry section already mapped"
     }
   ],
   "remainingManualReview": [
@@ -48,7 +64,9 @@
       "reason": "unmapped_no_trusted_section",
       "primaryCategory": "Education / Children",
       "candidateSections": ["aff-deti-hracky"],
-      "note": "No education section; children toys is only a weak option — do not invent"
+      "stableUrlFound": true,
+      "stableUrlEvidence": "CJ Text Link Novakid - Online English Classes (click-14509925) — timestamp stripped candidate available",
+      "note": "Online English education — aff-deti-hracky (toys) is weak; do not invent education section"
     },
     {
       "advertiserId": "7804601",
@@ -56,7 +74,9 @@
       "reason": "unmapped_no_trusted_section",
       "primaryCategory": "Games & Toys / Electronic Games",
       "candidateSections": ["aff-knihy"],
-      "note": "No dedicated gaming section; books/media is weak — do not invent"
+      "stableUrlFound": true,
+      "stableUrlEvidence": "CJ Banner GearUP homepage (click-17235974) — timestamp stripped candidate available",
+      "note": "Game boosting / electronic games — aff-knihy (books/media) is weak; do not invent gaming section"
     }
   ],
   "managedNotJoined": [
@@ -68,6 +88,14 @@
       "note": "Not in current joined fetch — fail-closed KEEP until CJ confirms ENDED; never mass-delete"
     }
   ],
+  "r2Phase3i": {
+    "bucketName": "iu-cj-managed-public-live",
+    "bindingName": "CJ_MANAGED_PUBLIC",
+    "liveEnabled": false,
+    "publishArmed": false,
+    "publicServe": "DISARMED",
+    "note": "Binding active in wrangler; LIVE_ENABLED=false; public CJ display remains off"
+  },
   "capacity": {
     "dynamicModel": "unlimited_overlay",
     "freeEmptyGateActive": false,
