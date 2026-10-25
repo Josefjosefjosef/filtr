@@ -2,7 +2,9 @@
  * infoUzel.cz — Affiliate services catalog (UI + data).
  * Partner URLs are placeholders until affiliate programs are approved.
  */
-/* iu-affiliate-catalog-bust: affiliate-phase2e-fix55-v1-20261023 */
+/* iu-affiliate-catalog-bust: affiliate-phase3f-unlimited-dynamic-v1-20261025 */
+/* Phase 3F: CJ_MANAGED chips append via managed-public overlay with no freeEmpty/overflow cap.
+   MANUAL_PROTECTED / PAID_RESERVED never auto-hidden. live publishing stays DISARMED until GO. */
 (function iuAffiliateCatalog() {
   "use strict";
 

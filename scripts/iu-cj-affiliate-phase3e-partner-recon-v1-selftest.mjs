@@ -109,7 +109,11 @@ expect("map_has_autohotarek", mapFile["7084105"] === "aff-auto-moto");
 
 const cap = auditAffiliateSectionCapacity({ catalogSrc });
 expect("capacity_free_empty_zero_or_number", typeof cap.freeEmptySlotCount === "number");
-expect("capacity_proposal_needs_go", cap.businessProposal.overflowCatalogOutsidePaidSlots.doNotImplementWithoutGo === true);
+expect(
+  "capacity_unlimited_overlay",
+  cap.dynamicModel === "unlimited_overlay" &&
+    cap.businessProposal.overflowCatalogOutsidePaidSlots.retired === true
+);
 
 const r2 = auditCjManagedPublicR2Readiness({
   secretsPresence: {
