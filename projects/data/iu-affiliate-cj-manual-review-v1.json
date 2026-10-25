@@ -1,0 +1,63 @@
+{
+  "schema": "iu-affiliate-cj-manual-review-v1",
+  "version": 1,
+  "updatedAt": "2026-10-25T06:00:00.000Z",
+  "liveEnabled": false,
+  "publishArmed": false,
+  "note": "DISARMED. Partners that cannot be auto-assigned without inventing a category. Do not auto-remove managedNotJoined from the public catalog.",
+  "remainingManualReview": [
+    {
+      "advertiserId": "5578976",
+      "partnerName": "Novakid INT",
+      "reason": "unmapped_no_trusted_section",
+      "primaryCategory": "Education / Children",
+      "candidateSections": ["aff-deti-hracky"],
+      "note": "No education section; children toys section is only a weak option"
+    },
+    {
+      "advertiserId": "5819507",
+      "partnerName": "Royalfashion.cz",
+      "reason": "unmapped_no_trusted_section",
+      "primaryCategory": "Accessories / Jewelry",
+      "candidateSections": ["aff-moda", "aff-sperky-hodinky"],
+      "note": "Name suggests fashion; CJ child is Jewelry — ambiguous"
+    },
+    {
+      "advertiserId": "5871720",
+      "partnerName": "Klik.cz",
+      "reason": "catalog_multi_section_collision",
+      "primaryCategory": "Insurance / Personal Insurance",
+      "candidateSections": ["aff-cestovni-pojisteni", "aff-pojisteni"],
+      "note": "Existing dual catalog buttons; primary section needs human pick for offers map"
+    },
+    {
+      "advertiserId": "7804601",
+      "partnerName": "GearUP",
+      "reason": "unmapped_no_trusted_section",
+      "primaryCategory": "Games & Toys / Electronic Games",
+      "candidateSections": ["aff-knihy"],
+      "note": "No dedicated gaming section; books/media/games is weak"
+    }
+  ],
+  "managedNotJoined": [
+    {
+      "advertiserId": "5614135",
+      "title": "Gavri.cz",
+      "sectionId": "aff-dum-zahrada",
+      "decision": "JOINED_STATUS_DRIFT_REVIEW",
+      "note": "In managed-public + catalog but not in current CJ joined fetch — do NOT auto-remove"
+    }
+  ],
+  "capacity": {
+    "freeEmptySlotCount": 0,
+    "occupiedButtonCount": 165,
+    "emptySectionsNeedingGo": [
+      "aff-finance",
+      "aff-energie-uspor",
+      "aff-tv-streamovani",
+      "aff-realitni-kancelare",
+      "aff-reality-nemovitosti"
+    ],
+    "overflowProposal": "PROPOSAL_ONLY_NEEDS_GO — secondary non-paid overflow list without changing paid layout"
+  }
+}
