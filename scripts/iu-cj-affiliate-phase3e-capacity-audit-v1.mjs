@@ -23,7 +23,9 @@ export function auditAffiliateSectionCapacity(opts = {}) {
     at: new Date().toISOString(),
     ok: true,
     catalogMutated: false,
+    dynamicModel: summary.dynamicModel || "unlimited_overlay",
     freeEmptySlotCount: summary.freeEmptySlotCount,
+    freeEmptyGateActive: false,
     occupiedButtonCount: summary.occupiedButtonCount,
     reservedSlotCount: summary.reservedSlotCount,
     blockedSlotCount: summary.blockedSlotCount,
@@ -34,7 +36,7 @@ export function auditAffiliateSectionCapacity(opts = {}) {
     uiNote: summary.uiNote,
     businessProposal: summary.businessProposal,
     viewportNote:
-      "Same item list drives PC/tablet/mobile/PWA; capacity is catalog-slot based, not viewport-specific empty slots.",
+      "Same item list drives PC/tablet/mobile/PWA. Dynamic CJ chips are unlimited via overlay; paid/manual positions unchanged.",
   };
 }
 
@@ -49,7 +51,8 @@ if (isMain) {
       freeEmptySlotCount: r.freeEmptySlotCount,
       occupiedButtonCount: r.occupiedButtonCount,
       emptySections: r.emptySections,
-      proposalNeedsGo: r.businessProposal.overflowCatalogOutsidePaidSlots.doNotImplementWithoutGo,
+      dynamicModel: r.dynamicModel,
+      overflowRetired: r.businessProposal.overflowCatalogOutsidePaidSlots.retired === true,
     })
   );
   process.exit(r.ok ? 0 : 1);

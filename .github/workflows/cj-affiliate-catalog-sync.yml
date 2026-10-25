@@ -92,6 +92,10 @@ jobs:
           node scripts/iu-cj-affiliate-phase3e-partner-recon-v1-selftest.mjs
           node scripts/iu-cj-affiliate-phase3e-capacity-audit-v1.mjs
           node scripts/iu-cj-affiliate-phase3e-r2-production-go-plan-v1.mjs
+      - name: Phase 3F unlimited dynamic catalog selftest (offline)
+        run: |
+          node scripts/iu-cj-affiliate-phase3f-dynamic-catalog-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-phase3f-dynamic-catalog-v1.mjs
 
   fetch-staging:
     needs: selftest

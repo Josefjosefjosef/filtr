@@ -254,7 +254,7 @@ export function proposeSectionAssignments({
     capacity: summarizeCapacity(inv),
     managedNotJoined: finalRecon.managedNotJoined,
     note:
-      "Section map only — does not add public catalog buttons. freeEmptySlots remain unchanged. DISARMED.",
+      "Section map feeds unlimited dynamic overlay (Phase 3F). freeEmpty is informational only — not a gate. DISARMED.",
   };
 }
 
@@ -306,19 +306,22 @@ export function summarizeCapacity(inventory) {
     emptySections: sections.filter((s) => s.slotCount === 0).map((s) => s.sectionId),
     sections,
     uiNote:
-      "PC/tablet/mobil render the same catalog items; freeEmpty=0 means no empty-* placeholders remain. Adding public buttons requires business GO.",
+      "Phase 3F: dynamic CJ_MANAGED buttons append via managed-public overlay with NO freeEmpty / overflow limit. MANUAL_PROTECTED / paid positions stay immutable.",
+    dynamicModel: "unlimited_overlay",
     businessProposal: {
       overflowCatalogOutsidePaidSlots: {
-        status: "PROPOSAL_ONLY_NEEDS_GO",
+        status: "RETIRED_PHASE_3F",
+        retired: true,
         description:
-          "Optional secondary CJ overflow list (non-paid, non-hero) for partners without free_empty slots — must not alter approved paid layout.",
-        doNotImplementWithoutGo: true,
+          "Overflow lists retired. New joined partners append unlimited into the correct section via CJ managed-public overlay.",
+        doNotImplementWithoutGo: false,
       },
       populateEmptySections: {
-        status: "PROPOSAL_ONLY_NEEDS_GO",
+        status: "ALLOWED_VIA_DYNAMIC_OVERLAY",
         sectionIds: sections.filter((s) => s.slotCount === 0).map((s) => s.sectionId),
-        description: "Empty section shells exist but have zero items; first public button would change public layout.",
-        doNotImplementWithoutGo: true,
+        description:
+          "Empty section shells may receive CJ_MANAGED chips through overlay when sectionMap assigns them — still DISARMED until promote GO.",
+        doNotImplementWithoutGo: false,
       },
     },
   };

@@ -20,6 +20,8 @@ export const PLAN_DECISION = Object.freeze({
   already_has_button: "already_has_button",
   planned_fill: "planned_fill",
   no_free_slot: "no_free_slot",
+  /** Phase 3F: append CJ_MANAGED chip without freeEmpty slot (overlay path). */
+  unlimited_append: "unlimited_append",
   manual_review: "manual_review",
   unmapped: "unmapped",
   missing_affiliate_url: "missing_affiliate_url",
@@ -313,6 +315,103 @@ export function planPartnerSlotAssignments(options = {}) {
       ],
     },
     CJ_LIVE_HTTP_CALLS: 0,
+  };
+}
+
+/**
+ * Phase 3F — unlimited dynamic fills (no freeEmpty gate).
+ * Plans CJ_MANAGED append via managed-public overlay; never mutates catalog JS;
+ * never touches MANUAL_PROTECTED. publishable stays false until promote GO.
+ */
+export function planUnlimitedDynamicFills(options = {}) {
+  const partners = Array.isArray(options.partners) ? options.partners : [];
+  const websitePid = options.websitePid || "101883843";
+  const observedAt = options.observedAt || new Date().toISOString();
+  const decisions = [];
+  const plannedAppends = [];
+
+  for (const partner of partners) {
+    const partnerId = partner.partnerId || partner.advertiserId || null;
+    const sectionId = partner.primarySectionId || partner.sectionId || null;
+    if (!isPublicationApproved(partner) && options.requireApproval !== false) {
+      decisions.push({
+        partnerId,
+        advertiserId: partner.advertiserId || null,
+        decision: PLAN_DECISION.not_publication_approved,
+        sectionId,
+        publishable: false,
+      });
+      continue;
+    }
+    if (!sectionId) {
+      decisions.push({
+        partnerId,
+        advertiserId: partner.advertiserId || null,
+        decision: PLAN_DECISION.unmapped,
+        sectionId: null,
+        publishable: false,
+        reason: "missing_section",
+      });
+      continue;
+    }
+    const urlCheck = verifyAffiliateUrl(partner.affiliateUrl, websitePid, { observedAt });
+    if (!urlCheck.ok) {
+      decisions.push({
+        partnerId,
+        advertiserId: partner.advertiserId || null,
+        decision:
+          urlCheck.reason === "missing_affiliate_url"
+            ? PLAN_DECISION.missing_affiliate_url
+            : PLAN_DECISION.invalid_affiliate_url,
+        sectionId,
+        publishable: false,
+        reason: urlCheck.reason,
+      });
+      continue;
+    }
+    const fill = {
+      partnerId,
+      advertiserId: partner.advertiserId || null,
+      displayName: partner.displayName || null,
+      sectionId,
+      slotIndex: null,
+      slotSlug: null,
+      unlimitedAppend: true,
+      affiliateUrl: partner.affiliateUrl,
+      affiliateUrlVerification: urlCheck,
+      observedAt,
+      phase: "3F",
+      publicCatalogMutation: false,
+      publishable: false,
+      rel: "sponsored noopener",
+      target: "_blank",
+    };
+    plannedAppends.push(fill);
+    decisions.push({
+      partnerId,
+      advertiserId: partner.advertiserId || null,
+      decision: PLAN_DECISION.unlimited_append,
+      sectionId,
+      publishable: false,
+      reason: "dynamic_overlay_append_no_slot_limit",
+    });
+  }
+
+  return {
+    ok: true,
+    phase: "3F",
+    unlimited: true,
+    freeEmptyGate: false,
+    publishable: false,
+    catalogMutated: false,
+    plannedAppends,
+    decisions,
+    counts: {
+      partners: partners.length,
+      unlimited_append: plannedAppends.length,
+      blocked: decisions.filter((d) => d.decision !== PLAN_DECISION.unlimited_append).length,
+    },
+    note: "Appends land via managed-public overlay; MANUAL_PROTECTED untouched; promote remains DISARMED by default.",
   };
 }
 
