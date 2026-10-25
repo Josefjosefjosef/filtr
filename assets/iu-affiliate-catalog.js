@@ -518,7 +518,7 @@
         affPartner("Meatfly.cz", "https://www.jdoqocy.com/click-101883843-15735649"),
         affPartner("Kabea.cz", "https://www.jdoqocy.com/click-101883843-15735243"),
         affPartner("Demix.cz", "https://www.tkqlhce.com/click-101883843-15202259"),
-        affPartner("Trenýrkárna.cz", "https://www.dpbolvw.net/click-101883843-15736041"),
+        affPartner("Trenýrkárna.cz", "https://www.dpbolvw.net/click-101883843-15736041", "5938081"),
         affPartner("VIP-pradlo.cz", "https://www.jdoqocy.com/click-101883843-15769149"),
         affPartner("Instamo.cz", "https://www.anrdoezrs.net/click-101883843-15753113", "6754118"),
         affPartner("Lelosi.cz", "https://www.kqzyfj.com/click-101883843-15356564", "6256015"),
@@ -743,7 +743,8 @@
       icon: "iu-aff-watch",
       description: "Odkazy na vybrané obchody se šperky a hodinkami.",
       items: [
-        affPartner("ELENYS", "https://www.dpbolvw.net/click-101883843-15735899")
+        affPartner("ELENYS", "https://www.dpbolvw.net/click-101883843-15735899"),
+        affPartner("Royalfashion.cz", "https://www.kqzyfj.com/click-101883843-15027011", "5819507")
       ],
     },
     {

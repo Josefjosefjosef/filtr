@@ -103,6 +103,9 @@ jobs:
         run: |
           node scripts/iu-cj-affiliate-phase3h-coverage-reconcile-v1-selftest.mjs
           node scripts/iu-cj-affiliate-phase3d-complete-validation-v1-selftest.mjs
+      - name: Phase 3I R2 binding + four-partner coverage (DISARMED)
+        run: |
+          node scripts/iu-cj-affiliate-phase3i-r2-four-partners-v1-selftest.mjs
 
   fetch-staging:
     needs: selftest
@@ -315,8 +318,8 @@ jobs:
     timeout-minutes: 10
     env:
       IU_CJ_MANAGED_PUBLIC_R2_PUBLISH_ARMED: "1"
-      IU_CJ_MANAGED_PUBLIC_PUBLISH_URL: ${{ secrets.IU_CJ_MANAGED_PUBLIC_PUBLISH_URL }}
-      IU_CJ_MANAGED_PUBLIC_PUBLISH_TOKEN: ${{ secrets.IU_CJ_MANAGED_PUBLIC_PUBLISH_TOKEN }}
+      IU_CJ_MANAGED_PUBLIC_PUBLISH_URL: ${{ secrets.IU_CJ_MANAGED_PUBLIC_R2_PUBLISH_URL || secrets.IU_CJ_MANAGED_PUBLIC_PUBLISH_URL }}
+      IU_CJ_MANAGED_PUBLIC_PUBLISH_TOKEN: ${{ secrets.IU_CJ_MANAGED_PUBLIC_R2_PUBLISH_TOKEN || secrets.IU_CJ_MANAGED_PUBLIC_PUBLISH_TOKEN }}
       IU_CJ_WEBSITE_PID: ${{ secrets.IU_CJ_WEBSITE_PID }}
     steps:
       - uses: actions/checkout@v4

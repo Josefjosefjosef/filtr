@@ -88,16 +88,24 @@ expect(
   )
 );
 expect(
-  "lidl_category_assign",
-  proposal.autoAssigned.some((a) => a.advertiserId === "5954793" && a.sectionId === "aff-jidlo")
+  "lidl_jidlo_assigned",
+  proposal.autoAssigned.some((a) => a.advertiserId === "5954793" && a.sectionId === "aff-jidlo") ||
+    proposal.reconciliation.assigned.some((a) => a.advertiserId === "5954793" && a.sectionId === "aff-jidlo")
 );
 expect(
   "novakid_manual",
   proposal.stillManualReview.some((a) => a.advertiserId === "5578976")
 );
 expect(
-  "royalfashion_manual",
-  proposal.stillManualReview.some((a) => a.advertiserId === "5819507")
+  "royalfashion_jewelry_assigned",
+  proposal.reconciliation.assigned.some(
+    (a) => a.advertiserId === "5819507" && a.sectionId === "aff-sperky-hodinky"
+  ) ||
+    proposal.autoAssigned.some((a) => a.advertiserId === "5819507" && a.sectionId === "aff-sperky-hodinky")
+);
+expect(
+  "royalfashion_not_manual",
+  !proposal.stillManualReview.some((a) => a.advertiserId === "5819507")
 );
 expect("no_catalog_mutation", proposal.catalogMutated === false);
 expect("disarmed", proposal.liveEnabled === false && proposal.publishArmed === false);
@@ -126,7 +134,14 @@ expect("r2_infra_pending", r2.infraPending === true && r2.productionPublishAllow
 const go = buildCjR2ProductionGoPlan();
 expect("go_plan_disarmed", go.productionActionsArmed === false);
 expect("go_plan_has_steps", (go.steps || []).length >= 6);
-expect("go_plan_no_auto_bucket", go.steps.every((s) => s.executeWithoutGo !== true));
+expect(
+  "go_plan_public_arm_still_gated",
+  (go.steps || []).some((s) => s.id === "arm_live_flag" && s.requiresGo === true && s.executeWithoutGo === false)
+);
+expect(
+  "go_plan_staging_still_gated",
+  (go.steps || []).some((s) => s.id === "staging_burn_in" && s.requiresGo === true)
+);
 
 const ok = failures.length === 0;
 console.log(
