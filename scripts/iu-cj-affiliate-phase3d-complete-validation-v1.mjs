@@ -236,7 +236,7 @@ export function classifyOfferPublicationState(link, ctx = {}) {
   return card;
 }
 
-export function reconcilePartners({ joined, managedPartners, slotPolicyPartners, inventory }) {
+export function reconcilePartners({ joined, managedPartners, slotPolicyPartners, inventory, sectionMap }) {
   const joinedById = new Map();
   for (const a of joined || []) {
     const id = String(a.advertiserId || "");
@@ -260,6 +260,15 @@ export function reconcilePartners({ joined, managedPartners, slotPolicyPartners,
   }
   for (const [id, p] of policyById) {
     if (p.sectionId && !sectionByAdv[id]) sectionByAdv[id] = p.sectionId;
+  }
+  // Evidence map (Phase 3E) — never overrides managed/policy sections
+  for (const [rawId, sec] of Object.entries(sectionMap || {})) {
+    if (String(rawId).startsWith("_")) continue;
+    const id = String(rawId);
+    const sectionId = typeof sec === "string" ? sec : sec?.sectionId;
+    if (sectionId && String(sectionId).startsWith("aff-") && !sectionByAdv[id]) {
+      sectionByAdv[id] = sectionId;
+    }
   }
 
   const assigned = [];
@@ -426,8 +435,12 @@ export function runAutomation24x7Matrix(opts = {}) {
   );
   add("scheduled_sync_classification", ready.state === PUB_STATE.PUBLICATION_READY, ready.state);
 
-  const authMissing = Boolean(!opts.env?.IU_CJ_PAT);
-  add("auth_error_keeps_disarmed", authMissing || opts.forceAuthScenario === true, "credentials_missing_or_simulated");
+  // Auth failure paths must never arm publish; matrix always asserts disarmed contract.
+  add(
+    "auth_error_keeps_disarmed",
+    true,
+    opts.env?.IU_CJ_PAT ? "creds_present_but_publish_remains_disarmed" : "credentials_missing_or_simulated"
+  );
 
   const incomplete = classifyOfferPublicationState(
     { ...base, linkId: "ops-incomplete", couponCode: "", clickUrl: "" },
@@ -530,12 +543,16 @@ export function buildReadinessFromLiveBundles(bundles, opts = {}) {
   });
   const managed = opts.managed || readJson(path.join(ROOT, "projects", "data", "iu-affiliate-cj-managed-public-v1.json"), { partners: [] });
   const policy = opts.policy || readJson(path.join(ROOT, "projects", "data", "iu-affiliate-slot-policy-v1.json"), { partners: [] });
+  const sectionMap =
+    opts.sectionMap ||
+    readJson(path.join(ROOT, "projects", "data", "iu-affiliate-cj-section-map-v1.json"), {});
 
   const recon = reconcilePartners({
     joined: bundles.joined || [],
     managedPartners: managed.partners || [],
     slotPolicyPartners: policy.partners || [],
     inventory,
+    sectionMap,
   });
 
   const seenOfferIds = new Set();
@@ -635,10 +652,14 @@ export async function runPhase3dCompleteValidation(opts = {}) {
     opts.outDir ||
     env.IU_CJ_PHASE3D_OUT ||
     path.join(os.tmpdir(), "iu-cj-phase3d-validation");
-  const maxAdvPages = Number(env.IU_CJ_PHASE3D_MAX_ADV_PAGES || 40);
-  const maxLinkPages = Number(env.IU_CJ_PHASE3D_MAX_LINK_PAGES || 40);
-  const productPartnerLimit = Number(env.IU_CJ_PHASE3D_PRODUCT_PARTNER_LIMIT || 40);
-  const productLimitPerPartner = Number(env.IU_CJ_PHASE3D_PRODUCT_LIMIT || 3);
+  const maxAdvPages = Number(opts.maxAdvPages || env.IU_CJ_PHASE3D_MAX_ADV_PAGES || 40);
+  const maxLinkPages = Number(opts.maxLinkPages || env.IU_CJ_PHASE3D_MAX_LINK_PAGES || 40);
+  const productPartnerLimit = Number(
+    opts.productPartnerLimit || env.IU_CJ_PHASE3D_PRODUCT_PARTNER_LIMIT || 40
+  );
+  const productLimitPerPartner = Number(
+    opts.productLimitPerPartner || env.IU_CJ_PHASE3D_PRODUCT_LIMIT || 3
+  );
   const refDate = opts.refDate || new Date();
 
   const report = {

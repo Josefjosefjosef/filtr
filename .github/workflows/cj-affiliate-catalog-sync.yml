@@ -87,6 +87,11 @@ jobs:
         run: |
           node scripts/iu-cj-affiliate-phase3d-complete-validation-v1-selftest.mjs
           node scripts/iu-cj-affiliate-phase3d-r2-infra-readiness-v1.mjs
+      - name: Phase 3E partner recon + capacity + R2 GO plan selftest (offline)
+        run: |
+          node scripts/iu-cj-affiliate-phase3e-partner-recon-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-phase3e-capacity-audit-v1.mjs
+          node scripts/iu-cj-affiliate-phase3e-r2-production-go-plan-v1.mjs
 
   fetch-staging:
     needs: selftest
