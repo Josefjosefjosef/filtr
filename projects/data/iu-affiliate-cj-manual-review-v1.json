@@ -1,10 +1,10 @@
 {
   "schema": "iu-affiliate-cj-manual-review-v1",
-  "version": 5,
-  "updatedAt": "2026-10-25T19:15:00.000Z",
+  "version": 6,
+  "updatedAt": "2026-10-26T00:45:00.000Z",
   "liveEnabled": false,
   "publishArmed": false,
-  "note": "DISARMED. Phase 3I: Trenýrkárna CID attached to existing baked button; Royalfashion stable deeplink added. Novakid/GearUP stay MANUAL_REVIEW (weak section fit). R2 infra prepared with LIVE_ENABLED=false.",
+  "note": "DISARMED. Phase 3J: R2 staging burn-in workflow ready; public LIVE stays false. Novakid/GearUP remain MANUAL_REVIEW — do not force unfit sections.",
   "phase3iCoverage": {
     "verified": true,
     "joined": 166,
@@ -95,6 +95,13 @@
     "publishArmed": false,
     "publicServe": "DISARMED",
     "note": "Binding active in wrangler; LIVE_ENABLED=false; public CJ display remains off"
+  },
+  "r2Phase3j": {
+    "stagingBurninWorkflow": ".github/workflows/cj-affiliate-r2-staging-burnin.yml",
+    "authorizedWriteWhileLiveFalse": true,
+    "publicServe": "DISARMED",
+    "longTermBurnin": "PENDING_SCHEDULED_RUNS",
+    "note": "One-shot staging publish via workflow_dispatch arm_r2_publish=1; schedule catalog-sync remains fetch≠R2-publish unless dual-armed"
   },
   "capacity": {
     "dynamicModel": "unlimited_overlay",
