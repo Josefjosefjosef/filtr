@@ -16,7 +16,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
+const CATALOG_BUST = "affiliate-phase3m-unified-lifecycle-v1-20261026";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const LEO_CJ = "https://www.jdoqocy.com/click-101883843-15736211";
 const PROD_INDEX = "https://infouzel.cz/projects/index.html";
@@ -35,7 +35,7 @@ function sha256(text) {
   return crypto.createHash("sha256").update(text, "utf8").digest("hex");
 }
 
-/** PR changed catalog vs merge base — prod SHA cannot match until Pages deploy after merge. */
+/** PR changed catalog vs merge base â€” prod SHA cannot match until Pages deploy after merge. */
 function affiliateCatalogChangedInPr() {
   try {
     const base = process.env.GITHUB_BASE_SHA || process.env.SMOKE_BASE_SHA || "origin/main";

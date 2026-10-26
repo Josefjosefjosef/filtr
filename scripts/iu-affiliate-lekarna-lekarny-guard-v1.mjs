@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Lékárny → Lékárna.cz (CJ 15734937), first free partner slot.
+ * Freeze guard: LĂ©kĂˇrny â†’ LĂ©kĂˇrna.cz (CJ 15734937), first free partner slot.
  * Does not lock remaining empty slots. Section stays at 8 slots.
  * Run: npm run iu-affiliate-lekarna-lekarny-guard
  */
@@ -17,14 +17,14 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-lekarna-lekarny-v1-20260922";
-const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
+const CATALOG_BUST = "affiliate-phase3m-unified-lifecycle-v1-20261026";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-lekarny";
-const SECTION_TITLE = "Lékárny";
-const PARTNER_TITLE = "Lékárna.cz";
+const SECTION_TITLE = "LĂ©kĂˇrny";
+const PARTNER_TITLE = "LĂ©kĂˇrna.cz";
 const CJ_URL = "https://www.kqzyfj.com/click-101883843-15734937";
 const DISCLOSURE =
-  "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
+  "Tato sekce obsahuje reklamnĂ­ a partnerskĂ© odkazy na externĂ­ sluĹľby a obchody.";
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
   "iu-affiliate-lekarna-lekarny-guard-report.json"
@@ -56,19 +56,19 @@ function auditStatic() {
   ok("catalog:cj_url_exact", catalog.includes(CJ_URL));
   ok(
     "catalog:no_direct_lekarna_href",
-    !/id:\s*"aff-lekarny"[\s\S]*?affPartner\(\s*"Lékárna\.cz"\s*,\s*"https:\/\/(?:www\.)?lekarna\.cz/i.test(
+    !/id:\s*"aff-lekarny"[\s\S]*?affPartner\(\s*"LĂ©kĂˇrna\.cz"\s*,\s*"https:\/\/(?:www\.)?lekarna\.cz/i.test(
       catalog
     )
   );
   ok(
     "catalog:lekarna_partner",
-    /id:\s*"aff-lekarny"[\s\S]*?affPartner\(\s*"Lékárna\.cz"\s*,\s*"https:\/\/www\.kqzyfj\.com\/click-101883843-15734937"\s*\)/.test(
+    /id:\s*"aff-lekarny"[\s\S]*?affPartner\(\s*"LĂ©kĂˇrna\.cz"\s*,\s*"https:\/\/www\.kqzyfj\.com\/click-101883843-15734937"\s*\)/.test(
       catalog
     )
   );
   ok(
     "catalog:slot1_lekarna",
-    /id:\s*"aff-lekarny"[\s\S]*?items:\s*\[\s*affPartner\(\s*"Lékárna\.cz"/.test(catalog)
+    /id:\s*"aff-lekarny"[\s\S]*?items:\s*\[\s*affPartner\(\s*"LĂ©kĂˇrna\.cz"/.test(catalog)
   );
 
   const block = lekarnyBlock(catalog);

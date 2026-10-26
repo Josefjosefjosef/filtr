@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Guard: Affiliate / selected services — neutral presentation + ad disclosure.
+ * Guard: Affiliate / selected services â€” neutral presentation + ad disclosure.
  * Run: npm run iu-affiliate-selected-services-neutral-guard
  */
 import fs from "node:fs";
@@ -15,25 +15,25 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
-const SECTION_TITLE = "Vybrané služby a odkazy";
+const CATALOG_BUST = "affiliate-phase3m-unified-lifecycle-v1-20261026";
+const SECTION_TITLE = "VybranĂ© sluĹľby a odkazy";
 const DISCLOSURE =
-  "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
+  "Tato sekce obsahuje reklamnĂ­ a partnerskĂ© odkazy na externĂ­ sluĹľby a obchody.";
 const TRAVEL_INTRO =
-  "Odkazy na vybrané cestovní kanceláře a služby související s cestováním.";
-const TRAVEL_SEO_H2 = "Cestovní kanceláře – odkazy na vybrané externí služby";
+  "Odkazy na vybranĂ© cestovnĂ­ kancelĂˇĹ™e a sluĹľby souvisejĂ­cĂ­ s cestovĂˇnĂ­m.";
+const TRAVEL_SEO_H2 = "CestovnĂ­ kancelĂˇĹ™e â€“ odkazy na vybranĂ© externĂ­ sluĹľby";
 const TRAVEL_SEO_P3 =
-  "InfoUzel.cz uvedené externí služby neprovozuje. Sekce slouží jako orientační rozcestník k vybraným externím službám a nepředstavuje jejich úplný výčet.";
+  "InfoUzel.cz uvedenĂ© externĂ­ sluĹľby neprovozuje. Sekce slouĹľĂ­ jako orientaÄŤnĂ­ rozcestnĂ­k k vybranĂ˝m externĂ­m sluĹľbĂˇm a nepĹ™edstavuje jejich ĂşplnĂ˝ vĂ˝ÄŤet.";
 
 const FORBIDDEN = [
-  "DOPORUČENÉ SLUŽBY",
-  "Doporučené služby",
-  "ověřené služby a obchody",
-  "Vyberte si cestovní kancelář a zobrazte aktuální nabídku zájezdů.",
-  "Klíčová slova:",
-  "může obsahovat reklamní",
-  "bez zbytečného proklikávání",
-  "Praktický rozcestník ušetří",
+  "DOPORUÄŚENĂ‰ SLUĹ˝BY",
+  "DoporuÄŤenĂ© sluĹľby",
+  "ovÄ›Ĺ™enĂ© sluĹľby a obchody",
+  "Vyberte si cestovnĂ­ kancelĂˇĹ™ a zobrazte aktuĂˇlnĂ­ nabĂ­dku zĂˇjezdĹŻ.",
+  "KlĂ­ÄŤovĂˇ slova:",
+  "mĹŻĹľe obsahovat reklamnĂ­",
+  "bez zbyteÄŤnĂ©ho proklikĂˇvĂˇnĂ­",
+  "PraktickĂ˝ rozcestnĂ­k uĹˇetĹ™Ă­",
 ];
 
 const EXPECTED_CAT_IDS = [
@@ -76,20 +76,20 @@ const EXPECTED_CAT_IDS = [
 ];
 
 const EXPECTED_CAT_TITLES = {
-  "aff-letenky": "Doprava a cestování",
-  "aff-letenky-letecka-doprava": "Letenky a letecká doprava",
-  "aff-moda": "Móda a doplňky",
-  "aff-deti-hracky": "Děti a hračky",
-  "aff-nabytek": "Bydlení a vybavení",
+  "aff-letenky": "Doprava a cestovĂˇnĂ­",
+  "aff-letenky-letecka-doprava": "Letenky a leteckĂˇ doprava",
+  "aff-moda": "MĂłda a doplĹky",
+  "aff-deti-hracky": "DÄ›ti a hraÄŤky",
+  "aff-nabytek": "BydlenĂ­ a vybavenĂ­",
   "aff-knihy": "Knihy, hudba a hry",
-  "aff-kvetiny-darky": "Květiny a dárky",
-  "aff-sperky-hodinky": "Šperky a hodinky",
-  "aff-tv-streamovani": "TV a streamování",
-  "aff-dilna-naradi": "Dílna a nářadí",
+  "aff-kvetiny-darky": "KvÄ›tiny a dĂˇrky",
+  "aff-sperky-hodinky": "Ĺ perky a hodinky",
+  "aff-tv-streamovani": "TV a streamovĂˇnĂ­",
+  "aff-dilna-naradi": "DĂ­lna a nĂˇĹ™adĂ­",
   "aff-inzerce-bazary": "Inzerce a bazary",
-  "aff-realitni-kancelare": "Realitní kanceláře",
+  "aff-realitni-kancelare": "RealitnĂ­ kancelĂˇĹ™e",
   "aff-reality-nemovitosti": "Reality a nemovitosti",
-  "aff-kancelarske-potreby": "Kancelářské potřeby a vybavení",
+  "aff-kancelarske-potreby": "KancelĂˇĹ™skĂ© potĹ™eby a vybavenĂ­",
 };
 
 const EXPECTED_CAT_ICONS = {
@@ -123,7 +123,7 @@ function auditStatic() {
   ok("catalog:travel_intro", catalog.includes(TRAVEL_INTRO));
   ok("catalog:travel_seo_h2", catalog.includes(TRAVEL_SEO_H2));
   ok("catalog:travel_seo_p3", catalog.includes(TRAVEL_SEO_P3));
-  ok("catalog:no_keywords_render", !catalog.includes("Klíčová slova:"));
+  ok("catalog:no_keywords_render", !catalog.includes("KlĂ­ÄŤovĂˇ slova:"));
   ok("catalog:no_keywords_field", !/\bkeywords\s*:/.test(catalog));
   for (const id of EXPECTED_CAT_IDS) {
     ok("catalog:cat:" + id, catalog.includes('id: "' + id + '"'));
@@ -147,7 +147,7 @@ function auditStatic() {
   );
   for (const [id, title] of Object.entries(EXPECTED_CAT_TITLES)) {
     ok("catalog:title:" + id, catalog.includes('title: "' + title + '"'), title);
-    ok("catalog:seo_title:" + id, catalog.includes(title + " – odkazy"), title);
+    ok("catalog:seo_title:" + id, catalog.includes(title + " â€“ odkazy"), title);
   }
   for (const [id, icon] of Object.entries(EXPECTED_CAT_ICONS)) {
     const blockRe = new RegExp('id:\\s*"' + id + '"[\\s\\S]*?icon:\\s*"' + icon + '"');
@@ -189,9 +189,9 @@ function auditStatic() {
   ok("index:cache_bust", index.includes(CATALOG_BUST));
   ok("index:leo_marker_retained", index.includes("affiliate-leo-express-slot1-v1-20260920"));
   ok("index:shell", index.includes('id="iuAffiliateView"'));
-  ok("index:no_doporucene_in_aff_shell", !/iuAffiliateTitle">Doporučené služby</.test(index));
-  ok("index:info_center_no_doporucovane", !index.includes("Doporučované služby"));
-  ok("index:info_center_no_doporucene_sluzby", !/Některé doporučené služby/.test(index));
+  ok("index:no_doporucene_in_aff_shell", !/iuAffiliateTitle">DoporuÄŤenĂ© sluĹľby</.test(index));
+  ok("index:info_center_no_doporucovane", !index.includes("DoporuÄŤovanĂ© sluĹľby"));
+  ok("index:info_center_no_doporucene_sluzby", !/NÄ›kterĂ© doporuÄŤenĂ© sluĹľby/.test(index));
 }
 
 function waitForPort(host, port, timeoutMs) {
@@ -254,7 +254,7 @@ async function openAff(page, baseUrl, section) {
       } catch (_) {}
     }
   });
-  /* Phase 2E: ready-only — empty sections have zero chips (no placeholders). */
+  /* Phase 2E: ready-only â€” empty sections have zero chips (no placeholders). */
   await page.waitForSelector("#iuAffiliateGrid", { state: "attached", timeout: 90000 });
   await page
     .waitForFunction(
@@ -387,8 +387,8 @@ try {
           namedChips.map((c) => c.text).join("|")
         );
       } else if (section === "aff-lekarny") {
-        const lekCz = namedChips.find((c) => c.text === "Lékárna.cz");
-        const lemon = namedChips.find((c) => c.text === "Lékárna Lemon");
+        const lekCz = namedChips.find((c) => c.text === "LĂ©kĂˇrna.cz");
+        const lemon = namedChips.find((c) => c.text === "LĂ©kĂˇrna Lemon");
         ok(
           tag + ":chips_named_lekarny_partners",
           namedChips.length >= 2 &&
@@ -401,7 +401,7 @@ try {
           namedChips.map((c) => c.text + ":" + c.href).join("|")
         );
       } else if (section === "aff-zdravi-doplnky") {
-        const klub = namedChips.find((c) => c.text === "Klub zdraví");
+        const klub = namedChips.find((c) => c.text === "Klub zdravĂ­");
         const bw = namedChips.find((c) => c.text === "BodyWorld");
         const uniz = namedChips.find((c) => c.text === "Unizdrav");
         const mentis = namedChips.find((c) => c.text === "MentisLab");
@@ -454,7 +454,7 @@ try {
         const meatfly = namedChips.find((c) => c.text === "Meatfly.cz");
         const kabea = namedChips.find((c) => c.text === "Kabea.cz");
         const demix = namedChips.find((c) => c.text === "Demix.cz");
-        const trenyrkarna = namedChips.find((c) => c.text === "Trenýrkárna.cz");
+        const trenyrkarna = namedChips.find((c) => c.text === "TrenĂ˝rkĂˇrna.cz");
         const vipPradlo = namedChips.find((c) => c.text === "VIP-pradlo.cz");
         ok(
           tag + ":chips_named_moda_partners",
@@ -521,25 +521,25 @@ try {
       ok(tag + ":no_forbidden", !snap.forbiddenHit, snap.forbiddenHit);
       ok(tag + ":no_h_overflow", !snap.overflow);
       ok(tag + ":seo_has_neprovozuje", /neprovozuje/.test(snap.seoText));
-      ok(tag + ":seo_no_keywords", !/Klíčová slova/.test(snap.seoText));
+      ok(tag + ":seo_no_keywords", !/KlĂ­ÄŤovĂˇ slova/.test(snap.seoText));
       if (section === "aff-cestovni-kancelare") {
         ok(tag + ":travel_intro", snap.subtitle === TRAVEL_INTRO, snap.subtitle);
         ok(tag + ":travel_seo_h2", snap.seoText.includes(TRAVEL_SEO_H2));
       }
       if (section === "aff-letenky") {
-        ok(tag + ":title_doprava", snap.title === "Doprava a cestování", snap.title);
+        ok(tag + ":title_doprava", snap.title === "Doprava a cestovĂˇnĂ­", snap.title);
       }
       if (section === "aff-moda") {
-        ok(tag + ":title_moda", snap.title === "Móda a doplňky", snap.title);
+        ok(tag + ":title_moda", snap.title === "MĂłda a doplĹky", snap.title);
       }
       if (section === "aff-nabytek") {
-        ok(tag + ":title_bydleni", snap.title === "Bydlení a vybavení", snap.title);
+        ok(tag + ":title_bydleni", snap.title === "BydlenĂ­ a vybavenĂ­", snap.title);
       }
       if (section === "aff-deti-hracky") {
-        ok(tag + ":title_deti", snap.title === "Děti a hračky", snap.title);
+        ok(tag + ":title_deti", snap.title === "DÄ›ti a hraÄŤky", snap.title);
       }
       if (vp.name === "desktop" && section === "aff-cestovni-kancelare") {
-        ok(tag + ":rail_title", snap.railTitle === SECTION_TITLE || /Vybrané služby a odkazy/i.test(snap.railTitle), snap.railTitle);
+        ok(tag + ":rail_title", snap.railTitle === SECTION_TITLE || /VybranĂ© sluĹľby a odkazy/i.test(snap.railTitle), snap.railTitle);
         const railSnap = await page.evaluate((expectedIds) => {
           const items = Array.from(
             document.querySelectorAll('#iuLeftRail .iu-leftNavItem[data-rail="affiliate"]')
@@ -560,18 +560,18 @@ try {
             EXPECTED_CAT_IDS.every((id, i) => railSnap.ids[i] === id),
           railSnap.ids.join(",")
         );
-        ok(tag + ":rail_label_doprava", railSnap.labels[2] === "Doprava a cestování", railSnap.labels[2]);
+        ok(tag + ":rail_label_doprava", railSnap.labels[2] === "Doprava a cestovĂˇnĂ­", railSnap.labels[2]);
         ok(
           tag + ":rail_label_letenky",
-          railSnap.labels[3] === "Letenky a letecká doprava",
+          railSnap.labels[3] === "Letenky a leteckĂˇ doprava",
           railSnap.labels[3]
         );
         ok(tag + ":rail_label_auto", railSnap.labels[5] === "Auto a moto", railSnap.labels[5]);
         ok(tag + ":rail_label_pneu", railSnap.labels[6] === "Pneu a pneuservis", railSnap.labels[6]);
-        ok(tag + ":rail_label_pojisteni", railSnap.labels[7] === "Pojištění", railSnap.labels[7]);
-        ok(tag + ":rail_label_moda", railSnap.labels[14] === "Móda a doplňky", railSnap.labels[14]);
-        ok(tag + ":rail_label_deti", railSnap.labels[16] === "Děti a hračky", railSnap.labels[16]);
-        ok(tag + ":rail_label_bydleni", railSnap.labels[20] === "Bydlení a vybavení", railSnap.labels[20]);
+        ok(tag + ":rail_label_pojisteni", railSnap.labels[7] === "PojiĹˇtÄ›nĂ­", railSnap.labels[7]);
+        ok(tag + ":rail_label_moda", railSnap.labels[14] === "MĂłda a doplĹky", railSnap.labels[14]);
+        ok(tag + ":rail_label_deti", railSnap.labels[16] === "DÄ›ti a hraÄŤky", railSnap.labels[16]);
+        ok(tag + ":rail_label_bydleni", railSnap.labels[20] === "BydlenĂ­ a vybavenĂ­", railSnap.labels[20]);
       }
       await context.close();
     }

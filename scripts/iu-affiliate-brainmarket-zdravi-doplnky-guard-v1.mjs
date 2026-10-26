@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Zdraví a doplňky → BrainMarket (CJ 17053829), seventh partner slot (first free after Nature's Finest on current main).
+ * Freeze guard: ZdravĂ­ a doplĹky â†’ BrainMarket (CJ 17053829), seventh partner slot (first free after Nature's Finest on current main).
  * Does not lock remaining empty slots. Prior partners unchanged. Section stays at 8 slots.
  * Run: npm run iu-affiliate-brainmarket-zdravi-doplnky-guard
  */
@@ -20,10 +20,10 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-brainmarket-zdravi-doplnky-v1-20260926";
-const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
+const CATALOG_BUST = "affiliate-phase3m-unified-lifecycle-v1-20261026";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-zdravi-doplnky";
-const SECTION_TITLE = "Zdraví a doplňky";
+const SECTION_TITLE = "ZdravĂ­ a doplĹky";
 const PARTNER_TITLE = "BrainMarket";
 const CJ_URL = "https://www.anrdoezrs.net/click-101883843-17053829";
 const KLUB_CJ = "https://www.dpbolvw.net/click-101883843-13884010";
@@ -272,7 +272,7 @@ try {
       };
     }, {
       partner: PARTNER_TITLE,
-      klubTitle: "Klub zdraví",
+      klubTitle: "Klub zdravĂ­",
       bwTitle: "BodyWorld",
       uzTitle: "Unizdrav",
       mentisTitle: "MentisLab",
@@ -285,7 +285,7 @@ try {
     ok(tag + ":slots_ready_ge_1", snap.slots >= 1, "n=" + snap.slots);
     ok(tag + ":empty_visible_0", (snap.emptyVisible != null ? snap.emptyVisible : 0) === 0, "empty=" + (snap.emptyVisible != null ? snap.emptyVisible : 0));
     ok(tag + ":no_external_on_section_open", extOnOpen.length === 0, extOnOpen.slice(0, 3).join("|"));
-    ok(tag + ":klub_slot1", snap.klubStillFirst && snap.firstText === "Klub zdraví", snap.firstText);
+    ok(tag + ":klub_slot1", snap.klubStillFirst && snap.firstText === "Klub zdravĂ­", snap.firstText);
     ok(tag + ":bodyworld_slot2", snap.bodyworldStillSecond && snap.secondText === "BodyWorld", snap.secondText);
     ok(tag + ":unizdrav_slot3", snap.unizdravStillThird && snap.thirdText === "Unizdrav", snap.thirdText);
     ok(tag + ":fourth_slot_mentislab", snap.mentisStillFourth && snap.fourthText === "MentisLab", snap.fourthText);

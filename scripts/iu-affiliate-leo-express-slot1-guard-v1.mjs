@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Doprava a cestování → slot 1 = Leo Express (CJ tracking).
- * Allows future partners in slots 2–8. Does not lock total partner count.
+ * Freeze guard: Doprava a cestovĂˇnĂ­ â†’ slot 1 = Leo Express (CJ tracking).
+ * Allows future partners in slots 2â€“8. Does not lock total partner count.
  * Run: npm run iu-affiliate-leo-express-slot1-guard
  */
 import fs from "node:fs";
@@ -17,14 +17,14 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const LEO_MARKER = "affiliate-leo-express-slot1-v1-20260920";
-const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
+const CATALOG_BUST = "affiliate-phase3m-unified-lifecycle-v1-20261026";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-letenky";
-const SECTION_TITLE = "Doprava a cestování";
+const SECTION_TITLE = "Doprava a cestovĂˇnĂ­";
 const PARTNER_TITLE = "Leo Express";
 const CJ_URL = "https://www.jdoqocy.com/click-101883843-15736211";
 const DISCLOSURE =
-  "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
+  "Tato sekce obsahuje reklamnĂ­ a partnerskĂ© odkazy na externĂ­ sluĹľby a obchody.";
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
   "iu-affiliate-leo-express-slot1-guard-report.json"

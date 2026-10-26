@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Cestovní pojištění → first free slot = AXA Assistance (CJ tracking).
+ * Freeze guard: CestovnĂ­ pojiĹˇtÄ›nĂ­ â†’ first free slot = AXA Assistance (CJ tracking).
  * Allows future partners in remaining slots. Protects Booking + Leo regression.
  * Run: npm run iu-affiliate-axa-assistance-cestovni-pojisteni-guard
  */
@@ -17,16 +17,16 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const AXA_MARKER = "affiliate-axa-assistance-cestovni-pojisteni-v1-20260921";
-const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
+const CATALOG_BUST = "affiliate-phase3m-unified-lifecycle-v1-20261026";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-cestovni-pojisteni";
-const SECTION_TITLE = "Cestovní pojištění";
+const SECTION_TITLE = "CestovnĂ­ pojiĹˇtÄ›nĂ­";
 const PARTNER_TITLE = "AXA Assistance";
 const CJ_URL = "https://www.tkqlhce.com/click-101883843-12585182";
 const BOOKING_CJ = "https://www.anrdoezrs.net/click-101883843-13323565";
 const LEO_CJ = "https://www.jdoqocy.com/click-101883843-15736211";
 const DISCLOSURE =
-  "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
+  "Tato sekce obsahuje reklamnĂ­ a partnerskĂ© odkazy na externĂ­ sluĹľby a obchody.";
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
   "iu-affiliate-axa-assistance-cestovni-pojisteni-guard-report.json"

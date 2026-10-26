@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Affiliate selected services — base 30 categories prefix preserved (≥30).
+ * Freeze guard: Affiliate selected services â€” base 30 categories prefix preserved (â‰Ą30).
  * Run: npm run iu-affiliate-categories-30-structure-guard
  */
 import fs from "node:fs";
@@ -30,7 +30,7 @@ const KALKULATOR_POJISTENI_MARKER = "affiliate-kalkulator-pojisteni-v1-20260922"
 const LEKARNA_LEKARNY_MARKER = "affiliate-lekarna-lekarny-v1-20260922";
 const LEKARNA_LEMON_MARKER = "affiliate-lekarna-lemon-lekarny-v1-20260923";
 const KLUB_ZDRAVI_MARKER = "affiliate-klub-zdravi-zdravi-doplnky-v1-20260924";
-const CATALOG_DELIVERY_MARKER = "affiliate-phase2e-fix55-v1-20261023";
+const CATALOG_DELIVERY_MARKER = "affiliate-phase3m-unified-lifecycle-v1-20261026";
 const CATALOG_BUST = CATALOG_DELIVERY_MARKER;
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 let PORT;
@@ -75,38 +75,38 @@ const EXPECTED_ORDER = [
 ];
 
 const EXPECTED_TITLES = [
-  "Cestovní kanceláře",
-  "Ubytování a hotely",
-  "Doprava a cestování",
-  "Letenky a letecká doprava",
-  "Cestovní pojištění",
+  "CestovnĂ­ kancelĂˇĹ™e",
+  "UbytovĂˇnĂ­ a hotely",
+  "Doprava a cestovĂˇnĂ­",
+  "Letenky a leteckĂˇ doprava",
+  "CestovnĂ­ pojiĹˇtÄ›nĂ­",
   "Auto a moto",
   "Pneu a pneuservis",
-  "Pojištění",
+  "PojiĹˇtÄ›nĂ­",
   "Finance",
-  "Energie a úspory",
-  "Lékárny",
-  "Zdraví a doplňky",
-  "Kosmetika a parfémy",
+  "Energie a Ăşspory",
+  "LĂ©kĂˇrny",
+  "ZdravĂ­ a doplĹky",
+  "Kosmetika a parfĂ©my",
   "Drogerie",
-  "Móda a doplňky",
+  "MĂłda a doplĹky",
   "Boty a tenisky",
-  "Děti a hračky",
-  "Sportovní oblečení",
+  "DÄ›ti a hraÄŤky",
+  "SportovnĂ­ obleÄŤenĂ­",
   "Sport a outdoor",
-  "Dům a zahrada",
-  "Bydlení a vybavení",
-  "Kuchyně a domácnost",
-  "Elektro a chytrá domácnost",
-  "Mobily a příslušenství",
-  "Software a bezpečnost",
+  "DĹŻm a zahrada",
+  "BydlenĂ­ a vybavenĂ­",
+  "KuchynÄ› a domĂˇcnost",
+  "Elektro a chytrĂˇ domĂˇcnost",
+  "Mobily a pĹ™Ă­sluĹˇenstvĂ­",
+  "Software a bezpeÄŤnost",
   "Knihy, hudba a hry",
-  "Jídlo a potraviny",
-  "Zvířata a chovatelství",
-  "Květiny a dárky",
-  "Šperky a hodinky",
-  "TV a streamování",
-  "Dílna a nářadí",
+  "JĂ­dlo a potraviny",
+  "ZvĂ­Ĺ™ata a chovatelstvĂ­",
+  "KvÄ›tiny a dĂˇrky",
+  "Ĺ perky a hodinky",
+  "TV a streamovĂˇnĂ­",
+  "DĂ­lna a nĂˇĹ™adĂ­",
 ];
 
 const NEW_IDS = [
@@ -253,11 +253,11 @@ function auditStatic() {
   );
   ok(
     "moda_trenyrkarna_slot4",
-    /affPartner\(\s*"Trenýrkárna\.cz",\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-15736041"\)/.test(modaBlock)
+    /affPartner\(\s*"TrenĂ˝rkĂˇrna\.cz",\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-15736041"\)/.test(modaBlock)
   );
   ok(
     "moda_trenyrkarna_after_demix",
-    /affPartner\(\s*"Demix\.cz"[\s\S]*?affPartner\(\s*"Trenýrkárna\.cz",\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-15736041"\)/.test(
+    /affPartner\(\s*"Demix\.cz"[\s\S]*?affPartner\(\s*"TrenĂ˝rkĂˇrna\.cz",\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-15736041"\)/.test(
       modaBlock
     )
   );
@@ -268,7 +268,7 @@ function auditStatic() {
   );
   ok(
     "moda_vip_pradlo_after_trenyrkarna",
-    /affPartner\(\s*"Trenýrkárna\.cz"[\s\S]*?affPartner\(\s*"VIP-pradlo\.cz",\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-15769149"\)/.test(
+    /affPartner\(\s*"TrenĂ˝rkĂˇrna\.cz"[\s\S]*?affPartner\(\s*"VIP-pradlo\.cz",\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-15769149"\)/.test(
       modaBlock
     )
   );
@@ -814,7 +814,7 @@ try {
           ok(
             vp.name + ":" + section + ":trenyrkarna_slot4",
             chipSnap.fourth &&
-              chipSnap.fourth.text === "Trenýrkárna.cz" &&
+              chipSnap.fourth.text === "TrenĂ˝rkĂˇrna.cz" &&
               chipSnap.fourth.href === "https://www.dpbolvw.net/click-101883843-15736041" &&
               chipSnap.fourth.target === "_blank" &&
               chipSnap.fourth.rel === "sponsored noopener" &&

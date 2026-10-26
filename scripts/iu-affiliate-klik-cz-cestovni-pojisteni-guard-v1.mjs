@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Cestovní pojištění → Klik.cz (CJ tracking), any occupied slot.
+ * Freeze guard: CestovnĂ­ pojiĹˇtÄ›nĂ­ â†’ Klik.cz (CJ tracking), any occupied slot.
  * Does not lock slot index. Section stays at 8 partner slots.
  * Run: npm run iu-affiliate-klik-cz-cestovni-pojisteni-guard
  */
@@ -17,14 +17,14 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const KLIK_MARKER = "affiliate-klik-cz-cestovni-pojisteni-v1-20260921";
-const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
+const CATALOG_BUST = "affiliate-phase3m-unified-lifecycle-v1-20261026";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-cestovni-pojisteni";
-const SECTION_TITLE = "Cestovní pojištění";
+const SECTION_TITLE = "CestovnĂ­ pojiĹˇtÄ›nĂ­";
 const PARTNER_TITLE = "Klik.cz";
 const CJ_URL = "https://www.dpbolvw.net/click-101883843-15024030";
 const DISCLOSURE =
-  "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
+  "Tato sekce obsahuje reklamnĂ­ a partnerskĂ© odkazy na externĂ­ sluĹľby a obchody.";
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
   "iu-affiliate-klik-cz-cestovni-pojisteni-guard-report.json"

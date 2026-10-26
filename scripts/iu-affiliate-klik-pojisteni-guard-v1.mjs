@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Pojištění → Klik.cz deeplink (CJ 15024026), slot 1 protected.
- * Does not change Cestovní pojištění Klik (15024030). Dual placement must stay exact.
+ * Freeze guard: PojiĹˇtÄ›nĂ­ â†’ Klik.cz deeplink (CJ 15024026), slot 1 protected.
+ * Does not change CestovnĂ­ pojiĹˇtÄ›nĂ­ Klik (15024030). Dual placement must stay exact.
  * Ready-only: no fixed 8-slot ceiling; still asserts exact Klik identity/order/URL.
  * Run: npm run iu-affiliate-klik-pojisteni-guard
  */
@@ -18,15 +18,15 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-klik-pojisteni-v1-20260922";
-const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
+const CATALOG_BUST = "affiliate-phase3m-unified-lifecycle-v1-20261026";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-pojisteni";
-const SECTION_TITLE = "Pojištění";
+const SECTION_TITLE = "PojiĹˇtÄ›nĂ­";
 const PARTNER_TITLE = "Klik.cz";
 const CJ_URL = "https://www.dpbolvw.net/click-101883843-15024026";
 const CESTOVNI_KLIK_CJ = "https://www.dpbolvw.net/click-101883843-15024030";
 const DISCLOSURE =
-  "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
+  "Tato sekce obsahuje reklamnĂ­ a partnerskĂ© odkazy na externĂ­ sluĹľby a obchody.";
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
   "iu-affiliate-klik-pojisteni-guard-report.json"
