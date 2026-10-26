@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: LĂ©kĂˇrny â†’ LĂ©kĂˇrna Lemon (CJ 14563148), second partner slot (first free after LĂ©kĂˇrna.cz).
- * Does not lock remaining empty slots. LĂ©kĂˇrna.cz slot 1 unchanged. Section stays at 8 slots.
+ * Freeze guard: Lékárny → Lékárna Lemon (CJ 14563148), second partner slot (first free after Lékárna.cz).
+ * Does not lock remaining empty slots. Lékárna.cz slot 1 unchanged. Section stays at 8 slots.
  * Run: npm run iu-affiliate-lekarna-lemon-lekarny-guard
  */
 import fs from "node:fs";
@@ -20,8 +20,8 @@ const MARKER = "affiliate-lekarna-lemon-lekarny-v1-20260923";
 const CATALOG_BUST = "affiliate-phase3m-unified-lifecycle-v1-20261026";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-lekarny";
-const SECTION_TITLE = "LĂ©kĂˇrny";
-const PARTNER_TITLE = "LĂ©kĂˇrna Lemon";
+const SECTION_TITLE = "Lékárny";
+const PARTNER_TITLE = "Lékárna Lemon";
 const CJ_URL = "https://www.jdoqocy.com/click-101883843-14563148";
 const LEKARNA_CZ_CJ = "https://www.kqzyfj.com/click-101883843-15734937";
 const REPORT = path.join(
@@ -55,19 +55,19 @@ function auditStatic() {
   ok("catalog:cj_url_exact", catalog.includes(CJ_URL));
   ok(
     "catalog:no_direct_lemon_href",
-    !/id:\s*"aff-lekarny"[\s\S]*?affPartner\(\s*"LĂ©kĂˇrna Lemon"\s*,\s*"https:\/\/(?:www\.)?lekarnalemon\.cz/i.test(
+    !/id:\s*"aff-lekarny"[\s\S]*?affPartner\(\s*"Lékárna Lemon"\s*,\s*"https:\/\/(?:www\.)?lekarnalemon\.cz/i.test(
       catalog
     )
   );
   ok(
     "catalog:lemon_partner",
-    /affPartner\(\s*"LĂ©kĂˇrna Lemon"\s*,\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-14563148"\s*\)/.test(
+    /affPartner\(\s*"Lékárna Lemon"\s*,\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-14563148"\s*\)/.test(
       catalog
     )
   );
   ok(
     "catalog:slot2_lemon_after_lekarna",
-    /id:\s*"aff-lekarny"[\s\S]*?affPartner\(\s*"LĂ©kĂˇrna\.cz"[\s\S]*?affPartner\(\s*"LĂ©kĂˇrna Lemon"/.test(
+    /id:\s*"aff-lekarny"[\s\S]*?affPartner\(\s*"Lékárna\.cz"[\s\S]*?affPartner\(\s*"Lékárna Lemon"/.test(
       catalog
     )
   );
@@ -247,13 +247,13 @@ try {
         namedCount: chips.filter((c) => chipText(c) !== "").length,
         lekarnaCzStillFirst: first ? chipText(first) === lekarnaCz : false,
       };
-    }, { partner: PARTNER_TITLE, lekarnaCz: "LĂ©kĂˇrna.cz" });
+    }, { partner: PARTNER_TITLE, lekarnaCz: "Lékárna.cz" });
 
     const tag = vp.name;
     ok(tag + ":title", snap.title === SECTION_TITLE, snap.title);
     ok(tag + ":slots_ready_ge_1", snap.slots >= 1, "n=" + snap.slots);
     ok(tag + ":empty_visible_0", (snap.emptyVisible != null ? snap.emptyVisible : 0) === 0, "empty=" + (snap.emptyVisible != null ? snap.emptyVisible : 0));
-    ok(tag + ":lekarna_cz_slot1", snap.lekarnaCzStillFirst && snap.firstText === "LĂ©kĂˇrna.cz", snap.firstText);
+    ok(tag + ":lekarna_cz_slot1", snap.lekarnaCzStillFirst && snap.firstText === "Lékárna.cz", snap.firstText);
     ok(tag + ":second_slot_lemon", snap.secondText === PARTNER_TITLE, snap.secondText);
     ok(tag + ":lemon_text", snap.lemonText === PARTNER_TITLE, snap.lemonText);
     ok(tag + ":lemon_href", snap.lemonHref === CJ_URL, snap.lemonHref);

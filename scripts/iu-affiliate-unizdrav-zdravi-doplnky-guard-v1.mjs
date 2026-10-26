@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: ZdravĂ­ a doplĹky â†’ Unizdrav (CJ 15735719), third partner slot (first free after Klub + BodyWorld).
+ * Freeze guard: Zdraví a doplňky → Unizdrav (CJ 15735719), third partner slot (first free after Klub + BodyWorld).
  * Does not lock remaining empty slots. Prior partners unchanged. Section stays at 8 slots.
  * Run: npm run iu-affiliate-unizdrav-zdravi-doplnky-guard
  */
@@ -20,7 +20,7 @@ const MARKER = "affiliate-brasty-kosmetika-v1-20260925";
 const CATALOG_BUST = "affiliate-phase3m-unified-lifecycle-v1-20261026";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-zdravi-doplnky";
-const SECTION_TITLE = "ZdravĂ­ a doplĹky";
+const SECTION_TITLE = "Zdraví a doplňky";
 const PARTNER_TITLE = "Unizdrav";
 const CJ_URL = "https://www.kqzyfj.com/click-101883843-15735719";
 const KLUB_CJ = "https://www.dpbolvw.net/click-101883843-13884010";
@@ -74,7 +74,7 @@ function auditStatic() {
   );
   ok(
     "catalog:slot3_unizdrav_after_bodyworld",
-    /id:\s*"aff-zdravi-doplnky"[\s\S]*?affPartner\(\s*"Klub zdravĂ­"[\s\S]*?affPartner\(\s*"BodyWorld"[\s\S]*?affPartner\(\s*"Unizdrav"/.test(
+    /id:\s*"aff-zdravi-doplnky"[\s\S]*?affPartner\(\s*"Klub zdraví"[\s\S]*?affPartner\(\s*"BodyWorld"[\s\S]*?affPartner\(\s*"Unizdrav"/.test(
       catalog
     )
   );
@@ -258,13 +258,13 @@ try {
         klubStillFirst: first ? chipText(first) === klubTitle : false,
         bodyworldStillSecond: second ? chipText(second) === bwTitle : false,
       };
-    }, { partner: PARTNER_TITLE, klubTitle: "Klub zdravĂ­", bwTitle: "BodyWorld" });
+    }, { partner: PARTNER_TITLE, klubTitle: "Klub zdraví", bwTitle: "BodyWorld" });
 
     const tag = vp.name;
     ok(tag + ":title", snap.title === SECTION_TITLE, snap.title);
     ok(tag + ":slots_ready_ge_1", snap.slots >= 1, "n=" + snap.slots);
     ok(tag + ":empty_visible_0", (snap.emptyVisible != null ? snap.emptyVisible : 0) === 0, "empty=" + (snap.emptyVisible != null ? snap.emptyVisible : 0));
-    ok(tag + ":klub_slot1", snap.klubStillFirst && snap.firstText === "Klub zdravĂ­", snap.firstText);
+    ok(tag + ":klub_slot1", snap.klubStillFirst && snap.firstText === "Klub zdraví", snap.firstText);
     ok(tag + ":bodyworld_slot2", snap.bodyworldStillSecond && snap.secondText === "BodyWorld", snap.secondText);
     ok(tag + ":third_slot_unizdrav", snap.thirdText === PARTNER_TITLE, snap.thirdText);
     ok(tag + ":unizdrav_text", snap.uzText === PARTNER_TITLE, snap.uzText);

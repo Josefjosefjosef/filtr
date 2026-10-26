@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Affiliate selected services â€” base 30 categories prefix preserved (â‰Ą30).
+ * Freeze guard: Affiliate selected services — base 30 categories prefix preserved (≥30).
  * Run: npm run iu-affiliate-categories-30-structure-guard
  */
 import fs from "node:fs";
@@ -75,38 +75,38 @@ const EXPECTED_ORDER = [
 ];
 
 const EXPECTED_TITLES = [
-  "CestovnĂ­ kancelĂˇĹ™e",
-  "UbytovĂˇnĂ­ a hotely",
-  "Doprava a cestovĂˇnĂ­",
-  "Letenky a leteckĂˇ doprava",
-  "CestovnĂ­ pojiĹˇtÄ›nĂ­",
+  "Cestovní kanceláře",
+  "Ubytování a hotely",
+  "Doprava a cestování",
+  "Letenky a letecká doprava",
+  "Cestovní pojištění",
   "Auto a moto",
   "Pneu a pneuservis",
-  "PojiĹˇtÄ›nĂ­",
+  "Pojištění",
   "Finance",
-  "Energie a Ăşspory",
-  "LĂ©kĂˇrny",
-  "ZdravĂ­ a doplĹky",
-  "Kosmetika a parfĂ©my",
+  "Energie a úspory",
+  "Lékárny",
+  "Zdraví a doplňky",
+  "Kosmetika a parfémy",
   "Drogerie",
-  "MĂłda a doplĹky",
+  "Móda a doplňky",
   "Boty a tenisky",
-  "DÄ›ti a hraÄŤky",
-  "SportovnĂ­ obleÄŤenĂ­",
+  "Děti a hračky",
+  "Sportovní oblečení",
   "Sport a outdoor",
-  "DĹŻm a zahrada",
-  "BydlenĂ­ a vybavenĂ­",
-  "KuchynÄ› a domĂˇcnost",
-  "Elektro a chytrĂˇ domĂˇcnost",
-  "Mobily a pĹ™Ă­sluĹˇenstvĂ­",
-  "Software a bezpeÄŤnost",
+  "Dům a zahrada",
+  "Bydlení a vybavení",
+  "Kuchyně a domácnost",
+  "Elektro a chytrá domácnost",
+  "Mobily a příslušenství",
+  "Software a bezpečnost",
   "Knihy, hudba a hry",
-  "JĂ­dlo a potraviny",
-  "ZvĂ­Ĺ™ata a chovatelstvĂ­",
-  "KvÄ›tiny a dĂˇrky",
-  "Ĺ perky a hodinky",
-  "TV a streamovĂˇnĂ­",
-  "DĂ­lna a nĂˇĹ™adĂ­",
+  "Jídlo a potraviny",
+  "Zvířata a chovatelství",
+  "Květiny a dárky",
+  "Šperky a hodinky",
+  "TV a streamování",
+  "Dílna a nářadí",
 ];
 
 const NEW_IDS = [
@@ -253,11 +253,11 @@ function auditStatic() {
   );
   ok(
     "moda_trenyrkarna_slot4",
-    /affPartner\(\s*"TrenĂ˝rkĂˇrna\.cz",\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-15736041"\)/.test(modaBlock)
+    /affPartner\(\s*"Trenýrkárna\.cz",\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-15736041"\)/.test(modaBlock)
   );
   ok(
     "moda_trenyrkarna_after_demix",
-    /affPartner\(\s*"Demix\.cz"[\s\S]*?affPartner\(\s*"TrenĂ˝rkĂˇrna\.cz",\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-15736041"\)/.test(
+    /affPartner\(\s*"Demix\.cz"[\s\S]*?affPartner\(\s*"Trenýrkárna\.cz",\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-15736041"\)/.test(
       modaBlock
     )
   );
@@ -268,7 +268,7 @@ function auditStatic() {
   );
   ok(
     "moda_vip_pradlo_after_trenyrkarna",
-    /affPartner\(\s*"TrenĂ˝rkĂˇrna\.cz"[\s\S]*?affPartner\(\s*"VIP-pradlo\.cz",\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-15769149"\)/.test(
+    /affPartner\(\s*"Trenýrkárna\.cz"[\s\S]*?affPartner\(\s*"VIP-pradlo\.cz",\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-15769149"\)/.test(
       modaBlock
     )
   );
@@ -814,7 +814,7 @@ try {
           ok(
             vp.name + ":" + section + ":trenyrkarna_slot4",
             chipSnap.fourth &&
-              chipSnap.fourth.text === "TrenĂ˝rkĂˇrna.cz" &&
+              chipSnap.fourth.text === "Trenýrkárna.cz" &&
               chipSnap.fourth.href === "https://www.dpbolvw.net/click-101883843-15736041" &&
               chipSnap.fourth.target === "_blank" &&
               chipSnap.fourth.rel === "sponsored noopener" &&

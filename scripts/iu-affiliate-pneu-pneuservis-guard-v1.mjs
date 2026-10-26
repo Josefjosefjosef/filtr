@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Pneu a pneuservis â€” BestDrive slot 1 + 7 empty slots.
- * Protects category order / Booking + Leo regression. Future partners in slots 2â€“8 allowed.
+ * Freeze guard: Pneu a pneuservis — BestDrive slot 1 + 7 empty slots.
+ * Protects category order / Booking + Leo regression. Future partners in slots 2–8 allowed.
  * Run: npm run iu-affiliate-pneu-pneuservis-guard
  */
 import fs from "node:fs";
@@ -23,12 +23,12 @@ const SECTION = "aff-pneu-pneuservis";
 const SECTION_TITLE = "Pneu a pneuservis";
 const PARTNER_TITLE = "BestDrive";
 const CJ_URL = "https://www.jdoqocy.com/click-101883843-17045434";
-const INTRO = "Odkazy na vybranĂ© prodejce pneumatik, pneuservisy a souvisejĂ­cĂ­ sluĹľby.";
-const SEO_H2 = "Pneu a pneuservis â€“ odkazy na vybranĂ© externĂ­ sluĹľby";
+const INTRO = "Odkazy na vybrané prodejce pneumatik, pneuservisy a související služby.";
+const SEO_H2 = "Pneu a pneuservis – odkazy na vybrané externí služby";
 const SEO_P1 =
-  "Sekce Pneu a pneuservis obsahuje odkazy na vybranĂ© externĂ­ prodejce pneumatik, pneuservisy a sluĹľby souvisejĂ­cĂ­ s pneumatikami, pĹ™ezutĂ­m a servisem kol. Po vĂ˝bÄ›ru je uĹľivatel pĹ™esmÄ›rovĂˇn na pĹ™Ă­sluĹˇnou externĂ­ strĂˇnku nebo sluĹľbu.";
+  "Sekce Pneu a pneuservis obsahuje odkazy na vybrané externí prodejce pneumatik, pneuservisy a služby související s pneumatikami, přezutím a servisem kol. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.";
 const DISCLOSURE =
-  "Tato sekce obsahuje reklamnĂ­ a partnerskĂ© odkazy na externĂ­ sluĹľby a obchody.";
+  "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
 const BOOKING_CJ = "https://www.anrdoezrs.net/click-101883843-13323565";
 const LEO_CJ = "https://www.jdoqocy.com/click-101883843-15736211";
 const REPORT = path.join(
@@ -265,7 +265,7 @@ try {
         tailNeutral: tailReady.every((r) => r === "0"),
         seoAfterGrid,
         seoVisible: !!(seo && !seo.hidden && (seo.textContent || "").includes(args.seoH2)),
-        seoHasP1: !!(seo && (seo.textContent || "").includes("pneuservisy a sluĹľby souvisejĂ­cĂ­ s pneumatikami")),
+        seoHasP1: !!(seo && (seo.textContent || "").includes("pneuservisy a služby související s pneumatikami")),
       };
     }, { disclosure: DISCLOSURE, seoH2: SEO_H2 });
 

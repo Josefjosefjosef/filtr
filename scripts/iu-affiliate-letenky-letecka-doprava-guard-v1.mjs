@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Letenky a leteckĂˇ doprava â€” Skytours slot 1 protected.
- * Protects Booking.com + Leo Express slot regression. Future partners in slots 2â€“8 allowed.
+ * Freeze guard: Letenky a letecká doprava — Skytours slot 1 protected.
+ * Protects Booking.com + Leo Express slot regression. Future partners in slots 2–8 allowed.
  * Run: npm run iu-affiliate-letenky-letecka-doprava-guard
  */
 import fs from "node:fs";
@@ -20,15 +20,15 @@ const MARKER = "affiliate-letenky-letecka-doprava-v1-20260921";
 const CATALOG_BUST = "affiliate-phase3m-unified-lifecycle-v1-20261026";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-letenky-letecka-doprava";
-const SECTION_TITLE = "Letenky a leteckĂˇ doprava";
+const SECTION_TITLE = "Letenky a letecká doprava";
 const PARTNER_TITLE = "Skytours";
 const CJ_URL = "https://www.jdoqocy.com/click-101883843-15733491";
-const INTRO = "Odkazy na vybranĂ© sluĹľby pro letenky a leteckou dopravu.";
-const SEO_H2 = "Letenky a leteckĂˇ doprava â€“ odkazy na vybranĂ© externĂ­ sluĹľby";
+const INTRO = "Odkazy na vybrané služby pro letenky a leteckou dopravu.";
+const SEO_H2 = "Letenky a letecká doprava – odkazy na vybrané externí služby";
 const SEO_P1 =
-  "Sekce Letenky a leteckĂˇ doprava obsahuje odkazy na vybranĂ© externĂ­ sluĹľby pro vyhledĂˇvĂˇnĂ­ a rezervaci letenek a sluĹľby souvisejĂ­cĂ­ s leteckou dopravou. Po vĂ˝bÄ›ru je uĹľivatel pĹ™esmÄ›rovĂˇn na pĹ™Ă­sluĹˇnou externĂ­ strĂˇnku nebo sluĹľbu.";
+  "Sekce Letenky a letecká doprava obsahuje odkazy na vybrané externí služby pro vyhledávání a rezervaci letenek a služby související s leteckou dopravou. Po výběru je uživatel přesměrován na příslušnou externí stránku nebo službu.";
 const DISCLOSURE =
-  "Tato sekce obsahuje reklamnĂ­ a partnerskĂ© odkazy na externĂ­ sluĹľby a obchody.";
+  "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
 const BOOKING_CJ = "https://www.anrdoezrs.net/click-101883843-13323565";
 const LEO_CJ = "https://www.jdoqocy.com/click-101883843-15736211";
 const REPORT = path.join(
@@ -271,7 +271,7 @@ try {
         tailNeutral: tailReady.every((r) => r === "0"),
         seoAfterGrid,
         seoVisible: !!(seo && !seo.hidden && (seo.textContent || "").includes(args.seoH2)),
-        seoHasP1: !!(seo && (seo.textContent || "").includes("vyhledĂˇvĂˇnĂ­ a rezervaci letenek")),
+        seoHasP1: !!(seo && (seo.textContent || "").includes("vyhledávání a rezervaci letenek")),
       };
     }, { disclosure: DISCLOSURE, seoH2: SEO_H2 });
 
@@ -286,7 +286,7 @@ try {
     ok(tag + ":skytours_target", snap.firstTarget === "_blank", snap.firstTarget);
     ok(tag + ":skytours_rel", snap.firstRel === "sponsored noopener", snap.firstRel);
     ok(tag + ":skytours_ready", snap.firstReady === "1", snap.firstReady);
-    // Slots 2â€“8 may hold future partners; only require Skytours remains slot 1.
+    // Slots 2–8 may hold future partners; only require Skytours remains slot 1.
     ok(tag + ":slot1_protected", snap.firstText === PARTNER_TITLE && snap.firstHref === CJ_URL);
     ok(tag + ":seo_after_slots", snap.seoAfterGrid && snap.seoVisible && snap.seoHasP1);
     samples.push({ vp: vp.name, slots: snap.slots, title: snap.title });

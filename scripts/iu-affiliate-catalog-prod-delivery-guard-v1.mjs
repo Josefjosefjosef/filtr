@@ -35,7 +35,7 @@ function sha256(text) {
   return crypto.createHash("sha256").update(text, "utf8").digest("hex");
 }
 
-/** PR changed catalog vs merge base â€” prod SHA cannot match until Pages deploy after merge. */
+/** PR changed catalog vs merge base — prod SHA cannot match until Pages deploy after merge. */
 function affiliateCatalogChangedInPr() {
   try {
     const base = process.env.GITHUB_BASE_SHA || process.env.SMOKE_BASE_SHA || "origin/main";

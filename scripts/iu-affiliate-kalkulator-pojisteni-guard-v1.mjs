@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: PojiĹˇtÄ›nĂ­ â†’ Kalkulator.cz (CJ 15616442), second partner slot (first free after Klik).
+ * Freeze guard: Pojištění → Kalkulator.cz (CJ 15616442), second partner slot (first free after Klik).
  * Does not lock remaining empty slots. Klik.cz slot 1 unchanged. Section stays at 8 slots.
  * Run: npm run iu-affiliate-kalkulator-pojisteni-guard
  */
@@ -20,12 +20,12 @@ const MARKER = "affiliate-kalkulator-pojisteni-v1-20260922";
 const CATALOG_BUST = "affiliate-phase3m-unified-lifecycle-v1-20261026";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-pojisteni";
-const SECTION_TITLE = "PojiĹˇtÄ›nĂ­";
+const SECTION_TITLE = "Pojištění";
 const PARTNER_TITLE = "Kalkulator.cz";
 const CJ_URL = "https://www.kqzyfj.com/click-101883843-15616442";
 const KLIK_CJ = "https://www.dpbolvw.net/click-101883843-15024026";
 const DISCLOSURE =
-  "Tato sekce obsahuje reklamnĂ­ a partnerskĂ© odkazy na externĂ­ sluĹľby a obchody.";
+  "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
   "iu-affiliate-kalkulator-pojisteni-guard-report.json"
@@ -268,7 +268,7 @@ try {
     ok(tag + ":kalkulator_no_img", snap.hasImg === false);
     ok(tag + ":kalkulator_no_direct", !/^https?:\/\/(www\.)?kalkulator\.cz/i.test(snap.kalkHref));
     ok(tag + ":centered", snap.centered === true);
-    /* Phase 2G: ready-only â€” section may hold >2 ready partners; no empty placeholders. */
+    /* Phase 2G: ready-only — section may hold >2 ready partners; no empty placeholders. */
     ok(tag + ":empty_slots_remain", snap.namedCount >= 2, "named=" + snap.namedCount);
 
     const popupPromise = page.waitForEvent("popup", { timeout: 15000 }).catch(() => null);

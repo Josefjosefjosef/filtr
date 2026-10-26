@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Auto a moto â†’ Autohotarek.cz (CJ tracking), first occupied partner slot.
+ * Freeze guard: Auto a moto → Autohotarek.cz (CJ tracking), first occupied partner slot.
  * Allows future partners in remaining slots. Does not lock total partner count.
  * Run: npm run iu-affiliate-autohotarek-auto-moto-guard
  */
@@ -24,7 +24,7 @@ const SECTION_TITLE = "Auto a moto";
 const PARTNER_TITLE = "Autohotarek.cz";
 const CJ_URL = "https://www.dpbolvw.net/click-101883843-15802025";
 const DISCLOSURE =
-  "Tato sekce obsahuje reklamnĂ­ a partnerskĂ© odkazy na externĂ­ sluĹľby a obchody.";
+  "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
   "iu-affiliate-autohotarek-auto-moto-guard-report.json"

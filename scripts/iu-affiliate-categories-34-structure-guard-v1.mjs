@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Affiliate selected services â€” base 30 preserved + 4 new cats (31â€“34).
+ * Freeze guard: Affiliate selected services — base 30 preserved + 4 new cats (31–34).
  * Does NOT require exact total count (future 35+ allowed). Protects the four new categories.
  * Run: npm run iu-affiliate-categories-34-structure-guard
  */
@@ -40,7 +40,7 @@ const REPORT = path.join(
   "iu_affiliate_categories_34_structure_guard.json"
 );
 
-/** Original 30 â€” must remain prefix in this order. */
+/** Original 30 — must remain prefix in this order. */
 const BASE_ORDER = [
   "aff-cestovni-kancelare",
   "aff-ubytovani-hotely",
@@ -77,41 +77,41 @@ const BASE_ORDER = [
 ];
 
 const BASE_TITLES = [
-  "CestovnĂ­ kancelĂˇĹ™e",
-  "UbytovĂˇnĂ­ a hotely",
-  "Doprava a cestovĂˇnĂ­",
-  "Letenky a leteckĂˇ doprava",
-  "CestovnĂ­ pojiĹˇtÄ›nĂ­",
+  "Cestovní kanceláře",
+  "Ubytování a hotely",
+  "Doprava a cestování",
+  "Letenky a letecká doprava",
+  "Cestovní pojištění",
   "Auto a moto",
   "Pneu a pneuservis",
-  "PojiĹˇtÄ›nĂ­",
+  "Pojištění",
   "Finance",
-  "Energie a Ăşspory",
-  "LĂ©kĂˇrny",
-  "ZdravĂ­ a doplĹky",
-  "Kosmetika a parfĂ©my",
+  "Energie a úspory",
+  "Lékárny",
+  "Zdraví a doplňky",
+  "Kosmetika a parfémy",
   "Drogerie",
-  "MĂłda a doplĹky",
+  "Móda a doplňky",
   "Boty a tenisky",
-  "DÄ›ti a hraÄŤky",
-  "SportovnĂ­ obleÄŤenĂ­",
+  "Děti a hračky",
+  "Sportovní oblečení",
   "Sport a outdoor",
-  "DĹŻm a zahrada",
-  "BydlenĂ­ a vybavenĂ­",
-  "KuchynÄ› a domĂˇcnost",
-  "Elektro a chytrĂˇ domĂˇcnost",
-  "Mobily a pĹ™Ă­sluĹˇenstvĂ­",
-  "Software a bezpeÄŤnost",
+  "Dům a zahrada",
+  "Bydlení a vybavení",
+  "Kuchyně a domácnost",
+  "Elektro a chytrá domácnost",
+  "Mobily a příslušenství",
+  "Software a bezpečnost",
   "Knihy, hudba a hry",
-  "JĂ­dlo a potraviny",
-  "ZvĂ­Ĺ™ata a chovatelstvĂ­",
-  "KvÄ›tiny a dĂˇrky",
-  "Ĺ perky a hodinky",
-  "TV a streamovĂˇnĂ­",
-  "DĂ­lna a nĂˇĹ™adĂ­",
+  "Jídlo a potraviny",
+  "Zvířata a chovatelství",
+  "Květiny a dárky",
+  "Šperky a hodinky",
+  "TV a streamování",
+  "Dílna a nářadí",
 ];
 
-/** Positions 31â€“34 (0-based 30â€“33). Future cats may follow. */
+/** Positions 31–34 (0-based 30–33). Future cats may follow. */
 const NEW_ORDER = [
   "aff-inzerce-bazary",
   "aff-realitni-kancelare",
@@ -121,9 +121,9 @@ const NEW_ORDER = [
 
 const NEW_TITLES = [
   "Inzerce a bazary",
-  "RealitnĂ­ kancelĂˇĹ™e",
+  "Realitní kanceláře",
   "Reality a nemovitosti",
-  "KancelĂˇĹ™skĂ© potĹ™eby a vybavenĂ­",
+  "Kancelářské potřeby a vybavení",
 ];
 
 const NEW_ICONS = [
@@ -191,7 +191,7 @@ function auditStatic() {
   );
   ok("no_old_label", !catalog.includes("Knihy, filmy a hry") && !titles.includes("Knihy, filmy a hry"));
   ok("has_new_knihy", titles.includes("Knihy, hudba a hry"));
-  ok("no_wrong_office_name", !titles.includes("KancelĂˇĹ™ a Ĺˇkola") && !titles.includes("Ĺ kola a kancelĂˇĹ™"));
+  ok("no_wrong_office_name", !titles.includes("Kancelář a škola") && !titles.includes("Škola a kancelář"));
   for (let ni = 0; ni < NEW_IDS.length; ni++) {
     const id = NEW_IDS[ni];
     ok("new_id:" + id, ids.includes(id));

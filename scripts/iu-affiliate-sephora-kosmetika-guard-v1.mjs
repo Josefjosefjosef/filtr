@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Kosmetika a parfĂ©my â†’ SEPHORA.cz (CJ 13212014), first partner slot (first free).
+ * Freeze guard: Kosmetika a parfémy → SEPHORA.cz (CJ 13212014), first partner slot (first free).
  * Does not lock remaining empty slots. Section stays at 8 slots.
  * Optional prod: IU_AFFILIATE_SEPHORA_PROD=1
  * Run: npm run iu-affiliate-sephora-kosmetika-guard
@@ -21,7 +21,7 @@ const MARKER = "affiliate-brasty-kosmetika-v1-20260925";
 const CATALOG_BUST = "affiliate-phase3m-unified-lifecycle-v1-20261026";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-kosmetika";
-const SECTION_TITLE = "Kosmetika a parfĂ©my";
+const SECTION_TITLE = "Kosmetika a parfémy";
 const PARTNER_TITLE = "SEPHORA.cz";
 const CJ_URL = "https://www.anrdoezrs.net/click-101883843-13212014";
 const REPORT = path.join(

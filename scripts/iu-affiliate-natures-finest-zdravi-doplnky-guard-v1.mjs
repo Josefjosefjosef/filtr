@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: ZdravĂ­ a doplĹky â†’ Nature's Finest (CJ 15037573), sixth partner slot (first free after NaZuby.cz).
+ * Freeze guard: Zdraví a doplňky → Nature's Finest (CJ 15037573), sixth partner slot (first free after NaZuby.cz).
  * Does not lock remaining empty slots. Prior partners unchanged. Section stays at 8 slots.
  * Optional prod: IU_AFFILIATE_NATURES_FINEST_PROD=1
  * Run: npm run iu-affiliate-natures-finest-zdravi-doplnky-guard
@@ -21,7 +21,7 @@ const MARKER = "affiliate-brasty-kosmetika-v1-20260925";
 const CATALOG_BUST = "affiliate-phase3m-unified-lifecycle-v1-20261026";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-zdravi-doplnky";
-const SECTION_TITLE = "ZdravĂ­ a doplĹky";
+const SECTION_TITLE = "Zdraví a doplňky";
 /* Catalog stores ASCII apostrophe; accept unicode in regex only. */
 const PARTNER_TITLE = "Nature's Finest";
 const CJ_URL = "https://www.dpbolvw.net/click-101883843-15037573";
@@ -299,7 +299,7 @@ try {
       };
     }, {
       partner: PARTNER_TITLE,
-      klubTitle: "Klub zdravĂ­",
+      klubTitle: "Klub zdraví",
       bwTitle: "BodyWorld",
       uzTitle: "Unizdrav",
       mentisTitle: "MentisLab",
@@ -310,7 +310,7 @@ try {
     ok(tag + ":title", snap.title === SECTION_TITLE, snap.title);
     ok(tag + ":slots_ready_ge_1", snap.slots >= 1, "n=" + snap.slots);
     ok(tag + ":empty_visible_0", (snap.emptyVisible != null ? snap.emptyVisible : 0) === 0, "empty=" + (snap.emptyVisible != null ? snap.emptyVisible : 0));
-    ok(tag + ":klub_slot1", snap.klubStillFirst && snap.firstText === "Klub zdravĂ­", snap.firstText);
+    ok(tag + ":klub_slot1", snap.klubStillFirst && snap.firstText === "Klub zdraví", snap.firstText);
     ok(tag + ":bodyworld_slot2", snap.bodyworldStillSecond && snap.secondText === "BodyWorld", snap.secondText);
     ok(tag + ":unizdrav_slot3", snap.unizdravStillThird && snap.thirdText === "Unizdrav", snap.thirdText);
     ok(tag + ":fourth_slot_mentislab", snap.mentisStillFourth && snap.fourthText === "MentisLab", snap.fourthText);

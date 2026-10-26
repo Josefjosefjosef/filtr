@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Auto a moto â†’ Ahifi.cz (CJ tracking), second partner slot.
+ * Freeze guard: Auto a moto → Ahifi.cz (CJ tracking), second partner slot.
  * Allows future partners in remaining slots. Does not lock total partner count.
  * Run: npm run iu-affiliate-ahifi-auto-moto-guard
  */
@@ -25,7 +25,7 @@ const PARTNER_TITLE = "Ahifi.cz";
 const CJ_URL = "https://www.dpbolvw.net/click-101883843-17006948";
 const AUTOHOTAREK_CJ = "https://www.dpbolvw.net/click-101883843-15802025";
 const DISCLOSURE =
-  "Tato sekce obsahuje reklamnĂ­ a partnerskĂ© odkazy na externĂ­ sluĹľby a obchody.";
+  "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
   "iu-affiliate-ahifi-auto-moto-guard-report.json"
