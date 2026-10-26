@@ -110,6 +110,11 @@ jobs:
         run: |
           node scripts/iu-cj-affiliate-phase3j-staging-burnin-v1-selftest.mjs
           node scripts/iu-cj-affiliate-phase3j-public-go-checklist-v1.mjs
+      - name: Phase 3M unified lifecycle + email hint (DISARMED; mock IMAP)
+        run: |
+          node scripts/iu-cj-affiliate-phase3m-unified-lifecycle-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-phase3m-email-hint-v1.mjs
+          node scripts/iu-cj-affiliate-phase3m-unified-lifecycle-v1.mjs
 
   fetch-staging:
     needs: selftest

@@ -2,7 +2,7 @@
  * infoUzel.cz — Affiliate services catalog (UI + data).
  * Partner URLs are placeholders until affiliate programs are approved.
  */
-/* iu-affiliate-catalog-bust: affiliate-phase2e-fix55-v1-20261023 */
+/* iu-affiliate-catalog-bust: affiliate-phase3m-unified-lifecycle-v1-20261026 */
 (function iuAffiliateCatalog() {
   "use strict";
 
@@ -1164,21 +1164,41 @@
     return false;
   }
 
+  /* Phase 3M: title key so baked-without-CID cannot duplicate managed / re-show ENDED. */
+  function __iuAffNormTitle(t) {
+    try {
+      return String(t || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "");
+    } catch (_) {
+      return String(t || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "");
+    }
+  }
+
   function applyManagedPublicOverlay(overlay) {
     if (!overlay || !Array.isArray(overlay.partners)) return false;
     var byAdv = {};
+    var byTitle = {};
     for (var i = 0; i < overlay.partners.length; i++) {
       var p = overlay.partners[i];
       if (!p || p.advertiserId == null) continue;
       byAdv[String(p.advertiserId)] = p;
+      var tn = __iuAffNormTitle(p.title);
+      if (tn && !byTitle[tn]) byTitle[tn] = p;
     }
     for (var c = 0; c < IU_AFFILIATE_CATALOG.length; c++) {
       var cat = IU_AFFILIATE_CATALOG[c];
       var kept = [];
       var seenAdv = {};
+      var seenTitle = {};
       for (var j = 0; j < cat.items.length; j++) {
         var it = cat.items[j];
         var adv = it.advertiserId != null ? String(it.advertiserId) : null;
+        var itTitleKey = __iuAffNormTitle(it.title);
         if (adv && byAdv[adv]) {
           var ov = byAdv[adv];
           if (ov.active === false) {
@@ -1186,6 +1206,7 @@
             if (__iuAffIsProtectedItem(it)) {
               kept.push(it);
               seenAdv[adv] = true;
+              if (itTitleKey) seenTitle[itTitleKey] = true;
             }
             continue;
           }
@@ -1197,10 +1218,31 @@
             management: "CJ_MANAGED",
           });
           seenAdv[adv] = true;
+          if (itTitleKey) seenTitle[itTitleKey] = true;
         } else if (!adv || !byAdv[adv]) {
+          var titleHit = itTitleKey ? byTitle[itTitleKey] : null;
+          if (titleHit && !__iuAffIsProtectedItem(it)) {
+            /* Unified lifecycle: managed authority wins over baked-without-CID */
+            if (titleHit.active === false) {
+              continue;
+            }
+            var tid = String(titleHit.advertiserId);
+            if (seenAdv[tid]) continue;
+            kept.push({
+              title: titleHit.title || it.title,
+              url: titleHit.url || it.url,
+              affiliateUrlReady: true,
+              advertiserId: tid,
+              management: "CJ_MANAGED",
+            });
+            seenAdv[tid] = true;
+            seenTitle[itTitleKey] = true;
+            continue;
+          }
           /* retain MANUAL_PROTECTED / unlisted baked partners (LKG) */
           kept.push(it);
           if (adv) seenAdv[adv] = true;
+          if (itTitleKey) seenTitle[itTitleKey] = true;
         }
       }
       /* add new active managed partners for this section */
@@ -1210,6 +1252,8 @@
         if (String(np.sectionId || "") !== String(cat.id)) continue;
         var nid = String(np.advertiserId);
         if (seenAdv[nid]) continue;
+        var npTitleKey = __iuAffNormTitle(np.title);
+        if (npTitleKey && seenTitle[npTitleKey]) continue;
         if (!np.url || !/^https:\/\//i.test(String(np.url))) continue;
         kept.push({
           title: np.title,
@@ -1219,6 +1263,7 @@
           management: "CJ_MANAGED",
         });
         seenAdv[nid] = true;
+        if (npTitleKey) seenTitle[npTitleKey] = true;
       }
       cat.items = kept;
     }
