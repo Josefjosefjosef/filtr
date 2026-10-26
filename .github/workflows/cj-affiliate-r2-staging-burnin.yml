@@ -1,0 +1,125 @@
+# Phase 3J: authorized R2 staging burn-in (write to CJ bucket while LIVE_ENABLED=false).
+# Does NOT arm public CJ serve. Does NOT touch NDIC/CHMI/CNB buckets.
+# Secrets via Actions only — never echoed.
+name: CJ Affiliate R2 staging burn-in
+
+on:
+  workflow_dispatch:
+    inputs:
+      arm_r2_publish:
+        description: "Arm authenticated R2 publish (LIVE_ENABLED must stay false on worker)"
+        required: true
+        default: "0"
+        type: choice
+        options:
+          - "0"
+          - "1"
+      source:
+        description: "JSON source for publish"
+        required: true
+        default: "main_managed_public"
+        type: choice
+        options:
+          - "main_managed_public"
+          - "sync_branch_managed_public"
+
+concurrency:
+  group: cj-affiliate-r2-staging-burnin
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  burnin:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      IU_CJ_MANAGED_PUBLIC_R2_PUBLISH_ARMED: ${{ github.event.inputs.arm_r2_publish }}
+      IU_CJ_MANAGED_PUBLIC_PUBLISH_URL: ${{ secrets.IU_CJ_MANAGED_PUBLIC_R2_PUBLISH_URL || secrets.IU_CJ_MANAGED_PUBLIC_PUBLISH_URL }}
+      IU_CJ_MANAGED_PUBLIC_PUBLISH_TOKEN: ${{ secrets.IU_CJ_MANAGED_PUBLIC_R2_PUBLISH_TOKEN || secrets.IU_CJ_MANAGED_PUBLIC_PUBLISH_TOKEN }}
+      IU_CJ_WEBSITE_PID: ${{ secrets.IU_CJ_WEBSITE_PID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Resolve source JSON
+        id: src
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p projects/data
+          if [ "${{ github.event.inputs.source }}" = "sync_branch_managed_public" ]; then
+            git fetch origin data/cj-affiliate-catalog-sync
+            git show "origin/data/cj-affiliate-catalog-sync:projects/data/iu-affiliate-cj-managed-public-v1.json" \
+              > projects/data/iu-affiliate-cj-managed-public-v1.json
+            echo "SOURCE=sync_branch"
+          else
+            test -f projects/data/iu-affiliate-cj-managed-public-v1.json
+            echo "SOURCE=main_checkout"
+          fi
+          node -e "
+            const fs=require('fs');
+            const j=JSON.parse(fs.readFileSync('projects/data/iu-affiliate-cj-managed-public-v1.json','utf8'));
+            const n=(j.partners||[]).length;
+            const a=(j.partners||[]).filter(p=>p.active!==false).length;
+            console.log('SCHEMA='+String(j.schema||''));
+            console.log('WEBSITE_PID='+String(j.websitePid||''));
+            console.log('PARTNERS='+n);
+            console.log('ACTIVE='+a);
+          "
+
+      - name: Offline ops matrix + R2 selftests (DISARMED)
+        run: |
+          node scripts/iu-cj-affiliate-phase3d-complete-validation-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-catalog-sync-r2-publish-selftest.mjs
+          node scripts/iu-cj-affiliate-phase3i-r2-four-partners-v1-selftest.mjs
+
+      - name: Preflight secrets presence (no values)
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -n "${IU_CJ_MANAGED_PUBLIC_PUBLISH_URL:-}" ]; then echo "PUBLISH_URL=CONFIGURED"; else echo "PUBLISH_URL=MISSING"; fi
+          if [ -n "${IU_CJ_MANAGED_PUBLIC_PUBLISH_TOKEN:-}" ]; then echo "PUBLISH_TOKEN=CONFIGURED"; else echo "PUBLISH_TOKEN=MISSING"; fi
+          if [ "${IU_CJ_MANAGED_PUBLIC_R2_PUBLISH_ARMED}" != "1" ]; then
+            echo "MODE=DRY_RUN_DISARMED"
+            node scripts/iu-cj-affiliate-catalog-sync-r2-publish-v1.mjs
+            exit 0
+          fi
+          if [ -z "${IU_CJ_MANAGED_PUBLIC_PUBLISH_URL:-}" ] || [ -z "${IU_CJ_MANAGED_PUBLIC_PUBLISH_TOKEN:-}" ]; then
+            echo "BLOCKER=R2_PUBLISH_SECRETS_MISSING"
+            exit 1
+          fi
+          echo "MODE=ARMED_STAGING_WRITE"
+
+      - name: Authorized R2 publish (LIVE serve stays false on worker)
+        if: github.event.inputs.arm_r2_publish == '1'
+        run: node scripts/iu-cj-affiliate-catalog-sync-r2-publish-v1.mjs
+
+      - name: Prove public GET still not serving R2 overlay
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          HDR="$(mktemp)"
+          CODE="$(curl -sS -D "$HDR" -o /dev/null -w '%{http_code}' \
+            'https://infouzel.cz/projects/data/iu-affiliate-cj-managed-public-v1.json' || true)"
+          echo "PUBLIC_GET_HTTP=$CODE"
+          if grep -qi 'x-iu-cj-managed-public-source:\s*r2' "$HDR"; then
+            echo "BLOCKER=PUBLIC_SERVE_FROM_R2_WHILE_DISARMED"
+            exit 1
+          fi
+          echo "PUBLIC_SERVE_SOURCE=not_r2_header"
+          CODE2="$(curl -sS -o /tmp/cj_pub_body.json -w '%{http_code}' -X POST \
+            'https://infouzel.cz/projects/data/iu-affiliate-cj-managed-public/__iu_live_publish' \
+            -H 'Content-Type: application/json' -d '{}' || true)"
+          echo "POST_NOAUTH_HTTP=$CODE2"
+          if [ "$CODE2" != "401" ] && [ "$CODE2" != "403" ]; then
+            echo "BLOCKER=UNEXPECTED_NOAUTH_POST_STATUS"
+            exit 1
+          fi
+          echo "NOAUTH_POST=DENIED"
+          echo "CJ_LIVE_PUBLISHING=DISARMED"

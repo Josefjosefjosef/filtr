@@ -106,6 +106,10 @@ jobs:
       - name: Phase 3I R2 binding + four-partner coverage (DISARMED)
         run: |
           node scripts/iu-cj-affiliate-phase3i-r2-four-partners-v1-selftest.mjs
+      - name: Phase 3J staging burn-in readiness + public GO checklist (DISARMED)
+        run: |
+          node scripts/iu-cj-affiliate-phase3j-staging-burnin-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-phase3j-public-go-checklist-v1.mjs
 
   fetch-staging:
     needs: selftest
