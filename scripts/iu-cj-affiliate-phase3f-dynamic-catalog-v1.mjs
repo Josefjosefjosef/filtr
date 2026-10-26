@@ -343,24 +343,36 @@ export function renderSectionChipsHtml(catalogSections, sectionId, overlay) {
   return { ok: true, html, chips, count: chips.length, sectionId: section.id };
 }
 
+function normTitleKey(t) {
+  return normalizePartnerBrand(t);
+}
+
 /** Same semantics as assets/iu-affiliate-catalog.js applyManagedPublicOverlay (section-scoped). */
 export function applyOverlayToSections(sections, overlay) {
   const byAdv = {};
+  const byTitle = {};
   for (const p of overlay.partners || []) {
     if (!p || p.advertiserId == null) continue;
     byAdv[String(p.advertiserId)] = p;
+    const tn = normTitleKey(p.title);
+    if (tn && !byTitle[tn]) byTitle[tn] = p;
   }
   for (const cat of sections) {
     const kept = [];
     const seenAdv = {};
+    const seenTitle = {};
     for (const it of cat.items || []) {
       const adv = it.advertiserId != null ? String(it.advertiserId) : null;
+      const itTitleKey = normTitleKey(it.title);
+      const protectedItem =
+        it.management === "MANUAL_PROTECTED" || it.management === "PAID_RESERVED";
       if (adv && byAdv[adv]) {
         const ov = byAdv[adv];
         if (ov.active === false) {
-          if (it.management === "MANUAL_PROTECTED" || it.management === "PAID_RESERVED") {
+          if (protectedItem) {
             kept.push(it);
             seenAdv[adv] = true;
+            if (itTitleKey) seenTitle[itTitleKey] = true;
           }
           continue;
         }
@@ -372,9 +384,27 @@ export function applyOverlayToSections(sections, overlay) {
           management: "CJ_MANAGED",
         });
         seenAdv[adv] = true;
+        if (itTitleKey) seenTitle[itTitleKey] = true;
       } else {
+        const titleHit = itTitleKey ? byTitle[itTitleKey] : null;
+        if (titleHit && !protectedItem) {
+          if (titleHit.active === false) continue;
+          const tid = String(titleHit.advertiserId);
+          if (seenAdv[tid]) continue;
+          kept.push({
+            title: titleHit.title || it.title,
+            url: titleHit.url || it.url,
+            affiliateUrlReady: true,
+            advertiserId: tid,
+            management: "CJ_MANAGED",
+          });
+          seenAdv[tid] = true;
+          if (itTitleKey) seenTitle[itTitleKey] = true;
+          continue;
+        }
         kept.push(it);
         if (adv) seenAdv[adv] = true;
+        if (itTitleKey) seenTitle[itTitleKey] = true;
       }
     }
     for (const np of overlay.partners || []) {
@@ -382,6 +412,8 @@ export function applyOverlayToSections(sections, overlay) {
       if (String(np.sectionId || "") !== String(cat.id || cat.sectionId)) continue;
       const nid = String(np.advertiserId);
       if (seenAdv[nid]) continue;
+      const npTitleKey = normTitleKey(np.title);
+      if (npTitleKey && seenTitle[npTitleKey]) continue;
       if (!np.url || !/^https:\/\//i.test(String(np.url))) continue;
       kept.push({
         title: np.title,
@@ -391,6 +423,7 @@ export function applyOverlayToSections(sections, overlay) {
         management: "CJ_MANAGED",
       });
       seenAdv[nid] = true;
+      if (npTitleKey) seenTitle[npTitleKey] = true;
     }
     cat.items = kept;
   }
