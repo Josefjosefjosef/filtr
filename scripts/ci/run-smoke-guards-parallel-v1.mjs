@@ -39,9 +39,11 @@ function evalIf(ifGha, scope) {
 function runCmd(name, run, env, timeoutMinutes, taskIndex) {
   return new Promise((resolve) => {
     const started = Date.now();
+    // High base avoids collisions with vault pickGuardPort(88xx–95xx) ranges that
+    // ignore IU_GUARD_PORT and previously raced the old 8600+index assignments (EADDRINUSE).
     const guardPort =
       env.IU_GUARD_PORT ||
-      String(8600 + (Number.isFinite(taskIndex) ? taskIndex : 0));
+      String(30000 + (Number.isFinite(taskIndex) ? taskIndex : 0));
     const child = spawn(run, {
       cwd: REPO,
       shell: true,
