@@ -163,9 +163,12 @@ export function runGuardChildScript(scriptPath, args = [], options = {}) {
 }
 
 export async function startGuardStaticServer(preferredPort) {
+  // Prefer CI parallel-pool assignment when present (unique per guard index).
+  const envPort = parseInt(process.env.IU_GUARD_PORT || "0", 10);
+  const basePort = envPort > 0 ? envPort : preferredPort;
   let lastErr = null;
   for (let attempt = 0; attempt < 5; attempt += 1) {
-    const port = preferredPort + attempt;
+    const port = basePort + attempt;
     let proc = null;
     try {
       proc = require("child_process").spawn(process.execPath, [path.join(REPO, "server", "projects-static.mjs")], {
