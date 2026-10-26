@@ -1,0 +1,84 @@
+# Phase 3K: watch real catalog-sync *schedule* runs (never treat workflow_dispatch as schedule).
+# Does NOT publish. Does NOT arm CJ LIVE. Read-only Actions API.
+name: CJ Affiliate catalog-sync schedule watch
+
+on:
+  schedule:
+    # After expected catalog-sync cron 03:17 UTC (+ GitHub delay buffer)
+    - cron: "47 5 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: cj-affiliate-catalog-sync-schedule-watch
+  cancel-in-progress: false
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Inspect last schedule runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          # Workflow file path → resolve ID at runtime
+          WORKFLOW_PATH: cj-affiliate-catalog-sync.yml
+        run: |
+          set -euo pipefail
+          WF_ID="$(gh api "repos/${REPO}/actions/workflows" --jq \
+            ".workflows[] | select(.path==\".github/workflows/${WORKFLOW_PATH}\") | .id")"
+          if [ -z "${WF_ID}" ]; then
+            echo "WATCH_RESULT=FAIL reason=workflow_not_found"
+            exit 1
+          fi
+          echo "WORKFLOW_ID=${WF_ID}"
+          RAW="$(gh api "repos/${REPO}/actions/workflows/${WF_ID}/runs?event=schedule&per_page=10")"
+          echo "${RAW}" | jq -r '.workflow_runs[] | "\(.id)\t\(.conclusion // "null")\t\(.status)\t\(.created_at)\t\(.actor.login // "")"' \
+            | tee /tmp/iu-cj-schedule-runs.tsv || true
+          TOTAL="$(echo "${RAW}" | jq '.total_count')"
+          echo "SCHEDULE_TOTAL_COUNT=${TOTAL}"
+          # Eval window: 48h
+          CUTOFF="$(date -u -d '48 hours ago' +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v-48H +%Y-%m-%dT%H:%M:%SZ)"
+          echo "CUTOFF_UTC=${CUTOFF}"
+          SUCCESS_48="$(echo "${RAW}" | jq --arg c "$CUTOFF" \
+            '[.workflow_runs[] | select(.conclusion=="success" and .created_at >= $c)] | length')"
+          FAIL_48="$(echo "${RAW}" | jq --arg c "$CUTOFF" \
+            '[.workflow_runs[] | select(.conclusion=="failure" and .created_at >= $c)] | length')"
+          CANCEL_48="$(echo "${RAW}" | jq --arg c "$CUTOFF" \
+            '[.workflow_runs[] | select(.conclusion=="cancelled" and .created_at >= $c)] | length')"
+          INPROG="$(echo "${RAW}" | jq \
+            '[.workflow_runs[] | select(.status=="in_progress" or .status=="queued")] | length')"
+          echo "SUCCESS_48H=${SUCCESS_48}"
+          echo "FAIL_48H=${FAIL_48}"
+          echo "CANCEL_48H=${CANCEL_48}"
+          echo "IN_PROGRESS=${INPROG}"
+          LATEST="$(echo "${RAW}" | jq -r '.workflow_runs[0] // empty | "\(.id) \(.conclusion) \(.created_at)"')"
+          echo "LATEST_SCHEDULE=${LATEST:-none}"
+          if [ "${SUCCESS_48}" -ge 1 ]; then
+            echo "WATCH_RESULT=PASS"
+            echo "BURNIN_STATUS=VERIFIED_RECENT_SCHEDULE_SUCCESS"
+            exit 0
+          fi
+          if [ "${INPROG}" -ge 1 ]; then
+            echo "WATCH_RESULT=PENDING"
+            echo "BURNIN_STATUS=SCHEDULE_IN_PROGRESS"
+            exit 0
+          fi
+          if [ "${TOTAL}" -eq 0 ]; then
+            echo "WATCH_RESULT=PENDING"
+            echo "BURNIN_STATUS=NO_SCHEDULE_RUNS_YET"
+            exit 0
+          fi
+          if [ "${FAIL_48}" -ge 1 ]; then
+            echo "WATCH_RESULT=FAIL"
+            echo "BURNIN_STATUS=SCHEDULE_FAILURE_IN_WINDOW"
+            exit 1
+          fi
+          # Cancelled-only / stale: not a code failure — keep PENDING so CI does not block merges.
+          echo "WATCH_RESULT=PENDING"
+          echo "BURNIN_STATUS=NO_SUCCESS_IN_48H_MANUAL_OR_DELAY"
+          exit 0
