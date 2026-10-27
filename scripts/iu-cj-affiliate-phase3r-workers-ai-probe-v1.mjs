@@ -61,7 +61,10 @@ try {
     aiActuallyRan: res.aiActuallyRan === true || res.http === true,
     httpStatus: res.httpStatus || null,
     reason: res.reason || res.state || null,
-    // Never echo model raw payload (may contain echoed probe text only — still omit).
+    cfErrorCode: res.cfErrorCode != null ? res.cfErrorCode : null,
+    cfErrorMessage: res.cfErrorMessage || null,
+    requestPathSafe: res.requestPathSafe || null,
+    // Never echo model raw payload or token values.
   };
   console.log(JSON.stringify(out, null, 2));
   if (strict && !out.ok) process.exit(1);

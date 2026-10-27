@@ -108,12 +108,24 @@ async function workersAiHttpRun(safeText, options = {}) {
     };
   }
 
+  /* Model path must keep @ and / unencoded (CF docs: .../ai/run/@cf/meta/...). */
+  const modelPath = String(config.model || WORKERS_AI_MODEL_CZECH_CANDIDATE).replace(/^\/+/, "");
+  if (!/^@cf\/[A-Za-z0-9._/-]+$/.test(modelPath)) {
+    return {
+      ok: false,
+      state: AI_PROCESSING_STATE.ai_failed,
+      payload: null,
+      reason: "workers_ai_model_path_rejected",
+      blocked: true,
+      aiActuallyRan: false,
+    };
+  }
   const url = testUrl
-    ? String(testUrl).replace(/\/$/, "") + "/ai/run/" + encodeURIComponent(config.model)
+    ? String(testUrl).replace(/\/$/, "") + "/ai/run/" + modelPath
     : "https://api.cloudflare.com/client/v4/accounts/" +
       encodeURIComponent(config.accountId) +
       "/ai/run/" +
-      encodeURIComponent(config.model);
+      modelPath;
 
   const prompt =
     typeof options.promptBuilder === "function"
@@ -184,6 +196,18 @@ async function workersAiHttpRun(safeText, options = {}) {
         };
       }
       if (!res.ok) {
+        let cfCode = null;
+        let cfMessage = null;
+        try {
+          const errJson = await res.json();
+          const first = Array.isArray(errJson?.errors) ? errJson.errors[0] : null;
+          if (first) {
+            cfCode = first.code != null ? Number(first.code) : null;
+            cfMessage = String(first.message || "")
+              .replace(/[A-Za-z0-9_\-]{20,}/g, "[redacted]")
+              .slice(0, 160);
+          }
+        } catch (_) {}
         lastFail = {
           ok: false,
           state: AI_PROCESSING_STATE.ai_failed,
@@ -191,7 +215,10 @@ async function workersAiHttpRun(safeText, options = {}) {
           httpStatus: res.status,
           aiActuallyRan: true,
           reason: "http_" + res.status,
+          cfErrorCode: cfCode,
+          cfErrorMessage: cfMessage,
           apiTokenSecretName: auth.name,
+          requestPathSafe: "/accounts/{id}/ai/run/" + modelPath,
         };
         // try next token on auth errors; otherwise try next body shape
         if (res.status === 401 || res.status === 403) break;
