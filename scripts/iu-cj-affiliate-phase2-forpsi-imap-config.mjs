@@ -32,11 +32,14 @@ export const DEFAULT_FORPSI_IMAP_TLS_MODE = "imaps_993";
 export const FORPSI_IMAP_DEFAULT_FOLDERS = Object.freeze(["INBOX"]);
 
 export const FORPSI_IMAP_SYNC_DEFAULTS = Object.freeze({
-  batchSize: 15,
-  maxBatchSize: 20,
+  // Phase 3R: drain historical queue safely without ~20-day lag (was 15/day).
+  batchSize: 80,
+  maxBatchSize: 100,
   minBatchSize: 10,
+  maxBatchesPerRun: 4,
   maxMessageBytes: 512 * 1024,
   maxAttachmentBytes: 256 * 1024,
+  aiExcerptChars: 2_000,
   pollIntervalMsMin: 120_000,
   pollIntervalMsDefault: 300_000,
   retryMaxAttempts: 5,
