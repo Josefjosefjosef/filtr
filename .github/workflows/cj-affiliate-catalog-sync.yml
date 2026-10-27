@@ -119,6 +119,11 @@ jobs:
         run: |
           node scripts/iu-cj-affiliate-phase3n-live-verify-v1.mjs
           node scripts/iu-cj-affiliate-phase3n-forpsi-auth-checklist-v1.mjs
+      - name: Phase 3O baked CID resolve + Forpsi ready + live-verify (DISARMED)
+        run: |
+          node scripts/iu-cj-affiliate-phase3o-baked-cid-resolve-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-phase3o-forpsi-ready-v1.mjs
+          node scripts/iu-cj-affiliate-phase3o-live-verify-v1.mjs
 
   fetch-staging:
     needs: selftest
