@@ -204,7 +204,23 @@ export async function runMailboxSyncBatch(options = {}) {
           }
         }
         state.processedUids.push(uid);
-        batchResults.push({ uid, ok: true, state: result.state, categories: result.affiliateCategories });
+        // Safe AI excerpt only — never persist full bodies into checkpoint/artifacts.
+        const subjectSafe = String(msg.subject || "").slice(0, 240);
+        const fromSafe = String(msg.from || "").slice(0, 200);
+        const rawExcerpt = String(msg.bodyText || msg.bodyHtmlStripped || "")
+          .replace(/\0/g, "")
+          .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, "[REDACTED_EMAIL]")
+          .replace(/\b(?:\+?\d[\d\s().-]{7,}\d)\b/g, "[REDACTED_PHONE]")
+          .slice(0, FORPSI_IMAP_SYNC_DEFAULTS.aiExcerptChars || 2_000);
+        batchResults.push({
+          uid,
+          ok: true,
+          state: result.state,
+          categories: result.affiliateCategories,
+          subjectSafe,
+          fromSafe,
+          excerptSafe: rawExcerpt,
+        });
       } catch (err) {
         state.failedUids[String(uid)] = String(err.message || err).slice(0, 200);
         state.stats.errors += 1;
