@@ -179,6 +179,17 @@ jobs:
           set -euo pipefail
           node scripts/iu-cj-affiliate-phase2-unattended-import-runner-v1.mjs
 
+      - name: Workers AI health probe (no email bodies)
+        if: env.LIVE_IMAP_BLOCKED == '0'
+        id: ai_probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/iu-cj-affiliate-phase3r-workers-ai-probe-v1.mjs | tee /tmp/iu-workers-ai-probe.json
+          PROBE=$(node -e 'console.log(JSON.parse(require("fs").readFileSync("/tmp/iu-workers-ai-probe.json","utf8")).probe)')
+          echo "WORKERS_AI_PROBE=$PROBE"
+          echo "WORKERS_AI_PROBE=$PROBE" >> "$GITHUB_ENV"
+
       - name: Phase 3R live pipeline (IMAP drain + Workers AI + CJ reconcile hints)
         if: env.LIVE_IMAP_BLOCKED == '0'
         id: live_pipeline
@@ -193,6 +204,8 @@ jobs:
           node -e '
             const fs=require("fs");
             const j=JSON.parse(fs.readFileSync("/tmp/iu-phase3r-pipeline.json","utf8"));
+            let probe=null;
+            try{probe=JSON.parse(fs.readFileSync("/tmp/iu-workers-ai-probe.json","utf8"));}catch{}
             const summary={
               schema:j.schema,
               ok:j.ok,
@@ -210,10 +223,17 @@ jobs:
               checkpointComplete:j.checkpoint&&j.checkpoint.complete,
               pendingAfterBatch:j.checkpoint&&j.checkpoint.pendingAfterBatch,
               uidvalidity:j.checkpoint&&j.checkpoint.uidvalidity,
+              workersAiProbe:probe&&probe.probe,
+              workersAiProbeReason:probe&&probe.reason,
               aiActuallyRan:j.ai&&j.ai.aiActuallyRan,
+              aiHttpAttempted:j.ai&&j.ai.aiHttpAttempted,
               aiBackend:j.ai&&j.ai.backend,
               aiModel:j.ai&&j.ai.model,
               aiCallsUsed:j.ai&&j.ai.callsUsed,
+              aiSuccessCount:j.ai&&j.ai.successCount,
+              aiFallbackCount:j.ai&&j.ai.fallbackCount,
+              aiSkippedOverCap:j.ai&&j.ai.skippedOverCap,
+              aiErrorCounts:j.ai&&j.ai.errorCounts,
               cjPassedToRobot:j.cjReconcile&&j.cjReconcile.passedToRobot,
               cjVerifiedViaApi:j.cjReconcile&&j.cjReconcile.verifiedViaCjApi,
               stagingAddPlans:j.cjReconcile&&j.cjReconcile.stagingAddPlans,
@@ -257,6 +277,7 @@ jobs:
           path: |
             /tmp/iu-phase3r-pipeline-summary.json
             /tmp/iu-forpsi-live-poll-summary.json
+            /tmp/iu-workers-ai-probe.json
             .iu-forpsi-imap-checkpoint/
           if-no-files-found: warn
           retention-days: 30

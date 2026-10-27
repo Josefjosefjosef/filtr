@@ -256,6 +256,18 @@ export async function classifyEmailRowToEvents(row = {}, options = {}) {
 
   const env = options.env || process.env;
   const config = resolveWorkersAiConfig(env);
+  if (options.forceDeterministic === true) {
+    const fb = deterministicEventFallback(row);
+    return {
+      ok: true,
+      backend: "deterministic_fallback",
+      aiActuallyRan: false,
+      aiHttpAttempted: false,
+      aiError: "ai_call_cap_reached",
+      events: [fb],
+      state: AI_PROCESSING_STATE.skipped_deterministic,
+    };
+  }
   const useMock = options.useMock === true || config.backend === "mock";
 
   let raw;
@@ -267,19 +279,23 @@ export async function classifyEmailRowToEvents(row = {}, options = {}) {
       env,
       jsonSchema: AI_EVENT_JSON_SCHEMA,
       promptBuilder: buildAiEventPrompt,
+      quota,
     });
   }
 
   if (!raw?.ok || !raw.payload) {
-    // Fallback is NOT AI — label explicitly.
+    // Fallback is NOT AI — label explicitly. Preserve whether HTTP was attempted.
     const fb = deterministicEventFallback(row);
     return {
       ok: true,
       backend: "deterministic_fallback",
-      aiActuallyRan: false,
+      aiActuallyRan: raw?.aiActuallyRan === true || raw?.http === true,
+      aiHttpAttempted: raw?.blocked !== true,
       aiError: raw?.reason || raw?.state || "ai_unavailable",
+      aiHttpStatus: raw?.httpStatus || null,
       events: [fb],
       state: raw?.state || AI_PROCESSING_STATE.ai_failed,
+      quotaAfter: raw?.quotaAfter || null,
     };
   }
 
@@ -290,9 +306,11 @@ export async function classifyEmailRowToEvents(row = {}, options = {}) {
       ok: true,
       backend: "deterministic_fallback",
       aiActuallyRan: raw.aiActuallyRan === true || raw.http === true,
+      aiHttpAttempted: true,
       aiError: validated.reason,
       events: [fb],
       state: AI_PROCESSING_STATE.invalid_ai_json,
+      quotaAfter: raw?.quotaAfter || null,
     };
   }
 
@@ -301,8 +319,10 @@ export async function classifyEmailRowToEvents(row = {}, options = {}) {
     backend: useMock ? "mock" : "workers-ai",
     model: useMock ? null : config.model || WORKERS_AI_MODEL_CZECH_CANDIDATE,
     aiActuallyRan: true,
+    aiHttpAttempted: !useMock,
     events: validated.events,
     state: raw.state || AI_PROCESSING_STATE.mock_ai_ok,
+    quotaAfter: raw.quotaAfter || null,
   };
 }
 

@@ -97,7 +97,8 @@ async function workersAiHttpRun(safeText, options = {}) {
       ? options.promptBuilder(safeText)
       : buildWorkersAiPrompt(safeText);
 
-  const body = {
+  const bodies = [];
+  const messagesBody = {
     messages: [
       {
         role: "system",
@@ -107,45 +108,85 @@ async function workersAiHttpRun(safeText, options = {}) {
     ],
   };
   if (options.jsonSchema) {
-    body.response_format = {
-      type: "json_schema",
-      json_schema: options.jsonSchema,
-    };
+    bodies.push({
+      ...messagesBody,
+      response_format: { type: "json_schema", json_schema: options.jsonSchema },
+    });
+  }
+  bodies.push(messagesBody);
+  bodies.push({ prompt });
+
+  const headers = { "Content-Type": "application/json" };
+  if (!testUrl) {
+    headers.Authorization = "Bearer " + String(env.CLOUDFLARE_API_TOKEN || "");
   }
 
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), config.timeoutMs);
-  try {
-    const headers = { "Content-Type": "application/json" };
-    if (!testUrl) {
-      headers.Authorization = "Bearer " + String(env.CLOUDFLARE_API_TOKEN || "");
-    }
-    const res = await fetch(url, {
-      method: "POST",
-      headers,
-      signal: controller.signal,
-      body: JSON.stringify(body),
-    });
-    if (res.status === 429) {
-      return {
-        ok: false,
-        state: AI_PROCESSING_STATE.quota_exceeded,
-        payload: null,
-        aiActuallyRan: true,
-      };
-    }
-    if (!res.ok) {
-      return {
-        ok: false,
-        state: AI_PROCESSING_STATE.ai_failed,
-        payload: null,
-        httpStatus: res.status,
-        aiActuallyRan: true,
-      };
-    }
-    const json = await res.json();
-    let raw = json?.result?.response ?? json?.response ?? "";
-    if (raw && typeof raw === "object") {
+  let lastFail = null;
+  for (const body of bodies) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), config.timeoutMs);
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers,
+        signal: controller.signal,
+        body: JSON.stringify(body),
+      });
+      if (res.status === 429) {
+        return {
+          ok: false,
+          state: AI_PROCESSING_STATE.quota_exceeded,
+          payload: null,
+          aiActuallyRan: true,
+          reason: "http_429",
+        };
+      }
+      if (!res.ok) {
+        lastFail = {
+          ok: false,
+          state: AI_PROCESSING_STATE.ai_failed,
+          payload: null,
+          httpStatus: res.status,
+          aiActuallyRan: true,
+          reason: "http_" + res.status,
+        };
+        // try next body shape on 400/415; stop on auth errors
+        if (res.status === 401 || res.status === 403) return lastFail;
+        continue;
+      }
+      const json = await res.json();
+      let raw = json?.result?.response ?? json?.response ?? "";
+      if (raw && typeof raw === "object") {
+        return {
+          ok: true,
+          state: AI_PROCESSING_STATE.mock_ai_ok,
+          payload: raw,
+          quotaAfter: { ...quota, callsUsed: callsUsed + 1 },
+          http: true,
+          aiActuallyRan: true,
+          backend: "workers-ai",
+          model: config.model,
+        };
+      }
+      if (typeof raw === "string") {
+        const trimmed = raw
+          .trim()
+          .replace(/^```json\s*/i, "")
+          .replace(/```$/i, "")
+          .trim();
+        try {
+          raw = JSON.parse(trimmed);
+        } catch {
+          lastFail = {
+            ok: false,
+            state: AI_PROCESSING_STATE.invalid_ai_json,
+            payload: null,
+            aiActuallyRan: true,
+            reason: "invalid_ai_json",
+          };
+          continue;
+        }
+      }
       return {
         ok: true,
         state: AI_PROCESSING_STATE.mock_ai_ok,
@@ -156,46 +197,28 @@ async function workersAiHttpRun(safeText, options = {}) {
         backend: "workers-ai",
         model: config.model,
       };
+    } catch (e) {
+      lastFail = {
+        ok: false,
+        state: AI_PROCESSING_STATE.ai_failed,
+        payload: null,
+        reason: "workers_ai_network",
+        safe: String(e?.message || "").slice(0, 80),
+        aiActuallyRan: false,
+      };
+    } finally {
+      clearTimeout(timer);
     }
-    if (typeof raw === "string") {
-      const trimmed = raw
-        .trim()
-        .replace(/^```json\s*/i, "")
-        .replace(/```$/i, "")
-        .trim();
-      try {
-        raw = JSON.parse(trimmed);
-      } catch {
-        return {
-          ok: false,
-          state: AI_PROCESSING_STATE.invalid_ai_json,
-          payload: null,
-          aiActuallyRan: true,
-        };
-      }
-    }
-    return {
-      ok: true,
-      state: AI_PROCESSING_STATE.mock_ai_ok,
-      payload: raw,
-      quotaAfter: { ...quota, callsUsed: callsUsed + 1 },
-      http: true,
-      aiActuallyRan: true,
-      backend: "workers-ai",
-      model: config.model,
-    };
-  } catch (e) {
-    return {
+  }
+  return (
+    lastFail || {
       ok: false,
       state: AI_PROCESSING_STATE.ai_failed,
       payload: null,
-      reason: "workers_ai_network",
-      safe: String(e?.message || "").slice(0, 80),
-      aiActuallyRan: false,
-    };
-  } finally {
-    clearTimeout(timer);
-  }
+      reason: "workers_ai_all_body_shapes_failed",
+      aiActuallyRan: true,
+    }
+  );
 }
 
 export async function workersAiHttpClassify(bodyText, options = {}) {
