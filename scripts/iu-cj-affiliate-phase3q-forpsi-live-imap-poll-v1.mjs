@@ -77,8 +77,8 @@ export function buildHintsFromBatchResults(batchResults = []) {
     if (!cats.length) continue;
     const kind = mapCategoryToHintKind(cats);
     const event = {
-      from: "imap-poll",
-      subject: "uid:" + row.uid + " cats:" + cats.join(","),
+      from: row.fromSafe || "imap-poll",
+      subject: row.subjectSafe || "uid:" + row.uid + " cats:" + cats.join(","),
       kind,
       uid: row.uid,
       categories: cats,
@@ -93,6 +93,23 @@ export function buildHintsFromBatchResults(batchResults = []) {
     });
   }
   return hints;
+}
+
+/** Safe rows for AI — never include full bodies or secrets. */
+export function buildAiSafeRowsFromBatchResults(batchResults = []) {
+  const rows = [];
+  for (const row of batchResults || []) {
+    if (!row?.ok) continue;
+    rows.push({
+      uid: row.uid,
+      categories: row.categories || [],
+      subjectSafe: String(row.subjectSafe || "").slice(0, 240),
+      fromSafe: String(row.fromSafe || "").slice(0, 200),
+      excerptSafe: String(row.excerptSafe || "").slice(0, FORPSI_IMAP_SYNC_DEFAULTS.aiExcerptChars || 2000),
+      state: row.state || null,
+    });
+  }
+  return rows;
 }
 
 export async function runForpsiLiveImapPoll(options = {}) {
@@ -140,6 +157,7 @@ export async function runForpsiLiveImapPoll(options = {}) {
       catalogAdvertisers: options.catalogAdvertisers || [],
     });
     const hints = buildHintsFromBatchResults(sync.batchResults || []);
+    const aiRows = buildAiSafeRowsFromBatchResults(sync.batchResults || []);
     return {
       ...base,
       ok: sync.ok === true,
@@ -150,6 +168,7 @@ export async function runForpsiLiveImapPoll(options = {}) {
       messagesInBatch: sync.batchSize ?? 0,
       relevantHints: hints.length,
       hints,
+      _batchResultsForAi: aiRows,
       checkpoint: {
         path: statePath,
         complete: sync.complete === true,
@@ -307,6 +326,7 @@ export async function runForpsiLiveImapPoll(options = {}) {
   }
 
   const hints = buildHintsFromBatchResults(sync.batchResults || []);
+  const aiRows = buildAiSafeRowsFromBatchResults(sync.batchResults || []);
   return {
     ...base,
     ok: true,
@@ -322,6 +342,7 @@ export async function runForpsiLiveImapPoll(options = {}) {
     errors: sync.stats?.errors ?? 0,
     relevantHints: hints.length,
     hints: hints.slice(0, 50),
+    _batchResultsForAi: aiRows,
     checkpoint: {
       path: statePath,
       complete: sync.complete === true,
