@@ -1,12 +1,12 @@
-name: CJ Affiliate email ingest (offline gate)
+name: CJ Affiliate email ingest (Forpsi IMAP)
 
-# 24/7 path without a local PC: GitHub Actions schedule.
-# Live IMAP stays BLOCKED until IU_FORPSI_IMAP_CONNECT_APPROVED=1 + secrets.
-# Email is hint-only; partner state authority remains CJ API.
+# 24/7 without a local PC: GitHub Actions schedule.
+# Live IMAP requires IU_FORPSI_IMAP_CONNECT_APPROVED=1 + USER/SECRET.
+# Read-only EXAMINE + BODY.PEEK. Email = EMAIL_HINT_REQUIRES_CJ_RECONCILE only.
+# CJ API remains the only authority for partner lifecycle changes.
 
 on:
   schedule:
-    # Off-peak UTC; no-op (exit 0) until operator approval + secrets.
     - cron: "47 4 * * *"
   workflow_dispatch:
     inputs:
@@ -21,6 +21,7 @@ on:
 
 permissions:
   contents: read
+  actions: write
 
 concurrency:
   group: cj-affiliate-email-ingest
@@ -35,6 +36,7 @@ jobs:
       IU_FORPSI_IMAP_SECRET: ${{ secrets.IU_FORPSI_IMAP_SECRET }}
       IU_FORPSI_IMAP_CONNECT_APPROVED: ${{ vars.IU_FORPSI_IMAP_CONNECT_APPROVED }}
       IU_FORPSI_IMAP_CREDENTIAL_SOURCE: process_env
+      IU_FORPSI_IMAP_CHECKPOINT_DIR: ${{ github.workspace }}/.iu-forpsi-imap-checkpoint
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -44,7 +46,11 @@ jobs:
         with:
           node-version: "22"
 
+      - name: Phase 3Q IMAP poll selftest (offline mock)
+        run: node scripts/iu-cj-affiliate-phase3q-forpsi-live-imap-poll-v1-selftest.mjs
+
       - name: Forpsi operator gate (never prints secrets)
+        id: gate
         shell: bash
         run: |
           set -euo pipefail
@@ -59,16 +65,24 @@ jobs:
           echo "IMAP_SECRET_CONFIGURED=$HAS_SECRET"
           if [ "$APPROVED" != "1" ] || [ "$HAS_USER" != "1" ] || [ "$HAS_SECRET" != "1" ]; then
             echo "LIVE_IMAP=BLOCKED"
-            echo "Reason: need IU_FORPSI_IMAP_CONNECT_APPROVED=1 (Actions variable) + IU_FORPSI_IMAP_USER/SECRET (Actions secrets)"
-            echo "Running offline mock path only."
             echo "LIVE_IMAP_BLOCKED=1" >> "$GITHUB_ENV"
+            echo "blocked=1" >> "$GITHUB_OUTPUT"
           else
             echo "LIVE_IMAP=AUTHORIZED_FLAGS_PRESENT"
             echo "LIVE_IMAP_BLOCKED=0" >> "$GITHUB_ENV"
-            echo "NOTE: Live poll remains hint-only; CJ API is authority for partner changes."
+            echo "blocked=0" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Run ingest runner (offline until secrets + approval)
+      - name: Restore IMAP checkpoint cache
+        if: env.LIVE_IMAP_BLOCKED == '0'
+        uses: actions/cache@v4
+        with:
+          path: .iu-forpsi-imap-checkpoint
+          key: forpsi-imap-checkpoint-v1-${{ github.run_id }}
+          restore-keys: |
+            forpsi-imap-checkpoint-v1-
+
+      - name: Offline mock ingest (when live blocked)
         if: env.LIVE_IMAP_BLOCKED == '1'
         shell: bash
         env:
@@ -97,28 +111,75 @@ jobs:
           set -euo pipefail
           node scripts/iu-cj-affiliate-phase2-unattended-import-runner-v1.mjs
 
-      - name: Live Forpsi IMAP hint poll (authorized only; never mutates catalog)
+      - name: Live Forpsi IMAP poll (EXAMINE + BODY.PEEK; hint-only)
         if: env.LIVE_IMAP_BLOCKED == '0'
+        id: live_poll
         shell: bash
         env:
           PRODUCTION_SIGNING_ENABLED: "false"
-          IU_CJ_EMAIL_INGEST_OFFLINE: "0"
-          IU_CJ_GITHUB_INGEST_DRY_RUN: "0"
         run: |
           set -euo pipefail
-          # Hint-only path: email events require CJ API reconcile before any partner change.
-          node scripts/iu-cj-affiliate-phase3n-forpsi-auth-checklist-v1.mjs
-          node scripts/iu-cj-affiliate-phase3m-email-hint-v1.mjs
-          echo "LIVE_IMAP_HINT_PATH=READY"
+          mkdir -p "$IU_FORPSI_IMAP_CHECKPOINT_DIR"
+          set +e
+          node scripts/iu-cj-affiliate-phase3q-forpsi-live-imap-poll-v1.mjs > /tmp/iu-forpsi-live-poll.json
+          CODE=$?
+          set -e
+          # Never echo secrets; summary only (no message bodies).
+          node -e '
+            const fs=require("fs");
+            const j=JSON.parse(fs.readFileSync("/tmp/iu-forpsi-live-poll.json","utf8"));
+            const summary={
+              schema:j.schema,
+              ok:j.ok,
+              status:j.status,
+              imapConnected:j.imapConnected,
+              authSuccess:j.authSuccess,
+              messagesChecked:j.messagesChecked,
+              messagesInBatch:j.messagesInBatch,
+              relevantHints:j.relevantHints,
+              duplicates:j.duplicates,
+              quarantined:j.quarantined,
+              errors:j.errors,
+              checkpointComplete:j.checkpoint&&j.checkpoint.complete,
+              pendingAfterBatch:j.checkpoint&&j.checkpoint.pendingAfterBatch,
+              uidvalidity:j.checkpoint&&j.checkpoint.uidvalidity,
+              cjApiFollowUp:j.cjApiFollowUp,
+              mutatePartners:j.mutatePartners,
+              liveEnabled:j.liveEnabled,
+              publishArmed:j.publishArmed,
+              reason:j.reason||null
+            };
+            console.log(JSON.stringify(summary,null,2));
+            fs.writeFileSync("/tmp/iu-forpsi-live-poll-summary.json", JSON.stringify(summary,null,2));
+          '
+          echo "IMAP_CONNECTED=$(node -e 'console.log(JSON.parse(require("fs").readFileSync("/tmp/iu-forpsi-live-poll-summary.json","utf8")).imapConnected)')"
+          echo "AUTH_SUCCESS=$(node -e 'console.log(JSON.parse(require("fs").readFileSync("/tmp/iu-forpsi-live-poll-summary.json","utf8")).authSuccess)')"
+          echo "MESSAGES_CHECKED=$(node -e 'console.log(JSON.parse(require("fs").readFileSync("/tmp/iu-forpsi-live-poll-summary.json","utf8")).messagesChecked)')"
+          echo "RELEVANT_HINTS=$(node -e 'console.log(JSON.parse(require("fs").readFileSync("/tmp/iu-forpsi-live-poll-summary.json","utf8")).relevantHints)')"
+          if [ "$CODE" -ne 0 ]; then
+            echo "LIVE_IMAP_POLL=FAILED exit=$CODE"
+            exit "$CODE"
+          fi
+          echo "LIVE_IMAP_POLL=OK"
           echo "Authority=CJ_API_ONLY"
-          echo "If a full IMAP poll runner is wired later, it must only emit EMAIL_HINT_REQUIRES_CJ_RECONCILE."
+          echo "False PASS forbidden: connect+auth+poll evidenced above"
+
+      - name: Upload IMAP poll summary + checkpoint (no secrets / no bodies)
+        if: always() && env.LIVE_IMAP_BLOCKED == '0'
+        uses: actions/upload-artifact@v4
+        with:
+          name: iu-forpsi-live-imap-poll
+          path: |
+            /tmp/iu-forpsi-live-poll-summary.json
+            .iu-forpsi-imap-checkpoint/
+          if-no-files-found: warn
+          retention-days: 14
 
       - name: Live ingest gate summary
         shell: bash
         run: |
           set -euo pipefail
           echo "Live catalog mutation from email: FORBIDDEN"
-          echo "Required for live IMAP connect:"
-          echo "  IU_FORPSI_IMAP_CONNECT_APPROVED=1 (Actions variable)"
-          echo "  secrets IU_FORPSI_IMAP_USER + IU_FORPSI_IMAP_SECRET"
+          echo "Mailbox target: affiliate@infouzel.cz via imap.forpsi.com:993 TLS"
+          echo "Required: IU_FORPSI_IMAP_CONNECT_APPROVED=1 + secrets IU_FORPSI_IMAP_USER/SECRET"
           echo "CJ API remains the only authority for partner lifecycle changes."

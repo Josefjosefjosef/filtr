@@ -185,9 +185,24 @@ export class ForpsiImapTlsSession {
 
   async selectFolderExamine(folder) {
     const tag = nextImapTag();
-    await this.#command(tag + " EXAMINE " + quoteImapString(folder), { tag });
+    const lines = await this.#command(tag + " EXAMINE " + quoteImapString(folder), { tag });
     this.selectedFolder = folder;
-    return { folder, readOnly: true };
+    let uidvalidity = null;
+    let exists = null;
+    for (const line of lines || []) {
+      const uv = /\* OK \[UIDVALIDITY (\d+)\]/i.exec(line) || /\* OK \[UIDVALIDITY (\d+)/i.exec(line);
+      if (uv) uidvalidity = Number(uv[1]);
+      const ex = /^\* (\d+) EXISTS\b/i.exec(line);
+      if (ex) exists = Number(ex[1]);
+    }
+    this.uidvalidity = uidvalidity;
+    return {
+      ok: true,
+      folder,
+      readOnly: true,
+      uidvalidity,
+      messageCount: exists,
+    };
   }
 
   async uidSearchAll() {
@@ -393,7 +408,15 @@ export async function createForpsiImapTransport(options = {}) {
       return names.map((name) => ({ name, messageCount: null, uidvalidity: null }));
     },
     async selectMailbox(folder) {
-      return session.selectFolderExamine(folder);
+      const sel = await session.selectFolderExamine(folder);
+      return {
+        ok: sel?.ok === true,
+        folder: sel?.folder || folder,
+        readOnly: true,
+        uidvalidity: sel?.uidvalidity ?? null,
+        messageCount: sel?.messageCount ?? null,
+        reason: sel?.ok === true ? null : sel?.reason || "examine_failed",
+      };
     },
     async fetchAllUids() {
       return session.uidSearchAll();
@@ -406,7 +429,7 @@ export async function createForpsiImapTransport(options = {}) {
           mailbox: AFFILIATE_MAILBOX_ADDRESS,
           folder: session.selectedFolder || "INBOX",
           uid,
-          uidvalidity: null,
+          uidvalidity: session.uidvalidity ?? null,
           rawRfc822: peek.rfc822Source,
           fetchMethod: peek.fetchCommand,
         }),
