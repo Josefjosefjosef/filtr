@@ -121,7 +121,11 @@ export class ForpsiImapTlsSession {
     }
     await this.#openSocket();
     await this.#readGreeting();
-    await this.#command(`LOGIN ${quoteImapString(user)} ${quoteImapString(secret)}`, { hideInLog: true });
+    const loginTag = nextImapTag();
+    await this.#command(
+      loginTag + " LOGIN " + quoteImapString(user) + " " + quoteImapString(secret),
+      { hideInLog: true, tag: loginTag }
+    );
     this.authenticated = true;
     return { ok: true, host: this.host, tlsMode: this.tlsMode.id };
   }
@@ -266,7 +270,7 @@ export class ForpsiImapTlsSession {
   }
 
   async #readGreeting() {
-    this.greeting = await this.#waitLine(/^\* OK/i);
+    this.greeting = await this.#waitLine(/^\* OK/i, 30_000);
   }
 
   async #command(line, options = {}) {
@@ -292,26 +296,35 @@ export class ForpsiImapTlsSession {
     });
   }
 
-  async #waitLine(pattern) {
+  async #waitLine(pattern, timeoutMs = 45_000) {
+    const deadline = Date.now() + timeoutMs;
     for (;;) {
       const line = this.byteBuffer.readLine();
       if (line !== null) {
         if (typeof pattern === "string" && line.startsWith(pattern)) return line;
         if (pattern instanceof RegExp && pattern.test(line)) return line;
         if (typeof pattern === "string" && line.includes(pattern)) return line;
+        // Unmatched untagged line: keep scanning within timeout.
         continue;
       }
+      if (Date.now() > deadline) throw new Error("imap_read_timeout");
       await new Promise((r) => setTimeout(r, 10));
     }
   }
 
-  async #waitTagged(okPrefix) {
+  async #waitTagged(okPrefix, timeoutMs = 60_000) {
     const lines = [];
+    const deadline = Date.now() + timeoutMs;
+    const tag = String(okPrefix || "").split(/\s+/)[0];
     for (;;) {
-      const line = await this.#waitLine(/.*/);
+      if (Date.now() > deadline) throw new Error("imap_tagged_timeout:" + tag);
+      const line = await this.#waitLine(/.*/, Math.max(1_000, deadline - Date.now()));
       lines.push(line);
       if (line.startsWith(okPrefix)) return lines;
-      if (/^a\d+ NO|^IU\d+ NO/i.test(line) || /^a\d+ BAD|^IU\d+ BAD/i.test(line)) {
+      if (tag && new RegExp("^" + tag + " NO\\b", "i").test(line)) {
+        throw new Error("imap_command_failed:" + line.slice(0, 120));
+      }
+      if (tag && new RegExp("^" + tag + " BAD\\b", "i").test(line)) {
         throw new Error("imap_command_failed:" + line.slice(0, 120));
       }
     }
