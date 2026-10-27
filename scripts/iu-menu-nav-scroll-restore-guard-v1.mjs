@@ -195,7 +195,9 @@ async function goBackToMenu(page) {
     await openMenu(page);
     gate = true;
   }
-  /* Wait until restore hold finishes (visibility + scrollTop). */
+  /* Wait until restore hold finishes (visibility + scrollTop).
+   * Only sample "immediate" after the panel is visible — hidden-state top=0
+   * must not poison the flash check (CI race under parallel pool load). */
   const deadline = Date.now() + 2000;
   let immediate = null;
   let settled = null;
@@ -210,13 +212,14 @@ async function goBackToMenu(page) {
       const max = Math.max(0, (panel.scrollHeight || 0) - (panel.clientHeight || 0));
       return { top: panel.scrollTop || 0, max: max, vis: vis };
     });
-    if (snap && snap.vis !== "hidden" && snap.top > 0) {
-      immediate = immediate || snap;
-      settled = snap;
-      break;
+    if (snap && snap.vis !== "hidden") {
+      if (!immediate) immediate = snap;
+      if (snap.top > 0) {
+        settled = snap;
+        break;
+      }
     }
-    if (snap && !immediate) immediate = snap;
-    settled = snap;
+    if (snap) settled = snap;
     await page.waitForTimeout(50);
   }
   await page.waitForTimeout(200);
