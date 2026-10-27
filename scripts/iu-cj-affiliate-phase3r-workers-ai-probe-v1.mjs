@@ -4,12 +4,17 @@
  * Exit 0 even on FAIL so workflow can continue with deterministic fallback,
  * unless IU_CJ_WORKERS_AI_PROBE_STRICT=1.
  */
-import { resolveWorkersAiConfig, WORKERS_AI_MODEL_CZECH_CANDIDATE } from "./iu-cj-affiliate-phase2-workers-ai-adapter.mjs";
+import {
+  resolveWorkersAiConfig,
+  resolveCloudflareAiApiToken,
+  WORKERS_AI_MODEL_CZECH_CANDIDATE,
+  workersAiHttpClassifyEvent,
+} from "./iu-cj-affiliate-phase2-workers-ai-adapter.mjs";
 import { AI_EVENT_JSON_SCHEMA, buildAiEventPrompt } from "./iu-cj-affiliate-phase3r-ai-email-event-v1.mjs";
-import { workersAiHttpClassifyEvent } from "./iu-cj-affiliate-phase2-workers-ai-adapter.mjs";
 
 const env = process.env;
 const config = resolveWorkersAiConfig(env);
+const tokenMeta = resolveCloudflareAiApiToken(env);
 const strict = env.IU_CJ_WORKERS_AI_PROBE_STRICT === "1";
 
 const base = {
@@ -18,7 +23,8 @@ const base = {
   enabled: config.enabled === true,
   httpExecuteArmed: config.httpExecuteArmed === true,
   hasAccountId: Boolean(config.accountId),
-  hasApiToken: Boolean(String(env.CLOUDFLARE_API_TOKEN || "").trim()),
+  hasApiToken: tokenMeta.present,
+  apiTokenSecretName: tokenMeta.name || null,
   liveEnabled: false,
   publishArmed: false,
 };

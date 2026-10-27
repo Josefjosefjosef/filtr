@@ -10,17 +10,40 @@ import { validateAiOfferJson } from "./iu-cj-affiliate-phase2-ai-offer-evidence-
 
 export const WORKERS_AI_MODEL_CZECH_CANDIDATE = "@cf/meta/llama-3.1-8b-instruct";
 
+/** Prefer dedicated Workers AI token; never log token values. */
+export function resolveCloudflareAiApiToken(env = process.env) {
+  const candidates = [
+    "IU_CJ_WORKERS_AI_API_TOKEN",
+    "CLOUDFLARE_CJ_STAGING_API_TOKEN",
+    "CLOUDFLARE_ADS_API_TOKEN",
+    "CLOUDFLARE_API_TOKEN",
+  ];
+  for (const name of candidates) {
+    const v = String(env[name] || "").trim();
+    if (v) return { name, present: true };
+  }
+  return { name: null, present: false };
+}
+
+export function readCloudflareAiApiToken(env = process.env) {
+  const meta = resolveCloudflareAiApiToken(env);
+  if (!meta.name) return "";
+  return String(env[meta.name] || "").trim();
+}
+
 export function resolveWorkersAiConfig(env = process.env) {
   const offline = env.IU_CJ_EMAIL_INGEST_OFFLINE === "1" || env.IU_CJ_GITHUB_INGEST_DRY_RUN === "1";
   const enabled = env.IU_CJ_WORKERS_AI_ENABLED === "1" && !offline;
   const httpExecuteArmed = env.IU_CJ_WORKERS_AI_HTTP_EXECUTE === "1";
+  const tokenMeta = resolveCloudflareAiApiToken(env);
   return {
     backend: enabled && httpExecuteArmed ? "workers-http" : "mock",
     enabled,
     httpExecuteArmed,
     offlineForced: offline,
     accountId: env.CLOUDFLARE_ACCOUNT_ID || null,
-    apiTokenSecret: "CLOUDFLARE_API_TOKEN",
+    apiTokenSecret: tokenMeta.name || "CLOUDFLARE_API_TOKEN",
+    hasApiToken: tokenMeta.present,
     model: env.IU_CJ_WORKERS_AI_MODEL || WORKERS_AI_MODEL_CZECH_CANDIDATE,
     maxCallsPerRun: Number(env.IU_CJ_AI_MAX_CALLS_PER_RUN || 40),
     maxCallsPerDay: Number(env.IU_CJ_AI_MAX_CALLS_PER_DAY || 80),
@@ -117,11 +140,29 @@ async function workersAiHttpRun(safeText, options = {}) {
   bodies.push({ prompt });
 
   const headers = { "Content-Type": "application/json" };
-  if (!testUrl) {
-    headers.Authorization = "Bearer " + String(env.CLOUDFLARE_API_TOKEN || "");
+  const tokenCandidates = [
+    "IU_CJ_WORKERS_AI_API_TOKEN",
+    "CLOUDFLARE_CJ_STAGING_API_TOKEN",
+    "CLOUDFLARE_ADS_API_TOKEN",
+    "CLOUDFLARE_API_TOKEN",
+  ]
+    .map((name) => ({ name, token: String(env[name] || "").trim() }))
+    .filter((t) => t.token);
+  if (!testUrl && tokenCandidates.length === 0) {
+    return {
+      ok: false,
+      state: AI_PROCESSING_STATE.ai_failed,
+      payload: null,
+      reason: "cloudflare_api_token_missing",
+      blocked: true,
+      aiActuallyRan: false,
+    };
   }
 
   let lastFail = null;
+  const authLoop = testUrl ? [{ name: "test", token: null }] : tokenCandidates;
+  for (const auth of authLoop) {
+    if (!testUrl) headers.Authorization = "Bearer " + auth.token;
   for (const body of bodies) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), config.timeoutMs);
@@ -139,6 +180,7 @@ async function workersAiHttpRun(safeText, options = {}) {
           payload: null,
           aiActuallyRan: true,
           reason: "http_429",
+          apiTokenSecretName: auth.name,
         };
       }
       if (!res.ok) {
@@ -149,9 +191,10 @@ async function workersAiHttpRun(safeText, options = {}) {
           httpStatus: res.status,
           aiActuallyRan: true,
           reason: "http_" + res.status,
+          apiTokenSecretName: auth.name,
         };
-        // try next body shape on 400/415; stop on auth errors
-        if (res.status === 401 || res.status === 403) return lastFail;
+        // try next token on auth errors; otherwise try next body shape
+        if (res.status === 401 || res.status === 403) break;
         continue;
       }
       const json = await res.json();
@@ -209,7 +252,8 @@ async function workersAiHttpRun(safeText, options = {}) {
     } finally {
       clearTimeout(timer);
     }
-  }
+  } // bodies
+  } // authLoop
   return (
     lastFail || {
       ok: false,

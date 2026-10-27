@@ -256,6 +256,10 @@ export async function classifyEmailRowToEvents(row = {}, options = {}) {
 
   const env = options.env || process.env;
   const config = resolveWorkersAiConfig(env);
+  const quota = {
+    ...(options.quota || {}),
+    callsUsed: Number(options.quota?.callsUsed || 0),
+  };
   if (options.forceDeterministic === true) {
     const fb = deterministicEventFallback(row);
     return {
@@ -266,13 +270,14 @@ export async function classifyEmailRowToEvents(row = {}, options = {}) {
       aiError: "ai_call_cap_reached",
       events: [fb],
       state: AI_PROCESSING_STATE.skipped_deterministic,
+      quotaAfter: quota,
     };
   }
   const useMock = options.useMock === true || config.backend === "mock";
 
   let raw;
   if (useMock) {
-    raw = mockWorkersAiClassifyEvent(safe, { ...options, categories: row.categories });
+    raw = mockWorkersAiClassifyEvent(safe, { ...options, categories: row.categories, quota });
   } else {
     raw = await workersAiHttpClassifyEvent(safe, {
       ...options,

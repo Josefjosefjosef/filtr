@@ -153,12 +153,33 @@ export async function runPhase3rPipeline(options = {}) {
 
   for (const row of classifyRows) {
     const overCap = !useMockAi && quota.callsUsed >= maxAiCalls;
-    const cls = await classifyEmailRowToEvents(row, {
-      useMock: useMockAi,
-      forceDeterministic: overCap,
-      env,
-      quota,
-    });
+    let cls;
+    try {
+      cls = await classifyEmailRowToEvents(row, {
+        useMock: useMockAi,
+        forceDeterministic: overCap,
+        env,
+        quota,
+      });
+    } catch (e) {
+      cls = {
+        ok: true,
+        backend: "deterministic_fallback",
+        aiActuallyRan: false,
+        aiHttpAttempted: false,
+        aiError: "classify_exception:" + String(e?.message || e).slice(0, 60),
+        events: [
+          {
+            eventType: "UNTRUSTED_OR_UNCLEAR",
+            partnerName: null,
+            advertiserId: null,
+            confidence: "low",
+            source: "email",
+            evidenceSpan: "classify_exception",
+          },
+        ],
+      };
+    }
     if (overCap) aiSkipCapCount += 1;
     if (cls.aiActuallyRan) aiActuallyRan = true;
     if (cls.aiHttpAttempted) aiHttpAttempted = true;
