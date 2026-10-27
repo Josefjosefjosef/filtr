@@ -236,6 +236,12 @@ jobs:
               aiFallbackCount:j.ai&&j.ai.fallbackCount,
               aiSkippedOverCap:j.ai&&j.ai.skippedOverCap,
               aiErrorCounts:j.ai&&j.ai.errorCounts,
+              aiOutcomeCounts:j.ai&&j.ai.outcomeCounts,
+              aiLiveSuccessCount:j.ai&&j.ai.liveSuccessCount,
+              aiFallbackUsedCount:j.ai&&j.ai.fallbackUsedCount,
+              aiAuthFailedCount:j.ai&&j.ai.authFailedCount,
+              aiClaimedAsLiveAi:j.ai&&j.ai.claimedAsLiveAi,
+              mailboxAudit:j.mailboxAudit||null,
               cjPassedToRobot:j.cjReconcile&&j.cjReconcile.passedToRobot,
               cjVerifiedViaApi:j.cjReconcile&&j.cjReconcile.verifiedViaCjApi,
               stagingAddPlans:j.cjReconcile&&j.cjReconcile.stagingAddPlans,
@@ -258,6 +264,10 @@ jobs:
           echo "MESSAGES_CLASSIFIED=$(node -e 'console.log(JSON.parse(require("fs").readFileSync("/tmp/iu-phase3r-pipeline-summary.json","utf8")).messagesClassified)')"
           echo "RELEVANT_HINTS=$(node -e 'console.log(JSON.parse(require("fs").readFileSync("/tmp/iu-phase3r-pipeline-summary.json","utf8")).relevantHints)')"
           echo "AI_ACTUALLY_RAN=$(node -e 'console.log(JSON.parse(require("fs").readFileSync("/tmp/iu-phase3r-pipeline-summary.json","utf8")).aiActuallyRan)')"
+          echo "AI_CLAIMED_AS_LIVE=$(node -e 'console.log(JSON.parse(require("fs").readFileSync("/tmp/iu-phase3r-pipeline-summary.json","utf8")).aiClaimedAsLiveAi)')"
+          echo "AI_LIVE_SUCCESS=$(node -e 'console.log(JSON.parse(require("fs").readFileSync("/tmp/iu-phase3r-pipeline-summary.json","utf8")).aiLiveSuccessCount)')"
+          echo "AI_FALLBACK_USED=$(node -e 'console.log(JSON.parse(require("fs").readFileSync("/tmp/iu-phase3r-pipeline-summary.json","utf8")).aiFallbackUsedCount)')"
+          echo "AI_AUTH_FAILED=$(node -e 'console.log(JSON.parse(require("fs").readFileSync("/tmp/iu-phase3r-pipeline-summary.json","utf8")).aiAuthFailedCount)')"
           echo "AI_BACKEND=$(node -e 'console.log(JSON.parse(require("fs").readFileSync("/tmp/iu-phase3r-pipeline-summary.json","utf8")).aiBackend)')"
           echo "CJ_PASSED=$(node -e 'console.log(JSON.parse(require("fs").readFileSync("/tmp/iu-phase3r-pipeline-summary.json","utf8")).cjPassedToRobot)')"
           echo "CJ_VERIFIED=$(node -e 'console.log(JSON.parse(require("fs").readFileSync("/tmp/iu-phase3r-pipeline-summary.json","utf8")).cjVerifiedViaApi)')"

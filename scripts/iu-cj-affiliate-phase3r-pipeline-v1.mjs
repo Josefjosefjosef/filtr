@@ -15,6 +15,8 @@ import {
   aiEventsToCjHints,
   describeWorkersAiCostModel,
   AI_EVENT_TYPE,
+  AI_OUTCOME,
+  resolveAiOutcome,
 } from "./iu-cj-affiliate-phase3r-ai-email-event-v1.mjs";
 import { reconcileAiEventBatch } from "./iu-cj-affiliate-phase3r-ai-to-cj-reconcile-v1.mjs";
 
@@ -149,6 +151,8 @@ export async function runPhase3rPipeline(options = {}) {
   let aiFallbackCount = 0;
   let aiSkipCapCount = 0;
   const aiErrorCounts = Object.create(null);
+  const aiOutcomeCounts = Object.create(null);
+  for (const k of Object.values(AI_OUTCOME)) aiOutcomeCounts[k] = 0;
   const allEvents = [];
 
   for (const row of classifyRows) {
@@ -199,6 +203,8 @@ export async function runPhase3rPipeline(options = {}) {
       const key = String(cls.aiError).slice(0, 80);
       aiErrorCounts[key] = (aiErrorCounts[key] || 0) + 1;
     }
+    const outcome = cls.aiOutcome || resolveAiOutcome(cls);
+    aiOutcomeCounts[outcome] = (aiOutcomeCounts[outcome] || 0) + 1;
     if (cls.model) aiModel = cls.model;
     if (cls?.quotaAfter?.callsUsed != null) quota.callsUsed = cls.quotaAfter.callsUsed;
     else if (cls.aiActuallyRan && cls.backend === "workers-ai") quota.callsUsed += 1;
@@ -259,7 +265,26 @@ export async function runPhase3rPipeline(options = {}) {
       fallbackCount: aiFallbackCount,
       skippedOverCap: aiSkipCapCount,
       errorCounts: aiErrorCounts,
+      outcomeCounts: aiOutcomeCounts,
+      liveSuccessCount: aiOutcomeCounts[AI_OUTCOME.AI_LIVE_SUCCESS] || 0,
+      fallbackUsedCount: aiOutcomeCounts[AI_OUTCOME.AI_FALLBACK_USED] || 0,
+      authFailedCount: aiOutcomeCounts[AI_OUTCOME.AI_AUTH_FAILED] || 0,
+      // Never claim live AI when only fallback ran.
+      claimedAsLiveAi: (aiOutcomeCounts[AI_OUTCOME.AI_LIVE_SUCCESS] || 0) > 0,
       classifiedSample: classified.slice(0, 30),
+    },
+    mailboxAudit: {
+      inventoryUids: messagesChecked,
+      readThisRun: messagesRead,
+      classifiedThisRun: classified.length,
+      alreadyProcessedBeforeRun:
+        typeof messagesChecked === "number" && typeof messagesRead === "number"
+          ? Math.max(0, messagesChecked - messagesRead - (lastPoll?.checkpoint?.pendingAfterBatch || 0))
+          : null,
+      pendingAfter: lastPoll?.checkpoint?.pendingAfterBatch ?? null,
+      complete: lastPoll?.checkpoint?.complete === true,
+      note:
+        "inventoryUids = all mailbox UIDs; readThisRun = UIDs fetched this run; gap usually = prior checkpoint progress (+ any skipped)",
     },
     cjReconcile: {
       passedToRobot: reconcile.counts?.passedToRobot ?? 0,
