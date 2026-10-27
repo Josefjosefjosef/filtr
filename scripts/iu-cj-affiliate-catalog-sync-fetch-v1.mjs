@@ -149,7 +149,8 @@ export async function runCatalogSyncFetch(opts = {}) {
         audit.advertiserTotalMatched = adv.totalMatched;
       }
 
-      const ls = await fetchPagedXml({
+      // Coupons (offers) + Text Links (partner button click URLs). Never invent click URLs.
+      const lsCoupon = await fetchPagedXml({
         baseUrl: CJ_LINK_SEARCH_BASE,
         queryBase:
           "website-id=" +
@@ -162,17 +163,91 @@ export async function runCatalogSyncFetch(opts = {}) {
         maxPages: maxLinkPages,
         audit,
       });
-      if (!ls.ok) {
+      const lsText = await fetchPagedXml({
+        baseUrl: CJ_LINK_SEARCH_BASE,
+        queryBase:
+          "website-id=" +
+          encodeURIComponent(websitePid) +
+          "&advertiser-ids=joined&link-type=" +
+          encodeURIComponent("Text Link"),
+        pat,
+        parseBlocks: parseLinkBlocks,
+        parseRecord: parseLinkRecord,
+        kind: "link_search_text_joined",
+        maxPages: maxLinkPages,
+        audit,
+      });
+      if (!lsCoupon.ok) {
         apiOutage = true;
-        audit.errors.push("link_search:" + ls.reason);
-      } else {
-        links = ls.records;
-        audit.linkTotalMatched = ls.totalMatched;
-        if (ls.emptySuccess && emptyVerified) {
+        audit.errors.push("link_search_coupon:" + lsCoupon.reason);
+      }
+      if (!lsText.ok) {
+        apiOutage = true;
+        audit.errors.push("link_search_text:" + lsText.reason);
+      }
+      if (lsCoupon.ok || lsText.ok) {
+        const byId = new Map();
+        for (const L of [...(lsCoupon.ok ? lsCoupon.records : []), ...(lsText.ok ? lsText.records : [])]) {
+          const lid = String(L.linkId || L.id || "");
+          if (lid && !byId.has(lid)) byId.set(lid, L);
+        }
+        links = [...byId.values()];
+        audit.linkTotalMatchedCoupon = lsCoupon.ok ? lsCoupon.totalMatched : null;
+        audit.linkTotalMatchedText = lsText.ok ? lsText.totalMatched : null;
+        audit.linkTotalMatched = links.length;
+        if (
+          lsCoupon.ok &&
+          lsCoupon.emptySuccess &&
+          lsText.ok &&
+          lsText.emptySuccess &&
+          emptyVerified
+        ) {
           audit.errors.push("empty_result_verified_both");
-        } else if (!ls.emptySuccess && links.length === 0 && (ls.totalMatched || 0) > 0) {
+        } else if (
+          links.length === 0 &&
+          ((lsCoupon.ok && (lsCoupon.totalMatched || 0) > 0) ||
+            (lsText.ok && (lsText.totalMatched || 0) > 0))
+        ) {
           apiOutage = true;
           audit.errors.push("link_search_empty_but_total_matched");
+        }
+      }
+
+      // Optional targeted probe (comma-separated CIDs) — all link types, no invented URLs.
+      const probeIds = String(env.IU_CJ_SYNC_PROBE_ADVERTISER_IDS || "")
+        .split(",")
+        .map((s) => s.trim())
+        .filter((s) => /^\d+$/.test(s));
+      if (probeIds.length > 0) {
+        const lsProbe = await fetchPagedXml({
+          baseUrl: CJ_LINK_SEARCH_BASE,
+          queryBase:
+            "website-id=" +
+            encodeURIComponent(websitePid) +
+            "&advertiser-ids=" +
+            encodeURIComponent(probeIds.join(",")),
+          pat,
+          parseBlocks: parseLinkBlocks,
+          parseRecord: parseLinkRecord,
+          kind: "link_search_probe_advertisers",
+          maxPages: Math.min(10, maxLinkPages),
+          audit,
+        });
+        audit.probeAdvertiserIds = probeIds;
+        if (!lsProbe.ok) {
+          audit.errors.push("link_search_probe:" + lsProbe.reason);
+          // Probe failure does not mark full apiOutage when coupon/text already succeeded.
+        } else {
+          const byId = new Map(links.map((L) => [String(L.linkId || L.id || ""), L]));
+          for (const L of lsProbe.records) {
+            const lid = String(L.linkId || L.id || "");
+            if (lid && !byId.has(lid)) {
+              byId.set(lid, L);
+              links.push(L);
+            }
+          }
+          audit.linkTotalMatchedProbe = lsProbe.totalMatched;
+          audit.linkTotalMatched = links.length;
         }
       }
     } catch (e) {

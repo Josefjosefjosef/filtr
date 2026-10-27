@@ -124,6 +124,10 @@ jobs:
           node scripts/iu-cj-affiliate-phase3o-baked-cid-resolve-v1-selftest.mjs
           node scripts/iu-cj-affiliate-phase3o-forpsi-ready-v1.mjs
           node scripts/iu-cj-affiliate-phase3o-live-verify-v1.mjs
+      - name: Phase 3P migration plan + Forpsi runbook + live-verify (DISARMED)
+        run: |
+          node scripts/iu-cj-affiliate-phase3p-forpsi-operator-runbook-v1.mjs
+          node scripts/iu-cj-affiliate-phase3p-live-verify-v1.mjs
 
   fetch-staging:
     needs: selftest
@@ -136,6 +140,8 @@ jobs:
       # Schedule must live-fetch (read-only). Publish/promote/R2 stay disarmed unless dispatch arms them.
       IU_CJ_SYNC_HTTP_EXECUTE: ${{ (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.execute_live_fetch == '1')) && '1' || '0' }}
       IU_CJ_SYNC_REQ_SPACING_MS: "2400"
+      # Targeted all-types Link Search for known missing-URL joined partners (read-only).
+      IU_CJ_SYNC_PROBE_ADVERTISER_IDS: "6466592,5578976,7804601,5725783"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

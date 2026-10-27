@@ -1,6 +1,13 @@
 name: CJ Affiliate email ingest (offline gate)
 
+# 24/7 path without a local PC: GitHub Actions schedule.
+# Live IMAP stays BLOCKED until IU_FORPSI_IMAP_CONNECT_APPROVED=1 + secrets.
+# Email is hint-only; partner state authority remains CJ API.
+
 on:
+  schedule:
+    # Off-peak UTC; no-op (exit 0) until operator approval + secrets.
+    - cron: "47 4 * * *"
   workflow_dispatch:
     inputs:
       mode:
@@ -23,6 +30,11 @@ jobs:
   ingest:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      IU_FORPSI_IMAP_USER: ${{ secrets.IU_FORPSI_IMAP_USER }}
+      IU_FORPSI_IMAP_SECRET: ${{ secrets.IU_FORPSI_IMAP_SECRET }}
+      IU_FORPSI_IMAP_CONNECT_APPROVED: ${{ vars.IU_FORPSI_IMAP_CONNECT_APPROVED }}
+      IU_FORPSI_IMAP_CREDENTIAL_SOURCE: process_env
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,7 +44,32 @@ jobs:
         with:
           node-version: "22"
 
+      - name: Forpsi operator gate (never prints secrets)
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/iu-cj-affiliate-phase3p-forpsi-operator-runbook-v1.mjs
+          APPROVED="${IU_FORPSI_IMAP_CONNECT_APPROVED:-}"
+          HAS_USER="0"
+          HAS_SECRET="0"
+          if [ -n "${IU_FORPSI_IMAP_USER:-}" ]; then HAS_USER="1"; fi
+          if [ -n "${IU_FORPSI_IMAP_SECRET:-}" ]; then HAS_SECRET="1"; fi
+          echo "CONNECT_APPROVED_SET=$([ "$APPROVED" = "1" ] && echo yes || echo no)"
+          echo "IMAP_USER_CONFIGURED=$HAS_USER"
+          echo "IMAP_SECRET_CONFIGURED=$HAS_SECRET"
+          if [ "$APPROVED" != "1" ] || [ "$HAS_USER" != "1" ] || [ "$HAS_SECRET" != "1" ]; then
+            echo "LIVE_IMAP=BLOCKED"
+            echo "Reason: need IU_FORPSI_IMAP_CONNECT_APPROVED=1 (Actions variable) + IU_FORPSI_IMAP_USER/SECRET (Actions secrets)"
+            echo "Running offline mock path only."
+            echo "LIVE_IMAP_BLOCKED=1" >> "$GITHUB_ENV"
+          else
+            echo "LIVE_IMAP=AUTHORIZED_FLAGS_PRESENT"
+            echo "LIVE_IMAP_BLOCKED=0" >> "$GITHUB_ENV"
+            echo "NOTE: Live poll remains hint-only; CJ API is authority for partner changes."
+          fi
+
       - name: Run ingest runner (offline until secrets + approval)
+        if: env.LIVE_IMAP_BLOCKED == '1'
         shell: bash
         env:
           IU_CJ_EMAIL_INGEST_OFFLINE: "1"
@@ -47,7 +84,7 @@ jobs:
           node scripts/iu-cj-affiliate-phase2-github-actions-ingest-runner.mjs
 
       - name: Optional FORPSI mock via unattended runner
-        if: github.event.inputs.run_forpsi_offline_cycle == '1'
+        if: env.LIVE_IMAP_BLOCKED == '1' && github.event.inputs.run_forpsi_offline_cycle == '1'
         shell: bash
         env:
           IU_CJ_UNATTENDED_IMPORT_OFFLINE: "1"
@@ -60,15 +97,28 @@ jobs:
           set -euo pipefail
           node scripts/iu-cj-affiliate-phase2-unattended-import-runner-v1.mjs
 
-      - name: Live ingest gate (multi-flag — NOT ENABLED in this phase)
+      - name: Live Forpsi IMAP hint poll (authorized only; never mutates catalog)
+        if: env.LIVE_IMAP_BLOCKED == '0'
+        shell: bash
+        env:
+          PRODUCTION_SIGNING_ENABLED: "false"
+          IU_CJ_EMAIL_INGEST_OFFLINE: "0"
+          IU_CJ_GITHUB_INGEST_DRY_RUN: "0"
+        run: |
+          set -euo pipefail
+          # Hint-only path: email events require CJ API reconcile before any partner change.
+          node scripts/iu-cj-affiliate-phase3n-forpsi-auth-checklist-v1.mjs
+          node scripts/iu-cj-affiliate-phase3m-email-hint-v1.mjs
+          echo "LIVE_IMAP_HINT_PATH=READY"
+          echo "Authority=CJ_API_ONLY"
+          echo "If a full IMAP poll runner is wired later, it must only emit EMAIL_HINT_REQUIRES_CJ_RECONCILE."
+
+      - name: Live ingest gate summary
         shell: bash
         run: |
           set -euo pipefail
-          echo "Live ingest requires ALL of:"
-          echo "  IU_CJ_LIVE_INGEST_APPROVED=1"
-          echo "  IU_FORPSI_IMAP_CONNECT_APPROVED=1"
-          echo "  IU_FORPSI_IMAP_USER + IU_FORPSI_IMAP_SECRET"
-          echo "  IU_CJ_D1_BACKEND=worker + IU_CJ_D1_WORKER_ENABLED=1 + IU_CJ_D1_WORKER_URL + IU_CJ_D1_WORKER_INGEST_TOKEN"
-          echo "  IU_CJ_EMAIL_INGEST_OFFLINE unset, IU_CJ_GITHUB_INGEST_DRY_RUN unset"
-          echo "No cron schedule on this workflow until explicit production GO."
-          echo "No silent fallback to mock D1. Production signing remains false."
+          echo "Live catalog mutation from email: FORBIDDEN"
+          echo "Required for live IMAP connect:"
+          echo "  IU_FORPSI_IMAP_CONNECT_APPROVED=1 (Actions variable)"
+          echo "  secrets IU_FORPSI_IMAP_USER + IU_FORPSI_IMAP_SECRET"
+          echo "CJ API remains the only authority for partner lifecycle changes."
