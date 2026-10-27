@@ -156,13 +156,23 @@ export function planBakedMigrationUnderManaged({
   const decisions = [];
   const migrateSlice = [];
   const joinedById = new Map(joined.map((j) => [String(j.advertiserId), j]));
-  const nameToId = new Map();
+  const confirmedNameToId = new Map();
   for (const [name, id] of Object.entries(confirmedNameToAdvertiserId || {})) {
-    nameToId.set(normalizePartnerBrand(name), String(id));
+    const n = normalizePartnerBrand(name);
+    if (n) confirmedNameToId.set(n, String(id));
   }
+  const joinedNameIds = new Map(); // brand -> Set(advertiserId)
   for (const j of joined) {
     const n = normalizePartnerBrand(j.advertiserName || j.partnerName || "");
-    if (n && !nameToId.has(n)) nameToId.set(n, String(j.advertiserId));
+    if (!n) continue;
+    if (!joinedNameIds.has(n)) joinedNameIds.set(n, new Set());
+    joinedNameIds.get(n).add(String(j.advertiserId));
+  }
+  const nameToId = new Map(confirmedNameToId);
+  for (const [n, ids] of joinedNameIds.entries()) {
+    if (nameToId.has(n)) continue; // confirmed wins
+    if (ids.size === 1) nameToId.set(n, [...ids][0]);
+    // ids.size > 1 → leave unresolved → MANUAL_REVIEW for baked-without-CID
   }
 
   const seen = new Set();
