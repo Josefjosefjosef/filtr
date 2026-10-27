@@ -414,13 +414,13 @@
   ],
   "chmiCapV2": {
     "mode": "active",
-    "lastRunAt": "2026-10-27T14:54:16.570Z",
-    "lastSuccessAt": "2026-10-27T14:54:19.979Z",
-    "lastChangedAt": "2026-10-27T09:01:15.475Z",
+    "lastRunAt": "2026-10-27T17:41:14.486Z",
+    "lastSuccessAt": "2026-10-27T17:41:17.682Z",
+    "lastChangedAt": "2026-10-27T17:41:16.929Z",
     "lastError": null,
     "status": "not_modified",
-    "etag": "\"6ae06561-17a8a6\"",
-    "lastModified": "Tue, 27 Oct 2026 08:48:33 GMT",
+    "etag": "\"6ae0d43e-ecb8\"",
+    "lastModified": "Tue, 27 Oct 2026 16:41:34 GMT",
     "consecutiveErrors": 0,
     "backoffUntil": null,
     "activeCount": 3,
@@ -433,11 +433,11 @@
     "totalItems": 3,
     "sourceCount": 2,
     "activeSourceCount": 1,
-    "updateCount": 0,
+    "updateCount": 1,
     "alertCount": 0,
     "cancelMsgCount": 0,
     "quarantineCount": 0,
-    "validCount": 0,
+    "validCount": 1,
     "rejectedCount": 0,
     "discoveryType": "opendata_active_streams",
     "discoveryRole": "open_data_file_distribution_discovery_not_api",
@@ -445,28 +445,28 @@
     "discoveryMaxFiles": null,
     "discoveryFixedLimit": false,
     "productStreams": [
-      "50",
-      "70"
+      "70",
+      "50"
     ],
     "streamCount": 2,
     "completeness": {
-      "capMessages": null,
-      "infoBlocks": null,
+      "capMessages": 1,
+      "infoBlocks": 4,
       "logicalAlerts": 3,
       "uniqueEvents": [
         "Stav sucha",
         "Hydrologické sucho"
       ],
-      "totalAreas": 160,
-      "mappedAreas": 160,
+      "totalAreas": 33,
+      "mappedAreas": 142,
       "unmappedAreas": 0,
       "mappingCoveragePercent": 100,
       "publishedActive": 3,
       "publishedScheduled": 0,
       "publishableCount": 3,
       "productStreams": [
-        "50",
-        "70"
+        "70",
+        "50"
       ],
       "streamCount": 2,
       "missingStreamCache": 0,
@@ -475,38 +475,38 @@
       "cancelledCount": 0
     },
     "alarms": [],
-    "lastCapSent": "2026-10-27T09:48:07+01:00",
+    "lastCapSent": "2026-10-27T13:00:00+01:00",
     "bulletinCacheSize": 2,
     "publish": true,
     "publishReason": "ok",
     "productionVerified": false,
-    "runMs": 5932,
+    "runMs": 5643,
     "registryVersion": "cisorp-csu65+cuzk-ui-2026-07-28",
-    "lastSnapshotAt": "2026-10-27T14:54:16.570Z",
+    "lastSnapshotAt": "2026-10-27T17:41:14.486Z",
     "freshness": {
       "slaLimitMs": 900000,
-      "officialFirstSeenAt": "2026-10-22T01:36:04.754Z",
-      "officialLatestSentAt": "2026-10-20T14:00:00+02:00",
-      "officialLatestValidFrom": "2026-10-20T14:00:00+02:00",
-      "discoveredAt": "2026-10-27T14:54:16.570Z",
-      "fetchedAt": "2026-10-27T14:54:16.570Z",
-      "transformedAt": "2026-10-27T14:54:22.502Z",
-      "validatedAt": "2026-10-27T14:54:22.502Z",
-      "publishedAt": "2026-10-27T14:54:16.570Z",
-      "endToEndLagMs": 135364754
+      "officialFirstSeenAt": "2026-10-27T17:41:14.486Z",
+      "officialLatestSentAt": "2026-10-27T13:00:00+01:00",
+      "officialLatestValidFrom": "2026-10-27T13:00:00+01:00",
+      "discoveredAt": "2026-10-27T17:41:14.486Z",
+      "fetchedAt": "2026-10-27T17:41:14.486Z",
+      "transformedAt": "2026-10-27T17:41:20.130Z",
+      "validatedAt": "2026-10-27T17:41:20.130Z",
+      "publishedAt": "2026-10-27T17:41:14.486Z",
+      "endToEndLagMs": 20474486
     },
     "audit": {
       "http": [
         {
-          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_270848.xml",
-          "productKey": "50",
-          "status": 304,
-          "action": "not_modified",
-          "cacheHit": true
+          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_271200.xml",
+          "productKey": "70",
+          "status": 200,
+          "action": "process",
+          "cacheHit": false
         },
         {
-          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_70_201200.xml",
-          "productKey": "70",
+          "url": "https://opendata.chmi.cz/meteorology/weather/alerts/cap/alert_cap_50_270848.xml",
+          "productKey": "50",
           "status": 304,
           "action": "not_modified",
           "cacheHit": true
@@ -516,23 +516,23 @@
         "publish": true,
         "reason": "ok",
         "completeness": {
-          "capMessages": null,
-          "infoBlocks": null,
+          "capMessages": 1,
+          "infoBlocks": 4,
           "logicalAlerts": 3,
           "uniqueEvents": [
             "Stav sucha",
             "Hydrologické sucho"
           ],
-          "totalAreas": 160,
-          "mappedAreas": 160,
+          "totalAreas": 33,
+          "mappedAreas": 142,
           "unmappedAreas": 0,
           "mappingCoveragePercent": 100,
           "publishedActive": 3,
           "publishedScheduled": 0,
           "publishableCount": 3,
           "productStreams": [
-            "50",
-            "70"
+            "70",
+            "50"
           ],
           "streamCount": 2,
           "missingStreamCache": 0,
@@ -543,9 +543,33 @@
         "alarms": [],
         "productionVerified": false
       },
-      "parser": null
+      "parser": {
+        "loaded": 1,
+        "valid": 1,
+        "rejected": 0,
+        "duplicates": 0,
+        "quarantine": 0,
+        "cancels": 0,
+        "updates": 0,
+        "newThreads": 1,
+        "status": "healthy",
+        "alert": 0,
+        "update": 1,
+        "cancel": 0
+      }
     },
     "runHistory": [
+      {
+        "at": "2026-10-27T17:41:14.486Z",
+        "status": "not_modified",
+        "mode": "active",
+        "publish": true,
+        "runMs": 5643,
+        "error": null,
+        "activeCount": 3,
+        "scheduledCount": 0,
+        "publishableCount": 3
+      },
       {
         "at": "2026-10-27T14:54:16.570Z",
         "status": "not_modified",
@@ -1058,17 +1082,6 @@
         "mode": "active",
         "publish": true,
         "runMs": 5209,
-        "error": null,
-        "activeCount": 3,
-        "scheduledCount": 0,
-        "publishableCount": 3
-      },
-      {
-        "at": "2026-10-27T01:11:11.614Z",
-        "status": "not_modified",
-        "mode": "active",
-        "publish": true,
-        "runMs": 4467,
         "error": null,
         "activeCount": 3,
         "scheduledCount": 0,
