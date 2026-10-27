@@ -137,27 +137,50 @@ export async function runPhase3rPipeline(options = {}) {
     }));
   }
 
+  const env = options.env || process.env;
+  const maxAiCalls = Number(env.IU_CJ_AI_MAX_CALLS_PER_RUN || 40);
   const quota = { callsUsed: 0 };
   const classified = [];
   let aiActuallyRan = false;
+  let aiHttpAttempted = false;
   let aiBackend = "none";
   let aiModel = null;
+  let aiSuccessCount = 0;
+  let aiFallbackCount = 0;
+  let aiSkipCapCount = 0;
+  const aiErrorCounts = Object.create(null);
   const allEvents = [];
 
   for (const row of classifyRows) {
+    const overCap = !useMockAi && quota.callsUsed >= maxAiCalls;
     const cls = await classifyEmailRowToEvents(row, {
       useMock: useMockAi,
-      env: options.env || process.env,
+      forceDeterministic: overCap,
+      env,
       quota,
     });
+    if (overCap) aiSkipCapCount += 1;
     if (cls.aiActuallyRan) aiActuallyRan = true;
-    if (cls.backend === "workers-ai" || cls.backend === "mock") {
-      aiBackend = cls.backend;
+    if (cls.aiHttpAttempted) aiHttpAttempted = true;
+    if (cls.backend === "workers-ai") {
+      aiBackend = "workers-ai";
+      aiSuccessCount += 1;
+    } else if (cls.backend === "mock" && aiBackend !== "workers-ai") {
+      aiBackend = "mock";
+      aiSuccessCount += 1;
     } else if (aiBackend === "none" && cls.backend) {
       aiBackend = cls.backend;
     }
+    if (cls.backend === "deterministic_fallback" || cls.backend === "prompt_injection_guard") {
+      aiFallbackCount += 1;
+    }
+    if (cls.aiError) {
+      const key = String(cls.aiError).slice(0, 80);
+      aiErrorCounts[key] = (aiErrorCounts[key] || 0) + 1;
+    }
     if (cls.model) aiModel = cls.model;
     if (cls?.quotaAfter?.callsUsed != null) quota.callsUsed = cls.quotaAfter.callsUsed;
+    else if (cls.aiActuallyRan && cls.backend === "workers-ai") quota.callsUsed += 1;
     const events = cls.events || [];
     for (const ev of events) allEvents.push({ ...ev, uid: row.uid });
     const hints = aiEventsToCjHints(events, {
@@ -205,10 +228,16 @@ export async function runPhase3rPipeline(options = {}) {
     checkpoint: lastPoll?.checkpoint || null,
     ai: {
       aiActuallyRan,
+      aiHttpAttempted,
       backend: aiBackend,
       model: aiModel,
       costModel: describeWorkersAiCostModel(),
       callsUsed: quota.callsUsed,
+      maxCallsPerRun: maxAiCalls,
+      successCount: aiSuccessCount,
+      fallbackCount: aiFallbackCount,
+      skippedOverCap: aiSkipCapCount,
+      errorCounts: aiErrorCounts,
       classifiedSample: classified.slice(0, 30),
     },
     cjReconcile: {
