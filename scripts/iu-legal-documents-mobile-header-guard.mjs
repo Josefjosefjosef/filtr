@@ -152,7 +152,11 @@ async function openHub(page) {
 
 async function openCategory(page, catId) {
   await openHub(page);
-  await page.click(`[data-iu-legal-cat="${catId}"]`);
+  const catSel = `[data-iu-legal-cat="${catId}"]`;
+  /* Hub can paint before category tiles hydrate under parallel CI load. */
+  await page.waitForSelector(catSel, { state: "visible", timeout: 30000 });
+  await page.locator(catSel).scrollIntoViewIfNeeded();
+  await page.click(catSel, { timeout: 15000 });
   await page.waitForFunction(
     (id) => {
       const panel = document.getElementById("iuLegalDocsPanel");
@@ -166,7 +170,10 @@ async function openCategory(page, catId) {
 
 async function openDocument(page, doc) {
   await openCategory(page, doc.category);
-  await page.click(`[data-iu-legal-open-doc="${doc.id}"]`);
+  const docSel = `[data-iu-legal-open-doc="${doc.id}"]`;
+  await page.waitForSelector(docSel, { state: "visible", timeout: 30000 });
+  await page.locator(docSel).scrollIntoViewIfNeeded();
+  await page.click(docSel, { timeout: 15000 });
   await page.waitForFunction(
     (id) => {
       const panel = document.getElementById("iuLegalDocsPanel");

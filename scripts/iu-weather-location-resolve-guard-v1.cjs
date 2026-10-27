@@ -546,9 +546,13 @@ function meteoHasCoords(urls, lat, lon) {
         (meteoHasCoords(newMeteo, BRNO.lat, BRNO.lon) || meteoHasCoords(afterMeteo, BRNO.lat, BRNO.lon));
       while (!dataMoved && Date.now() < cityDeadline) {
         await page.waitForTimeout(250);
+        /* EnsureState alone may not refetch under CI race — force LoadAndRender. */
         await page.evaluate(async () => {
           try {
             if (typeof window.iuWeatherEnsureState === "function") await window.iuWeatherEnsureState();
+          } catch (_) {}
+          try {
+            if (typeof window.iuWeatherLoadAndRender === "function") await window.iuWeatherLoadAndRender();
           } catch (_) {}
         });
         after = await snap(page, "G_city_after_poll");

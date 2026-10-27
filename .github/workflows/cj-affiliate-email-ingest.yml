@@ -42,6 +42,8 @@ jobs:
       IU_FORPSI_IMAP_MAX_BATCHES_PER_RUN: "4"
       # Cloudflare Workers AI (free Neurons; no new paid commitment)
       CLOUDFLARE_ACCOUNT_ID: "577868e9aac9c289e9323100f68fad16"
+      # Dedicated Workers AI token (preferred). Never echo value in logs.
+      IU_CJ_WORKERS_AI_API_TOKEN: ${{ secrets.IU_CJ_WORKERS_AI_API_TOKEN }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_CJ_STAGING_API_TOKEN: ${{ secrets.CLOUDFLARE_CJ_STAGING_API_TOKEN }}
       CLOUDFLARE_ADS_API_TOKEN: ${{ secrets.CLOUDFLARE_ADS_API_TOKEN }}
