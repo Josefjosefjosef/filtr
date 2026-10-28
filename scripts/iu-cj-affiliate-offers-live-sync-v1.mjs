@@ -100,7 +100,10 @@ export const OFFER_CROSS_CATEGORY_RULES = [
   { sectionKey: "aff-sperky-hodinky", re: /\b(hodink|watch(es)?|smartwatch|sperk|jewellery|jewelry)\b/i },
   { sectionKey: "aff-dum-zahrada", re: /\b(zahrad|garden|seka[cč]ka|gril)\b/i },
   { sectionKey: "aff-nabytek", re: /\b(n[aá]bytek|sofa|matrace|sk[rř][ií][nň])\b/i },
-  { sectionKey: "aff-jidlo", re: /\b(potravin|jidlo|food|gourmet|supplement\s*food)\b/i },
+  {
+    sectionKey: "aff-jidlo",
+    re: /\b(potravin|jidlo|gourmet|doplnky?\s+stravy|food\s*(box|delivery|market|shop)|potravinov)\b/i,
+  },
   { sectionKey: "aff-deti-hracky", re: /\b(d[eě]tsk|hra[cč]k|toy|kids?\b|baby)\b/i },
   {
     sectionKey: "aff-cestovni-kancelare",

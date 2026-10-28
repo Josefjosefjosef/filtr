@@ -211,6 +211,16 @@ function expect(name, cond) {
 }
 
 {
+  /* "Skin Food" must not falsely map to aff-jidlo. */
+  const keys = resolveOfferSectionKeys({
+    primarySection: "aff-kosmetika",
+    text: "Weleda Skin Food s 20% slevou",
+  });
+  expect("no_false_jidlo_from_skin_food", !keys.includes("aff-jidlo"));
+  expect("kosmetika_primary", keys.includes("aff-kosmetika"));
+}
+
+{
   /* Partner button stays in A; coupon evidence maps also to B; product to C. */
   const staging = {
     apiOutage: false,
