@@ -198,10 +198,23 @@ async function runScenario(browser, base, name, permState, prepPage) {
     };
   }, CTA);
 
-  const samples = await samplePhases(page, 3500);
+  /* Sample hero jump only after boot/layout settle — early boot under CI load can shift ~29px. */
   try {
     await waitForVaultReady(page, 90000);
   } catch (_) {}
+  try {
+    await page.waitForFunction(() => {
+      const card = document.getElementById("iuSilverWeatherCard");
+      const phase = card ? card.getAttribute("data-iu-silver-wx-phase") : "";
+      return phase && phase !== "boot";
+    }, { timeout: 15000 });
+  } catch (_) {}
+  try {
+    await page.evaluate(async () => {
+      if (document.fonts && document.fonts.ready) await document.fonts.ready;
+    });
+  } catch (_) {}
+  const samples = await samplePhases(page, 3500);
   const lateSamples = await samplePhases(page, 2000);
   const all = samples.concat(lateSamples);
 

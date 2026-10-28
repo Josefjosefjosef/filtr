@@ -139,10 +139,17 @@ async function openHub(page) {
       window.iuLegalDocsOpenSurface();
     }
   });
+  /* renderHub sets hub class BEFORE writing category cards into views — wait for cards. */
   await page.waitForFunction(
     () => {
       const panel = document.getElementById("iuLegalDocsPanel");
-      return panel && !panel.hasAttribute("hidden") && panel.classList.contains("iu-legal-overlay-panel--hub");
+      const cats = document.querySelectorAll("[data-iu-legal-cat]");
+      return (
+        panel &&
+        !panel.hasAttribute("hidden") &&
+        panel.classList.contains("iu-legal-overlay-panel--hub") &&
+        cats.length > 0
+      );
     },
     null,
     { timeout: 30000 },
