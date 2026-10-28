@@ -19,8 +19,19 @@ function expect(id, cond, detail) {
   if (!cond) failures.push(detail ? { id, detail } : id);
 }
 
-expect("stub_live_false", stub.liveEnabled === false);
-expect("stub_empty_sections", Array.isArray(stub.sections) && stub.sections.length === 0);
+expect("stub_schema", stub.schema === "iu-affiliate-cj-offers-public-v1");
+expect("stub_sections_array", Array.isArray(stub.sections));
+if (stub.liveEnabled === true) {
+  const ready = (stub.sections || []).some(
+    (s) =>
+      (s.coupons || []).some((c) => c && c.publicationReady === true) ||
+      (s.actions || []).some((a) => a && a.publicationReady === true) ||
+      (s.products || []).some((p) => p && p.publicationReady === true)
+  );
+  expect("live_stub_has_publication_ready", ready === true);
+} else {
+  expect("stub_disarmed", stub.liveEnabled === false);
+}
 
 /* Minimal DOM + fetch harness */
 const mountState = { html: "", hidden: true, calls: 0 };
