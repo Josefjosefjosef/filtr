@@ -42,6 +42,22 @@ on:
         options:
           - "0"
           - "1"
+      arm_offers_live:
+        description: "Arm offers liveEnabled=true (coupons/actions/products) after validation"
+        required: true
+        default: "0"
+        type: choice
+        options:
+          - "0"
+          - "1"
+      promote_offers_public:
+        description: "Open data-only PR to main with offers-public JSON (Pages path)"
+        required: true
+        default: "0"
+        type: choice
+        options:
+          - "0"
+          - "1"
 
 permissions:
   contents: write
@@ -77,6 +93,8 @@ jobs:
           npm test -- --run src/cj-managed-public.test.ts
       - name: Offers public build selftest (fixture; liveEnabled disarmed)
         run: node scripts/iu-cj-affiliate-offers-public-build-v1-selftest.mjs
+      - name: Offers live-sync selftest (offline fixtures)
+        run: node scripts/iu-cj-affiliate-offers-live-sync-v1-selftest.mjs
       - name: Offers UI + production feature-flag gate selftest
         run: |
           node scripts/iu-cj-affiliate-phase2-offers-preview-ui-selftest.mjs
@@ -439,3 +457,178 @@ jobs:
           echo "NO_AUTO_MERGE_PR=true"
           echo "CHANNEL=cloudflare_r2_via_site_redirects"
           echo "LIVE_ARM_REQUIRES_INFRA_GO=true"
+
+  # Phase 3V: offers/coupons/products from staging (+ optional shoppingProducts sample).
+  # Schedule: rebuild + promote when previous public was live (KEEP_LIVE). First LIVE requires dispatch arm_offers_live=1.
+  offers-live-sync:
+    needs: fetch-staging
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      IU_CJ_PAT: ${{ secrets.IU_CJ_PAT }}
+      IU_CJ_PUBLISHER_CID: ${{ secrets.IU_CJ_PUBLISHER_CID }}
+      IU_CJ_WEBSITE_PID: ${{ secrets.IU_CJ_WEBSITE_PID }}
+      # Promote writes on schedule (KEEP_LIVE) or when dispatch arms offers.
+      IU_CJ_OFFERS_PROMOTE_ARMED: ${{ (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && (inputs.arm_offers_live == '1' || inputs.promote_offers_public == '1'))) && '1' || '0' }}
+      IU_CJ_OFFERS_LIVE_ENABLED: ${{ github.event_name == 'workflow_dispatch' && inputs.arm_offers_live == '1' && '1' || '0' }}
+      IU_CJ_OFFERS_SAMPLE_PRODUCTS: "1"
+      IU_CJ_OFFERS_PRODUCT_PARTNER_LIMIT: "80"
+      IU_CJ_OFFERS_PRODUCT_LIMIT: "3"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Download staging artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: iu-affiliate-cj-staging
+          path: projects/data
+      - name: Restore policy/section-map/offers LKG + prefer LIVE managed-public
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p projects/data
+          for f in \
+            iu-affiliate-slot-policy-v1.json \
+            iu-affiliate-cj-section-map-v1.json \
+            iu-affiliate-cj-offers-public-v1.json
+          do
+            if [ ! -f "projects/data/${f}" ]; then
+              git show "HEAD:projects/data/${f}" > "projects/data/${f}" || true
+            fi
+          done
+          # Prefer R2/public LIVE partner overlay for section mapping (not stale Pages tip).
+          if curl -fsSL "https://infouzel.cz/projects/data/iu-affiliate-cj-managed-public-v1.json" \
+            -o projects/data/iu-affiliate-cj-managed-public-v1.json; then
+            echo "MANAGED_PUBLIC_SOURCE=production_live"
+          else
+            echo "MANAGED_PUBLIC_SOURCE=checkout_fallback"
+          fi
+          python3 - <<'PY'
+          import json
+          mp=json.load(open("projects/data/iu-affiliate-cj-managed-public-v1.json"))
+          print("MANAGED_PUBLIC_PARTNERS", len(mp.get("partners") or []))
+          off=json.load(open("projects/data/iu-affiliate-cj-offers-public-v1.json"))
+          print("PREV_OFFERS_LIVE", off.get("liveEnabled") is True)
+          PY
+      - name: Build/promote offers-public (fail-closed)
+        run: node scripts/iu-cj-affiliate-offers-live-sync-v1.mjs
+      - name: Upload offers artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: iu-affiliate-cj-offers-public
+          path: |
+            projects/data/iu-affiliate-cj-offers-public-v1.json
+            projects/data/iu-affiliate-cj-offers-public-lkg-v1.json
+            projects/data/iu-affiliate-cj-offers-sync-audit-v1.json
+          if-no-files-found: warn
+      - name: Commit offers to sync branch (slim tip preserve)
+        if: env.IU_CJ_OFFERS_PROMOTE_ARMED == '1'
+        shell: bash
+        run: |
+          set -euo pipefail
+          SYNC_BRANCH="data/cj-affiliate-catalog-sync"
+          STASH="${RUNNER_TEMP}/iu-cj-offers"
+          mkdir -p "${STASH}/prev" projects/data
+          for name in managed-public managed-registry staging sync-audit offers-public offers-public-lkg offers-sync-audit; do
+            f="projects/data/iu-affiliate-cj-${name}-v1.json"
+            if [ -f "$f" ]; then cp "$f" "${STASH}/iu-affiliate-cj-${name}-v1.json"; fi
+          done
+          # offers file names differ slightly
+          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json; do
+            if [ -f "projects/data/${f}" ]; then cp "projects/data/${f}" "${STASH}/${f}"; fi
+          done
+          git config user.name "iu-cj-catalog-sync-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "${SYNC_BRANCH}" --depth=1 || true
+          for name in managed-public managed-registry staging sync-audit; do
+            git show "origin/${SYNC_BRANCH}:projects/data/iu-affiliate-cj-${name}-v1.json" \
+              > "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" 2>/dev/null || true
+          done
+          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json; do
+            git show "origin/${SYNC_BRANCH}:projects/data/${f}" > "${STASH}/prev/${f}" 2>/dev/null || true
+          done
+          git checkout --orphan "iu-cj-offers-slim-$$"
+          git reset --hard
+          git clean -fdx
+          mkdir -p projects/data
+          for name in managed-public managed-registry staging sync-audit; do
+            if [ -f "${STASH}/iu-affiliate-cj-${name}-v1.json" ]; then
+              cp "${STASH}/iu-affiliate-cj-${name}-v1.json" "projects/data/iu-affiliate-cj-${name}-v1.json"
+            elif [ -f "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" ]; then
+              cp "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" "projects/data/iu-affiliate-cj-${name}-v1.json"
+            fi
+          done
+          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json; do
+            if [ -f "${STASH}/${f}" ]; then cp "${STASH}/${f}" "projects/data/${f}"
+            elif [ -f "${STASH}/prev/${f}" ]; then cp "${STASH}/prev/${f}" "projects/data/${f}"; fi
+          done
+          git add projects/data/iu-affiliate-cj-*.json
+          if git diff --cached --quiet; then
+            echo "NO_OFFERS_CHANGES"
+            exit 0
+          fi
+          git commit --trailer "Co-authored-by: Cursor <cursoragent@cursor.com>" -m "chore(data): CJ offers-public sync (slim tip)"
+          git push --force origin "HEAD:${SYNC_BRANCH}"
+          echo "OFFERS_SYNC_BRANCH_UPDATED=true"
+
+  promote-offers-public-pr:
+    needs: offers-live-sync
+    if: >
+      github.event_name == 'schedule' ||
+      (github.event_name == 'workflow_dispatch' &&
+       (inputs.arm_offers_live == '1' || inputs.promote_offers_public == '1'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Fetch offers-public from sync branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          SYNC_BRANCH="data/cj-affiliate-catalog-sync"
+          git fetch origin "${SYNC_BRANCH}" --depth=1
+          git show "origin/${SYNC_BRANCH}:projects/data/iu-affiliate-cj-offers-public-v1.json" \
+            > /tmp/iu-offers-public-incoming.json
+          python3 - <<'PY'
+          import json
+          d=json.load(open("/tmp/iu-offers-public-incoming.json"))
+          print("INCOMING_LIVE", d.get("liveEnabled") is True)
+          print("INCOMING_STATS", json.dumps(d.get("stats") or {}))
+          if d.get("ok") is False:
+            raise SystemExit("BLOCKER=OFFERS_DOC_NOT_OK")
+          PY
+      - name: Open data-only offers PR to main
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          BR="data/cj-offers-public-promote-${GITHUB_RUN_ID}"
+          git config user.name "iu-cj-catalog-sync-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "${BR}"
+          mkdir -p projects/data
+          cp /tmp/iu-offers-public-incoming.json projects/data/iu-affiliate-cj-offers-public-v1.json
+          git add projects/data/iu-affiliate-cj-offers-public-v1.json
+          if git diff --cached --quiet; then
+            echo "NO_OFFERS_PUBLIC_CHANGES"
+            exit 0
+          fi
+          if git diff --cached --name-only | grep -Ev '^projects/data/iu-affiliate-cj-offers-public-v1\.json$'; then
+            echo "BLOCKER=UNEXPECTED_OFFERS_PROMOTE_PATHS"
+            git diff --cached --name-only
+            exit 1
+          fi
+          git commit --trailer "Co-authored-by: Cursor <cursoragent@cursor.com>" -m "chore(data): promote CJ offers-public (coupons/actions/products)"
+          git push origin "HEAD:${BR}"
+          BODY=$(printf '%s\n' "## Summary" "- Data-only promote of projects/data/iu-affiliate-cj-offers-public-v1.json" "- Coupons/actions/products publicationReady only" "- Required checks must pass; no admin merge" "" "## What does NOT change" "- Catalog JS, slot policy, MANUAL_PROTECTED, managed-public, secrets")
+          gh pr create --base main --head "${BR}" --title "chore(data): promote CJ offers-public (coupons/actions/products)" --body "${BODY}"
+          echo "OFFERS_PROMOTE_PR_OPENED=true"
