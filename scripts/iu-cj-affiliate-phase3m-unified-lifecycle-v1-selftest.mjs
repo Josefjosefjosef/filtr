@@ -458,8 +458,16 @@ expect(
 // --- 30 paid ads not overwritten ---
 expect("paid_preserved", chipTitles.includes("Paid"));
 
-// --- 34 LIVE disarmed on repo offers ---
-expect("offers_live_false", offersDisarmed.liveEnabled === false);
+// --- 34 repo offers: allow LIVE after Phase 3V promote; sync path stays DISARMED ---
+if (offersDisarmed.liveEnabled === true) {
+  expect(
+    "offers_live_has_ready",
+    (offersDisarmed.stats?.publicationReady || 0) > 0 ||
+      (Array.isArray(offersDisarmed.sections) && offersDisarmed.sections.length > 0)
+  );
+} else {
+  expect("offers_live_false", offersDisarmed.liveEnabled === false);
+}
 expect("sync_disarmed", syncAdd.cjLivePublishing === "DISARMED");
 
 // re-join after ENDED
