@@ -629,18 +629,6 @@ jobs:
           fi
           git commit --trailer "Co-authored-by: Cursor <cursoragent@cursor.com>" -m "chore(data): promote CJ offers-public (coupons/actions/products)"
           git push origin "HEAD:${BR}"
-          gh pr create \
-            --base main \
-            --head "${BR}" \
-            --title "chore(data): promote CJ offers-public (coupons/actions/products)" \
-            --body "## Summary
-          - Data-only promote of \`projects/data/iu-affiliate-cj-offers-public-v1.json\`
-          - Coupons / actions / products with publicationReady only
-          - Required checks must pass; no admin merge
-
-          ## What does NOT change
-          - Catalog JS, slot policy, MANUAL_PROTECTED, managed-public partners, secrets
-          
-
-Made with [Cursor](https://cursor.com)"
+          BODY=$(printf '%s\n' "## Summary" "- Data-only promote of projects/data/iu-affiliate-cj-offers-public-v1.json" "- Coupons/actions/products publicationReady only" "- Required checks must pass; no admin merge" "" "## What does NOT change" "- Catalog JS, slot policy, MANUAL_PROTECTED, managed-public, secrets")
+          gh pr create --base main --head "${BR}" --title "chore(data): promote CJ offers-public (coupons/actions/products)" --body "${BODY}"
           echo "OFFERS_PROMOTE_PR_OPENED=true"

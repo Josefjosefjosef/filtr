@@ -51,24 +51,37 @@
     document.head.appendChild(link);
   }
 
-  function ensureMount() {
-    var mount = document.getElementById("iuAffiliatePhase2Offers");
-    if (mount) return mount;
+  function ensureAffiliateCategoryOrder() {
     var view = document.getElementById("iuAffiliateView");
     if (!view) return null;
-    mount = document.createElement("div");
-    mount.id = "iuAffiliatePhase2Offers";
-    mount.className = "iuAffiliatePhase2Offers";
-    mount.hidden = true;
-    mount.setAttribute("data-iu-aff-phase2-mount", "1");
+    var intro = document.getElementById("iuAffiliateIntro");
     var grid = document.getElementById("iuAffiliateGrid");
-    if (grid && grid.parentNode === view) {
-      if (grid.nextSibling) view.insertBefore(mount, grid.nextSibling);
-      else view.appendChild(mount);
-    } else {
-      view.appendChild(mount);
+    var mount = document.getElementById("iuAffiliatePhase2Offers");
+    if (!mount) {
+      mount = document.createElement("div");
+      mount.id = "iuAffiliatePhase2Offers";
+      mount.className = "iuAffiliatePhase2Offers";
+      mount.hidden = true;
+      mount.setAttribute("data-iu-aff-phase2-mount", "1");
     }
+    var note =
+      view.querySelector && typeof view.querySelector === "function"
+        ? view.querySelector(".iuAffiliatePlaceholderNote")
+        : null;
+    var disclosure = document.getElementById("iuAffiliateDisclosure");
+    var seo = document.getElementById("iuAffiliateSeo");
+    /* Contract: intro → partner buttons → offers → note → legal/disclosure → SEO (always last). */
+    if (intro) view.appendChild(intro);
+    if (grid) view.appendChild(grid);
+    view.appendChild(mount);
+    if (note) view.appendChild(note);
+    if (disclosure) view.appendChild(disclosure);
+    if (seo) view.appendChild(seo);
     return mount;
+  }
+
+  function ensureMount() {
+    return ensureAffiliateCategoryOrder();
   }
 
   function clearMount(mount) {
@@ -471,6 +484,10 @@
 
   window.iuAffiliatePhase2OffersClear = function () {
     clearMount(document.getElementById("iuAffiliatePhase2Offers"));
+  };
+
+  window.iuAffiliatePhase2OffersEnsureOrder = function () {
+    return ensureAffiliateCategoryOrder();
   };
 
   if (previewEnabled()) {

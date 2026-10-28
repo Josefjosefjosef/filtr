@@ -78,6 +78,68 @@ function isCouponLink(link) {
   return /coupon/.test(t);
 }
 
+/**
+ * Cross-category offer mapping: partner main button stays in one section,
+ * but individual offers/products may map to additional relevant sections
+ * when title/description evidence is strong. Never invents categories.
+ */
+export const OFFER_CROSS_CATEGORY_RULES = [
+  { sectionKey: "aff-boty", re: /\b(bot[ay]|tenisk|obuv|shoes?|sneakers?|boots?)\b/i },
+  {
+    sectionKey: "aff-sportovni-obleceni",
+    re: /\b(sportovn[ií]\s+oble[cč]|running\s+jacket|sport\s*(wear|apparel)|leggins|mikina\s+sport)\b/i,
+  },
+  {
+    sectionKey: "aff-sport-outdoor",
+    re: /\b(stan|turistik|outdoor|camping|trekking|hiking|batoh\s+turist)\b/i,
+  },
+  { sectionKey: "aff-moda", re: /\b(m[oó]da|fashion|oble[cč]en[ií]|apparel|dress|sukn[eě])\b/i },
+  { sectionKey: "aff-kosmetika", re: /\b(kosmetik|makeup|parf[eé]m|skin\s*care|kr[eé]m)\b/i },
+  { sectionKey: "aff-elektro", re: /\b(notebook|laptop|televize|sluch[aá]tk|elektro)\b/i },
+  { sectionKey: "aff-mobily", re: /\b(mobil|smartphone|iphone|android\s*phone)\b/i },
+  { sectionKey: "aff-sperky-hodinky", re: /\b(hodink|watch(es)?|smartwatch|sperk|jewellery|jewelry)\b/i },
+  { sectionKey: "aff-dum-zahrada", re: /\b(zahrad|garden|seka[cč]ka|gril)\b/i },
+  { sectionKey: "aff-nabytek", re: /\b(n[aá]bytek|sofa|matrace|sk[rř][ií][nň])\b/i },
+  { sectionKey: "aff-jidlo", re: /\b(potravin|jidlo|food|gourmet|supplement\s*food)\b/i },
+  { sectionKey: "aff-deti-hracky", re: /\b(d[eě]tsk|hra[cč]k|toy|kids?\b|baby)\b/i },
+  {
+    sectionKey: "aff-cestovni-kancelare",
+    re: /\b(z[aá]jezd|dovolen[aá]|package\s*tour|cestovn[ií]\s+kancel[aá][rř])\b/i,
+  },
+  { sectionKey: "aff-letenky", re: /\b(letenk|flight|airline|leteck)\b/i },
+  { sectionKey: "aff-ubytovani-hotely", re: /\b(hotel|ubytov[aá]n|accommodation|booking\.com)\b/i },
+];
+
+export function resolveOfferSectionKeys({ primarySection, text, allowCrossCategory = true } = {}) {
+  const keys = [];
+  const add = (k) => {
+    if (!k || !String(k).startsWith("aff-")) return;
+    if (!keys.includes(k)) keys.push(k);
+  };
+  add(primarySection || null);
+  if (!allowCrossCategory) return keys;
+  const blob = String(text || "");
+  if (!blob.trim()) return keys;
+  for (const rule of OFFER_CROSS_CATEGORY_RULES) {
+    if (rule.re.test(blob)) add(rule.sectionKey);
+  }
+  return keys;
+}
+
+export function offerEvidenceText(linkOrProduct = {}) {
+  return [
+    linkOrProduct.linkName,
+    linkOrProduct.title,
+    linkOrProduct.description,
+    linkOrProduct.conditionsSummary,
+    linkOrProduct.category,
+    linkOrProduct.advertiserName,
+    linkOrProduct.partnerName,
+  ]
+    .filter(Boolean)
+    .join(" | ");
+}
+
 function toPublicOfferCard(card) {
   if (!card || card.state !== PUB_STATE.PUBLICATION_READY || card.publicationReady !== true) {
     return null;
@@ -217,36 +279,59 @@ export function buildOffersPublicFromStaging(opts = {}) {
       card.kind = "coupon";
       card.couponCode = String(link.couponCode).trim();
     }
-    const pub = toPublicOfferCard(card);
-    if (!pub || !pub.sectionKey) {
+    const pubBase = toPublicOfferCard(card);
+    if (!pubBase || !pubBase.sectionKey) {
       bump("public_card_rejected");
       continue;
     }
-    const sec = secBucket(pub.sectionKey, pub.advertiserId, pub.partnerName);
-    if (pub.offerId && sec.seenOfferIds.has(pub.offerId)) {
-      bump("duplicate_offer_id");
-      continue;
+    const sectionKeys = resolveOfferSectionKeys({
+      primarySection: pubBase.sectionKey,
+      text: offerEvidenceText(link) + " " + offerEvidenceText(card),
+      allowCrossCategory: opts.allowCrossCategory !== false,
+    });
+    let placed = 0;
+    for (const sectionKey of sectionKeys) {
+      const pub = { ...pubBase, sectionKey, sectionKeys };
+      const sec = secBucket(sectionKey, pub.advertiserId, pub.partnerName);
+      if (pub.offerId && sec.seenOfferIds.has(pub.offerId)) {
+        bump("duplicate_offer_id");
+        continue;
+      }
+      if (pub.offerId) sec.seenOfferIds.add(pub.offerId);
+      if (pub.kind === "coupon") sec.coupons.push(pub);
+      else sec.actions.push(pub);
+      placed += 1;
     }
-    if (pub.offerId) sec.seenOfferIds.add(pub.offerId);
-    if (pub.kind === "coupon") sec.coupons.push(pub);
-    else sec.actions.push(pub);
+    if (!placed) bump("cross_category_unplaced");
   }
 
   for (const p of productsIn) {
-    const sectionKey = sectionByAdv[String(p.advertiserId || "")] || p.sectionKey || null;
-    const pub = toPublicProductCard(p, sectionKey);
-    if (!pub || !pub.sectionKey) {
-      bump("product_rejected");
-      continue;
+    const primary =
+      sectionByAdv[String(p.advertiserId || "")] || p.sectionKey || null;
+    const sectionKeys = resolveOfferSectionKeys({
+      primarySection: primary,
+      text: offerEvidenceText(p),
+      allowCrossCategory: opts.allowCrossCategory !== false,
+    });
+    let placed = 0;
+    for (const sectionKey of sectionKeys) {
+      const pub = toPublicProductCard(p, sectionKey);
+      if (!pub || !pub.sectionKey) {
+        bump("product_rejected");
+        continue;
+      }
+      pub.sectionKeys = sectionKeys;
+      const sec = secBucket(pub.sectionKey, pub.advertiserId, pub.partnerName);
+      const key = String(pub.productId || "") + "|" + String(pub.productVariant || "");
+      if (sec.seenProductKeys.has(key)) {
+        bump("duplicate_product");
+        continue;
+      }
+      sec.seenProductKeys.add(key);
+      sec.products.push(pub);
+      placed += 1;
     }
-    const sec = secBucket(pub.sectionKey, pub.advertiserId, pub.partnerName);
-    const key = String(pub.productId || "") + "|" + String(pub.productVariant || "");
-    if (sec.seenProductKeys.has(key)) {
-      bump("duplicate_product");
-      continue;
-    }
-    sec.seenProductKeys.add(key);
-    sec.products.push(pub);
+    if (!placed) bump("product_unplaced");
   }
 
   const sections = [];
@@ -254,6 +339,8 @@ export function buildOffersPublicFromStaging(opts = {}) {
   let actions = 0;
   let products = 0;
   let publicationReady = 0;
+  let crossCategoryOfferPlacements = 0;
+  const offerIdSections = new Map();
   for (const sec of bySection.values()) {
     delete sec.seenOfferIds;
     delete sec.seenProductKeys;
@@ -261,7 +348,16 @@ export function buildOffersPublicFromStaging(opts = {}) {
     actions += sec.actions.length;
     products += sec.products.length;
     publicationReady += sec.coupons.length + sec.actions.length + sec.products.length;
+    for (const item of [...sec.coupons, ...sec.actions, ...sec.products]) {
+      const oid = item.offerId || item.productId;
+      if (!oid) continue;
+      if (!offerIdSections.has(oid)) offerIdSections.set(oid, new Set());
+      offerIdSections.get(oid).add(sec.sectionKey);
+    }
     sections.push(sec);
+  }
+  for (const set of offerIdSections.values()) {
+    if (set.size > 1) crossCategoryOfferPlacements += 1;
   }
 
   const doc = {
@@ -278,6 +374,10 @@ export function buildOffersPublicFromStaging(opts = {}) {
       actions,
       products,
       publicationReady,
+      crossCategoryOfferPlacements,
+      sectionsWithOffers: sections.filter(
+        (s) => (s.coupons?.length || 0) + (s.actions?.length || 0) + (s.products?.length || 0) > 0
+      ).length,
     },
     rejectReasons,
     note: "Built from CJ staging; liveEnabled disarmed until both arm flags set.",

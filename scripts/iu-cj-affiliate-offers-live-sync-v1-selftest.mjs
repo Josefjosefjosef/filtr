@@ -9,6 +9,7 @@ import path from "node:path";
 import {
   buildOffersPublicFromStaging,
   buildSectionByAdvertiser,
+  resolveOfferSectionKeys,
   runOffersLiveSync,
 } from "./iu-cj-affiliate-offers-live-sync-v1.mjs";
 
@@ -198,6 +199,92 @@ function expect(name, cond) {
         refused.reason === "EMPTY_OFFERS_REGRESSION_KEEP_LKG" ||
         refused.reason === "ZERO_PUBLICATION_READY_REFUSED")
   );
+}
+
+{
+  const keys = resolveOfferSectionKeys({
+    primarySection: "aff-sport-outdoor",
+    text: "Sleva na běžecké boty a tenisky",
+  });
+  expect("cross_primary", keys[0] === "aff-sport-outdoor");
+  expect("cross_boty", keys.includes("aff-boty"));
+}
+
+{
+  /* Partner button stays in A; coupon evidence maps also to B; product to C. */
+  const staging = {
+    apiOutage: false,
+    advertisers: [{ advertiserId: "555", relationshipStatus: "joined" }],
+    links: [
+      {
+        linkId: "cross-c1",
+        advertiserId: "555",
+        advertiserName: "Decathlon",
+        linkName: "Kupón pouze na boty a tenisky",
+        couponCode: "BOTY15",
+        clickUrl: goodUrl,
+        description: "Platí na obuv",
+        promotionType: "coupon",
+        promotionEndDate: "2027-12-31 23:59:00.0",
+      },
+    ],
+  };
+  const built = buildOffersPublicFromStaging({
+    staging,
+    sectionByAdv: { "555": "aff-sport-outdoor" },
+    products: [
+      {
+        advertiserId: "555",
+        productId: "jacket-1",
+        title: "Sportovní oblečení bunda running jacket",
+        imageUrl: "https://cdn.example.com/j.jpg",
+        currentPrice: 1299,
+        currency: "CZK",
+        affiliateUrl: goodUrl,
+        publicationReady: true,
+      },
+    ],
+    refDate: new Date("2026-10-28T12:00:00Z"),
+  });
+  expect("cross_build_ok", built.ok === true);
+  const byKey = Object.fromEntries((built.doc.sections || []).map((s) => [s.sectionKey, s]));
+  expect("partner_primary_section_present", Boolean(byKey["aff-sport-outdoor"]));
+  expect("coupon_in_boty", (byKey["aff-boty"]?.coupons || []).some((c) => c.couponCode === "BOTY15"));
+  expect(
+    "coupon_also_primary",
+    (byKey["aff-sport-outdoor"]?.coupons || []).some((c) => c.couponCode === "BOTY15")
+  );
+  expect(
+    "product_in_sport_wear",
+    (byKey["aff-sportovni-obleceni"]?.products || []).some((p) => p.productId === "jacket-1")
+  );
+  expect("no_dup_in_boty", (byKey["aff-boty"]?.coupons || []).filter((c) => c.couponCode === "BOTY15").length === 1);
+  expect("cross_stat", (built.doc.stats?.crossCategoryOfferPlacements || 0) >= 1);
+}
+
+{
+  /* ENDED partner: no offers kept when advertiser absent from section map and staging. */
+  const ended = buildOffersPublicFromStaging({
+    staging: {
+      apiOutage: false,
+      advertisers: [],
+      links: [
+        {
+          linkId: "ended-1",
+          advertiserId: "777",
+          advertiserName: "Gone",
+          couponCode: "GONE",
+          clickUrl: goodUrl,
+          promotionType: "coupon",
+          promotionEndDate: "2027-12-31 23:59:00.0",
+        },
+      ],
+    },
+    sectionByAdv: {},
+    refDate: new Date("2026-10-28T12:00:00Z"),
+  });
+  expect("ended_unmapped_rejected", ended.ok === true);
+  expect("ended_no_sections", (ended.doc.sections || []).length === 0);
 }
 
 console.log(
