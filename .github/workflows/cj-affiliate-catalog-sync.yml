@@ -589,13 +589,17 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Fetch offers-public from sync branch
+      - name: Fetch offers-public from sync branch (API, no full git history)
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           SYNC_BRANCH="data/cj-affiliate-catalog-sync"
-          git fetch origin "${SYNC_BRANCH}" --depth=1
-          git show "origin/${SYNC_BRANCH}:projects/data/iu-affiliate-cj-offers-public-v1.json" \
+          # Avoid git fetch of all refs (previous cancel during deep checkout).
+          gh api \
+            "repos/${GITHUB_REPOSITORY}/contents/projects/data/iu-affiliate-cj-offers-public-v1.json?ref=${SYNC_BRANCH}" \
+            -H "Accept: application/vnd.github.raw" \
             > /tmp/iu-offers-public-incoming.json
           python3 - <<'PY'
           import json
@@ -604,6 +608,8 @@ jobs:
           print("INCOMING_STATS", json.dumps(d.get("stats") or {}))
           if d.get("ok") is False:
             raise SystemExit("BLOCKER=OFFERS_DOC_NOT_OK")
+          if d.get("liveEnabled") is not True:
+            print("NOTE=INCOMING_NOT_LIVE_YET")
           PY
       - name: Open data-only offers PR to main
         shell: bash
