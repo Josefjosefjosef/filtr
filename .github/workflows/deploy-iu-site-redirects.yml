@@ -116,20 +116,28 @@ jobs:
           else
             echo "CJ_MANAGED_PUBLIC_PUBLISH_TOKEN_SET=NO"
           fi
-          # Fail closed: never commit/deploy from toml with CJ live armed.
+          # Fail closed: never commit LIVE=true into wrangler.toml.
           if grep -Eq 'CJ_MANAGED_PUBLIC_LIVE_ENABLED\s*=\s*"true"' wrangler.toml; then
             echo "BLOCKER=CJ_MANAGED_PUBLIC_LIVE_ENABLED_TRUE"
             exit 1
           fi
-          # Phase 3U: optional runtime arm via --var (toml remains "false").
-          EXTRA_VARS=()
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.cj_managed_public_live }}" = "1" ]; then
-            EXTRA_VARS+=(--var CJ_MANAGED_PUBLIC_LIVE_ENABLED:true)
-            echo "CJ_MANAGED_PUBLIC_LIVE_RUNTIME=true"
+          # Phase 3U: LIVE is a runtime var only (not in committed [vars]).
+          # - dispatch live=1 → arm true
+          # - dispatch live=0 → explicit false (disarm)
+          # - push → --keep-vars so a live arm survives code deploys
+          EXTRA_ARGS=(--keep-vars)
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if [ "${{ inputs.cj_managed_public_live }}" = "1" ]; then
+              EXTRA_ARGS+=(--var CJ_MANAGED_PUBLIC_LIVE_ENABLED:true)
+              echo "CJ_MANAGED_PUBLIC_LIVE_RUNTIME=true"
+            else
+              EXTRA_ARGS+=(--var CJ_MANAGED_PUBLIC_LIVE_ENABLED:false)
+              echo "CJ_MANAGED_PUBLIC_LIVE_RUNTIME=false"
+            fi
           else
-            echo "CJ_MANAGED_PUBLIC_LIVE_RUNTIME=false"
+            echo "CJ_MANAGED_PUBLIC_LIVE_RUNTIME=KEEP_EXISTING"
           fi
-          npx wrangler deploy "${EXTRA_VARS[@]}"
+          npx wrangler deploy "${EXTRA_ARGS[@]}"
 
       - name: Prove HTTP 301
         run: |

@@ -25,7 +25,10 @@ const wrangler = fs.readFileSync(
   path.join(ROOT, "cloudflare", "iu-site-redirects", "wrangler.toml"),
   "utf8"
 );
-expect("live_false", /CJ_MANAGED_PUBLIC_LIVE_ENABLED\s*=\s*"false"/.test(wrangler));
+expect(
+  "live_not_committed_true",
+  !/CJ_MANAGED_PUBLIC_LIVE_ENABLED\s*=\s*"true"/.test(wrangler)
+);
 expect("cj_binding", /binding\s*=\s*"CJ_MANAGED_PUBLIC"/.test(wrangler));
 expect("ndic_binding", /binding\s*=\s*"TRAFFIC_LIVE"/.test(wrangler));
 expect("cj_bucket", /iu-cj-managed-public-live/.test(wrangler));

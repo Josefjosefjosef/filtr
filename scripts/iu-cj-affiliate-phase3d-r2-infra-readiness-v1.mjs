@@ -31,9 +31,9 @@ export function auditCjManagedPublicR2Readiness(opts = {}) {
   const wrangler = fs.existsSync(wranglerPath) ? fs.readFileSync(wranglerPath, "utf8") : "";
   note("wrangler_present", Boolean(wrangler), wranglerPath);
   note(
-    "live_flag_false",
-    /CJ_MANAGED_PUBLIC_LIVE_ENABLED\s*=\s*"false"/.test(wrangler),
-    "CJ_MANAGED_PUBLIC_LIVE_ENABLED must stay false until public GO"
+    "live_flag_not_committed_true",
+    !/CJ_MANAGED_PUBLIC_LIVE_ENABLED\s*=\s*"true"/.test(wrangler),
+    "CJ_MANAGED_PUBLIC_LIVE_ENABLED must not be committed true (runtime arm only)"
   );
 
   const bindingActive =
@@ -101,7 +101,7 @@ export function auditCjManagedPublicR2Readiness(opts = {}) {
   const infraPending = !(bindingActive && r2Url && r2Tok) || opts.bucketExists === false;
   const codeReady = [
     "wrangler_present",
-    "live_flag_false",
+    "live_flag_not_committed_true",
     "binding_cj_managed_public",
     "publish_token_not_committed",
     "worker_handler_present",
