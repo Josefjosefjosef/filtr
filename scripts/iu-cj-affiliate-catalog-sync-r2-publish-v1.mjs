@@ -185,6 +185,17 @@ export async function publishManagedPublicToR2(opts = {}) {
     };
   }
 
+  // Phase 3U fail-closed: never push an empty overlay (would wipe LIVE R2).
+  if ((validation.counts?.active || 0) === 0 && (validation.counts?.partners || 0) === 0) {
+    return {
+      ok: false,
+      reason: "EMPTY_PUBLIC_REFUSED",
+      armed: true,
+      counts: validation.counts,
+      NO_GIT_MERGE_REQUIRED: "YES",
+    };
+  }
+
   if (!endpoint) return { ok: false, reason: "ENDPOINT_MISSING", armed: true };
   if (!token) return { ok: false, reason: "TOKEN_MISSING", armed: true };
 

@@ -3,6 +3,9 @@
  * Phase 2C PR B selftest — fetch≠publish gate scenarios (no live CJ HTTP).
  */
 import assert from "node:assert/strict";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
 import {
   buildPublishPlan,
   decidePublishAction,
@@ -12,6 +15,10 @@ import {
   PARTNER_STATE,
   WEBSITE_PID,
 } from "./iu-cj-affiliate-catalog-sync-publish-gate-v1.mjs";
+import {
+  buildCandidatesFromStaging,
+  runCatalogSyncPublish,
+} from "./iu-cj-affiliate-catalog-sync-publish-v1.mjs";
 
 const PID = WEBSITE_PID;
 const goodUrl = `https://www.jdoqocy.com/click-${PID}-15735649`;
@@ -252,6 +259,144 @@ function expect(name, cond) {
     lastKnownGood: [],
   });
   expect("dedupe_slice", plan.publishSlice.filter((p) => p.advertiserId === "300").length === 1);
+}
+
+// Phase 3U: staging → one candidate/advertiser + empty-regression keep LKG
+{
+  const built = buildCandidatesFromStaging(
+    {
+      apiOutage: false,
+      advertisers: [
+        {
+          advertiserId: "9001",
+          advertiserName: "CoA",
+          relationshipStatus: "joined",
+          accountStatus: "Active",
+        },
+        {
+          advertiserId: "9002",
+          advertiserName: "Skip",
+          relationshipStatus: "ended",
+          accountStatus: "Active",
+        },
+      ],
+      links: [
+        {
+          advertiserId: "9001",
+          linkId: "111",
+          linkType: "Text Link",
+          clickUrl: goodUrl,
+        },
+        {
+          advertiserId: "9001",
+          linkId: "222",
+          linkType: "Banner",
+          clickUrl: `https://www.jdoqocy.com/click-${PID}-999`,
+        },
+      ],
+    },
+    { "9001": "aff-moda" },
+    [{ advertiserId: "9001", management: "CJ_MANAGED", sectionId: "aff-moda" }]
+  );
+  expect("one_candidate_per_joined", built.candidates.length === 1);
+  expect("meta_injected", built.linkMetaByAdvertiser["9001"]?.programAvailable === true);
+
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "iu-cj-pub-"));
+  const dataDir = path.join(tmp, "projects", "data");
+  fs.mkdirSync(dataDir, { recursive: true });
+  fs.writeFileSync(
+    path.join(dataDir, "iu-affiliate-cj-staging-v1.json"),
+    JSON.stringify({ apiOutage: false, advertisers: [], links: [] })
+  );
+  fs.writeFileSync(
+    path.join(dataDir, "iu-affiliate-slot-policy-v1.json"),
+    JSON.stringify({ partners: [] })
+  );
+  fs.writeFileSync(
+    path.join(dataDir, "iu-affiliate-cj-managed-registry-v1.json"),
+    JSON.stringify({ partners: [] })
+  );
+  fs.writeFileSync(
+    path.join(dataDir, "iu-affiliate-cj-section-map-v1.json"),
+    JSON.stringify({})
+  );
+  fs.writeFileSync(
+    path.join(dataDir, "iu-affiliate-cj-managed-public-v1.json"),
+    JSON.stringify({
+      schema: "iu-affiliate-cj-managed-public-v1",
+      version: 1,
+      websitePid: PID,
+      partners: [
+        {
+          advertiserId: "9001",
+          sectionId: "aff-moda",
+          title: "KeepMe",
+          url: goodUrl,
+          active: true,
+        },
+      ],
+    })
+  );
+  fs.writeFileSync(
+    path.join(dataDir, "iu-affiliate-cj-sync-audit-v1.json"),
+    JSON.stringify({})
+  );
+
+  const keep = runCatalogSyncPublish({
+    dataDir,
+    env: { IU_CJ_SYNC_PUBLISH_ARMED: "1" },
+    candidates: [],
+    linkMetaByAdvertiser: {},
+  });
+  const pubKeep = JSON.parse(
+    fs.readFileSync(path.join(dataDir, "iu-affiliate-cj-managed-public-v1.json"), "utf8")
+  );
+  expect("seed_lkg_write_ok", keep.ok === true && keep.wrotePublic === true);
+  expect(
+    "seed_lkg_kept_partner",
+    (pubKeep.partners || []).some((p) => p.advertiserId === "9001" && p.active !== false)
+  );
+
+  // Force empty materialize from bad LKG URLs → must refuse wipe of prior good public.
+  fs.writeFileSync(
+    path.join(dataDir, "iu-affiliate-cj-managed-registry-v1.json"),
+    JSON.stringify({ partners: [] })
+  );
+  fs.writeFileSync(
+    path.join(dataDir, "iu-affiliate-cj-managed-public-v1.json"),
+    JSON.stringify({
+      schema: "iu-affiliate-cj-managed-public-v1",
+      version: 1,
+      websitePid: PID,
+      partners: [
+        {
+          advertiserId: "9001",
+          sectionId: "aff-moda",
+          title: "KeepMe",
+          url: "https://example.com/not-cj",
+          active: true,
+        },
+      ],
+    })
+  );
+  const refused = runCatalogSyncPublish({
+    dataDir,
+    env: { IU_CJ_SYNC_PUBLISH_ARMED: "1" },
+    candidates: [],
+    linkMetaByAdvertiser: {},
+  });
+  expect(
+    "empty_regression_refused",
+    refused.ok === false &&
+      String(refused.plan?.publishBlockedReason || "").includes("KEEP_LKG")
+  );
+  const pubRefused = JSON.parse(
+    fs.readFileSync(path.join(dataDir, "iu-affiliate-cj-managed-public-v1.json"), "utf8")
+  );
+  expect(
+    "public_file_unchanged_on_refuse",
+    (pubRefused.partners || [])[0]?.url === "https://example.com/not-cj"
+  );
 }
 
 console.log(
