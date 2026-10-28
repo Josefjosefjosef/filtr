@@ -580,12 +580,12 @@ jobs:
       (github.event_name == 'workflow_dispatch' &&
        (inputs.arm_offers_live == '1' || inputs.promote_offers_public == '1'))
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
           ref: main
-          fetch-depth: 0
+          fetch-depth: 1
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
