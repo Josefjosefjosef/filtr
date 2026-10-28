@@ -76,8 +76,9 @@ zone_name = "infouzel.cz"
 [vars]
 # Cutover: R2 is authoritative for traffic_offline_snapshot when true (Pages fallback if R2 empty).
 LIVE_TRAFFIC_ENABLED = "true"
-# Phase 2H: CJ managed-public R2 overlay — keep false until infra GO (bucket + token + arm).
-CJ_MANAGED_PUBLIC_LIVE_ENABLED = "false"
+# Phase 3U: CJ_MANAGED_PUBLIC_LIVE_ENABLED is intentionally NOT committed here.
+# Unset => false in worker. Arm/disarm only via deploy workflow_dispatch --var
+# so push deploys can --keep-vars without wiping a live arm.
 
 [[r2_buckets]]
 binding = "TRAFFIC_LIVE"
