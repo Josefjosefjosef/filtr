@@ -5,12 +5,14 @@
  */
 import {
   AI_EVENT_TYPE,
+  AI_OUTCOME,
   classifyEmailRowToEvents,
   validateAiEventPayload,
   detectPromptInjection,
   describeWorkersAiCostModel,
   deterministicEventFallback,
   aiEventsToCjHints,
+  resolveAiOutcome,
 } from "./iu-cj-affiliate-phase3r-ai-email-event-v1.mjs";
 
 const failures = [];
@@ -141,6 +143,22 @@ const fail2 = await classifyEmailRowToEvents(
 expect("ai_fail_fallback_not_labeled_ai", fail2.backend === "deterministic_fallback" || fail2.ok === true);
 expect("ai_fail_has_event", (fail2.events || []).length >= 1);
 expect("ai_fail_aiActuallyRan_false_or_fallback", fail2.aiActuallyRan === false || fail2.backend === "deterministic_fallback");
+expect(
+  "ai_fail_outcome_not_live",
+  fail2.aiOutcome !== AI_OUTCOME.AI_LIVE_SUCCESS &&
+    [AI_OUTCOME.AI_FALLBACK_USED, AI_OUTCOME.AI_UNAVAILABLE, AI_OUTCOME.AI_AUTH_FAILED, AI_OUTCOME.AI_QUOTA_EXCEEDED].includes(
+      fail2.aiOutcome || resolveAiOutcome(fail2)
+    )
+);
+expect(
+  "auth_outcome",
+  resolveAiOutcome({ backend: "deterministic_fallback", aiError: "http_401" }) === AI_OUTCOME.AI_AUTH_FAILED
+);
+expect(
+  "live_outcome",
+  resolveAiOutcome({ backend: "workers-ai", aiActuallyRan: true, events: [{ eventType: AI_EVENT_TYPE.INFORMATIONAL }] }) ===
+    AI_OUTCOME.AI_LIVE_SUCCESS
+);
 
 const spoofHints = aiEventsToCjHints(
   [{ eventType: AI_EVENT_TYPE.PARTNER_ENDED, confidence: "high", advertiserId: "1", source: "email" }],

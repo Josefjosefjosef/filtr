@@ -364,7 +364,9 @@ jobs:
         if: steps.scope.outputs.data_only != 'true' && steps.scope.outputs.cj_affiliate_phase2_offline_only != 'true' && steps.scope.outputs.cj_offline_catalog_normalize_only != 'true' && steps.scope.outputs.cj_partner_slot_planner_phase_a_only != 'true' && steps.scope.outputs.cj_staging_api_probe_only != 'true'
         timeout-minutes: 90
         env:
-          IU_SMOKE_GUARD_PARALLEL: "4"
+          # Measured (phase 3T): parallel=4 → rotating single-guard timeouts under runner CPU
+          # contention (391/392). parallel=2 keeps full coverage with lower peak load.
+          IU_SMOKE_GUARD_PARALLEL: "2"
           SCOPE_data_only: ${{ steps.scope.outputs.data_only }}
           SCOPE_cj_affiliate_phase2_offline_only: ${{ steps.scope.outputs.cj_affiliate_phase2_offline_only }}
           SCOPE_cj_offline_catalog_normalize_only: ${{ steps.scope.outputs.cj_offline_catalog_normalize_only }}

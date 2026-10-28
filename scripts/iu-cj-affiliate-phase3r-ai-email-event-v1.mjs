@@ -20,6 +20,40 @@ import { emailHintToLifecycleAction, LIFECYCLE_ACTION } from "./iu-cj-affiliate-
 
 export const PHASE3R_AI_SCHEMA = "iu-cj-affiliate-phase3r-ai-email-event-v1";
 
+/** Honest AI outcome labels — never present fallback as live AI success. */
+export const AI_OUTCOME = Object.freeze({
+  AI_LIVE_SUCCESS: "AI_LIVE_SUCCESS",
+  AI_FALLBACK_USED: "AI_FALLBACK_USED",
+  AI_AUTH_FAILED: "AI_AUTH_FAILED",
+  AI_QUOTA_EXCEEDED: "AI_QUOTA_EXCEEDED",
+  AI_UNAVAILABLE: "AI_UNAVAILABLE",
+  AI_CLASSIFICATION_REJECTED: "AI_CLASSIFICATION_REJECTED",
+});
+
+export function resolveAiOutcome(cls = {}) {
+  if (cls.backend === "workers-ai" && cls.aiActuallyRan === true && Array.isArray(cls.events)) {
+    return AI_OUTCOME.AI_LIVE_SUCCESS;
+  }
+  const err = String(cls.aiError || cls.state || "");
+  if (/http_401|http_403|auth|token_missing|not_armed|blocked/i.test(err)) {
+    return AI_OUTCOME.AI_AUTH_FAILED;
+  }
+  if (/quota|http_429|ai_call_cap/i.test(err) || cls.state === AI_PROCESSING_STATE.quota_exceeded) {
+    return AI_OUTCOME.AI_QUOTA_EXCEEDED;
+  }
+  if (cls.state === AI_PROCESSING_STATE.invalid_ai_json || /invalid_ai_json|invalid_event/i.test(err)) {
+    return AI_OUTCOME.AI_CLASSIFICATION_REJECTED;
+  }
+  if (cls.backend === "deterministic_fallback" || cls.backend === "prompt_injection_guard") {
+    return AI_OUTCOME.AI_FALLBACK_USED;
+  }
+  if (cls.backend === "mock") {
+    // Mock is intentional offline test — not live AI and not silent fallback.
+    return AI_OUTCOME.AI_FALLBACK_USED;
+  }
+  return AI_OUTCOME.AI_UNAVAILABLE;
+}
+
 export const AI_EVENT_TYPE = Object.freeze({
   PARTNER_APPROVED: "PARTNER_APPROVED",
   PARTNER_ENDED: "PARTNER_ENDED",
@@ -245,20 +279,27 @@ export async function classifyEmailRowToEvents(row = {}, options = {}) {
       confidence: "low",
       evidenceSpan: "prompt_injection_guard",
     };
-    return {
+    const out = {
       ok: true,
       backend: "prompt_injection_guard",
       aiActuallyRan: false,
+      aiError: "prompt_injection_guard",
       events: [ev],
       state: AI_PROCESSING_STATE.needs_review,
     };
+    out.aiOutcome = resolveAiOutcome(out);
+    return out;
   }
 
   const env = options.env || process.env;
   const config = resolveWorkersAiConfig(env);
+  const quota = {
+    ...(options.quota || {}),
+    callsUsed: Number(options.quota?.callsUsed || 0),
+  };
   if (options.forceDeterministic === true) {
     const fb = deterministicEventFallback(row);
-    return {
+    const out = {
       ok: true,
       backend: "deterministic_fallback",
       aiActuallyRan: false,
@@ -266,13 +307,16 @@ export async function classifyEmailRowToEvents(row = {}, options = {}) {
       aiError: "ai_call_cap_reached",
       events: [fb],
       state: AI_PROCESSING_STATE.skipped_deterministic,
+      quotaAfter: quota,
     };
+    out.aiOutcome = resolveAiOutcome(out);
+    return out;
   }
   const useMock = options.useMock === true || config.backend === "mock";
 
   let raw;
   if (useMock) {
-    raw = mockWorkersAiClassifyEvent(safe, { ...options, categories: row.categories });
+    raw = mockWorkersAiClassifyEvent(safe, { ...options, categories: row.categories, quota });
   } else {
     raw = await workersAiHttpClassifyEvent(safe, {
       ...options,
@@ -286,7 +330,7 @@ export async function classifyEmailRowToEvents(row = {}, options = {}) {
   if (!raw?.ok || !raw.payload) {
     // Fallback is NOT AI — label explicitly. Preserve whether HTTP was attempted.
     const fb = deterministicEventFallback(row);
-    return {
+    const out = {
       ok: true,
       backend: "deterministic_fallback",
       aiActuallyRan: raw?.aiActuallyRan === true || raw?.http === true,
@@ -297,12 +341,14 @@ export async function classifyEmailRowToEvents(row = {}, options = {}) {
       state: raw?.state || AI_PROCESSING_STATE.ai_failed,
       quotaAfter: raw?.quotaAfter || null,
     };
+    out.aiOutcome = resolveAiOutcome(out);
+    return out;
   }
 
   const validated = validateAiEventPayload(raw.payload, safe);
   if (!validated.ok) {
     const fb = deterministicEventFallback(row);
-    return {
+    const out = {
       ok: true,
       backend: "deterministic_fallback",
       aiActuallyRan: raw.aiActuallyRan === true || raw.http === true,
@@ -312,9 +358,11 @@ export async function classifyEmailRowToEvents(row = {}, options = {}) {
       state: AI_PROCESSING_STATE.invalid_ai_json,
       quotaAfter: raw?.quotaAfter || null,
     };
+    out.aiOutcome = resolveAiOutcome(out);
+    return out;
   }
 
-  return {
+  const out = {
     ok: true,
     backend: useMock ? "mock" : "workers-ai",
     model: useMock ? null : config.model || WORKERS_AI_MODEL_CZECH_CANDIDATE,
@@ -324,6 +372,8 @@ export async function classifyEmailRowToEvents(row = {}, options = {}) {
     state: raw.state || AI_PROCESSING_STATE.mock_ai_ok,
     quotaAfter: raw.quotaAfter || null,
   };
+  out.aiOutcome = resolveAiOutcome(out);
+  return out;
 }
 
 export function aiEventsToCjHints(events = [], meta = {}) {

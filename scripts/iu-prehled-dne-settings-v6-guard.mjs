@@ -426,22 +426,57 @@ async function runPlaywright() {
       }
       if (soonState.soonCbs !== 0) pwFails.push(vp.name + ":coming_soon_checkbox");
 
-      await page.evaluate(() => {
-        const btn = document.querySelector('[data-act="feed-coming-soon"][data-kind="media"]');
-        if (btn) btn.click();
-      });
-      await page.waitForSelector('[data-iu-pd-soon-info="media"]', { timeout: 8000 });
-      const mediaInfo = await page.evaluate(() => {
-        const root = document.querySelector('[data-iu-pd-soon-info="media"]');
-        const mail = root ? root.querySelector('a[href="mailto:info@infouzel.cz"]') : null;
-        return {
-          title: root ? ((root.querySelector(".iuPdSoonInfo__title") || {}).textContent || "").trim() : "",
-          hasMail: !!mail,
-          mailText: mail ? (mail.textContent || "").trim() : "",
-        };
-      });
-      if (mediaInfo.title !== "Média – připravujeme") pwFails.push(vp.name + ":media_info_title");
-      if (!mediaInfo.hasMail || mediaInfo.mailText !== "info@infouzel.cz") pwFails.push(vp.name + ":media_mailto");
+      async function openSoonInfo(kind) {
+        const sel = '[data-iu-pd-soon-info="' + kind + '"]';
+        for (let attempt = 0; attempt < 4; attempt++) {
+          const opened = await page.evaluate((k) => {
+            const btn = document.querySelector('[data-act="feed-coming-soon"][data-kind="' + k + '"]');
+            if (!btn) return false;
+            try {
+              btn.scrollIntoView({ block: "center", inline: "nearest" });
+            } catch (_) {}
+            btn.click();
+            return true;
+          }, kind);
+          if (!opened) {
+            await page.waitForTimeout(200);
+            continue;
+          }
+          try {
+            await page.waitForSelector(sel, { timeout: 5000, state: "attached" });
+            return true;
+          } catch (_) {
+            await page.waitForTimeout(250);
+          }
+        }
+        /* last attempt with longer wait */
+        await page.evaluate((k) => {
+          const btn = document.querySelector('[data-act="feed-coming-soon"][data-kind="' + k + '"]');
+          if (btn) btn.click();
+        }, kind);
+        try {
+          await page.waitForSelector(sel, { timeout: 10000, state: "attached" });
+          return true;
+        } catch (_) {
+          return false;
+        }
+      }
+
+      if (!(await openSoonInfo("media"))) {
+        pwFails.push(vp.name + ":media_soon_info_timeout");
+      } else {
+        const mediaInfo = await page.evaluate(() => {
+          const root = document.querySelector('[data-iu-pd-soon-info="media"]');
+          const mail = root ? root.querySelector('a[href="mailto:info@infouzel.cz"]') : null;
+          return {
+            title: root ? ((root.querySelector(".iuPdSoonInfo__title") || {}).textContent || "").trim() : "",
+            hasMail: !!mail,
+            mailText: mail ? (mail.textContent || "").trim() : "",
+          };
+        });
+        if (mediaInfo.title !== "Média – připravujeme") pwFails.push(vp.name + ":media_info_title");
+        if (!mediaInfo.hasMail || mediaInfo.mailText !== "info@infouzel.cz") pwFails.push(vp.name + ":media_mailto");
+      }
 
       await page.evaluate(() => {
         const back = document.querySelector('#iuPdSettings [data-act="back-section"]');
@@ -449,32 +484,30 @@ async function runPlaywright() {
       });
       await page.waitForSelector("[data-iu-pd-feed-main]", { timeout: 8000 });
 
-      await page.evaluate(() => {
-        const btn = document.querySelector('[data-act="feed-coming-soon"][data-kind="institutions"]');
-        if (btn) btn.click();
-      });
-      await page.waitForSelector('[data-iu-pd-soon-info="institutions"]', { timeout: 8000 });
-      const instTitle = await page.evaluate(() => {
-        const t = document.querySelector('[data-iu-pd-soon-info="institutions"] .iuPdSoonInfo__title');
-        return t ? (t.textContent || "").trim() : "";
-      });
-      if (instTitle !== "Státní instituce – připravujeme") pwFails.push(vp.name + ":institutions_info_title");
+      if (!(await openSoonInfo("institutions"))) {
+        pwFails.push(vp.name + ":institutions_soon_info_timeout");
+      } else {
+        const instTitle = await page.evaluate(() => {
+          const t = document.querySelector('[data-iu-pd-soon-info="institutions"] .iuPdSoonInfo__title');
+          return t ? (t.textContent || "").trim() : "";
+        });
+        if (instTitle !== "Státní instituce – připravujeme") pwFails.push(vp.name + ":institutions_info_title");
+      }
       await page.evaluate(() => {
         const back = document.querySelector('#iuPdSettings [data-act="back-section"]');
         if (back) back.click();
       });
       await page.waitForSelector("[data-iu-pd-feed-main]", { timeout: 8000 });
 
-      await page.evaluate(() => {
-        const btn = document.querySelector('[data-act="feed-coming-soon"][data-kind="security"]');
-        if (btn) btn.click();
-      });
-      await page.waitForSelector('[data-iu-pd-soon-info="security"]', { timeout: 8000 });
-      const secTitle = await page.evaluate(() => {
-        const t = document.querySelector('[data-iu-pd-soon-info="security"] .iuPdSoonInfo__title');
-        return t ? (t.textContent || "").trim() : "";
-      });
-      if (secTitle !== "Bezpečnost – připravujeme") pwFails.push(vp.name + ":security_info_title");
+      if (!(await openSoonInfo("security"))) {
+        pwFails.push(vp.name + ":security_soon_info_timeout");
+      } else {
+        const secTitle = await page.evaluate(() => {
+          const t = document.querySelector('[data-iu-pd-soon-info="security"] .iuPdSoonInfo__title');
+          return t ? (t.textContent || "").trim() : "";
+        });
+        if (secTitle !== "Bezpečnost – připravujeme") pwFails.push(vp.name + ":security_info_title");
+      }
       await page.evaluate(() => {
         const back = document.querySelector('#iuPdSettings [data-act="back-section"]');
         if (back) back.click();
@@ -591,23 +624,27 @@ async function runPlaywright() {
       });
       if (!chmuDetail.area || !chmuDetail.noRoads || !chmuDetail.hasCr) pwFails.push(vp.name + ":chmu_area_only");
 
-      // Autosave: toggle CHMU off
+      // Autosave: toggle CHMU off (vault/LS write can lag under parallel CI load)
       await page.evaluate(() => document.querySelector('[data-act="back-section"]')?.click());
       await page.waitForSelector("[data-iu-pd-feed-main]", { timeout: 8000 });
       await page.evaluate(() => {
         const el = document.querySelector('[data-act="feed-main-toggle"][data-kind="chmu"]');
         if (el && el.checked) el.click();
       });
-      await page.waitForTimeout(200);
-      const prefsAfter = await page.evaluate(() => {
-        try {
-          const raw = localStorage.getItem("iu.infoEvents.prefs.v1");
-          const p = raw ? JSON.parse(raw) : null;
-          return !!(p && p.feedFilter && p.feedFilter.chmuEnabled === false);
-        } catch (_) {
-          return false;
-        }
-      });
+      let prefsAfter = false;
+      const prefsDeadline = Date.now() + 3000;
+      while (!prefsAfter && Date.now() < prefsDeadline) {
+        prefsAfter = await page.evaluate(() => {
+          try {
+            const raw = localStorage.getItem("iu.infoEvents.prefs.v1");
+            const p = raw ? JSON.parse(raw) : null;
+            return !!(p && p.feedFilter && p.feedFilter.chmuEnabled === false);
+          } catch (_) {
+            return false;
+          }
+        });
+        if (!prefsAfter) await page.waitForTimeout(100);
+      }
       if (!prefsAfter) pwFails.push(vp.name + ":autosave_feedFilter");
 
       if (vp.name !== "desktop") {

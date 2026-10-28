@@ -166,6 +166,15 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Substantive gate: skip PR when only timestamps/runHistory/orchestrator metadata churn
+          # (status=not_modified) so open feature PRs are not invalidated every ~10 minutes.
+          GATE_OUT="$(node scripts/iu-chmi-cap-v2-substantive-change-gate-v1.mjs)"
+          echo "$GATE_OUT"
+          if echo "$GATE_OUT" | grep -q '^SUBSTANTIVE=false$'; then
+            echo "NO_CHANGES (volatile-only / no substantive CAP payload change)"
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           git add projects/data/info_events
           if git diff --cached --quiet; then
             echo "NO_CHANGES"

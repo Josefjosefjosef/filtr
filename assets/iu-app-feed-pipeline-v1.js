@@ -23638,6 +23638,7 @@ function buildVideoAsArticleCard(it) {
 
   async function iuWeatherLiveRefresh(city, locationMode){
     try{
+      if (window.__iuWeatherDisableLiveRefresh) return;
       if (iuWeatherLiveBackoffActive()) return;
       const d = await iuFetchOpenMeteoLive(city.lat, city.lon);
       if (!iuOpenMeteoPayloadIsValid(d)) return;

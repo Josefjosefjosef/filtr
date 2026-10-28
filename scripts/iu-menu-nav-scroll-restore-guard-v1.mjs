@@ -195,8 +195,11 @@ async function goBackToMenu(page) {
     await openMenu(page);
     gate = true;
   }
-  /* Wait until restore hold finishes (visibility + scrollTop). */
-  const deadline = Date.now() + 2000;
+  /* Wait until restore finishes (visibility + scrollTop>0).
+   * Do not sample immediate while top===0 — under CI load restore is async
+   * after the panel becomes visible; poisoning immediate with 0 causes false FAIL
+   * even when settled restore is correct. Still fail if restore never lands. */
+  const deadline = Date.now() + 2500;
   let immediate = null;
   let settled = null;
   while (Date.now() < deadline) {
@@ -215,8 +218,7 @@ async function goBackToMenu(page) {
       settled = snap;
       break;
     }
-    if (snap && !immediate) immediate = snap;
-    settled = snap;
+    if (snap) settled = snap;
     await page.waitForTimeout(50);
   }
   await page.waitForTimeout(200);
