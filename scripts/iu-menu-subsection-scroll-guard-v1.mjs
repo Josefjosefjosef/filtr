@@ -38,9 +38,9 @@ const VIEWPORTS = [
 ];
 
 const SECTIONS = [
-  { id: "mapy", re: /Mapy/i },
-  { id: "pocasi", re: /Počasí|Pocasi/i },
-  { id: "aff-cestovni-kancelare", re: /Cestovní kanceláře|Cestovni kancelare/i },
+  { id: "mapy", re: /Mapy/i, accent: "mapy" },
+  { id: "pocasi", re: /Počasí|Pocasi/i, accent: "pocasi" },
+  { id: "aff-cestovni-kancelare", re: /Cestovní kanceláře|Cestovni kancelare/i, accent: "aff-cestovni-kancelare" },
 ];
 
 function fail(msg) {
@@ -189,19 +189,64 @@ async function openMenu(page) {
   }
 }
 
-async function clickRail(page, re) {
-  return page.evaluate((src) => {
-    const re = new RegExp(src, "i");
-    const root = document.querySelector("#iuMobileGatePanelNav") || document.body;
-    const nodes = root.querySelectorAll("a.iu-leftNavItem,.iu-leftNavItem,.iuHex,[data-section]");
-    for (const n of nodes) {
-      if (re.test(String(n.textContent || ""))) {
+async function clickRail(page, sec) {
+  /* Affiliate catalog mounts async into #iuLeftRail (inside panelNav on ≤900).
+     Match by data-accent first, then label; scroll panel; retry until deadline. */
+  const src = sec.re.source;
+  const accent = sec.accent || sec.id;
+  const deadline = Date.now() + 8000;
+  while (Date.now() < deadline) {
+    const clicked = await page.evaluate(
+      ({ src, accent }) => {
+        const re = new RegExp(src, "i");
+        const panel = document.getElementById("iuMobileGatePanelNav");
+        const rail = document.getElementById("iuLeftRail");
+        const roots = [];
+        if (panel) roots.push(panel);
+        if (rail && !roots.includes(rail)) roots.push(rail);
+        roots.push(document.body);
+        const findIn = (root) => {
+          if (!root) return null;
+          if (accent) {
+            const byAccent =
+              root.querySelector('.iu-leftNavItem[data-accent="' + accent + '"]') ||
+              root.querySelector('[data-section="' + accent + '"]') ||
+              root.querySelector('[data-accent="' + accent + '"]');
+            if (byAccent) return byAccent;
+          }
+          const nodes = root.querySelectorAll("a.iu-leftNavItem,.iu-leftNavItem,.iuHex,[data-section]");
+          for (const n of nodes) {
+            if (re.test(String(n.textContent || ""))) return n;
+          }
+          return null;
+        };
+        let n = null;
+        for (const root of roots) {
+          n = findIn(root);
+          if (n) break;
+        }
+        if (!n && panel) {
+          const max = Math.max(0, (panel.scrollHeight || 0) - (panel.clientHeight || 0));
+          const step = Math.max(80, Math.floor((panel.clientHeight || 200) * 0.7));
+          for (let y = 0; y <= max + 40; y += step) {
+            panel.scrollTop = y;
+            n = findIn(panel) || findIn(rail);
+            if (n) break;
+          }
+        }
+        if (!n) return null;
+        try {
+          n.scrollIntoView({ block: "center", inline: "nearest" });
+        } catch (_) {}
         n.click();
         return String(n.textContent || "").replace(/\s+/g, " ").trim().slice(0, 60);
-      }
-    }
-    return null;
-  }, re.source);
+      },
+      { src, accent }
+    );
+    if (clicked) return clicked;
+    await page.waitForTimeout(250);
+  }
+  return null;
 }
 
 async function goBackToMenu(page) {
@@ -265,7 +310,7 @@ async function runViewport(browser, vp) {
     await dismissTerms(page);
     await openMenu(page);
     const navP = page.waitForNavigation({ timeout: 8000 }).catch(() => null);
-    const clicked = await clickRail(page, sec.re);
+    const clicked = await clickRail(page, sec);
     if (!clicked) fail(vp.name + ":" + sec.id + ": rail item not found");
     await navP;
     await page.waitForTimeout(1400);
@@ -294,7 +339,7 @@ async function runViewport(browser, vp) {
   for (const sec of SECTIONS) {
     await openMenu(page);
     const navP = page.waitForNavigation({ timeout: 8000 }).catch(() => null);
-    const clicked = await clickRail(page, sec.re);
+    const clicked = await clickRail(page, sec);
     if (!clicked) fail(vp.name + ":lifecycle:" + sec.id + ": missing");
     await navP;
     await page.waitForTimeout(1200);

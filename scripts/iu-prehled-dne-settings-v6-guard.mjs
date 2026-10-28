@@ -591,23 +591,27 @@ async function runPlaywright() {
       });
       if (!chmuDetail.area || !chmuDetail.noRoads || !chmuDetail.hasCr) pwFails.push(vp.name + ":chmu_area_only");
 
-      // Autosave: toggle CHMU off
+      // Autosave: toggle CHMU off (vault/LS write can lag under parallel CI load)
       await page.evaluate(() => document.querySelector('[data-act="back-section"]')?.click());
       await page.waitForSelector("[data-iu-pd-feed-main]", { timeout: 8000 });
       await page.evaluate(() => {
         const el = document.querySelector('[data-act="feed-main-toggle"][data-kind="chmu"]');
         if (el && el.checked) el.click();
       });
-      await page.waitForTimeout(200);
-      const prefsAfter = await page.evaluate(() => {
-        try {
-          const raw = localStorage.getItem("iu.infoEvents.prefs.v1");
-          const p = raw ? JSON.parse(raw) : null;
-          return !!(p && p.feedFilter && p.feedFilter.chmuEnabled === false);
-        } catch (_) {
-          return false;
-        }
-      });
+      let prefsAfter = false;
+      const prefsDeadline = Date.now() + 3000;
+      while (!prefsAfter && Date.now() < prefsDeadline) {
+        prefsAfter = await page.evaluate(() => {
+          try {
+            const raw = localStorage.getItem("iu.infoEvents.prefs.v1");
+            const p = raw ? JSON.parse(raw) : null;
+            return !!(p && p.feedFilter && p.feedFilter.chmuEnabled === false);
+          } catch (_) {
+            return false;
+          }
+        });
+        if (!prefsAfter) await page.waitForTimeout(100);
+      }
       if (!prefsAfter) pwFails.push(vp.name + ":autosave_feedFilter");
 
       if (vp.name !== "desktop") {
