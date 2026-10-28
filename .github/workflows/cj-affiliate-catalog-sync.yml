@@ -235,6 +235,29 @@ jobs:
         with:
           name: iu-affiliate-cj-staging
           path: projects/data
+      - name: Ensure policy + section-map + public LKG present (artifact must not wipe)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p projects/data
+          for f in \
+            iu-affiliate-slot-policy-v1.json \
+            iu-affiliate-cj-section-map-v1.json \
+            iu-affiliate-cj-managed-public-v1.json \
+            iu-affiliate-cj-managed-registry-v1.json
+          do
+            if [ ! -f "projects/data/${f}" ]; then
+              git show "HEAD:projects/data/${f}" > "projects/data/${f}"
+              echo "RESTORED_FROM_HEAD=${f}"
+            else
+              echo "PRESENT=${f}"
+            fi
+          done
+          python3 - <<'PY'
+          import json
+          mp=json.load(open("projects/data/iu-affiliate-cj-managed-public-v1.json"))
+          print("LKG_PUBLIC_PARTNERS", len(mp.get("partners") or []))
+          PY
       - name: Publish gate (CJ_MANAGED only; LKG on outage)
         run: node scripts/iu-cj-affiliate-catalog-sync-publish-v1.mjs
       - name: Commit managed registry + public overlay if armed (sync branch only)
