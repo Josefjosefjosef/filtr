@@ -97,25 +97,33 @@ function auditStatic(catIds) {
   ok("index:intro_wrap", /id="iuAffiliateIntro"/.test(index));
   ok(
     "index:title_inside_intro",
-    /id="iuAffiliateIntro"[\s\S]*?id="iuAffiliateTitle"[\s\S]*?<\/div>[\s\S]*?id="iuAffiliateDisclosure"/.test(
+    /id="iuAffiliateIntro"[\s\S]*?id="iuAffiliateTitle"[\s\S]*?<\/div>[\s\S]*?id="iuAffiliateGrid"/.test(
       index
     )
   );
   ok(
     "index:subtitle_inside_intro",
-    /id="iuAffiliateIntro"[\s\S]*?id="iuAffiliateSubtitle"[\s\S]*?<\/div>[\s\S]*?id="iuAffiliateDisclosure"/.test(
+    /id="iuAffiliateIntro"[\s\S]*?id="iuAffiliateSubtitle"[\s\S]*?<\/div>[\s\S]*?id="iuAffiliateGrid"/.test(
       index
     )
   );
+  /* Phase 3V: legal/disclosure is last (after partner grid + offers), not under the header. */
   ok(
-    "index:disclosure_after_intro",
-    /id="iuAffiliateIntro"[\s\S]*?<\/div>\s*<div class="iuAffiliateDisclosure" id="iuAffiliateDisclosure"/.test(
-      index
-    )
+    "index:grid_after_intro",
+    /id="iuAffiliateIntro"[\s\S]*?<\/div>\s*<div class="iuRadioGrid[^"]*" id="iuAffiliateGrid"/.test(index) ||
+      /id="iuAffiliateIntro"[\s\S]*?id="iuAffiliateGrid"/.test(index)
   );
   ok(
-    "index:grid_after_disclosure",
-    /id="iuAffiliateDisclosure"[\s\S]*?id="iuAffiliateGrid"/.test(index)
+    "index:offers_after_grid",
+    /id="iuAffiliateGrid"[\s\S]*?id="iuAffiliatePhase2Offers"/.test(index)
+  );
+  ok(
+    "index:disclosure_after_offers",
+    /id="iuAffiliatePhase2Offers"[\s\S]*?id="iuAffiliateDisclosure"/.test(index)
+  );
+  ok(
+    "index:disclosure_before_seo_last",
+    /id="iuAffiliateDisclosure"[\s\S]*?id="iuAffiliateSeo"/.test(index)
   );
   ok("index:cache_bust", index.includes(APP_CSS_BUST) && /app\.css\?v=/.test(index));
   ok("css:marker", css.includes("affiliate-header-frame-v1-20260918"));
@@ -304,8 +312,10 @@ try {
           : [];
         const orderOk =
           children.indexOf("iuAffiliateIntro") >= 0 &&
-          children.indexOf("iuAffiliateDisclosure") === children.indexOf("iuAffiliateIntro") + 1 &&
-          children.indexOf("iuAffiliateGrid") > children.indexOf("iuAffiliateDisclosure");
+          children.indexOf("iuAffiliateGrid") > children.indexOf("iuAffiliateIntro") &&
+          children.indexOf("iuAffiliatePhase2Offers") > children.indexOf("iuAffiliateGrid") &&
+          children.indexOf("iuAffiliateDisclosure") > children.indexOf("iuAffiliatePhase2Offers") &&
+          children.indexOf("iuAffiliateSeo") > children.indexOf("iuAffiliateDisclosure");
 
         const introCs = intro ? getComputedStyle(intro) : null;
         const discCs = disc ? getComputedStyle(disc) : null;
