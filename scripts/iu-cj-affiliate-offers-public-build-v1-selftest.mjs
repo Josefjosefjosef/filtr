@@ -112,9 +112,16 @@ expect("rollback_ok", rb.ok === true);
 const shipped = path.join(ROOT, "projects", "data", "iu-affiliate-cj-offers-public-v1.json");
 expect("shipped_stub_exists", fs.existsSync(shipped));
 const stub = JSON.parse(fs.readFileSync(shipped, "utf8"));
-expect("shipped_disarmed", stub.liveEnabled === false);
 expect("shipped_schema", stub.schema === OFFERS_SCHEMA);
-expect("shipped_no_ready", (stub.stats?.publicationReady || 0) === 0);
+expect("shipped_ok_flag", stub.ok !== false);
+/* Phase 3W: production may ship liveEnabled=true with publicationReady>0 after armed promote. */
+if (stub.liveEnabled === true) {
+  expect("shipped_live_has_ready", (stub.stats?.publicationReady || 0) > 0);
+  expect("shipped_live_has_sections", Array.isArray(stub.sections) && stub.sections.length > 0);
+} else {
+  expect("shipped_disarmed", stub.liveEnabled === false);
+  expect("shipped_no_ready", (stub.stats?.publicationReady || 0) === 0);
+}
 
 const policy = JSON.parse(
   fs.readFileSync(path.join(ROOT, "projects", "data", "iu-affiliate-slot-policy-v1.json"), "utf8")
