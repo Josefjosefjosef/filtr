@@ -1,12 +1,12 @@
-name: CJ Affiliate catalog sync (fetch ≠ publish)
+﻿name: CJ Affiliate catalog sync (fetch â‰  publish)
 
-# Phase 2C PR B: daily fetch → staging artifacts; publish only CJ_MANAGED via gate.
+# Phase 2C PR B: daily fetch â†’ staging artifacts; publish only CJ_MANAGED via gate.
 # Never force-pushes main. Never rewrites catalog JS / freeze guards / slot policy.
 # Prod deploy remains Pages/PR merge after human approval.
 
 on:
   schedule:
-    # Off-peak UTC (~03:17) — ~25 req/min spacing enforced in fetch script
+    # Off-peak UTC (~03:17) â€” ~25 req/min spacing enforced in fetch script
     - cron: "17 3 * * *"
   workflow_dispatch:
     inputs:
@@ -68,7 +68,7 @@ jobs:
         run: node scripts/iu-cj-affiliate-catalog-sync-promote-selftest.mjs
       - name: R2 auto-publish selftest (fixtures; no prod; proves no git merge)
         run: node scripts/iu-cj-affiliate-catalog-sync-r2-publish-selftest.mjs
-      - name: R2 → overlay E2E selftest (fixtures; no git merge)
+      - name: R2 â†’ overlay E2E selftest (fixtures; no git merge)
         run: node scripts/iu-cj-affiliate-catalog-sync-r2-e2e-overlay-selftest.mjs
       - name: Site-redirects CJ managed-public unit tests
         working-directory: cloudflare/iu-site-redirects
@@ -164,7 +164,7 @@ jobs:
           fi
       - name: Offers public dry-build from fixture (never arms liveEnabled)
         run: node scripts/iu-cj-affiliate-offers-public-build-v1.mjs
-      - name: Fetch → staging JSON
+      - name: Fetch â†’ staging JSON
         run: node scripts/iu-cj-affiliate-catalog-sync-fetch-v1.mjs
       - name: Upload staging artifact
         uses: actions/upload-artifact@v4
@@ -178,30 +178,45 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # Sync branch historically bloated (~400k files). Always rewrite as a slim
+          # orphan tip with only CJ JSON artifacts â€” never checkout the fat history.
           SYNC_BRANCH="data/cj-affiliate-catalog-sync"
           STASH="${RUNNER_TEMP}/iu-cj-staging"
-          mkdir -p "${STASH}"
+          mkdir -p "${STASH}/prev" projects/data
           cp projects/data/iu-affiliate-cj-staging-v1.json "${STASH}/"
           cp projects/data/iu-affiliate-cj-sync-audit-v1.json "${STASH}/"
           git config user.name "iu-cj-catalog-sync-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git fetch origin "${SYNC_BRANCH}" || true
-          git checkout -B "${SYNC_BRANCH}" "origin/${SYNC_BRANCH}" 2>/dev/null || git checkout -B "${SYNC_BRANCH}"
+          git fetch origin "${SYNC_BRANCH}" --depth=1 || true
+          for name in managed-public managed-registry staging sync-audit; do
+            git show "origin/${SYNC_BRANCH}:projects/data/iu-affiliate-cj-${name}-v1.json" \
+              > "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" 2>/dev/null || true
+          done
+          git checkout --orphan "iu-cj-sync-slim-$$"
+          git reset --hard
+          git clean -fdx
           mkdir -p projects/data
+          # Preserve prior managed overlays when this job only refreshes staging.
+          for name in managed-public managed-registry; do
+            if [ -f "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" ]; then
+              cp "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" "projects/data/iu-affiliate-cj-${name}-v1.json"
+            fi
+          done
           cp "${STASH}/iu-affiliate-cj-staging-v1.json" projects/data/
           cp "${STASH}/iu-affiliate-cj-sync-audit-v1.json" projects/data/
-          git add projects/data/iu-affiliate-cj-staging-v1.json projects/data/iu-affiliate-cj-sync-audit-v1.json
+          git add projects/data/iu-affiliate-cj-*.json
           if git diff --cached --quiet; then
             echo "NO_STAGING_CHANGES"
             exit 0
           fi
-          if git diff --cached --name-only | grep -Ev '^projects/data/iu-affiliate-cj-(staging|sync-audit)-v1\.json$'; then
+          if git diff --cached --name-only | grep -Ev '^projects/data/iu-affiliate-cj-(staging|sync-audit|managed-public|managed-registry)-v1\.json$'; then
             echo "BLOCKER=UNEXPECTED_STAGED_PATHS"
             git diff --cached --name-only
             exit 1
           fi
-          git commit -m "chore(data): CJ affiliate staging fetch (sync branch only)"
-          git push origin "HEAD:${SYNC_BRANCH}"
+          git commit -m "chore(data): CJ affiliate staging fetch (sync branch only, slim tip)"
+          git push --force origin "HEAD:${SYNC_BRANCH}"
+          echo "SYNC_BRANCH_SLIM_REWRITE=true"
 
   publish-gate:
     needs: fetch-staging
@@ -228,25 +243,44 @@ jobs:
         run: |
           set -euo pipefail
           SYNC_BRANCH="data/cj-affiliate-catalog-sync"
+          STASH="${RUNNER_TEMP}/iu-cj-publish"
+          mkdir -p "${STASH}/prev" projects/data
+          for name in managed-public managed-registry staging sync-audit; do
+            if [ -f "projects/data/iu-affiliate-cj-${name}-v1.json" ]; then
+              cp "projects/data/iu-affiliate-cj-${name}-v1.json" "${STASH}/iu-affiliate-cj-${name}-v1.json"
+            fi
+          done
           git config user.name "iu-cj-catalog-sync-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git fetch origin "${SYNC_BRANCH}" || true
-          git checkout -B "${SYNC_BRANCH}" "origin/${SYNC_BRANCH}" 2>/dev/null || git checkout -B "${SYNC_BRANCH}"
-          git add \
-            projects/data/iu-affiliate-cj-managed-registry-v1.json \
-            projects/data/iu-affiliate-cj-managed-public-v1.json \
-            projects/data/iu-affiliate-cj-sync-audit-v1.json || true
+          git fetch origin "${SYNC_BRANCH}" --depth=1 || true
+          for name in managed-public managed-registry staging sync-audit; do
+            git show "origin/${SYNC_BRANCH}:projects/data/iu-affiliate-cj-${name}-v1.json" \
+              > "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" 2>/dev/null || true
+          done
+          git checkout --orphan "iu-cj-sync-slim-$$"
+          git reset --hard
+          git clean -fdx
+          mkdir -p projects/data
+          for name in managed-public managed-registry staging sync-audit; do
+            if [ -f "${STASH}/iu-affiliate-cj-${name}-v1.json" ]; then
+              cp "${STASH}/iu-affiliate-cj-${name}-v1.json" "projects/data/iu-affiliate-cj-${name}-v1.json"
+            elif [ -f "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" ]; then
+              cp "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" "projects/data/iu-affiliate-cj-${name}-v1.json"
+            fi
+          done
+          git add projects/data/iu-affiliate-cj-*.json
           if git diff --cached --quiet; then
             echo "NO_REGISTRY_CHANGES"
             exit 0
           fi
-          if git diff --cached --name-only | grep -Ev '^projects/data/iu-affiliate-cj-(managed-registry|managed-public|sync-audit)-v1\.json$'; then
+          if git diff --cached --name-only | grep -Ev '^projects/data/iu-affiliate-cj-(managed-registry|managed-public|staging|sync-audit)-v1\.json$'; then
             echo "BLOCKER=UNEXPECTED_PUBLISH_PATHS"
             git diff --cached --name-only
             exit 1
           fi
-          git commit -m "chore(data): CJ_MANAGED registry+public overlay (gate pass, sync branch)"
-          git push origin "HEAD:${SYNC_BRANCH}"
+          git commit -m "chore(data): CJ_MANAGED registry+public overlay (gate pass, slim sync tip)"
+          git push --force origin "HEAD:${SYNC_BRANCH}"
+          echo "SYNC_BRANCH_SLIM_REWRITE=true"
       - name: Summary (no merge / no prod)
         shell: bash
         run: |
@@ -278,7 +312,7 @@ jobs:
         run: |
           set -euo pipefail
           SYNC_BRANCH="data/cj-affiliate-catalog-sync"
-          git fetch origin "${SYNC_BRANCH}"
+          git fetch origin "${SYNC_BRANCH}" --depth=1
           git show "origin/${SYNC_BRANCH}:projects/data/iu-affiliate-cj-managed-public-v1.json" > /tmp/iu-managed-public-incoming.json
       - name: Validate incoming managed-public (promote write stays disarmed)
         shell: bash
@@ -336,7 +370,7 @@ jobs:
 
   # Phase 2H: unattended public overlay via Worker/R2 (no PR merge, no commit to main).
   # DISARMED unless workflow_dispatch publish_managed_public_r2=1 AND arm_publish=1 AND secrets set.
-  # Live CF binding creation is INFRA_PENDING — job fails closed if endpoint/token missing when armed.
+  # Live CF binding creation is INFRA_PENDING â€” job fails closed if endpoint/token missing when armed.
   publish-managed-public-r2:
     needs: publish-gate
     if: github.event_name == 'workflow_dispatch' && inputs.publish_managed_public_r2 == '1' && inputs.arm_publish == '1'
@@ -357,7 +391,7 @@ jobs:
         run: |
           set -euo pipefail
           SYNC_BRANCH="data/cj-affiliate-catalog-sync"
-          git fetch origin "${SYNC_BRANCH}"
+          git fetch origin "${SYNC_BRANCH}" --depth=1
           mkdir -p projects/data
           git show "origin/${SYNC_BRANCH}:projects/data/iu-affiliate-cj-managed-public-v1.json" > projects/data/iu-affiliate-cj-managed-public-v1.json
       - name: Preflight R2 publish secrets (no values)
