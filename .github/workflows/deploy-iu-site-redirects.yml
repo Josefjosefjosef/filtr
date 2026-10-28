@@ -3,7 +3,16 @@
 name: Deploy IU site redirects
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      cj_managed_public_live:
+        description: "Arm CJ_MANAGED_PUBLIC_LIVE_ENABLED at deploy time only (toml stays false; public GET serves R2)"
+        required: true
+        default: "0"
+        type: choice
+        options:
+          - "0"
+          - "1"
   push:
     branches: [main]
     paths:
@@ -107,12 +116,20 @@ jobs:
           else
             echo "CJ_MANAGED_PUBLIC_PUBLISH_TOKEN_SET=NO"
           fi
-          # Fail closed: never deploy with CJ live armed.
+          # Fail closed: never commit/deploy from toml with CJ live armed.
           if grep -Eq 'CJ_MANAGED_PUBLIC_LIVE_ENABLED\s*=\s*"true"' wrangler.toml; then
             echo "BLOCKER=CJ_MANAGED_PUBLIC_LIVE_ENABLED_TRUE"
             exit 1
           fi
-          npx wrangler deploy
+          # Phase 3U: optional runtime arm via --var (toml remains "false").
+          EXTRA_VARS=()
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.cj_managed_public_live }}" = "1" ]; then
+            EXTRA_VARS+=(--var CJ_MANAGED_PUBLIC_LIVE_ENABLED:true)
+            echo "CJ_MANAGED_PUBLIC_LIVE_RUNTIME=true"
+          else
+            echo "CJ_MANAGED_PUBLIC_LIVE_RUNTIME=false"
+          fi
+          npx wrangler deploy "${EXTRA_VARS[@]}"
 
       - name: Prove HTTP 301
         run: |
@@ -129,6 +146,34 @@ jobs:
           echo "DATA_PROBE_HTTP=$code"
           test "$code" = "200"
           echo "REDIRECT_PROOF=PASS"
+
+      - name: Prove CJ managed-public LIVE R2 serve (dispatch arm only)
+        if: github.event_name == 'workflow_dispatch' && inputs.cj_managed_public_live == '1'
+        run: |
+          set -euo pipefail
+          ok=0
+          for attempt in 1 2 3 4 5 6 7 8; do
+            echo "CJ_LIVE_PROBE_ATTEMPT=${attempt}"
+            curl -sI "https://infouzel.cz/projects/data/iu-affiliate-cj-managed-public-v1.json" | tee /tmp/cj_mp_headers.txt
+            if grep -qiE "^x-iu-cj-managed-public-source:[[:space:]]*r2" /tmp/cj_mp_headers.txt; then
+              ok=1
+              break
+            fi
+            sleep 5
+          done
+          test "$ok" = "1"
+          curl -s "https://infouzel.cz/projects/data/iu-affiliate-cj-managed-public-v1.json" -o /tmp/cj_mp.json
+          python3 - <<'PY'
+          import json
+          d=json.load(open("/tmp/cj_mp.json"))
+          partners=d.get("partners") or []
+          active=sum(1 for p in partners if p.get("active") is not False)
+          print("CJ_LIVE_PARTNERS", len(partners))
+          print("CJ_LIVE_ACTIVE", active)
+          if active < 1:
+            raise SystemExit("BLOCKER=CJ_LIVE_EMPTY_ACTIVE")
+          PY
+          echo "CJ_MANAGED_PUBLIC_LIVE_PROOF=PASS"
 
       - name: Prove HTTP CSP on HTML documents (XSS-CSP-01/02)
         run: |
