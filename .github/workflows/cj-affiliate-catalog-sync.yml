@@ -132,7 +132,8 @@ jobs:
   fetch-staging:
     needs: selftest
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Full CJ Link Search + advertiser pages with ~2.4s spacing routinely exceeds 20m.
+    timeout-minutes: 45
     env:
       IU_CJ_PAT: ${{ secrets.IU_CJ_PAT }}
       IU_CJ_PUBLISHER_CID: ${{ secrets.IU_CJ_PUBLISHER_CID }}
