@@ -49,7 +49,16 @@ const workflow = fs.readFileSync(
   "utf8"
 );
 
-expect("offers_disarmed", offersPublic.liveEnabled === false);
+// Repo offers may be LIVE after Phase 3V promote; require ready content when live.
+if (offersPublic.liveEnabled === true) {
+  expect(
+    "offers_live_has_ready",
+    (offersPublic.stats?.publicationReady || 0) > 0 ||
+      (Array.isArray(offersPublic.sections) && offersPublic.sections.length > 0)
+  );
+} else {
+  expect("offers_disarmed", offersPublic.liveEnabled === false);
+}
 
 const stagingPath =
   process.env.IU_CJ_PHASE3O_STAGING_JSON ||

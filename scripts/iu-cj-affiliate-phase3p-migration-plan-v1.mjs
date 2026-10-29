@@ -37,7 +37,16 @@ if (fs.existsSync(stagingPath)) {
   stagingSource = stagingPath;
 }
 
-expect("offers_disarmed", offersPublic.liveEnabled === false);
+// Repo offers may be LIVE after Phase 3V promote; require ready content when live.
+if (offersPublic.liveEnabled === true) {
+  expect(
+    "offers_live_has_ready",
+    (offersPublic.stats?.publicationReady || 0) > 0 ||
+      (Array.isArray(offersPublic.sections) && offersPublic.sections.length > 0)
+  );
+} else {
+  expect("offers_disarmed", offersPublic.liveEnabled === false);
+}
 
 if (advertisers.length === 0) {
   const out = {
