@@ -159,11 +159,41 @@ async function fetchAllPages({ baseUrl, queryBase, pat, parseBlocks, parseRecord
   return { ok: true, reason: "complete", records, pages, totalMatched, incomplete: false };
 }
 
+/** Parse CJ Link Search datetime as UTC (suffix .0 stripped). */
+function parseOfferInstant(raw) {
+  const s = String(raw ?? "").trim();
+  if (!s) return null;
+  const normalized = s.replace(/\.0$/, "").replace(" ", "T");
+  const withZ = /Z$/i.test(normalized) || /[+-]\d{2}:?\d{2}$/.test(normalized) ? normalized : normalized + "Z";
+  const t = Date.parse(withZ);
+  return Number.isFinite(t) ? t : null;
+}
+
 function isExpired(link, ref) {
-  const end = link?.promotionEndDate;
-  if (!end) return false;
-  const t = Date.parse(String(end).replace(" ", "T"));
-  return Number.isFinite(t) && t < ref.getTime();
+  const t = parseOfferInstant(link?.promotionEndDate);
+  return t != null && t < ref.getTime();
+}
+
+function isFutureStart(link, ref) {
+  const t = parseOfferInstant(link?.promotionStartDate);
+  return t != null && t > ref.getTime();
+}
+
+/**
+ * CJ targetedCountries → CZ eligibility.
+ * Returns: true (CZ allowed), false (explicit non-CZ market), null (unknown / absent → do not hard-block).
+ */
+export function marketAllowsCzechRepublic(targetedCountries) {
+  const tc = String(targetedCountries ?? "").trim();
+  if (!tc) return null;
+  const parts = tc
+    .split(/[,;/|]+/)
+    .map((s) => s.trim().toUpperCase())
+    .filter(Boolean);
+  if (parts.length === 0) return null;
+  const czOk = new Set(["CZ", "CZE", "CZECH", "CZECHIA", "ALL", "EU", "EUROPE", "WW", "WORLDWIDE", "INT", "INTERNATIONAL"]);
+  if (parts.some((p) => czOk.has(p))) return true;
+  return false;
 }
 
 function parseMinOrder(text) {
@@ -196,6 +226,25 @@ export function classifyOfferPublicationState(link, ctx = {}) {
 
   if (isExpired(link, ref)) {
     return { state: PUB_STATE.EXPIRED, reasons: ["expired"], publicationReady: false, offerId };
+  }
+  if (isFutureStart(link, ref)) {
+    return {
+      state: PUB_STATE.MANUAL_REVIEW,
+      reasons: ["time_window", "future_start"],
+      publicationReady: false,
+      offerId,
+    };
+  }
+
+  const marketOk = marketAllowsCzechRepublic(link.targetedCountries);
+  if (marketOk === false) {
+    return {
+      state: PUB_STATE.MANUAL_REVIEW,
+      reasons: ["market_not_targeting_cz"],
+      publicationReady: false,
+      offerId,
+      targetedCountries: link.targetedCountries || null,
+    };
   }
 
   const click = String(link.clickUrl || "").trim();
@@ -254,6 +303,7 @@ export function classifyOfferPublicationState(link, ctx = {}) {
     discountLabel: null,
     validFrom: link.promotionStartDate || null,
     validTo: link.promotionEndDate || null,
+    targetedCountries: link.targetedCountries || null,
     affiliateUrl: click,
     publicationReady: false,
     publishable: false,
@@ -261,13 +311,17 @@ export function classifyOfferPublicationState(link, ctx = {}) {
     reasons: [],
   };
 
-  // Strict PUBLICATION_READY: mapped section + trusted URL + coupon code when coupon + no hard blockers
+  // Strict PUBLICATION_READY: mapped section + trusted URL + coupon code when coupon + no hard blockers.
+  // time_window (future/expired from assessOffer) must never publish.
   const hard = reasons.filter(
     (r) =>
       r === "partner_section_unmapped" ||
       r === "missing_coupon_code" ||
       r === "incomplete_fields" ||
-      r === "invalid_record"
+      r === "invalid_record" ||
+      r === "time_window" ||
+      r === "future_start" ||
+      r === "market_not_targeting_cz"
   );
   if (hard.length === 0 && (card.kind === "coupon" || card.kind === "action") && sectionId) {
     card.state = PUB_STATE.PUBLICATION_READY;

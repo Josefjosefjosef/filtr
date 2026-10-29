@@ -11,7 +11,7 @@
   var PREVIEW_JSON_LOCAL = "/assets/cj-phase2-preview-autohotarek.local-dev.json";
   var PREVIEW_JSON_STUB = "/assets/cj-phase2-preview-autohotarek.json";
   var OFFERS_PUBLIC_PATH = "/projects/data/iu-affiliate-cj-offers-public-v1.json";
-  var CSS_HREF = "/assets/iu-affiliate-phase2-offers-v1.css?v=cj-phase2c-offers-v3";
+  var CSS_HREF = "/assets/iu-affiliate-phase2-offers-v1.css?v=cj-phase3y-offers-v4";
 
   function escapeHtml(s) {
     return String(s == null ? "" : s)
@@ -19,6 +19,32 @@
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;");
+  }
+
+  /** CJ-style datetimes → UTC ms; invalid → NaN. */
+  function parseOfferInstantMs(raw) {
+    var s = String(raw == null ? "" : raw).trim();
+    if (!s) return NaN;
+    var normalized = s.replace(/\.0$/, "").replace(" ", "T");
+    if (!/Z$/i.test(normalized) && !/[+-]\d{2}:?\d{2}$/.test(normalized)) normalized += "Z";
+    return Date.parse(normalized);
+  }
+
+  /** Defense-in-depth: hide expired / not-yet-started offers even if JSON is stale. */
+  function offerInPublicTimeWindow(item, nowMs) {
+    if (!item) return false;
+    var now = typeof nowMs === "number" ? nowMs : Date.now();
+    var from = parseOfferInstantMs(item.validFrom);
+    var to = parseOfferInstantMs(item.validTo);
+    if (Number.isFinite(from) && from > now) return false;
+    if (Number.isFinite(to) && to < now) return false;
+    return true;
+  }
+
+  function isPositiveSalePrice(raw) {
+    if (raw == null || raw === "") return false;
+    var n = typeof raw === "number" ? raw : Number(String(raw).replace(/\s/g, "").replace(",", "."));
+    return Number.isFinite(n) && n > 0;
   }
 
   function isLocalDevHost() {
@@ -142,6 +168,7 @@
     var preview = opts && opts.preview;
     if (!preview && coupon.publicationReady !== true) return;
     if (!preview && !coupon.couponCode) return;
+    if (!preview && !offerInPublicTimeWindow(coupon)) return;
     if (preview && !coupon.couponCode) return;
 
     var parts = [
@@ -214,6 +241,7 @@
     if (!action) return;
     var preview = opts && opts.preview;
     if (!preview && action.publicationReady !== true) return;
+    if (!preview && !offerInPublicTimeWindow(action)) return;
     var parts = [
       '<div class="iuAffiliatePhase2Offers__action" role="region" aria-label="Nabídka bez kódu">',
       partnerHeaderHtml(action.partnerName, action.partnerLogoUrl),
@@ -257,7 +285,10 @@
     var list = (cards || []).filter(function (c) {
       if (!c) return false;
       if (preview) return true;
-      return c.publicationReady === true;
+      if (c.publicationReady !== true) return false;
+      if (!isPositiveSalePrice(c.currentPrice)) return false;
+      if (!offerInPublicTimeWindow(c)) return false;
+      return true;
     });
     if (!list.length) return;
     var visible = (display && display.defaultVisibleProducts) || 3;
@@ -282,10 +313,13 @@
         var brand = c.brand
           ? '<div class="iuAffiliatePhase2Offers__brand">' + escapeHtml(c.brand) + "</div>"
           : "";
-        var price = c.currentPrice
-          ? '<div class="iuAffiliatePhase2Offers__price">' + escapeHtml(String(c.currentPrice)) + "</div>"
+        var price = isPositiveSalePrice(c.currentPrice)
+          ? '<div class="iuAffiliatePhase2Offers__price">' +
+            escapeHtml(String(c.currentPrice)) +
+            (c.currency ? " " + escapeHtml(String(c.currency)) : "") +
+            "</div>"
           : "";
-        var orig = c.originalPrice
+        var orig = isPositiveSalePrice(c.originalPrice)
           ? '<div class="iuAffiliatePhase2Offers__meta iuAffiliatePhase2Offers__priceWas">Původně: ' +
             escapeHtml(String(c.originalPrice)) +
             "</div>"
@@ -391,13 +425,18 @@
     if (!sec) return;
 
     var coupons = (sec.coupons || []).filter(function (c) {
-      return c && c.publicationReady === true && c.couponCode;
+      return c && c.publicationReady === true && c.couponCode && offerInPublicTimeWindow(c);
     });
     var actions = (sec.actions || []).filter(function (a) {
-      return a && a.publicationReady === true;
+      return a && a.publicationReady === true && offerInPublicTimeWindow(a);
     });
     var products = (sec.products || []).filter(function (p) {
-      return p && p.publicationReady === true;
+      return (
+        p &&
+        p.publicationReady === true &&
+        isPositiveSalePrice(p.currentPrice) &&
+        offerInPublicTimeWindow(p)
+      );
     });
     if (!coupons.length && !actions.length && !products.length) return;
 

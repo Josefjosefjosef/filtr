@@ -101,6 +101,50 @@ expect("expired", c2.state === PUB_STATE.EXPIRED);
 expect("invalid_url", c3.state === PUB_STATE.INVALID);
 expect("duplicate", c4.state === PUB_STATE.DUPLICATE);
 
+{
+  const future = {
+    ...goodCoupon,
+    linkId: "1004",
+    couponCode: "SOON",
+    clickUrl: "https://www.kqzyfj.com/click-101883843-6179554-1004",
+    promotionStartDate: "2026-11-05 23:00:00.0",
+    promotionEndDate: "2026-11-06 23:00:00.0",
+  };
+  const foreign = {
+    ...goodCoupon,
+    linkId: "1005",
+    couponCode: "HU15",
+    clickUrl: "https://www.kqzyfj.com/click-101883843-6179554-1005",
+    targetedCountries: "HU",
+  };
+  const czOk = {
+    ...goodCoupon,
+    linkId: "1006",
+    couponCode: "CZ15",
+    clickUrl: "https://www.kqzyfj.com/click-101883843-6179554-1006",
+    targetedCountries: "CZ,SK",
+  };
+  const seen2 = new Set();
+  const f1 = classifyOfferPublicationState(future, {
+    sectionByAdv,
+    seenOfferIds: seen2,
+    refDate: new Date("2026-10-29T08:00:00Z"),
+  });
+  const f2 = classifyOfferPublicationState(foreign, {
+    sectionByAdv,
+    seenOfferIds: seen2,
+    refDate: new Date("2026-10-29T08:00:00Z"),
+  });
+  const f3 = classifyOfferPublicationState(czOk, {
+    sectionByAdv,
+    seenOfferIds: seen2,
+    refDate: new Date("2026-10-29T08:00:00Z"),
+  });
+  expect("future_not_ready", f1.publicationReady !== true && (f1.reasons || []).includes("future_start"));
+  expect("foreign_market_blocked", f2.publicationReady !== true && (f2.reasons || []).includes("market_not_targeting_cz"));
+  expect("cz_market_ready", f3.state === PUB_STATE.PUBLICATION_READY);
+}
+
 const { doc } = buildReadinessFromLiveBundles(
   {
     sourceKind: "fixture_offline",
