@@ -297,6 +297,86 @@ function expect(name, cond) {
   expect("ended_no_sections", (ended.doc.sections || []).length === 0);
 }
 
+{
+  /* Phase 3Y: reject zero-price products; reject future / non-CZ market offers. */
+  const gated = buildOffersPublicFromStaging({
+    staging: {
+      apiOutage: false,
+      advertisers: [{ advertiserId: "100", relationshipStatus: "joined" }],
+      links: [
+        {
+          linkId: "fut-1",
+          advertiserId: "100",
+          advertiserName: "TestCo",
+          couponCode: "SOON",
+          clickUrl: goodUrl,
+          description: "Od 500 Kč",
+          promotionType: "coupon",
+          promotionStartDate: "2026-11-05 23:00:00.0",
+          promotionEndDate: "2026-11-06 23:00:00.0",
+          targetedCountries: "CZ",
+        },
+        {
+          linkId: "hu-1",
+          advertiserId: "100",
+          advertiserName: "TestCo",
+          couponCode: "HU15",
+          clickUrl: goodUrl,
+          description: "Od 500 Kč",
+          promotionType: "coupon",
+          promotionStartDate: "2026-01-01 00:00:00.0",
+          promotionEndDate: "2027-12-31 23:59:00.0",
+          targetedCountries: "HU",
+        },
+        {
+          linkId: "cz-1",
+          advertiserId: "100",
+          advertiserName: "TestCo",
+          couponCode: "CZ15",
+          clickUrl: goodUrl,
+          description: "Od 500 Kč",
+          promotionType: "coupon",
+          promotionStartDate: "2026-01-01 00:00:00.0",
+          promotionEndDate: "2027-12-31 23:59:00.0",
+          targetedCountries: "CZ",
+        },
+      ],
+    },
+    sectionByAdv: { "100": "aff-moda" },
+    products: [
+      {
+        advertiserId: "100",
+        productId: "166769",
+        title: "Zero price",
+        imageUrl: "https://cdn.example.com/z.jpg",
+        currentPrice: "0.00",
+        currency: "CZK",
+        affiliateUrl: goodUrl,
+        publicationReady: true,
+      },
+      {
+        advertiserId: "100",
+        productId: "ok-1",
+        title: "Ok price",
+        imageUrl: "https://cdn.example.com/ok.jpg",
+        currentPrice: "199.00",
+        currency: "CZK",
+        affiliateUrl: goodUrl,
+        publicationReady: true,
+      },
+    ],
+    refDate: new Date("2026-10-29T08:00:00Z"),
+  });
+  expect("gate_build_ok", gated.ok === true);
+  expect("future_rejected", (gated.rejectReasons?.time_window || 0) + (gated.rejectReasons?.future_start || 0) >= 1);
+  expect("foreign_rejected", (gated.rejectReasons?.market_not_targeting_cz || 0) >= 1);
+  expect("cz_coupon_kept", gated.counts.coupons === 1);
+  expect("zero_price_rejected", gated.counts.products === 1);
+  const prod = (gated.doc.sections || []).flatMap((s) => s.products || []);
+  expect("zero_not_present", !prod.some((p) => String(p.productId) === "166769"));
+  expect("ok_price_present", prod.some((p) => String(p.productId) === "ok-1"));
+}
+
 console.log(
   JSON.stringify({
     IU_CJ_OFFERS_LIVE_SYNC_V1_SELFTEST: "PASS",

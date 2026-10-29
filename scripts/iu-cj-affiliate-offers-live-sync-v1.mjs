@@ -164,6 +164,7 @@ function toPublicOfferCard(card) {
     conditionsSummary: card.conditionsSummary || null,
     validFrom: card.validFrom || null,
     validTo: card.validTo || null,
+    targetedCountries: card.targetedCountries || null,
     affiliateUrl: card.affiliateUrl,
     publicationReady: true,
     publishable: true,
@@ -173,11 +174,19 @@ function toPublicOfferCard(card) {
   };
 }
 
+function isPositiveSalePrice(raw) {
+  if (raw == null || raw === "") return false;
+  const n = typeof raw === "number" ? raw : Number(String(raw).replace(/\s/g, "").replace(",", "."));
+  return Number.isFinite(n) && n > 0;
+}
+
 function toPublicProductCard(p, sectionKey) {
   if (!p || p.publicationReady !== true) return null;
   if (!isCjTrackingUrl(p.affiliateUrl)) return null;
   if (!p.imageUrl || !/^https:\/\//i.test(String(p.imageUrl))) return null;
   if (p.currentPrice == null || !p.currency) return null;
+  // Never publish zero/negative as a confirmed sale price (Phase 3Y).
+  if (!isPositiveSalePrice(p.currentPrice)) return null;
   return {
     productId: p.productId || null,
     productVariant: p.productVariant || null,
