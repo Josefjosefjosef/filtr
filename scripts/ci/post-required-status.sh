@@ -36,6 +36,10 @@ elif [ "$EVENT_NAME" = "pull_request" ] || [ "$EVENT_NAME" = "pull_request_targe
     exit 1
   fi
   SHA="$HEAD_SHA"
+elif [ -n "$HEAD_SHA" ]; then
+  # workflow_dispatch (CHMI/offers data PRs): honor explicit PR head when provided
+  SHA="$HEAD_SHA"
+  echo "status_post_explicit_head_sha=${SHA} event=${EVENT_NAME}"
 fi
 
 if [ -z "$SHA" ]; then
