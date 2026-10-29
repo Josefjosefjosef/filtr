@@ -48,7 +48,16 @@ const workflow = fs.readFileSync(
 // --- inventury ---
 const inv = inventuryUnifiedButtons({ catalogSrc, managedPublic });
 expect("disarmed_flags", inv.liveEnabled === false && inv.publishArmed === false);
-expect("offers_disarmed", offersPublic.liveEnabled === false);
+// Repo offers may be LIVE after Phase 3V promote; require ready content when live.
+if (offersPublic.liveEnabled === true) {
+  expect(
+    "offers_live_has_ready",
+    (offersPublic.stats?.publicationReady || 0) > 0 ||
+      (Array.isArray(offersPublic.sections) && offersPublic.sections.length > 0)
+  );
+} else {
+  expect("offers_disarmed", offersPublic.liveEnabled === false);
+}
 expect("baked_partners", inv.counts.bakedPartners > 0);
 expect("managed_active", inv.counts.managedActive > 0);
 expect("cid_overlap_complete", inv.counts.bakedOnlyCid === 0);
