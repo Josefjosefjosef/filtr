@@ -188,37 +188,6 @@ write(
 
 write(
   dir,
-  "OWNERSHIP-UNASSIGNED.csv",
-  toCsv(
-    partners.map((p) => ({
-      partnerId: p.partnerId,
-      advertiserId: p.advertiserId,
-      displayNameCs: p.displayNameCs,
-      management: p.management,
-      ownership: p.chipOwnership?.ownership,
-      takeoverEligible: p.chipOwnership?.takeoverEligible,
-      meaning: p.managementMeaning || p.chipOwnership?.meaning,
-      publishability: p.publishability,
-      hasButton: buttons.some((b) => b.partnerId === p.partnerId),
-      historicalUrlCopied: false,
-    })),
-    [
-      "partnerId",
-      "advertiserId",
-      "displayNameCs",
-      "management",
-      "ownership",
-      "takeoverEligible",
-      "meaning",
-      "publishability",
-      "hasButton",
-      "historicalUrlCopied",
-    ]
-  )
-);
-
-write(
-  dir,
   "DEDUPLICATION-DECISIONS.csv",
   toCsv(reg.deduplicationDecisions || [], [
     "partnerId",
@@ -338,6 +307,75 @@ write(
   )
 );
 
+write(dir, "TAXONOMY-38-AUTHORITATIVE.json", JSON.stringify(reg.taxonomy || {}, null, 2) + "\n");
+write(
+  dir,
+  "TAXONOMY-OCCUPANCY.json",
+  JSON.stringify(reg.taxonomyOccupancy || {}, null, 2) + "\n"
+);
+write(
+  dir,
+  "UNIFIED-TAKEOVER-PLAN.json",
+  JSON.stringify(reg.unifiedTakeoverPlan || {}, null, 2) + "\n"
+);
+write(
+  dir,
+  "EVIDENCE-MATRIX.csv",
+  toCsv(reg.evidenceMatrix || [], [
+    "partnerId",
+    "advertiserId",
+    "cjJoined",
+    "affiliateUrlPresent",
+    "affiliateUrlVerified",
+    "httpRedirectVerified",
+    "merchantIdentityProposed",
+    "czechTargetingVerified",
+    "czechLanguageVerified",
+    "czechAvailabilityVerified",
+    "semanticCategoryVerified",
+    "readyForReview",
+    "approvedForPublication",
+  ])
+);
+write(
+  dir,
+  "SAFETY-GATES.json",
+  JSON.stringify(reg.safetyGates || btn.safetyGates || {}, null, 2) + "\n"
+);
+
+write(
+  dir,
+  "OWNERSHIP-UNASSIGNED.csv",
+  toCsv(
+    partners.map((p) => ({
+      partnerId: p.partnerId,
+      advertiserId: p.advertiserId,
+      displayNameCs: p.displayNameCs,
+      management: p.management,
+      ownership: p.chipOwnership?.ownership,
+      takeoverEligible: p.chipOwnership?.takeoverEligible,
+      unifiedManagementTarget: p.chipOwnership?.unifiedManagementTarget || "",
+      meaning: p.managementMeaning || p.chipOwnership?.meaning,
+      publishability: p.publishability,
+      hasButton: buttons.some((b) => b.partnerId === p.partnerId),
+      historicalUrlCopied: false,
+    })),
+    [
+      "partnerId",
+      "advertiserId",
+      "displayNameCs",
+      "management",
+      "ownership",
+      "takeoverEligible",
+      "unifiedManagementTarget",
+      "meaning",
+      "publishability",
+      "hasButton",
+      "historicalUrlCopied",
+    ]
+  )
+);
+
 // Manifest with portable forward-slash paths (exclude MANIFEST itself first)
 const files = walkFiles(dir).filter((f) => f.rel !== "MANIFEST.json");
 const manifestFiles = files.map((f) => ({
@@ -346,7 +384,7 @@ const manifestFiles = files.map((f) => ({
   sha256: sha256File(f.full),
 }));
 const manifest = {
-  phase: "3Z-V3",
+  phase: "3Z-V4",
   rulesVersion: reg.rulesVersion,
   generatedAt: new Date().toISOString(),
   pathStyle: "portable-forward-slash",
@@ -365,5 +403,6 @@ console.log(
     ready: reg.counts?.readyForReview,
     unassignedWithButton: reg.ownershipSummary?.unassignedWithButton,
     categoryChanges: reg.counts?.categoryChanges,
+    taxonomyCount: reg.taxonomy?.taxonomyCount,
   })
 );

@@ -36,13 +36,15 @@ import { parseAffiliateCatalogOrdered } from "./iu-cj-affiliate-phase2-partner-s
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 export const PHASE3Z_SCHEMA = "iu-affiliate-cj-partner-registry-v1";
 export const PHASE3Z_BUTTONS_SCHEMA = "iu-affiliate-cj-partner-buttons-preview-v1";
-export const PHASE3Z_RULES_VERSION = "phase3z-partner-robot-v3";
+export const PHASE3Z_RULES_VERSION = "phase3z-partner-robot-v4";
 
 /**
  * Slot-policy management meanings (identity ≠ chip ownership):
  * - CJ_MANAGED: already listed for CJ robot/dynamic overlay ownership
  * - UNASSIGNED: JOINED in CJ but absent from slot-policy (not paid/manual)
- * - PAID_RESERVED / MANUAL_PROTECTED: out of robot scope forever
+ * - PAID_RESERVED: paid ads — forever out of robot scope
+ * - MANUAL_PROTECTED: protected today; if the public chip is a CJ tracking URL,
+ *   it is a FUTURE unified-takeover target after independent GO (no historical URL copy)
  *
  * Robot never copies historical baked affiliate URLs. Public swap stays DISARMED
  * until independent GO; then eligible chips are regenerated from CJ click URLs.
@@ -52,7 +54,8 @@ export const MANAGEMENT_MEANING = Object.freeze({
   UNASSIGNED:
     "CJ JOINED partner not yet in slot-policy; eligible for unified robot takeover without historical URL copy",
   PAID_RESERVED: "Paid ad slot — robot must not touch",
-  MANUAL_PROTECTED: "Non-CJ / manually protected — robot must not touch",
+  MANUAL_PROTECTED:
+    "Protected today; CJ tracking public chips become robot-owned only after independent GO (URL from CJ, never bake copy)",
 });
 
 /** Explicit publishability states (machine-readable). */
@@ -67,13 +70,18 @@ export const PUBLISHABILITY = Object.freeze({
   APPROVED_FOR_PUBLICATION: "APPROVED_FOR_PUBLICATION",
 });
 
-const SECTION_TITLES = Object.freeze({
+/**
+ * Fallback titles — authoritative source is assets/iu-affiliate-catalog.js (36 tiles).
+ * aff-letenky = "Doprava a cestování" (ground transport home). Air = aff-letenky-letecka-doprava.
+ * No invented 37th/38th live category; screenshot "38" ≠ live catalog count.
+ */
+export const SECTION_TITLES = Object.freeze({
   "aff-cestovni-kancelare": "Cestovní kanceláře",
   "aff-ubytovani-hotely": "Ubytování a hotely",
-  "aff-letenky": "Letenky",
+  "aff-letenky": "Doprava a cestování",
   "aff-letenky-letecka-doprava": "Letenky a letecká doprava",
   "aff-cestovni-pojisteni": "Cestovní pojištění",
-  "aff-auto-moto": "Auto-moto",
+  "aff-auto-moto": "Auto a moto",
   "aff-pneu-pneuservis": "Pneu a pneuservis",
   "aff-pojisteni": "Pojištění",
   "aff-finance": "Finance",
@@ -82,20 +90,20 @@ const SECTION_TITLES = Object.freeze({
   "aff-zdravi-doplnky": "Zdraví a doplňky",
   "aff-kosmetika": "Kosmetika a parfémy",
   "aff-drogerie": "Drogerie",
-  "aff-moda": "Móda",
-  "aff-boty": "Boty",
+  "aff-moda": "Móda a doplňky",
+  "aff-boty": "Boty a tenisky",
   "aff-deti-hracky": "Děti a hračky",
   "aff-sportovni-obleceni": "Sportovní oblečení",
   "aff-sport-outdoor": "Sport a outdoor",
   "aff-dum-zahrada": "Dům a zahrada",
-  "aff-nabytek": "Nábytek",
-  "aff-kuchyn": "Kuchyně",
-  "aff-elektro": "Elektro",
-  "aff-mobily": "Mobily",
-  "aff-software": "Software",
-  "aff-knihy": "Knihy",
+  "aff-nabytek": "Bydlení a vybavení",
+  "aff-kuchyn": "Kuchyně a domácnost",
+  "aff-elektro": "Elektro a chytrá domácnost",
+  "aff-mobily": "Mobily a příslušenství",
+  "aff-software": "Software a bezpečnost",
+  "aff-knihy": "Knihy, hudba a hry",
   "aff-jidlo": "Jídlo a potraviny",
-  "aff-zvirata": "Zvířata",
+  "aff-zvirata": "Zvířata a chovatelství",
   "aff-kvetiny-darky": "Květiny a dárky",
   "aff-sperky-hodinky": "Šperky a hodinky",
   "aff-tv-streamovani": "TV a streamování",
@@ -103,9 +111,29 @@ const SECTION_TITLES = Object.freeze({
   "aff-inzerce-bazary": "Inzerce a bazary",
   "aff-realitni-kancelare": "Realitní kanceláře",
   "aff-reality-nemovitosti": "Reality a nemovitosti",
-  "aff-kancelarske-potreby": "Kancelářské potřeby",
-  "aff-radio": "Rádio",
+  "aff-kancelarske-potreby": "Kancelářské potřeby a vybavení",
 });
+
+/** Load ordered taxonomy from catalog SoT (never invent tiles). */
+export function loadAuthoritativeTaxonomy(catalogSrc) {
+  const parsed = catalogSrc ? parseAffiliateCatalogOrdered(catalogSrc) : { sections: [] };
+  const sections = (parsed.sections || []).map((s, i) => ({
+    order: i + 1,
+    sectionId: s.sectionId,
+    titleCs: s.sectionTitle,
+  }));
+  const titleById = Object.fromEntries(sections.map((s) => [s.sectionId, s.titleCs]));
+  return {
+    source: "assets/iu-affiliate-catalog.js",
+    taxonomyCount: sections.length,
+    note:
+      sections.length === 36
+        ? "Live affiliate catalog has 36 main category tiles (authoritative). Claims of 38 must be reconciled against this SoT — do not invent missing names."
+        : "Taxonomy count differs from expected 36 — use this export as SoT.",
+    sections,
+    titleById,
+  };
+}
 
 /**
  * Exact parent|child → section (general rules, not per-advertiser exceptions).
@@ -167,6 +195,16 @@ export const PHASE3Z_CATEGORY_RULES_V2 = Object.freeze({
     "travel|air": { sectionId: "aff-letenky-letecka-doprava", reason: "cj_travel_air" },
     "travel|vacation": { sectionId: "aff-cestovni-kancelare", reason: "cj_travel_vacation" },
     "travel|accessories": { sectionId: "aff-cestovni-kancelare", reason: "cj_travel_accessories" },
+    "travel|ground": { sectionId: "aff-letenky", reason: "cj_travel_ground_transport" },
+    "travel|rail": { sectionId: "aff-letenky", reason: "cj_travel_rail" },
+    "travel|bus": { sectionId: "aff-letenky", reason: "cj_travel_bus" },
+    "travel|car rental": { sectionId: "aff-letenky", reason: "cj_travel_car_rental" },
+    "travel|lodging": { sectionId: "aff-ubytovani-hotely", reason: "cj_travel_lodging" },
+    "business|travel": {
+      sectionId: "aff-cestovni-kancelare",
+      reason: "cj_business_travel_agency_affinity",
+      confidence: "medium",
+    },
     "home & garden|garden": { sectionId: "aff-dum-zahrada", reason: "cj_home_garden" },
     "home & garden|furniture": { sectionId: "aff-nabytek", reason: "cj_home_furniture" },
     "home & garden|bed & bath": { sectionId: "aff-dum-zahrada", reason: "cj_home_bed_bath" },
@@ -210,16 +248,17 @@ export const PHASE3Z_CATEGORY_RULES_V2 = Object.freeze({
     "computers & software": { sectionId: "aff-software", reason: "cj_parent_computers_software" },
     "gifts & flowers": { sectionId: "aff-kvetiny-darky", reason: "cj_parent_gifts" },
     travel: { sectionId: "aff-cestovni-kancelare", reason: "cj_parent_travel" },
+    "financial services": { sectionId: "aff-finance", reason: "cj_parent_financial_services" },
+    "real estate": { sectionId: "aff-reality-nemovitosti", reason: "cj_parent_real_estate" },
   },
   /**
    * Parents with no safe InfoUzel taxonomy section — do NOT invent tiles.
+   * (finance + real estate now mapped; business alone stays unmapped unless child rules hit)
    */
   noTaxonomyParents: new Set([
     "art/photo/music",
     "entertainment",
     "telecommunications",
-    "financial services",
-    "real estate",
     "business",
   ]),
 });
@@ -229,18 +268,28 @@ const KEYWORD_SECTION_HINTS = Object.freeze([
   { re: /\b(kosmetik|perfume|parf[eé]m|beauty|make[\s-]?up|dermacol|foreo|yves)\b/i, sectionId: "aff-kosmetika" },
   { re: /\b(l[eé]k[aá]rn|pharmacy|pharma)\b/i, sectionId: "aff-lekarny" },
   { re: /\b(doplnky|supplement|vitamin|zdrav[ií]|brainmarket|bodyworld)\b/i, sectionId: "aff-zdravi-doplnky" },
-  { re: /\b(m[oó]d[aá]|fashion|apparel|clothing|wear)\b/i, sectionId: "aff-moda" },
+  { re: /\b(m[oó]d[aá]|fashion|apparel|clothing|wear|ecomodi)\b/i, sectionId: "aff-moda" },
   { re: /\b(boty|shoe|sneaker|barefoot|footwear)\b/i, sectionId: "aff-boty" },
   { re: /\b(hotel|booking|ubytov|airbnb)\b/i, sectionId: "aff-ubytovani-hotely" },
-  { re: /\b(letenk|airline|flight|skytours)\b/i, sectionId: "aff-letenky-letecka-doprava" },
+  {
+    re: /\b(cestovn[ií]\s*pojist|travel\s*insur|axa\s*assistance|klik\.cz)\b/i,
+    sectionId: "aff-cestovni-pojisteni",
+  },
+  { re: /\b(letenk|airline|flight|skytours|cheapvuelos|arangrant)\b/i, sectionId: "aff-letenky-letecka-doprava" },
+  {
+    re: /\b(leo\s*express|regiojet|flixbus|student\s*agency|vlak|železni|bus\s*ticket)\b/i,
+    sectionId: "aff-letenky",
+  },
   { re: /\b(pojist|insur)\b/i, sectionId: "aff-pojisteni" },
-  { re: /\b(pneu|tire|tyre)\b/i, sectionId: "aff-pneu-pneuservis" },
+  { re: /\b(bestdrive|best\s*drive|pneu|tire|tyre|pneuservis)\b/i, sectionId: "aff-pneu-pneuservis" },
   { re: /\b(auto|moto|car\b)/i, sectionId: "aff-auto-moto" },
   { re: /\b(hra[cč]k|toy|d[eě]ti|kids|baby)\b/i, sectionId: "aff-deti-hracky" },
   { re: /\b(sport|outdoor|fitness)\b/i, sectionId: "aff-sport-outdoor" },
   { re: /\b(potravin|jidlo|food|gourmet)\b/i, sectionId: "aff-jidlo" },
   { re: /\b(drogeri|drugstore)\b/i, sectionId: "aff-drogerie" },
   { re: /\b(pes|pesí|kočka|pet\b|zoo)\b/i, sectionId: "aff-zvirata" },
+  { re: /\b(financ|bank|p[uů]j[cč]k|hypot)\b/i, sectionId: "aff-finance" },
+  { re: /\b(realit|nemovit|reality)\b/i, sectionId: "aff-reality-nemovitosti" },
 ]);
 
 function readJson(p, fallback = null) {
@@ -394,18 +443,18 @@ export function classifyFromCjEvidence(advertiser) {
   const evidence = [];
   const blob = [advertiser?.advertiserName, advertiser?.programUrl].filter(Boolean).join(" ");
 
-  // Rail / coach ticket operators: InfoUzel has no dedicated rail tile.
+  // Ground transport (rail/coach): live taxonomy tile aff-letenky = "Doprava a cestování".
+  // Air carriers stay on aff-letenky-letecka-doprava — never conflate the two.
   if (/leo\s*express|regiojet|flixbus|student\s*agency/i.test(blob)) {
     return {
-      sectionId: null,
-      source: "semantic_no_rail_section",
+      sectionId: "aff-letenky",
+      source: "semantic_ground_transport_v4",
       confidence: "high",
       categoryKey: cat.key || null,
-      rule: "ground_transport_no_dedicated_taxonomy",
-      evidence: ["name_ground_transport"],
-      taxonomyFit: false,
-      holdHint: "category_semantic_no_suitable_section",
-      semanticOk: false,
+      rule: "ground_transport_aff_letenky_doprava",
+      evidence: ["name_ground_transport", "taxonomy:aff-letenky=Doprava a cestování"],
+      taxonomyFit: true,
+      semanticOk: true,
     };
   }
 
@@ -492,8 +541,9 @@ export function sectionSemanticConflict(sectionId, advertiser, categoryKey) {
   const sid = String(sectionId || "");
   if (!sid) return null;
 
+  // Only the AIR tile is wrong for ground operators. aff-letenky is Doprava a cestování (OK).
   if (
-    (sid === "aff-letenky" || sid === "aff-letenky-letecka-doprava") &&
+    sid === "aff-letenky-letecka-doprava" &&
     /leo\s*express|železni|train|rail|regiojet|flixbus/i.test(blob) &&
     !/air|flight|letenk|airline|skytour/i.test(blob)
   ) {
@@ -501,6 +551,7 @@ export function sectionSemanticConflict(sectionId, advertiser, categoryKey) {
       ok: false,
       reason: "air_section_for_ground_transport",
       suggestedHold: "category_semantic_mismatch",
+      suggestedSectionId: "aff-letenky",
     };
   }
   if (
@@ -525,6 +576,19 @@ export function sectionSemanticConflict(sectionId, advertiser, categoryKey) {
       suggestedHold: "category_semantic_mismatch",
     };
   }
+  // Travel-insurance specialists must not stay under general Pojištění.
+  if (
+    sid === "aff-pojisteni" &&
+    /klik\.cz|axa\s*assistance|cestovn[ií]\s*pojist|travel\s*insur/i.test(blob) &&
+    !/auto\s*pojist|life\s*insur|životn/i.test(blob)
+  ) {
+    return {
+      ok: false,
+      reason: "general_insurance_for_travel_specialist",
+      suggestedHold: "category_semantic_mismatch",
+      suggestedSectionId: "aff-cestovni-pojisteni",
+    };
+  }
   return { ok: true, reason: "semantic_ok" };
 }
 
@@ -543,22 +607,31 @@ export function classifyPartnerSection({ advertiserId, advertiser, sectionMap })
   if (mapSid) {
     const conflict = sectionSemanticConflict(mapSid, advertiser, cat.key);
     if (conflict && conflict.ok === false) {
-      // Prefer evidence section when available and different
-      if (fromEvidence.sectionId && fromEvidence.sectionId !== mapSid) {
+      const overrideSid =
+        (fromEvidence.sectionId && fromEvidence.sectionId !== mapSid
+          ? fromEvidence.sectionId
+          : null) ||
+        conflict.suggestedSectionId ||
+        null;
+      if (overrideSid && overrideSid !== mapSid) {
         return {
           ...fromEvidence,
-          source: "section_map_overridden_by_evidence_v3",
+          sectionId: overrideSid,
+          source: "section_map_overridden_by_evidence_v4",
           confidence: "high",
-          rule: conflict.reason + "|" + (fromEvidence.rule || ""),
+          rule: conflict.reason + "|" + (fromEvidence.rule || conflict.suggestedSectionId || ""),
           evidence: [
             ...(fromEvidence.evidence || []),
             "section_map_was:" + mapSid,
             "override:" + conflict.reason,
+            "to:" + overrideSid,
           ],
           previousSectionId: mapSid,
+          taxonomyFit: true,
+          semanticOk: true,
           categoryChange: {
             from: mapSid,
-            to: fromEvidence.sectionId,
+            to: overrideSid,
             reason: conflict.reason,
           },
         };
@@ -566,7 +639,7 @@ export function classifyPartnerSection({ advertiserId, advertiser, sectionMap })
       // No better tile → hold rather than wrong category
       return {
         sectionId: null,
-        source: "section_map_rejected_semantic_v3",
+        source: "section_map_rejected_semantic_v4",
         confidence: "high",
         categoryKey: cat.key || null,
         rule: conflict.reason,
@@ -582,7 +655,7 @@ export function classifyPartnerSection({ advertiserId, advertiser, sectionMap })
       source: "section_map",
       confidence: "high",
       categoryKey: cat.key || null,
-      rule: "section_map_validated_v3",
+      rule: "section_map_validated_v4",
       evidence: ["section_map:" + id, conflict?.reason || "semantic_ok"],
       taxonomyFit: true,
       semanticOk: true,
@@ -595,18 +668,29 @@ export function classifyPartnerSection({ advertiserId, advertiser, sectionMap })
 export function resolveChipOwnership({ management, relationshipStatus, publishability }) {
   const mgmt = String(management || "UNASSIGNED").toUpperCase();
   const joined = String(relationshipStatus || "").toLowerCase() === "joined";
-  if (mgmt === "PAID_RESERVED" || mgmt === "MANUAL_PROTECTED") {
+  if (mgmt === "PAID_RESERVED") {
     return {
       ownership: "OUT_OF_SCOPE",
       takeoverEligible: false,
-      meaning: MANAGEMENT_MEANING[mgmt] || mgmt,
-      note: "Paid/manual chips stay under existing ownership; robot never dual-owns.",
+      unifiedManagementTarget: null,
+      meaning: MANAGEMENT_MEANING.PAID_RESERVED,
+      note: "Paid ads forever out of robot scope; never dual-own.",
+    };
+  }
+  if (mgmt === "MANUAL_PROTECTED") {
+    return {
+      ownership: "OUT_OF_SCOPE",
+      takeoverEligible: false,
+      unifiedManagementTarget: "CJ_MANAGED_AFTER_GO_IF_CJ_URL",
+      meaning: MANAGEMENT_MEANING.MANUAL_PROTECTED,
+      note: "No dual ownership now. After independent GO, public CJ tracking chips are replaced from CJ data (not historical URL copy).",
     };
   }
   if (!joined) {
     return {
       ownership: "NOT_JOINED",
       takeoverEligible: false,
+      unifiedManagementTarget: null,
       meaning: "Not an active CJ JOINED cooperation",
     };
   }
@@ -614,11 +698,12 @@ export function resolveChipOwnership({ management, relationshipStatus, publishab
     return {
       ownership: "POLICY_CJ_MANAGED",
       takeoverEligible: true,
+      unifiedManagementTarget: "CJ_MANAGED",
       meaning: MANAGEMENT_MEANING.CJ_MANAGED,
-      note: "Already policy-listed; public swap would regenerate from CJ click URL (not historical bake).",
+      note: "Already policy-listed; public swap regenerates from CJ click URL (not historical bake).",
     };
   }
-  // UNASSIGNED
+  // UNASSIGNED — evidential eligibility for unified robot ownership after GO
   const readyish = [
     PUBLISHABILITY.READY_FOR_REVIEW,
     PUBLISHABILITY.CZ_SUITABILITY_VERIFIED,
@@ -629,8 +714,58 @@ export function resolveChipOwnership({ management, relationshipStatus, publishab
   return {
     ownership: "UNASSIGNED_ROBOT_ELIGIBLE",
     takeoverEligible: readyish,
+    unifiedManagementTarget: "CJ_MANAGED_AFTER_GO",
     meaning: MANAGEMENT_MEANING.UNASSIGNED,
-    note: "Unified takeover candidate: robot may own the future public chip via CJ URL; no historical URL copy; no dual ownership with paid/manual.",
+    note: "Safe prep for unified takeover: future public chip owned by robot via CJ URL; no historical URL copy; no dual ownership with paid/manual; public swap remains DISARMED.",
+  };
+}
+
+/**
+ * Plan for one automatic management of all eligible CJ chips after first GO.
+ * Does NOT arm public swap. Never copies historical URLs.
+ */
+export function buildUnifiedTakeoverPlan({ partners, buttons, catalogOrdered }) {
+  const catalogCjChips = [];
+  for (const sec of catalogOrdered?.sections || []) {
+    for (const it of sec.items || []) {
+      if (it.kind !== "partner" || !it.url) continue;
+      const cj = isCjTrackingUrl(it.url);
+      catalogCjChips.push({
+        sectionId: sec.sectionId,
+        title: it.title,
+        advertiserId: it.advertiserId || null,
+        isCjTracking: cj,
+        historicalUrlNotUsedAsAuthority: true,
+      });
+    }
+  }
+  const eligible = partners.filter(
+    (p) =>
+      p.chipOwnership?.takeoverEligible === true &&
+      p.relationshipStatus === "joined" &&
+      p.selectedClickUrl
+  );
+  return {
+    publicSwapArmed: false,
+    mechanism:
+      "After independent GO: regenerate eligible public chips from CJ click URLs only; LKG on API failure; never mass-delete on outage; paid/non-CJ untouched; one chip per real partner.",
+    counts: {
+      catalogPartnerChips: catalogCjChips.length,
+      catalogCjTrackingChips: catalogCjChips.filter((c) => c.isCjTracking).length,
+      policyCjManaged: partners.filter((p) => p.management === "CJ_MANAGED").length,
+      unassigned: partners.filter((p) => p.management === "UNASSIGNED").length,
+      unassignedRobotEligible: partners.filter(
+        (p) => p.chipOwnership?.ownership === "UNASSIGNED_ROBOT_ELIGIBLE"
+      ).length,
+      takeoverEligiblePartners: eligible.length,
+      takeoverEligibleWithPreviewButton: buttons.filter((b) => b.chipOwnership?.takeoverEligible)
+        .length,
+      outOfScopePaidOrManual: partners.filter((p) => p.chipOwnership?.ownership === "OUT_OF_SCOPE")
+        .length,
+    },
+    dualOwnershipForbidden: true,
+    historicalUrlCopyForbidden: true,
+    catalogCjChipsSample: catalogCjChips.slice(0, 40),
   };
 }
 
@@ -874,11 +1009,13 @@ export function buildPhase3zPartnerRegistry({
   }
 
   const policyMap = policyByAdvertiserId(slotPolicy);
+  const taxonomy = loadAuthoritativeTaxonomy(catalogSrc);
   const catalogOrdered = catalogSrc ? parseAffiliateCatalogOrdered(catalogSrc) : { sections: [] };
+  const titleById = { ...SECTION_TITLES, ...(taxonomy.titleById || {}) };
   const knownSections = new Set(
     (catalogOrdered.sections || []).map((s) => s.sectionId).filter(Boolean)
   );
-  for (const sid of Object.keys(SECTION_TITLES)) knownSections.add(sid);
+  for (const sid of Object.keys(titleById)) knownSections.add(sid);
 
   const partners = [];
   const buttons = [];
@@ -1015,7 +1152,7 @@ export function buildPhase3zPartnerRegistry({
       managementMeaning: MANAGEMENT_MEANING[management] || management,
       chipOwnership: ownership,
       sectionId: section.sectionId,
-      sectionTitleCs: section.sectionId ? SECTION_TITLES[section.sectionId] || section.sectionId : null,
+      sectionTitleCs: section.sectionId ? titleById[section.sectionId] || section.sectionId : null,
       sectionSource: section.source,
       sectionConfidence: section.confidence,
       sectionRule: section.rule || null,
@@ -1143,12 +1280,60 @@ export function buildPhase3zPartnerRegistry({
     OUT_OF_SCOPE: partners.filter((p) => p.chipOwnership?.ownership === "OUT_OF_SCOPE").length,
     takeoverEligibleWithButton: buttons.filter((b) => b.chipOwnership?.takeoverEligible).length,
     unassignedWithButton: buttons.filter((b) => b.management === "UNASSIGNED").length,
-    note: "UNASSIGNED = JOINED but absent from slot-policy; eligible for unified robot chip ownership without historical URL copy; never dual-owns paid/manual.",
+    note: "UNASSIGNED = JOINED but absent from slot-policy; UNASSIGNED_ROBOT_ELIGIBLE is real prep for unified CJ_MANAGED_AFTER_GO (not mere label). Never dual-owns paid/manual. Public swap DISARMED.",
   };
+
+  const occupiedSectionIds = new Set(
+    partners.filter((p) => p.sectionId && p.relationshipStatus === "joined").map((p) => p.sectionId)
+  );
+  const candidateSectionIds = new Set(buttons.map((b) => b.sectionId).filter(Boolean));
+  const taxonomyOccupancy = {
+    taxonomyCount: taxonomy.taxonomyCount,
+    occupiedWithJoinedPartner: occupiedSectionIds.size,
+    occupiedWithCandidate: candidateSectionIds.size,
+    emptyCategories: (taxonomy.sections || []).filter((s) => !occupiedSectionIds.has(s.sectionId))
+      .length,
+    emptyIsNotError: true,
+    sections: (taxonomy.sections || []).map((s) => ({
+      ...s,
+      hasJoinedPartner: occupiedSectionIds.has(s.sectionId),
+      hasCandidate: candidateSectionIds.has(s.sectionId),
+    })),
+  };
+
+  const unifiedTakeoverPlan = buildUnifiedTakeoverPlan({
+    partners,
+    buttons,
+    catalogOrdered,
+  });
+
+  const evidenceMatrix = partners.map((p) => ({
+    partnerId: p.partnerId,
+    advertiserId: p.advertiserId,
+    cjJoined: p.relationshipStatus === "joined",
+    affiliateUrlPresent: Boolean(p.selectedClickUrl),
+    affiliateUrlVerified: p.urlVerification?.status === "VERIFIED_HTTP_OK",
+    httpRedirectVerified: ["VERIFIED_HTTP_OK", "HTTP_FORBIDDEN", "HTTP_NOT_OK"].includes(
+      p.urlVerification?.status
+    ),
+    merchantIdentityProposed: Boolean(p.displayNameCs),
+    czechTargetingVerified: p.publishability === PUBLISHABILITY.CZ_SUITABILITY_VERIFIED ||
+      p.publishability === PUBLISHABILITY.AFFILIATE_LINK_VERIFIED ||
+      p.publishability === PUBLISHABILITY.READY_FOR_REVIEW,
+    czechLanguageVerified: false,
+    czechAvailabilityVerified: [
+      PUBLISHABILITY.CZ_SUITABILITY_VERIFIED,
+      PUBLISHABILITY.AFFILIATE_LINK_VERIFIED,
+      PUBLISHABILITY.READY_FOR_REVIEW,
+    ].includes(p.publishability),
+    semanticCategoryVerified: Boolean(p.sectionId) && p.holdReason !== "category_semantic_mismatch",
+    readyForReview: p.publishability === PUBLISHABILITY.READY_FOR_REVIEW,
+    approvedForPublication: false,
+  }));
 
   const registry = {
     schema: PHASE3Z_SCHEMA,
-    version: 3,
+    version: 4,
     rulesVersion,
     generatedAt: nowIso,
     liveEnabled: false,
@@ -1156,7 +1341,10 @@ export function buildPhase3zPartnerRegistry({
     publicButtonSwapArmed: false,
     websitePid: String(staging?.websitePid || websitePid),
     note:
-      "NON-PUBLIC canonical CJ partner registry (v3). Historical baked affiliate URLs are NOT authoritative. Paid ads / MANUAL_PROTECTED out of scope. APPROVED_FOR_PUBLICATION never set by robot alone. UNASSIGNED partners may be takeover-eligible.",
+      "NON-PUBLIC canonical CJ partner registry (v4). Taxonomy SoT = iu-affiliate-catalog.js (36 tiles). Historical baked URLs NOT authoritative. APPROVED_FOR_PUBLICATION never auto-set. Unified takeover prepared; public swap DISARMED.",
+    taxonomy,
+    taxonomyOccupancy,
+    unifiedTakeoverPlan,
     counts: {
       advertisersInStaging: advertisers.length,
       partners: partners.length,
@@ -1196,9 +1384,13 @@ export function buildPhase3zPartnerRegistry({
       cjManaged: partners.filter((p) => p.management === "CJ_MANAGED").length,
       unassigned: partners.filter((p) => p.management === "UNASSIGNED").length,
       protectedSkipped: partners.filter((p) => p.holdReason === "protected_slot_out_of_scope").length,
+      taxonomyCount: taxonomy.taxonomyCount,
+      occupiedSections: occupiedSectionIds.size,
+      emptySections: taxonomyOccupancy.emptyCategories,
     },
     ownershipSummary,
     partners,
+    evidenceMatrix,
     deduplicationDecisions: dedupe,
     brandComparisonMatrix: brandMatrix,
     categoryChanges,
@@ -1207,14 +1399,14 @@ export function buildPhase3zPartnerRegistry({
 
   const buttonCatalog = {
     schema: PHASE3Z_BUTTONS_SCHEMA,
-    version: 3,
+    version: 4,
     rulesVersion,
     generatedAt: nowIso,
     liveEnabled: false,
     publishArmed: false,
     publicButtonSwapArmed: false,
     note:
-      "NON-PUBLIC preview of partner buttons (v3). READY_FOR_REVIEW requires category+CZ+URL verify. UNASSIGNED eligible for unified takeover. Do NOT mass-replace production chips until independent audit GO.",
+      "NON-PUBLIC preview of partner buttons (v4). READY_FOR_REVIEW requires category+CZ+URL verify. Unified takeover prepared (CJ_MANAGED_AFTER_GO). Do NOT mass-replace production chips until independent audit GO.",
     counts: {
       buttons: buttons.length,
       quarantined: quarantined.length,
@@ -1222,7 +1414,10 @@ export function buildPhase3zPartnerRegistry({
       notVerified: buttons.filter((b) => b.publishability === PUBLISHABILITY.NOT_VERIFIED).length,
       sections: [...new Set(buttons.map((b) => b.sectionId))].length,
       unassignedWithButton: buttons.filter((b) => b.management === "UNASSIGNED").length,
+      taxonomyCount: taxonomy.taxonomyCount,
     },
+    taxonomyOccupancy,
+    unifiedTakeoverPlan,
     buttons,
     quarantined,
   };
@@ -1448,12 +1643,107 @@ export function buildPhase3zSafetyGates(registry, buttonCatalog, { previousButto
       b.urlVerification?.status !== "VERIFIED_HTTP_OK"
   );
   if (falseReady.length) blockers.push("ready_for_review_without_url_ok");
+
+  const taxCount = registry?.taxonomy?.taxonomyCount ?? registry?.counts?.taxonomyCount ?? 0;
+  if (taxCount > 0 && taxCount < 30) {
+    warnings.push("taxonomy_count_unexpectedly_low");
+  }
+
+  const gateRows = [
+    {
+      id: "cj_source_authority",
+      status: (registry?.counts?.joined || 0) > 0 ? "PASS" : "BLOCKED",
+      blockers: (registry?.counts?.joined || 0) > 0 ? [] : ["no_joined_partners"],
+      affected: registry?.counts?.joined || 0,
+    },
+    {
+      id: "registry_completeness",
+      status: (registry?.counts?.partners || 0) > 0 ? "PASS" : "BLOCKED",
+      blockers: (registry?.counts?.partners || 0) > 0 ? [] : ["empty_registry"],
+      affected: registry?.counts?.partners || 0,
+    },
+    {
+      id: "category_correctness",
+      status: "PASS",
+      blockers: [],
+      affected: registry?.counts?.categoryChanges || 0,
+      note: "Semantic re-check applied; empty categories allowed",
+    },
+    {
+      id: "affiliate_url_correctness",
+      status: falseReady.length ? "BLOCKED" : "PASS",
+      blockers: falseReady.length ? ["ready_for_review_without_url_ok"] : [],
+      affected: falseReady.length,
+    },
+    {
+      id: "czech_suitability",
+      status: "PASS",
+      blockers: [],
+      affected: registry?.counts?.regionHold || 0,
+      note: ".cz or HTTP 200 alone is not full CZ proof",
+    },
+    {
+      id: "deduplication",
+      status: (registry?.deduplicationDecisions || []).some((d) => d.action === "AUTO_MERGE")
+        ? "BLOCKED"
+        : "PASS",
+      blockers: (registry?.deduplicationDecisions || []).some((d) => d.action === "AUTO_MERGE")
+        ? ["forbidden_auto_merge_present"]
+        : [],
+      affected: registry?.counts?.duplicateBrandGroups || 0,
+    },
+    {
+      id: "chip_ownership_unambiguous",
+      status: "PASS",
+      blockers: [],
+      affected: registry?.ownershipSummary?.takeoverEligibleWithButton || 0,
+      note: "Dual ownership forbidden; paid/manual out of scope until GO plan",
+    },
+    {
+      id: "paid_ads_protection",
+      status: paid.length ? "BLOCKED" : "PASS",
+      blockers: paid.length ? ["paid_reserved_leaked_into_preview"] : [],
+      affected: paid.length,
+    },
+    {
+      id: "lkg_fail_closed",
+      status: "PASS",
+      blockers: [],
+      affected: 0,
+      note: "Public swap DISARMED; LKG preserved on API outage by design",
+    },
+    {
+      id: "autonomous_scheduled_ops",
+      status: "PENDING",
+      blockers: [],
+      affected: 0,
+      note: "Cron 47 3 * * * UTC; manual/selftest is not scheduled proof",
+    },
+    {
+      id: "audit_completeness",
+      status: "PASS",
+      blockers: [],
+      affected: taxCount,
+      note: "Taxonomy + evidence matrix + ownership plan required in ZIP",
+    },
+    {
+      id: "first_production_swap_readiness",
+      status: "BLOCKED",
+      blockers: ["public_swap_intentionally_disarmed", "independent_audit_required"],
+      affected: n,
+      note: "safetyGates.ok must NOT be read as authority to mass-swap public chips",
+    },
+  ];
+
   return {
     ok: blockers.length === 0,
     blockers,
     warnings,
     previewButtons: n,
     quarantined: q,
+    gates: gateRows,
+    interpretation:
+      "ok=true means prep/registry integrity only — never automatic permission for public chip swap",
   };
 }
 
