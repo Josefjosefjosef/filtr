@@ -17,7 +17,12 @@ import {
   sectionSemanticConflict,
   resolveChipOwnership,
   buildBrandComparisonMatrix,
+  loadAuthoritativeTaxonomy,
+  SECTION_TITLES,
 } from "./iu-cj-affiliate-phase3z-partner-registry-v1.mjs";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { isCjTrackingUrl } from "./iu-cj-affiliate-catalog-sync-publish-gate-v1.mjs";
 import { normalizePartnerBrand } from "./iu-cj-affiliate-phase3e-partner-recon-v1.mjs";
 
@@ -71,21 +76,87 @@ const leo = classifyFromCjEvidence({
   programUrl: "https://www.leoexpress.com/cs",
   primaryCategory: "<parent>Business</parent><child>Travel</child>",
 });
-expect("leo_no_air_section", leo.sectionId == null && leo.holdHint === "category_semantic_no_suitable_section", leo);
+expect("leo_doprava", leo.sectionId === "aff-letenky", leo);
+expect("leo_title_doprava", SECTION_TITLES["aff-letenky"] === "Doprava a cestování");
 expect(
-  "leo_map_conflict",
-  sectionSemanticConflict("aff-letenky", { advertiserName: "Leo Express Europe" }, "business|travel")?.ok ===
-    false
+  "leo_air_conflict_only",
+  sectionSemanticConflict(
+    "aff-letenky-letecka-doprava",
+    { advertiserName: "Leo Express Europe" },
+    "business|travel"
+  )?.ok === false
+);
+expect(
+  "leo_doprava_ok",
+  sectionSemanticConflict("aff-letenky", { advertiserName: "Leo Express Europe" }, "business|travel")
+    ?.ok === true
 );
 
+const axa = classifyFromCjEvidence({
+  advertiserName: "AXA Assistance",
+  programUrl: "https://www.axa-assistance.cz/",
+  primaryCategory: "<parent>Insurance</parent><child>Travel Insurance</child>",
+});
+expect("axa_cestovni_pojisteni", axa.sectionId === "aff-cestovni-pojisteni", axa);
+
+const klik = classifyPartnerSection({
+  advertiserId: "9999001",
+  advertiser: {
+    advertiserName: "Klik.cz",
+    programUrl: "https://www.klik.cz/",
+    primaryCategory: "<parent>Insurance</parent><child>Travel Insurance</child>",
+  },
+  sectionMap: {},
+});
+expect("klik_cestovni_pojisteni", klik.sectionId === "aff-cestovni-pojisteni", klik);
+const klikMappedWrong = classifyPartnerSection({
+  advertiserId: "9999001",
+  advertiser: {
+    advertiserName: "Klik.cz",
+    programUrl: "https://www.klik.cz/",
+    primaryCategory: "<parent>Insurance</parent><child>Personal Insurance</child>",
+  },
+  sectionMap: { "9999001": "aff-pojisteni" },
+});
 expect(
-  "ownership_unassigned",
-  resolveChipOwnership({
-    management: "UNASSIGNED",
-    relationshipStatus: "joined",
-    publishability: PUBLISHABILITY.READY_FOR_REVIEW,
-  }).ownership === "UNASSIGNED_ROBOT_ELIGIBLE"
+  "klik_override_from_general",
+  klikMappedWrong.sectionId === "aff-cestovni-pojisteni",
+  klikMappedWrong
 );
+
+const bestDrive = classifyPartnerSection({
+  advertiserId: "7449050",
+  advertiser: {
+    advertiserName: "BestDrive",
+    programUrl: "https://www.bestdrive.cz/",
+    primaryCategory: "<parent>Automotive</parent><child>Parts &amp; Accessories</child>",
+  },
+  sectionMap: { "7449050": "aff-pneu-pneuservis" },
+});
+expect("bestdrive_pneu", bestDrive.sectionId === "aff-pneu-pneuservis", bestDrive);
+
+const catalogPath = path.join(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "..",
+  "assets",
+  "iu-affiliate-catalog.js"
+);
+const tax = loadAuthoritativeTaxonomy(fs.readFileSync(catalogPath, "utf8"));
+expect("taxonomy_36", tax.taxonomyCount === 36, tax.taxonomyCount);
+expect(
+  "taxonomy_letenky_title",
+  tax.titleById["aff-letenky"] === "Doprava a cestování",
+  tax.titleById["aff-letenky"]
+);
+
+const ownUa = resolveChipOwnership({
+  management: "UNASSIGNED",
+  relationshipStatus: "joined",
+  publishability: PUBLISHABILITY.READY_FOR_REVIEW,
+});
+expect("ownership_unassigned", ownUa.ownership === "UNASSIGNED_ROBOT_ELIGIBLE");
+expect("ownership_unified_target", ownUa.unifiedManagementTarget === "CJ_MANAGED_AFTER_GO");
+expect("gates_have_12", buildPhase3zSafetyGates({ counts: { joined: 1, partners: 1 }, partners: [], deduplicationDecisions: [], taxonomy: { taxonomyCount: 36 }, liveEnabled: false, publicButtonSwapArmed: false }, { counts: { buttons: 1, quarantined: 0 }, buttons: [], publicButtonSwapArmed: false }).gates?.length === 12);
 expect(
   "ownership_paid_out",
   resolveChipOwnership({
