@@ -36,10 +36,27 @@ import { parseAffiliateCatalogOrdered } from "./iu-cj-affiliate-phase2-partner-s
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 export const PHASE3Z_SCHEMA = "iu-affiliate-cj-partner-registry-v1";
 export const PHASE3Z_BUTTONS_SCHEMA = "iu-affiliate-cj-partner-buttons-preview-v1";
-export const PHASE3Z_RULES_VERSION = "phase3z-partner-robot-v5";
+export const PHASE3Z_RULES_VERSION = "phase3z-partner-robot-v6";
 
 /** Language preference for InfoUzel visitors: CZ first, then SK, then EN. EN is never quarantine-only. */
 export const LANGUAGE_PRIORITY = Object.freeze(["CZ", "SK", "EN"]);
+
+/**
+ * Button-record lifecycle (proposal ≠ public chip).
+ * JOINED → BUTTON_RECORD_CREATED always; later gates only change status.
+ */
+export const BUTTON_RECORD_STATUS = Object.freeze({
+  BUTTON_RECORD_CREATED: "BUTTON_RECORD_CREATED",
+  CATEGORY_ASSIGNED: "CATEGORY_ASSIGNED",
+  CATEGORY_REVIEW_REQUIRED: "CATEGORY_REVIEW_REQUIRED",
+  LINK_MISSING: "LINK_MISSING",
+  CJ_LINK_RESOLVED: "CJ_LINK_RESOLVED",
+  CZ_ELIGIBLE_CONFIRMED: "CZ_ELIGIBLE_CONFIRMED",
+  CZ_ELIGIBILITY_UNKNOWN: "CZ_ELIGIBILITY_UNKNOWN",
+  CZ_RESTRICTED_CONFIRMED: "CZ_RESTRICTED_CONFIRMED",
+  READY_FOR_REVIEW: "READY_FOR_REVIEW",
+  QUARANTINED_WITH_REASON: "QUARANTINED_WITH_REASON",
+});
 
 /**
  * Slot-policy management meanings (identity ≠ chip ownership):
@@ -551,11 +568,40 @@ export function selectPrimaryAffiliateLink(links, advertiser) {
   };
 }
 
+/** Explicit CID semantic overrides for known JOINED merchants (never invent tiles). */
+export const PHASE3Z_CID_SECTION_OVERRIDES_V6 = Object.freeze({
+  "5096493": { sectionId: "aff-ubytovani-hotely", rule: "booking_com_lodging", confidence: "high" },
+  "6659563": { sectionId: "aff-boty", rule: "shapen_barefoot_footwear", confidence: "high" },
+  "7474250": { sectionId: "aff-zdravi-doplnky", rule: "brainmarket_supplements", confidence: "high" },
+  "4851178": { sectionId: "aff-elektro", rule: "kytary_music_instruments_affinity", confidence: "medium" },
+  "5320945": { sectionId: "aff-dilna-naradi", rule: "expondo_trade_equipment", confidence: "medium" },
+  "6972484": { sectionId: "aff-knihy", rule: "imago_books_games_fantasy", confidence: "high" },
+  "6282055": { sectionId: "aff-software", rule: "surfshark_vpn_digital", confidence: "high" },
+  "5894154": { sectionId: "aff-kosmetika", rule: "nefertitis_beauty", confidence: "medium" },
+  "5477885": { sectionId: "aff-tv-streamovani", rule: "supraphonline_digital_music", confidence: "medium" },
+  "6203294": { sectionId: "aff-mobily", rule: "momanio_mobile_accessories", confidence: "high" },
+});
+
 /** Infer section from CJ category + name/domain only (ignores section_map). */
 export function classifyFromCjEvidence(advertiser) {
   const cat = parseCjPrimaryCategory(advertiser?.primaryCategory);
   const evidence = [];
   const blob = [advertiser?.advertiserName, advertiser?.programUrl].filter(Boolean).join(" ");
+  const cid = String(advertiser?.advertiserId || "");
+
+  if (cid && PHASE3Z_CID_SECTION_OVERRIDES_V6[cid]) {
+    const ov = PHASE3Z_CID_SECTION_OVERRIDES_V6[cid];
+    return {
+      sectionId: ov.sectionId,
+      source: "cid_semantic_override_v6",
+      confidence: ov.confidence || "high",
+      categoryKey: cat.key || null,
+      rule: ov.rule,
+      evidence: ["cid:" + cid, "rule:" + ov.rule],
+      taxonomyFit: true,
+      semanticOk: true,
+    };
+  }
 
   // Ground transport (rail/coach): live taxonomy tile aff-letenky = "Doprava a cestování".
   // Air carriers stay on aff-letenky-letecka-doprava — never conflate the two.
@@ -711,15 +757,19 @@ export function sectionSemanticConflict(sectionId, advertiser, categoryKey) {
  */
 export function classifyPartnerSection({ advertiserId, advertiser, sectionMap }) {
   const id = String(advertiserId);
-  const cat = parseCjPrimaryCategory(advertiser?.primaryCategory);
-  const fromEvidence = classifyFromCjEvidence(advertiser);
+  const advWithId = {
+    ...(advertiser || {}),
+    advertiserId: String((advertiser && advertiser.advertiserId) || advertiserId || ""),
+  };
+  const cat = parseCjPrimaryCategory(advWithId.primaryCategory);
+  const fromEvidence = classifyFromCjEvidence(advWithId);
   const mapSid =
     sectionMap && sectionMap[id] && !String(sectionMap[id]).startsWith("_")
       ? String(sectionMap[id])
       : null;
 
   if (mapSid) {
-    const conflict = sectionSemanticConflict(mapSid, advertiser, cat.key);
+    const conflict = sectionSemanticConflict(mapSid, advWithId, cat.key);
     if (conflict && conflict.ok === false) {
       const overrideSid =
         (fromEvidence.sectionId && fromEvidence.sectionId !== mapSid
@@ -983,31 +1033,72 @@ export function detectDuplicates(rows) {
 /** Regional special-case audit (evidence only; never invents URLs). */
 export function auditRegionalSpecialCases(partners) {
   const needles = [
+    { id: "booking", re: /booking\.com|booking\b/i, cid: "5096493" },
+    { id: "shapenbarefoot", re: /shapen|barefoot/i, cid: "6659563" },
+    { id: "brainmarket", re: /brainmarket/i, cid: "7474250" },
+    { id: "kytary", re: /kytary/i, cid: "4851178" },
+    { id: "expondo", re: /expondo/i, cid: "5320945" },
+    { id: "imago", re: /imago/i, cid: "6972484" },
+    { id: "surfshark", re: /surfshark/i, cid: "6282055" },
+    { id: "nefertitis", re: /nefertitis/i, cid: "5894154" },
+    { id: "supraphonline", re: /supraphon/i, cid: "5477885" },
+    { id: "momanio", re: /momanio|tvrzenaskla/i, cid: "6203294" },
     { id: "skytours", re: /skytours/i },
-    { id: "shapenbarefoot", re: /shapen|barefoot/i },
-    { id: "brainmarket", re: /brainmarket/i },
-    { id: "booking", re: /booking\.com|booking\b/i },
+    { id: "hero-wars", re: /hero[\s-]?wars/i },
+    { id: "kings-camo", re: /kings\s*camo/i },
+    { id: "dedoma", re: /dedoma/i },
+    { id: "abracadabra", re: /abracadabra/i },
+    { id: "paragon", re: /paragon\s*software/i },
+    { id: "arangrant", re: /arangrant/i },
+    { id: "novakid", re: /novakid/i },
+    { id: "velocity-outdoor", re: /velocity\s*outdoor/i },
+    { id: "gearup", re: /gearup|gear\s*up/i },
+    { id: "cheapvuelos", re: /cheapvuelos/i },
+    { id: "imoda", re: /imoda/i },
+    { id: "gorila", re: /gorila/i },
     { id: "foreo", re: /foreo/i },
+    { id: "kancelarskestolicky", re: /kancelarskestolicky|kancelářské\s*stoličky/i },
   ];
   const out = [];
   for (const n of needles) {
     const hits = partners.filter(
-      (p) => n.re.test(p.cjName || "") || n.re.test(p.programUrl || "") || n.re.test(p.displayNameCs || "")
+      (p) =>
+        (n.cid && String(p.advertiserId) === n.cid) ||
+        n.re.test(p.cjName || "") ||
+        n.re.test(p.programUrl || "") ||
+        n.re.test(p.displayNameCs || "")
     );
     for (const p of hits) {
       const linkCz = marketAllowsCzechRepublic(p.selectedTargetedCountries);
-      const destCz = /\.cz(\/|$)/i.test(String(p.selectedDestination || "")) || /\.cz$/i.test(String(p.programUrl || ""));
-      let verdict = "KEEP_QUARANTINED_OR_REVIEW";
+      const destCz =
+        /\.cz(\/|$)/i.test(String(p.selectedDestination || "")) ||
+        /\.cz$/i.test(String(p.programUrl || ""));
+      let verdict = "BUTTON_RECORD_REVIEW";
       let reason = "regional_variant_needs_evidence";
       if (p.publishability === PUBLISHABILITY.READY_FOR_REVIEW) {
         verdict = "CZ_OK_IN_REGISTRY";
         reason = "already_ready_for_review";
-      } else if (p.holdReason === "market_not_targeting_cz" && !destCz) {
-        verdict = "QUARANTINED";
-        reason = "selected_link_market_non_cz";
+      } else if (
+        p.holdReason === "CZ_RESTRICTED_CONFIRMED" ||
+        p.holdReason === "market_not_targeting_cz"
+      ) {
+        verdict = p.holdReason === "CZ_RESTRICTED_CONFIRMED" ? "CZ_RESTRICTED_CONFIRMED" : "CZ_ELIGIBILITY_UNKNOWN";
+        reason = "selected_link_market_non_cz_or_restricted";
+      } else if (p.holdReason === "CZ_ELIGIBILITY_UNKNOWN" || p.holdReason === "cz_suitability_not_proven") {
+        verdict = "CZ_ELIGIBILITY_UNKNOWN";
+        reason = "insufficient_cz_evidence";
+      } else if (p.holdReason === "CATEGORY_REVIEW_REQUIRED") {
+        verdict = "CATEGORY_REVIEW_REQUIRED";
+        reason = "no_confident_taxonomy_fit";
+      } else if (p.holdReason === "LINK_MISSING") {
+        verdict = "LINK_MISSING";
+        reason = "no_cj_tracking_link";
       } else if (destCz && linkCz !== false) {
         verdict = "CZ_AFFINITY_PRESENT";
         reason = "program_or_dest_cz";
+      } else if (p.buttonRecordCreated) {
+        verdict = "BUTTON_RECORD_CREATED";
+        reason = "joined_button_present_" + (p.publishability || "unknown");
       }
       out.push({
         caseId: n.id,
@@ -1017,11 +1108,13 @@ export function auditRegionalSpecialCases(partners) {
         selectedTargetedCountries: p.selectedTargetedCountries,
         selectedDestination: p.selectedDestination,
         programUrl: p.programUrl,
+        sectionId: p.sectionId,
+        buttonRecordStatus: p.buttonRecordStatus,
         publishability: p.publishability,
         holdReason: p.holdReason,
         verdict,
         reason,
-        note: "Historical baked URLs are not used as authority.",
+        note: "Historical baked URLs are not used as authority. Quarantine is status not omission.",
       });
     }
   }
@@ -1057,12 +1150,22 @@ function computeCzSuitability(pick, advertiser) {
     note: "HTTP 200 and .cz alone are not full CZ-usability proof; EN language never quarantines alone",
   };
   if (market === false && !programCz) {
+    // Missing CZ on the selected link is NOT proof of a publisher ban.
+    // Keep button record; block publish as UNKNOWN pending program-terms review.
     return {
-      ok: false,
-      status: "NON_CZ_MARKET",
-      confidence: "high",
-      notes: [String(pick.selected?.targetedCountries || ""), "lang=" + detectedLang],
-      evidence,
+      ok: null,
+      status: "CZ_ELIGIBILITY_UNKNOWN",
+      confidence: "low",
+      notes: [
+        String(pick.selected?.targetedCountries || ""),
+        "lang=" + detectedLang,
+        "selected_link_market_non_cz_not_confirmed_ban",
+      ],
+      evidence: {
+        ...evidence,
+        czEligibility: "CZ_ELIGIBILITY_UNKNOWN",
+        note: "Absence of CZ on selected link ≠ confirmed CZ restriction; review all links/program terms",
+      },
     };
   }
   if (market === true && (programCz || detectedLang === "CZ")) {
@@ -1095,10 +1198,63 @@ function computeCzSuitability(pick, advertiser) {
   }
   return {
     ok: null,
-    status: "CZ_UNKNOWN",
+    status: "CZ_ELIGIBILITY_UNKNOWN",
     confidence: "low",
     notes: ["market_unspecified", "lang=" + detectedLang],
-    evidence,
+    evidence: { ...evidence, czEligibility: "CZ_ELIGIBILITY_UNKNOWN" },
+  };
+}
+
+/** JOINED count must equal full button-record count (quarantine is a status, not omission). */
+export function assertJoinedEqualsButtonRecords(registry, buttonCatalog) {
+  const joinedIds = (registry?.partners || [])
+    .filter((p) => String(p.relationshipStatus || "").toLowerCase() === "joined")
+    .map((p) => p.partnerId);
+  const buttonIds = (buttonCatalog?.buttons || []).map((b) => b.partnerId);
+  const errors = [];
+  if (joinedIds.length !== buttonIds.length) {
+    errors.push("count_mismatch:" + joinedIds.length + "/" + buttonIds.length);
+  }
+  const buttonSet = new Set(buttonIds);
+  for (const id of joinedIds) {
+    if (!buttonSet.has(id)) errors.push("joined_missing_button:" + id);
+  }
+  const joinedSet = new Set(joinedIds);
+  for (const id of buttonIds) {
+    if (!joinedSet.has(id)) errors.push("button_without_joined:" + id);
+  }
+  const ready = (buttonCatalog?.buttons || []).filter(
+    (b) => b.publishability === PUBLISHABILITY.READY_FOR_REVIEW
+  ).length;
+  const blocked = (buttonCatalog?.buttons || []).filter(
+    (b) =>
+      b.publishability === PUBLISHABILITY.QUARANTINED ||
+      b.buttonRecordStatus === BUTTON_RECORD_STATUS.QUARANTINED_WITH_REASON ||
+      b.buttonRecordStatus === BUTTON_RECORD_STATUS.CZ_RESTRICTED_CONFIRMED ||
+      b.buttonRecordStatus === BUTTON_RECORD_STATUS.CATEGORY_REVIEW_REQUIRED ||
+      b.buttonRecordStatus === BUTTON_RECORD_STATUS.LINK_MISSING
+  ).length;
+  const pending = (buttonCatalog?.buttons || []).filter(
+    (b) =>
+      b.publishability === PUBLISHABILITY.NOT_VERIFIED ||
+      b.publishability === PUBLISHABILITY.CATEGORY_VERIFIED ||
+      b.publishability === PUBLISHABILITY.CZ_SUITABILITY_VERIFIED ||
+      b.publishability === PUBLISHABILITY.AFFILIATE_LINK_VERIFIED ||
+      b.publishability === PUBLISHABILITY.CANDIDATE_GENERATED
+  ).length;
+  // Mutual exclusion soft-check: every button in exactly one of ready/blocked/pending buckets
+  const classified = ready + blocked + pending;
+  if (classified !== buttonIds.length) {
+    errors.push("status_bucket_sum:" + classified + "/" + buttonIds.length);
+  }
+  return {
+    ok: errors.length === 0,
+    errors,
+    joined: joinedIds.length,
+    buttonRecords: buttonIds.length,
+    ready,
+    blocked,
+    pending,
   };
 }
 
@@ -1173,7 +1329,7 @@ export function buildEvidenceRow(partner, { verifiedAt = null } = {}) {
     semanticCategoryVerified: categoryOk,
     readyForReview: ready,
     approvedForPublication: false,
-    evidenceSource: "phase3z-partner-registry-v5",
+    evidenceSource: "phase3z-partner-registry-v6",
     verifiedAt: verifiedAt || uv.probedAt || partner.source?.confirmedAt || null,
     method: urlProbed ? "cj_staging+http_redirect_probe+language_priority" : "cj_staging+language_priority",
     limitation:
@@ -1351,32 +1507,29 @@ export function buildPhase3zPartnerRegistry({
       };
     } else if (!pick.selected) {
       publishability = PUBLISHABILITY.QUARANTINED;
-      holdReason = pick.reason || "no_affiliate_link";
+      holdReason = "LINK_MISSING";
       triple.technical = {
-        status: "NO_SUITABLE_LINK",
+        status: "LINK_MISSING",
         confidence: "high",
-        notes: [holdReason],
+        notes: [pick.reason || "no_affiliate_link"],
       };
-    } else if (!section.sectionId) {
+    } else if (!section.sectionId || (section.sectionId && !knownSections.has(section.sectionId))) {
+      // Still create button record — category gate fails closed for publish, not for evidence.
       publishability = PUBLISHABILITY.QUARANTINED;
-      holdReason = section.holdHint || "partner_section_unmapped";
+      holdReason = section.sectionId
+        ? "CATEGORY_REVIEW_REQUIRED"
+        : section.holdHint === "no_suitable_taxonomy_section"
+          ? "CATEGORY_REVIEW_REQUIRED"
+          : "CATEGORY_REVIEW_REQUIRED";
       triple.business = {
-        status: section.taxonomyFit === false ? "NO_TAXONOMY_FIT" : "NEEDS_CATEGORY",
+        status: "CATEGORY_REVIEW_REQUIRED",
         confidence: section.confidence || "medium",
-        notes: [section.categoryKey || "", section.rule || ""],
+        notes: [section.categoryKey || "", section.rule || section.holdHint || ""],
       };
       triple.technical = {
-        status: "JOINED_LINK_CANDIDATE",
+        status: pick.selected ? "JOINED_LINK_CANDIDATE" : "LINK_MISSING",
         confidence: "medium",
-        notes: ["awaiting_category_or_taxonomy"],
-      };
-    } else if (!knownSections.has(section.sectionId)) {
-      publishability = PUBLISHABILITY.QUARANTINED;
-      holdReason = "section_not_in_taxonomy";
-      triple.business = {
-        status: "UNKNOWN_SECTION",
-        confidence: "medium",
-        notes: [section.sectionId],
+        notes: ["button_record_kept_pending_category"],
       };
     } else {
       publishability = PUBLISHABILITY.CATEGORY_VERIFIED;
@@ -1398,8 +1551,9 @@ export function buildPhase3zPartnerRegistry({
 
       const cz = computeCzSuitability(pick, adv);
       if (cz.ok === false) {
+        // Restricted on selected link — keep full button record; do not omit.
         publishability = PUBLISHABILITY.QUARANTINED;
-        holdReason = "market_not_targeting_cz";
+        holdReason = "CZ_RESTRICTED_CONFIRMED";
         triple.visitor = { status: cz.status, confidence: cz.confidence, notes: cz.notes };
       } else if (cz.ok === true) {
         publishability = PUBLISHABILITY.CZ_SUITABILITY_VERIFIED;
@@ -1409,15 +1563,39 @@ export function buildPhase3zPartnerRegistry({
           notes: [...(triple.visitor.notes || []), ...cz.notes],
         };
       } else {
-        // Category ok but CZ not proven → NOT_VERIFIED (still a non-public candidate)
+        // Unknown CZ eligibility → block publish, keep proposal
         publishability = PUBLISHABILITY.NOT_VERIFIED;
-        holdReason = "cz_suitability_not_proven";
+        holdReason = "CZ_ELIGIBILITY_UNKNOWN";
         triple.visitor = { status: cz.status, confidence: cz.confidence, notes: cz.notes };
       }
     }
 
     const partnerId = "cj-" + advertiserId;
     const ownership = resolveChipOwnership({ management, relationshipStatus: rel, publishability });
+
+    let buttonRecordStatus = BUTTON_RECORD_STATUS.BUTTON_RECORD_CREATED;
+    if (rel === "joined") {
+      if (holdReason === "LINK_MISSING" || (!pick.selected && !protectedSkip)) {
+        buttonRecordStatus = BUTTON_RECORD_STATUS.LINK_MISSING;
+      } else if (holdReason === "CATEGORY_REVIEW_REQUIRED") {
+        buttonRecordStatus = BUTTON_RECORD_STATUS.CATEGORY_REVIEW_REQUIRED;
+      } else if (holdReason === "CZ_RESTRICTED_CONFIRMED") {
+        buttonRecordStatus = BUTTON_RECORD_STATUS.CZ_RESTRICTED_CONFIRMED;
+      } else if (holdReason === "CZ_ELIGIBILITY_UNKNOWN" || holdReason === "cz_suitability_not_proven") {
+        buttonRecordStatus = BUTTON_RECORD_STATUS.CZ_ELIGIBILITY_UNKNOWN;
+      } else if (publishability === PUBLISHABILITY.QUARANTINED) {
+        buttonRecordStatus = BUTTON_RECORD_STATUS.QUARANTINED_WITH_REASON;
+      } else if (section.sectionId && knownSections.has(section.sectionId)) {
+        buttonRecordStatus = BUTTON_RECORD_STATUS.CATEGORY_ASSIGNED;
+        if (pick.selected) buttonRecordStatus = BUTTON_RECORD_STATUS.CJ_LINK_RESOLVED;
+        if (publishability === PUBLISHABILITY.CZ_SUITABILITY_VERIFIED) {
+          buttonRecordStatus = BUTTON_RECORD_STATUS.CZ_ELIGIBLE_CONFIRMED;
+        }
+        if (publishability === PUBLISHABILITY.READY_FOR_REVIEW) {
+          buttonRecordStatus = BUTTON_RECORD_STATUS.READY_FOR_REVIEW;
+        }
+      }
+    }
     const langCandidates = (advLinks || []).map((lnk) => ({
       language: detectPageLanguage({ url: lnk.destination, linkName: lnk.linkName }),
       linkId: lnk.linkId,
@@ -1456,9 +1634,10 @@ export function buildPhase3zPartnerRegistry({
       publishability === PUBLISHABILITY.AFFILIATE_LINK_VERIFIED ||
       publishability === PUBLISHABILITY.READY_FOR_REVIEW
         ? true
-        : holdReason === "market_not_targeting_cz"
+        : holdReason === "CZ_RESTRICTED_CONFIRMED" || holdReason === "market_not_targeting_cz"
           ? false
-          : holdReason === "cz_suitability_not_proven"
+          : holdReason === "CZ_ELIGIBILITY_UNKNOWN" ||
+              holdReason === "cz_suitability_not_proven"
             ? null
             : null;
 
@@ -1511,6 +1690,8 @@ export function buildPhase3zPartnerRegistry({
       czMarketEligibilityVerified,
       czShippingVerified: "unknown",
       czBookingOrServiceVerified: "unknown",
+      buttonRecordStatus,
+      buttonRecordCreated: rel === "joined",
       publishability,
       holdReason,
       czEvidence: null,
@@ -1532,15 +1713,9 @@ export function buildPhase3zPartnerRegistry({
 
     partners.push(row);
 
-    const isCandidate =
-      publishability === PUBLISHABILITY.CATEGORY_VERIFIED ||
-      publishability === PUBLISHABILITY.CZ_SUITABILITY_VERIFIED ||
-      publishability === PUBLISHABILITY.NOT_VERIFIED ||
-      publishability === PUBLISHABILITY.AFFILIATE_LINK_VERIFIED ||
-      publishability === PUBLISHABILITY.READY_FOR_REVIEW;
-
-    if (isCandidate && row.selectedClickUrl && section.sectionId) {
-      buttons.push({
+    // V6: every JOINED partner gets a full button proposal (quarantine = status, not omission).
+    if (rel === "joined") {
+      const button = {
         partnerId,
         advertiserId,
         displayNameCs,
@@ -1549,17 +1724,23 @@ export function buildPhase3zPartnerRegistry({
         sectionSource: section.source,
         sectionRule: section.rule,
         categoryChange: section.categoryChange || null,
+        categoryKey: section.categoryKey || null,
         clickUrl: row.selectedClickUrl,
         destination: row.selectedDestination,
         trackingHost: (() => {
           try {
-            return new URL(row.selectedClickUrl).hostname;
+            return row.selectedClickUrl ? new URL(row.selectedClickUrl).hostname : "";
           } catch {
             return "";
           }
         })(),
         targetedCountries: row.selectedTargetedCountries,
         linkId: row.selectedLinkId,
+        selectedLanguage: row.selectedLanguage,
+        languagePrioritySatisfied: row.languagePrioritySatisfied,
+        czMarketEligibilityVerified: row.czMarketEligibilityVerified,
+        buttonRecordStatus,
+        buttonRecordCreated: true,
         publishability,
         holdReason,
         management,
@@ -1572,23 +1753,51 @@ export function buildPhase3zPartnerRegistry({
         rulesVersion,
         triple,
         urlVerification: row.urlVerification,
-      });
-    } else {
-      quarantined.push({
-        partnerId,
-        advertiserId,
-        displayNameCs,
-        holdReason,
-        management,
-        chipOwnership: ownership,
-        relationshipStatus: rel,
-        sectionId: section.sectionId,
-        categoryKey: section.categoryKey || null,
-        sectionRule: section.rule || null,
-        categoryChange: section.categoryChange || null,
-        publishability,
-        rulesVersion,
-      });
+        nextStep:
+          holdReason === "LINK_MISSING"
+            ? "resolve_cj_link_search"
+            : holdReason === "CATEGORY_REVIEW_REQUIRED"
+              ? "manual_or_rule_category_assignment"
+              : holdReason === "CZ_RESTRICTED_CONFIRMED"
+                ? "review_all_cj_links_and_program_terms"
+                : holdReason === "CZ_ELIGIBILITY_UNKNOWN"
+                  ? "gather_cz_eligibility_evidence"
+                  : publishability === PUBLISHABILITY.READY_FOR_REVIEW
+                    ? "await_independent_publication_go"
+                    : "continue_automated_gates",
+      };
+      buttons.push(button);
+      if (
+        publishability === PUBLISHABILITY.QUARANTINED ||
+        publishability === PUBLISHABILITY.NOT_VERIFIED ||
+        [
+          "LINK_MISSING",
+          "CATEGORY_REVIEW_REQUIRED",
+          "CZ_RESTRICTED_CONFIRMED",
+          "CZ_ELIGIBILITY_UNKNOWN",
+          "cz_suitability_not_proven",
+          "protected_slot_out_of_scope",
+        ].includes(String(holdReason || ""))
+      ) {
+        quarantined.push({
+          partnerId,
+          advertiserId,
+          displayNameCs,
+          holdReason,
+          management,
+          chipOwnership: ownership,
+          relationshipStatus: rel,
+          sectionId: section.sectionId,
+          categoryKey: section.categoryKey || null,
+          sectionRule: section.rule || null,
+          categoryChange: section.categoryChange || null,
+          publishability,
+          buttonRecordStatus,
+          buttonRecordCreated: true,
+          rulesVersion,
+          nextStep: button.nextStep,
+        });
+      }
     }
   }
 
@@ -1656,7 +1865,7 @@ export function buildPhase3zPartnerRegistry({
 
   const registry = {
     schema: PHASE3Z_SCHEMA,
-    version: 5,
+    version: 6,
     rulesVersion,
     generatedAt: nowIso,
     liveEnabled: false,
@@ -1664,7 +1873,7 @@ export function buildPhase3zPartnerRegistry({
     publicButtonSwapArmed: false,
     websitePid: String(staging?.websitePid || websitePid),
     note:
-      "NON-PUBLIC canonical CJ partner registry (v5). Evidence matrix rebuilt after URL verify. Language priority CZ>SK>EN (EN never quarantines alone). APPROVED_FOR_PUBLICATION never auto-set. Public swap DISARMED.",
+      "NON-PUBLIC canonical CJ partner registry (v6). Every JOINED partner has a full button record; quarantine is a status not an omission. Language CZ>SK>EN. Public swap DISARMED.",
     taxonomy,
     taxonomyOccupancy,
     unifiedTakeoverPlan,
@@ -1672,6 +1881,8 @@ export function buildPhase3zPartnerRegistry({
       advertisersInStaging: advertisers.length,
       partners: partners.length,
       previewButtons: buttons.length,
+      buttonRecords: buttons.length,
+      joinedButtonRecords: buttons.length,
       quarantined: quarantined.length,
       readyForReview: partners.filter((p) => p.publishability === PUBLISHABILITY.READY_FOR_REVIEW).length,
       categoryVerified: partners.filter((p) =>
@@ -1690,9 +1901,12 @@ export function buildPhase3zPartnerRegistry({
           "section_not_in_taxonomy",
           "category_semantic_mismatch",
           "category_semantic_no_suitable_section",
+          "CATEGORY_REVIEW_REQUIRED",
         ].includes(q.holdReason)
       ).length,
-      regionHold: quarantined.filter((q) => q.holdReason === "market_not_targeting_cz").length,
+      regionHold: quarantined.filter((q) =>
+        ["CZ_RESTRICTED_CONFIRMED", "market_not_targeting_cz"].includes(q.holdReason)
+      ).length,
       duplicateBrandGroups: brandMatrix.filter((d) => (d.advertiserIds || []).length > 1).length,
       dedupeDecisions: dedupe.length,
       brandComparisons: brandMatrix.length,
@@ -1722,28 +1936,37 @@ export function buildPhase3zPartnerRegistry({
 
   const buttonCatalog = {
     schema: PHASE3Z_BUTTONS_SCHEMA,
-    version: 5,
+    version: 6,
     rulesVersion,
     generatedAt: nowIso,
     liveEnabled: false,
     publishArmed: false,
     publicButtonSwapArmed: false,
     note:
-      "NON-PUBLIC preview of partner buttons (v5). READY_FOR_REVIEW requires category+CZ market+URL verify; language CZ>SK>EN. Unified takeover prepared. Do NOT mass-replace production chips until independent audit GO.",
+      "NON-PUBLIC preview of partner buttons (v6). JOINED count == button record count. Quarantine is status. READY_FOR_REVIEW requires category+CZ+URL. Public swap DISARMED.",
     counts: {
       buttons: buttons.length,
+      buttonRecords: buttons.length,
       quarantined: quarantined.length,
       readyForReview: buttons.filter((b) => b.publishability === PUBLISHABILITY.READY_FOR_REVIEW).length,
       notVerified: buttons.filter((b) => b.publishability === PUBLISHABILITY.NOT_VERIFIED).length,
-      sections: [...new Set(buttons.map((b) => b.sectionId))].length,
+      sections: [...new Set(buttons.map((b) => b.sectionId).filter(Boolean))].length,
       unassignedWithButton: buttons.filter((b) => b.management === "UNASSIGNED").length,
       taxonomyCount: taxonomy.taxonomyCount,
+      linkMissing: buttons.filter((b) => b.holdReason === "LINK_MISSING").length,
+      categoryReviewRequired: buttons.filter((b) => b.holdReason === "CATEGORY_REVIEW_REQUIRED")
+        .length,
+      czRestricted: buttons.filter((b) => b.holdReason === "CZ_RESTRICTED_CONFIRMED").length,
     },
     taxonomyOccupancy,
     unifiedTakeoverPlan,
     buttons,
     quarantined,
   };
+
+  const joinedButtonParity = assertJoinedEqualsButtonRecords(registry, buttonCatalog);
+  registry.joinedButtonParity = joinedButtonParity;
+  buttonCatalog.joinedButtonParity = joinedButtonParity;
 
   return { registry, buttonCatalog };
 }
@@ -1928,7 +2151,8 @@ export async function verifyAllCandidateUrls(registry, buttonCatalog, opts = {})
     path.join(process.env.TEMP || "/tmp", "iu-phase3z-url-checkpoint.json");
 
   const checkpoint = readJson(checkpointPath, { byPartnerId: {} }) || { byPartnerId: {} };
-  const targets = buttonCatalog.buttons.slice();
+  // Probe only records with a CJ click URL (LINK_MISSING stays unevidenced for HTTP).
+  const targets = buttonCatalog.buttons.filter((b) => b.clickUrl);
   const max = limit > 0 ? Math.min(targets.length, limit) : targets.length;
   const queue = targets.slice(0, max);
 
@@ -1970,6 +2194,7 @@ export async function verifyAllCandidateUrls(registry, buttonCatalog, opts = {})
     verifiedAt: new Date().toISOString(),
   });
   registry.evidenceConsistency = assertEvidenceConsistency(registry, buttonCatalog);
+  registry.joinedButtonParity = assertJoinedEqualsButtonRecords(registry, buttonCatalog);
 
   const http403 = queue.filter((b) => b.urlVerification?.httpStatus === 403).length;
   const http404 = queue.filter((b) => b.urlVerification?.httpStatus === 404).length;
@@ -1986,6 +2211,7 @@ export async function verifyAllCandidateUrls(registry, buttonCatalog, opts = {})
     http404,
     http503,
     evidenceConsistencyOk: registry.evidenceConsistency?.ok === true,
+    joinedButtonParityOk: registry.joinedButtonParity?.ok === true,
   };
 }
 
@@ -2026,6 +2252,8 @@ export function buildPhase3zSafetyGates(registry, buttonCatalog, { previousButto
       b.urlVerification?.status !== "VERIFIED_HTTP_OK"
   );
   if (falseReady.length) blockers.push("ready_for_review_without_url_ok");
+  const parity = registry?.joinedButtonParity || assertJoinedEqualsButtonRecords(registry, buttonCatalog);
+  if (parity && parity.ok === false) blockers.push("joined_button_parity_failed");
 
   const taxCount = registry?.taxonomy?.taxonomyCount ?? registry?.counts?.taxonomyCount ?? 0;
   if (taxCount > 0 && taxCount < 30) {
@@ -2044,6 +2272,13 @@ export function buildPhase3zSafetyGates(registry, buttonCatalog, { previousButto
       status: (registry?.counts?.partners || 0) > 0 ? "PASS" : "BLOCKED",
       blockers: (registry?.counts?.partners || 0) > 0 ? [] : ["empty_registry"],
       affected: registry?.counts?.partners || 0,
+    },
+    {
+      id: "joined_button_parity",
+      status: parity?.ok === true ? "PASS" : "BLOCKED",
+      blockers: parity?.ok === true ? [] : ["joined_ne_button_records"],
+      affected: parity?.joined ?? 0,
+      note: "Every JOINED partner must have exactly one button record",
     },
     {
       id: "category_correctness",
@@ -2194,6 +2429,7 @@ export async function main(argv = process.argv.slice(2)) {
     // Still materialize matrix from current partner state for export consistency.
     registry.evidenceMatrix = buildEvidenceMatrix(registry.partners);
     registry.evidenceConsistency = assertEvidenceConsistency(registry, buttonCatalog);
+    registry.joinedButtonParity = assertJoinedEqualsButtonRecords(registry, buttonCatalog);
   }
 
   const gates = buildPhase3zSafetyGates(registry, buttonCatalog);
@@ -2203,6 +2439,14 @@ export async function main(argv = process.argv.slice(2)) {
       ...(gates.blockers || []),
       "evidence_matrix_inconsistent",
       ...(registry.evidenceConsistency.errors || []).slice(0, 8),
+    ];
+  }
+  if (registry.joinedButtonParity && registry.joinedButtonParity.ok === false) {
+    gates.ok = false;
+    gates.blockers = [
+      ...(gates.blockers || []),
+      "joined_button_parity_failed",
+      ...(registry.joinedButtonParity.errors || []).slice(0, 8),
     ];
   }
   registry.safetyGates = gates;

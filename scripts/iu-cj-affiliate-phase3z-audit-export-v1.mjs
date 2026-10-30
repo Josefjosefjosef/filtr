@@ -97,6 +97,9 @@ write(
       "sectionRule",
       "publishability",
       "holdReason",
+      "buttonRecordStatus",
+      "selectedLanguage",
+      "czMarketEligibilityVerified",
       "selectedClickUrl",
       "selectedDestination",
       "urlVerificationStatus",
@@ -125,6 +128,8 @@ write(
       "sectionId",
       "publishability",
       "holdReason",
+      "buttonRecordStatus",
+      "selectedLanguage",
       "clickUrl",
       "destination",
       "linkId",
@@ -393,6 +398,27 @@ write(
   "SAFETY-GATES.json",
   JSON.stringify(reg.safetyGates || btn.safetyGates || {}, null, 2) + "\n"
 );
+write(
+  dir,
+  "JOINED-BUTTON-PARITY.json",
+  JSON.stringify(
+    {
+      ok: reg.joinedButtonParity?.ok === true,
+      joined: reg.counts?.joined,
+      buttonRecords: btn.counts?.buttons,
+      difference: Number(reg.counts?.joined || 0) - Number(btn.counts?.buttons || 0),
+      parity: reg.joinedButtonParity || null,
+      ready: btn.counts?.readyForReview,
+      quarantined: btn.counts?.quarantined,
+      linkMissing: btn.counts?.linkMissing,
+      categoryReviewRequired: btn.counts?.categoryReviewRequired,
+      publicButtonSwapArmed: false,
+      note: "JOINED count must equal button record count; quarantine is status not omission",
+    },
+    null,
+    2
+  ) + "\n"
+);
 
 write(
   dir,
@@ -435,8 +461,9 @@ const manifestFiles = files.map((f) => ({
   sha256: sha256File(f.full),
 }));
 const manifest = {
-  phase: "3Z-V5",
+  phase: "3Z-V6",
   rulesVersion: reg.rulesVersion,
+  joinedButtonParity: reg.joinedButtonParity || null,
   generatedAt: new Date().toISOString(),
   pathStyle: "portable-forward-slash",
   fileCount: manifestFiles.length,
