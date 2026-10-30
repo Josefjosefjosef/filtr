@@ -10,7 +10,11 @@
  * Run: node scripts/iu-cj-affiliate-phase3z-partner-registry-v1.mjs
  * Env:
  *   IU_CJ_PHASE3Z_STAGING_PATH — override staging JSON
- *   IU_CJ_PHASE3Z_VERIFY_URLS=1 — optional HTTP redirect probe (slow)
+ *   IU_CJ_PHASE3Z_VERIFY_URLS=1 — HTTP redirect probe
+ *   IU_CJ_PHASE3Z_VERIFY_LIMIT — max probes (default all candidates)
+ *   IU_CJ_PHASE3Z_VERIFY_CONCURRENCY — parallel probes (default 3)
+ *   IU_CJ_PHASE3Z_VERIFY_SPACING_MS — delay between batches (default 400)
+ *   IU_CJ_PHASE3Z_VERIFY_CHECKPOINT — resume JSON path
  *   IU_CJ_PHASE3Z_OUT_DIR — write registry + button catalog JSON
  */
 import fs from "node:fs";
@@ -32,41 +36,195 @@ import { parseAffiliateCatalogOrdered } from "./iu-cj-affiliate-phase2-partner-s
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 export const PHASE3Z_SCHEMA = "iu-affiliate-cj-partner-registry-v1";
 export const PHASE3Z_BUTTONS_SCHEMA = "iu-affiliate-cj-partner-buttons-preview-v1";
-export const PHASE3Z_RULES_VERSION = "phase3z-partner-robot-v1";
+export const PHASE3Z_RULES_VERSION = "phase3z-partner-robot-v2";
 
-const CJ_TRACKING_HOSTS = new Set([
-  "www.anrdoezrs.com",
-  "www.anrdoezrs.net",
-  "www.jdoqocy.com",
-  "www.jdoqocy.net",
-  "www.dpbolvw.com",
-  "www.dpbolvw.net",
-  "www.kqzyfj.com",
-  "www.kqzyfj.net",
-  "www.tkqlhce.com",
-  "www.tkqlhce.net",
-]);
+/** Explicit publishability states (machine-readable). */
+export const PUBLISHABILITY = Object.freeze({
+  CANDIDATE_GENERATED: "CANDIDATE_GENERATED",
+  CATEGORY_VERIFIED: "CATEGORY_VERIFIED",
+  AFFILIATE_LINK_VERIFIED: "AFFILIATE_LINK_VERIFIED",
+  CZ_SUITABILITY_VERIFIED: "CZ_SUITABILITY_VERIFIED",
+  READY_FOR_REVIEW: "READY_FOR_REVIEW",
+  QUARANTINED: "QUARANTINED",
+  NOT_VERIFIED: "NOT_VERIFIED",
+  APPROVED_FOR_PUBLICATION: "APPROVED_FOR_PUBLICATION",
+});
 
 const SECTION_TITLES = Object.freeze({
-  "aff-kosmetika": "Kosmetika a parfémy",
-  "aff-drogerie": "Drogerie",
-  "aff-moda": "Móda",
-  "aff-boty": "Boty",
-  "aff-sperky-hodinky": "Šperky a hodinky",
-  "aff-sport-outdoor": "Sport a outdoor",
-  "aff-zdravi-doplnky": "Zdraví a doplňky",
-  "aff-lekarny": "Lékárny",
-  "aff-jidlo": "Jídlo a potraviny",
-  "aff-deti-hracky": "Děti a hračky",
+  "aff-cestovni-kancelare": "Cestovní kanceláře",
   "aff-ubytovani-hotely": "Ubytování a hotely",
   "aff-letenky": "Letenky",
   "aff-letenky-letecka-doprava": "Letenky a letecká doprava",
   "aff-cestovni-pojisteni": "Cestovní pojištění",
-  "aff-pojisteni": "Pojištění",
   "aff-auto-moto": "Auto-moto",
   "aff-pneu-pneuservis": "Pneu a pneuservis",
+  "aff-pojisteni": "Pojištění",
+  "aff-finance": "Finance",
+  "aff-energie-uspor": "Energie a úspory",
+  "aff-lekarny": "Lékárny",
+  "aff-zdravi-doplnky": "Zdraví a doplňky",
+  "aff-kosmetika": "Kosmetika a parfémy",
+  "aff-drogerie": "Drogerie",
+  "aff-moda": "Móda",
+  "aff-boty": "Boty",
+  "aff-deti-hracky": "Děti a hračky",
+  "aff-sportovni-obleceni": "Sportovní oblečení",
+  "aff-sport-outdoor": "Sport a outdoor",
+  "aff-dum-zahrada": "Dům a zahrada",
+  "aff-nabytek": "Nábytek",
+  "aff-kuchyn": "Kuchyně",
+  "aff-elektro": "Elektro",
+  "aff-mobily": "Mobily",
+  "aff-software": "Software",
+  "aff-knihy": "Knihy",
+  "aff-jidlo": "Jídlo a potraviny",
   "aff-zvirata": "Zvířata",
+  "aff-kvetiny-darky": "Květiny a dárky",
+  "aff-sperky-hodinky": "Šperky a hodinky",
+  "aff-tv-streamovani": "TV a streamování",
+  "aff-dilna-naradi": "Dílna a nářadí",
+  "aff-inzerce-bazary": "Inzerce a bazary",
+  "aff-realitni-kancelare": "Realitní kanceláře",
+  "aff-reality-nemovitosti": "Reality a nemovitosti",
+  "aff-kancelarske-potreby": "Kancelářské potřeby",
+  "aff-radio": "Rádio",
 });
+
+/**
+ * Exact parent|child → section (general rules, not per-advertiser exceptions).
+ * Parents without a fitting InfoUzel section stay unmapped → quarantine reason
+ * `no_suitable_taxonomy_section` (documented; not invented categories).
+ */
+export const PHASE3Z_CATEGORY_RULES_V2 = Object.freeze({
+  exact: {
+    ...CJ_CATEGORY_SECTION_EVIDENCE,
+    "beauty|bath & body": { sectionId: "aff-kosmetika", reason: "cj_beauty_bath_body" },
+    "beauty|hair care": { sectionId: "aff-kosmetika", reason: "cj_beauty_hair" },
+    "beauty|skin care": { sectionId: "aff-kosmetika", reason: "cj_beauty_skin" },
+    "beauty|nail care": { sectionId: "aff-kosmetika", reason: "cj_beauty_nail" },
+    "beauty|tools & accessories": { sectionId: "aff-kosmetika", reason: "cj_beauty_tools" },
+    "clothing/apparel|womens": { sectionId: "aff-moda", reason: "cj_apparel_womens" },
+    "clothing/apparel|mens": { sectionId: "aff-moda", reason: "cj_apparel_mens" },
+    "clothing/apparel|childrens": { sectionId: "aff-deti-hracky", reason: "cj_apparel_childrens" },
+    "clothing/apparel|malls": { sectionId: "aff-moda", reason: "cj_apparel_malls" },
+    "clothing/apparel|underwear": { sectionId: "aff-moda", reason: "cj_apparel_underwear" },
+    "accessories|jewelry": { sectionId: "aff-sperky-hodinky", reason: "cj_accessories_jewelry" },
+    "accessories|watches": { sectionId: "aff-sperky-hodinky", reason: "cj_accessories_watches" },
+    "food & drinks|gourmet": { sectionId: "aff-jidlo", reason: "cj_food_gourmet" },
+    "food & drinks|green": { sectionId: "aff-jidlo", reason: "cj_food_green" },
+    "food & drinks|restaurants": { sectionId: "aff-jidlo", reason: "cj_food_restaurants" },
+    "health and wellness|nutritional supplements": {
+      sectionId: "aff-zdravi-doplnky",
+      reason: "cj_health_supplements",
+    },
+    "health and wellness|health food": {
+      sectionId: "aff-zdravi-doplnky",
+      reason: "cj_health_food",
+    },
+    "health and wellness|pharmaceuticals": {
+      sectionId: "aff-lekarny",
+      reason: "cj_health_pharma",
+    },
+    "health and wellness|equipment": {
+      sectionId: "aff-zdravi-doplnky",
+      reason: "cj_health_equipment",
+    },
+    "games & toys|toys": { sectionId: "aff-deti-hracky", reason: "cj_toys" },
+    "games & toys|games": { sectionId: "aff-deti-hracky", reason: "cj_games" },
+    "games & toys|electronic games": { sectionId: "aff-deti-hracky", reason: "cj_electronic_games" },
+    "sports & fitness|equipment": { sectionId: "aff-sport-outdoor", reason: "cj_sports_equipment" },
+    "sports & fitness|sports": { sectionId: "aff-sport-outdoor", reason: "cj_sports" },
+    "sports & fitness|apparel": { sectionId: "aff-sport-outdoor", reason: "cj_sports_apparel" },
+    "recreation & leisure|outdoors": {
+      sectionId: "aff-sport-outdoor",
+      reason: "cj_recreation_outdoors",
+    },
+    "insurance|personal insurance": { sectionId: "aff-pojisteni", reason: "cj_insurance_personal" },
+    "insurance|travel insurance": {
+      sectionId: "aff-cestovni-pojisteni",
+      reason: "cj_insurance_travel",
+    },
+    "automotive|parts & accessories": { sectionId: "aff-auto-moto", reason: "cj_auto_parts" },
+    "automotive|cars & trucks": { sectionId: "aff-auto-moto", reason: "cj_auto_cars" },
+    "education|children": { sectionId: "aff-deti-hracky", reason: "cj_education_children" },
+    "travel|air": { sectionId: "aff-letenky-letecka-doprava", reason: "cj_travel_air" },
+    "travel|vacation": { sectionId: "aff-cestovni-kancelare", reason: "cj_travel_vacation" },
+    "travel|accessories": { sectionId: "aff-cestovni-kancelare", reason: "cj_travel_accessories" },
+    "home & garden|garden": { sectionId: "aff-dum-zahrada", reason: "cj_home_garden" },
+    "home & garden|furniture": { sectionId: "aff-nabytek", reason: "cj_home_furniture" },
+    "home & garden|bed & bath": { sectionId: "aff-dum-zahrada", reason: "cj_home_bed_bath" },
+    "home & garden|home appliances": { sectionId: "aff-dum-zahrada", reason: "cj_home_appliances" },
+    "home & garden|kitchen": { sectionId: "aff-kuchyn", reason: "cj_home_kitchen" },
+    "home & garden|construction": { sectionId: "aff-dilna-naradi", reason: "cj_home_construction" },
+    "home & garden|utilities": { sectionId: "aff-energie-uspor", reason: "cj_home_utilities" },
+    "books/media|books": { sectionId: "aff-knihy", reason: "cj_books" },
+    "books/media|videos/movies": { sectionId: "aff-tv-streamovani", reason: "cj_media_video" },
+    "books/media|television": { sectionId: "aff-tv-streamovani", reason: "cj_media_tv" },
+    "computer & electronics|computer sw": { sectionId: "aff-software", reason: "cj_electronics_sw" },
+    "computer & electronics|computer hw": { sectionId: "aff-elektro", reason: "cj_electronics_hw" },
+    "computer & electronics|consumer electronics": {
+      sectionId: "aff-elektro",
+      reason: "cj_electronics_consumer",
+    },
+    "gifts & flowers|gifts": { sectionId: "aff-kvetiny-darky", reason: "cj_gifts" },
+    "gifts & flowers|flowers": { sectionId: "aff-kvetiny-darky", reason: "cj_flowers" },
+    "gifts & flowers|collectibles": { sectionId: "aff-kvetiny-darky", reason: "cj_collectibles" },
+    "sports & fitness|apparel": { sectionId: "aff-sportovni-obleceni", reason: "cj_sports_apparel" },
+    "business|office": { sectionId: "aff-kancelarske-potreby", reason: "cj_business_office" },
+    "department stores/malls|virtual malls": {
+      sectionId: "aff-moda",
+      reason: "cj_virtual_malls_apparel_affinity",
+      confidence: "low",
+    },
+  },
+  /** Parent-only fallbacks when child is empty/unknown but parent is unambiguous. */
+  parent: {
+    beauty: { sectionId: "aff-kosmetika", reason: "cj_parent_beauty" },
+    "clothing/apparel": { sectionId: "aff-moda", reason: "cj_parent_apparel" },
+    "food & drinks": { sectionId: "aff-jidlo", reason: "cj_parent_food" },
+    "health and wellness": { sectionId: "aff-zdravi-doplnky", reason: "cj_parent_health" },
+    "games & toys": { sectionId: "aff-deti-hracky", reason: "cj_parent_toys" },
+    "sports & fitness": { sectionId: "aff-sport-outdoor", reason: "cj_parent_sports" },
+    insurance: { sectionId: "aff-pojisteni", reason: "cj_parent_insurance" },
+    automotive: { sectionId: "aff-auto-moto", reason: "cj_parent_automotive" },
+    "home & garden": { sectionId: "aff-dum-zahrada", reason: "cj_parent_home_garden" },
+    "books/media": { sectionId: "aff-knihy", reason: "cj_parent_books_media" },
+    "computer & electronics": { sectionId: "aff-elektro", reason: "cj_parent_electronics" },
+    "computers & software": { sectionId: "aff-software", reason: "cj_parent_computers_software" },
+    "gifts & flowers": { sectionId: "aff-kvetiny-darky", reason: "cj_parent_gifts" },
+    travel: { sectionId: "aff-cestovni-kancelare", reason: "cj_parent_travel" },
+  },
+  /**
+   * Parents with no safe InfoUzel taxonomy section — do NOT invent tiles.
+   */
+  noTaxonomyParents: new Set([
+    "art/photo/music",
+    "entertainment",
+    "telecommunications",
+    "financial services",
+    "real estate",
+    "business",
+  ]),
+});
+
+/** Keyword hints (name + host) — lower confidence; never override exact CJ map. */
+const KEYWORD_SECTION_HINTS = Object.freeze([
+  { re: /\b(kosmetik|perfume|parf[eé]m|beauty|make[\s-]?up|dermacol|foreo|yves)\b/i, sectionId: "aff-kosmetika" },
+  { re: /\b(l[eé]k[aá]rn|pharmacy|pharma)\b/i, sectionId: "aff-lekarny" },
+  { re: /\b(doplnky|supplement|vitamin|zdrav[ií]|brainmarket|bodyworld)\b/i, sectionId: "aff-zdravi-doplnky" },
+  { re: /\b(m[oó]d[aá]|fashion|apparel|clothing|wear)\b/i, sectionId: "aff-moda" },
+  { re: /\b(boty|shoe|sneaker|barefoot|footwear)\b/i, sectionId: "aff-boty" },
+  { re: /\b(hotel|booking|ubytov|airbnb)\b/i, sectionId: "aff-ubytovani-hotely" },
+  { re: /\b(letenk|airline|flight|skytours)\b/i, sectionId: "aff-letenky-letecka-doprava" },
+  { re: /\b(pojist|insur)\b/i, sectionId: "aff-pojisteni" },
+  { re: /\b(pneu|tire|tyre)\b/i, sectionId: "aff-pneu-pneuservis" },
+  { re: /\b(auto|moto|car\b)/i, sectionId: "aff-auto-moto" },
+  { re: /\b(hra[cč]k|toy|d[eě]ti|kids|baby)\b/i, sectionId: "aff-deti-hracky" },
+  { re: /\b(sport|outdoor|fitness)\b/i, sectionId: "aff-sport-outdoor" },
+  { re: /\b(potravin|jidlo|food|gourmet)\b/i, sectionId: "aff-jidlo" },
+  { re: /\b(drogeri|drugstore)\b/i, sectionId: "aff-drogerie" },
+  { re: /\b(pes|pesí|kočka|pet\b|zoo)\b/i, sectionId: "aff-zvirata" },
+]);
 
 function readJson(p, fallback = null) {
   try {
@@ -129,7 +287,6 @@ export function proposeCzechDisplayName(advertiserName, programUrl) {
     }
   }
   if (!name) name = host || raw || "Partner";
-  // Title-ish cleanup: keep diacritics if present; strip trailing punctuation
   return name.replace(/[\s\-_/|]+$/g, "").trim();
 }
 
@@ -165,7 +322,6 @@ export function scoreAffiliateLink(link, advertiser) {
     reasons.push("cz_destination_or_program");
   }
 
-  // Prefer homepage / deeplink home over campaign/coupon
   try {
     const pathOnly = new URL(dest).pathname.replace(/\/+$/, "") || "/";
     if (pathOnly === "/" || pathOnly.length <= 1) {
@@ -215,32 +371,96 @@ export function selectPrimaryAffiliateLink(links, advertiser) {
   };
 }
 
-export function resolveSectionId({ advertiserId, advertiser, sectionMap, categoryEvidence }) {
+/**
+ * General category classifier (versioned). Prefer section_map → exact CJ → parent → keyword.
+ */
+export function classifyPartnerSection({ advertiserId, advertiser, sectionMap }) {
   const id = String(advertiserId);
+  const cat = parseCjPrimaryCategory(advertiser?.primaryCategory);
+  const evidence = [];
+
   if (sectionMap && sectionMap[id] && !String(sectionMap[id]).startsWith("_")) {
     return {
       sectionId: sectionMap[id],
       source: "section_map",
       confidence: "high",
+      categoryKey: cat.key || null,
+      rule: "section_map_authoritative",
+      evidence: ["section_map:" + id],
+      taxonomyFit: true,
     };
   }
-  const cat = parseCjPrimaryCategory(advertiser.primaryCategory);
-  const hit = categoryEvidence[cat.key] || CJ_CATEGORY_SECTION_EVIDENCE[cat.key];
-  if (hit?.sectionId) {
+
+  const exact = PHASE3Z_CATEGORY_RULES_V2.exact[cat.key];
+  if (exact?.sectionId) {
     return {
-      sectionId: hit.sectionId,
-      source: "cj_category_evidence",
+      sectionId: exact.sectionId,
+      source: "cj_category_exact_v2",
+      confidence: exact.confidence || "high",
+      categoryKey: cat.key,
+      rule: exact.reason,
+      evidence: ["cj_primary:" + cat.key],
+      taxonomyFit: true,
+    };
+  }
+
+  const parentKey = String(cat.parent || "").toLowerCase();
+  if (parentKey && PHASE3Z_CATEGORY_RULES_V2.noTaxonomyParents.has(parentKey)) {
+    return {
+      sectionId: null,
+      source: "cj_category_no_taxonomy",
+      confidence: "high",
+      categoryKey: cat.key,
+      rule: "no_suitable_taxonomy_section",
+      evidence: ["cj_parent_no_tile:" + parentKey],
+      taxonomyFit: false,
+      holdHint: "no_suitable_taxonomy_section",
+    };
+  }
+
+  const parentHit = PHASE3Z_CATEGORY_RULES_V2.parent[parentKey];
+  if (parentHit?.sectionId) {
+    return {
+      sectionId: parentHit.sectionId,
+      source: "cj_category_parent_v2",
       confidence: "medium",
       categoryKey: cat.key,
-      evidenceReason: hit.reason,
+      rule: parentHit.reason,
+      evidence: ["cj_parent:" + parentKey],
+      taxonomyFit: true,
     };
   }
+
+  const blob = [advertiser?.advertiserName, advertiser?.programUrl].filter(Boolean).join(" ");
+  for (const hint of KEYWORD_SECTION_HINTS) {
+    if (hint.re.test(blob)) {
+      evidence.push("keyword:" + hint.sectionId);
+      return {
+        sectionId: hint.sectionId,
+        source: "keyword_hint_v2",
+        confidence: "low",
+        categoryKey: cat.key || null,
+        rule: "keyword_name_or_domain",
+        evidence,
+        taxonomyFit: true,
+      };
+    }
+  }
+
   return {
     sectionId: null,
     source: "unmapped",
     confidence: "low",
     categoryKey: cat.key || null,
+    rule: "no_rule_matched",
+    evidence: cat.key ? ["cj_primary:" + cat.key] : ["missing_category"],
+    taxonomyFit: null,
+    holdHint: "partner_section_unmapped",
   };
+}
+
+export function resolveSectionId(args) {
+  return classifyPartnerSection(args);
 }
 
 function policyByAdvertiserId(slotPolicy) {
@@ -252,27 +472,119 @@ function policyByAdvertiserId(slotPolicy) {
   return map;
 }
 
-function detectDuplicates(rows) {
+/**
+ * Full identity audit: every partner gets a decision; same-brand groups flagged KEEP_SEPARATE.
+ */
+export function detectDuplicates(rows) {
   const byBrand = new Map();
   for (const r of rows) {
     const n = r.brandKey;
-    if (!n || n.length < 4) continue;
+    if (!n || n.length < 3) continue;
     if (!byBrand.has(n)) byBrand.set(n, []);
-    byBrand.get(n).push(r.partnerId);
+    byBrand.get(n).push(r);
   }
   const decisions = [];
-  for (const [brandKey, ids] of byBrand) {
-    if (ids.length < 2) continue;
-    // Do NOT auto-merge different advertiserIds — record suspicion only.
+  for (const r of rows) {
+    const peers = byBrand.get(r.brandKey) || [r];
+    if (peers.length === 1) {
+      decisions.push({
+        partnerId: r.partnerId,
+        advertiserId: r.advertiserId,
+        brandKey: r.brandKey,
+        merchantDomain: r.merchantDomain || "",
+        action: "NOT_MERGED",
+        reason: "single_cid_identity",
+        confidence: "high",
+        peerAdvertiserIds: [r.advertiserId],
+      });
+      continue;
+    }
+    const peerIds = peers.map((p) => p.advertiserId);
     decisions.push({
-      brandKey,
-      advertiserIds: ids,
-      action: "KEEP_SEPARATE_PENDING_EVIDENCE",
-      reason: "same_normalized_brand_distinct_cid",
+      partnerId: r.partnerId,
+      advertiserId: r.advertiserId,
+      brandKey: r.brandKey,
+      merchantDomain: r.merchantDomain || "",
+      action: "NOT_MERGED",
+      reason: "same_normalized_brand_distinct_cid_keep_separate",
       confidence: "medium",
+      peerAdvertiserIds: peerIds,
+      groupAction: "KEEP_SEPARATE_PENDING_EVIDENCE",
     });
   }
   return decisions;
+}
+
+/** Regional special-case audit (evidence only; never invents URLs). */
+export function auditRegionalSpecialCases(partners) {
+  const needles = [
+    { id: "skytours", re: /skytours/i },
+    { id: "shapenbarefoot", re: /shapen|barefoot/i },
+    { id: "brainmarket", re: /brainmarket/i },
+    { id: "booking", re: /booking\.com|booking\b/i },
+    { id: "foreo", re: /foreo/i },
+  ];
+  const out = [];
+  for (const n of needles) {
+    const hits = partners.filter(
+      (p) => n.re.test(p.cjName || "") || n.re.test(p.programUrl || "") || n.re.test(p.displayNameCs || "")
+    );
+    for (const p of hits) {
+      const linkCz = marketAllowsCzechRepublic(p.selectedTargetedCountries);
+      const destCz = /\.cz(\/|$)/i.test(String(p.selectedDestination || "")) || /\.cz$/i.test(String(p.programUrl || ""));
+      let verdict = "KEEP_QUARANTINED_OR_REVIEW";
+      let reason = "regional_variant_needs_evidence";
+      if (p.publishability === PUBLISHABILITY.READY_FOR_REVIEW) {
+        verdict = "CZ_OK_IN_REGISTRY";
+        reason = "already_ready_for_review";
+      } else if (p.holdReason === "market_not_targeting_cz" && !destCz) {
+        verdict = "QUARANTINED";
+        reason = "selected_link_market_non_cz";
+      } else if (destCz && linkCz !== false) {
+        verdict = "CZ_AFFINITY_PRESENT";
+        reason = "program_or_dest_cz";
+      }
+      out.push({
+        caseId: n.id,
+        partnerId: p.partnerId,
+        advertiserId: p.advertiserId,
+        cjName: p.cjName,
+        selectedTargetedCountries: p.selectedTargetedCountries,
+        selectedDestination: p.selectedDestination,
+        programUrl: p.programUrl,
+        publishability: p.publishability,
+        holdReason: p.holdReason,
+        verdict,
+        reason,
+        note: "Historical baked URLs are not used as authority.",
+      });
+    }
+  }
+  return out;
+}
+
+function computeCzSuitability(pick, advertiser) {
+  const destHost = (() => {
+    try {
+      return new URL(pick.selected.destination).hostname;
+    } catch {
+      return "";
+    }
+  })();
+  const market = marketAllowsCzechRepublic(pick.selected.targetedCountries);
+  const programCz = /\.cz$/i.test(String(advertiser.programUrl || "")) || /\.cz$/i.test(destHost);
+  if (market === false && !programCz) {
+    return { ok: false, status: "NON_CZ_MARKET", confidence: "high", notes: [String(pick.selected.targetedCountries || "")] };
+  }
+  if (market === true || programCz) {
+    return {
+      ok: true,
+      status: "CZ_AFFINITY",
+      confidence: market === true ? "high" : "medium",
+      notes: [market === true ? "targeted_cz" : "cz_domain"],
+    };
+  }
+  return { ok: null, status: "CZ_UNKNOWN", confidence: "low", notes: ["market_unspecified"] };
 }
 
 /**
@@ -302,9 +614,6 @@ export function buildPhase3zPartnerRegistry({
   const knownSections = new Set(
     (catalogOrdered.sections || []).map((s) => s.sectionId).filter(Boolean)
   );
-  for (const sid of Object.values(SECTION_TITLES)) {
-    /* titles only */
-  }
   for (const sid of Object.keys(SECTION_TITLES)) knownSections.add(sid);
 
   const partners = [];
@@ -320,11 +629,10 @@ export function buildPhase3zPartnerRegistry({
     const management = classifyPolicyManagement(policy) || "UNASSIGNED";
     const brandKey = normalizePartnerBrand(adv.advertiserName);
     const displayNameCs = proposeCzechDisplayName(adv.advertiserName, adv.programUrl);
-    const section = resolveSectionId({
+    const section = classifyPartnerSection({
       advertiserId,
       advertiser: adv,
       sectionMap,
-      categoryEvidence: CJ_CATEGORY_SECTION_EVIDENCE,
     });
     const advLinks = linksByAdv.get(advertiserId) || [];
     const pick = selectPrimaryAffiliateLink(advLinks, adv);
@@ -332,7 +640,7 @@ export function buildPhase3zPartnerRegistry({
     const protectedSkip =
       management === "PAID_RESERVED" || management === "MANUAL_PROTECTED";
 
-    let publishability = "QUARANTINED";
+    let publishability = PUBLISHABILITY.CANDIDATE_GENERATED;
     let holdReason = null;
     const triple = {
       technical: { status: "NOT_VERIFIED", confidence: "low", notes: [] },
@@ -341,13 +649,11 @@ export function buildPhase3zPartnerRegistry({
     };
 
     if (protectedSkip) {
+      publishability = PUBLISHABILITY.QUARANTINED;
       holdReason = "protected_slot_out_of_scope";
-      triple.technical = {
-        status: "PROTECTED_SKIP",
-        confidence: "high",
-        notes: [management],
-      };
+      triple.technical = { status: "PROTECTED_SKIP", confidence: "high", notes: [management] };
     } else if (rel !== "joined") {
+      publishability = PUBLISHABILITY.QUARANTINED;
       holdReason = "relationship_not_joined";
       triple.technical = {
         status: "NOT_JOINED",
@@ -355,6 +661,7 @@ export function buildPhase3zPartnerRegistry({
         notes: [rel || "missing"],
       };
     } else if (!pick.selected) {
+      publishability = PUBLISHABILITY.QUARANTINED;
       holdReason = pick.reason || "no_affiliate_link";
       triple.technical = {
         status: "NO_SUITABLE_LINK",
@@ -362,18 +669,20 @@ export function buildPhase3zPartnerRegistry({
         notes: [holdReason],
       };
     } else if (!section.sectionId) {
-      holdReason = "partner_section_unmapped";
+      publishability = PUBLISHABILITY.QUARANTINED;
+      holdReason = section.holdHint || "partner_section_unmapped";
       triple.business = {
-        status: "NEEDS_CATEGORY",
-        confidence: "medium",
-        notes: [section.categoryKey || ""],
+        status: section.taxonomyFit === false ? "NO_TAXONOMY_FIT" : "NEEDS_CATEGORY",
+        confidence: section.confidence || "medium",
+        notes: [section.categoryKey || "", section.rule || ""],
       };
       triple.technical = {
-        status: "JOINED_LINK_OK",
+        status: "JOINED_LINK_CANDIDATE",
         confidence: "medium",
-        notes: ["awaiting_section"],
+        notes: ["awaiting_category_or_taxonomy"],
       };
     } else if (!knownSections.has(section.sectionId)) {
+      publishability = PUBLISHABILITY.QUARANTINED;
       holdReason = "section_not_in_taxonomy";
       triple.business = {
         status: "UNKNOWN_SECTION",
@@ -381,8 +690,12 @@ export function buildPhase3zPartnerRegistry({
         notes: [section.sectionId],
       };
     } else {
-      // Candidate for non-public button catalog (still not public live)
-      publishability = "PREVIEW_READY";
+      publishability = PUBLISHABILITY.CATEGORY_VERIFIED;
+      triple.business = {
+        status: "SECTION_ASSIGNED",
+        confidence: section.confidence,
+        notes: [section.sectionId, section.source, section.rule],
+      };
       triple.technical = {
         status: "JOINED_CJ_TRACKING",
         confidence: "high",
@@ -393,29 +706,24 @@ export function buildPhase3zPartnerRegistry({
         confidence: "medium",
         notes: [displayNameCs],
       };
-      triple.business = {
-        status: "SECTION_ASSIGNED",
-        confidence: section.confidence,
-        notes: [section.sectionId, section.source],
-      };
-      const destHost = (() => {
-        try {
-          return new URL(pick.selected.destination).hostname;
-        } catch {
-          return "";
-        }
-      })();
-      if (/\.cz$/i.test(destHost) || marketAllowsCzechRepublic(pick.selected.targetedCountries) === true) {
-        triple.visitor.notes.push("cz_affinity");
-        triple.visitor.confidence = "high";
-      } else if (marketAllowsCzechRepublic(pick.selected.targetedCountries) === false) {
-        publishability = "QUARANTINED";
+
+      const cz = computeCzSuitability(pick, adv);
+      if (cz.ok === false) {
+        publishability = PUBLISHABILITY.QUARANTINED;
         holdReason = "market_not_targeting_cz";
+        triple.visitor = { status: cz.status, confidence: cz.confidence, notes: cz.notes };
+      } else if (cz.ok === true) {
+        publishability = PUBLISHABILITY.CZ_SUITABILITY_VERIFIED;
         triple.visitor = {
-          status: "NON_CZ_MARKET",
-          confidence: "high",
-          notes: [String(pick.selected.targetedCountries || "")],
+          status: cz.status,
+          confidence: cz.confidence,
+          notes: [...(triple.visitor.notes || []), ...cz.notes],
         };
+      } else {
+        // Category ok but CZ not proven → NOT_VERIFIED (still a non-public candidate)
+        publishability = PUBLISHABILITY.NOT_VERIFIED;
+        holdReason = "cz_suitability_not_proven";
+        triple.visitor = { status: cz.status, confidence: cz.confidence, notes: cz.notes };
       }
     }
 
@@ -443,6 +751,9 @@ export function buildPhase3zPartnerRegistry({
       sectionTitleCs: section.sectionId ? SECTION_TITLES[section.sectionId] || section.sectionId : null,
       sectionSource: section.source,
       sectionConfidence: section.confidence,
+      sectionRule: section.rule || null,
+      sectionEvidence: section.evidence || [],
+      categoryKey: section.categoryKey || null,
       selectedClickUrl: pick.selected?.clickUrl || null,
       selectedDestination: pick.selected?.destination || null,
       selectedLinkId: pick.selected?.linkId || null,
@@ -469,13 +780,22 @@ export function buildPhase3zPartnerRegistry({
 
     partners.push(row);
 
-    if (publishability === "PREVIEW_READY") {
+    const isCandidate =
+      publishability === PUBLISHABILITY.CATEGORY_VERIFIED ||
+      publishability === PUBLISHABILITY.CZ_SUITABILITY_VERIFIED ||
+      publishability === PUBLISHABILITY.NOT_VERIFIED ||
+      publishability === PUBLISHABILITY.AFFILIATE_LINK_VERIFIED ||
+      publishability === PUBLISHABILITY.READY_FOR_REVIEW;
+
+    if (isCandidate && row.selectedClickUrl && section.sectionId) {
       buttons.push({
         partnerId,
         advertiserId,
         displayNameCs,
         sectionId: section.sectionId,
         sectionTitleCs: row.sectionTitleCs,
+        sectionSource: section.source,
+        sectionRule: section.rule,
         clickUrl: row.selectedClickUrl,
         destination: row.selectedDestination,
         trackingHost: (() => {
@@ -487,12 +807,15 @@ export function buildPhase3zPartnerRegistry({
         })(),
         targetedCountries: row.selectedTargetedCountries,
         linkId: row.selectedLinkId,
+        publishability,
+        holdReason,
         publicSwapArmed: false,
         chipStyle: "radio-compact-v1",
         rel: "sponsored noopener",
         target: "_blank",
         rulesVersion,
         triple,
+        urlVerification: row.urlVerification,
       });
     } else {
       quarantined.push({
@@ -503,16 +826,20 @@ export function buildPhase3zPartnerRegistry({
         management,
         relationshipStatus: rel,
         sectionId: section.sectionId,
+        categoryKey: section.categoryKey || null,
+        sectionRule: section.rule || null,
+        publishability,
         rulesVersion,
       });
     }
   }
 
   const dedupe = detectDuplicates(partners);
+  const regionalAudit = auditRegionalSpecialCases(partners);
 
   const registry = {
     schema: PHASE3Z_SCHEMA,
-    version: 1,
+    version: 2,
     rulesVersion,
     generatedAt: nowIso,
     liveEnabled: false,
@@ -520,36 +847,59 @@ export function buildPhase3zPartnerRegistry({
     publicButtonSwapArmed: false,
     websitePid: String(staging?.websitePid || websitePid),
     note:
-      "NON-PUBLIC canonical CJ partner registry. Historical baked affiliate URLs are NOT authoritative. Paid ads / MANUAL_PROTECTED out of scope.",
+      "NON-PUBLIC canonical CJ partner registry (v2). Historical baked affiliate URLs are NOT authoritative. Paid ads / MANUAL_PROTECTED out of scope. APPROVED_FOR_PUBLICATION never set by robot alone.",
     counts: {
       advertisersInStaging: advertisers.length,
       partners: partners.length,
       previewButtons: buttons.length,
       quarantined: quarantined.length,
-      duplicateBrandGroups: dedupe.length,
+      readyForReview: partners.filter((p) => p.publishability === PUBLISHABILITY.READY_FOR_REVIEW).length,
+      categoryVerified: partners.filter((p) =>
+        [
+          PUBLISHABILITY.CATEGORY_VERIFIED,
+          PUBLISHABILITY.CZ_SUITABILITY_VERIFIED,
+          PUBLISHABILITY.AFFILIATE_LINK_VERIFIED,
+          PUBLISHABILITY.READY_FOR_REVIEW,
+          PUBLISHABILITY.NOT_VERIFIED,
+        ].includes(p.publishability)
+      ).length,
+      categoryHold: quarantined.filter((q) =>
+        ["partner_section_unmapped", "no_suitable_taxonomy_section", "section_not_in_taxonomy"].includes(
+          q.holdReason
+        )
+      ).length,
+      regionHold: quarantined.filter((q) => q.holdReason === "market_not_targeting_cz").length,
+      duplicateBrandGroups: [...new Set(dedupe.filter((d) => d.peerAdvertiserIds?.length > 1).map((d) => d.brandKey))]
+        .length,
+      dedupeDecisions: dedupe.length,
       sectionMapped: partners.filter((p) => p.sectionSource === "section_map").length,
-      categoryMapped: partners.filter((p) => p.sectionSource === "cj_category_evidence").length,
+      categoryMappedExact: partners.filter((p) => p.sectionSource === "cj_category_exact_v2").length,
+      categoryMappedParent: partners.filter((p) => p.sectionSource === "cj_category_parent_v2").length,
+      categoryMappedKeyword: partners.filter((p) => p.sectionSource === "keyword_hint_v2").length,
       unmapped: partners.filter((p) => !p.sectionId).length,
       joined: partners.filter((p) => p.relationshipStatus === "joined").length,
       protectedSkipped: partners.filter((p) => p.holdReason === "protected_slot_out_of_scope").length,
     },
     partners,
     deduplicationDecisions: dedupe,
+    regionalSpecialCases: regionalAudit,
   };
 
   const buttonCatalog = {
     schema: PHASE3Z_BUTTONS_SCHEMA,
-    version: 1,
+    version: 2,
     rulesVersion,
     generatedAt: nowIso,
     liveEnabled: false,
     publishArmed: false,
     publicButtonSwapArmed: false,
     note:
-      "NON-PUBLIC preview of partner buttons. Do NOT mass-replace production affiliate chips until independent audit GO.",
+      "NON-PUBLIC preview of partner buttons (v2 statuses). READY_FOR_REVIEW requires category+CZ+URL verify. Do NOT mass-replace production chips until independent audit GO.",
     counts: {
       buttons: buttons.length,
       quarantined: quarantined.length,
+      readyForReview: buttons.filter((b) => b.publishability === PUBLISHABILITY.READY_FOR_REVIEW).length,
+      notVerified: buttons.filter((b) => b.publishability === PUBLISHABILITY.NOT_VERIFIED).length,
       sections: [...new Set(buttons.map((b) => b.sectionId))].length,
     },
     buttons,
@@ -568,6 +918,7 @@ export async function verifyClickUrlRedirect(clickUrl, { timeoutMs = 8000 } = {}
     httpStatus: null,
     redirects: [],
     error: null,
+    clientBlockedPossible: false,
   };
   if (!isCjTrackingUrl(clickUrl)) {
     out.status = "REJECTED";
@@ -594,14 +945,131 @@ export async function verifyClickUrlRedirect(clickUrl, { timeoutMs = 8000 } = {}
     } catch {
       out.finalHost = null;
     }
-    out.status = res.ok ? "VERIFIED_HTTP_OK" : "HTTP_NOT_OK";
-    // HTTP 200 alone is not proof of CZ suitability — caller must still judge.
+    if (res.status === 403) {
+      out.status = "HTTP_FORBIDDEN";
+      out.clientBlockedPossible = true;
+      out.error = "http_403_may_be_bot_block_not_dead_link";
+    } else if (res.ok) {
+      out.status = "VERIFIED_HTTP_OK";
+    } else {
+      out.status = "HTTP_NOT_OK";
+    }
     return out;
   } catch (e) {
     out.error = String(e && e.name === "AbortError" ? "timeout" : e.message || e);
     out.status = "NOT_VERIFIED";
     return out;
   }
+}
+
+function sleep(ms) {
+  return new Promise((r) => setTimeout(r, ms));
+}
+
+/**
+ * Apply URL verification onto partners/buttons and advance publishability.
+ * HTTP 200 alone does not set READY_FOR_REVIEW without prior CZ+category.
+ */
+export function applyUrlVerificationToPartner(partner, button, verification) {
+  partner.urlVerification = verification;
+  if (button) button.urlVerification = verification;
+
+  if (partner.publishability === PUBLISHABILITY.QUARANTINED) return;
+
+  if (verification.status === "VERIFIED_HTTP_OK") {
+    if (
+      partner.publishability === PUBLISHABILITY.CZ_SUITABILITY_VERIFIED ||
+      partner.publishability === PUBLISHABILITY.CATEGORY_VERIFIED ||
+      partner.publishability === PUBLISHABILITY.NOT_VERIFIED
+    ) {
+      // Need CZ proven for READY_FOR_REVIEW
+      const czOk =
+        partner.publishability === PUBLISHABILITY.CZ_SUITABILITY_VERIFIED ||
+        (partner.triple?.visitor?.status === "CZ_AFFINITY" &&
+          partner.triple?.visitor?.confidence !== "low");
+      partner.publishability = PUBLISHABILITY.AFFILIATE_LINK_VERIFIED;
+      if (czOk && partner.sectionId) {
+        partner.publishability = PUBLISHABILITY.READY_FOR_REVIEW;
+        partner.holdReason = null;
+      } else if (!czOk) {
+        partner.publishability = PUBLISHABILITY.NOT_VERIFIED;
+        partner.holdReason = partner.holdReason || "cz_suitability_not_proven";
+      }
+    }
+  } else if (verification.status === "HTTP_FORBIDDEN") {
+    partner.publishability = PUBLISHABILITY.NOT_VERIFIED;
+    partner.holdReason = "url_http_403_bot_block_possible";
+  } else if (verification.status === "HTTP_NOT_OK") {
+    partner.publishability = PUBLISHABILITY.NOT_VERIFIED;
+    partner.holdReason = "url_http_not_ok";
+  } else {
+    partner.publishability = PUBLISHABILITY.NOT_VERIFIED;
+    partner.holdReason = partner.holdReason || "url_not_verified";
+  }
+
+  if (button) {
+    button.publishability = partner.publishability;
+    button.holdReason = partner.holdReason;
+  }
+}
+
+export async function verifyAllCandidateUrls(registry, buttonCatalog, opts = {}) {
+  const limit = Number(opts.limit ?? process.env.IU_CJ_PHASE3Z_VERIFY_LIMIT ?? 0) || 0;
+  const concurrency = Math.max(1, Number(opts.concurrency ?? process.env.IU_CJ_PHASE3Z_VERIFY_CONCURRENCY ?? 3));
+  const spacingMs = Math.max(0, Number(opts.spacingMs ?? process.env.IU_CJ_PHASE3Z_VERIFY_SPACING_MS ?? 400));
+  const checkpointPath =
+    opts.checkpointPath ||
+    process.env.IU_CJ_PHASE3Z_VERIFY_CHECKPOINT ||
+    path.join(process.env.TEMP || "/tmp", "iu-phase3z-url-checkpoint.json");
+
+  const checkpoint = readJson(checkpointPath, { byPartnerId: {} }) || { byPartnerId: {} };
+  const targets = buttonCatalog.buttons.slice();
+  const max = limit > 0 ? Math.min(targets.length, limit) : targets.length;
+  const queue = targets.slice(0, max);
+
+  let i = 0;
+  async function worker() {
+    while (i < queue.length) {
+      const idx = i++;
+      const b = queue[idx];
+      const cached = checkpoint.byPartnerId[b.partnerId];
+      let v;
+      if (cached && cached.status && cached.status !== "NOT_VERIFIED") {
+        v = cached;
+      } else {
+        v = await verifyClickUrlRedirect(b.clickUrl);
+        checkpoint.byPartnerId[b.partnerId] = v;
+        if (idx % 10 === 0) writeJson(checkpointPath, checkpoint);
+        if (spacingMs) await sleep(spacingMs);
+      }
+      const partner = registry.partners.find((p) => p.partnerId === b.partnerId);
+      applyUrlVerificationToPartner(partner, b, v);
+    }
+  }
+
+  const workers = Array.from({ length: Math.min(concurrency, queue.length || 1) }, () => worker());
+  await Promise.all(workers);
+  writeJson(checkpointPath, checkpoint);
+
+  // refresh counts
+  registry.counts.readyForReview = registry.partners.filter(
+    (p) => p.publishability === PUBLISHABILITY.READY_FOR_REVIEW
+  ).length;
+  buttonCatalog.counts.readyForReview = buttonCatalog.buttons.filter(
+    (b) => b.publishability === PUBLISHABILITY.READY_FOR_REVIEW
+  ).length;
+  buttonCatalog.counts.notVerified = buttonCatalog.buttons.filter(
+    (b) => b.publishability === PUBLISHABILITY.NOT_VERIFIED
+  ).length;
+
+  return {
+    probed: queue.length,
+    checkpointPath,
+    verifiedOk: queue.filter((b) => b.urlVerification?.status === "VERIFIED_HTTP_OK").length,
+    forbidden: queue.filter((b) => b.urlVerification?.status === "HTTP_FORBIDDEN").length,
+    httpNotOk: queue.filter((b) => b.urlVerification?.status === "HTTP_NOT_OK").length,
+    notVerified: queue.filter((b) => b.urlVerification?.status === "NOT_VERIFIED").length,
+  };
 }
 
 export function buildPhase3zSafetyGates(registry, buttonCatalog, { previousButtonCount = null } = {}) {
@@ -625,8 +1093,22 @@ export function buildPhase3zSafetyGates(registry, buttonCatalog, { previousButto
   if (buttonCatalog?.publicButtonSwapArmed === true) {
     blockers.push("button_catalog_must_stay_disarmed");
   }
-  const paid = (registry?.partners || []).filter((p) => p.management === "PAID_RESERVED" && p.publishability === "PREVIEW_READY");
+  const approved = (registry?.partners || []).filter(
+    (p) => p.publishability === PUBLISHABILITY.APPROVED_FOR_PUBLICATION
+  );
+  if (approved.length) blockers.push("approved_for_publication_must_not_be_auto_set");
+  const paid = (registry?.partners || []).filter(
+    (p) =>
+      p.management === "PAID_RESERVED" &&
+      p.publishability !== PUBLISHABILITY.QUARANTINED
+  );
   if (paid.length) blockers.push("paid_reserved_leaked_into_preview");
+  const falseReady = (buttonCatalog?.buttons || []).filter(
+    (b) =>
+      b.publishability === PUBLISHABILITY.READY_FOR_REVIEW &&
+      b.urlVerification?.status !== "VERIFIED_HTTP_OK"
+  );
+  if (falseReady.length) blockers.push("ready_for_review_without_url_ok");
   return {
     ok: blockers.length === 0,
     blockers,
@@ -642,7 +1124,7 @@ function defaultPaths() {
       process.env.IU_CJ_PHASE3Z_STAGING_PATH ||
       path.join(ROOT, "projects", "data", "iu-affiliate-cj-staging-v1.json"),
     sectionMap: path.join(ROOT, "projects", "data", "iu-affiliate-cj-section-map-v1.json"),
-    slotPolicy: path.join(ROOT, "projects", "data", "iu-affiliate-cj-slot-policy-v1.json".replace("cj-slot", "slot")),
+    slotPolicy: path.join(ROOT, "projects", "data", "iu-affiliate-slot-policy-v1.json"),
     catalog: path.join(ROOT, "assets", "iu-affiliate-catalog.js"),
     outRegistry: path.join(ROOT, "projects", "data", "iu-affiliate-cj-partner-registry-v1.json"),
     outButtons: path.join(ROOT, "projects", "data", "iu-affiliate-cj-partner-buttons-preview-v1.json"),
@@ -651,8 +1133,6 @@ function defaultPaths() {
 
 export async function main(argv = process.argv.slice(2)) {
   const paths = defaultPaths();
-  // fix slot policy path typo-safe
-  paths.slotPolicy = path.join(ROOT, "projects", "data", "iu-affiliate-slot-policy-v1.json");
   if (process.env.IU_CJ_PHASE3Z_OUT_DIR) {
     const d = process.env.IU_CJ_PHASE3Z_OUT_DIR;
     paths.outRegistry = path.join(d, "iu-affiliate-cj-partner-registry-v1.json");
@@ -693,22 +1173,17 @@ export async function main(argv = process.argv.slice(2)) {
     catalogSrc,
   });
 
+  let verifyStats = null;
   if (process.env.IU_CJ_PHASE3Z_VERIFY_URLS === "1") {
-    const limit = Math.min(buttonCatalog.buttons.length, Number(process.env.IU_CJ_PHASE3Z_VERIFY_LIMIT || 40));
-    for (let i = 0; i < limit; i++) {
-      const b = buttonCatalog.buttons[i];
-      const v = await verifyClickUrlRedirect(b.clickUrl);
-      b.urlVerification = v;
-      const partner = registry.partners.find((p) => p.partnerId === b.partnerId);
-      if (partner) partner.urlVerification = v;
-    }
+    verifyStats = await verifyAllCandidateUrls(registry, buttonCatalog);
+    registry.urlVerificationRun = verifyStats;
+    buttonCatalog.urlVerificationRun = verifyStats;
   }
 
   const gates = buildPhase3zSafetyGates(registry, buttonCatalog);
   registry.safetyGates = gates;
   buttonCatalog.safetyGates = gates;
 
-  // Only write into repo allowlisted path when explicitly armed for data write
   const writeRepo = argv.includes("--write-repo") || process.env.IU_CJ_PHASE3Z_WRITE_REPO === "1";
   if (writeRepo) {
     assertAllowedDataWrite(paths.outRegistry);
@@ -723,9 +1198,12 @@ export async function main(argv = process.argv.slice(2)) {
       blockers: gates.blockers,
       warnings: gates.warnings,
       counts: registry.counts,
+      buttonCounts: buttonCatalog.counts,
+      verifyStats,
       outRegistry: paths.outRegistry,
       outButtons: paths.outButtons,
       publicButtonSwapArmed: false,
+      rulesVersion: PHASE3Z_RULES_VERSION,
     })
   );
   if (!gates.ok) process.exitCode = 2;

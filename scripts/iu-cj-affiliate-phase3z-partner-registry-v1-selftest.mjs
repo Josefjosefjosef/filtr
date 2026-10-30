@@ -9,6 +9,9 @@ import {
   marketAllowsCzechRepublic,
   buildPhase3zPartnerRegistry,
   buildPhase3zSafetyGates,
+  classifyPartnerSection,
+  applyUrlVerificationToPartner,
+  PUBLISHABILITY,
   PHASE3Z_RULES_VERSION,
 } from "./iu-cj-affiliate-phase3z-partner-registry-v1.mjs";
 import { isCjTrackingUrl } from "./iu-cj-affiliate-catalog-sync-publish-gate-v1.mjs";
@@ -21,8 +24,7 @@ function expect(id, cond, detail) {
 
 expect(
   "cz_name_strips_region",
-  proposeCzechDisplayName("Dermacol CZ/SK/PL/RO", "https://www.dermacol.cz/") === "Dermacol" ||
-    proposeCzechDisplayName("Dermacol CZ/SK/PL/RO", "https://www.dermacol.cz/").includes("Dermacol")
+  proposeCzechDisplayName("Dermacol CZ/SK/PL/RO", "https://www.dermacol.cz/").includes("Dermacol")
 );
 expect("norm_dermacol", normalizePartnerBrand("Dermacol CZ/SK/PL/RO") === "dermacol");
 expect("market_cz", marketAllowsCzechRepublic("CZ") === true);
@@ -32,6 +34,50 @@ expect(
   "tracking_kqzyfj",
   isCjTrackingUrl("https://www.kqzyfj.com/click-101883843-15319224-1707865993000")
 );
+
+const byrokko = classifyPartnerSection({
+  advertiserId: "7133039",
+  advertiser: {
+    advertiserName: "Byrokko World",
+    programUrl: "https://www.byrokko.com/",
+    primaryCategory: "<parent>Beauty</parent><child>Bath &amp; Body</child>",
+  },
+  sectionMap: {},
+});
+expect("byrokko_kosmetika", byrokko.sectionId === "aff-kosmetika", byrokko);
+
+const wear = classifyPartnerSection({
+  advertiserId: "7726276",
+  advertiser: {
+    advertiserName: "WearMedicine CZ",
+    programUrl: "https://wearmedicine.cz/",
+    primaryCategory: "<parent>Clothing/Apparel</parent><child>Womens</child>",
+  },
+  sectionMap: {},
+});
+expect("wear_moda", wear.sectionId === "aff-moda", wear);
+
+const doppler = classifyPartnerSection({
+  advertiserId: "6065245",
+  advertiser: {
+    advertiserName: "Dopplershop cz/sk",
+    programUrl: "https://www.dopplershop.cz/",
+    primaryCategory: "<parent>Home &amp; Garden</parent><child>Garden</child>",
+  },
+  sectionMap: {},
+});
+expect("doppler_dum_zahrada", doppler.sectionId === "aff-dum-zahrada", doppler);
+
+const butlers = classifyPartnerSection({
+  advertiserId: "4432968",
+  advertiser: {
+    advertiserName: "Butlers.cz",
+    programUrl: "http://www.butlers.cz",
+    primaryCategory: "<parent>Home &amp; Garden</parent><child>Home Appliances</child>",
+  },
+  sectionMap: {},
+});
+expect("butlers_dum_zahrada", butlers.sectionId === "aff-dum-zahrada", butlers);
 
 const adv = {
   advertiserId: "6065245",
@@ -80,12 +126,20 @@ const staging = {
   advertisers: [
     adv,
     {
+      advertiserId: "7133039",
+      advertiserName: "Byrokko World",
+      programUrl: "https://www.byrokko.com/",
+      relationshipStatus: "joined",
+      accountStatus: "Active",
+      primaryCategory: "<parent>Beauty</parent><child>Bath &amp; Body</child>",
+    },
+    {
       advertiserId: "2624620",
       advertiserName: "ABBYY Europe Affiliate Program",
       programUrl: "https://www.abbyy.com/",
       relationshipStatus: "joined",
       accountStatus: "Active",
-      primaryCategory: "<parent>Computers &amp; Software</parent><child>Software</child>",
+      primaryCategory: "<parent>Computer &amp; Electronics</parent><child>Computer SW</child>",
     },
     {
       advertiserId: "9990001",
@@ -98,6 +152,15 @@ const staging = {
   ],
   links: [
     ...links,
+    {
+      linkId: "20",
+      advertiserId: "7133039",
+      linkName: "home",
+      linkType: "Text Link",
+      destination: "https://www.byrokko.com/cz",
+      clickUrl: "https://www.dpbolvw.net/click-101883843-20-20",
+      targetedCountries: "CZ",
+    },
     {
       linkId: "10",
       advertiserId: "2624620",
@@ -121,7 +184,7 @@ const staging = {
 
 const { registry, buttonCatalog } = buildPhase3zPartnerRegistry({
   staging,
-  sectionMap: { "6065245": "aff-zvirata" },
+  sectionMap: {},
   slotPolicy: {
     partners: [
       {
@@ -136,11 +199,21 @@ const { registry, buttonCatalog } = buildPhase3zPartnerRegistry({
 
 expect("disarmed_registry", registry.liveEnabled === false && registry.publicButtonSwapArmed === false);
 expect("disarmed_buttons", buttonCatalog.publicButtonSwapArmed === false);
-expect("doppler_preview", buttonCatalog.buttons.some((b) => b.advertiserId === "6065245"));
 expect(
-  "abbyy_quarantine_or_unmapped",
-  buttonCatalog.quarantined.some((q) => q.advertiserId === "2624620") ||
-    !buttonCatalog.buttons.some((b) => b.advertiserId === "2624620")
+  "doppler_candidate_home",
+  buttonCatalog.buttons.some((b) => b.advertiserId === "6065245" && b.sectionId === "aff-dum-zahrada")
+);
+expect(
+  "byrokko_candidate",
+  buttonCatalog.buttons.some((b) => b.advertiserId === "7133039")
+);
+expect(
+  "no_preview_ready_legacy",
+  !buttonCatalog.buttons.some((b) => b.publishability === "PREVIEW_READY")
+);
+expect(
+  "abbyy_quarantine",
+  buttonCatalog.quarantined.some((q) => q.advertiserId === "2624620")
 );
 expect(
   "paid_not_preview",
@@ -153,11 +226,35 @@ expect(
   )
 );
 expect("rules_version", registry.rulesVersion === PHASE3Z_RULES_VERSION);
+expect("dedupe_not_empty", (registry.deduplicationDecisions || []).length >= registry.partners.length);
+
+const byrokkoBtn = buttonCatalog.buttons.find((b) => b.advertiserId === "7133039");
+const byrokkoPartner = registry.partners.find((p) => p.advertiserId === "7133039");
+expect("byrokko_cz_suitability", byrokkoPartner.publishability === PUBLISHABILITY.CZ_SUITABILITY_VERIFIED);
+applyUrlVerificationToPartner(byrokkoPartner, byrokkoBtn, {
+  status: "VERIFIED_HTTP_OK",
+  httpStatus: 200,
+  finalHost: "www.byrokko.com",
+});
+expect(
+  "byrokko_ready_after_url",
+  byrokkoPartner.publishability === PUBLISHABILITY.READY_FOR_REVIEW,
+  byrokkoPartner.publishability
+);
+applyUrlVerificationToPartner(byrokkoPartner, byrokkoBtn, {
+  status: "HTTP_FORBIDDEN",
+  httpStatus: 403,
+  clientBlockedPossible: true,
+});
+expect(
+  "byrokko_403_not_ready",
+  byrokkoPartner.publishability === PUBLISHABILITY.NOT_VERIFIED &&
+    byrokkoPartner.holdReason === "url_http_403_bot_block_possible"
+);
 
 const gates = buildPhase3zSafetyGates(registry, buttonCatalog);
 expect("gates_ok", gates.ok === true, gates);
 
-// Dedup suspicion without auto-merge
 const stagingDup = {
   ...staging,
   advertisers: [
@@ -201,7 +298,7 @@ const stagingDup = {
 };
 const dup = buildPhase3zPartnerRegistry({
   staging: stagingDup,
-  sectionMap: { "100": "aff-kosmetika", "101": "aff-kosmetika" },
+  sectionMap: {},
   slotPolicy: { partners: [] },
 });
 expect(
@@ -209,8 +306,12 @@ expect(
   (dup.registry.deduplicationDecisions || []).every((d) => d.action !== "AUTO_MERGE")
 );
 expect(
-  "dup_flagged",
-  (dup.registry.deduplicationDecisions || []).some((d) => d.brandKey === "yvesrocher")
+  "dup_not_merged_flagged",
+  (dup.registry.deduplicationDecisions || []).filter((d) => d.brandKey === "yvesrocher").length === 2
+);
+expect(
+  "yves_auto_category",
+  dup.buttonCatalog.buttons.every((b) => b.sectionId === "aff-kosmetika")
 );
 
 if (failures.length) {
@@ -221,6 +322,7 @@ if (failures.length) {
 console.log(
   JSON.stringify({
     ok: true,
+    rulesVersion: PHASE3Z_RULES_VERSION,
     previewButtons: buttonCatalog.counts.buttons,
     quarantined: buttonCatalog.counts.quarantined,
   })

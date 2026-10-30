@@ -3,8 +3,12 @@ name: CJ Affiliate phase3z partner registry (non-public)
 # Builds canonical partner registry + button PREVIEW from staging.
 # Never arms publicButtonSwapArmed / managed-public live / catalog JS rewrite.
 # Does not touch paid ads.
+# Scheduled after catalog-sync off-peak window; also callable from catalog-sync.
 
 on:
+  schedule:
+    # ~30 min after catalog-sync cron (17 3 * * *)
+    - cron: "47 3 * * *"
   workflow_dispatch:
     inputs:
       use_artifact_run_id:
@@ -12,14 +16,21 @@ on:
         required: false
         default: ""
       verify_urls:
-        description: "Probe up to N click URLs (0=off)"
+        description: "Probe click URLs (0=off, all=all candidates, or capped)"
         required: true
-        default: "0"
+        default: "all"
         type: choice
         options:
           - "0"
-          - "20"
           - "40"
+          - "all"
+  workflow_call:
+    inputs:
+      verify_urls:
+        description: "Probe click URLs"
+        required: false
+        default: "all"
+        type: string
 
 permissions:
   contents: read
@@ -32,7 +43,7 @@ concurrency:
 jobs:
   build-registry:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -40,39 +51,63 @@ jobs:
           node-version: "22"
       - name: Selftest
         run: node scripts/iu-cj-affiliate-phase3z-partner-registry-v1-selftest.mjs
-      - name: Download staging artifact (optional)
-        if: ${{ inputs.use_artifact_run_id != '' }}
+      - name: Resolve staging source
+        id: staging
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          mkdir -p /tmp/iu-phase3z-art
-          gh run download "${{ inputs.use_artifact_run_id }}" -D /tmp/iu-phase3z-art || true
-          find /tmp/iu-phase3z-art -name 'iu-affiliate-cj-staging-v1.json' | head -n 5
-      - name: Build non-public registry
-        env:
-          IU_CJ_PHASE3Z_OUT_DIR: ${{ runner.temp }}/phase3z-out
-          IU_CJ_PHASE3Z_VERIFY_URLS: ${{ inputs.verify_urls != '0' && '1' || '0' }}
-          IU_CJ_PHASE3Z_VERIFY_LIMIT: ${{ inputs.verify_urls }}
-        run: |
-          set -euo pipefail
-          mkdir -p "$IU_CJ_PHASE3Z_OUT_DIR"
+          mkdir -p /tmp/iu-phase3z-art projects/data
           STAGING=""
-          if [ -n "${{ inputs.use_artifact_run_id }}" ]; then
+          RUN_ID="${{ github.event.inputs.use_artifact_run_id || '' }}"
+          if [ -n "$RUN_ID" ]; then
+            gh run download "$RUN_ID" -D /tmp/iu-phase3z-art || true
             STAGING=$(find /tmp/iu-phase3z-art -name 'iu-affiliate-cj-staging-v1.json' | head -n 1 || true)
           fi
+          if [ -z "$STAGING" ]; then
+            # Prefer latest successful catalog-sync staging artifact
+            LATEST=$(gh run list --workflow "cj-affiliate-catalog-sync.yml" --status success --limit 5 --json databaseId,conclusion -q '.[0].databaseId' || true)
+            if [ -n "${LATEST:-}" ]; then
+              gh run download "$LATEST" -n iu-affiliate-cj-staging -D /tmp/iu-phase3z-art || true
+              STAGING=$(find /tmp/iu-phase3z-art -name 'iu-affiliate-cj-staging-v1.json' | head -n 1 || true)
+            fi
+          fi
+          if [ -z "$STAGING" ]; then
+            # Sync branch slim tip (may exist)
+            git fetch origin data/cj-affiliate-catalog-sync --depth=1 || true
+            git show origin/data/cj-affiliate-catalog-sync:projects/data/iu-affiliate-cj-staging-v1.json \
+              > /tmp/iu-phase3z-art/iu-affiliate-cj-staging-v1.json 2>/dev/null || true
+            if [ -s /tmp/iu-phase3z-art/iu-affiliate-cj-staging-v1.json ]; then
+              STAGING=/tmp/iu-phase3z-art/iu-affiliate-cj-staging-v1.json
+            fi
+          fi
           if [ -z "$STAGING" ] && [ -f projects/data/iu-affiliate-cj-staging-v1.json ]; then
-            # Repo stub is often dry_run empty — prefer artifact
             SIZE=$(wc -c < projects/data/iu-affiliate-cj-staging-v1.json || echo 0)
             if [ "$SIZE" -gt 1000 ]; then
               STAGING=projects/data/iu-affiliate-cj-staging-v1.json
             fi
           fi
           if [ -z "$STAGING" ]; then
-            echo "STAGING_EMPTY — pass use_artifact_run_id from a successful catalog-sync fetch"
-            exit 1
+            echo "STAGING_EMPTY — schedule will retry after next catalog-sync; dispatch with use_artifact_run_id"
+            echo "pending=1" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
-          export IU_CJ_PHASE3Z_STAGING_PATH="$STAGING"
+          echo "path=$STAGING" >> "$GITHUB_OUTPUT"
+          echo "pending=0" >> "$GITHUB_OUTPUT"
+          echo "STAGING_OK=$STAGING"
+      - name: Build non-public registry
+        if: ${{ steps.staging.outputs.pending != '1' }}
+        env:
+          IU_CJ_PHASE3Z_OUT_DIR: ${{ runner.temp }}/phase3z-out
+          IU_CJ_PHASE3Z_STAGING_PATH: ${{ steps.staging.outputs.path }}
+          IU_CJ_PHASE3Z_VERIFY_URLS: ${{ (github.event.inputs.verify_urls || inputs.verify_urls || 'all') != '0' && '1' || '0' }}
+          IU_CJ_PHASE3Z_VERIFY_LIMIT: ${{ (github.event.inputs.verify_urls || inputs.verify_urls || 'all') == 'all' && '0' || (github.event.inputs.verify_urls || inputs.verify_urls || '0') }}
+          IU_CJ_PHASE3Z_VERIFY_CONCURRENCY: "3"
+          IU_CJ_PHASE3Z_VERIFY_SPACING_MS: "350"
+          IU_CJ_PHASE3Z_VERIFY_CHECKPOINT: ${{ runner.temp }}/phase3z-url-checkpoint.json
+        run: |
+          set -euo pipefail
+          mkdir -p "$IU_CJ_PHASE3Z_OUT_DIR"
           node scripts/iu-cj-affiliate-phase3z-partner-registry-v1.mjs
           python3 - <<'PY'
           import json,os
@@ -82,13 +117,25 @@ jobs:
           assert reg.get("liveEnabled") is False
           assert reg.get("publicButtonSwapArmed") is False
           assert btn.get("publicButtonSwapArmed") is False
-          print("DISARMED_OK", reg.get("counts"), btn.get("counts"))
+          assert reg.get("rulesVersion") == "phase3z-partner-robot-v2"
+          ready=btn.get("counts",{}).get("readyForReview",0)
+          for b in btn.get("buttons",[]):
+            if b.get("publishability")=="READY_FOR_REVIEW":
+              assert (b.get("urlVerification") or {}).get("status")=="VERIFIED_HTTP_OK"
+          print("DISARMED_OK", reg.get("counts"), btn.get("counts"), "ready", ready)
           PY
       - name: Upload non-public registry artifacts
+        if: ${{ steps.staging.outputs.pending != '1' }}
         uses: actions/upload-artifact@v4
         with:
           name: iu-affiliate-cj-phase3z-registry
           path: |
             ${{ runner.temp }}/phase3z-out/iu-affiliate-cj-partner-registry-v1.json
             ${{ runner.temp }}/phase3z-out/iu-affiliate-cj-partner-buttons-preview-v1.json
+            ${{ runner.temp }}/phase3z-url-checkpoint.json
           if-no-files-found: error
+      - name: Mark schedule pending when staging missing
+        if: ${{ steps.staging.outputs.pending == '1' }}
+        run: |
+          echo "PHASE3Z_SCHEDULE_PENDING_STAGING=1"
+          echo "Public swap remains DISARMED."
