@@ -5,12 +5,12 @@
  */
 .iuAffiliateSection[data-iu-phase3z-chips="1"] .iuAffiliateChip.iuRadioChip,
 .iuAffiliatePhase3zPreview .iuAffiliateChip.iuRadioChip {
-  --iuChipH: 72px;
   --iuChipPadX: 10px;
   --iuChipTitleSize: 14px;
-  height: var(--iuChipH);
-  padding: 10px var(--iuChipPadX);
   min-height: 44px;
+  height: auto;
+  padding: 10px var(--iuChipPadX);
+  box-sizing: border-box;
 }
 
 .iuAffiliateSection[data-iu-phase3z-chips="1"] .iuAffiliateChip .iuRadioChipTitle,
@@ -21,10 +21,10 @@
   overflow-wrap: anywhere;
   word-break: break-word;
   hyphens: auto;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  overflow: hidden;
+  display: block;
+  white-space: normal;
+  overflow: visible;
+  /* no -webkit-line-clamp — full name must remain readable */
 }
 
 .iuAffiliateSection[data-iu-phase3z-chips="1"] .iuAffiliateGrid,

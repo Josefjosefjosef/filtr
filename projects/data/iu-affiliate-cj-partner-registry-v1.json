@@ -1,25 +1,15 @@
 {
   "schema": "iu-affiliate-cj-partner-registry-v1",
-  "version": 1,
-  "rulesVersion": "phase3z-partner-robot-v1",
-  "generatedAt": null,
+  "version": 2,
+  "rulesVersion": "phase3z-partner-robot-v2",
   "liveEnabled": false,
   "publishArmed": false,
   "publicButtonSwapArmed": false,
-  "websitePid": "101883843",
-  "note": "DISARMED stub. Populate via scripts/iu-cj-affiliate-phase3z-partner-registry-v1.mjs from CJ staging. Never copy historical baked affiliate URLs as authoritative.",
+  "note": "Stub on main. Full non-public registry is produced by scheduled catalog-sync phase3z job / phase3z workflow artifacts. Never arms public chip swap.",
+  "partners": [],
   "counts": {
-    "advertisersInStaging": 0,
     "partners": 0,
     "previewButtons": 0,
-    "quarantined": 0,
-    "duplicateBrandGroups": 0,
-    "sectionMapped": 0,
-    "categoryMapped": 0,
-    "unmapped": 0,
-    "joined": 0,
-    "protectedSkipped": 0
-  },
-  "partners": [],
-  "deduplicationDecisions": []
+    "quarantined": 0
+  }
 }
