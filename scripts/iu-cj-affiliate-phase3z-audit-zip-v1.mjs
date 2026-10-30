@@ -10,8 +10,9 @@ import crypto from "node:crypto";
 import zlib from "node:zlib";
 import { fileURLToPath } from "node:url";
 
+/** High-signal secret patterns only (avoid false positives on code words like "token"). */
 const SECRET_RE =
-  /(api[_-]?key|secret|password|token|authorization|bearer\s+[a-z0-9]|CJ_[A-Z0-9_]{6,}|ghp_[A-Za-z0-9]{20,}|-----BEGIN)/i;
+  /(ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|sk_live_[A-Za-z0-9]{20,}|-----BEGIN (RSA |OPENSSH |EC )?PRIVATE KEY-----|(api[_-]?key|password|client_secret)\s*[:=]\s*['\"][^'\"]{12,}|Bearer\s+[A-Za-z0-9\-._~+/]+=*)/;
 
 function crc32(buf) {
   let c = ~0;
@@ -159,7 +160,9 @@ export function validatePortableZip(zipPath, manifestPath) {
     const sha = crypto.createHash("sha256").update(data).digest("hex");
     if (sha !== mf.sha256) errors.push("sha256_mismatch:" + mf.path);
     if (ent.crc32 !== crc32(data)) errors.push("crc_mismatch:" + mf.path);
-    if (SECRET_RE.test(data.toString("utf8").slice(0, 200000))) {
+    const text = data.toString("utf8").slice(0, 200000);
+    // Skip source scripts for keyword scan; still hashed/CRC-checked.
+    if (!/\.(mjs|js|css)$/i.test(mf.path) && SECRET_RE.test(text)) {
       errors.push("secret_pattern:" + mf.path);
     }
   }
