@@ -326,6 +326,8 @@ export function buildPublishPlan({
       "projects/data/iu-affiliate-cj-managed-public-v1.json",
       "projects/data/iu-affiliate-cj-managed-public-lkg-v1.json",
       "projects/data/iu-affiliate-cj-sync-audit-v1.json",
+      "projects/data/iu-affiliate-cj-partner-registry-v1.json",
+      "projects/data/iu-affiliate-cj-partner-buttons-preview-v1.json",
     ],
   };
 }
@@ -375,6 +377,9 @@ export function assertAllowedDataWrite(filePath) {
     "projects/data/iu-affiliate-cj-managed-public-v1.json",
     "projects/data/iu-affiliate-cj-managed-public-lkg-v1.json",
     "projects/data/iu-affiliate-cj-sync-audit-v1.json",
+    // Phase 3Z non-public robot outputs (liveEnabled/publicButtonSwapArmed must stay false)
+    "projects/data/iu-affiliate-cj-partner-registry-v1.json",
+    "projects/data/iu-affiliate-cj-partner-buttons-preview-v1.json",
   ];
   if (!allowed.some((a) => norm.endsWith(a) || norm.includes("/" + a))) {
     throw new Error("FORBIDDEN_SYNC_WRITE:" + norm);

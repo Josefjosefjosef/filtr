@@ -1,0 +1,94 @@
+name: CJ Affiliate phase3z partner registry (non-public)
+
+# Builds canonical partner registry + button PREVIEW from staging.
+# Never arms publicButtonSwapArmed / managed-public live / catalog JS rewrite.
+# Does not touch paid ads.
+
+on:
+  workflow_dispatch:
+    inputs:
+      use_artifact_run_id:
+        description: "Optional prior catalog-sync run id to download staging artifact"
+        required: false
+        default: ""
+      verify_urls:
+        description: "Probe up to N click URLs (0=off)"
+        required: true
+        default: "0"
+        type: choice
+        options:
+          - "0"
+          - "20"
+          - "40"
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: cj-affiliate-phase3z-registry
+  cancel-in-progress: false
+
+jobs:
+  build-registry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Selftest
+        run: node scripts/iu-cj-affiliate-phase3z-partner-registry-v1-selftest.mjs
+      - name: Download staging artifact (optional)
+        if: ${{ inputs.use_artifact_run_id != '' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/iu-phase3z-art
+          gh run download "${{ inputs.use_artifact_run_id }}" -D /tmp/iu-phase3z-art || true
+          find /tmp/iu-phase3z-art -name 'iu-affiliate-cj-staging-v1.json' | head -n 5
+      - name: Build non-public registry
+        env:
+          IU_CJ_PHASE3Z_OUT_DIR: ${{ runner.temp }}/phase3z-out
+          IU_CJ_PHASE3Z_VERIFY_URLS: ${{ inputs.verify_urls != '0' && '1' || '0' }}
+          IU_CJ_PHASE3Z_VERIFY_LIMIT: ${{ inputs.verify_urls }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$IU_CJ_PHASE3Z_OUT_DIR"
+          STAGING=""
+          if [ -n "${{ inputs.use_artifact_run_id }}" ]; then
+            STAGING=$(find /tmp/iu-phase3z-art -name 'iu-affiliate-cj-staging-v1.json' | head -n 1 || true)
+          fi
+          if [ -z "$STAGING" ] && [ -f projects/data/iu-affiliate-cj-staging-v1.json ]; then
+            # Repo stub is often dry_run empty — prefer artifact
+            SIZE=$(wc -c < projects/data/iu-affiliate-cj-staging-v1.json || echo 0)
+            if [ "$SIZE" -gt 1000 ]; then
+              STAGING=projects/data/iu-affiliate-cj-staging-v1.json
+            fi
+          fi
+          if [ -z "$STAGING" ]; then
+            echo "STAGING_EMPTY — pass use_artifact_run_id from a successful catalog-sync fetch"
+            exit 1
+          fi
+          export IU_CJ_PHASE3Z_STAGING_PATH="$STAGING"
+          node scripts/iu-cj-affiliate-phase3z-partner-registry-v1.mjs
+          python3 - <<'PY'
+          import json,os
+          d=os.environ["IU_CJ_PHASE3Z_OUT_DIR"]
+          reg=json.load(open(f"{d}/iu-affiliate-cj-partner-registry-v1.json"))
+          btn=json.load(open(f"{d}/iu-affiliate-cj-partner-buttons-preview-v1.json"))
+          assert reg.get("liveEnabled") is False
+          assert reg.get("publicButtonSwapArmed") is False
+          assert btn.get("publicButtonSwapArmed") is False
+          print("DISARMED_OK", reg.get("counts"), btn.get("counts"))
+          PY
+      - name: Upload non-public registry artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: iu-affiliate-cj-phase3z-registry
+          path: |
+            ${{ runner.temp }}/phase3z-out/iu-affiliate-cj-partner-registry-v1.json
+            ${{ runner.temp }}/phase3z-out/iu-affiliate-cj-partner-buttons-preview-v1.json
+          if-no-files-found: error

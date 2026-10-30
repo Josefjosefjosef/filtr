@@ -1,0 +1,48 @@
+/**
+ * Phase 3Z — compact partner chips (Radio-like), PREVIEW / future cutover only.
+ * NOT wired into production catalog until publicButtonSwapArmed GO.
+ * Does NOT style paid premium buttons or category tile headers.
+ */
+.iuAffiliateSection[data-iu-phase3z-chips="1"] .iuAffiliateChip.iuRadioChip,
+.iuAffiliatePhase3zPreview .iuAffiliateChip.iuRadioChip {
+  --iuChipH: 72px;
+  --iuChipPadX: 10px;
+  --iuChipTitleSize: 14px;
+  height: var(--iuChipH);
+  padding: 10px var(--iuChipPadX);
+  min-height: 44px;
+}
+
+.iuAffiliateSection[data-iu-phase3z-chips="1"] .iuAffiliateChip .iuRadioChipTitle,
+.iuAffiliatePhase3zPreview .iuAffiliateChip .iuRadioChipTitle {
+  font-size: var(--iuChipTitleSize);
+  font-weight: 650;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  hyphens: auto;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+.iuAffiliateSection[data-iu-phase3z-chips="1"] .iuAffiliateGrid,
+.iuAffiliatePhase3zPreview .iuAffiliateGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+}
+
+@media (max-width: 520px) {
+  .iuAffiliateSection[data-iu-phase3z-chips="1"] .iuAffiliateGrid,
+  .iuAffiliatePhase3zPreview .iuAffiliateGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Hard isolation: never restyle premium / paid slots via this sheet */
+.iuPremiumSelectedRoot .iuAffiliateChip,
+[data-iu-premium-selected] .iuAffiliateChip {
+  /* no-op marker — phase3z rules must not apply here */
+}

@@ -190,6 +190,8 @@ const VIEWPORTS = [
 
 const PREMIUM_SELECTED_OPEN_ALLOW =
   /^https:\/\/ads\.infouzel\.cz\/v1\/public\/premium\/selected-services\/(catalog|render)\?category=/;
+/** Passive assets (product card images from LIVE offers) must not trip section-open external guard. */
+const PASSIVE_RESOURCE_TYPES = new Set(["image", "media", "font", "stylesheet", "texttrack", "manifest"]);
 
 const browser = await chromium.launch({ headless: true });
 const samples = [];
@@ -212,6 +214,8 @@ try {
     const extOnOpen = [];
     page.on("request", (req) => {
       const u = req.url();
+      const rt = typeof req.resourceType === "function" ? req.resourceType() : "";
+      if (PASSIVE_RESOURCE_TYPES.has(rt)) return;
       if (
         /^https?:\/\//i.test(u) &&
         !u.includes("127.0.0.1") &&
