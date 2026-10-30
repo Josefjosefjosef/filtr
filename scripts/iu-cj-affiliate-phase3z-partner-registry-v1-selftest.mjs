@@ -23,6 +23,8 @@ import {
   selectLanguagePreference,
   buildEvidenceMatrix,
   assertEvidenceConsistency,
+  assertJoinedEqualsButtonRecords,
+  BUTTON_RECORD_STATUS,
 } from "./iu-cj-affiliate-phase3z-partner-registry-v1.mjs";
 import fs from "node:fs";
 import path from "node:path";
@@ -348,12 +350,33 @@ expect(
   !buttonCatalog.buttons.some((b) => b.publishability === "PREVIEW_READY")
 );
 expect(
-  "abbyy_quarantine",
-  buttonCatalog.quarantined.some((q) => q.advertiserId === "2624620")
+  "abbyy_button_record",
+  buttonCatalog.buttons.some((b) => b.advertiserId === "2624620")
 );
 expect(
-  "paid_not_preview",
-  !buttonCatalog.buttons.some((b) => b.advertiserId === "9990001")
+  "abbyy_not_ready",
+  buttonCatalog.buttons.some(
+    (b) =>
+      b.advertiserId === "2624620" &&
+      b.publishability !== PUBLISHABILITY.READY_FOR_REVIEW &&
+      (b.holdReason === "CZ_ELIGIBILITY_UNKNOWN" ||
+        b.holdReason === "CZ_RESTRICTED_CONFIRMED" ||
+        b.holdReason === "market_not_targeting_cz" ||
+        b.buttonRecordStatus === BUTTON_RECORD_STATUS.CZ_ELIGIBILITY_UNKNOWN ||
+        b.buttonRecordStatus === BUTTON_RECORD_STATUS.CZ_RESTRICTED_CONFIRMED)
+  )
+);
+expect(
+  "paid_button_record",
+  buttonCatalog.buttons.some(
+    (b) => b.advertiserId === "9990001" && b.holdReason === "protected_slot_out_of_scope"
+  )
+);
+expect(
+  "paid_not_ready",
+  !buttonCatalog.buttons.some(
+    (b) => b.advertiserId === "9990001" && b.publishability === PUBLISHABILITY.READY_FOR_REVIEW
+  )
 );
 expect(
   "paid_quarantined",
@@ -363,6 +386,104 @@ expect(
 );
 expect("rules_version", registry.rulesVersion === PHASE3Z_RULES_VERSION);
 expect("dedupe_not_empty", (registry.deduplicationDecisions || []).length >= registry.partners.length);
+const parity0 = assertJoinedEqualsButtonRecords(registry, buttonCatalog);
+expect("joined_eq_buttons", parity0.ok === true, parity0);
+expect(
+  "joined_count_eq",
+  registry.counts.joined === buttonCatalog.counts.buttons,
+  { joined: registry.counts.joined, buttons: buttonCatalog.counts.buttons }
+);
+
+// JOINED with no category still gets a button record
+const noCat = buildPhase3zPartnerRegistry({
+  staging: {
+    generatedAt: "2026-10-30T00:00:00.000Z",
+    websitePid: "101883843",
+    advertisers: [
+      {
+        advertiserId: "7770001",
+        advertiserName: "Obscure Widget Co",
+        programUrl: "https://obscure-widgets.example/",
+        relationshipStatus: "joined",
+        accountStatus: "Active",
+        primaryCategory: "<parent>Art/Photo/Music</parent><child>Photography</child>",
+      },
+    ],
+    links: [
+      {
+        linkId: "x1",
+        advertiserId: "7770001",
+        linkName: "home",
+        linkType: "Text Link",
+        destination: "https://obscure-widgets.example/en/",
+        clickUrl: "https://www.dpbolvw.net/click-101883843-777-777",
+        targetedCountries: "CZ",
+      },
+    ],
+  },
+  sectionMap: {},
+  slotPolicy: { partners: [] },
+  catalogSrc: fs.readFileSync(catalogPath, "utf8"),
+});
+expect("nocat_button_exists", noCat.buttonCatalog.buttons.length === 1, noCat.buttonCatalog.counts);
+expect(
+  "nocat_category_review",
+  noCat.buttonCatalog.buttons[0].holdReason === "CATEGORY_REVIEW_REQUIRED" ||
+    noCat.buttonCatalog.buttons[0].buttonRecordStatus ===
+      BUTTON_RECORD_STATUS.CATEGORY_REVIEW_REQUIRED,
+  noCat.buttonCatalog.buttons[0]
+);
+expect("nocat_parity", assertJoinedEqualsButtonRecords(noCat.registry, noCat.buttonCatalog).ok);
+
+// LINK_MISSING still creates a button record
+const noLink = buildPhase3zPartnerRegistry({
+  staging: {
+    generatedAt: "2026-10-30T00:00:00.000Z",
+    websitePid: "101883843",
+    advertisers: [
+      {
+        advertiserId: "6660001",
+        advertiserName: "Linkless Merchant",
+        programUrl: "https://linkless.example/",
+        relationshipStatus: "joined",
+        accountStatus: "Active",
+        primaryCategory: "<parent>Beauty</parent><child>Cosmetics</child>",
+      },
+    ],
+    links: [],
+  },
+  sectionMap: {},
+  slotPolicy: { partners: [] },
+  catalogSrc: fs.readFileSync(catalogPath, "utf8"),
+});
+expect("nolink_button", noLink.buttonCatalog.buttons.length === 1);
+expect(
+  "nolink_status",
+  noLink.buttonCatalog.buttons[0].holdReason === "LINK_MISSING" ||
+    noLink.buttonCatalog.buttons[0].buttonRecordStatus === BUTTON_RECORD_STATUS.LINK_MISSING,
+  noLink.buttonCatalog.buttons[0]
+);
+expect("nolink_parity", assertJoinedEqualsButtonRecords(noLink.registry, noLink.buttonCatalog).ok);
+
+// SK preferred when CZ missing
+const skOnly = selectLanguagePreference([
+  { language: "EN", linkId: "e" },
+  { language: "SK", linkId: "s" },
+]);
+expect("sk_over_en", skOnly.selectedLanguage === "SK" && skOnly.languagePrioritySatisfied);
+
+// CID override: Booking.com → ubytování
+const bookingCls = classifyPartnerSection({
+  advertiserId: "5096493",
+  advertiser: {
+    advertiserId: "5096493",
+    advertiserName: "Booking.com",
+    programUrl: "https://www.booking.com/",
+    primaryCategory: "<parent>Travel</parent><child>Lodging</child>",
+  },
+  sectionMap: {},
+});
+expect("booking_hotels", bookingCls.sectionId === "aff-ubytovani-hotely", bookingCls);
 
 const byrokkoBtn = buttonCatalog.buttons.find((b) => b.advertiserId === "7133039");
 const byrokkoPartner = registry.partners.find((p) => p.advertiserId === "7133039");

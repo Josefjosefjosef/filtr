@@ -117,12 +117,17 @@ jobs:
           assert reg.get("liveEnabled") is False
           assert reg.get("publicButtonSwapArmed") is False
           assert btn.get("publicButtonSwapArmed") is False
-          assert reg.get("rulesVersion") == "phase3z-partner-robot-v5"
+          assert reg.get("rulesVersion") == "phase3z-partner-robot-v6"
           assert reg.get("taxonomy", {}).get("taxonomyCount", 0) == 36
           assert reg.get("publicButtonSwapArmed") is False
           assert (reg.get("unifiedTakeoverPlan") or {}).get("publicSwapArmed") is False
           cons = reg.get("evidenceConsistency") or {}
           assert cons.get("ok") is True, cons
+          parity = reg.get("joinedButtonParity") or {}
+          assert parity.get("ok") is True, parity
+          joined = int((reg.get("counts") or {}).get("joined") or 0)
+          btn_n = int((btn.get("counts") or {}).get("buttons") or 0)
+          assert joined == btn_n, (joined, btn_n)
           ready = int((btn.get("counts") or {}).get("readyForReview") or 0)
           ready_m = sum(1 for r in (reg.get("evidenceMatrix") or []) if r.get("readyForReview") is True)
           assert ready_m == ready, (ready_m, ready)
