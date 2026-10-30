@@ -117,10 +117,18 @@ jobs:
           assert reg.get("liveEnabled") is False
           assert reg.get("publicButtonSwapArmed") is False
           assert btn.get("publicButtonSwapArmed") is False
-          assert reg.get("rulesVersion") == "phase3z-partner-robot-v4"
+          assert reg.get("rulesVersion") == "phase3z-partner-robot-v5"
           assert reg.get("taxonomy", {}).get("taxonomyCount", 0) == 36
           assert reg.get("publicButtonSwapArmed") is False
           assert (reg.get("unifiedTakeoverPlan") or {}).get("publicSwapArmed") is False
+          cons = reg.get("evidenceConsistency") or {}
+          assert cons.get("ok") is True, cons
+          ready = int((btn.get("counts") or {}).get("readyForReview") or 0)
+          ready_m = sum(1 for r in (reg.get("evidenceMatrix") or []) if r.get("readyForReview") is True)
+          assert ready_m == ready, (ready_m, ready)
+          url_m = sum(1 for r in (reg.get("evidenceMatrix") or []) if r.get("affiliateUrlVerified") is True)
+          url_ok = int((reg.get("urlVerificationRun") or {}).get("verifiedOk") or 0)
+          assert url_m == url_ok, (url_m, url_ok)
           ready=btn.get("counts",{}).get("readyForReview",0)
           for b in btn.get("buttons",[]):
             if b.get("publishability")=="READY_FOR_REVIEW":
