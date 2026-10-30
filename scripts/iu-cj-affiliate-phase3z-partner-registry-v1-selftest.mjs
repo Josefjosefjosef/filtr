@@ -13,6 +13,10 @@ import {
   applyUrlVerificationToPartner,
   PUBLISHABILITY,
   PHASE3Z_RULES_VERSION,
+  classifyFromCjEvidence,
+  sectionSemanticConflict,
+  resolveChipOwnership,
+  buildBrandComparisonMatrix,
 } from "./iu-cj-affiliate-phase3z-partner-registry-v1.mjs";
 import { isCjTrackingUrl } from "./iu-cj-affiliate-catalog-sync-publish-gate-v1.mjs";
 import { normalizePartnerBrand } from "./iu-cj-affiliate-phase3e-partner-recon-v1.mjs";
@@ -45,6 +49,51 @@ const byrokko = classifyPartnerSection({
   sectionMap: {},
 });
 expect("byrokko_kosmetika", byrokko.sectionId === "aff-kosmetika", byrokko);
+
+const ecomodi = classifyPartnerSection({
+  advertiserId: "6065327",
+  advertiser: {
+    advertiserName: "Ecomodi CZ/SK",
+    programUrl: "https://www.ecomodi.cz/",
+    primaryCategory: "<parent>Clothing/Apparel</parent><child>Womens</child>",
+  },
+  sectionMap: { "6065327": "aff-drogerie" },
+});
+expect("ecomodi_override_moda", ecomodi.sectionId === "aff-moda", ecomodi);
+expect(
+  "ecomodi_override_source",
+  String(ecomodi.source || "").includes("overridden"),
+  ecomodi
+);
+
+const leo = classifyFromCjEvidence({
+  advertiserName: "Leo Express Europe",
+  programUrl: "https://www.leoexpress.com/cs",
+  primaryCategory: "<parent>Business</parent><child>Travel</child>",
+});
+expect("leo_no_air_section", leo.sectionId == null && leo.holdHint === "category_semantic_no_suitable_section", leo);
+expect(
+  "leo_map_conflict",
+  sectionSemanticConflict("aff-letenky", { advertiserName: "Leo Express Europe" }, "business|travel")?.ok ===
+    false
+);
+
+expect(
+  "ownership_unassigned",
+  resolveChipOwnership({
+    management: "UNASSIGNED",
+    relationshipStatus: "joined",
+    publishability: PUBLISHABILITY.READY_FOR_REVIEW,
+  }).ownership === "UNASSIGNED_ROBOT_ELIGIBLE"
+);
+expect(
+  "ownership_paid_out",
+  resolveChipOwnership({
+    management: "PAID_RESERVED",
+    relationshipStatus: "joined",
+    publishability: PUBLISHABILITY.READY_FOR_REVIEW,
+  }).takeoverEligible === false
+);
 
 const wear = classifyPartnerSection({
   advertiserId: "7726276",
