@@ -19,6 +19,10 @@ import {
   buildBrandComparisonMatrix,
   loadAuthoritativeTaxonomy,
   SECTION_TITLES,
+  detectPageLanguage,
+  selectLanguagePreference,
+  buildEvidenceMatrix,
+  assertEvidenceConsistency,
 } from "./iu-cj-affiliate-phase3z-partner-registry-v1.mjs";
 import fs from "node:fs";
 import path from "node:path";
@@ -43,6 +47,18 @@ expect(
   "tracking_kqzyfj",
   isCjTrackingUrl("https://www.kqzyfj.com/click-101883843-15319224-1707865993000")
 );
+
+expect("lang_cz_host", detectPageLanguage({ url: "https://shop.cz/" }) === "CZ");
+expect("lang_sk_path", detectPageLanguage({ url: "https://example.com/sk/home" }) === "SK");
+expect("lang_en_path", detectPageLanguage({ url: "https://example.com/en/home" }) === "EN");
+const langPref = selectLanguagePreference([
+  { language: "EN", linkId: "1" },
+  { language: "SK", linkId: "2" },
+  { language: "CZ", linkId: "3" },
+]);
+expect("lang_priority_cz", langPref.selectedLanguage === "CZ" && langPref.languagePrioritySatisfied);
+const langEnOnly = selectLanguagePreference([{ language: "EN", linkId: "9" }]);
+expect("lang_en_ok", langEnOnly.selectedLanguage === "EN" && langEnOnly.languagePrioritySatisfied);
 
 const byrokko = classifyPartnerSection({
   advertiserId: "7133039",
@@ -361,6 +377,20 @@ expect(
   byrokkoPartner.publishability === PUBLISHABILITY.READY_FOR_REVIEW,
   byrokkoPartner.publishability
 );
+// Rebuild matrix after URL verify — must match READY and URL flags
+registry.evidenceMatrix = buildEvidenceMatrix(registry.partners);
+registry.counts.readyForReview = registry.partners.filter(
+  (p) => p.publishability === PUBLISHABILITY.READY_FOR_REVIEW
+).length;
+buttonCatalog.counts.readyForReview = buttonCatalog.buttons.filter(
+  (b) => b.publishability === PUBLISHABILITY.READY_FOR_REVIEW
+).length;
+const consOk = assertEvidenceConsistency(registry, buttonCatalog);
+expect("evidence_consistent_after_url", consOk.ok === true, consOk);
+const byrokkoRow = registry.evidenceMatrix.find((r) => r.advertiserId === "7133039");
+expect("matrix_url_true", byrokkoRow?.affiliateUrlVerified === true, byrokkoRow);
+expect("matrix_ready_true", byrokkoRow?.readyForReview === true, byrokkoRow);
+
 applyUrlVerificationToPartner(byrokkoPartner, byrokkoBtn, {
   status: "HTTP_FORBIDDEN",
   httpStatus: 403,
@@ -371,6 +401,54 @@ expect(
   byrokkoPartner.publishability === PUBLISHABILITY.NOT_VERIFIED &&
     byrokkoPartner.holdReason === "url_http_403_bot_block_possible"
 );
+
+// EN merchant with CZ targeting must not quarantine for language
+const enAdv = {
+  advertiserId: "8880001",
+  advertiserName: "Global Gadgets EN",
+  programUrl: "https://www.globalgadgets.example/en/",
+  relationshipStatus: "joined",
+  accountStatus: "Active",
+  primaryCategory: "<parent>Computer &amp; Electronics</parent><child>Consumer Electronics</child>",
+};
+const enStaging = {
+  generatedAt: "2026-10-30T00:00:00.000Z",
+  websitePid: "101883843",
+  advertisers: [enAdv],
+  links: [
+    {
+      linkId: "en1",
+      advertiserId: "8880001",
+      linkName: "English home",
+      linkType: "Text Link",
+      destination: "https://www.globalgadgets.example/en/",
+      clickUrl: "https://www.dpbolvw.net/click-101883843-888-888",
+      targetedCountries: "CZ",
+    },
+  ],
+};
+const enReg = buildPhase3zPartnerRegistry({
+  staging: enStaging,
+  sectionMap: {},
+  slotPolicy: { partners: [] },
+  catalogSrc: fs.readFileSync(catalogPath, "utf8"),
+});
+const enPartner = enReg.registry.partners[0];
+expect("en_not_quarantine_lang", enPartner.publishability !== PUBLISHABILITY.QUARANTINED || enPartner.holdReason !== "language_english", enPartner);
+expect(
+  "en_cz_market_ok",
+  enPartner.publishability === PUBLISHABILITY.CZ_SUITABILITY_VERIFIED ||
+    enPartner.czMarketEligibilityVerified === true,
+  enPartner
+);
+expect("en_selected_lang", enPartner.selectedLanguage === "EN", enPartner);
+applyUrlVerificationToPartner(enPartner, enReg.buttonCatalog.buttons[0], {
+  status: "VERIFIED_HTTP_OK",
+  httpStatus: 200,
+  finalHost: "www.globalgadgets.example",
+  finalUrl: "https://www.globalgadgets.example/en/",
+});
+expect("en_ready_allowed", enPartner.publishability === PUBLISHABILITY.READY_FOR_REVIEW, enPartner);
 
 const gates = buildPhase3zSafetyGates(registry, buttonCatalog);
 expect("gates_ok", gates.ok === true, gates);

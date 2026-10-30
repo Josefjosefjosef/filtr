@@ -36,7 +36,10 @@ import { parseAffiliateCatalogOrdered } from "./iu-cj-affiliate-phase2-partner-s
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 export const PHASE3Z_SCHEMA = "iu-affiliate-cj-partner-registry-v1";
 export const PHASE3Z_BUTTONS_SCHEMA = "iu-affiliate-cj-partner-buttons-preview-v1";
-export const PHASE3Z_RULES_VERSION = "phase3z-partner-robot-v4";
+export const PHASE3Z_RULES_VERSION = "phase3z-partner-robot-v5";
+
+/** Language preference for InfoUzel visitors: CZ first, then SK, then EN. EN is never quarantine-only. */
+export const LANGUAGE_PRIORITY = Object.freeze(["CZ", "SK", "EN"]);
 
 /**
  * Slot-policy management meanings (identity ≠ chip ownership):
@@ -356,6 +359,102 @@ export function proposeCzechDisplayName(advertiserName, programUrl) {
   return name.replace(/[\s\-_/|]+$/g, "").trim();
 }
 
+/**
+ * Detect page language hints from URL / host (not a full HTML lang crawl).
+ * Returns CZ | SK | EN | OTHER | unknown.
+ */
+export function detectPageLanguage({ url, host, linkName } = {}) {
+  const u = String(url || "");
+  const h = String(host || "");
+  const n = String(linkName || "").toLowerCase();
+  let path = "";
+  let hostname = h;
+  try {
+    const parsed = new URL(u.startsWith("http") ? u : "https://" + u);
+    path = parsed.pathname || "";
+    hostname = hostname || parsed.hostname.replace(/^www\./i, "");
+  } catch {
+    /* keep raw */
+  }
+  if (
+    /\.cz$/i.test(hostname) ||
+    /\/(cs|cz)(\/|$)/i.test(path) ||
+    /[?&](lang|locale|language)=(cs|cz)\b/i.test(u) ||
+    /\b(cesky|česky|czech)\b/i.test(n)
+  ) {
+    return "CZ";
+  }
+  if (
+    /\.sk$/i.test(hostname) ||
+    /\/sk(\/|$)/i.test(path) ||
+    /[?&](lang|locale|language)=sk\b/i.test(u) ||
+    /\b(sloven|slovak)\b/i.test(n)
+  ) {
+    return "SK";
+  }
+  if (
+    /\/en(\/|$)/i.test(path) ||
+    /[?&](lang|locale|language)=en\b/i.test(u) ||
+    /\b(english|anglick)\b/i.test(n) ||
+    /\.(com|net|org|eu|io)$/i.test(hostname)
+  ) {
+    // .com alone is weak EN hint — mark EN only with path/query/name, else OTHER-ish
+    if (
+      /\/en(\/|$)/i.test(path) ||
+      /[?&](lang|locale|language)=en\b/i.test(u) ||
+      /\b(english|anglick)\b/i.test(n)
+    ) {
+      return "EN";
+    }
+    return "unknown";
+  }
+  if (/\/(de|pl|hu|fr|it|es)(\/|$)/i.test(path)) return "OTHER";
+  return "unknown";
+}
+
+/**
+ * Choose language by mandatory priority CZ → SK → EN.
+ * EN is a full legitimate option — never quarantine solely for English.
+ */
+export function selectLanguagePreference(candidates) {
+  const list = Array.isArray(candidates) ? candidates.filter(Boolean) : [];
+  const byLang = new Map();
+  for (const c of list) {
+    const lang = String(c.language || "unknown").toUpperCase();
+    if (!byLang.has(lang)) byLang.set(lang, []);
+    byLang.get(lang).push(c);
+  }
+  for (const pref of LANGUAGE_PRIORITY) {
+    if (byLang.has(pref) && byLang.get(pref).length) {
+      return {
+        selectedLanguage: pref,
+        languagePrioritySatisfied: true,
+        reason: "priority_" + pref.toLowerCase(),
+        availableLanguages: [...byLang.keys()].sort(),
+        pick: byLang.get(pref)[0],
+      };
+    }
+  }
+  const other = [...byLang.keys()].filter((k) => k !== "UNKNOWN");
+  if (other.length) {
+    return {
+      selectedLanguage: other[0],
+      languagePrioritySatisfied: false,
+      reason: "non_priority_language_needs_review",
+      availableLanguages: [...byLang.keys()].sort(),
+      pick: byLang.get(other[0])[0],
+      holdHint: "language_outside_cz_sk_en",
+    };
+  }
+  return {
+    selectedLanguage: "unknown",
+    languagePrioritySatisfied: false,
+    reason: "language_not_detected",
+    availableLanguages: [],
+    pick: null,
+  };
+}
+
 export function scoreAffiliateLink(link, advertiser) {
   let score = 0;
   const reasons = [];
@@ -388,6 +487,21 @@ export function scoreAffiliateLink(link, advertiser) {
     reasons.push("cz_destination_or_program");
   }
 
+  const lang = detectPageLanguage({ url: dest, linkName: name });
+  if (lang === "CZ") {
+    score += 35;
+    reasons.push("lang_cz");
+  } else if (lang === "SK") {
+    score += 20;
+    reasons.push("lang_sk");
+  } else if (lang === "EN") {
+    score += 10;
+    reasons.push("lang_en_ok");
+  } else if (lang === "OTHER") {
+    score -= 5;
+    reasons.push("lang_other");
+  }
+
   try {
     const pathOnly = new URL(dest).pathname.replace(/\/+$/, "") || "/";
     if (pathOnly === "/" || pathOnly.length <= 1) {
@@ -410,7 +524,7 @@ export function scoreAffiliateLink(link, advertiser) {
     reasons.push("text_link");
   }
 
-  return { score, reasons };
+  return { score, reasons, language: lang };
 }
 
 export function selectPrimaryAffiliateLink(links, advertiser) {
@@ -918,62 +1032,64 @@ function computeCzSuitability(pick, advertiser) {
   const dest = String(pick.selected?.destination || "");
   const destHost = (() => {
     try {
-      return new URL(dest).hostname;
+      return new URL(dest).hostname.replace(/^www\./i, "");
     } catch {
       return "";
     }
   })();
-  const destPath = (() => {
-    try {
-      return new URL(dest).pathname || "";
-    } catch {
-      return "";
-    }
-  })();
-  const market = marketAllowsCzechRepublic(pick.selected.targetedCountries);
+  const market = marketAllowsCzechRepublic(pick.selected?.targetedCountries);
   const programCz = /\.cz$/i.test(String(advertiser.programUrl || "")) || /\.cz$/i.test(destHost);
-  const langHint =
-    /\/(cs|cz)(\/|$)/i.test(destPath) ||
-    /[?&](lang|locale|language)=(cs|cz)\b/i.test(dest) ||
-    /\.cz$/i.test(destHost)
-      ? "cs_path_or_cz_host"
-      : /\/(sk|en|de|pl|hu)(\/|$)/i.test(destPath)
-        ? "non_cs_path_hint"
-        : "language_unknown";
+  const detectedLang = detectPageLanguage({
+    url: dest,
+    host: destHost,
+    linkName: pick.selected?.linkName,
+  });
+  // Language is NOT a CZ-market gate: EN + CZ targeting is a valid candidate.
   const evidence = {
     cjCooperationJoined: true,
     affiliateTrackingUrl: Boolean(pick.selected?.clickUrl),
     httpRedirect: "PENDING_PROBE",
     merchantIdentity: destHost || String(advertiser.programUrl || ""),
-    languageHint: langHint,
+    selectedLanguage: detectedLang,
+    languageHint: detectedLang,
     marketTargeting: pick.selected?.targetedCountries || null,
     czDomain: programCz,
-    note: "HTTP 200 and .cz alone are not full CZ-usability proof",
+    note: "HTTP 200 and .cz alone are not full CZ-usability proof; EN language never quarantines alone",
   };
   if (market === false && !programCz) {
     return {
       ok: false,
       status: "NON_CZ_MARKET",
       confidence: "high",
-      notes: [String(pick.selected.targetedCountries || "")],
+      notes: [String(pick.selected?.targetedCountries || ""), "lang=" + detectedLang],
       evidence,
     };
   }
-  if (market === true && (programCz || langHint === "cs_path_or_cz_host")) {
+  if (market === true && (programCz || detectedLang === "CZ")) {
     return {
       ok: true,
       status: "CZ_AFFINITY",
       confidence: "high",
-      notes: ["targeted_cz", langHint],
+      notes: ["targeted_cz", "lang=" + detectedLang],
       evidence,
     };
   }
-  if (market === true || programCz) {
+  if (market === true) {
+    // Explicit CZ targeting — EN/SK landing pages are OK for Czech visitors.
+    return {
+      ok: true,
+      status: "CZ_AFFINITY",
+      confidence: detectedLang === "SK" || detectedLang === "EN" ? "high" : "medium",
+      notes: ["targeted_cz", "lang=" + detectedLang, "language_separated_from_market"],
+      evidence,
+    };
+  }
+  if (programCz) {
     return {
       ok: true,
       status: "CZ_AFFINITY",
       confidence: "medium",
-      notes: [market === true ? "targeted_cz" : "cz_domain", langHint, "partial_evidence"],
+      notes: ["cz_domain", "lang=" + detectedLang, "partial_evidence"],
       evidence,
     };
   }
@@ -981,8 +1097,180 @@ function computeCzSuitability(pick, advertiser) {
     ok: null,
     status: "CZ_UNKNOWN",
     confidence: "low",
-    notes: ["market_unspecified", langHint],
+    notes: ["market_unspecified", "lang=" + detectedLang],
     evidence,
+  };
+}
+
+function triState(value) {
+  if (value === true) return true;
+  if (value === false) return false;
+  return "unknown";
+}
+
+/**
+ * Authoritative evidence row — must be rebuilt AFTER URL verification.
+ * Uses true/false/unknown; never invents PASS from HTTP 200 alone.
+ */
+export function buildEvidenceRow(partner, { verifiedAt = null } = {}) {
+  const uv = partner.urlVerification || {};
+  const urlStatus = String(uv.status || "NOT_VERIFIED");
+  const urlProbed = Boolean(uv.probedAt || uv.httpStatus != null || urlStatus !== "NOT_VERIFIED");
+  const affiliateUrlVerified =
+    urlStatus === "VERIFIED_HTTP_OK" ? true : urlProbed ? false : "unknown";
+  const httpRedirectVerified = ["VERIFIED_HTTP_OK", "HTTP_FORBIDDEN", "HTTP_NOT_OK"].includes(
+    urlStatus
+  )
+    ? true
+    : urlProbed
+      ? false
+      : "unknown";
+
+  const selectedLanguage = partner.selectedLanguage || partner.languageEvidence?.selectedLanguage || "unknown";
+  const languageVerified =
+    selectedLanguage && selectedLanguage !== "unknown"
+      ? true
+      : partner.languageEvidence?.attempted
+        ? false
+        : "unknown";
+  const languagePrioritySatisfied = LANGUAGE_PRIORITY.includes(String(selectedLanguage).toUpperCase())
+    ? true
+    : languageVerified === true
+      ? false
+      : "unknown";
+
+  const czMarket = partner.czMarketEligibilityVerified;
+  const ready = partner.publishability === PUBLISHABILITY.READY_FOR_REVIEW;
+  const categoryOk = Boolean(partner.sectionId) && partner.holdReason !== "category_semantic_mismatch";
+
+  return {
+    partnerId: partner.partnerId,
+    advertiserId: partner.advertiserId,
+    linkId: partner.selectedLinkId || null,
+    cjJoined: partner.relationshipStatus === "joined",
+    cjAuthorizationVerified: partner.relationshipStatus === "joined",
+    affiliateUrlPresent: Boolean(partner.selectedClickUrl),
+    trackingUrlVerified: affiliateUrlVerified,
+    affiliateUrlVerified,
+    redirectVerified: httpRedirectVerified,
+    httpRedirectVerified,
+    httpStatus: uv.httpStatus ?? null,
+    urlVerificationStatus: urlStatus,
+    merchantIdentityVerified: Boolean(partner.displayNameCs && (partner.merchantDomain || partner.programUrl))
+      ? true
+      : "unknown",
+    merchantIdentityProposed: Boolean(partner.displayNameCs),
+    selectedLanguage,
+    languageVerified,
+    languagePrioritySatisfied,
+    czechLanguageVerified: selectedLanguage === "CZ" ? true : selectedLanguage && selectedLanguage !== "unknown" ? false : "unknown",
+    czechTargetingVerified: triState(czMarket),
+    czMarketEligibilityVerified: triState(czMarket),
+    czechAvailabilityVerified: triState(czMarket),
+    czShippingVerified: partner.czShippingVerified ?? "unknown",
+    czBookingOrServiceVerified: partner.czBookingOrServiceVerified ?? "unknown",
+    categoryVerified: categoryOk ? true : partner.sectionId ? false : "unknown",
+    semanticCategoryVerified: categoryOk,
+    readyForReview: ready,
+    approvedForPublication: false,
+    evidenceSource: "phase3z-partner-registry-v5",
+    verifiedAt: verifiedAt || uv.probedAt || partner.source?.confirmedAt || null,
+    method: urlProbed ? "cj_staging+http_redirect_probe+language_priority" : "cj_staging+language_priority",
+    limitation:
+      urlStatus === "HTTP_FORBIDDEN"
+        ? "bot_block_possible_not_proof_of_dead_link"
+        : urlStatus === "VERIFIED_HTTP_OK"
+          ? "http_200_not_full_cz_or_language_proof"
+          : null,
+  };
+}
+
+export function buildEvidenceMatrix(partners, opts = {}) {
+  return (partners || []).map((p) => buildEvidenceRow(p, opts));
+}
+
+/**
+ * Fail if evidence matrix disagrees with registry publishability / URL status.
+ */
+export function assertEvidenceConsistency(registry, buttonCatalog) {
+  const errors = [];
+  const matrix = registry?.evidenceMatrix || [];
+  const byId = new Map(matrix.map((r) => [r.partnerId, r]));
+  let readyMatrix = 0;
+  let readyReg = 0;
+  let urlOkMatrix = 0;
+  let urlOkReg = 0;
+
+  for (const p of registry?.partners || []) {
+    if (p.publishability === PUBLISHABILITY.READY_FOR_REVIEW) readyReg++;
+    if (p.urlVerification?.status === "VERIFIED_HTTP_OK") urlOkReg++;
+    const row = byId.get(p.partnerId);
+    if (!row) {
+      errors.push("missing_matrix_row:" + p.partnerId);
+      continue;
+    }
+    if (row.advertiserId !== p.advertiserId) {
+      errors.push("advertiserId_mismatch:" + p.partnerId);
+    }
+    if (row.linkId != null && p.selectedLinkId != null && String(row.linkId) !== String(p.selectedLinkId)) {
+      errors.push("linkId_mismatch:" + p.partnerId);
+    }
+    const readyRow = row.readyForReview === true;
+    const readyP = p.publishability === PUBLISHABILITY.READY_FOR_REVIEW;
+    if (readyRow !== readyP) {
+      errors.push("ready_mismatch:" + p.partnerId);
+    }
+    if (readyRow) readyMatrix++;
+    const urlRow = row.affiliateUrlVerified === true;
+    const urlP = p.urlVerification?.status === "VERIFIED_HTTP_OK";
+    if (urlRow !== urlP) {
+      errors.push("url_verified_mismatch:" + p.partnerId);
+    }
+    if (urlRow) urlOkMatrix++;
+    if (readyP && p.urlVerification?.status !== "VERIFIED_HTTP_OK") {
+      errors.push("ready_without_url_ok:" + p.partnerId);
+    }
+    if (readyP && !p.sectionId) {
+      errors.push("ready_without_category:" + p.partnerId);
+    }
+    if (p.publishability === PUBLISHABILITY.APPROVED_FOR_PUBLICATION) {
+      errors.push("approved_auto_set:" + p.partnerId);
+    }
+  }
+
+  const btnReady = (buttonCatalog?.buttons || []).filter(
+    (b) => b.publishability === PUBLISHABILITY.READY_FOR_REVIEW
+  ).length;
+  if (readyMatrix !== readyReg) {
+    errors.push("ready_count_matrix_vs_registry:" + readyMatrix + "/" + readyReg);
+  }
+  if (readyReg !== (registry?.counts?.readyForReview ?? -1)) {
+    errors.push("ready_count_registry_field:" + readyReg + "/" + registry?.counts?.readyForReview);
+  }
+  if (btnReady !== readyReg) {
+    // buttons subset may equal ready candidates with click URLs — allow buttons <= partners
+    const readyWithUrl = (registry?.partners || []).filter(
+      (p) =>
+        p.publishability === PUBLISHABILITY.READY_FOR_REVIEW && p.selectedClickUrl
+    ).length;
+    if (btnReady !== readyWithUrl) {
+      errors.push("ready_count_buttons:" + btnReady + "/" + readyWithUrl);
+    }
+  }
+  if (registry?.publicButtonSwapArmed === true || buttonCatalog?.publicButtonSwapArmed === true) {
+    errors.push("public_swap_armed");
+  }
+  if (urlOkMatrix !== urlOkReg) {
+    errors.push("url_ok_count_mismatch:" + urlOkMatrix + "/" + urlOkReg);
+  }
+
+  return {
+    ok: errors.length === 0,
+    errors,
+    readyMatrix,
+    readyReg,
+    urlOkMatrix,
+    urlOkReg,
   };
 }
 
@@ -1130,6 +1418,50 @@ export function buildPhase3zPartnerRegistry({
 
     const partnerId = "cj-" + advertiserId;
     const ownership = resolveChipOwnership({ management, relationshipStatus: rel, publishability });
+    const langCandidates = (advLinks || []).map((lnk) => ({
+      language: detectPageLanguage({ url: lnk.destination, linkName: lnk.linkName }),
+      linkId: lnk.linkId,
+      destination: lnk.destination,
+      clickUrl: lnk.clickUrl,
+    }));
+    if (pick.selected) {
+      langCandidates.unshift({
+        language: detectPageLanguage({
+          url: pick.selected.destination,
+          linkName: pick.selected.linkName,
+        }),
+        linkId: pick.selected.linkId,
+        destination: pick.selected.destination,
+        clickUrl: pick.selected.clickUrl,
+      });
+    }
+    const langPick = selectLanguagePreference(langCandidates);
+    // Never quarantine solely for EN/SK — only for market/category/URL failures.
+    if (
+      langPick.holdHint === "language_outside_cz_sk_en" &&
+      publishability !== PUBLISHABILITY.QUARANTINED &&
+      publishability !== PUBLISHABILITY.CANDIDATE_GENERATED
+    ) {
+      // Keep as NOT_VERIFIED / review — not market quarantine
+      if (
+        publishability === PUBLISHABILITY.CZ_SUITABILITY_VERIFIED ||
+        publishability === PUBLISHABILITY.CATEGORY_VERIFIED
+      ) {
+        publishability = PUBLISHABILITY.NOT_VERIFIED;
+        holdReason = holdReason || "language_outside_cz_sk_en_needs_review";
+      }
+    }
+    const czMarketEligibilityVerified =
+      publishability === PUBLISHABILITY.CZ_SUITABILITY_VERIFIED ||
+      publishability === PUBLISHABILITY.AFFILIATE_LINK_VERIFIED ||
+      publishability === PUBLISHABILITY.READY_FOR_REVIEW
+        ? true
+        : holdReason === "market_not_targeting_cz"
+          ? false
+          : holdReason === "cz_suitability_not_proven"
+            ? null
+            : null;
+
     const row = {
       partnerId,
       advertiserId,
@@ -1167,6 +1499,18 @@ export function buildPhase3zPartnerRegistry({
       linkSelectionReason: pick.reason || null,
       linkSelectionScore: pick.score ?? null,
       linkCandidateCount: pick.candidates || 0,
+      selectedLanguage: langPick.selectedLanguage,
+      languagePrioritySatisfied: langPick.languagePrioritySatisfied,
+      languageEvidence: {
+        attempted: true,
+        reason: langPick.reason,
+        availableLanguages: langPick.availableLanguages,
+        priority: LANGUAGE_PRIORITY,
+        note: "EN is legitimate when CZ/SK unavailable; never quarantine for English alone",
+      },
+      czMarketEligibilityVerified,
+      czShippingVerified: "unknown",
+      czBookingOrServiceVerified: "unknown",
       publishability,
       holdReason,
       czEvidence: null,
@@ -1307,33 +1651,12 @@ export function buildPhase3zPartnerRegistry({
     catalogOrdered,
   });
 
-  const evidenceMatrix = partners.map((p) => ({
-    partnerId: p.partnerId,
-    advertiserId: p.advertiserId,
-    cjJoined: p.relationshipStatus === "joined",
-    affiliateUrlPresent: Boolean(p.selectedClickUrl),
-    affiliateUrlVerified: p.urlVerification?.status === "VERIFIED_HTTP_OK",
-    httpRedirectVerified: ["VERIFIED_HTTP_OK", "HTTP_FORBIDDEN", "HTTP_NOT_OK"].includes(
-      p.urlVerification?.status
-    ),
-    merchantIdentityProposed: Boolean(p.displayNameCs),
-    czechTargetingVerified: p.publishability === PUBLISHABILITY.CZ_SUITABILITY_VERIFIED ||
-      p.publishability === PUBLISHABILITY.AFFILIATE_LINK_VERIFIED ||
-      p.publishability === PUBLISHABILITY.READY_FOR_REVIEW,
-    czechLanguageVerified: false,
-    czechAvailabilityVerified: [
-      PUBLISHABILITY.CZ_SUITABILITY_VERIFIED,
-      PUBLISHABILITY.AFFILIATE_LINK_VERIFIED,
-      PUBLISHABILITY.READY_FOR_REVIEW,
-    ].includes(p.publishability),
-    semanticCategoryVerified: Boolean(p.sectionId) && p.holdReason !== "category_semantic_mismatch",
-    readyForReview: p.publishability === PUBLISHABILITY.READY_FOR_REVIEW,
-    approvedForPublication: false,
-  }));
+  // Snapshot before URL probe — MUST be rebuilt after verifyAllCandidateUrls.
+  const evidenceMatrix = buildEvidenceMatrix(partners, { verifiedAt: nowIso });
 
   const registry = {
     schema: PHASE3Z_SCHEMA,
-    version: 4,
+    version: 5,
     rulesVersion,
     generatedAt: nowIso,
     liveEnabled: false,
@@ -1341,7 +1664,7 @@ export function buildPhase3zPartnerRegistry({
     publicButtonSwapArmed: false,
     websitePid: String(staging?.websitePid || websitePid),
     note:
-      "NON-PUBLIC canonical CJ partner registry (v4). Taxonomy SoT = iu-affiliate-catalog.js (36 tiles). Historical baked URLs NOT authoritative. APPROVED_FOR_PUBLICATION never auto-set. Unified takeover prepared; public swap DISARMED.",
+      "NON-PUBLIC canonical CJ partner registry (v5). Evidence matrix rebuilt after URL verify. Language priority CZ>SK>EN (EN never quarantines alone). APPROVED_FOR_PUBLICATION never auto-set. Public swap DISARMED.",
     taxonomy,
     taxonomyOccupancy,
     unifiedTakeoverPlan,
@@ -1399,14 +1722,14 @@ export function buildPhase3zPartnerRegistry({
 
   const buttonCatalog = {
     schema: PHASE3Z_BUTTONS_SCHEMA,
-    version: 4,
+    version: 5,
     rulesVersion,
     generatedAt: nowIso,
     liveEnabled: false,
     publishArmed: false,
     publicButtonSwapArmed: false,
     note:
-      "NON-PUBLIC preview of partner buttons (v4). READY_FOR_REVIEW requires category+CZ+URL verify. Unified takeover prepared (CJ_MANAGED_AFTER_GO). Do NOT mass-replace production chips until independent audit GO.",
+      "NON-PUBLIC preview of partner buttons (v5). READY_FOR_REVIEW requires category+CZ market+URL verify; language CZ>SK>EN. Unified takeover prepared. Do NOT mass-replace production chips until independent audit GO.",
     counts: {
       buttons: buttons.length,
       quarantined: quarantined.length,
@@ -1487,25 +1810,57 @@ function sleep(ms) {
  * HTTP 200 alone does not set READY_FOR_REVIEW without prior CZ+category.
  */
 export function applyUrlVerificationToPartner(partner, button, verification) {
-  partner.urlVerification = verification;
-  if (button) button.urlVerification = verification;
+  const probedAt = verification.probedAt || new Date().toISOString();
+  partner.urlVerification = { ...verification, probedAt };
+  if (button) button.urlVerification = partner.urlVerification;
+
+  if (verification.finalUrl || verification.finalHost) {
+    const langAfter = detectPageLanguage({
+      url: verification.finalUrl || partner.selectedDestination,
+      host: verification.finalHost,
+      linkName: partner.selectedLinkName,
+    });
+    if (langAfter && langAfter !== "unknown") {
+      const refreshed = selectLanguagePreference([
+        { language: langAfter, linkId: partner.selectedLinkId, destination: verification.finalUrl },
+        {
+          language: partner.selectedLanguage,
+          linkId: partner.selectedLinkId,
+          destination: partner.selectedDestination,
+        },
+      ]);
+      partner.selectedLanguage = refreshed.selectedLanguage;
+      partner.languagePrioritySatisfied = refreshed.languagePrioritySatisfied;
+      partner.languageEvidence = {
+        ...(partner.languageEvidence || {}),
+        attempted: true,
+        reason: refreshed.reason + "|after_redirect",
+        availableLanguages: [
+          ...new Set([
+            ...(partner.languageEvidence?.availableLanguages || []),
+            ...refreshed.availableLanguages,
+          ]),
+        ],
+        redirectLanguage: langAfter,
+      };
+    }
+  }
+
   if (partner.czEvidence) {
     partner.czEvidence.httpRedirect = verification.status;
     partner.czEvidence.finalHost = verification.finalHost || null;
     partner.czEvidence.httpStatus = verification.httpStatus ?? null;
-    if (verification.finalUrl) {
-      const path = (() => {
-        try {
-          return new URL(verification.finalUrl).pathname || "";
-        } catch {
-          return "";
-        }
-      })();
-      partner.czEvidence.languageHint =
-        /\/(cs|cz)(\/|$)/i.test(path) || /\.cz$/i.test(String(verification.finalHost || ""))
-          ? "cs_path_or_cz_host_after_redirect"
-          : partner.czEvidence.languageHint;
-    }
+    partner.czEvidence.selectedLanguage = partner.selectedLanguage;
+  }
+
+  // Classify 403 carefully — bot block ≠ dead link.
+  if (verification.status === "HTTP_FORBIDDEN") {
+    partner.urlVerification.clientBlockedPossible = true;
+    partner.urlVerification.classification = "bot_block_or_region_or_unknown";
+  } else if (verification.status === "HTTP_NOT_OK" && verification.httpStatus === 404) {
+    partner.urlVerification.classification = "target_not_found";
+  } else if (verification.status === "HTTP_NOT_OK" && verification.httpStatus === 503) {
+    partner.urlVerification.classification = "temporary_unavailable";
   }
 
   if (partner.publishability === PUBLISHABILITY.QUARANTINED) return;
@@ -1514,20 +1869,29 @@ export function applyUrlVerificationToPartner(partner, button, verification) {
     if (
       partner.publishability === PUBLISHABILITY.CZ_SUITABILITY_VERIFIED ||
       partner.publishability === PUBLISHABILITY.CATEGORY_VERIFIED ||
-      partner.publishability === PUBLISHABILITY.NOT_VERIFIED
+      partner.publishability === PUBLISHABILITY.NOT_VERIFIED ||
+      partner.publishability === PUBLISHABILITY.AFFILIATE_LINK_VERIFIED
     ) {
-      // Need CZ proven for READY_FOR_REVIEW
+      // CZ market proven required for READY — language EN alone must NOT block.
       const czOk =
+        partner.czMarketEligibilityVerified === true ||
         partner.publishability === PUBLISHABILITY.CZ_SUITABILITY_VERIFIED ||
         (partner.triple?.visitor?.status === "CZ_AFFINITY" &&
           partner.triple?.visitor?.confidence !== "low");
+      const langOk =
+        partner.languagePrioritySatisfied === true ||
+        LANGUAGE_PRIORITY.includes(String(partner.selectedLanguage || "").toUpperCase());
       partner.publishability = PUBLISHABILITY.AFFILIATE_LINK_VERIFIED;
-      if (czOk && partner.sectionId) {
+      if (czOk && partner.sectionId && langOk !== false) {
         partner.publishability = PUBLISHABILITY.READY_FOR_REVIEW;
         partner.holdReason = null;
+        partner.czMarketEligibilityVerified = true;
       } else if (!czOk) {
         partner.publishability = PUBLISHABILITY.NOT_VERIFIED;
         partner.holdReason = partner.holdReason || "cz_suitability_not_proven";
+      } else if (langOk === false) {
+        partner.publishability = PUBLISHABILITY.NOT_VERIFIED;
+        partner.holdReason = "language_outside_cz_sk_en_needs_review";
       }
     }
   } else if (verification.status === "HTTP_FORBIDDEN") {
@@ -1535,7 +1899,12 @@ export function applyUrlVerificationToPartner(partner, button, verification) {
     partner.holdReason = "url_http_403_bot_block_possible";
   } else if (verification.status === "HTTP_NOT_OK") {
     partner.publishability = PUBLISHABILITY.NOT_VERIFIED;
-    partner.holdReason = "url_http_not_ok";
+    partner.holdReason =
+      verification.httpStatus === 404
+        ? "url_http_404"
+        : verification.httpStatus === 503
+          ? "url_http_503_temporary"
+          : "url_http_not_ok";
   } else {
     partner.publishability = PUBLISHABILITY.NOT_VERIFIED;
     partner.holdReason = partner.holdReason || "url_not_verified";
@@ -1544,6 +1913,8 @@ export function applyUrlVerificationToPartner(partner, button, verification) {
   if (button) {
     button.publishability = partner.publishability;
     button.holdReason = partner.holdReason;
+    button.selectedLanguage = partner.selectedLanguage;
+    button.urlVerification = partner.urlVerification;
   }
 }
 
@@ -1585,7 +1956,7 @@ export async function verifyAllCandidateUrls(registry, buttonCatalog, opts = {})
   await Promise.all(workers);
   writeJson(checkpointPath, checkpoint);
 
-  // refresh counts
+  // refresh counts + authoritative evidence matrix AFTER probes
   registry.counts.readyForReview = registry.partners.filter(
     (p) => p.publishability === PUBLISHABILITY.READY_FOR_REVIEW
   ).length;
@@ -1595,6 +1966,14 @@ export async function verifyAllCandidateUrls(registry, buttonCatalog, opts = {})
   buttonCatalog.counts.notVerified = buttonCatalog.buttons.filter(
     (b) => b.publishability === PUBLISHABILITY.NOT_VERIFIED
   ).length;
+  registry.evidenceMatrix = buildEvidenceMatrix(registry.partners, {
+    verifiedAt: new Date().toISOString(),
+  });
+  registry.evidenceConsistency = assertEvidenceConsistency(registry, buttonCatalog);
+
+  const http403 = queue.filter((b) => b.urlVerification?.httpStatus === 403).length;
+  const http404 = queue.filter((b) => b.urlVerification?.httpStatus === 404).length;
+  const http503 = queue.filter((b) => b.urlVerification?.httpStatus === 503).length;
 
   return {
     probed: queue.length,
@@ -1603,6 +1982,10 @@ export async function verifyAllCandidateUrls(registry, buttonCatalog, opts = {})
     forbidden: queue.filter((b) => b.urlVerification?.status === "HTTP_FORBIDDEN").length,
     httpNotOk: queue.filter((b) => b.urlVerification?.status === "HTTP_NOT_OK").length,
     notVerified: queue.filter((b) => b.urlVerification?.status === "NOT_VERIFIED").length,
+    http403,
+    http404,
+    http503,
+    evidenceConsistencyOk: registry.evidenceConsistency?.ok === true,
   };
 }
 
@@ -1807,9 +2190,21 @@ export async function main(argv = process.argv.slice(2)) {
     verifyStats = await verifyAllCandidateUrls(registry, buttonCatalog);
     registry.urlVerificationRun = verifyStats;
     buttonCatalog.urlVerificationRun = verifyStats;
+  } else {
+    // Still materialize matrix from current partner state for export consistency.
+    registry.evidenceMatrix = buildEvidenceMatrix(registry.partners);
+    registry.evidenceConsistency = assertEvidenceConsistency(registry, buttonCatalog);
   }
 
   const gates = buildPhase3zSafetyGates(registry, buttonCatalog);
+  if (registry.evidenceConsistency && registry.evidenceConsistency.ok === false) {
+    gates.ok = false;
+    gates.blockers = [
+      ...(gates.blockers || []),
+      "evidence_matrix_inconsistent",
+      ...(registry.evidenceConsistency.errors || []).slice(0, 8),
+    ];
+  }
   registry.safetyGates = gates;
   buttonCatalog.safetyGates = gates;
 

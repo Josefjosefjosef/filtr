@@ -324,18 +324,69 @@ write(
   toCsv(reg.evidenceMatrix || [], [
     "partnerId",
     "advertiserId",
+    "linkId",
     "cjJoined",
+    "cjAuthorizationVerified",
     "affiliateUrlPresent",
+    "trackingUrlVerified",
     "affiliateUrlVerified",
+    "redirectVerified",
     "httpRedirectVerified",
+    "httpStatus",
+    "urlVerificationStatus",
+    "merchantIdentityVerified",
     "merchantIdentityProposed",
-    "czechTargetingVerified",
+    "selectedLanguage",
+    "languageVerified",
+    "languagePrioritySatisfied",
     "czechLanguageVerified",
+    "czechTargetingVerified",
+    "czMarketEligibilityVerified",
     "czechAvailabilityVerified",
+    "czShippingVerified",
+    "czBookingOrServiceVerified",
+    "categoryVerified",
     "semanticCategoryVerified",
     "readyForReview",
     "approvedForPublication",
+    "evidenceSource",
+    "verifiedAt",
+    "method",
+    "limitation",
   ])
+);
+write(
+  dir,
+  "EVIDENCE-CONSISTENCY.json",
+  JSON.stringify(reg.evidenceConsistency || {}, null, 2) + "\n"
+);
+write(
+  dir,
+  "LANGUAGE-MATRIX.csv",
+  toCsv(
+    partners.map((p) => ({
+      partnerId: p.partnerId,
+      advertiserId: p.advertiserId,
+      selectedLanguage: p.selectedLanguage,
+      languagePrioritySatisfied: p.languagePrioritySatisfied,
+      availableLanguages: (p.languageEvidence?.availableLanguages || []).join("|"),
+      languageReason: p.languageEvidence?.reason || "",
+      czMarketEligibilityVerified: p.czMarketEligibilityVerified,
+      publishability: p.publishability,
+      holdReason: p.holdReason,
+    })),
+    [
+      "partnerId",
+      "advertiserId",
+      "selectedLanguage",
+      "languagePrioritySatisfied",
+      "availableLanguages",
+      "languageReason",
+      "czMarketEligibilityVerified",
+      "publishability",
+      "holdReason",
+    ]
+  )
 );
 write(
   dir,
@@ -384,7 +435,7 @@ const manifestFiles = files.map((f) => ({
   sha256: sha256File(f.full),
 }));
 const manifest = {
-  phase: "3Z-V4",
+  phase: "3Z-V5",
   rulesVersion: reg.rulesVersion,
   generatedAt: new Date().toISOString(),
   pathStyle: "portable-forward-slash",
