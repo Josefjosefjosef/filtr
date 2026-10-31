@@ -35,6 +35,11 @@ import {
   auditLinkCandidateBuckets,
   explainTaxonomy36vs38,
   MERCHANT_TYPE,
+  classifyDestinationType,
+  applyMerchantEvidenceOverride,
+  isUnsuitableMainDestination,
+  GOLDEN_DATASET_V9,
+  DESTINATION_TYPE,
 } from "./iu-cj-affiliate-phase3z-partner-registry-v1.mjs";
 import fs from "node:fs";
 import path from "node:path";
@@ -726,7 +731,7 @@ const hyst = selectPrimaryAffiliateLink(answearLinks, answearAdv, {
 });
 expect("hysteresis_keeps_home", hyst.selected?.linkId === "home" && hyst.hysteresisKept === true, hyst);
 
-expect("rules_v8", PHASE3Z_RULES_VERSION === "phase3z-partner-robot-v8");
+expect("rules_v9", PHASE3Z_RULES_VERSION === "phase3z-partner-robot-v9");
 const tax36 = explainTaxonomy36vs38(36);
 expect("tax_36_ok", tax36.ok === true && tax36.productionMainCategoryTiles === 36);
 const taxBad = explainTaxonomy36vs38(38);
@@ -810,6 +815,143 @@ expect(
   specialist.merchantType === MERCHANT_TYPE.SPECIALIST ||
     (specialist.primaryAssortment && specialist.primaryAssortment.sectionId === "aff-kosmetika"),
   specialist
+);
+
+// --- V9 destination + merchant evidence regressions ---
+expect(
+  "v9_paragon_scope_checkout",
+  classifyDestinationType(
+    "https://shop.paragon-software.com/order/?scope=checkout&cart=1",
+    "Buy"
+  ) === DESTINATION_TYPE.CHECKOUT
+);
+expect(
+  "v9_paragon_legacy_role",
+  classifyDestinationRole(
+    "https://shop.paragon-software.com/order/?scope=checkout&cart=1",
+    "Buy"
+  ) === DESTINATION_ROLE.CHECKOUT
+);
+expect(
+  "v9_cheapvuelos_affiliate",
+  classifyDestinationType(
+    "https://www.cheapvuelos.com/cheapflights-affiliates/",
+    "Affiliate"
+  ) === DESTINATION_TYPE.AFFILIATE_SIGNUP
+);
+expect(
+  "v9_allegro_redirect_home",
+  classifyDestinationType(
+    "https://allegro.cz/affiliate?redirect_url=" +
+      encodeURIComponent("https://allegro.cz/?utm_source=ctr"),
+    "Allegro home"
+  ) === DESTINATION_TYPE.MERCHANT_HOMEPAGE
+);
+expect(
+  "v9_allegro_redirect_category",
+  classifyDestinationType(
+    "https://allegro.cz/affiliate?redirect_url=" +
+      encodeURIComponent("https://allegro.cz/doporucujeme/elektronika"),
+    "Electronics"
+  ) === DESTINATION_TYPE.UNKNOWN ||
+    classifyDestinationType(
+      "https://allegro.cz/affiliate?redirect_url=" +
+        encodeURIComponent("https://allegro.cz/doporucujeme/elektronika"),
+      "Electronics"
+    ) === DESTINATION_TYPE.RELEVANT_CATEGORY
+);
+expect(
+  "v9_abbyy_checkout_host",
+  classifyDestinationType("https://checkout.abbyy.com/order/product", "ABBYY") ===
+    DESTINATION_TYPE.CHECKOUT
+);
+expect(
+  "v9_unsuitable_checkout",
+  isUnsuitableMainDestination(DESTINATION_TYPE.CHECKOUT, "2624620").unsuitable === true
+);
+expect(
+  "v9_unsuitable_affiliate",
+  isUnsuitableMainDestination(DESTINATION_TYPE.AFFILIATE_SIGNUP, "7947783").unsuitable === true
+);
+
+const tipaOv = applyMerchantEvidenceOverride({
+  advertiserId: "4921612",
+  assortment: { merchantType: MERCHANT_TYPE.SPECIALIST, primaryAssortment: { sectionId: "aff-moda" } },
+  baseSectionId: "aff-moda",
+});
+expect("v9_tipa_not_moda", tipaOv.applied && tipaOv.sectionId === "aff-elektro", tipaOv);
+expect("v9_tipa_forbidden_moda", (tipaOv.evidence?.forbiddenSections || []).includes("aff-moda"));
+
+const allegroOv = applyMerchantEvidenceOverride({
+  advertiserId: "6464420",
+  assortment: { merchantType: MERCHANT_TYPE.MARKETPLACE },
+  baseSectionId: "aff-inzerce-bazary",
+});
+expect(
+  "v9_allegro_not_bazar",
+  allegroOv.applied &&
+    allegroOv.categoryReviewRequired === true &&
+    allegroOv.sectionId == null,
+  allegroOv
+);
+
+const paragonPick = selectPrimaryAffiliateLink(
+  [
+    {
+      linkId: "chk",
+      linkName: "Checkout",
+      linkType: "Text Link",
+      advertiserId: "4686326",
+      clickUrl: "https://www.dpbolvw.net/click-101883843-111",
+      destination: "https://shop.paragon-software.com/?scope=checkout&cart=x",
+      targetedCountries: "CZ",
+    },
+    {
+      linkId: "home",
+      linkName: "Home",
+      linkType: "Text Link",
+      advertiserId: "4686326",
+      clickUrl: "https://www.dpbolvw.net/click-101883843-222",
+      destination: "https://www.paragon-software.com/",
+      targetedCountries: "CZ",
+    },
+  ],
+  { advertiserId: "4686326", programUrl: "https://www.paragon-software.com/" }
+);
+expect("v9_paragon_prefers_home", paragonPick.selected?.linkId === "home", paragonPick);
+expect("v9_paragon_not_checkout", paragonPick.destinationType !== DESTINATION_TYPE.CHECKOUT, paragonPick);
+
+const cheapPick = selectPrimaryAffiliateLink(
+  [
+    {
+      linkId: "aff",
+      linkName: "Affiliates",
+      linkType: "Text Link",
+      advertiserId: "7947783",
+      clickUrl: "https://www.dpbolvw.net/click-101883843-333",
+      destination: "https://www.cheapvuelos.com/cheapflights-affiliates/",
+      targetedCountries: "CZ",
+    },
+    {
+      linkId: "home",
+      linkName: "Home",
+      linkType: "Text Link",
+      advertiserId: "7947783",
+      clickUrl: "https://www.dpbolvw.net/click-101883843-444",
+      destination: "https://www.cheapvuelos.com/",
+      targetedCountries: "CZ",
+    },
+  ],
+  { advertiserId: "7947783", programUrl: "https://www.cheapvuelos.com/" }
+);
+expect("v9_cheapvuelos_not_signup", cheapPick.selected?.linkId === "home", cheapPick);
+
+expect("v9_golden_coverage", GOLDEN_DATASET_V9.length >= 6);
+expect(
+  "v9_golden_tipa",
+  GOLDEN_DATASET_V9.some(
+    (g) => g.advertiserCid === "4921612" && g.expectedPrimarySectionId === "aff-elektro"
+  )
 );
 
 if (failures.length) {

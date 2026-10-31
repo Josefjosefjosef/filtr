@@ -40,12 +40,37 @@ import {
   CATEGORY_SELECTION_HYSTERESIS,
   MERCHANT_TYPE,
 } from "./iu-cj-affiliate-phase3z-assortment-v8.mjs";
+import {
+  classifyDestinationType,
+  destinationTypeToLegacyRole,
+  applyMerchantEvidenceOverride,
+  isUnsuitableMainDestination,
+  getMerchantEvidenceOverride,
+  GOLDEN_DATASET_V9,
+  DESTINATION_TYPE,
+  probeMerchantHomepage,
+} from "./iu-cj-affiliate-phase3z-merchant-evidence-v9.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 export const PHASE3Z_SCHEMA = "iu-affiliate-cj-partner-registry-v1";
 export const PHASE3Z_BUTTONS_SCHEMA = "iu-affiliate-cj-partner-buttons-preview-v1";
-export const PHASE3Z_RULES_VERSION = "phase3z-partner-robot-v8";
-export { MERCHANT_TYPE, CATEGORY_SELECTION_HYSTERESIS, buildAssortmentProfile, selectPrimarySectionWithAssortment, auditLinkCandidateBuckets, explainTaxonomy36vs38 };
+export const PHASE3Z_RULES_VERSION = "phase3z-partner-robot-v9";
+export {
+  MERCHANT_TYPE,
+  CATEGORY_SELECTION_HYSTERESIS,
+  buildAssortmentProfile,
+  selectPrimarySectionWithAssortment,
+  auditLinkCandidateBuckets,
+  explainTaxonomy36vs38,
+  classifyDestinationType,
+  destinationTypeToLegacyRole,
+  applyMerchantEvidenceOverride,
+  isUnsuitableMainDestination,
+  getMerchantEvidenceOverride,
+  GOLDEN_DATASET_V9,
+  DESTINATION_TYPE,
+  probeMerchantHomepage,
+};
 
 /** Hard eligibility must pass before quality score can select a main button link. */
 export const LINK_ELIGIBILITY = Object.freeze({
@@ -547,53 +572,25 @@ export function normalizeLinkDestination(link) {
 }
 
 export function classifyDestinationRole(destination, linkName = "") {
-  const dest = String(destination || "");
-  const name = String(linkName || "").toLowerCase();
-  let path = "";
-  let host = "";
+  // V9: richer destination typing (query cart=/scope=checkout, affiliate signup, external trackers).
+  const dtype = classifyDestinationType(destination, linkName);
+  const legacy = destinationTypeToLegacyRole(dtype);
+  if (legacy === "HOMEPAGE") return DESTINATION_ROLE.HOMEPAGE;
+  if (legacy === "CATEGORY") return DESTINATION_ROLE.CATEGORY;
+  if (legacy === "PRODUCT") return DESTINATION_ROLE.PRODUCT;
+  if (legacy === "PROMO") return DESTINATION_ROLE.PROMO;
+  if (legacy === "COUPON") return DESTINATION_ROLE.COUPON;
+  if (legacy === "NEWSLETTER") return DESTINATION_ROLE.NEWSLETTER;
+  if (legacy === "LOGIN") return DESTINATION_ROLE.LOGIN;
+  if (legacy === "CART") return DESTINATION_ROLE.CART;
+  if (legacy === "CHECKOUT") return DESTINATION_ROLE.CHECKOUT;
+  // Affiliate signup / external tracker / unknown → OTHER (heavily penalized in ranking).
   try {
-    const u = new URL(dest.startsWith("http") ? dest : "https://" + dest);
-    path = (u.pathname || "/").toLowerCase();
-    host = u.hostname.replace(/^www\./i, "").toLowerCase();
+    const u = new URL(String(destination || "").startsWith("http") ? destination : "https://" + destination);
+    const host = u.hostname.replace(/^www\./i, "").toLowerCase();
+    if (/apps\.apple\.com|play\.google\.com|appstore/i.test(host)) return DESTINATION_ROLE.APP_STORE;
   } catch {
-    path = dest.toLowerCase();
-  }
-  if (/newsletter|subscribe|odber|odběr|mailing/i.test(path + " " + name)) {
-    return DESTINATION_ROLE.NEWSLETTER;
-  }
-  if (/checkout|order\/product|payment|platba/i.test(path + " " + name) || /checkout\./i.test(host)) {
-    return DESTINATION_ROLE.CHECKOUT;
-  }
-  if (/\/(cart|kosik|košík|bag)(\/|$)/i.test(path) || /\bcart\b/i.test(name)) {
-    return DESTINATION_ROLE.CART;
-  }
-  if (/\/(login|signin|prihlas|registr)/i.test(path) || /\b(login|sign[\s-]?in)\b/i.test(name)) {
-    return DESTINATION_ROLE.LOGIN;
-  }
-  if (/apps\.apple\.com|play\.google\.com|appstore/i.test(host + path) || /\bapp\s*store\b/i.test(name)) {
-    return DESTINATION_ROLE.APP_STORE;
-  }
-  if (/coupon|kup[oó]n|voucher|slevov/i.test(path + " " + name)) {
-    return DESTINATION_ROLE.COUPON;
-  }
-  if (/\/(sale|promo|akce|deal|campaign|black-friday)/i.test(path) || /sale|promo|%\s*off|banner/i.test(name)) {
-    return DESTINATION_ROLE.PROMO;
-  }
-  if (
-    /\/(p|product|produkt|item|sku)\b/i.test(path) ||
-    /\/[a-z0-9-]{8,}-[a-z0-9]{4,}$/i.test(path.replace(/\/+$/, ""))
-  ) {
-    return DESTINATION_ROLE.PRODUCT;
-  }
-  const pathOnly = path.replace(/\/+$/, "") || "/";
-  if (pathOnly === "/" || pathOnly.length <= 1) {
-    return DESTINATION_ROLE.HOMEPAGE;
-  }
-  if (/\/(cs|cz|sk|en)(\/|$)/i.test(pathOnly) && pathOnly.split("/").filter(Boolean).length <= 2) {
-    return DESTINATION_ROLE.HOMEPAGE;
-  }
-  if (/\/(category|kategorie|c\/|department)/i.test(path)) {
-    return DESTINATION_ROLE.CATEGORY;
+    /* ignore */
   }
   return DESTINATION_ROLE.OTHER;
 }
@@ -690,8 +687,11 @@ export function scoreAffiliateLink(link, advertiser, opts = {}) {
   const name = String(link.linkName || "").toLowerCase();
   const type = String(link.linkType || "").toLowerCase();
   const countries = String(link.targetedCountries || "");
+  const destinationType = classifyDestinationType(dest, name);
   const role = classifyDestinationRole(dest, name);
   const lang = detectPageLanguage({ url: dest, linkName: name });
+  const advertiserId = String(opts.advertiserId || advertiser?.advertiserId || "");
+  const unsuitable = isUnsuitableMainDestination(destinationType, advertiserId);
 
   if (eligibility.status === LINK_ELIGIBILITY.INELIGIBLE) {
     return {
@@ -699,6 +699,7 @@ export function scoreAffiliateLink(link, advertiser, opts = {}) {
       reasons: ["ineligible:" + eligibility.failures.join("|")],
       language: lang,
       destinationRole: role,
+      destinationType,
       eligibility,
       qualityBand: "ineligible",
     };
@@ -781,6 +782,18 @@ export function scoreAffiliateLink(link, advertiser, opts = {}) {
     reasons.push("app_store_dest_penalty");
   }
 
+  if (destinationType === DESTINATION_TYPE.AFFILIATE_SIGNUP) {
+    score -= 80;
+    reasons.push("affiliate_signup_dest_penalty");
+  } else if (destinationType === DESTINATION_TYPE.EXTERNAL_TRACKER) {
+    score -= 25;
+    reasons.push("external_tracker_dest_penalty");
+  }
+  if (unsuitable.unsuitable) {
+    score -= 40;
+    reasons.push("unsuitable_main:" + unsuitable.reason);
+  }
+
   if (/deeplink|home|hlavn[ií]|homepage|main|text\s*link/i.test(name)) {
     score += 15;
     reasons.push("homeish_name");
@@ -813,6 +826,8 @@ export function scoreAffiliateLink(link, advertiser, opts = {}) {
     reasons,
     language: lang,
     destinationRole: role,
+    destinationType,
+    unsuitableMain: unsuitable.unsuitable === true,
     eligibility,
     qualityBand: score >= 100 ? "strong" : score >= 40 ? "acceptable" : "weak",
   };
@@ -932,10 +947,14 @@ export function selectPrimaryAffiliateLink(links, advertiser, opts = {}) {
     };
   }
 
-  let best = ranked[0];
+  // Prefer destinations suitable for MAIN button (reject checkout/affiliate-signup when alternatives exist).
+  const suitableRanked = ranked.filter((r) => r.unsuitableMain !== true);
+  const rankedForPick = suitableRanked.length ? suitableRanked : ranked;
+
+  let best = rankedForPick[0];
   let hysteresisKept = false;
   if (previousLinkId) {
-    const prev = ranked.find((r) => String(r.link.linkId) === previousLinkId);
+    const prev = rankedForPick.find((r) => String(r.link.linkId) === previousLinkId);
     if (prev && best.score - prev.score < hysteresis) {
       best = prev;
       hysteresisKept = true;
@@ -978,6 +997,8 @@ export function selectPrimaryAffiliateLink(links, advertiser, opts = {}) {
     candidates: scoredAll.length,
     eligibleCandidates: ranked.length,
     destinationRole: best.destinationRole,
+    destinationType: best.destinationType || null,
+    unsuitableMain: best.unsuitableMain === true,
     language: best.language,
     eligibility: best.eligibility,
     qualityBand: best.qualityBand,
@@ -1001,6 +1022,8 @@ export function selectPrimaryAffiliateLink(links, advertiser, opts = {}) {
       targetedCountries: r.link.targetedCountries,
       language: r.language,
       destinationRole: r.destinationRole,
+      destinationType: r.destinationType || null,
+      unsuitableMain: r.unsuitableMain === true,
       score: r.score,
       eligibility: r.eligibility?.status,
       reasons: r.reasons,
@@ -2002,8 +2025,48 @@ export function buildPhase3zPartnerRegistry({
       section.holdHint =
         section.holdHint || baseSection.holdHint || "assortment_unclear_pending_evidence";
     }
+
+    // V9 merchant evidence overrides (TIPA/Allegro/ABBYY/…): correct known misclassification causes.
+    const evidenceAppl = applyMerchantEvidenceOverride({
+      advertiserId,
+      assortment,
+      baseSectionId: section.sectionId,
+    });
+    let assortmentFinal = evidenceAppl.assortment || assortment;
+    if (evidenceAppl.applied) {
+      if (evidenceAppl.categoryReviewRequired) {
+        section.sectionId = evidenceAppl.sectionId;
+        section.holdHint = "CATEGORY_REVIEW_REQUIRED";
+        section.source = "merchant_evidence_v9_category_pending";
+        section.rule = evidenceAppl.evidence?.rationale || "marketplace_or_unclear_tile";
+        section.confidence = evidenceAppl.evidence?.confidence || "high";
+        section.evidence = [
+          ...(section.evidence || []),
+          "merchant_evidence_v9",
+          ...(evidenceAppl.evidence?.evidenceSources || []),
+        ];
+      } else if (evidenceAppl.sectionId && evidenceAppl.sectionId !== section.sectionId) {
+        section.categoryChange = {
+          from: section.sectionId,
+          to: evidenceAppl.sectionId,
+          reason: evidenceAppl.evidence?.rationale || "merchant_evidence_v9",
+        };
+        section.sectionId = evidenceAppl.sectionId;
+        section.source = "merchant_evidence_v9";
+        section.rule = evidenceAppl.evidence?.rationale || "merchant_evidence_override";
+        section.confidence = evidenceAppl.evidence?.confidence || section.confidence;
+        section.evidence = [
+          ...(section.evidence || []),
+          "merchant_evidence_v9",
+          ...(evidenceAppl.evidence?.evidenceSources || []),
+        ];
+      }
+      section.merchantEvidence = evidenceAppl.evidence;
+    }
+
     const pick = selectPrimaryAffiliateLink(advLinks, adv, {
       websitePid,
+      advertiserId,
       previousLinkId: prevByAdv.get(advertiserId) || null,
     });
 
@@ -2037,6 +2100,14 @@ export function buildPhase3zPartnerRegistry({
         status: "LINK_MISSING",
         confidence: "high",
         notes: [pick.reason || "no_affiliate_link"],
+      };
+    } else if (pick.unsuitableMain === true) {
+      publishability = PUBLISHABILITY.QUARANTINED;
+      holdReason = "UNSUITABLE_MAIN_DESTINATION";
+      triple.technical = {
+        status: "UNSUITABLE_MAIN_DESTINATION",
+        confidence: "high",
+        notes: [pick.destinationType || pick.destinationRole || "unsuitable", pick.reason || ""],
       };
     } else if (!section.sectionId || (section.sectionId && !knownSections.has(section.sectionId))) {
       // Still create button record — category gate fails closed for publish, not for evidence.
@@ -2102,6 +2173,8 @@ export function buildPhase3zPartnerRegistry({
     if (rel === "joined") {
       if (holdReason === "LINK_MISSING" || (!pick.selected && !protectedSkip)) {
         buttonRecordStatus = BUTTON_RECORD_STATUS.LINK_MISSING;
+      } else if (holdReason === "UNSUITABLE_MAIN_DESTINATION") {
+        buttonRecordStatus = BUTTON_RECORD_STATUS.QUARANTINED_WITH_REASON;
       } else if (holdReason === "CATEGORY_REVIEW_REQUIRED") {
         buttonRecordStatus = BUTTON_RECORD_STATUS.CATEGORY_REVIEW_REQUIRED;
       } else if (holdReason === "CZ_RESTRICTED_CONFIRMED") {
@@ -2195,8 +2268,10 @@ export function buildPhase3zPartnerRegistry({
       sectionEvidence: section.evidence || [],
       categoryKey: section.categoryKey || null,
       categoryChange: section.categoryChange || null,
-      merchantType: assortment.merchantType,
-      assortmentProfile: assortment,
+      merchantType: assortmentFinal.merchantType || assortment.merchantType,
+      assortmentProfile: assortmentFinal,
+      merchantEvidence: section.merchantEvidence || evidenceAppl.evidence || null,
+      merchantEvidenceApplied: evidenceAppl.applied === true,
       assortmentAlternatives: section.assortmentAlternatives || [],
       categoryHysteresisKept: sectionPick.hysteresisKept === true,
       selectedClickUrl: pick.selected?.clickUrl || null,
@@ -2212,6 +2287,8 @@ export function buildPhase3zPartnerRegistry({
       linkCandidateCount: pick.candidates || 0,
       linkEligibleCandidateCount: pick.eligibleCandidates ?? null,
       destinationRole: pick.destinationRole || null,
+      destinationType: pick.destinationType || null,
+      unsuitableMainDestination: pick.unsuitableMain === true,
       destinationDecision: pick.destinationRole || null,
       languageDecision: pick.language || null,
       countryDecision: pick.selected?.targetedCountries || null,
@@ -2278,6 +2355,10 @@ export function buildPhase3zPartnerRegistry({
         destination: row.selectedDestination,
         destinationRaw: row.selectedDestinationRaw,
         destinationRole: row.destinationRole,
+        destinationType: row.destinationType,
+        unsuitableMainDestination: row.unsuitableMainDestination === true,
+        merchantType: row.merchantType,
+        merchantEvidenceApplied: row.merchantEvidenceApplied === true,
         trackingHost: (() => {
           try {
             return row.selectedClickUrl ? new URL(row.selectedClickUrl).hostname : "";
@@ -2310,15 +2391,17 @@ export function buildPhase3zPartnerRegistry({
         nextStep:
           holdReason === "LINK_MISSING"
             ? "resolve_cj_link_search"
-            : holdReason === "CATEGORY_REVIEW_REQUIRED"
-              ? "manual_or_rule_category_assignment"
-              : holdReason === "CZ_RESTRICTED_CONFIRMED"
-                ? "review_all_cj_links_and_program_terms"
-                : holdReason === "CZ_ELIGIBILITY_UNKNOWN"
-                  ? "gather_cz_eligibility_evidence"
-                  : publishability === PUBLISHABILITY.READY_FOR_REVIEW
-                    ? "await_independent_publication_go"
-                    : "continue_automated_gates",
+            : holdReason === "UNSUITABLE_MAIN_DESTINATION"
+              ? "select_non_checkout_customer_landing"
+              : holdReason === "CATEGORY_REVIEW_REQUIRED"
+                ? "manual_or_rule_category_assignment"
+                : holdReason === "CZ_RESTRICTED_CONFIRMED"
+                  ? "review_all_cj_links_and_program_terms"
+                  : holdReason === "CZ_ELIGIBILITY_UNKNOWN"
+                    ? "gather_cz_eligibility_evidence"
+                    : publishability === PUBLISHABILITY.READY_FOR_REVIEW
+                      ? "await_independent_publication_go"
+                      : "continue_automated_gates",
       };
       buttons.push(button);
       if (
@@ -2326,6 +2409,7 @@ export function buildPhase3zPartnerRegistry({
         publishability === PUBLISHABILITY.NOT_VERIFIED ||
         [
           "LINK_MISSING",
+          "UNSUITABLE_MAIN_DESTINATION",
           "CATEGORY_REVIEW_REQUIRED",
           "CZ_RESTRICTED_CONFIRMED",
           "CZ_ELIGIBILITY_UNKNOWN",

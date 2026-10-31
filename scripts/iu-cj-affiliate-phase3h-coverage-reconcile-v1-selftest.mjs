@@ -54,7 +54,12 @@ expect("novakid_no_false_match", nova == null);
 const map = JSON.parse(
   fs.readFileSync(path.join(ROOT, "projects", "data", "iu-affiliate-cj-section-map-v1.json"), "utf8")
 );
-expect("klik_pojisteni", map["5871720"] === "aff-pojisteni");
+// Klik.cz travel insurance belongs on aff-cestovni-pojisteni (authoritative); aff-pojisteni is legacy.
+expect(
+  "klik_pojisteni",
+  map["5871720"] === "aff-cestovni-pojisteni" || map["5871720"] === "aff-pojisteni"
+);
+expect("klik_pojisteni_travel_preferred", map["5871720"] === "aff-cestovni-pojisteni");
 expect("royal_sperky", map["5819507"] === "aff-sperky-hodinky");
 expect("lidl_jidlo", map["5954793"] === "aff-jidlo");
 
