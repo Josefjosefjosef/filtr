@@ -23,6 +23,11 @@ import {
   classifyDestinationType,
   GOLDEN_DATASET_V9,
 } from "./iu-cj-affiliate-phase3z-merchant-evidence-v9.mjs";
+import {
+  diagnoseContentFailure,
+  evaluatePublicationReadiness,
+  attachPublicationReadiness,
+} from "./iu-cj-affiliate-phase3z-publication-readiness-v9.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -81,11 +86,16 @@ export async function buildDeepContentReview({
           ? programUrl
           : "https://" + programUrl
         : "";
+      const cat = adv.primaryCategory || {};
+      const cjCategoryBlob = [cat.parent, cat.child, cat.key, typeof cat === "string" ? cat : ""]
+        .filter(Boolean)
+        .join(" ");
       let probe = null;
       if (probeUrl) {
         probe = await probeMerchantHomepage(probeUrl, {
-          timeoutMs: 10000,
+          timeoutMs: 12000,
           merchantIdentity: ov?.merchantIdentity || adv.advertiserName || null,
+          cjCategoryBlob,
         });
         if (spacingMs) await sleep(spacingMs);
       }
@@ -153,6 +163,26 @@ export async function buildDeepContentReview({
       const dest = reg?.selectedDestination || null;
       const destinationType =
         reg?.destinationType || (dest ? classifyDestinationType(dest, reg?.selectedLinkName || "") : null);
+      const failureReasons = diagnoseContentFailure({
+        probe,
+        evidence,
+        reviewStatus,
+      });
+      const pubEval = evaluatePublicationReadiness(
+        {
+          ...(reg || {}),
+          advertiserId: advertiserCid,
+          publishability: reg?.publishability,
+          holdReason: reg?.holdReason,
+          destinationType,
+          selectedClickUrl: reg?.selectedClickUrl,
+          unsuitableMainDestination: reg?.unsuitableMainDestination,
+          relationshipStatus: adv.relationshipStatus || "joined",
+          czMarketEligibilityVerified: reg?.czMarketEligibilityVerified,
+          triple: reg?.triple,
+        },
+        { reviewStatus, czAvailability: ov?.czAffinityOverride ? "YES" : "UNKNOWN" }
+      );
 
       results[idx] = {
         advertiserCid,
@@ -192,6 +222,7 @@ export async function buildDeepContentReview({
                       primaryAssortment: evidence.primaryAssortment,
                       significantGroups: evidence.significantGroups,
                       regionsUsed: evidence.regionsUsed,
+                      diagnostics: evidence.diagnostics || null,
                       note: evidence.note,
                     }
                   : null,
@@ -201,7 +232,12 @@ export async function buildDeepContentReview({
             : null,
           grade,
         },
-        czAvailability: ov?.czAffinityOverride ? "YES" : "UNKNOWN",
+        contentFailureReasons: failureReasons,
+        czAvailability: ov?.czAffinityOverride
+          ? "YES"
+          : reg?.czMarketEligibilityVerified === true
+            ? "YES"
+            : "UNKNOWN",
         confidence: ov?.confidence || (contentVerified ? "medium" : "low"),
         lastReviewedAt: new Date().toISOString(),
         reviewStatus,
@@ -212,6 +248,9 @@ export async function buildDeepContentReview({
         destinationType,
         publishability: reg?.publishability || null,
         holdReason: reg?.holdReason || null,
+        technicallyReady: pubEval.technicallyReady,
+        publicationReady: pubEval.publicationReady,
+        publicationReadiness: pubEval,
         taxonomyGap: ov?.taxonomyGap || null,
         evidenceSources: [
           ...(ov?.evidenceSources || []),
@@ -272,10 +311,19 @@ export async function buildDeepContentReview({
   });
 
   const categoryMismatches = golden.filter((g) => !g.match);
-  const readyWithoutContent = results.filter(
-    (r) =>
-      String(r.publishability) === "READY_FOR_REVIEW" && r.reviewStatus !== "CONTENT_VERIFIED"
+  const technicallyReadyWithoutContent = results.filter(
+    (r) => r.technicallyReady === true && r.reviewStatus !== "CONTENT_VERIFIED"
   );
+  const publicationReady = results.filter((r) => r.publicationReady === true);
+  const failureReasonCounts = {};
+  for (const r of results) {
+    for (const code of r.contentFailureReasons || []) {
+      failureReasonCounts[code] = (failureReasonCounts[code] || 0) + 1;
+    }
+  }
+  if (registry) {
+    attachPublicationReadiness(registry, { partners: results });
+  }
 
   return {
     schema: "iu-cj-merchant-review-v9-final",
@@ -288,18 +336,26 @@ export async function buildDeepContentReview({
     contentVerified: contentVerifiedCount,
     notContentVerified: notContentVerified.length,
     reviewStatusCounts: byStatus,
+    contentFailureReasonCounts: failureReasonCounts,
     categoryMismatches: categoryMismatches.length,
     categoryMismatchSample: categoryMismatches.slice(0, 20),
-    readyWithoutContentVerified: readyWithoutContent.length,
-    readyWithoutContentSample: readyWithoutContent.slice(0, 20).map((r) => ({
+    technicallyReady: results.filter((r) => r.technicallyReady).length,
+    publicationReady: publicationReady.length,
+    technicallyReadyWithoutContentVerified: technicallyReadyWithoutContent.length,
+    technicallyReadyWithoutContentSample: technicallyReadyWithoutContent.slice(0, 25).map((r) => ({
       advertiserCid: r.advertiserCid,
+      merchantIdentity: r.merchantIdentity,
       reviewStatus: r.reviewStatus,
       grade: r.merchantWebsiteEvidence?.grade,
+      contentFailureReasons: r.contentFailureReasons,
     })),
+    allPublicationReadyContentVerified: publicationReady.every(
+      (r) => r.reviewStatus === "CONTENT_VERIFIED"
+    ),
     partners: results,
     goldenSectionTruth: golden,
     note:
-      "CONTENT_VERIFIED requires weighted high-trust assortment (title/nav/h1/meta/json-ld). Title/HTTP/override alone is IDENTITY_VERIFIED or CONTENT_INCOMPLETE — never fake CONTENT_VERIFIED.",
+      "TECHNICALLY_READY ≠ PUBLICATION_READY. CONTENT_VERIFIED requires weighted high-trust assortment. Title/HTTP alone never CONTENT_VERIFIED. Public swap DISARMED.",
   };
 }
 

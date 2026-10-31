@@ -51,6 +51,7 @@ import {
   probeMerchantHomepage,
   httpGetText,
 } from "./iu-cj-affiliate-phase3z-merchant-evidence-v9.mjs";
+import { attachPublicationReadiness } from "./iu-cj-affiliate-phase3z-publication-readiness-v9.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 export const PHASE3Z_SCHEMA = "iu-affiliate-cj-partner-registry-v1";
@@ -3404,6 +3405,17 @@ export async function main(argv = process.argv.slice(2)) {
   registry.safetyGates = gates;
   buttonCatalog.safetyGates = gates;
 
+  // Optional content-review merge: TECHNICALLY_READY ≠ PUBLICATION_READY.
+  const reviewPath =
+    process.env.IU_CJ_PHASE3Z_REVIEW_PATH ||
+    path.join(ROOT, "projects", "data", "iu-affiliate-cj-merchant-review-v9-final.json");
+  const contentReview = readJson(reviewPath, null);
+  if (contentReview?.partners?.length) {
+    attachPublicationReadiness(registry, contentReview);
+  } else {
+    attachPublicationReadiness(registry, null);
+  }
+
   const writeRepo = argv.includes("--write-repo") || process.env.IU_CJ_PHASE3Z_WRITE_REPO === "1";
   if (writeRepo) {
     assertAllowedDataWrite(paths.outRegistry);
@@ -3419,6 +3431,7 @@ export async function main(argv = process.argv.slice(2)) {
       warnings: gates.warnings,
       counts: registry.counts,
       buttonCounts: buttonCatalog.counts,
+      publicationSummary: registry.publicationSummary || null,
       verifyStats,
       outRegistry: paths.outRegistry,
       outButtons: paths.outButtons,
