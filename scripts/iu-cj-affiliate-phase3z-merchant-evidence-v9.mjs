@@ -46,17 +46,89 @@ export const MERCHANT_EVIDENCE_OVERRIDES = Object.freeze({
     merchantIdentity: "Allegro.cz",
     officialDomains: ["allegro.cz", "www.allegro.cz"],
     merchantType: "MARKETPLACE",
+    // No dedicated marketplace tile in the 36-section SoT. Closest honest fit among
+    // existing tiles is universal home goods / living (still imperfect) — keep review
+    // flag so READY requires explicit taxonomy GO; never map to aff-inzerce-bazary.
     primaryAssortment: null,
     secondaryAssortments: [],
     significantAssortmentGroups: ["marketplace", "universal"],
-    forbiddenSections: [],
+    forbiddenSections: ["aff-inzerce-bazary"],
     preferCategoryReview: true,
     rejectSectionIds: ["aff-inzerce-bazary"],
+    taxonomyGap: "NO_MARKETPLACE_TILE_IN_36",
     confidence: "high",
     rationale:
-      "Allegro.cz is a general marketplace, not a classifieds/bazar. Without a dedicated marketplace tile, category stays PENDING_EVIDENCE rather than aff-inzerce-bazary.",
-    evidenceSources: ["official_domain:allegro.cz", "merchant_type:marketplace"],
+      "Allegro.cz is a general marketplace, not classifieds/bazar. Authoritative taxonomy has no marketplace tile → CATEGORY_REVIEW_REQUIRED (external taxonomy gap).",
+    evidenceSources: ["official_domain:allegro.cz", "merchant_type:marketplace", "taxonomy36_no_marketplace_tile"],
     preferHomepagePath: true,
+  },
+  "5096493": {
+    advertiserCid: "5096493",
+    merchantIdentity: "Booking.com",
+    officialDomains: ["booking.com", "www.booking.com"],
+    merchantType: "SERVICE_PROVIDER",
+    primaryAssortment: { sectionId: "aff-ubytovani-hotely", group: "ubytovani" },
+    confidence: "high",
+    czAffinityOverride: true,
+    rationale: "Booking.com CEE program; homepage is a legitimate CZ-visitor customer landing despite empty targetedCountries on some links.",
+    evidenceSources: ["official_domain:booking.com", "program:CEE"],
+  },
+  "6282055": {
+    advertiserCid: "6282055",
+    merchantIdentity: "Surfshark",
+    officialDomains: ["surfshark.com", "www.surfshark.com"],
+    merchantType: "DIGITAL_SERVICE",
+    primaryAssortment: { sectionId: "aff-software", group: "software" },
+    confidence: "high",
+    czAffinityOverride: true,
+    rejectDestinationTypes: ["EXTERNAL_TRACKER"],
+    preferHostnames: ["surfshark.com", "www.surfshark.com"],
+    rationale: "Prefer surfshark.com customer homepage over get.surfshark.net tracker hops; VPN available to CZ visitors.",
+    evidenceSources: ["official_domain:surfshark.com"],
+  },
+  "7133039": {
+    advertiserCid: "7133039",
+    merchantIdentity: "Byrokko World",
+    officialDomains: ["byrokko.com", "www.byrokko.com"],
+    merchantType: "SPECIALIST",
+    primaryAssortment: { sectionId: "aff-kosmetika", group: "kosmetika" },
+    confidence: "high",
+    czAffinityOverride: true,
+    rationale: "Byrokko sells beauty products to CZ/SK market from byrokko.com; empty CJ targetedCountries must not block CZ affinity.",
+    evidenceSources: ["official_domain:byrokko.com", "merchant_positioning:beauty_cz_sk"],
+  },
+  "5755636": {
+    advertiserCid: "5755636",
+    merchantIdentity: "Foreo",
+    officialDomains: ["foreo.com"],
+    merchantType: "SPECIALIST",
+    primaryAssortment: { sectionId: "aff-kosmetika", group: "kosmetika" },
+    confidence: "medium",
+    rejectDestinationTypes: ["EXTERNAL_TRACKER"],
+    rationale: "Main button must not use flip.go2cloud.org tracker as customer destination when merchant origin is unavailable in inventory.",
+    evidenceSources: ["external_tracker:go2cloud"],
+  },
+  "5578976": {
+    advertiserCid: "5578976",
+    merchantIdentity: "Novakid INT",
+    officialDomains: ["novakidschool.com"],
+    merchantType: "SERVICE_PROVIDER",
+    primaryAssortment: { sectionId: "aff-deti-hracky", group: "deti" },
+    confidence: "medium",
+    rejectDestinationTypes: ["EXTERNAL_TRACKER"],
+    rationale: "Novakidtracking.com is an external tracker hop — unsuitable as evidenced customer landing without resolved final merchant URL.",
+    evidenceSources: ["external_tracker:novakidtracking"],
+  },
+  "7520433": {
+    advertiserCid: "7520433",
+    merchantIdentity: "Hero Wars",
+    officialDomains: ["hero-wars.com"],
+    merchantType: "DIGITAL_SERVICE",
+    primaryAssortment: { sectionId: "aff-deti-hracky", group: "deti" },
+    confidence: "medium",
+    rejectDestinationTypes: ["EXTERNAL_TRACKER"],
+    rationale: "g2afse.com click hop is external tracker — not a stable customer landing for main button.",
+    evidenceSources: ["external_tracker:g2afse"],
   },
   "2624620": {
     advertiserCid: "2624620",
@@ -175,8 +247,19 @@ export function classifyDestinationType(destination, linkName = "", opts = {}) {
     return DESTINATION_TYPE.LOGIN;
   }
   if (/\/(register|registr|signup|sign-up)/i.test(path)) return DESTINATION_TYPE.REGISTRATION;
-  if (/coupon|kup[oó]n|voucher|slevov/i.test(blob)) return DESTINATION_TYPE.COUPON;
-  if (/\/(sale|promo|akce|deal|campaign|black-friday)/i.test(path) || /sale|promo|%\s*off|banner/i.test(name)) {
+  // Homepage with coupon query is still a customer homepage (not a coupon listing page).
+  const pathOnlyEarly = path.replace(/\/+$/, "") || "/";
+  const isHomeish =
+    pathOnlyEarly === "/" ||
+    pathOnlyEarly.length <= 1 ||
+    (/\/(cs|cz|sk|en)(\/|$)/i.test(pathOnlyEarly) &&
+      pathOnlyEarly.split("/").filter(Boolean).length <= 2);
+  if (/coupon|kup[oó]n|voucher|slevov/i.test(blob) && !isHomeish) return DESTINATION_TYPE.COUPON;
+  if (
+    (/\/(sale|promo|akce|deal|campaign|black-friday)/i.test(path) ||
+      /sale|promo|%\s*off|banner/i.test(name)) &&
+    !isHomeish
+  ) {
     return DESTINATION_TYPE.CAMPAIGN;
   }
   // Known external affiliate/tracking hops (not merchant origin).
@@ -308,6 +391,7 @@ export function isUnsuitableMainDestination(destinationType, advertiserId) {
     DESTINATION_TYPE.AFFILIATE_SIGNUP,
     DESTINATION_TYPE.ERROR_PAGE,
     DESTINATION_TYPE.UNRELATED_DESTINATION,
+    DESTINATION_TYPE.EXTERNAL_TRACKER,
   ]);
   if (bad.has(destinationType)) return { unsuitable: true, reason: "destination_type:" + destinationType };
   const ev = getMerchantEvidenceOverride(advertiserId);

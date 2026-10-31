@@ -146,6 +146,10 @@ jobs:
         run: |
           node scripts/iu-cj-affiliate-phase3p-forpsi-operator-runbook-v1.mjs
           node scripts/iu-cj-affiliate-phase3p-live-verify-v1.mjs
+      - name: Phase 3Z V9-final ops guards (circuit / schedule watchdog helpers)
+        run: |
+          node scripts/iu-cj-affiliate-phase3z-ops-guards-v9-selftest.mjs
+          node scripts/iu-cj-affiliate-phase3z-inventory-equality-v9.mjs
 
   fetch-staging:
     needs: selftest
