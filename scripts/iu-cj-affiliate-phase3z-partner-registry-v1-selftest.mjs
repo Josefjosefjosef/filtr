@@ -546,10 +546,35 @@ applyUrlVerificationToPartner(byrokkoPartner, byrokkoBtn, {
   httpStatus: 403,
   clientBlockedPossible: true,
 });
+// WAF/bot 403 with prior CZ+category+suitable destination → READY via IDENTITY_VERIFIED_WAF
+// (not content verification; not treated as a broken destination).
 expect(
-  "byrokko_403_not_ready",
-  byrokkoPartner.publishability === PUBLISHABILITY.NOT_VERIFIED &&
-    byrokkoPartner.holdReason === "url_http_403_bot_block_possible"
+  "byrokko_403_identity_ready",
+  byrokkoPartner.publishability === PUBLISHABILITY.READY_FOR_REVIEW &&
+    byrokkoPartner.merchantReviewStatus === "IDENTITY_VERIFIED_WAF" &&
+    byrokkoPartner.holdReason == null,
+  byrokkoPartner
+);
+const noCz403 = {
+  ...byrokkoPartner,
+  partnerId: "cj-test-403",
+  advertiserId: "9999403",
+  publishability: PUBLISHABILITY.NOT_VERIFIED,
+  czMarketEligibilityVerified: null,
+  sectionId: null,
+  holdReason: "CZ_ELIGIBILITY_UNKNOWN",
+  merchantReviewStatus: null,
+};
+applyUrlVerificationToPartner(noCz403, null, {
+  status: "HTTP_FORBIDDEN",
+  httpStatus: 403,
+  clientBlockedPossible: true,
+});
+expect(
+  "byrokko_403_without_cz_still_pending",
+  noCz403.publishability === PUBLISHABILITY.NOT_VERIFIED &&
+    noCz403.holdReason === "url_http_403_bot_block_possible",
+  noCz403
 );
 
 // EN merchant with CZ targeting must not quarantine for language
@@ -731,7 +756,7 @@ const hyst = selectPrimaryAffiliateLink(answearLinks, answearAdv, {
 });
 expect("hysteresis_keeps_home", hyst.selected?.linkId === "home" && hyst.hysteresisKept === true, hyst);
 
-expect("rules_v9", PHASE3Z_RULES_VERSION === "phase3z-partner-robot-v9");
+expect("rules_v9_final", PHASE3Z_RULES_VERSION === "phase3z-partner-robot-v9-final");
 const tax36 = explainTaxonomy36vs38(36);
 expect("tax_36_ok", tax36.ok === true && tax36.productionMainCategoryTiles === 36);
 const taxBad = explainTaxonomy36vs38(38);
@@ -866,12 +891,101 @@ expect(
     DESTINATION_TYPE.CHECKOUT
 );
 expect(
+  "v9_abbyy_orderstyle_desturl_product",
+  classifyDestinationType(
+    "https://checkout.abbyy.com/order/product.php?ORDERSTYLE=nLWsm5TflHM=&DESTURL=" +
+      encodeURIComponent("https://pdf.abbyy.com/cs/finereader-pdf-for-mac/trial/"),
+    "ABBYY FineReader"
+  ) === DESTINATION_TYPE.RELEVANT_PRODUCT ||
+    classifyDestinationType(
+      "https://checkout.abbyy.com/order/product.php?ORDERSTYLE=nLWsm5TflHM=&DESTURL=" +
+        encodeURIComponent("https://pdf.abbyy.com/cs/finereader-pdf-for-mac/trial/"),
+      "ABBYY FineReader"
+    ) === DESTINATION_TYPE.UNKNOWN
+);
+expect(
+  "v9_abbyy_orderstyle_desturl_home",
+  classifyDestinationType(
+    "https://checkout.abbyy.com/order/product.php?ORDERSTYLE=nLWsm5TflHM=&DESTURL=" +
+      encodeURIComponent("https://pdf.abbyy.com/"),
+    "ABBYY FineReader PDF"
+  ) === DESTINATION_TYPE.MERCHANT_HOMEPAGE
+);
+expect(
   "v9_unsuitable_checkout",
   isUnsuitableMainDestination(DESTINATION_TYPE.CHECKOUT, "2624620").unsuitable === true
 );
 expect(
   "v9_unsuitable_affiliate",
   isUnsuitableMainDestination(DESTINATION_TYPE.AFFILIATE_SIGNUP, "7947783").unsuitable === true
+);
+expect(
+  "v9_external_tracker_before_campaign",
+  classifyDestinationType(
+    "https://flip.go2cloud.org/aff_c?offer_id=4&aff_id=4492&url_id=872",
+    "Sale promo banner"
+  ) === DESTINATION_TYPE.EXTERNAL_TRACKER
+);
+expect(
+  "v9_novakid_tracker",
+  classifyDestinationType(
+    "https://affise.novakidtracking.com/click?pid=3&offer_id=2",
+    "Campaign"
+  ) === DESTINATION_TYPE.EXTERNAL_TRACKER
+);
+expect(
+  "v9_unsuitable_external_tracker",
+  isUnsuitableMainDestination(DESTINATION_TYPE.EXTERNAL_TRACKER, "5755636").unsuitable === true
+);
+const lidlOv = applyMerchantEvidenceOverride({
+  advertiserId: "5954793",
+  assortment: { merchantType: MERCHANT_TYPE.MULTI_ASSORTMENT },
+  baseSectionId: "aff-jidlo",
+});
+expect("v9_lidl_cz_override", lidlOv.applied && lidlOv.sectionId === "aff-jidlo", lidlOv);
+const obiOv = applyMerchantEvidenceOverride({
+  advertiserId: "6857406",
+  assortment: { merchantType: MERCHANT_TYPE.SPECIALIST },
+  baseSectionId: "aff-dum-zahrada",
+});
+expect("v9_obi_cz_override", obiOv.applied && obiOv.sectionId === "aff-dilna-naradi", obiOv);
+const sanitinoOv = applyMerchantEvidenceOverride({
+  advertiserId: "6358042",
+  assortment: { merchantType: MERCHANT_TYPE.SPECIALIST },
+  baseSectionId: "aff-energie-uspor",
+});
+expect(
+  "v9_sanitino_not_energie",
+  sanitinoOv.applied &&
+    sanitinoOv.sectionId === "aff-dum-zahrada" &&
+    sanitinoOv.categoryReviewRequired === false,
+  sanitinoOv
+);
+const axaOv = applyMerchantEvidenceOverride({
+  advertiserId: "4697950",
+  assortment: { merchantType: MERCHANT_TYPE.SERVICE_PROVIDER },
+  baseSectionId: "aff-cestovni-pojisteni",
+});
+expect(
+  "v9_axa_vehicle_to_pojisteni",
+  axaOv.applied && axaOv.sectionId === "aff-pojisteni" && axaOv.categoryReviewRequired === false,
+  axaOv
+);
+const gearOv = applyMerchantEvidenceOverride({
+  advertiserId: "7804601",
+  assortment: { merchantType: MERCHANT_TYPE.DIGITAL_SERVICE },
+  baseSectionId: "aff-deti-hracky",
+});
+expect("v9_gearup_software", gearOv.applied && gearOv.sectionId === "aff-software", gearOv);
+const argosOv = applyMerchantEvidenceOverride({
+  advertiserId: "8010554",
+  assortment: { merchantType: MERCHANT_TYPE.SPECIALIST },
+  baseSectionId: "aff-dum-zahrada",
+});
+expect(
+  "v9_argos_elektro_not_dum_or_dilna",
+  argosOv.applied && argosOv.sectionId === "aff-elektro",
+  argosOv
 );
 
 const tipaOv = applyMerchantEvidenceOverride({
