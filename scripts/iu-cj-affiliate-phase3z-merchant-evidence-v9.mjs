@@ -203,14 +203,80 @@ export const MERCHANT_EVIDENCE_OVERRIDES = Object.freeze({
     merchantIdentity: "OBI CZ",
     officialDomains: ["obi.cz", "www.obi.cz"],
     merchantType: "SPECIALIST",
-    primaryAssortment: { sectionId: "aff-dum-zahrada", group: "dum" },
-    significantAssortmentGroups: ["dum", "dilna", "zahrada"],
+    // DIY warehouse — tools/construction is the primary customer intent on InfoUzel.
+    primaryAssortment: { sectionId: "aff-dilna-naradi", group: "dilna" },
+    secondaryAssortments: [{ sectionId: "aff-dum-zahrada", group: "dum" }],
+    significantAssortmentGroups: ["dilna", "dum", "zahrada"],
     confidence: "high",
     czAffinityOverride: true,
     preferHomepagePath: true,
     rationale:
-      "OBI Česká republika (obi.cz). Minimal bot UA previously received HTTP 404 from edge; browser-UA probe returns 200 homepage.",
-    evidenceSources: ["official_domain:obi.cz", "cz_retail:obi"],
+      "OBI Česká republika (obi.cz) DIY/bauhaus: dilna-naradi is the accurate primary tile; dum-zahrada is secondary.",
+    evidenceSources: ["official_domain:obi.cz", "cz_retail:obi", "merchant_positioning:diy_bauhaus"],
+  },
+  "6358042": {
+    advertiserCid: "6358042",
+    merchantIdentity: "Sanitino Europe",
+    officialDomains: ["sanitino.cz", "www.sanitino.cz"],
+    merchantType: "SPECIALIST",
+    primaryAssortment: { sectionId: "aff-dum-zahrada", group: "dum" },
+    significantAssortmentGroups: ["dum", "koupelna"],
+    confidence: "high",
+    rejectSectionIds: ["aff-energie-uspor"],
+    rationale:
+      "Sanitino sells bathroom/sanitary fittings and home fixtures — not energy-saving utilities. CJ home_utilities map must not land on aff-energie-uspor.",
+    evidenceSources: ["official_domain:sanitino.cz", "merchant_positioning:bathroom_sanitary"],
+  },
+  "4697950": {
+    advertiserCid: "4697950",
+    merchantIdentity: "AXA ASSISTANCE - CZ",
+    officialDomains: ["axa-assistance.cz", "www.axa-assistance.cz"],
+    merchantType: "SERVICE_PROVIDER",
+    primaryAssortment: { sectionId: "aff-pojisteni", group: "pojisteni" },
+    significantAssortmentGroups: ["pojisteni", "cestovni-pojisteni"],
+    confidence: "high",
+    rejectSectionIds: ["aff-cestovni-pojisteni"],
+    rationale:
+      "Selected customer landing is pojisteni-vozidla (vehicle assistance/insurance). General aff-pojisteni is correct; travel-insurance tile would mislabel the destination.",
+    evidenceSources: ["official_domain:axa-assistance.cz", "destination_path:pojisteni-vozidla"],
+  },
+  "7804601": {
+    advertiserCid: "7804601",
+    merchantIdentity: "GearUP",
+    officialDomains: ["gearupbooster.com", "www.gearupbooster.com"],
+    merchantType: "DIGITAL_SERVICE",
+    primaryAssortment: { sectionId: "aff-software", group: "software" },
+    significantAssortmentGroups: ["software"],
+    confidence: "high",
+    rejectSectionIds: ["aff-deti-hracky", "aff-knihy"],
+    rationale:
+      "GearUP is a PC/network game-booster software product, not a children's toy/game catalog. Prefer aff-software.",
+    evidenceSources: ["official_domain:gearupbooster.com", "merchant_positioning:game_booster_software"],
+  },
+  "5603344": {
+    advertiserCid: "5603344",
+    merchantIdentity: "Hs-sport.cz",
+    officialDomains: ["hs-sport.cz", "www.hs-sport.cz"],
+    merchantType: "SPECIALIST",
+    primaryAssortment: { sectionId: "aff-sport-outdoor", group: "sport" },
+    secondaryAssortments: [{ sectionId: "aff-moda", group: "moda" }],
+    significantAssortmentGroups: ["sport", "moda"],
+    confidence: "high",
+    rejectSectionIds: ["aff-moda"],
+    rationale:
+      "HS Sport is a sports equipment/apparel specialist — primary tile is sport-outdoor; moda alone understates assortment.",
+    evidenceSources: ["official_domain:hs-sport.cz", "merchant_positioning:sports_specialist"],
+  },
+  "8010554": {
+    advertiserCid: "8010554",
+    merchantIdentity: "Argos.cz",
+    officialDomains: ["argos.cz", "www.argos.cz"],
+    merchantType: "SPECIALIST",
+    primaryAssortment: { sectionId: "aff-dilna-naradi", group: "dilna" },
+    significantAssortmentGroups: ["dilna", "elektro"],
+    confidence: "high",
+    rationale: "ARGOS ELEKTRO — electrical installation materials and lighting; dilna-naradi / elektro-trade, not general dum-zahrada.",
+    evidenceSources: ["official_domain:argos.cz", "merchant_positioning:elektroinstalace"],
   },
 });
 
@@ -394,9 +460,15 @@ export function applyMerchantEvidenceOverride({ advertiserId, assortment, baseSe
 
   let sectionId = ev.primaryAssortment?.sectionId || baseSectionId || null;
   let categoryReviewRequired = !!ev.preferCategoryReview;
+  // rejectSectionIds: remapa na primary, pokud existuje — quarantine jen při absenci náhrady.
   if (ev.rejectSectionIds?.includes(String(baseSectionId || ""))) {
-    categoryReviewRequired = true;
-    sectionId = ev.primaryAssortment?.sectionId || null;
+    if (ev.primaryAssortment?.sectionId) {
+      sectionId = ev.primaryAssortment.sectionId;
+      categoryReviewRequired = !!ev.preferCategoryReview;
+    } else {
+      sectionId = null;
+      categoryReviewRequired = true;
+    }
   }
   if (ev.forbiddenSections?.includes(String(baseSectionId || ""))) {
     sectionId = ev.primaryAssortment?.sectionId || null;

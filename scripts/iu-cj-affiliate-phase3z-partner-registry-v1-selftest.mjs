@@ -927,7 +927,35 @@ const obiOv = applyMerchantEvidenceOverride({
   assortment: { merchantType: MERCHANT_TYPE.SPECIALIST },
   baseSectionId: "aff-dum-zahrada",
 });
-expect("v9_obi_cz_override", obiOv.applied && obiOv.sectionId === "aff-dum-zahrada", obiOv);
+expect("v9_obi_cz_override", obiOv.applied && obiOv.sectionId === "aff-dilna-naradi", obiOv);
+const sanitinoOv = applyMerchantEvidenceOverride({
+  advertiserId: "6358042",
+  assortment: { merchantType: MERCHANT_TYPE.SPECIALIST },
+  baseSectionId: "aff-energie-uspor",
+});
+expect(
+  "v9_sanitino_not_energie",
+  sanitinoOv.applied &&
+    sanitinoOv.sectionId === "aff-dum-zahrada" &&
+    sanitinoOv.categoryReviewRequired === false,
+  sanitinoOv
+);
+const axaOv = applyMerchantEvidenceOverride({
+  advertiserId: "4697950",
+  assortment: { merchantType: MERCHANT_TYPE.SERVICE_PROVIDER },
+  baseSectionId: "aff-cestovni-pojisteni",
+});
+expect(
+  "v9_axa_vehicle_to_pojisteni",
+  axaOv.applied && axaOv.sectionId === "aff-pojisteni" && axaOv.categoryReviewRequired === false,
+  axaOv
+);
+const gearOv = applyMerchantEvidenceOverride({
+  advertiserId: "7804601",
+  assortment: { merchantType: MERCHANT_TYPE.DIGITAL_SERVICE },
+  baseSectionId: "aff-deti-hracky",
+});
+expect("v9_gearup_software", gearOv.applied && gearOv.sectionId === "aff-software", gearOv);
 
 const tipaOv = applyMerchantEvidenceOverride({
   advertiserId: "4921612",
