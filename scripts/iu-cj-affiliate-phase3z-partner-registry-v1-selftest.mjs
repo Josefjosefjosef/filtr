@@ -546,10 +546,35 @@ applyUrlVerificationToPartner(byrokkoPartner, byrokkoBtn, {
   httpStatus: 403,
   clientBlockedPossible: true,
 });
+// WAF/bot 403 with prior CZ+category+suitable destination → READY via IDENTITY_VERIFIED_WAF
+// (not content verification; not treated as a broken destination).
 expect(
-  "byrokko_403_not_ready",
-  byrokkoPartner.publishability === PUBLISHABILITY.NOT_VERIFIED &&
-    byrokkoPartner.holdReason === "url_http_403_bot_block_possible"
+  "byrokko_403_identity_ready",
+  byrokkoPartner.publishability === PUBLISHABILITY.READY_FOR_REVIEW &&
+    byrokkoPartner.merchantReviewStatus === "IDENTITY_VERIFIED_WAF" &&
+    byrokkoPartner.holdReason == null,
+  byrokkoPartner
+);
+const noCz403 = {
+  ...byrokkoPartner,
+  partnerId: "cj-test-403",
+  advertiserId: "9999403",
+  publishability: PUBLISHABILITY.NOT_VERIFIED,
+  czMarketEligibilityVerified: null,
+  sectionId: null,
+  holdReason: "CZ_ELIGIBILITY_UNKNOWN",
+  merchantReviewStatus: null,
+};
+applyUrlVerificationToPartner(noCz403, null, {
+  status: "HTTP_FORBIDDEN",
+  httpStatus: 403,
+  clientBlockedPossible: true,
+});
+expect(
+  "byrokko_403_without_cz_still_pending",
+  noCz403.publishability === PUBLISHABILITY.NOT_VERIFIED &&
+    noCz403.holdReason === "url_http_403_bot_block_possible",
+  noCz403
 );
 
 // EN merchant with CZ targeting must not quarantine for language
@@ -731,7 +756,7 @@ const hyst = selectPrimaryAffiliateLink(answearLinks, answearAdv, {
 });
 expect("hysteresis_keeps_home", hyst.selected?.linkId === "home" && hyst.hysteresisKept === true, hyst);
 
-expect("rules_v9", PHASE3Z_RULES_VERSION === "phase3z-partner-robot-v9");
+expect("rules_v9_final", PHASE3Z_RULES_VERSION === "phase3z-partner-robot-v9-final");
 const tax36 = explainTaxonomy36vs38(36);
 expect("tax_36_ok", tax36.ok === true && tax36.productionMainCategoryTiles === 36);
 const taxBad = explainTaxonomy36vs38(38);

@@ -117,7 +117,7 @@ jobs:
           assert reg.get("liveEnabled") is False
           assert reg.get("publicButtonSwapArmed") is False
           assert btn.get("publicButtonSwapArmed") is False
-          assert reg.get("rulesVersion") == "phase3z-partner-robot-v9"
+          assert reg.get("rulesVersion") == "phase3z-partner-robot-v9-final"
           assert (reg.get("taxonomyReconciliation") or {}).get("ok") is True
           assert (reg.get("linkCandidateAudit") or {}).get("accounted", 0) >= 0
           assert (reg.get("selectionAudit") or {}).get("unsuitableMainDestinationsRemaining", 0) >= 0

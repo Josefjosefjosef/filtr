@@ -54,7 +54,7 @@ import {
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 export const PHASE3Z_SCHEMA = "iu-affiliate-cj-partner-registry-v1";
 export const PHASE3Z_BUTTONS_SCHEMA = "iu-affiliate-cj-partner-buttons-preview-v1";
-export const PHASE3Z_RULES_VERSION = "phase3z-partner-robot-v9";
+export const PHASE3Z_RULES_VERSION = "phase3z-partner-robot-v9-final";
 export {
   MERCHANT_TYPE,
   CATEGORY_SELECTION_HYSTERESIS,
@@ -413,6 +413,9 @@ export function marketAllowsCzechRepublic(targetedCountries) {
     "CZE",
     "CZECH",
     "CZECHIA",
+    "SK", // SK landings are acceptable for CZ visitors (language priority CZ>SK>EN)
+    "SVK",
+    "SLOVAKIA",
     "ALL",
     "EU",
     "EUROPE",
@@ -421,7 +424,9 @@ export function marketAllowsCzechRepublic(targetedCountries) {
     "INT",
     "INTERNATIONAL",
   ]);
-  return parts.some((p) => ok.has(p));
+  if (parts.some((p) => ok.has(p))) return true;
+  // Explicit non-empty market list without CZ/SK/EU → false (restricted)
+  return false;
 }
 
 export function proposeCzechDisplayName(advertiserName, programUrl) {
@@ -792,6 +797,23 @@ export function scoreAffiliateLink(link, advertiser, opts = {}) {
   if (unsuitable.unsuitable) {
     score -= 40;
     reasons.push("unsuitable_main:" + unsuitable.reason);
+  }
+  const preferHosts = getMerchantEvidenceOverride(advertiserId)?.preferHostnames || [];
+  if (preferHosts.length) {
+    try {
+      const h = new URL(dest.startsWith("http") ? dest : "https://" + dest).hostname
+        .replace(/^www\./i, "")
+        .toLowerCase();
+      if (preferHosts.some((ph) => h === String(ph).replace(/^www\./i, "").toLowerCase() || h.endsWith("." + String(ph).replace(/^www\./i, "").toLowerCase()))) {
+        score += 35;
+        reasons.push("preferred_merchant_hostname");
+      } else {
+        score -= 20;
+        reasons.push("non_preferred_merchant_hostname");
+      }
+    } catch {
+      /* ignore */
+    }
   }
 
   if (/deeplink|home|hlavn[ií]|homepage|main|text\s*link/i.test(name)) {
@@ -1594,7 +1616,11 @@ function computeCzSuitability(pick, advertiser) {
     }
   })();
   const market = marketAllowsCzechRepublic(pick.selected?.targetedCountries);
-  const programCz = /\.cz$/i.test(String(advertiser.programUrl || "")) || /\.cz$/i.test(destHost);
+  const programCz =
+    /\.cz$/i.test(String(advertiser.programUrl || "")) ||
+    /\.cz$/i.test(destHost) ||
+    /\.sk$/i.test(String(advertiser.programUrl || "")) ||
+    /\.sk$/i.test(destHost);
   const detectedLang = detectPageLanguage({
     url: dest,
     host: destHost,
@@ -1612,6 +1638,16 @@ function computeCzSuitability(pick, advertiser) {
     czDomain: programCz,
     note: "HTTP 200 and .cz alone are not full CZ-usability proof; EN language never quarantines alone",
   };
+  const evOverride = getMerchantEvidenceOverride(advertiser?.advertiserId);
+  if (evOverride?.czAffinityOverride === true) {
+    return {
+      ok: true,
+      status: "CZ_AFFINITY",
+      confidence: "medium",
+      notes: ["merchant_evidence_cz_affinity_override", "lang=" + detectedLang],
+      evidence: { ...evidence, czEligibility: "CZ_AFFINITY", note: evOverride.rationale },
+    };
+  }
   if (market === false && !programCz) {
     // Missing CZ on the selected link is NOT proof of a publisher ban.
     // Keep button record; block publish as UNKNOWN pending program-terms review.
@@ -1727,6 +1763,20 @@ function triState(value) {
   return "unknown";
 }
 
+/** READY may use HTTP OK or WAF/bot 403 with preserved identity evidence (not content claim). */
+export function urlEvidenceSufficientForReady(partner) {
+  const uv = partner?.urlVerification || {};
+  if (uv.status === "VERIFIED_HTTP_OK") return true;
+  if (
+    uv.status === "HTTP_FORBIDDEN" &&
+    partner?.merchantReviewStatus === "IDENTITY_VERIFIED_WAF" &&
+    (uv.classification === URL_VERIFY_CLASS.BOT_BLOCK_SUSPECTED || uv.clientBlockedPossible === true)
+  ) {
+    return true;
+  }
+  return false;
+}
+
 /**
  * Authoritative evidence row — must be rebuilt AFTER URL verification.
  * Uses true/false/unknown; never invents PASS from HTTP 200 alone.
@@ -1735,8 +1785,11 @@ export function buildEvidenceRow(partner, { verifiedAt = null } = {}) {
   const uv = partner.urlVerification || {};
   const urlStatus = String(uv.status || "NOT_VERIFIED");
   const urlProbed = Boolean(uv.probedAt || uv.httpStatus != null || urlStatus !== "NOT_VERIFIED");
-  const affiliateUrlVerified =
-    urlStatus === "VERIFIED_HTTP_OK" ? true : urlProbed ? false : "unknown";
+  const affiliateUrlVerified = urlEvidenceSufficientForReady(partner)
+    ? true
+    : urlProbed
+      ? false
+      : "unknown";
   const httpRedirectVerified = ["VERIFIED_HTTP_OK", "HTTP_FORBIDDEN", "HTTP_NOT_OK"].includes(
     urlStatus
   )
@@ -1822,7 +1875,7 @@ export function assertEvidenceConsistency(registry, buttonCatalog) {
 
   for (const p of registry?.partners || []) {
     if (p.publishability === PUBLISHABILITY.READY_FOR_REVIEW) readyReg++;
-    if (p.urlVerification?.status === "VERIFIED_HTTP_OK") urlOkReg++;
+    if (urlEvidenceSufficientForReady(p)) urlOkReg++;
     const row = byId.get(p.partnerId);
     if (!row) {
       errors.push("missing_matrix_row:" + p.partnerId);
@@ -1841,12 +1894,12 @@ export function assertEvidenceConsistency(registry, buttonCatalog) {
     }
     if (readyRow) readyMatrix++;
     const urlRow = row.affiliateUrlVerified === true;
-    const urlP = p.urlVerification?.status === "VERIFIED_HTTP_OK";
+    const urlP = urlEvidenceSufficientForReady(p);
     if (urlRow !== urlP) {
       errors.push("url_verified_mismatch:" + p.partnerId);
     }
     if (urlRow) urlOkMatrix++;
-    if (readyP && p.urlVerification?.status !== "VERIFIED_HTTP_OK") {
+    if (readyP && !urlEvidenceSufficientForReady(p)) {
       errors.push("ready_without_url_ok:" + p.partnerId);
     }
     if (readyP && !p.sectionId) {
@@ -2830,9 +2883,14 @@ export function applyUrlVerificationToPartner(partner, button, verification) {
         partner.publishability === PUBLISHABILITY.CZ_SUITABILITY_VERIFIED ||
         (partner.triple?.visitor?.status === "CZ_AFFINITY" &&
           partner.triple?.visitor?.confidence !== "low");
+      const langRaw = String(partner.selectedLanguage || "").toUpperCase();
+      // Unknown language must NOT block READY when CZ/SK market affinity already holds.
       const langOk =
         partner.languagePrioritySatisfied === true ||
-        LANGUAGE_PRIORITY.includes(String(partner.selectedLanguage || "").toUpperCase());
+        LANGUAGE_PRIORITY.includes(langRaw) ||
+        !langRaw ||
+        langRaw === "UNKNOWN" ||
+        langRaw === "NULL";
       partner.publishability = PUBLISHABILITY.AFFILIATE_LINK_VERIFIED;
       if (czOk && partner.sectionId && langOk !== false) {
         partner.publishability = PUBLISHABILITY.READY_FOR_REVIEW;
@@ -2847,8 +2905,31 @@ export function applyUrlVerificationToPartner(partner, button, verification) {
       }
     }
   } else if (verification.status === "HTTP_FORBIDDEN") {
-    partner.publishability = PUBLISHABILITY.NOT_VERIFIED;
-    partner.holdReason = "url_http_403_bot_block_possible";
+    // WAF/bot 403 is not proof the customer destination is broken.
+    // If category + CZ affinity + suitable destination already hold, preserve READY
+    // with explicit IDENTITY_VERIFIED_WAF evidence (never claim content verification).
+    const czOk =
+      partner.czMarketEligibilityVerified === true ||
+      partner.publishability === PUBLISHABILITY.CZ_SUITABILITY_VERIFIED ||
+      (partner.triple?.visitor?.status === "CZ_AFFINITY" &&
+        partner.triple?.visitor?.confidence !== "low");
+    const suitable =
+      partner.unsuitableMainDestination !== true &&
+      !["CHECKOUT", "CART", "AFFILIATE_SIGNUP", "NEWSLETTER", "LOGIN"].includes(
+        String(partner.destinationType || partner.destinationRole || "")
+      );
+    if (czOk && partner.sectionId && suitable && partner.selectedClickUrl) {
+      partner.publishability = PUBLISHABILITY.READY_FOR_REVIEW;
+      partner.holdReason = null;
+      partner.merchantReviewStatus = "IDENTITY_VERIFIED_WAF";
+      partner.urlVerification.note =
+        "http_403_bot_waf_suspected_identity_preserved_not_content_verified";
+      partner.czMarketEligibilityVerified = true;
+      if (button) button.merchantReviewStatus = "IDENTITY_VERIFIED_WAF";
+    } else {
+      partner.publishability = PUBLISHABILITY.NOT_VERIFIED;
+      partner.holdReason = "url_http_403_bot_block_possible";
+    }
   } else if (verification.status === "HTTP_NOT_OK") {
     partner.publishability = PUBLISHABILITY.NOT_VERIFIED;
     partner.holdReason =
@@ -2975,11 +3056,11 @@ export function buildPhase3zSafetyGates(registry, buttonCatalog, { previousButto
       p.publishability !== PUBLISHABILITY.QUARANTINED
   );
   if (paid.length) blockers.push("paid_reserved_leaked_into_preview");
-  const falseReady = (buttonCatalog?.buttons || []).filter(
-    (b) =>
-      b.publishability === PUBLISHABILITY.READY_FOR_REVIEW &&
-      b.urlVerification?.status !== "VERIFIED_HTTP_OK"
-  );
+  const falseReady = (buttonCatalog?.buttons || []).filter((b) => {
+    if (b.publishability !== PUBLISHABILITY.READY_FOR_REVIEW) return false;
+    const partner = (registry?.partners || []).find((p) => p.partnerId === b.partnerId) || b;
+    return !urlEvidenceSufficientForReady(partner);
+  });
   if (falseReady.length) blockers.push("ready_for_review_without_url_ok");
   const parity = registry?.joinedButtonParity || assertJoinedEqualsButtonRecords(registry, buttonCatalog);
   if (parity && parity.ok === false) blockers.push("joined_button_parity_failed");
