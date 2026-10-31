@@ -62,6 +62,12 @@ const spa = diagnoseContentFailure({
   reviewStatus: CONTENT_STATUS.CONTENT_INCOMPLETE,
 });
 expect("diag_spa", spa.includes("SPA_JS_RENDERED_MINIMAL_HTML"), spa);
+const verifiedEmpty = diagnoseContentFailure({
+  probe: { ok: true, httpStatus: 200, title: "x" },
+  evidence: { contentVerified: true, diagnostics: {} },
+  reviewStatus: "CONTENT_VERIFIED",
+});
+expect("diag_verified_empty", Array.isArray(verifiedEmpty) && verifiedEmpty.length === 0, verifiedEmpty);
 
 const waf = diagnoseContentFailure({
   probe: { ok: false, httpStatus: 403, title: null, error: null },

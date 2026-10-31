@@ -1,10 +1,10 @@
 {
-  "version": 1,
-  "at": "2026-10-23T18:45:34.248Z",
-  "mode": "dry_staging_shape",
+  "version": 2,
+  "at": "2026-10-31T15:25:22.982Z",
+  "mode": "live_fetch_xml_paginated",
   "websitePid": "101883843",
-  "publisherCidConfigured": false,
-  "patConfigured": false,
+  "publisherCidConfigured": true,
+  "patConfigured": true,
   "secretNames": {
     "pat": [
       "CJ_API_PAT",
@@ -14,40 +14,387 @@
     "publisherCid": "IU_CJ_PUBLISHER_CID",
     "websitePid": "IU_CJ_WEBSITE_PID"
   },
-  "http": [],
-  "errors": [
-    "dry_run_no_http"
-  ],
-  "note": "publish_not_armed — dry plan only; registry unchanged",
-  "publishAt": "2026-10-23T18:45:34.314Z",
-  "publishArmed": false,
-  "plan": {
-    "ok": true,
-    "apiOutage": false,
-    "massEndedStop": false,
-    "publishBlockedReason": null,
-    "counts": {
-      "candidates": 0,
-      "published": 0,
-      "needs_review": 0,
-      "protected": 0,
-      "ended_managed": 0,
-      "managed_considered": 0,
-      "publish_slice": 0
+  "http": [
+    {
+      "kind": "advertiser_lookup_joined",
+      "page": 1,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
     },
-    "endedRatio": 0
-  },
-  "noMergeNoProd": true,
-  "forbiddenWritePaths": [
-    "assets/",
-    "scripts/",
-    ".github/workflows/",
-    "projects/index.html",
-    "projects/data/iu-affiliate-slot-policy-v1.json"
+    {
+      "kind": "advertiser_lookup_joined",
+      "page": 2,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_coupon_joined",
+      "page": 1,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_coupon_joined",
+      "page": 2,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_coupon_joined",
+      "page": 3,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_coupon_joined",
+      "page": 4,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 1,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 2,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 3,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 4,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 5,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 6,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 7,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 8,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 9,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 10,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 11,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 12,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 13,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 14,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 15,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 16,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 17,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 18,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 19,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 20,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 21,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 22,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 23,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 24,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 25,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 26,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 27,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 28,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 29,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 30,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 31,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 32,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 33,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 34,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_text_joined",
+      "page": 35,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_probe_advertisers",
+      "page": 1,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_probe_advertisers",
+      "page": 2,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_probe_advertisers",
+      "page": 3,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_probe_advertisers",
+      "page": 4,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    },
+    {
+      "kind": "link_search_probe_advertisers",
+      "page": 5,
+      "status": 200,
+      "ok": true,
+      "networkError": false,
+      "authReason": "xml_ok"
+    }
   ],
-  "allowedWritePaths": [
-    "projects/data/iu-affiliate-cj-staging-v1.json",
-    "projects/data/iu-affiliate-cj-managed-registry-v1.json",
-    "projects/data/iu-affiliate-cj-sync-audit-v1.json"
-  ]
+  "errors": [],
+  "note": "PAT never logged; fetch writes staging only (not public catalog). XML Accept + pagination.",
+  "advertiserTotalMatched": 175,
+  "linkTotalMatchedCoupon": 378,
+  "linkTotalMatchedText": 3469,
+  "linkTotalMatched": 3904,
+  "probeAdvertiserIds": [
+    "6466592",
+    "5578976",
+    "7804601",
+    "5725783"
+  ],
+  "linkTotalMatchedProbe": 467
 }

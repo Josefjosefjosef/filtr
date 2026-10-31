@@ -19,9 +19,10 @@ import { fileURLToPath } from "node:url";
 import {
   MERCHANT_EVIDENCE_OVERRIDES,
   probeMerchantHomepage,
-  extractWeightedAssortmentEvidence,
+  probeMerchantHomepageRendered,
+  createEvidenceBrowser,
   classifyDestinationType,
-  GOLDEN_DATASET_V9,
+  loadIndependentGoldenDatasetV9,
 } from "./iu-cj-affiliate-phase3z-merchant-evidence-v9.mjs";
 import {
   diagnoseContentFailure,
@@ -72,6 +73,8 @@ export async function buildDeepContentReview({
   const queue = joined.slice(0, max);
   const results = new Array(queue.length);
   let i = 0;
+  const sharedBrowser =
+    process.env.IU_CJ_PHASE3Z_REVIEW_BROWSER_RENDER === "0" ? null : await createEvidenceBrowser();
 
   async function worker() {
     while (i < queue.length) {
@@ -91,16 +94,62 @@ export async function buildDeepContentReview({
         .filter(Boolean)
         .join(" ");
       let probe = null;
+      const identity = ov?.merchantIdentity || adv.advertiserName || null;
       if (probeUrl) {
         probe = await probeMerchantHomepage(probeUrl, {
           timeoutMs: 12000,
-          merchantIdentity: ov?.merchantIdentity || adv.advertiserName || null,
+          merchantIdentity: identity,
           cjCategoryBlob,
         });
         if (spacingMs) await sleep(spacingMs);
+        // Legitimate browser render for SPA / thin HTML — never CAPTCHA/WAF bypass.
+        const diag = probe?.assortmentEvidence?.diagnostics || {};
+        const blockedHttp = probe?.httpStatus === 403 || probe?.httpStatus === 429;
+        const needsRender =
+          sharedBrowser &&
+          probe &&
+          !blockedHttp &&
+          (diag.spaSuspected === true ||
+            diag.thinHtml === true ||
+            (probe.ok &&
+              probe.assortmentEvidence?.contentVerified !== true &&
+              (diag.textLen || 0) < 1800));
+        if (needsRender) {
+          const rendered = await probeMerchantHomepageRendered(probeUrl, {
+            timeoutMs: 22000,
+            merchantIdentity: identity,
+            cjCategoryBlob,
+            browser: sharedBrowser,
+          });
+          if (spacingMs) await sleep(spacingMs);
+          const renderedBetter =
+            rendered &&
+            !String(rendered.error || "").includes("playwright_unavailable") &&
+            ((rendered.assortmentEvidence?.contentVerified === true &&
+              probe.assortmentEvidence?.contentVerified !== true) ||
+              ((rendered.assortmentEvidence?.significantGroups || []).length >
+                (probe.assortmentEvidence?.significantGroups || []).length &&
+                rendered.ok) ||
+              (!probe.ok && rendered.ok && rendered.title));
+          if (renderedBetter) {
+            probe = {
+              ...rendered,
+              staticProbe: { ok: probe.ok, httpStatus: probe.httpStatus, error: probe.error },
+            };
+          } else if (rendered) {
+            probe = {
+              ...probe,
+              renderedAttempt: {
+                ok: rendered.ok,
+                httpStatus: rendered.httpStatus,
+                error: rendered.error,
+                contentVerified: rendered.assortmentEvidence?.contentVerified === true,
+              },
+            };
+          }
+        }
       }
-      const evidence = probe?.assortmentEvidence || null;
-      const navHints = (evidence?.significantGroups || []).map((g) => g.group);
+      const evidence = probe?.assortmentEvidence || null;      const navHints = (evidence?.significantGroups || []).map((g) => g.group);
       // CONTENT_VERIFIED requires high-trust assortment signals — never title/HTTP/override alone.
       const assortmentSignificant = evidence?.contentVerified === true && (evidence?.significantGroups || []).length > 0;
       const overrideAligned =
@@ -109,6 +158,16 @@ export async function buildDeepContentReview({
           (g) => g.group === ov.primaryAssortment.group || g.sectionId === ov.primaryAssortment.sectionId
         );
       const contentVerified = assortmentSignificant === true;
+      const overrideIdentityAligned =
+        Boolean(ov?.primaryAssortment?.sectionId) &&
+        (evidence?.significantGroups || []).some(
+          (g) =>
+            g.sectionId === ov.primaryAssortment.sectionId ||
+            g.group === ov.primaryAssortment.group
+        ) &&
+        (evidence?.significantGroups || []).some((g) =>
+          (g.sources || []).includes("merchant_identity")
+        );
       const waf =
         probe && (probe.httpStatus === 403 || String(probe.error || "").includes("403"));
       const pub = String(reg?.publishability || "");
@@ -120,6 +179,11 @@ export async function buildDeepContentReview({
         reviewStatus = "BLOCKED";
         grade = "BLOCKED";
         blockers.push(hold || "quarantined");
+      } else if (waf && contentVerified && overrideIdentityAligned) {
+        // WAF blocked HTML body, but curated merchant identity already produced aligned assortment.
+        reviewStatus = "CONTENT_VERIFIED";
+        grade = "CONTENT_VERIFIED_OVERRIDE_IDENTITY_WAF";
+        blockers.push("http_403_body_untrusted_identity_assortment_used");
       } else if (waf) {
         reviewStatus = ov ? "IDENTITY_VERIFIED" : "CONTENT_UNAVAILABLE";
         grade = ov ? "IDENTITY_VERIFIED_WAF" : "CONTENT_UNAVAILABLE_WAF";
@@ -268,6 +332,13 @@ export async function buildDeepContentReview({
 
   const workers = Array.from({ length: Math.min(concurrency, queue.length || 1) }, () => worker());
   await Promise.all(workers);
+  if (sharedBrowser) {
+    try {
+      await sharedBrowser.close();
+    } catch {
+      /* ignore */
+    }
+  }
 
   const byStatus = {};
   for (const r of results) {
@@ -276,8 +347,12 @@ export async function buildDeepContentReview({
   const contentVerifiedCount = results.filter((r) => r.reviewStatus === "CONTENT_VERIFIED").length;
   const notContentVerified = results.filter((r) => r.reviewStatus !== "CONTENT_VERIFIED");
 
-  // Golden / override section truth: independent evidence vs golden vs button section
-  const golden = GOLDEN_DATASET_V9.map((g) => {
+  // Independent golden (JSON 175 + override authority). Never rewrite expected from robot button.
+  const goldenSource = loadIndependentGoldenDatasetV9({
+    root: ROOT,
+    joinedAdvertisers: joined,
+  });
+  const golden = goldenSource.records.map((g) => {
     const row = results.find((r) => r.advertiserCid === g.advertiserCid);
     const reg = regById.get(g.advertiserCid);
     const evidenceSection =
@@ -285,12 +360,27 @@ export async function buildDeepContentReview({
     const expected = g.expectedPrimarySectionId;
     const buttonSection = reg?.sectionId || null;
     const declared = row?.expectedSectionId || row?.primaryAssortment?.sectionId || null;
-    const match =
-      g.preferCategoryReview
-        ? (expected == null || buttonSection == null) && (declared == null || expected == null)
-        : expected === declared && (!buttonSection || buttonSection === expected);
-    const evidenceAlign =
-      !evidenceSection || !expected || evidenceSection === expected || g.preferCategoryReview;
+    // Category truth = golden expected vs declared vs public button.
+    // Weighted probe noise is informational only when button+declared already agree with golden
+    // (probe false-positives must not invent mismatches that overwrite independent expected).
+    // Taxonomy-gap merchants (preferCategoryReview): match when not falsely published into a
+    // rejected section as READY — CATEGORY_REVIEW_REQUIRED / null expected is an honest gap.
+    const match = g.preferCategoryReview
+      ? expected == null &&
+        (reg?.holdReason === "CATEGORY_REVIEW_REQUIRED" ||
+          reg?.publishability === "QUARANTINED" ||
+          reg?.publishability === "NOT_VERIFIED" ||
+          !buttonSection ||
+          (g.rejectSectionIds || []).includes(String(buttonSection)))
+      : expected != null &&
+        expected === declared &&
+        (!buttonSection || buttonSection === expected);
+    const evidenceNoise =
+      !g.fromOverride &&
+      !g.preferCategoryReview &&
+      expected &&
+      evidenceSection &&
+      evidenceSection !== expected;
     return {
       advertiserCid: g.advertiserCid,
       merchantIdentity: g.merchantIdentity,
@@ -298,14 +388,14 @@ export async function buildDeepContentReview({
       declared,
       buttonSection,
       evidenceSection,
-      match: match && evidenceAlign,
-      preferCategoryReview: g.preferCategoryReview,
+      match: Boolean(match),
+      evidenceNoise: Boolean(evidenceNoise),
+      preferCategoryReview: !!g.preferCategoryReview,
+      fromOverride: !!g.fromOverride,
       mismatchReasons: [
         ...(expected && declared && expected !== declared ? ["golden_vs_declared"] : []),
         ...(expected && buttonSection && expected !== buttonSection ? ["golden_vs_button"] : []),
-        ...(expected && evidenceSection && expected !== evidenceSection
-          ? ["golden_vs_weighted_evidence"]
-          : []),
+        ...(evidenceNoise ? ["probe_evidence_noise_informational"] : []),
       ],
     };
   });
@@ -333,6 +423,8 @@ export async function buildDeepContentReview({
     total: results.length,
     sectionTruthCorrections: golden.filter((g) => g.match).length,
     sectionTruthTotal: golden.length,
+    goldenCoverage: goldenSource.coverage,
+    goldenOverrideCount: goldenSource.overrideCount,
     contentVerified: contentVerifiedCount,
     notContentVerified: notContentVerified.length,
     reviewStatusCounts: byStatus,

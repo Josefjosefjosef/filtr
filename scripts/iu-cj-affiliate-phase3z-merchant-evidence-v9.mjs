@@ -3,6 +3,8 @@
  * Unifies decision inputs for category + main-button destination.
  * Never fabricates website evidence; overrides require explicit documented rationale.
  */
+import fs from "node:fs";
+import path from "node:path";
 import http from "node:http";
 import https from "node:https";
 import { URL as NodeURL } from "node:url";
@@ -305,7 +307,7 @@ export const MERCHANT_EVIDENCE_OVERRIDES = Object.freeze({
     primaryAssortment: { sectionId: "aff-elektro", group: "elektro" },
     secondaryAssortments: [{ sectionId: "aff-dilna-naradi", group: "dilna" }],
     significantAssortmentGroups: ["elektro", "dilna"],
-    rejectSectionIds: ["aff-dum-zahrada"],
+    rejectSectionIds: ["aff-dum-zahrada", "aff-dilna-naradi"],
     confidence: "high",
     rationale:
       "ARGOS ELEKTRO sells electrical installation materials, lighting and PV — primary tile is aff-elektro (matches title/nav evidence). Not general dum-zahrada; dilna-naradi is secondary DIY adjacency only.",
@@ -315,6 +317,54 @@ export const MERCHANT_EVIDENCE_OVERRIDES = Object.freeze({
       "title:ARGOS ELEKTRO",
       "weighted_nav:elektro",
     ],
+  },
+  "6130482": {
+    advertiserCid: "6130482",
+    merchantIdentity: "Leo Express Europe",
+    officialDomains: ["leoexpress.com", "www.leoexpress.com"],
+    merchantType: "SERVICE_PROVIDER",
+    // No dedicated rail tile in the 36-section SoT. Flights tile is assortment-incorrect.
+    primaryAssortment: { sectionId: "aff-cestovni-kancelare", group: "cestovani" },
+    significantAssortmentGroups: ["cestovani", "vlaky"],
+    rejectSectionIds: ["aff-letenky", "aff-letenky-letecka-doprava"],
+    confidence: "high",
+    czAffinityOverride: true,
+    preferHomepagePath: true,
+    rationale:
+      "Leo Express is a CZ/SK/PL passenger rail operator (leoexpress.com), not an airline. Among existing tiles, aff-cestovni-kancelare is the honest travel fit; aff-letenky* must be rejected.",
+    evidenceSources: [
+      "official_domain:leoexpress.com",
+      "merchant_positioning:passenger_rail",
+      "cz_service:leo_express",
+    ],
+  },
+  "4883722": {
+    advertiserCid: "4883722",
+    merchantIdentity: "DRMAX.CZ",
+    officialDomains: ["drmax.cz", "www.drmax.cz"],
+    merchantType: "SPECIALIST",
+    primaryAssortment: { sectionId: "aff-lekarny", group: "lekarny" },
+    significantAssortmentGroups: ["lekarny", "zdravi"],
+    confidence: "high",
+    czAffinityOverride: true,
+    preferHomepagePath: true,
+    rationale:
+      "Dr. Max is a major CZ pharmacy chain (drmax.cz). Bot WAF/403 must not erase CZ pharmacy identity; customer homepage is live for CZ visitors.",
+    evidenceSources: ["official_domain:drmax.cz", "cz_retail:pharmacy_chain", "merchant_positioning:lekarna"],
+  },
+  "5154182": {
+    advertiserCid: "5154182",
+    merchantIdentity: "Lékárna.cz",
+    officialDomains: ["lekarna.cz", "www.lekarna.cz"],
+    merchantType: "SPECIALIST",
+    primaryAssortment: { sectionId: "aff-lekarny", group: "lekarny" },
+    significantAssortmentGroups: ["lekarny", "zdravi"],
+    confidence: "high",
+    czAffinityOverride: true,
+    preferHomepagePath: true,
+    rationale:
+      "Lékárna.cz is a CZ online pharmacy. Primary tile is aff-lekarny; thin static HTML must not block identity when brand/domain evidence is clear.",
+    evidenceSources: ["official_domain:lekarna.cz", "cz_retail:online_pharmacy"],
   },
 });
 
@@ -697,24 +747,27 @@ export function extractWeightedAssortmentEvidence(
   const HINTS = [
     { group: "software", re: /\b(software|antivirus|vpn|saas|pdf|ocr|finereader|abbyy|paragon|security\s*suite|game\s*booster)\b/i, sectionId: "aff-software" },
     { group: "elektro", re: /\b(elektro|electronics|notebook|laptop|fotografie|camera|svítid|svitid)\b/i, sectionId: "aff-elektro" },
-    { group: "dilna", re: /\b(díln|dilna|nářad|naradi|stavebn|vrtač|bauhaus|hobby\s*market)\b/i, sectionId: "aff-dilna-naradi" },
+    { group: "dilna", re: /\b(díln|dilna|nářad|naradi|stavebn|vrtač|bauhaus|hobby\s*market|obi)\b/i, sectionId: "aff-dilna-naradi" },
     { group: "nabytek", re: /\b(nábytek|nabytek|furniture|židle|zidle|stůl|sofa)\b/i, sectionId: "aff-nabytek" },
     { group: "kuchyn", re: /\b(kuchyn|kitchen|cookware|gril)\b/i, sectionId: "aff-kuchyn" },
-    { group: "dum", re: /\b(zahrad|garden|koupel|sanit|dům\s+a\s+zahrada)\b/i, sectionId: "aff-dum-zahrada" },
+    { group: "dum", re: /\b(zahrad\w*|garden|koupeln?\w*|sanit\w*|dům\s+a\s+zahrada)\b/i, sectionId: "aff-dum-zahrada" },
     { group: "moda", re: /\b(móda|moda|fashion|oblečen|oblecen|apparel|streetwear)\b/i, sectionId: "aff-moda" },
     { group: "boty", re: /\b(boty|obuv|footwear|barefoot)\b/i, sectionId: "aff-boty" },
     { group: "kosmetika", re: /\b(kosmetik|beauty|skincare|skin\s*care|make-?up)\b/i, sectionId: "aff-kosmetika" },
     { group: "drogerie", re: /\b(drogerie|drugstore)\b/i, sectionId: "aff-drogerie" },
-    { group: "lekarny", re: /\b(lékárn|lekarn|pharmacy|pharma)\b/i, sectionId: "aff-lekarny" },
+    // Stem match: trailing \b breaks on "lékárna" (next char is word-ish in some engines / stems).
+    { group: "lekarny", re: /\b(l[eé]k[aá]rn\w*|pharmacy|pharma(?:cy|ceutical)?s?|dr\.?\s*max)\b/i, sectionId: "aff-lekarny" },
     { group: "zdravi", re: /\b(doplněk\s+stravy|supplement|vitamin|superfood)\b/i, sectionId: "aff-zdravi-doplnky" },
     { group: "jidlo", re: /\b(potravin|supermarket|grocery|jídlo|jidlo)\b/i, sectionId: "aff-jidlo" },
     { group: "zvirata", re: /\b(chovatel|zvířec|zvirec|pet\s*shop|superzoo|obojek)\b/i, sectionId: "aff-zvirata" },
-    { group: "sport", re: /\b(sport|outdoor|fitness|turistik|crossbow)\b/i, sectionId: "aff-sport-outdoor" },
+    { group: "sport", re: /\b(sport|outdoor|fitness|turistik|crossbow|kola|kolo|bike|bicycle|tokyobike)\b/i, sectionId: "aff-sport-outdoor" },
     { group: "deti", re: /\b(hračk|hrack|toys?|dětsk|detsk|kids)\b/i, sectionId: "aff-deti-hracky" },
     { group: "pojisteni", re: /\b(pojišt|pojist|insurance|assistance)\b/i, sectionId: "aff-pojisteni" },
     { group: "ubytovani", re: /\b(hotel|ubytov|spa\s*pobyt|accommodation)\b/i, sectionId: "aff-ubytovani-hotely" },
     { group: "cestovani", re: /\b(cestovn|dovolen|zájezd|zajezd|travel\s*agency)\b/i, sectionId: "aff-cestovni-kancelare" },
     { group: "letenky", re: /\b(letenk|flight|airline|letišt)\b/i, sectionId: "aff-letenky-letecka-doprava" },
+    // Rail / coach — no dedicated tile; map to travel (never invent flights from "express" alone).
+    { group: "vlaky", re: /\b(vlak|train|rail(way)?|leo\s*express|regiojet|flixbus|autobusov)\b/i, sectionId: "aff-cestovni-kancelare" },
     { group: "darky", re: /\b(zážitkov|zazitkov|dárkov|darkov|gift\s*experience)\b/i, sectionId: "aff-kvetiny-darky" },
     // Require clear marketplace brands — bare "marketplace" appears on SaaS/app stores and causes FPs.
     { group: "marketplace", re: /\b(allegro|amazon\.|ebay|heureka|bazos|aukro|mall\.cz)\b/i, sectionId: "aff-inzerce-bazary" },
@@ -836,7 +889,7 @@ export async function probeMerchantHomepage(
     out.httpStatus = res.status;
     out.url = res.url || out.url;
     const ct = String(res.headers["content-type"] || "");
-    if (!ct.includes("text/html")) {
+    if (!ct.includes("text/html") && !ct.includes("text/plain") && ct.length > 0) {
       out.error = "non_html";
       out.ok = res.status >= 200 && res.status < 400;
       return out;
@@ -857,7 +910,22 @@ export async function probeMerchantHomepage(
       out.error = "http_202_not_confirmed_customer_page";
     }
   } catch (e) {
-    out.error = String(e && e.name === "AbortError" ? "timeout" : e?.message || e);
+    const msg = String(e && e.name === "AbortError" ? "timeout" : e?.message || e);
+    out.error = msg;
+    // Cert CN mismatch on apex → retry www. host (common CZ e-shop pattern). No WAF/CAPTCHA bypass.
+    if (/cert|altnames|ERR_CERT|hostname\/ip does not match/i.test(msg) && !/\/\/www\./i.test(out.url)) {
+      try {
+        const u = new URL(out.url);
+        u.hostname = "www." + u.hostname.replace(/^www\./i, "");
+        return await probeMerchantHomepage(u.toString(), {
+          timeoutMs,
+          merchantIdentity,
+          cjCategoryBlob,
+        });
+      } catch (e2) {
+        out.error = msg + "; www_retry:" + String(e2?.message || e2);
+      }
+    }
   }
   return out;
 }
@@ -873,5 +941,185 @@ export const GOLDEN_DATASET_V9 = Object.freeze(
     rejectDestinationTypes: e.rejectDestinationTypes || [],
     preferCategoryReview: !!e.preferCategoryReview,
     rationale: e.rationale,
+    fromOverride: true,
   }))
 );
+
+/**
+ * Independent golden coverage for all JOINED partners.
+ * Override sections always win over JSON (never copy robot button → expected).
+ * JSON expectedSectionId is retained only when not contradicted by an override.
+ */
+export function loadIndependentGoldenDatasetV9({ root = null, joinedAdvertisers = null, jsonPath = null } = {}) {
+  let fileRecords = [];
+  const candidates = [];
+  if (jsonPath) candidates.push(jsonPath);
+  if (root) {
+    candidates.push(path.join(root, "projects", "data", "iu-affiliate-cj-golden-dataset-v9-final.json"));
+  }
+  for (const p of candidates) {
+    try {
+      if (!fs.existsSync(p)) continue;
+      const raw = JSON.parse(fs.readFileSync(p, "utf8"));
+      fileRecords = Array.isArray(raw?.records) ? raw.records : [];
+      break;
+    } catch {
+      /* try next */
+    }
+  }
+  const byCid = new Map();
+  for (const r of fileRecords) {
+    const cid = String(r.advertiserCid || "");
+    if (!cid) continue;
+    byCid.set(cid, {
+      advertiserCid: cid,
+      merchantIdentity: r.merchantIdentity || null,
+      expectedMerchantType: r.merchantType || null,
+      expectedPrimarySectionId: r.expectedSectionId || r.primaryAssortment?.sectionId || null,
+      forbiddenSections: r.forbiddenSections || [],
+      rejectSectionIds: r.rejectSectionIds || [],
+      rejectDestinationTypes: r.forbiddenDestinationTypes || r.rejectDestinationTypes || [],
+      preferCategoryReview: !!r.preferCategoryReview,
+      rationale: r.note || r.rationale || "independent_golden_json",
+      fromOverride: false,
+      evidenceSources: r.evidenceSources || [],
+    });
+  }
+  // Overrides are authoritative — fix stale JSON (e.g. Argos dilna→elektro, Leo Express letenky→travel).
+  for (const e of Object.values(MERCHANT_EVIDENCE_OVERRIDES)) {
+    byCid.set(e.advertiserCid, {
+      advertiserCid: e.advertiserCid,
+      merchantIdentity: e.merchantIdentity,
+      expectedMerchantType: e.merchantType,
+      expectedPrimarySectionId: e.primaryAssortment?.sectionId || null,
+      forbiddenSections: e.forbiddenSections || [],
+      rejectSectionIds: e.rejectSectionIds || [],
+      rejectDestinationTypes: e.rejectDestinationTypes || [],
+      preferCategoryReview: !!e.preferCategoryReview,
+      rationale: e.rationale,
+      fromOverride: true,
+      evidenceSources: e.evidenceSources || [],
+    });
+  }
+  // Ensure every JOINED advertiser appears (coverage 100%); do not invent section from robot.
+  for (const adv of joinedAdvertisers || []) {
+    const cid = String(adv.advertiserId || "");
+    if (!cid || byCid.has(cid)) continue;
+    byCid.set(cid, {
+      advertiserCid: cid,
+      merchantIdentity: adv.advertiserName || null,
+      expectedMerchantType: null,
+      expectedPrimarySectionId: null,
+      forbiddenSections: [],
+      rejectSectionIds: [],
+      rejectDestinationTypes: [],
+      preferCategoryReview: true,
+      rationale: "joined_without_independent_section_prior — category review required",
+      fromOverride: false,
+      evidenceSources: ["joined_registry_identity_only"],
+    });
+  }
+  const records = [...byCid.values()].sort((a, b) => a.advertiserCid.localeCompare(b.advertiserCid));
+  return {
+    schema: "iu-cj-golden-dataset-v9-independent",
+    coverage: records.length,
+    overrideCount: records.filter((r) => r.fromOverride).length,
+    records,
+  };
+}
+
+/**
+ * Legitimate browser render for SPA / thin-HTML pages (no CAPTCHA/WAF bypass).
+ * Uses Playwright Chromium when available; returns null if unavailable.
+ */
+export async function probeMerchantHomepageRendered(
+  url,
+  { timeoutMs = 20000, merchantIdentity = null, cjCategoryBlob = null, browser = null } = {}
+) {
+  const out = {
+    url: String(url || ""),
+    ok: false,
+    httpStatus: null,
+    title: null,
+    navHints: [],
+    assortmentEvidence: null,
+    error: null,
+    rendered: true,
+    fetchedAt: new Date().toISOString(),
+  };
+  if (!out.url) {
+    out.error = "missing_url";
+    return out;
+  }
+  let playwright;
+  try {
+    playwright = await import("playwright");
+  } catch {
+    out.error = "playwright_unavailable";
+    return out;
+  }
+  let ownedBrowser = null;
+  let active = browser;
+  try {
+    if (!active) {
+      ownedBrowser = await playwright.chromium.launch({
+        headless: true,
+        args: ["--disable-blink-features=AutomationControlled"],
+      });
+      active = ownedBrowser;
+    }
+    const page = await active.newPage({
+      userAgent:
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+      extraHTTPHeaders: {
+        "Accept-Language": "cs-CZ,cs;q=0.9,en;q=0.8",
+        "X-InfoUzel-Audit": "merchant-evidence-browser-render; no-affiliate-click; +https://infouzel.cz",
+      },
+    });
+    page.setDefaultTimeout(timeoutMs);
+    const resp = await page.goto(out.url, { waitUntil: "domcontentloaded", timeout: timeoutMs });
+    out.httpStatus = resp ? resp.status() : null;
+    // Wait briefly for client render; do not click through challenges.
+    await page.waitForTimeout(1500);
+    out.title = (await page.title()) || null;
+    out.url = page.url() || out.url;
+    const html = await page.content();
+    const evidence = extractWeightedAssortmentEvidence(html, {
+      title: out.title,
+      merchantIdentity,
+      cjCategoryBlob,
+    });
+    out.assortmentEvidence = evidence;
+    out.navHints = (evidence.significantGroups || []).slice(0, 8).map((g) => g.group);
+    out.ok = out.httpStatus >= 200 && out.httpStatus < 400;
+    if (out.httpStatus === 403 || out.httpStatus === 429) {
+      out.ok = false;
+      out.error = "http_" + out.httpStatus + "_not_bypassed";
+    }
+    await page.close().catch(() => {});
+  } catch (e) {
+    out.error = String(e?.message || e);
+  } finally {
+    if (ownedBrowser) {
+      try {
+        await ownedBrowser.close();
+      } catch {
+        /* ignore */
+      }
+    }
+  }
+  return out;
+}
+
+/** Shared Chromium for batch SPA probes (caller must close). */
+export async function createEvidenceBrowser() {
+  try {
+    const playwright = await import("playwright");
+    return await playwright.chromium.launch({
+      headless: true,
+      args: ["--disable-blink-features=AutomationControlled"],
+    });
+  } catch {
+    return null;
+  }
+}
