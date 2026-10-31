@@ -144,6 +144,7 @@ export function attachPublicationReadiness(registry, contentReview = null) {
  * Diagnose why content verification failed (structured reason codes).
  */
 export function diagnoseContentFailure({ probe = null, evidence = null, reviewStatus = null } = {}) {
+  if (reviewStatus === "CONTENT_VERIFIED") return [];
   const reasons = [];
   const http = probe?.httpStatus;
   const err = String(probe?.error || "").toLowerCase();
@@ -152,9 +153,14 @@ export function diagnoseContentFailure({ probe = null, evidence = null, reviewSt
   if (http === 429) reasons.push("HTTP_429_RATE_LIMIT");
   if (http === 502 || http === 503 || http === 504) reasons.push("HTTP_5XX_TEMPORARY");
   if (err.includes("timeout")) reasons.push("PROBE_TIMEOUT");
+  if (err.includes("http_403") || err.includes("403")) reasons.push("HTTP_403_WAF_OR_BOT");
+  if (err.includes("http_429") || err.includes("429")) reasons.push("HTTP_429_RATE_LIMIT");
   if (err && !reasons.length) reasons.push("PROBE_ERROR");
   if (htmlHints.spaSuspected) reasons.push("SPA_JS_RENDERED_MINIMAL_HTML");
   if (htmlHints.thinHtml) reasons.push("THIN_HTML_INSUFFICIENT_NAV_MAIN");
+  if (probe?.rendered === true && evidence?.contentVerified !== true) {
+    reasons.push("BROWSER_RENDER_ATTEMPTED");
+  }
   if (http >= 200 && http < 400 && !evidence?.contentVerified && probe?.title) {
     reasons.push("ASSORTMENT_WEIGHT_INSUFFICIENT");
   }

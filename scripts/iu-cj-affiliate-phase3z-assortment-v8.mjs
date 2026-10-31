@@ -32,7 +32,7 @@ const KEYWORD_GROUPS = Object.freeze([
   { group: "deti", sectionId: "aff-deti-hracky", re: /\b(dět|deti|hračka|hracka|toy|kids|child)\b/i },
   { group: "jidlo", sectionId: "aff-jidlo", re: /\b(jídlo|jidlo|potravin|food|gourmet|supermarket)\b/i },
   { group: "zdravi", sectionId: "aff-zdravi-doplnky", re: /\b(zdrav[íi]|doplněk|supplement|vitamin)\b/i },
-  { group: "lekarny", sectionId: "aff-lekarny", re: /\b(lékárn|lekarn|pharma|pharmacy)\b/i },
+  { group: "lekarny", sectionId: "aff-lekarny", re: /\b(l[eé]k[aá]rn\w*|pharmacy|pharma(?:cy|ceutical)?s?)\b/i },
   { group: "dum", sectionId: "aff-dum-zahrada", re: /\b(dům|dum|zahrad|garden|home\s*&\s*garden)\b/i },
   { group: "nabytek", sectionId: "aff-nabytek", re: /\b(nábytek|nabytek|furniture|bydlen)\b/i },
   { group: "kuchyn", sectionId: "aff-kuchyn", re: /\b(kuchyn|kitchen|cookware)\b/i },
