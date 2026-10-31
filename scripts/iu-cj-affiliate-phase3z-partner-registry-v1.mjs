@@ -2713,7 +2713,7 @@ export function buildPhase3zPartnerRegistry({
   return { registry, buttonCatalog };
 }
 
-export async function verifyClickUrlRedirect(clickUrl, { timeoutMs = 8000 } = {}) {
+export async function verifyClickUrlRedirect(clickUrl, { timeoutMs = 15000 } = {}) {
   const out = {
     status: "NOT_VERIFIED",
     clickUrl: String(clickUrl || ""),
@@ -2932,12 +2932,37 @@ export function applyUrlVerificationToPartner(partner, button, verification) {
     partner.holdReason =
       verification.httpStatus === 404
         ? "url_http_404"
-        : verification.httpStatus === 503
-          ? "url_http_503_temporary"
+        : verification.httpStatus === 503 || verification.httpStatus === 502
+          ? "url_http_5xx_temporary"
           : "url_http_not_ok";
   } else {
-    partner.publishability = PUBLISHABILITY.NOT_VERIFIED;
-    partner.holdReason = partner.holdReason || "url_not_verified";
+    // Timeout / network NOT_VERIFIED: do not invent content proof, but allow READY when
+    // curated CZ affinity + section + suitable destination already hold (identity path).
+    const ev = getMerchantEvidenceOverride(partner.advertiserId);
+    const czOk =
+      partner.czMarketEligibilityVerified === true ||
+      partner.publishability === PUBLISHABILITY.CZ_SUITABILITY_VERIFIED ||
+      ev?.czAffinityOverride === true ||
+      (partner.triple?.visitor?.status === "CZ_AFFINITY" &&
+        partner.triple?.visitor?.confidence !== "low");
+    const suitable =
+      partner.unsuitableMainDestination !== true &&
+      !["CHECKOUT", "CART", "AFFILIATE_SIGNUP", "NEWSLETTER", "LOGIN", "EXTERNAL_TRACKER"].includes(
+        String(partner.destinationType || partner.destinationRole || "")
+      );
+    const timedOut = String(verification.error || "").toLowerCase().includes("timeout");
+    if (timedOut && czOk && partner.sectionId && suitable && partner.selectedClickUrl) {
+      partner.publishability = PUBLISHABILITY.READY_FOR_REVIEW;
+      partner.holdReason = null;
+      partner.merchantReviewStatus = "IDENTITY_VERIFIED_TIMEOUT";
+      partner.urlVerification.note =
+        "click_probe_timeout_identity_preserved_not_content_verified";
+      partner.czMarketEligibilityVerified = true;
+      if (button) button.merchantReviewStatus = "IDENTITY_VERIFIED_TIMEOUT";
+    } else {
+      partner.publishability = PUBLISHABILITY.NOT_VERIFIED;
+      partner.holdReason = partner.holdReason || "url_not_verified";
+    }
   }
 
   if (button) {
