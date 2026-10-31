@@ -646,8 +646,12 @@ export function httpGetText(url, { timeoutMs = 8000, maxRedirects = 5, headers =
  * Strip page noise that causes false assortment hits (footers, cookies, ads, scripts).
  * Prefer title / h1 / nav / header / main for assortment decisions.
  */
-export function extractWeightedAssortmentEvidence(html, { title = null, merchantIdentity = null } = {}) {
+export function extractWeightedAssortmentEvidence(
+  html,
+  { title = null, merchantIdentity = null, cjCategoryBlob = null } = {}
+) {
   const raw = String(html || "");
+  const scriptCount = (raw.match(/<script\b/gi) || []).length;
   let cleaned = raw
     .replace(/<script[\s\S]*?<\/script>/gi, " ")
     .replace(/<style[\s\S]*?<\/style>/gi, " ")
@@ -737,16 +741,22 @@ export function extractWeightedAssortmentEvidence(html, { title = null, merchant
   add(metaDesc, 22, "meta_description");
   add(jsonLd, 18, "json_ld");
   add(main.slice(0, 20000), 12, "main");
+  // CJ primary category may only corroborate an already-present high-trust hit — never invent alone.
+  const cjBlob = String(cjCategoryBlob || "").trim();
+  if (cjBlob) add(cjBlob, 8, "cj_primary_category_corroboration");
   // Remainder of cleaned page (already without footer/script) — very low weight, cannot alone create significant group.
   const rest = cleaned.replace(/<[^>]+>/g, " ").slice(0, 40000);
   add(rest, 2, "body_low_trust");
 
   const ranked = [...scores.values()].sort((a, b) => b.weight - a.weight || a.group.localeCompare(b.group));
-  // Significant only if driven by high-trust sources — never body_low_trust alone.
+  // Significant only if driven by high-trust sources — never body/CJ-alone.
   const HIGH = new Set(["title", "h1", "nav_or_header", "merchant_identity", "meta_description", "json_ld"]);
   let significant = ranked.filter((r) => {
     const high = (r.sources || []).some((s) => HIGH.has(s));
-    return high && r.weight >= 30;
+    const onlyCj =
+      (r.sources || []).length > 0 &&
+      (r.sources || []).every((s) => s === "cj_primary_category_corroboration" || s === "body_low_trust");
+    return high && !onlyCj && r.weight >= 30;
   });
   // Identity conflict: software/digital specialists must not pick up marketplace/moda/etc. from a lone nav token.
   const idBlob = `${titleText} ${merchantIdentity || ""}`;
@@ -758,6 +768,9 @@ export function extractWeightedAssortmentEvidence(html, { title = null, merchant
   const primary = significant[0] || null;
   const secondary = significant[1] || null;
   const contentVerified = Boolean(titleText) && significant.length > 0;
+  const textLen = rest.replace(/\s+/g, " ").trim().length;
+  const thinHtml = textLen < 400 && !h1.trim() && !nav.trim();
+  const spaSuspected = scriptCount >= 8 && thinHtml;
 
   return {
     title: titleText || null,
@@ -780,13 +793,25 @@ export function extractWeightedAssortmentEvidence(html, { title = null, merchant
       h1: Boolean(h1.trim()),
       nav: Boolean(nav.trim()),
       main: Boolean(main.trim()),
+      meta: Boolean(metaDesc),
+      jsonLd: Boolean(jsonLd.trim()),
     },
-    note: "Assortment from title/h1/nav/main with weights; footer/cookie/ads/scripts stripped. Body-only keyword hits are not significant.",
+    diagnostics: {
+      scriptCount,
+      textLen,
+      thinHtml,
+      spaSuspected,
+      cjCategoryCorroborationUsed: Boolean(cjBlob),
+    },
+    note: "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant.",
   };
 }
 
 /** Lightweight merchant website probe (no affiliate click). */
-export async function probeMerchantHomepage(url, { timeoutMs = 8000, merchantIdentity = null } = {}) {
+export async function probeMerchantHomepage(
+  url,
+  { timeoutMs = 8000, merchantIdentity = null, cjCategoryBlob = null } = {}
+) {
   const out = {
     url: String(url || ""),
     ok: false,
@@ -822,6 +847,7 @@ export async function probeMerchantHomepage(url, { timeoutMs = 8000, merchantIde
     const evidence = extractWeightedAssortmentEvidence(text, {
       title: out.title,
       merchantIdentity,
+      cjCategoryBlob,
     });
     out.assortmentEvidence = evidence;
     out.navHints = (evidence.significantGroups || []).slice(0, 8).map((g) => g.group);
