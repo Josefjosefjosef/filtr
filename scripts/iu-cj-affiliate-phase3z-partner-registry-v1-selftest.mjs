@@ -25,6 +25,11 @@ import {
   assertEvidenceConsistency,
   assertJoinedEqualsButtonRecords,
   BUTTON_RECORD_STATUS,
+  decodeHtmlEntitiesInUrl,
+  classifyDestinationRole,
+  evaluateLinkEligibility,
+  DESTINATION_ROLE,
+  LINK_ELIGIBILITY,
 } from "./iu-cj-affiliate-phase3z-partner-registry-v1.mjs";
 import fs from "node:fs";
 import path from "node:path";
@@ -174,7 +179,21 @@ const ownUa = resolveChipOwnership({
 });
 expect("ownership_unassigned", ownUa.ownership === "UNASSIGNED_ROBOT_ELIGIBLE");
 expect("ownership_unified_target", ownUa.unifiedManagementTarget === "CJ_MANAGED_AFTER_GO");
-expect("gates_have_12", buildPhase3zSafetyGates({ counts: { joined: 1, partners: 1 }, partners: [], deduplicationDecisions: [], taxonomy: { taxonomyCount: 36 }, liveEnabled: false, publicButtonSwapArmed: false }, { counts: { buttons: 1, quarantined: 0 }, buttons: [], publicButtonSwapArmed: false }).gates?.length === 12);
+expect(
+  "gates_have_13",
+  buildPhase3zSafetyGates(
+    {
+      counts: { joined: 1, partners: 1 },
+      partners: [],
+      deduplicationDecisions: [],
+      taxonomy: { taxonomyCount: 36 },
+      liveEnabled: false,
+      publicButtonSwapArmed: false,
+      joinedButtonParity: { ok: true, joined: 1, buttonRecords: 1 },
+    },
+    { counts: { buttons: 1, quarantined: 0 }, buttons: [], publicButtonSwapArmed: false }
+  ).gates?.length === 13
+);
 expect(
   "ownership_paid_out",
   resolveChipOwnership({
@@ -632,6 +651,75 @@ expect(
   "yves_auto_category",
   dup.buttonCatalog.buttons.every((b) => b.sectionId === "aff-kosmetika")
 );
+
+// --- V7 link intelligence ---
+const amp = decodeHtmlEntitiesInUrl(
+  "https://arangrant.com/en-us/?cid=ARANCJ&amp;utm_source=cj&amp;utm_medium=Affiliate"
+);
+expect("amp_decoded", amp.changed && amp.decoded.includes("&utm_source=cj") && !amp.decoded.includes("&amp;"));
+expect("amp_no_double", decodeHtmlEntitiesInUrl(amp.decoded).changed === false);
+
+expect(
+  "role_newsletter",
+  classifyDestinationRole("https://answear.cz/newsletter", "Newsletter") === DESTINATION_ROLE.NEWSLETTER
+);
+expect(
+  "role_checkout",
+  classifyDestinationRole(
+    "https://checkout.abbyy.com/order/product.php?x=1",
+    "Order"
+  ) === DESTINATION_ROLE.CHECKOUT
+);
+expect("role_home", classifyDestinationRole("https://www.dopplershop.cz/", "Home") === DESTINATION_ROLE.HOMEPAGE);
+
+const answearAdv = {
+  advertiserId: "5550001",
+  advertiserName: "Answear.cz",
+  programUrl: "https://answear.cz/",
+};
+const answearLinks = [
+  {
+    linkId: "nl",
+    advertiserId: "5550001",
+    linkName: "Newsletter",
+    linkType: "Text Link",
+    destination: "https://answear.cz/newsletter",
+    clickUrl: "https://www.dpbolvw.net/click-101883843-1-1",
+    targetedCountries: "CZ",
+  },
+  {
+    linkId: "home",
+    advertiserId: "5550001",
+    linkName: "Homepage",
+    linkType: "Text Link",
+    destination: "https://answear.cz/",
+    clickUrl: "https://www.dpbolvw.net/click-101883843-2-2",
+    targetedCountries: "CZ",
+  },
+];
+const ansPick = selectPrimaryAffiliateLink(answearLinks, answearAdv);
+expect("answear_prefers_home", ansPick.selected?.linkId === "home", ansPick);
+expect(
+  "answear_rejects_newsletter",
+  (ansPick.rejectedAlternatives || []).some((r) => r.linkId === "nl"),
+  ansPick.rejectedAlternatives
+);
+expect(
+  "answear_narrative",
+  String(ansPick.selectionReasonNarrative || "").length > 40
+);
+
+const inelig = evaluateLinkEligibility(
+  { clickUrl: "https://evil.example/not-cj", destination: "https://x.cz/", advertiserId: "1" },
+  { advertiserId: "1" }
+);
+expect("hard_fail_non_cj", inelig.status === LINK_ELIGIBILITY.INELIGIBLE);
+
+const hyst = selectPrimaryAffiliateLink(answearLinks, answearAdv, {
+  previousLinkId: "home",
+  hysteresis: 1000,
+});
+expect("hysteresis_keeps_home", hyst.selected?.linkId === "home" && hyst.hysteresisKept === true, hyst);
 
 if (failures.length) {
   console.error("IU_PHASE3Z_PARTNER_REGISTRY_SELFTEST_FAIL");

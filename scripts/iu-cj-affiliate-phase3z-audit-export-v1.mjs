@@ -419,6 +419,77 @@ write(
     2
   ) + "\n"
 );
+write(
+  dir,
+  "LINK-SELECTION.json",
+  JSON.stringify(
+    {
+      selectionAudit: reg.selectionAudit || null,
+      partners: partners.map((p) => ({
+        advertiserId: p.advertiserId,
+        displayNameCs: p.displayNameCs,
+        selectedLinkId: p.selectedLinkId,
+        selectedClickUrl: p.selectedClickUrl,
+        selectedDestination: p.selectedDestination,
+        selectedDestinationRaw: p.selectedDestinationRaw,
+        destinationRole: p.destinationRole,
+        selectionReasonNarrative: p.selectionReasonNarrative,
+        linkSelectionScore: p.linkSelectionScore,
+        linkSelectionReason: p.linkSelectionReason,
+        languageDecision: p.languageDecision || p.selectedLanguage,
+        countryDecision: p.countryDecision || p.selectedTargetedCountries,
+        eligibilityEvidence: p.eligibilityEvidence,
+        htmlEntitiesDecoded: p.htmlEntitiesDecoded,
+        rejectedAlternatives: p.rejectedAlternatives || [],
+        lastVerifiedAt: p.lastVerifiedAt,
+        technicalVerification: p.technicalVerification || p.urlVerification,
+      })),
+    },
+    null,
+    2
+  ) + "\n"
+);
+write(
+  dir,
+  "LINK-INVENTORY-BY-PARTNER.json",
+  JSON.stringify(
+    {
+      totalLinks: partners.reduce((a, p) => a + Number(p.linkCandidateCount || 0), 0),
+      partners: partners.map((p) => ({
+        advertiserId: p.advertiserId,
+        displayNameCs: p.displayNameCs,
+        linkCandidateCount: p.linkCandidateCount,
+        linkEligibleCandidateCount: p.linkEligibleCandidateCount,
+        inventory: p.linkInventory || [],
+      })),
+    },
+    null,
+    2
+  ) + "\n"
+);
+write(
+  dir,
+  "HTTP-VERIFY-CLASSES.json",
+  JSON.stringify(
+    {
+      byClass: partners.reduce((a, p) => {
+        const c = p.urlVerification?.classification || p.technicalVerification?.status || "UNVERIFIED";
+        a[c] = (a[c] || 0) + 1;
+        return a;
+      }, {}),
+      rows: partners.map((p) => ({
+        advertiserId: p.advertiserId,
+        displayNameCs: p.displayNameCs,
+        classification: p.urlVerification?.classification || null,
+        httpStatus: p.urlVerification?.httpStatus ?? null,
+        status: p.urlVerification?.status || null,
+        holdReason: p.holdReason,
+      })),
+    },
+    null,
+    2
+  ) + "\n"
+);
 
 write(
   dir,
@@ -461,9 +532,10 @@ const manifestFiles = files.map((f) => ({
   sha256: sha256File(f.full),
 }));
 const manifest = {
-  phase: "3Z-V6",
+  phase: "3Z-V7",
   rulesVersion: reg.rulesVersion,
   joinedButtonParity: reg.joinedButtonParity || null,
+  selectionAudit: reg.selectionAudit || null,
   generatedAt: new Date().toISOString(),
   pathStyle: "portable-forward-slash",
   fileCount: manifestFiles.length,

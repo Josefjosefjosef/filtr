@@ -36,7 +36,42 @@ import { parseAffiliateCatalogOrdered } from "./iu-cj-affiliate-phase2-partner-s
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 export const PHASE3Z_SCHEMA = "iu-affiliate-cj-partner-registry-v1";
 export const PHASE3Z_BUTTONS_SCHEMA = "iu-affiliate-cj-partner-buttons-preview-v1";
-export const PHASE3Z_RULES_VERSION = "phase3z-partner-robot-v6";
+export const PHASE3Z_RULES_VERSION = "phase3z-partner-robot-v7";
+
+/** Hard eligibility must pass before quality score can select a main button link. */
+export const LINK_ELIGIBILITY = Object.freeze({
+  ELIGIBLE: "ELIGIBLE",
+  PENDING_EVIDENCE: "PENDING_EVIDENCE",
+  INELIGIBLE: "INELIGIBLE",
+});
+
+/** Destination role for main partner button (not coupons/products). */
+export const DESTINATION_ROLE = Object.freeze({
+  HOMEPAGE: "HOMEPAGE",
+  CATEGORY: "CATEGORY",
+  PRODUCT: "PRODUCT",
+  COUPON: "COUPON",
+  PROMO: "PROMO",
+  NEWSLETTER: "NEWSLETTER",
+  CHECKOUT: "CHECKOUT",
+  LOGIN: "LOGIN",
+  CART: "CART",
+  APP_STORE: "APP_STORE",
+  OTHER: "OTHER",
+});
+
+/** HTTP verification taxonomy (V7) — never equate 403 with dead or with OK. */
+export const URL_VERIFY_CLASS = Object.freeze({
+  TRACKING_CONFIRMED: "TRACKING_CONFIRMED",
+  DESTINATION_CONFIRMED: "DESTINATION_CONFIRMED",
+  BOT_BLOCK_SUSPECTED: "BOT_BLOCK_SUSPECTED",
+  BROKEN_CONFIRMED: "BROKEN_CONFIRMED",
+  RATE_LIMITED: "RATE_LIMITED",
+  UNVERIFIED: "UNVERIFIED",
+});
+
+/** Prefer keeping a still-good prior selection unless challenger wins by this margin. */
+export const LINK_SELECTION_HYSTERESIS = 12;
 
 /** Language preference for InfoUzel visitors: CZ first, then SK, then EN. EN is never quarantine-only. */
 export const LANGUAGE_PRIORITY = Object.freeze(["CZ", "SK", "EN"]);
@@ -331,10 +366,13 @@ function writeJson(p, obj) {
 export function marketAllowsCzechRepublic(targetedCountries) {
   const s = String(targetedCountries ?? "").trim();
   if (!s) return null;
+  // CJ staging sometimes serializes missing markets as the literal "null"/"undefined".
+  if (/^(null|undefined|none|n\/a|-)$/i.test(s)) return null;
   const parts = s
     .split(/[,;/|]+/)
     .map((x) => x.trim().toUpperCase())
-    .filter(Boolean);
+    .filter(Boolean)
+    .filter((p) => !/^(NULL|UNDEFINED|NONE|N\/A|-)$/.test(p));
   if (!parts.length) return null;
   const ok = new Set([
     "CZ",
@@ -472,27 +510,203 @@ export function selectLanguagePreference(candidates) {
   };
 }
 
-export function scoreAffiliateLink(link, advertiser) {
-  let score = 0;
+/**
+ * Decode HTML entities in destination URLs once (e.g. &amp; → &).
+ * Never double-decode. Preserves original string when unchanged.
+ */
+export function decodeHtmlEntitiesInUrl(raw) {
+  const s = String(raw ?? "");
+  if (!s) return { decoded: "", original: s, changed: false };
+  let out = s;
+  // Only common HTML entities seen in CJ destinations — single pass.
+  out = out.replace(/&amp;/gi, "&");
+  out = out.replace(/&lt;/gi, "<");
+  out = out.replace(/&gt;/gi, ">");
+  out = out.replace(/&quot;/gi, '"');
+  out = out.replace(/&#39;/g, "'");
+  return { decoded: out, original: s, changed: out !== s };
+}
+
+export function normalizeLinkDestination(link) {
+  const raw = String(link?.destination || "");
+  const { decoded, original, changed } = decodeHtmlEntitiesInUrl(raw);
+  return {
+    destinationRaw: original,
+    destination: decoded,
+    htmlEntitiesDecoded: changed,
+  };
+}
+
+export function classifyDestinationRole(destination, linkName = "") {
+  const dest = String(destination || "");
+  const name = String(linkName || "").toLowerCase();
+  let path = "";
+  let host = "";
+  try {
+    const u = new URL(dest.startsWith("http") ? dest : "https://" + dest);
+    path = (u.pathname || "/").toLowerCase();
+    host = u.hostname.replace(/^www\./i, "").toLowerCase();
+  } catch {
+    path = dest.toLowerCase();
+  }
+  if (/newsletter|subscribe|odber|odběr|mailing/i.test(path + " " + name)) {
+    return DESTINATION_ROLE.NEWSLETTER;
+  }
+  if (/checkout|order\/product|payment|platba/i.test(path + " " + name) || /checkout\./i.test(host)) {
+    return DESTINATION_ROLE.CHECKOUT;
+  }
+  if (/\/(cart|kosik|košík|bag)(\/|$)/i.test(path) || /\bcart\b/i.test(name)) {
+    return DESTINATION_ROLE.CART;
+  }
+  if (/\/(login|signin|prihlas|registr)/i.test(path) || /\b(login|sign[\s-]?in)\b/i.test(name)) {
+    return DESTINATION_ROLE.LOGIN;
+  }
+  if (/apps\.apple\.com|play\.google\.com|appstore/i.test(host + path) || /\bapp\s*store\b/i.test(name)) {
+    return DESTINATION_ROLE.APP_STORE;
+  }
+  if (/coupon|kup[oó]n|voucher|slevov/i.test(path + " " + name)) {
+    return DESTINATION_ROLE.COUPON;
+  }
+  if (/\/(sale|promo|akce|deal|campaign|black-friday)/i.test(path) || /sale|promo|%\s*off|banner/i.test(name)) {
+    return DESTINATION_ROLE.PROMO;
+  }
+  if (
+    /\/(p|product|produkt|item|sku)\b/i.test(path) ||
+    /\/[a-z0-9-]{8,}-[a-z0-9]{4,}$/i.test(path.replace(/\/+$/, ""))
+  ) {
+    return DESTINATION_ROLE.PRODUCT;
+  }
+  const pathOnly = path.replace(/\/+$/, "") || "/";
+  if (pathOnly === "/" || pathOnly.length <= 1) {
+    return DESTINATION_ROLE.HOMEPAGE;
+  }
+  if (/\/(cs|cz|sk|en)(\/|$)/i.test(pathOnly) && pathOnly.split("/").filter(Boolean).length <= 2) {
+    return DESTINATION_ROLE.HOMEPAGE;
+  }
+  if (/\/(category|kategorie|c\/|department)/i.test(path)) {
+    return DESTINATION_ROLE.CATEGORY;
+  }
+  return DESTINATION_ROLE.OTHER;
+}
+
+function promotionWindowOk(link, nowMs = Date.now()) {
+  const start = link?.promotionStartDate || link?.promotionStart || null;
+  const end = link?.promotionEndDate || link?.promotionEnd || null;
+  if (!start && !end) return { ok: true, note: "no_promo_window" };
+  try {
+    if (start && Date.parse(String(start)) > nowMs) return { ok: false, note: "promo_not_started" };
+    if (end && Date.parse(String(end)) < nowMs) return { ok: false, note: "promo_expired" };
+    return { ok: true, note: "promo_window_active" };
+  } catch {
+    return { ok: true, note: "promo_window_unparsed" };
+  }
+}
+
+/**
+ * Hard eligibility (V7): quality score must never override a hard fail.
+ */
+export function evaluateLinkEligibility(link, advertiser, opts = {}) {
+  const failures = [];
+  const pending = [];
+  const notes = [];
+  const advId = String(advertiser?.advertiserId || opts.advertiserId || "");
+  const linkAdv = String(link?.advertiserId || "");
+  if (advId && linkAdv && linkAdv !== advId) {
+    failures.push("advertiser_cid_mismatch");
+  }
+  const click = String(link?.clickUrl || "");
+  if (!isCjTrackingUrl(click)) {
+    failures.push("not_cj_tracking_click");
+  }
+  const websitePid = String(opts.websitePid || WEBSITE_PID || "");
+  if (websitePid && click && !click.includes("-" + websitePid + "-") && !click.includes("/" + websitePid + "/")) {
+    // Soft pending: some CJ hosts encode PID differently; do not hard-fail.
+    pending.push("pid_not_embedded_in_clickurl");
+  }
+  const promo = promotionWindowOk(link);
+  if (!promo.ok) failures.push(promo.note);
+  else notes.push(promo.note);
+
+  const norm = normalizeLinkDestination(link);
+  if (!norm.destination) {
+    pending.push("destination_missing");
+  }
+  try {
+    if (norm.destination) new URL(norm.destination.startsWith("http") ? norm.destination : "https://x");
+  } catch {
+    failures.push("destination_unparseable");
+  }
+
+  if (failures.length) {
+    return {
+      status: LINK_ELIGIBILITY.INELIGIBLE,
+      failures,
+      pending,
+      notes,
+      destination: norm.destination,
+      destinationRaw: norm.destinationRaw,
+      htmlEntitiesDecoded: norm.htmlEntitiesDecoded,
+    };
+  }
+  if (pending.length) {
+    return {
+      status: LINK_ELIGIBILITY.PENDING_EVIDENCE,
+      failures,
+      pending,
+      notes,
+      destination: norm.destination,
+      destinationRaw: norm.destinationRaw,
+      htmlEntitiesDecoded: norm.htmlEntitiesDecoded,
+    };
+  }
+  return {
+    status: LINK_ELIGIBILITY.ELIGIBLE,
+    failures,
+    pending,
+    notes,
+    destination: norm.destination,
+    destinationRaw: norm.destinationRaw,
+    htmlEntitiesDecoded: norm.htmlEntitiesDecoded,
+  };
+}
+
+/**
+ * Quality score among eligible/pending candidates (never used to override INELIGIBLE).
+ */
+export function scoreAffiliateLink(link, advertiser, opts = {}) {
+  const eligibility = evaluateLinkEligibility(link, advertiser, opts);
   const reasons = [];
   const click = String(link.clickUrl || "");
-  const dest = String(link.destination || "");
+  const dest = eligibility.destination || String(link.destination || "");
   const name = String(link.linkName || "").toLowerCase();
   const type = String(link.linkType || "").toLowerCase();
   const countries = String(link.targetedCountries || "");
+  const role = classifyDestinationRole(dest, name);
+  const lang = detectPageLanguage({ url: dest, linkName: name });
 
-  if (!isCjTrackingUrl(click)) {
-    return { score: -1000, reasons: ["not_cj_tracking_click"] };
+  if (eligibility.status === LINK_ELIGIBILITY.INELIGIBLE) {
+    return {
+      score: -1000,
+      reasons: ["ineligible:" + eligibility.failures.join("|")],
+      language: lang,
+      destinationRole: role,
+      eligibility,
+      qualityBand: "ineligible",
+    };
   }
-  score += 50;
-  reasons.push("cj_tracking_click");
+
+  let score = 0;
+  if (isCjTrackingUrl(click)) {
+    score += 50;
+    reasons.push("cj_tracking_click");
+  }
 
   const czMarket = marketAllowsCzechRepublic(countries);
   if (czMarket === true) {
     score += 40;
     reasons.push("targeted_cz");
   } else if (czMarket === false) {
-    score -= 30;
+    score -= 25;
     reasons.push("targeted_non_cz");
   } else {
     score += 5;
@@ -502,9 +716,11 @@ export function scoreAffiliateLink(link, advertiser) {
   if (/\.cz(\/|$|\?)/i.test(dest) || /\.cz$/i.test(String(advertiser.programUrl || ""))) {
     score += 25;
     reasons.push("cz_destination_or_program");
+  } else if (/\.sk(\/|$|\?)/i.test(dest)) {
+    score += 12;
+    reasons.push("sk_destination");
   }
 
-  const lang = detectPageLanguage({ url: dest, linkName: name });
   if (lang === "CZ") {
     score += 35;
     reasons.push("lang_cz");
@@ -515,56 +731,271 @@ export function scoreAffiliateLink(link, advertiser) {
     score += 10;
     reasons.push("lang_en_ok");
   } else if (lang === "OTHER") {
-    score -= 5;
+    score -= 8;
     reasons.push("lang_other");
+  } else {
+    reasons.push("lang_unknown");
   }
 
-  try {
-    const pathOnly = new URL(dest).pathname.replace(/\/+$/, "") || "/";
-    if (pathOnly === "/" || pathOnly.length <= 1) {
-      score += 30;
-      reasons.push("homepage_dest");
-    }
-  } catch {
-    /* ignore */
+  // Destination role preferences for MAIN button
+  if (role === DESTINATION_ROLE.HOMEPAGE) {
+    // Strong bias: main button should prefer merchant home over content landings
+    // even when those have explicit CZ targeting.
+    score += 55;
+    reasons.push("homepage_dest");
+  } else if (role === DESTINATION_ROLE.CATEGORY) {
+    score += 18;
+    reasons.push("category_dest");
+  } else if (role === DESTINATION_ROLE.OTHER) {
+    score += 5;
+    reasons.push("other_dest");
+  } else if (role === DESTINATION_ROLE.PRODUCT) {
+    score -= 35;
+    reasons.push("product_dest_penalty");
+  } else if (role === DESTINATION_ROLE.COUPON) {
+    score -= 45;
+    reasons.push("coupon_dest_penalty");
+  } else if (role === DESTINATION_ROLE.PROMO) {
+    score -= 30;
+    reasons.push("promo_dest_penalty");
+  } else if (role === DESTINATION_ROLE.NEWSLETTER) {
+    score -= 55;
+    reasons.push("newsletter_dest_penalty");
+  } else if (role === DESTINATION_ROLE.CHECKOUT) {
+    score -= 60;
+    reasons.push("checkout_dest_penalty");
+  } else if (role === DESTINATION_ROLE.CART || role === DESTINATION_ROLE.LOGIN) {
+    score -= 50;
+    reasons.push(role.toLowerCase() + "_dest_penalty");
+  } else if (role === DESTINATION_ROLE.APP_STORE) {
+    score -= 40;
+    reasons.push("app_store_dest_penalty");
   }
-  if (/deeplink|home|hlavn[ií]|homepage|main/i.test(name)) {
+
+  if (/deeplink|home|hlavn[ií]|homepage|main|text\s*link/i.test(name)) {
     score += 15;
     reasons.push("homeish_name");
   }
-  if (/coupon|kup[oó]n|banner|promo|deal|sale|%\s*off/i.test(name) || type.includes("banner")) {
+  if (/coupon|kup[oó]n|banner|promo|deal|sale|%\s*off|newsletter/i.test(name) || type.includes("banner")) {
     score -= 20;
-    reasons.push("campaignish");
+    reasons.push("campaignish_name_or_banner");
   }
-  if (type.includes("text")) {
-    score += 5;
-    reasons.push("text_link");
+  if (type.includes("text") || type.includes("content")) {
+    score += 8;
+    reasons.push("text_or_content_link");
+  }
+  if (eligibility.htmlEntitiesDecoded) {
+    reasons.push("html_entities_decoded");
+  }
+  if (eligibility.status === LINK_ELIGIBILITY.PENDING_EVIDENCE) {
+    score -= 5;
+    reasons.push("pending_evidence:" + eligibility.pending.join("|"));
   }
 
-  return { score, reasons, language: lang };
+  // EPC / commission must NEVER dominate — tiny optional signal only if present.
+  const epc = Number(link.epc || link.clickEpc || 0);
+  if (Number.isFinite(epc) && epc > 0) {
+    score += Math.min(3, Math.floor(epc));
+    reasons.push("epc_tiebreak_only");
+  }
+
+  return {
+    score,
+    reasons,
+    language: lang,
+    destinationRole: role,
+    eligibility,
+    qualityBand: score >= 100 ? "strong" : score >= 40 ? "acceptable" : "weak",
+  };
 }
 
-export function selectPrimaryAffiliateLink(links, advertiser) {
-  const ranked = (links || [])
-    .map((link) => ({ link, ...scoreAffiliateLink(link, advertiser) }))
+function explainSelectionCs(scored) {
+  const link = scored.link || {};
+  const role = scored.destinationRole;
+  const lang = scored.language;
+  const countries = String(link.targetedCountries || "") || "unspecified";
+  const parts = [];
+  parts.push(
+    "Vybrán " +
+      (String(link.linkType || "text").toLowerCase().includes("banner") ? "bannerový" : "textový/content") +
+      " CJ odkaz (linkId=" +
+      String(link.linkId || "") +
+      ")"
+  );
+  if (role === DESTINATION_ROLE.HOMEPAGE) parts.push("na hlavní stránku obchodníka");
+  else if (role === DESTINATION_ROLE.CATEGORY) parts.push("na kategoriální landing page");
+  else parts.push("na cílovou stránku role=" + role);
+  parts.push("jazyk=" + lang);
+  parts.push("cílení=" + countries);
+  parts.push("skóre=" + scored.score);
+  parts.push("důvody=" + (scored.reasons || []).join(", "));
+  return parts.join("; ") + ".";
+}
+
+function explainRejectionCs(scored) {
+  if (scored.eligibility?.status === LINK_ELIGIBILITY.INELIGIBLE) {
+    return "Zamítnuto tvrdou podmínkou: " + (scored.eligibility.failures || []).join(", ");
+  }
+  const role = scored.destinationRole;
+  if (role === DESTINATION_ROLE.NEWSLETTER) return "Nevhodné jako hlavní tlačítko: newsletter landing";
+  if (role === DESTINATION_ROLE.CHECKOUT) return "Nevhodné jako hlavní tlačítko: checkout/objednávka";
+  if (role === DESTINATION_ROLE.COUPON) return "Kupónový odkaz — patří do kupónové pipeline, ne hlavní tlačítko";
+  if (role === DESTINATION_ROLE.PROMO) return "Časově/kampanově omezená landing — preferována stabilní homepage";
+  if (role === DESTINATION_ROLE.PRODUCT) return "Produktový odkaz — preferována homepage/kategorie";
+  return "Nižší kvalita než vybraný (score=" + scored.score + "; " + (scored.reasons || []).slice(0, 4).join("|") + ")";
+}
+
+/**
+ * Select primary main-button link: hard eligibility first, then quality, then hysteresis.
+ */
+export function selectPrimaryAffiliateLink(links, advertiser, opts = {}) {
+  const previousLinkId = opts.previousLinkId != null ? String(opts.previousLinkId) : null;
+  const hysteresis = Number(opts.hysteresis ?? LINK_SELECTION_HYSTERESIS);
+  const websitePid = opts.websitePid || WEBSITE_PID;
+
+  const scoredAll = (links || []).map((link) => {
+    const scored = scoreAffiliateLink(link, advertiser, { websitePid, advertiserId: advertiser?.advertiserId });
+    const normDest = scored.eligibility?.destination || link.destination;
+    return {
+      ...scored,
+      link: {
+        ...link,
+        destination: normDest,
+        destinationRaw: scored.eligibility?.destinationRaw || link.destination,
+        htmlEntitiesDecoded: scored.eligibility?.htmlEntitiesDecoded || false,
+      },
+    };
+  });
+
+  const eligible = scoredAll.filter(
+    (r) =>
+      r.eligibility?.status === LINK_ELIGIBILITY.ELIGIBLE ||
+      r.eligibility?.status === LINK_ELIGIBILITY.PENDING_EVIDENCE
+  );
+  const roleRank = (role) => {
+    if (role === DESTINATION_ROLE.HOMEPAGE) return 0;
+    if (role === DESTINATION_ROLE.CATEGORY) return 1;
+    if (role === DESTINATION_ROLE.OTHER) return 2;
+    return 9;
+  };
+  const ranked = eligible
     .filter((r) => r.score > -500)
-    .sort((a, b) => b.score - a.score);
+    .sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      const rr = roleRank(a.destinationRole) - roleRank(b.destinationRole);
+      if (rr !== 0) return rr;
+      // Stable tie-break by linkId
+      return String(a.link.linkId || "").localeCompare(String(b.link.linkId || ""));
+    });
+
   if (!ranked.length) {
     return {
       selected: null,
       reason: "no_suitable_cj_tracking_link",
-      candidates: 0,
+      selectionReasonNarrative: "Žádný aktivní CJ tracking odkaz neprošel tvrdými podmínkami způsobilosti.",
+      score: null,
+      candidates: scoredAll.length,
+      eligibleCandidates: 0,
+      rejectedAlternatives: scoredAll.slice(0, 40).map((r) => ({
+        linkId: r.link.linkId,
+        clickUrl: r.link.clickUrl,
+        destination: r.link.destination,
+        destinationRole: r.destinationRole,
+        score: r.score,
+        eligibility: r.eligibility?.status,
+        rejectionReason: explainRejectionCs(r),
+        reasons: r.reasons,
+      })),
+      inventory: scoredAll.map((r) => ({
+        linkId: r.link.linkId,
+        linkName: r.link.linkName,
+        linkType: r.link.linkType,
+        clickUrl: r.link.clickUrl,
+        destination: r.link.destination,
+        destinationRaw: r.link.destinationRaw,
+        targetedCountries: r.link.targetedCountries,
+        language: r.language,
+        destinationRole: r.destinationRole,
+        score: r.score,
+        eligibility: r.eligibility?.status,
+        reasons: r.reasons,
+      })),
     };
   }
-  const best = ranked[0];
+
+  let best = ranked[0];
+  let hysteresisKept = false;
+  if (previousLinkId) {
+    const prev = ranked.find((r) => String(r.link.linkId) === previousLinkId);
+    if (prev && best.score - prev.score < hysteresis) {
+      best = prev;
+      hysteresisKept = true;
+    }
+  }
+
+  const rejected = ranked
+    .filter((r) => String(r.link.linkId) !== String(best.link.linkId))
+    .slice(0, 25)
+    .map((r) => ({
+      linkId: r.link.linkId,
+      clickUrl: r.link.clickUrl,
+      destination: r.link.destination,
+      destinationRole: r.destinationRole,
+      score: r.score,
+      eligibility: r.eligibility?.status,
+      rejectionReason: explainRejectionCs(r),
+      reasons: r.reasons,
+    }));
+
+  // Also include hard-ineligible samples for audit
+  for (const r of scoredAll.filter((x) => x.eligibility?.status === LINK_ELIGIBILITY.INELIGIBLE).slice(0, 10)) {
+    rejected.push({
+      linkId: r.link.linkId,
+      clickUrl: r.link.clickUrl,
+      destination: r.link.destination,
+      destinationRole: r.destinationRole,
+      score: r.score,
+      eligibility: r.eligibility?.status,
+      rejectionReason: explainRejectionCs(r),
+      reasons: r.reasons,
+    });
+  }
+
   return {
     selected: best.link,
-    reason: best.reasons.join("|"),
+    reason: best.reasons.join("|") + (hysteresisKept ? "|hysteresis_kept_previous" : ""),
+    selectionReasonNarrative: explainSelectionCs(best) + (hysteresisKept ? " Zachován předchozí odkaz (hysteresis)." : ""),
     score: best.score,
-    candidates: ranked.length,
+    candidates: scoredAll.length,
+    eligibleCandidates: ranked.length,
+    destinationRole: best.destinationRole,
+    language: best.language,
+    eligibility: best.eligibility,
+    qualityBand: best.qualityBand,
+    hysteresisKept,
     runnerUp: ranked[1]
-      ? { linkId: ranked[1].link.linkId, score: ranked[1].score, reasons: ranked[1].reasons }
+      ? {
+          linkId: ranked[1].link.linkId,
+          score: ranked[1].score,
+          reasons: ranked[1].reasons,
+          destinationRole: ranked[1].destinationRole,
+        }
       : null,
+    rejectedAlternatives: rejected,
+    inventory: scoredAll.map((r) => ({
+      linkId: r.link.linkId,
+      linkName: r.link.linkName,
+      linkType: r.link.linkType,
+      clickUrl: r.link.clickUrl,
+      destination: r.link.destination,
+      destinationRaw: r.link.destinationRaw,
+      targetedCountries: r.link.targetedCountries,
+      language: r.language,
+      destinationRole: r.destinationRole,
+      score: r.score,
+      eligibility: r.eligibility?.status,
+      reasons: r.reasons,
+    })),
   };
 }
 
@@ -1441,9 +1872,26 @@ export function buildPhase3zPartnerRegistry({
   websitePid = WEBSITE_PID,
   rulesVersion = PHASE3Z_RULES_VERSION,
   nowIso = new Date().toISOString(),
+  previousSelections = null,
 } = {}) {
   const advertisers = Array.isArray(staging?.advertisers) ? staging.advertisers : [];
   const links = Array.isArray(staging?.links) ? staging.links : [];
+  const prevByAdv = new Map();
+  if (previousSelections && typeof previousSelections === "object") {
+    if (Array.isArray(previousSelections.partners)) {
+      for (const p of previousSelections.partners) {
+        if (p?.advertiserId && p?.selectedLinkId) {
+          prevByAdv.set(String(p.advertiserId), String(p.selectedLinkId));
+        }
+      }
+    } else if (previousSelections instanceof Map) {
+      for (const [k, v] of previousSelections) prevByAdv.set(String(k), String(v));
+    } else {
+      for (const [k, v] of Object.entries(previousSelections)) {
+        if (v) prevByAdv.set(String(k), String(v));
+      }
+    }
+  }
   const linksByAdv = new Map();
   for (const link of links) {
     const id = String(link.advertiserId || "");
@@ -1480,7 +1928,10 @@ export function buildPhase3zPartnerRegistry({
       sectionMap,
     });
     const advLinks = linksByAdv.get(advertiserId) || [];
-    const pick = selectPrimaryAffiliateLink(advLinks, adv);
+    const pick = selectPrimaryAffiliateLink(advLinks, adv, {
+      websitePid,
+      previousLinkId: prevByAdv.get(advertiserId) || null,
+    });
 
     const protectedSkip =
       management === "PAID_RESERVED" || management === "MANUAL_PROTECTED";
@@ -1672,12 +2123,32 @@ export function buildPhase3zPartnerRegistry({
       categoryChange: section.categoryChange || null,
       selectedClickUrl: pick.selected?.clickUrl || null,
       selectedDestination: pick.selected?.destination || null,
+      selectedDestinationRaw: pick.selected?.destinationRaw || pick.selected?.destination || null,
       selectedLinkId: pick.selected?.linkId || null,
       selectedLinkName: pick.selected?.linkName || null,
+      selectedLinkType: pick.selected?.linkType || null,
       selectedTargetedCountries: pick.selected?.targetedCountries || null,
       linkSelectionReason: pick.reason || null,
+      selectionReasonNarrative: pick.selectionReasonNarrative || null,
       linkSelectionScore: pick.score ?? null,
       linkCandidateCount: pick.candidates || 0,
+      linkEligibleCandidateCount: pick.eligibleCandidates ?? null,
+      destinationRole: pick.destinationRole || null,
+      destinationDecision: pick.destinationRole || null,
+      languageDecision: pick.language || null,
+      countryDecision: pick.selected?.targetedCountries || null,
+      eligibilityEvidence: pick.eligibility || null,
+      rejectedAlternatives: pick.rejectedAlternatives || [],
+      linkInventorySummary: {
+        total: pick.candidates || 0,
+        eligible: pick.eligibleCandidates || 0,
+        rejectedSample: (pick.rejectedAlternatives || []).length,
+      },
+      linkInventory: pick.inventory || [],
+      selectionHysteresisKept: pick.hysteresisKept === true,
+      htmlEntitiesDecoded: pick.selected?.htmlEntitiesDecoded === true,
+      lastVerifiedAt: null,
+      nextReviewAt: null,
       selectedLanguage: langPick.selectedLanguage,
       languagePrioritySatisfied: langPick.languagePrioritySatisfied,
       languageEvidence: {
@@ -1727,6 +2198,8 @@ export function buildPhase3zPartnerRegistry({
         categoryKey: section.categoryKey || null,
         clickUrl: row.selectedClickUrl,
         destination: row.selectedDestination,
+        destinationRaw: row.selectedDestinationRaw,
+        destinationRole: row.destinationRole,
         trackingHost: (() => {
           try {
             return row.selectedClickUrl ? new URL(row.selectedClickUrl).hostname : "";
@@ -1736,6 +2209,9 @@ export function buildPhase3zPartnerRegistry({
         })(),
         targetedCountries: row.selectedTargetedCountries,
         linkId: row.selectedLinkId,
+        selectionReasonNarrative: row.selectionReasonNarrative,
+        linkSelectionScore: row.linkSelectionScore,
+        rejectedAlternativesCount: (row.rejectedAlternatives || []).length,
         selectedLanguage: row.selectedLanguage,
         languagePrioritySatisfied: row.languagePrioritySatisfied,
         czMarketEligibilityVerified: row.czMarketEligibilityVerified,
@@ -2076,15 +2552,46 @@ export function applyUrlVerificationToPartner(partner, button, verification) {
     partner.czEvidence.selectedLanguage = partner.selectedLanguage;
   }
 
-  // Classify 403 carefully — bot block ≠ dead link.
-  if (verification.status === "HTTP_FORBIDDEN") {
+  // V7 HTTP taxonomy — 403 ≠ dead; 403 ≠ OK.
+  if (verification.status === "VERIFIED_HTTP_OK") {
+    partner.urlVerification.classification = URL_VERIFY_CLASS.DESTINATION_CONFIRMED;
+    partner.urlVerification.trackingStatus = URL_VERIFY_CLASS.TRACKING_CONFIRMED;
+    partner.technicalVerification = {
+      status: URL_VERIFY_CLASS.DESTINATION_CONFIRMED,
+      httpStatus: verification.httpStatus ?? 200,
+      finalHost: verification.finalHost || null,
+    };
+  } else if (verification.status === "HTTP_FORBIDDEN") {
     partner.urlVerification.clientBlockedPossible = true;
-    partner.urlVerification.classification = "bot_block_or_region_or_unknown";
+    partner.urlVerification.classification = URL_VERIFY_CLASS.BOT_BLOCK_SUSPECTED;
+    partner.technicalVerification = {
+      status: URL_VERIFY_CLASS.BOT_BLOCK_SUSPECTED,
+      httpStatus: 403,
+      note: "403 may be WAF/bot block; not confirmed broken",
+    };
   } else if (verification.status === "HTTP_NOT_OK" && verification.httpStatus === 404) {
-    partner.urlVerification.classification = "target_not_found";
+    partner.urlVerification.classification = URL_VERIFY_CLASS.BROKEN_CONFIRMED;
+    partner.technicalVerification = { status: URL_VERIFY_CLASS.BROKEN_CONFIRMED, httpStatus: 404 };
+  } else if (verification.status === "HTTP_NOT_OK" && verification.httpStatus === 429) {
+    partner.urlVerification.classification = URL_VERIFY_CLASS.RATE_LIMITED;
+    partner.technicalVerification = { status: URL_VERIFY_CLASS.RATE_LIMITED, httpStatus: 429 };
   } else if (verification.status === "HTTP_NOT_OK" && verification.httpStatus === 503) {
-    partner.urlVerification.classification = "temporary_unavailable";
+    partner.urlVerification.classification = URL_VERIFY_CLASS.UNVERIFIED;
+    partner.technicalVerification = {
+      status: URL_VERIFY_CLASS.UNVERIFIED,
+      httpStatus: 503,
+      note: "temporary_unavailable",
+    };
+  } else {
+    partner.urlVerification.classification =
+      partner.urlVerification.classification || URL_VERIFY_CLASS.UNVERIFIED;
+    partner.technicalVerification = {
+      status: URL_VERIFY_CLASS.UNVERIFIED,
+      httpStatus: verification.httpStatus ?? null,
+    };
   }
+  partner.lastVerifiedAt = probedAt;
+  partner.nextReviewAt = new Date(Date.parse(probedAt) + 7 * 24 * 3600 * 1000).toISOString();
 
   if (partner.publishability === PUBLISHABILITY.QUARANTINED) return;
 
@@ -2412,13 +2919,63 @@ export async function main(argv = process.argv.slice(2)) {
   const sectionMap = readJson(paths.sectionMap, {}) || {};
   const slotPolicy = readJson(paths.slotPolicy, { partners: [] }) || { partners: [] };
   const catalogSrc = fs.existsSync(paths.catalog) ? fs.readFileSync(paths.catalog, "utf8") : "";
+  const previousSelections =
+    readJson(paths.outRegistry, null) ||
+    readJson(path.join(ROOT, "projects", "data", "iu-affiliate-cj-partner-registry-v1.json"), null);
 
   const { registry, buttonCatalog } = buildPhase3zPartnerRegistry({
     staging,
     sectionMap,
     slotPolicy,
     catalogSrc,
+    previousSelections,
   });
+
+  // Selection change audit vs previous registry (if any)
+  const prevMap = new Map(
+    (previousSelections?.partners || [])
+      .filter((p) => p.advertiserId && p.selectedLinkId)
+      .map((p) => [String(p.advertiserId), String(p.selectedLinkId)])
+  );
+  let selectionChanged = 0;
+  let destinationRoleUpgrades = 0;
+  for (const p of registry.partners || []) {
+    const prev = prevMap.get(String(p.advertiserId));
+    if (prev && p.selectedLinkId && prev !== String(p.selectedLinkId)) selectionChanged++;
+    if (
+      p.destinationRole === DESTINATION_ROLE.HOMEPAGE ||
+      p.destinationRole === DESTINATION_ROLE.CATEGORY
+    ) {
+      /* counted below */
+    }
+  }
+  const badRoles = (registry.partners || []).filter((p) =>
+    [
+      DESTINATION_ROLE.NEWSLETTER,
+      DESTINATION_ROLE.CHECKOUT,
+      DESTINATION_ROLE.CART,
+      DESTINATION_ROLE.LOGIN,
+      DESTINATION_ROLE.COUPON,
+    ].includes(p.destinationRole)
+  ).length;
+  const homepageSelected = (registry.partners || []).filter(
+    (p) => p.destinationRole === DESTINATION_ROLE.HOMEPAGE
+  ).length;
+  registry.selectionAudit = {
+    previousAvailable: prevMap.size > 0,
+    selectionChanged,
+    homepageSelected,
+    unsuitableMainDestinationsRemaining: badRoles,
+    htmlEntitiesDecoded: (registry.partners || []).filter((p) => p.htmlEntitiesDecoded).length,
+    totalLinkCandidates: (registry.partners || []).reduce(
+      (a, p) => a + Number(p.linkCandidateCount || 0),
+      0
+    ),
+  };
+  registry.counts.selectionChanged = selectionChanged;
+  registry.counts.homepageSelected = homepageSelected;
+  registry.counts.unsuitableMainDestinationsRemaining = badRoles;
+  buttonCatalog.selectionAudit = registry.selectionAudit;
 
   let verifyStats = null;
   if (process.env.IU_CJ_PHASE3Z_VERIFY_URLS === "1") {

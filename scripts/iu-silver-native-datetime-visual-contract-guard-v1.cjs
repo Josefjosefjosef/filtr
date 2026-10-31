@@ -90,7 +90,12 @@ async function openForm(page, key) {
     return "";
   }, key);
   if (!opened) throw new Error("open failed:" + key);
-  await page.waitForTimeout(900);
+  const cardWait =
+    key === "calendar"
+      ? ".iuSilverDraftCard--quickTemplateEmpty.iuSilverDraftCard--quickTemplateCalendar .iuSilverDraftGrid--edit input[type='date']"
+      : ".iuSilverDraftCard--quickTemplateEmpty.iuSilverDraftCard--quickTemplateTask .iuSilverDraftGrid--edit input[type='date']";
+  await page.waitForSelector(cardWait, { timeout: 8000 });
+  await page.waitForTimeout(200);
   await dismiss(page);
 }
 
