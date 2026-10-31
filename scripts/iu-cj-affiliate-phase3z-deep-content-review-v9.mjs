@@ -91,32 +91,63 @@ export async function buildDeepContentReview({
       }
       const evidence = probe?.assortmentEvidence || null;
       const navHints = (evidence?.significantGroups || []).map((g) => g.group);
-      const contentVerified =
-        evidence?.contentVerified === true ||
-        (ov && probe?.ok === true && Boolean(probe?.title));
-      // WAF/403: identity only — never CONTENT_VERIFIED.
+      // CONTENT_VERIFIED requires high-trust assortment signals — never title/HTTP/override alone.
+      const assortmentSignificant = evidence?.contentVerified === true && (evidence?.significantGroups || []).length > 0;
+      const overrideAligned =
+        Boolean(ov?.primaryAssortment?.group) &&
+        (evidence?.significantGroups || []).some(
+          (g) => g.group === ov.primaryAssortment.group || g.sectionId === ov.primaryAssortment.sectionId
+        );
+      const contentVerified = assortmentSignificant === true;
       const waf =
         probe && (probe.httpStatus === 403 || String(probe.error || "").includes("403"));
+      const pub = String(reg?.publishability || "");
+      const hold = String(reg?.holdReason || "");
       let reviewStatus = "NOT_VERIFIED";
       let grade = "NOT_VERIFIED";
       const blockers = [];
-      if (waf && ov) {
-        reviewStatus = "IDENTITY_VERIFIED_WAF";
-        grade = "IDENTITY_VERIFIED_WAF";
+      if (pub === "QUARANTINED") {
+        reviewStatus = "BLOCKED";
+        grade = "BLOCKED";
+        blockers.push(hold || "quarantined");
+      } else if (waf) {
+        reviewStatus = ov ? "IDENTITY_VERIFIED" : "CONTENT_UNAVAILABLE";
+        grade = ov ? "IDENTITY_VERIFIED_WAF" : "CONTENT_UNAVAILABLE_WAF";
         blockers.push("http_403_bot_waf_suspected");
       } else if (contentVerified) {
         reviewStatus = "CONTENT_VERIFIED";
-        grade = "CONTENT_VERIFIED";
-      } else if (probe?.ok && probe?.title && !evidence?.contentVerified) {
+        grade = overrideAligned || !ov ? "CONTENT_VERIFIED" : "CONTENT_VERIFIED_OVERRIDE_MISALIGN";
+        if (ov && !overrideAligned) blockers.push("override_section_differs_from_weighted_evidence");
+      } else if (probe?.ok && probe?.title && (evidence?.allScored || []).length > 0) {
+        reviewStatus = "CONTENT_INCOMPLETE";
+        grade = "CONTENT_INCOMPLETE_WEAK_ASSORTMENT";
+        blockers.push("assortment_signals_present_but_not_significant");
+      } else if (probe?.ok && probe?.title) {
         reviewStatus = "IDENTITY_VERIFIED";
         grade = "IDENTITY_TITLE_ONLY";
-        blockers.push("assortment_not_significant_from_high_trust_regions");
+        blockers.push("title_ok_no_significant_assortment");
       } else if (!probeUrl) {
+        reviewStatus = "CONTENT_UNAVAILABLE";
+        grade = "CONTENT_UNAVAILABLE";
         blockers.push("missing_program_url");
       } else if (probe?.error) {
+        reviewStatus = "CONTENT_UNAVAILABLE";
+        grade = "CONTENT_UNAVAILABLE";
         blockers.push("probe_error:" + probe.error);
       } else {
+        reviewStatus = "CONTENT_UNAVAILABLE";
+        grade = "CONTENT_UNAVAILABLE";
         blockers.push("insufficient_website_evidence");
+      }
+      // Region layer: content may be verified while CZ market remains unknown.
+      if (
+        reviewStatus === "CONTENT_VERIFIED" &&
+        !ov?.czAffinityOverride &&
+        hold === "CZ_ELIGIBILITY_UNKNOWN"
+      ) {
+        reviewStatus = "REGION_UNVERIFIED";
+        grade = "REGION_UNVERIFIED";
+        blockers.push("cz_eligibility_unknown");
       }
 
       const dest = reg?.selectedDestination || null;
@@ -199,26 +230,52 @@ export async function buildDeepContentReview({
   const workers = Array.from({ length: Math.min(concurrency, queue.length || 1) }, () => worker());
   await Promise.all(workers);
 
+  const byStatus = {};
+  for (const r of results) {
+    byStatus[r.reviewStatus] = (byStatus[r.reviewStatus] || 0) + 1;
+  }
   const contentVerifiedCount = results.filter((r) => r.reviewStatus === "CONTENT_VERIFIED").length;
   const notContentVerified = results.filter((r) => r.reviewStatus !== "CONTENT_VERIFIED");
 
-  // Golden / override section truth coverage
+  // Golden / override section truth: independent evidence vs golden vs button section
   const golden = GOLDEN_DATASET_V9.map((g) => {
     const row = results.find((r) => r.advertiserCid === g.advertiserCid);
-    const actual = row?.expectedSectionId || row?.primaryAssortment?.sectionId || null;
+    const reg = regById.get(g.advertiserCid);
+    const evidenceSection =
+      row?.merchantWebsiteEvidence?.probe?.assortmentEvidence?.primaryAssortment?.sectionId || null;
+    const expected = g.expectedPrimarySectionId;
+    const buttonSection = reg?.sectionId || null;
+    const declared = row?.expectedSectionId || row?.primaryAssortment?.sectionId || null;
     const match =
       g.preferCategoryReview
-        ? actual == null || g.expectedPrimarySectionId == null
-        : actual === g.expectedPrimarySectionId;
+        ? (expected == null || buttonSection == null) && (declared == null || expected == null)
+        : expected === declared && (!buttonSection || buttonSection === expected);
+    const evidenceAlign =
+      !evidenceSection || !expected || evidenceSection === expected || g.preferCategoryReview;
     return {
       advertiserCid: g.advertiserCid,
       merchantIdentity: g.merchantIdentity,
-      expected: g.expectedPrimarySectionId,
-      actual,
-      match,
+      expected,
+      declared,
+      buttonSection,
+      evidenceSection,
+      match: match && evidenceAlign,
       preferCategoryReview: g.preferCategoryReview,
+      mismatchReasons: [
+        ...(expected && declared && expected !== declared ? ["golden_vs_declared"] : []),
+        ...(expected && buttonSection && expected !== buttonSection ? ["golden_vs_button"] : []),
+        ...(expected && evidenceSection && expected !== evidenceSection
+          ? ["golden_vs_weighted_evidence"]
+          : []),
+      ],
     };
   });
+
+  const categoryMismatches = golden.filter((g) => !g.match);
+  const readyWithoutContent = results.filter(
+    (r) =>
+      String(r.publishability) === "READY_FOR_REVIEW" && r.reviewStatus !== "CONTENT_VERIFIED"
+  );
 
   return {
     schema: "iu-cj-merchant-review-v9-final",
@@ -230,9 +287,19 @@ export async function buildDeepContentReview({
     sectionTruthTotal: golden.length,
     contentVerified: contentVerifiedCount,
     notContentVerified: notContentVerified.length,
+    reviewStatusCounts: byStatus,
+    categoryMismatches: categoryMismatches.length,
+    categoryMismatchSample: categoryMismatches.slice(0, 20),
+    readyWithoutContentVerified: readyWithoutContent.length,
+    readyWithoutContentSample: readyWithoutContent.slice(0, 20).map((r) => ({
+      advertiserCid: r.advertiserCid,
+      reviewStatus: r.reviewStatus,
+      grade: r.merchantWebsiteEvidence?.grade,
+    })),
     partners: results,
     goldenSectionTruth: golden,
-    note: "Weighted title/nav/h1/main assortment; footer/cookie/ads stripped. CONTENT_VERIFIED requires high-trust signals.",
+    note:
+      "CONTENT_VERIFIED requires weighted high-trust assortment (title/nav/h1/meta/json-ld). Title/HTTP/override alone is IDENTITY_VERIFIED or CONTENT_INCOMPLETE — never fake CONTENT_VERIFIED.",
   };
 }
 
