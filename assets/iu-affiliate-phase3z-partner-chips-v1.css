@@ -1,16 +1,31 @@
 /**
- * Phase 3Z — compact partner chips (Radio-like), PREVIEW / future cutover only.
- * NOT wired into production catalog until publicButtonSwapArmed GO.
- * Does NOT style paid premium buttons or category tile headers.
+ * Phase 3Z — compact partner chips: Radio DIMENSIONS only.
+ * Colors remain per-section affiliate accents (never Radio palette).
+ * PREVIEW / future cutover — gated by data-iu-phase3z-chips until public swap GO.
+ * Does NOT style paid premium buttons or Radio section itself.
  */
 .iuAffiliateSection[data-iu-phase3z-chips="1"] .iuAffiliateChip.iuRadioChip,
 .iuAffiliatePhase3zPreview .iuAffiliateChip.iuRadioChip {
-  --iuChipPadX: 10px;
+  /* Geometry borrowed from #iuRadioView .iuRadioChip--nameOnly — not Radio colors */
+  --iuChipH: 72px;
+  --iuChipPadX: 12px;
   --iuChipTitleSize: 14px;
-  min-height: 44px;
   height: auto;
-  padding: 10px var(--iuChipPadX);
+  min-height: 56px;
+  max-height: none;
+  padding: 12px var(--iuChipPadX);
+  gap: 0;
+  justify-content: center;
+  align-items: center;
   box-sizing: border-box;
+}
+
+@media (min-width: 1025px) {
+  .iuAffiliateSection[data-iu-phase3z-chips="1"] .iuAffiliateChip.iuRadioChip,
+  .iuAffiliatePhase3zPreview .iuAffiliateChip.iuRadioChip {
+    --iuChipH: 76px;
+    min-height: 60px;
+  }
 }
 
 .iuAffiliateSection[data-iu-phase3z-chips="1"] .iuAffiliateChip .iuRadioChipTitle,
@@ -24,7 +39,22 @@
   display: block;
   white-space: normal;
   overflow: visible;
-  /* no -webkit-line-clamp — full name must remain readable */
+  text-overflow: clip;
+  /* Explicitly NO -webkit-line-clamp / ellipsis — full partner name must remain readable */
+  max-width: 100%;
+}
+
+/* Long names: slightly smaller type, still fully visible */
+.iuAffiliateSection[data-iu-phase3z-chips="1"] .iuAffiliateChip[data-long-title="1"] .iuRadioChipTitle,
+.iuAffiliatePhase3zPreview .iuAffiliateChip[data-long-title="1"] .iuRadioChipTitle {
+  font-size: 12.5px;
+  line-height: 1.2;
+}
+
+.iuAffiliateSection[data-iu-phase3z-chips="1"] .iuAffiliateChip[data-long-title="2"] .iuRadioChipTitle,
+.iuAffiliatePhase3zPreview .iuAffiliateChip[data-long-title="2"] .iuRadioChipTitle {
+  font-size: 11.5px;
+  line-height: 1.15;
 }
 
 .iuAffiliateSection[data-iu-phase3z-chips="1"] .iuAffiliateGrid,
@@ -35,14 +65,21 @@
 }
 
 @media (max-width: 520px) {
+  .iuAffiliateSection[data-iu-phase3z-chips="1"] .iuAffiliateChip.iuRadioChip,
+  .iuAffiliatePhase3zPreview .iuAffiliateChip.iuRadioChip {
+    min-height: 52px;
+    padding: 10px 10px;
+  }
+
   .iuAffiliateSection[data-iu-phase3z-chips="1"] .iuAffiliateGrid,
   .iuAffiliatePhase3zPreview .iuAffiliateGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-/* Hard isolation: never restyle premium / paid slots via this sheet */
+/* Hard isolation: never restyle premium / paid slots or Radio view via this sheet */
 .iuPremiumSelectedRoot .iuAffiliateChip,
-[data-iu-premium-selected] .iuAffiliateChip {
-  /* no-op marker — phase3z rules must not apply here */
+[data-iu-premium-selected] .iuAffiliateChip,
+#iuRadioView .iuRadioChip {
+  /* no-op marker — phase3z affiliate rules must not apply to Radio native chips */
 }
