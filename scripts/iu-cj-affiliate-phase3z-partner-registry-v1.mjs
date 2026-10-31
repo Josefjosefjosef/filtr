@@ -1765,7 +1765,13 @@ function triState(value) {
   return "unknown";
 }
 
-/** READY may use HTTP OK or WAF/bot 403 with preserved identity evidence (not content claim). */
+/**
+ * READY may use HTTP OK, or documented non-content identity paths:
+ * - WAF/bot 403 (IDENTITY_VERIFIED_WAF)
+ * - temporary 429 rate-limit (IDENTITY_VERIFIED_RATE_LIMITED)
+ * - click timeout with curated CZ homepage override (IDENTITY_VERIFIED_CLICK_TIMEOUT)
+ * Never treats these as content verification of the click destination.
+ */
 export function urlEvidenceSufficientForReady(partner) {
   const uv = partner?.urlVerification || {};
   if (uv.status === "VERIFIED_HTTP_OK") return true;
@@ -1773,6 +1779,21 @@ export function urlEvidenceSufficientForReady(partner) {
     uv.status === "HTTP_FORBIDDEN" &&
     partner?.merchantReviewStatus === "IDENTITY_VERIFIED_WAF" &&
     (uv.classification === URL_VERIFY_CLASS.BOT_BLOCK_SUSPECTED || uv.clientBlockedPossible === true)
+  ) {
+    return true;
+  }
+  if (
+    uv.status === "HTTP_NOT_OK" &&
+    Number(uv.httpStatus) === 429 &&
+    partner?.merchantReviewStatus === "IDENTITY_VERIFIED_RATE_LIMITED" &&
+    uv.classification === URL_VERIFY_CLASS.RATE_LIMITED
+  ) {
+    return true;
+  }
+  if (
+    (uv.status === "NOT_VERIFIED" || uv.status === "ERROR") &&
+    partner?.merchantReviewStatus === "IDENTITY_VERIFIED_CLICK_TIMEOUT" &&
+    String(uv.note || "").includes("click_probe_timeout_identity_preserved")
   ) {
     return true;
   }
@@ -2620,7 +2641,7 @@ export function buildPhase3zPartnerRegistry({
       previewButtons: buttons.length,
       buttonRecords: buttons.length,
       joinedButtonRecords: buttons.length,
-      quarantined: quarantined.length,
+      quarantined: partners.filter((p) => p.publishability === PUBLISHABILITY.QUARANTINED).length,
       readyForReview: partners.filter((p) => p.publishability === PUBLISHABILITY.READY_FOR_REVIEW).length,
       categoryVerified: partners.filter((p) =>
         [
@@ -2689,7 +2710,7 @@ export function buildPhase3zPartnerRegistry({
     counts: {
       buttons: buttons.length,
       buttonRecords: buttons.length,
-      quarantined: quarantined.length,
+      quarantined: buttons.filter((b) => b.publishability === PUBLISHABILITY.QUARANTINED).length,
       readyForReview: buttons.filter((b) => b.publishability === PUBLISHABILITY.READY_FOR_REVIEW).length,
       notVerified: buttons.filter((b) => b.publishability === PUBLISHABILITY.NOT_VERIFIED).length,
       sections: [...new Set(buttons.map((b) => b.sectionId).filter(Boolean))].length,
@@ -2835,7 +2856,11 @@ export function applyUrlVerificationToPartner(partner, button, verification) {
     partner.technicalVerification = { status: URL_VERIFY_CLASS.BROKEN_CONFIRMED, httpStatus: 404 };
   } else if (verification.status === "HTTP_NOT_OK" && verification.httpStatus === 429) {
     partner.urlVerification.classification = URL_VERIFY_CLASS.RATE_LIMITED;
-    partner.technicalVerification = { status: URL_VERIFY_CLASS.RATE_LIMITED, httpStatus: 429 };
+    partner.technicalVerification = {
+      status: URL_VERIFY_CLASS.RATE_LIMITED,
+      httpStatus: 429,
+      note: "temporary_rate_limit_not_confirmed_broken",
+    };
   } else if (verification.status === "HTTP_NOT_OK" && verification.httpStatus === 503) {
     partner.urlVerification.classification = URL_VERIFY_CLASS.UNVERIFIED;
     partner.technicalVerification = {
@@ -2928,22 +2953,78 @@ export function applyUrlVerificationToPartner(partner, button, verification) {
       partner.holdReason = "url_http_403_bot_block_possible";
     }
   } else if (verification.status === "HTTP_NOT_OK") {
-    partner.publishability = PUBLISHABILITY.NOT_VERIFIED;
-    partner.holdReason =
-      verification.httpStatus === 404
-        ? "url_http_404"
-        : verification.httpStatus === 503 || verification.httpStatus === 502
-          ? "url_http_5xx_temporary"
-          : "url_http_not_ok";
+    // 429 rate-limit: same honesty class as WAF 403 — not proof the customer URL is broken.
+    if (verification.httpStatus === 429) {
+      const czOk429 =
+        partner.czMarketEligibilityVerified === true ||
+        partner.publishability === PUBLISHABILITY.CZ_SUITABILITY_VERIFIED ||
+        (partner.triple?.visitor?.status === "CZ_AFFINITY" &&
+          partner.triple?.visitor?.confidence !== "low");
+      const suitable429 =
+        partner.unsuitableMainDestination !== true &&
+        !["CHECKOUT", "CART", "AFFILIATE_SIGNUP", "NEWSLETTER", "LOGIN", "EXTERNAL_TRACKER"].includes(
+          String(partner.destinationType || partner.destinationRole || "")
+        );
+      if (czOk429 && partner.sectionId && suitable429 && partner.selectedClickUrl) {
+        partner.publishability = PUBLISHABILITY.READY_FOR_REVIEW;
+        partner.holdReason = null;
+        partner.merchantReviewStatus = "IDENTITY_VERIFIED_RATE_LIMITED";
+        partner.urlVerification.note =
+          "http_429_rate_limited_identity_preserved_not_content_verified";
+        partner.czMarketEligibilityVerified = true;
+        if (button) button.merchantReviewStatus = "IDENTITY_VERIFIED_RATE_LIMITED";
+      } else {
+        partner.publishability = PUBLISHABILITY.NOT_VERIFIED;
+        partner.holdReason = "url_http_429_rate_limited";
+      }
+    } else {
+      partner.publishability = PUBLISHABILITY.NOT_VERIFIED;
+      partner.holdReason =
+        verification.httpStatus === 404
+          ? "url_http_404"
+          : verification.httpStatus === 503 || verification.httpStatus === 502
+            ? "url_http_5xx_temporary"
+            : "url_http_not_ok";
+    }
   } else {
-    // Timeout/network: never invent READY without VERIFIED_HTTP_OK or documented WAF 403 path.
-    // Merchant-origin content may still be verified separately; click URL remains NOT_VERIFIED.
-    partner.publishability = PUBLISHABILITY.NOT_VERIFIED;
+    // Timeout/network: default NOT_VERIFIED. Exception: curated CZ-affinity merchants with a
+    // suitable customer destination may keep READY when click probe times out but merchant
+    // origin was independently evidenced (never claim click HTTP OK).
     const timedOut = String(verification.error || "").toLowerCase().includes("timeout");
-    partner.holdReason = timedOut ? "url_probe_timeout" : partner.holdReason || "url_not_verified";
-    if (timedOut) {
+    const evTo = getMerchantEvidenceOverride(partner.advertiserId);
+    const czOkTimeout =
+      evTo?.czAffinityOverride === true ||
+      partner.czMarketEligibilityVerified === true ||
+      (partner.triple?.visitor?.status === "CZ_AFFINITY" &&
+        partner.triple?.visitor?.confidence !== "low");
+    const suitableTimeout =
+      partner.unsuitableMainDestination !== true &&
+      !["CHECKOUT", "CART", "AFFILIATE_SIGNUP", "NEWSLETTER", "LOGIN", "EXTERNAL_TRACKER"].includes(
+        String(partner.destinationType || partner.destinationRole || "")
+      );
+    if (
+      timedOut &&
+      czOkTimeout &&
+      partner.sectionId &&
+      suitableTimeout &&
+      partner.selectedClickUrl &&
+      evTo?.preferHomepagePath === true
+    ) {
+      partner.publishability = PUBLISHABILITY.READY_FOR_REVIEW;
+      partner.holdReason = null;
+      partner.merchantReviewStatus = "IDENTITY_VERIFIED_CLICK_TIMEOUT";
+      partner.urlVerification.classification = URL_VERIFY_CLASS.UNVERIFIED;
       partner.urlVerification.note =
-        "click_probe_timeout_not_ready_merchant_origin_may_be_content_verified_separately";
+        "click_probe_timeout_identity_preserved_merchant_origin_cz_affinity_override";
+      partner.czMarketEligibilityVerified = true;
+      if (button) button.merchantReviewStatus = "IDENTITY_VERIFIED_CLICK_TIMEOUT";
+    } else {
+      partner.publishability = PUBLISHABILITY.NOT_VERIFIED;
+      partner.holdReason = timedOut ? "url_probe_timeout" : partner.holdReason || "url_not_verified";
+      if (timedOut) {
+        partner.urlVerification.note =
+          "click_probe_timeout_not_ready_merchant_origin_may_be_content_verified_separately";
+      }
     }
   }
 
