@@ -2936,32 +2936,14 @@ export function applyUrlVerificationToPartner(partner, button, verification) {
           ? "url_http_5xx_temporary"
           : "url_http_not_ok";
   } else {
-    // Timeout / network NOT_VERIFIED: do not invent content proof, but allow READY when
-    // curated CZ affinity + section + suitable destination already hold (identity path).
-    const ev = getMerchantEvidenceOverride(partner.advertiserId);
-    const czOk =
-      partner.czMarketEligibilityVerified === true ||
-      partner.publishability === PUBLISHABILITY.CZ_SUITABILITY_VERIFIED ||
-      ev?.czAffinityOverride === true ||
-      (partner.triple?.visitor?.status === "CZ_AFFINITY" &&
-        partner.triple?.visitor?.confidence !== "low");
-    const suitable =
-      partner.unsuitableMainDestination !== true &&
-      !["CHECKOUT", "CART", "AFFILIATE_SIGNUP", "NEWSLETTER", "LOGIN", "EXTERNAL_TRACKER"].includes(
-        String(partner.destinationType || partner.destinationRole || "")
-      );
+    // Timeout/network: never invent READY without VERIFIED_HTTP_OK or documented WAF 403 path.
+    // Merchant-origin content may still be verified separately; click URL remains NOT_VERIFIED.
+    partner.publishability = PUBLISHABILITY.NOT_VERIFIED;
     const timedOut = String(verification.error || "").toLowerCase().includes("timeout");
-    if (timedOut && czOk && partner.sectionId && suitable && partner.selectedClickUrl) {
-      partner.publishability = PUBLISHABILITY.READY_FOR_REVIEW;
-      partner.holdReason = null;
-      partner.merchantReviewStatus = "IDENTITY_VERIFIED_TIMEOUT";
+    partner.holdReason = timedOut ? "url_probe_timeout" : partner.holdReason || "url_not_verified";
+    if (timedOut) {
       partner.urlVerification.note =
-        "click_probe_timeout_identity_preserved_not_content_verified";
-      partner.czMarketEligibilityVerified = true;
-      if (button) button.merchantReviewStatus = "IDENTITY_VERIFIED_TIMEOUT";
-    } else {
-      partner.publishability = PUBLISHABILITY.NOT_VERIFIED;
-      partner.holdReason = partner.holdReason || "url_not_verified";
+        "click_probe_timeout_not_ready_merchant_origin_may_be_content_verified_separately";
     }
   }
 
