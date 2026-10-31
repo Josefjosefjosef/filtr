@@ -898,6 +898,36 @@ expect(
   "v9_unsuitable_affiliate",
   isUnsuitableMainDestination(DESTINATION_TYPE.AFFILIATE_SIGNUP, "7947783").unsuitable === true
 );
+expect(
+  "v9_external_tracker_before_campaign",
+  classifyDestinationType(
+    "https://flip.go2cloud.org/aff_c?offer_id=4&aff_id=4492&url_id=872",
+    "Sale promo banner"
+  ) === DESTINATION_TYPE.EXTERNAL_TRACKER
+);
+expect(
+  "v9_novakid_tracker",
+  classifyDestinationType(
+    "https://affise.novakidtracking.com/click?pid=3&offer_id=2",
+    "Campaign"
+  ) === DESTINATION_TYPE.EXTERNAL_TRACKER
+);
+expect(
+  "v9_unsuitable_external_tracker",
+  isUnsuitableMainDestination(DESTINATION_TYPE.EXTERNAL_TRACKER, "5755636").unsuitable === true
+);
+const lidlOv = applyMerchantEvidenceOverride({
+  advertiserId: "5954793",
+  assortment: { merchantType: MERCHANT_TYPE.MULTI_ASSORTMENT },
+  baseSectionId: "aff-jidlo",
+});
+expect("v9_lidl_cz_override", lidlOv.applied && lidlOv.sectionId === "aff-jidlo", lidlOv);
+const obiOv = applyMerchantEvidenceOverride({
+  advertiserId: "6857406",
+  assortment: { merchantType: MERCHANT_TYPE.SPECIALIST },
+  baseSectionId: "aff-dum-zahrada",
+});
+expect("v9_obi_cz_override", obiOv.applied && obiOv.sectionId === "aff-dum-zahrada", obiOv);
 
 const tipaOv = applyMerchantEvidenceOverride({
   advertiserId: "4921612",

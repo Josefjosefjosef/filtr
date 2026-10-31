@@ -49,6 +49,7 @@ import {
   GOLDEN_DATASET_V9,
   DESTINATION_TYPE,
   probeMerchantHomepage,
+  httpGetText,
 } from "./iu-cj-affiliate-phase3z-merchant-evidence-v9.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -70,6 +71,7 @@ export {
   GOLDEN_DATASET_V9,
   DESTINATION_TYPE,
   probeMerchantHomepage,
+  httpGetText,
 };
 
 /** Hard eligibility must pass before quality score can select a main button link. */
@@ -2728,20 +2730,15 @@ export async function verifyClickUrlRedirect(clickUrl, { timeoutMs = 8000 } = {}
     return out;
   }
   try {
-    const controller = new AbortController();
-    const t = setTimeout(() => controller.abort(), timeoutMs);
-    const res = await fetch(clickUrl, {
-      method: "GET",
-      redirect: "follow",
-      signal: controller.signal,
+    const res = await httpGetText(clickUrl, {
+      timeoutMs,
+      maxRedirects: 8,
       headers: {
-        "User-Agent": "InfoUzelPhase3ZLinkAudit/1.0 (+https://infouzel.cz; non-transactional)",
-        Accept: "text/html,application/xhtml+xml",
+        "X-InfoUzel-Audit": "phase3z-link-audit; non-transactional; +https://infouzel.cz",
       },
     });
-    clearTimeout(t);
     out.httpStatus = res.status;
-    out.finalUrl = String(res.url || "");
+    out.finalUrl = String(res.url || clickUrl);
     try {
       out.finalHost = new URL(out.finalUrl).hostname;
     } catch {
@@ -2751,7 +2748,7 @@ export async function verifyClickUrlRedirect(clickUrl, { timeoutMs = 8000 } = {}
       out.status = "HTTP_FORBIDDEN";
       out.clientBlockedPossible = true;
       out.error = "http_403_may_be_bot_block_not_dead_link";
-    } else if (res.ok) {
+    } else if (res.status >= 200 && res.status < 400) {
       out.status = "VERIFIED_HTTP_OK";
     } else {
       out.status = "HTTP_NOT_OK";

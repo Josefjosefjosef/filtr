@@ -3,6 +3,10 @@
  * Unifies decision inputs for category + main-button destination.
  * Never fabricates website evidence; overrides require explicit documented rationale.
  */
+import http from "node:http";
+import https from "node:https";
+import { URL as NodeURL } from "node:url";
+
 export const DESTINATION_TYPE = Object.freeze({
   MERCHANT_HOMEPAGE: "MERCHANT_HOMEPAGE",
   RELEVANT_CATEGORY: "RELEVANT_CATEGORY",
@@ -176,6 +180,38 @@ export const MERCHANT_EVIDENCE_OVERRIDES = Object.freeze({
     rationale: "Multi-brand consumer electronics / small appliances program; lauben.com/cs is acceptable brand home within program.",
     evidenceSources: ["brand_domains:lauben,lamax,truelife"],
   },
+  "5954793": {
+    advertiserCid: "5954793",
+    merchantIdentity: "lidl-shop.cz",
+    officialDomains: ["lidl.cz", "www.lidl.cz"],
+    merchantType: "MULTI_ASSORTMENT",
+    primaryAssortment: { sectionId: "aff-jidlo", group: "jidlo" },
+    secondaryAssortments: [
+      { sectionId: "aff-dum-zahrada", group: "dum" },
+      { sectionId: "aff-moda", group: "moda" },
+    ],
+    significantAssortmentGroups: ["jidlo", "dum", "moda", "elektro"],
+    confidence: "high",
+    czAffinityOverride: true,
+    preferHomepagePath: true,
+    rationale:
+      "Lidl Czech retail + e-shop (lidl.cz). Bot probes without browser UA historically failed; customer homepage is live for CZ visitors.",
+    evidenceSources: ["official_domain:lidl.cz", "cz_retail:lidl"],
+  },
+  "6857406": {
+    advertiserCid: "6857406",
+    merchantIdentity: "OBI CZ",
+    officialDomains: ["obi.cz", "www.obi.cz"],
+    merchantType: "SPECIALIST",
+    primaryAssortment: { sectionId: "aff-dum-zahrada", group: "dum" },
+    significantAssortmentGroups: ["dum", "dilna", "zahrada"],
+    confidence: "high",
+    czAffinityOverride: true,
+    preferHomepagePath: true,
+    rationale:
+      "OBI Česká republika (obi.cz). Minimal bot UA previously received HTTP 404 from edge; browser-UA probe returns 200 homepage.",
+    evidenceSources: ["official_domain:obi.cz", "cz_retail:obi"],
+  },
 });
 
 /**
@@ -255,19 +291,20 @@ export function classifyDestinationType(destination, linkName = "", opts = {}) {
     (/\/(cs|cz|sk|en)(\/|$)/i.test(pathOnlyEarly) &&
       pathOnlyEarly.split("/").filter(Boolean).length <= 2);
   if (/coupon|kup[oó]n|voucher|slevov/i.test(blob) && !isHomeish) return DESTINATION_TYPE.COUPON;
+  // Known external affiliate/tracking hops (not merchant origin).
+  // MUST run before CAMPAIGN — tracker paths often contain offer/promo tokens.
+  if (
+    /g2afse\.com|go2cloud\.org|novakidtracking\.com|flip\.go2cloud/i.test(host) ||
+    (opts.externalTrackerHosts || []).some((h) => host.endsWith(String(h).toLowerCase()))
+  ) {
+    return DESTINATION_TYPE.EXTERNAL_TRACKER;
+  }
   if (
     (/\/(sale|promo|akce|deal|campaign|black-friday)/i.test(path) ||
       /sale|promo|%\s*off|banner/i.test(name)) &&
     !isHomeish
   ) {
     return DESTINATION_TYPE.CAMPAIGN;
-  }
-  // Known external affiliate/tracking hops (not merchant origin).
-  if (
-    /g2afse\.com|go2cloud\.org|novakidtracking\.com|flip\.go2cloud/i.test(host) ||
-    (opts.externalTrackerHosts || []).some((h) => host.endsWith(String(h).toLowerCase()))
-  ) {
-    return DESTINATION_TYPE.EXTERNAL_TRACKER;
   }
   if (/\/(p|product|produkt|item|sku)\b/i.test(path)) return DESTINATION_TYPE.RELEVANT_PRODUCT;
   const pathOnly = path.replace(/\/+$/, "") || "/";
@@ -401,6 +438,81 @@ export function isUnsuitableMainDestination(destinationType, advertiserId) {
   return { unsuitable: false, reason: null };
 }
 
+const BROWSER_LIKE_HEADERS = Object.freeze({
+  "User-Agent":
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+  Accept: "text/html,application/xhtml+xml;q=0.9,*/*;q=0.8",
+  "Accept-Language": "cs-CZ,cs;q=0.9,en;q=0.8",
+});
+
+/**
+ * HTTP(S) GET with raised maxHeaderSize — Lidl and similar edges overflow Node's default undici limit.
+ * Follows redirects up to maxRedirects. Does not click affiliate networks beyond the given URL.
+ */
+export function httpGetText(url, { timeoutMs = 8000, maxRedirects = 5, headers = {} } = {}) {
+  return new Promise((resolve, reject) => {
+    let settled = false;
+    const finish = (err, value) => {
+      if (settled) return;
+      settled = true;
+      if (err) reject(err);
+      else resolve(value);
+    };
+    const run = (current, redirectsLeft) => {
+      let parsed;
+      try {
+        parsed = new NodeURL(current);
+      } catch (e) {
+        finish(e);
+        return;
+      }
+      const lib = parsed.protocol === "http:" ? http : https;
+      const req = lib.request(
+        {
+          protocol: parsed.protocol,
+          hostname: parsed.hostname,
+          port: parsed.port || (parsed.protocol === "http:" ? 80 : 443),
+          path: parsed.pathname + parsed.search,
+          method: "GET",
+          maxHeaderSize: 131072,
+          headers: { ...BROWSER_LIKE_HEADERS, ...headers },
+        },
+        (res) => {
+          const status = res.statusCode || 0;
+          const loc = res.headers.location;
+          if (status >= 300 && status < 400 && loc && redirectsLeft > 0) {
+            res.resume();
+            let next = loc;
+            try {
+              next = new NodeURL(loc, current).toString();
+            } catch {
+              /* keep raw */
+            }
+            run(next, redirectsLeft - 1);
+            return;
+          }
+          const chunks = [];
+          res.on("data", (c) => chunks.push(c));
+          res.on("end", () => {
+            finish(null, {
+              status,
+              url: current,
+              headers: res.headers,
+              body: Buffer.concat(chunks).toString("utf8"),
+            });
+          });
+        }
+      );
+      req.on("error", (e) => finish(e));
+      req.setTimeout(timeoutMs, () => {
+        req.destroy(Object.assign(new Error("timeout"), { name: "AbortError" }));
+      });
+      req.end();
+    };
+    run(String(url || ""), maxRedirects);
+  });
+}
+
 /** Lightweight merchant website probe (no affiliate click). */
 export async function probeMerchantHomepage(url, { timeoutMs = 8000 } = {}) {
   const out = {
@@ -416,23 +528,22 @@ export async function probeMerchantHomepage(url, { timeoutMs = 8000 } = {}) {
     out.error = "missing_url";
     return out;
   }
-  const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), timeoutMs);
   try {
-    const res = await fetch(out.url, {
-      method: "GET",
-      redirect: "follow",
-      signal: ctrl.signal,
-      headers: { "user-agent": "InfoUzelMerchantEvidenceBot/1.0 (+https://infouzel.cz; audit-only; no affiliate click)" },
+    const res = await httpGetText(out.url, {
+      timeoutMs,
+      headers: {
+        "X-InfoUzel-Audit": "merchant-evidence-only; no-affiliate-click; +https://infouzel.cz",
+      },
     });
     out.httpStatus = res.status;
-    const ct = String(res.headers.get("content-type") || "");
+    out.url = res.url || out.url;
+    const ct = String(res.headers["content-type"] || "");
     if (!ct.includes("text/html")) {
       out.error = "non_html";
       out.ok = res.status >= 200 && res.status < 400;
       return out;
     }
-    const text = await res.text();
+    const text = res.body || "";
     const titleM = text.match(/<title[^>]*>([^<]{0,200})<\/title>/i);
     out.title = titleM ? titleM[1].trim() : null;
     const navSlice = text.slice(0, 120000);
@@ -454,8 +565,6 @@ export async function probeMerchantHomepage(url, { timeoutMs = 8000 } = {}) {
     }
   } catch (e) {
     out.error = String(e && e.name === "AbortError" ? "timeout" : e?.message || e);
-  } finally {
-    clearTimeout(t);
   }
   return out;
 }
