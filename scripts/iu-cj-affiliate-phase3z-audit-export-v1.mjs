@@ -493,6 +493,132 @@ write(
 
 write(
   dir,
+  "LINK-CANDIDATE-AUDIT.json",
+  JSON.stringify(reg.linkCandidateAudit || reg.selectionAudit?.linkCandidateAudit || {}, null, 2) + "\n"
+);
+write(
+  dir,
+  "TAXONOMY-SOURCE-OF-TRUTH.json",
+  JSON.stringify(
+    {
+      taxonomy: reg.taxonomy || null,
+      reconciliation: reg.taxonomyReconciliation || null,
+      occupancy: reg.taxonomyOccupancy || null,
+    },
+    null,
+    2
+  ) + "\n"
+);
+write(
+  dir,
+  "ASSORTMENT-PROFILES.json",
+  JSON.stringify(
+    {
+      stats: reg.assortmentStats || null,
+      partners: partners.map((p) => ({
+        advertiserId: p.advertiserId,
+        displayNameCs: p.displayNameCs,
+        merchantType: p.merchantType,
+        sectionId: p.sectionId,
+        sectionTitleCs: p.sectionTitleCs,
+        assortmentProfile: p.assortmentProfile || null,
+        assortmentAlternatives: p.assortmentAlternatives || [],
+        categoryHysteresisKept: p.categoryHysteresisKept === true,
+        categoryChange: p.categoryChange || null,
+      })),
+    },
+    null,
+    2
+  ) + "\n"
+);
+write(
+  dir,
+  "CATEGORY-SEMANTIC-AUDIT-ALL-PARTNERS.csv",
+  toCsv(
+    partners.map((p) => {
+      const ap = p.assortmentProfile || {};
+      const sig = (ap.significantGroups || []).map((g) => g.group || g.sectionId).join("|");
+      const alts = (p.assortmentAlternatives || []).map((a) => a.sectionId).join("|");
+      return {
+        advertiserId: p.advertiserId,
+        partner: p.displayNameCs || p.cjName,
+        merchantType: p.merchantType || "",
+        primaryAssortment: ap.primaryAssortment?.group || ap.primaryAssortment?.sectionId || "",
+        secondaryAssortment: ap.secondaryAssortment?.group || ap.secondaryAssortment?.sectionId || "",
+        significantGroups: sig,
+        previousSectionId: p.categoryChange?.from || "",
+        previousSectionTitle: "",
+        recommendedSectionId: p.sectionId || "",
+        recommendedSectionTitle: p.sectionTitleCs || "",
+        alternativeSections: alts,
+        evidenceSources: (ap.sources || []).join("|"),
+        verifiedAt: ap.checkedAt || p.source?.confirmedAt || "",
+        confidence: ap.confidence || p.sectionConfidence || "",
+        decisionReason: p.sectionRule || "",
+        changeReason: p.categoryChange?.reason || "",
+        reviewStatus: p.holdReason || p.publishability || "",
+        blockingIssue: p.holdReason || "",
+      };
+    }),
+    [
+      "advertiserId",
+      "partner",
+      "merchantType",
+      "primaryAssortment",
+      "secondaryAssortment",
+      "significantGroups",
+      "previousSectionId",
+      "previousSectionTitle",
+      "recommendedSectionId",
+      "recommendedSectionTitle",
+      "alternativeSections",
+      "evidenceSources",
+      "verifiedAt",
+      "confidence",
+      "decisionReason",
+      "changeReason",
+      "reviewStatus",
+      "blockingIssue",
+    ]
+  )
+);
+write(
+  dir,
+  "MIGRATION-PLAN-DISARMED.json",
+  JSON.stringify(
+    {
+      publicSwapArmed: false,
+      mode: "PREP_ONLY",
+      invariant: "atomic_cutover_required_no_empty_gap",
+      map: buttons.map((b) => ({
+        advertiserId: b.advertiserId,
+        partnerId: b.partnerId,
+        displayNameCs: b.displayNameCs,
+        sectionId: b.sectionId,
+        cjLinkId: b.linkId,
+        clickUrlPresent: Boolean(b.clickUrl),
+        publishability: b.publishability,
+        holdReason: b.holdReason || null,
+        ownership: b.chipOwnership?.ownership || null,
+        migrationAction:
+          b.publishability === "READY_FOR_REVIEW"
+            ? "REPLACE_ON_GO"
+            : b.holdReason
+              ? "HOLD_NO_PUBLIC_CHIP"
+              : "REVIEW",
+      })),
+      pendingPlan:
+        "PENDING partners stay evidential only; never silently keep unauthorized public chips; never mass-drop without replacement set.",
+      rollback:
+        "LKG restore allowed for technical outage only; never restore proven-prohibited affiliate URLs.",
+    },
+    null,
+    2
+  ) + "\n"
+);
+
+write(
+  dir,
   "OWNERSHIP-UNASSIGNED.csv",
   toCsv(
     partners.map((p) => ({
@@ -532,7 +658,7 @@ const manifestFiles = files.map((f) => ({
   sha256: sha256File(f.full),
 }));
 const manifest = {
-  phase: "3Z-V7",
+  phase: "3Z-V8",
   rulesVersion: reg.rulesVersion,
   joinedButtonParity: reg.joinedButtonParity || null,
   selectionAudit: reg.selectionAudit || null,
