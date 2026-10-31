@@ -9,7 +9,8 @@ const path = require("path");
 const { spawn, spawnSync } = require("child_process");
 const http = require("http");
 
-const PORT = Number(process.env.SILVER_NATIVE_DATETIME_GUARD_LOCAL_PORT || 8094);
+/* Unique vs IU datetime real-route geometry (8094): parallel smoke pool must not share bind. */
+const PORT = Number(process.env.SILVER_NATIVE_DATETIME_GUARD_LOCAL_PORT || 8102);
 const GUARD_URL = `http://127.0.0.1:${PORT}/`;
 const SERVER_SCRIPT = path.join(__dirname, "..", "server", "projects-static.mjs");
 
