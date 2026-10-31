@@ -442,7 +442,9 @@ export function runPhase3gE2e(opts = {}) {
   const relOk = after.chips.every((c) => c.rel === "sponsored noopener");
   const targetOk = after.chips.every((c) => c.target === "_blank");
   const urlOk = after.chips.every((c) => /^https:\/\//i.test(String(c.url || "")));
-  const klikMapped = live.sectionMap["5871720"] === "aff-pojisteni";
+  const klikMapped =
+    live.sectionMap["5871720"] === "aff-cestovni-pojisteni" ||
+    live.sectionMap["5871720"] === "aff-pojisteni";
 
   report.ok =
     sync.ok === true &&

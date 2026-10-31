@@ -195,7 +195,13 @@ expect("capacity_unlimited_model", cap.dynamicModel === "unlimited_overlay" || c
 const map = JSON.parse(
   fs.readFileSync(path.join(ROOT, "projects", "data", "iu-affiliate-cj-section-map-v1.json"), "utf8")
 );
-expect("klik_pojisteni", map["5871720"] === "aff-pojisteni");
+// Klik.cz (5871720) is travel insurance — authoritative tile is aff-cestovni-pojisteni
+// (not the broader aff-pojisteni). Stale map expectation blocked live catalog-sync.
+expect(
+  "klik_pojisteni",
+  map["5871720"] === "aff-cestovni-pojisteni" || map["5871720"] === "aff-pojisteni"
+);
+expect("klik_pojisteni_travel_preferred", map["5871720"] === "aff-cestovni-pojisteni");
 
 const review = JSON.parse(
   fs.readFileSync(path.join(ROOT, "projects", "data", "iu-affiliate-cj-manual-review-v1.json"), "utf8")
