@@ -32,11 +32,20 @@ import {
 } from "./iu-cj-affiliate-phase3e-partner-recon-v1.mjs";
 import { classifyPolicyManagement } from "./iu-cj-affiliate-phase3f-dynamic-catalog-v1.mjs";
 import { parseAffiliateCatalogOrdered } from "./iu-cj-affiliate-phase2-partner-slot-inventory-v1.mjs";
+import {
+  buildAssortmentProfile,
+  selectPrimarySectionWithAssortment,
+  auditLinkCandidateBuckets,
+  explainTaxonomy36vs38,
+  CATEGORY_SELECTION_HYSTERESIS,
+  MERCHANT_TYPE,
+} from "./iu-cj-affiliate-phase3z-assortment-v8.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 export const PHASE3Z_SCHEMA = "iu-affiliate-cj-partner-registry-v1";
 export const PHASE3Z_BUTTONS_SCHEMA = "iu-affiliate-cj-partner-buttons-preview-v1";
-export const PHASE3Z_RULES_VERSION = "phase3z-partner-robot-v7";
+export const PHASE3Z_RULES_VERSION = "phase3z-partner-robot-v8";
+export { MERCHANT_TYPE, CATEGORY_SELECTION_HYSTERESIS, buildAssortmentProfile, selectPrimarySectionWithAssortment, auditLinkCandidateBuckets, explainTaxonomy36vs38 };
 
 /** Hard eligibility must pass before quality score can select a main button link. */
 export const LINK_ELIGIBILITY = Object.freeze({
@@ -1877,11 +1886,15 @@ export function buildPhase3zPartnerRegistry({
   const advertisers = Array.isArray(staging?.advertisers) ? staging.advertisers : [];
   const links = Array.isArray(staging?.links) ? staging.links : [];
   const prevByAdv = new Map();
+  const prevSectionByAdv = new Map();
   if (previousSelections && typeof previousSelections === "object") {
     if (Array.isArray(previousSelections.partners)) {
       for (const p of previousSelections.partners) {
         if (p?.advertiserId && p?.selectedLinkId) {
           prevByAdv.set(String(p.advertiserId), String(p.selectedLinkId));
+        }
+        if (p?.advertiserId && p?.sectionId) {
+          prevSectionByAdv.set(String(p.advertiserId), String(p.sectionId));
         }
       }
     } else if (previousSelections instanceof Map) {
@@ -1922,12 +1935,73 @@ export function buildPhase3zPartnerRegistry({
     const management = classifyPolicyManagement(policy) || "UNASSIGNED";
     const brandKey = normalizePartnerBrand(adv.advertiserName);
     const displayNameCs = proposeCzechDisplayName(adv.advertiserName, adv.programUrl);
-    const section = classifyPartnerSection({
+    const baseSection = classifyPartnerSection({
       advertiserId,
       advertiser: adv,
       sectionMap,
     });
     const advLinks = linksByAdv.get(advertiserId) || [];
+    const assortment = buildAssortmentProfile({
+      advertiser: adv,
+      links: advLinks,
+      knownSections,
+    });
+    const sectionPick = selectPrimarySectionWithAssortment({
+      baseSection,
+      assortment,
+      previousSectionId: prevSectionByAdv.get(advertiserId) || baseSection.previousSectionId || null,
+      knownSections,
+      hysteresis: CATEGORY_SELECTION_HYSTERESIS,
+    });
+    const baseHadNoTile =
+      !baseSection.sectionId ||
+      String(baseSection.source || "").includes("no_taxonomy") ||
+      String(baseSection.holdHint || "").includes("no_suitable") ||
+      String(baseSection.holdHint || "").includes("semantic");
+    const allowAssortmentFill =
+      !baseHadNoTile ||
+      (sectionPick.confidence === "high" && Number(sectionPick.score || 0) >= 80);
+    const chosenSectionId = allowAssortmentFill
+      ? sectionPick.sectionId || baseSection.sectionId
+      : baseSection.sectionId || null;
+    const section = {
+      ...baseSection,
+      sectionId: chosenSectionId,
+      source: !chosenSectionId
+        ? baseSection.source || "pending_category_evidence_v8"
+        : sectionPick.hysteresisKept
+          ? "assortment_v8_hysteresis"
+          : baseSection.source === "section_map" || String(baseSection.source || "").includes("section_map")
+            ? baseSection.source
+            : chosenSectionId === baseSection.sectionId
+              ? baseSection.source || "cj_evidence"
+              : "assortment_v8+" + (baseSection.source || "cj_evidence"),
+      confidence: sectionPick.confidence || baseSection.confidence,
+      rule: chosenSectionId ? sectionPick.reason || baseSection.rule : baseSection.rule || "pending_evidence",
+      evidence: [
+        ...(baseSection.evidence || []),
+        "merchantType:" + (assortment.merchantType || ""),
+        "assortmentConfidence:" + (assortment.confidence || ""),
+        ...(sectionPick.hysteresisKept ? ["category_hysteresis_kept"] : []),
+        ...(baseHadNoTile && !chosenSectionId ? ["assortment_fill_blocked_pending_evidence"] : []),
+      ],
+      assortmentAlternatives: sectionPick.alternatives || [],
+      categoryChange:
+        prevSectionByAdv.get(advertiserId) &&
+        chosenSectionId &&
+        prevSectionByAdv.get(advertiserId) !== chosenSectionId &&
+        !sectionPick.hysteresisKept
+          ? {
+              from: prevSectionByAdv.get(advertiserId),
+              to: chosenSectionId,
+              reason: sectionPick.reason,
+            }
+          : baseSection.categoryChange || null,
+    };
+    if (!section.sectionId) {
+      section.holdHint =
+        section.holdHint || baseSection.holdHint || "assortment_unclear_pending_evidence";
+    }
     const pick = selectPrimaryAffiliateLink(advLinks, adv, {
       websitePid,
       previousLinkId: prevByAdv.get(advertiserId) || null,
@@ -2121,6 +2195,10 @@ export function buildPhase3zPartnerRegistry({
       sectionEvidence: section.evidence || [],
       categoryKey: section.categoryKey || null,
       categoryChange: section.categoryChange || null,
+      merchantType: assortment.merchantType,
+      assortmentProfile: assortment,
+      assortmentAlternatives: section.assortmentAlternatives || [],
+      categoryHysteresisKept: sectionPick.hysteresisKept === true,
       selectedClickUrl: pick.selected?.clickUrl || null,
       selectedDestination: pick.selected?.destination || null,
       selectedDestinationRaw: pick.selected?.destinationRaw || pick.selected?.destination || null,
@@ -2339,9 +2417,42 @@ export function buildPhase3zPartnerRegistry({
   // Snapshot before URL probe — MUST be rebuilt after verifyAllCandidateUrls.
   const evidenceMatrix = buildEvidenceMatrix(partners, { verifiedAt: nowIso });
 
+  const linkCandidateAudit = auditLinkCandidateBuckets(partners, links.length);
+  const taxonomyReconciliation = explainTaxonomy36vs38(taxonomy.taxonomyCount);
+  const assortmentStats = {
+    specialist: partners.filter((p) => p.merchantType === MERCHANT_TYPE.SPECIALIST).length,
+    multiAssortment: partners.filter((p) => p.merchantType === MERCHANT_TYPE.MULTI_ASSORTMENT).length,
+    universal: partners.filter((p) => p.merchantType === MERCHANT_TYPE.UNIVERSAL_ESHOP).length,
+    marketplace: partners.filter((p) => p.merchantType === MERCHANT_TYPE.MARKETPLACE).length,
+    digitalService: partners.filter((p) => p.merchantType === MERCHANT_TYPE.DIGITAL_SERVICE).length,
+    serviceProvider: partners.filter((p) => p.merchantType === MERCHANT_TYPE.SERVICE_PROVIDER).length,
+    goodsAndServices: partners.filter((p) => p.merchantType === MERCHANT_TYPE.GOODS_AND_SERVICES).length,
+    unknown: partners.filter((p) => p.merchantType === MERCHANT_TYPE.UNKNOWN).length,
+    multiSignificantGroups: partners.filter(
+      (p) => (p.assortmentProfile?.significantGroups || []).length >= 2
+    ).length,
+    categoryHysteresisKept: partners.filter((p) => p.categoryHysteresisKept).length,
+  };
+  const selectionAudit = {
+    previousAvailable: prevByAdv.size > 0,
+    selectionChanged: partners.filter(
+      (p) =>
+        prevByAdv.has(String(p.advertiserId)) &&
+        p.selectedLinkId &&
+        String(prevByAdv.get(String(p.advertiserId))) !== String(p.selectedLinkId)
+    ).length,
+    homepageSelected: partners.filter((p) => p.destinationRole === "HOMEPAGE").length,
+    unsuitableMainDestinationsRemaining: partners.filter((p) =>
+      ["NEWSLETTER", "CHECKOUT", "CART", "LOGIN", "COUPON", "PROMO"].includes(String(p.destinationRole || ""))
+    ).length,
+    htmlEntitiesDecoded: partners.filter((p) => p.htmlEntitiesDecoded).length,
+    totalLinkCandidates: links.length,
+    linkCandidateAudit,
+  };
+
   const registry = {
     schema: PHASE3Z_SCHEMA,
-    version: 6,
+    version: 8,
     rulesVersion,
     generatedAt: nowIso,
     liveEnabled: false,
@@ -2349,10 +2460,21 @@ export function buildPhase3zPartnerRegistry({
     publicButtonSwapArmed: false,
     websitePid: String(staging?.websitePid || websitePid),
     note:
-      "NON-PUBLIC canonical CJ partner registry (v6). Every JOINED partner has a full button record; quarantine is a status not an omission. Language CZ>SK>EN. Public swap DISARMED.",
+      "NON-PUBLIC canonical CJ partner registry (v8). Assortment-aware section selection + exclusive link-candidate accounting. Every JOINED partner has a full button record; quarantine is a status not an omission. Language CZ>SK>EN. Public swap DISARMED.",
     taxonomy,
+    taxonomyReconciliation,
     taxonomyOccupancy,
     unifiedTakeoverPlan,
+    assortmentStats,
+    selectionAudit,
+    linkCandidateAudit,
+    stagingMeta: {
+      generatedAt: staging?.generatedAt || null,
+      sourceKind: staging?.sourceKind || staging?.source || null,
+      transport: staging?.transport || null,
+      advertisers: advertisers.length,
+      links: links.length,
+    },
     counts: {
       advertisersInStaging: advertisers.length,
       partners: partners.length,
@@ -2400,6 +2522,11 @@ export function buildPhase3zPartnerRegistry({
       taxonomyCount: taxonomy.taxonomyCount,
       occupiedSections: occupiedSectionIds.size,
       emptySections: taxonomyOccupancy.emptyCategories,
+      assortmentMultiGroup: assortmentStats.multiSignificantGroups,
+      merchantTypeUnknown: assortmentStats.unknown,
+      selectionChanged: selectionAudit.selectionChanged,
+      homepageSelected: selectionAudit.homepageSelected,
+      unsuitableMainDestinationsRemaining: selectionAudit.unsuitableMainDestinationsRemaining,
     },
     ownershipSummary,
     partners,
@@ -2412,14 +2539,14 @@ export function buildPhase3zPartnerRegistry({
 
   const buttonCatalog = {
     schema: PHASE3Z_BUTTONS_SCHEMA,
-    version: 6,
+    version: 8,
     rulesVersion,
     generatedAt: nowIso,
     liveEnabled: false,
     publishArmed: false,
     publicButtonSwapArmed: false,
     note:
-      "NON-PUBLIC preview of partner buttons (v6). JOINED count == button record count. Quarantine is status. READY_FOR_REVIEW requires category+CZ+URL. Public swap DISARMED.",
+      "NON-PUBLIC preview of partner buttons (v8). JOINED count == button record count. Quarantine is status. READY_FOR_REVIEW requires category+CZ+URL. Public swap DISARMED.",
     counts: {
       buttons: buttons.length,
       buttonRecords: buttons.length,
@@ -2581,6 +2708,17 @@ export function applyUrlVerificationToPartner(partner, button, verification) {
       status: URL_VERIFY_CLASS.UNVERIFIED,
       httpStatus: 503,
       note: "temporary_unavailable",
+    };
+  } else if (
+    verification.httpStatus === 202 ||
+    (verification.status === "HTTP_NOT_OK" && verification.httpStatus === 202)
+  ) {
+    // HTTP 202 Accepted ≠ confirmed customer-facing destination.
+    partner.urlVerification.classification = URL_VERIFY_CLASS.UNVERIFIED;
+    partner.technicalVerification = {
+      status: URL_VERIFY_CLASS.UNVERIFIED,
+      httpStatus: 202,
+      note: "http_202_not_sufficient_destination_proof",
     };
   } else {
     partner.urlVerification.classification =
@@ -2961,16 +3099,23 @@ export async function main(argv = process.argv.slice(2)) {
   const homepageSelected = (registry.partners || []).filter(
     (p) => p.destinationRole === DESTINATION_ROLE.HOMEPAGE
   ).length;
+  const linkCandidateAudit =
+    registry.linkCandidateAudit ||
+    auditLinkCandidateBuckets(registry.partners || [], Number(registry.stagingMeta?.links || 0));
+  registry.linkCandidateAudit = linkCandidateAudit;
+  registry.taxonomyReconciliation =
+    registry.taxonomyReconciliation ||
+    explainTaxonomy36vs38(registry.taxonomy?.taxonomyCount || 0);
   registry.selectionAudit = {
     previousAvailable: prevMap.size > 0,
     selectionChanged,
     homepageSelected,
     unsuitableMainDestinationsRemaining: badRoles,
     htmlEntitiesDecoded: (registry.partners || []).filter((p) => p.htmlEntitiesDecoded).length,
-    totalLinkCandidates: (registry.partners || []).reduce(
-      (a, p) => a + Number(p.linkCandidateCount || 0),
-      0
-    ),
+    totalLinkCandidates: Number(registry.stagingMeta?.links || 0) ||
+      (registry.partners || []).reduce((a, p) => a + Number(p.linkCandidateCount || 0), 0),
+    linkCandidateAudit,
+    assortmentStats: registry.assortmentStats || null,
   };
   registry.counts.selectionChanged = selectionChanged;
   registry.counts.homepageSelected = homepageSelected;

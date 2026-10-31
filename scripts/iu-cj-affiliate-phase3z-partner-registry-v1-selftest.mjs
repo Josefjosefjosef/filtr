@@ -30,6 +30,11 @@ import {
   evaluateLinkEligibility,
   DESTINATION_ROLE,
   LINK_ELIGIBILITY,
+  buildAssortmentProfile,
+  selectPrimarySectionWithAssortment,
+  auditLinkCandidateBuckets,
+  explainTaxonomy36vs38,
+  MERCHANT_TYPE,
 } from "./iu-cj-affiliate-phase3z-partner-registry-v1.mjs";
 import fs from "node:fs";
 import path from "node:path";
@@ -720,6 +725,92 @@ const hyst = selectPrimaryAffiliateLink(answearLinks, answearAdv, {
   hysteresis: 1000,
 });
 expect("hysteresis_keeps_home", hyst.selected?.linkId === "home" && hyst.hysteresisKept === true, hyst);
+
+expect("rules_v8", PHASE3Z_RULES_VERSION === "phase3z-partner-robot-v8");
+const tax36 = explainTaxonomy36vs38(36);
+expect("tax_36_ok", tax36.ok === true && tax36.productionMainCategoryTiles === 36);
+const taxBad = explainTaxonomy36vs38(38);
+expect("tax_38_filename_not_sot", taxBad.ok === false);
+
+const allegroProfile = buildAssortmentProfile({
+  advertiser: {
+    advertiserName: "Allegro.cz Marketplace",
+    programUrl: "https://allegro.cz/",
+    primaryCategory: "<parent>Clothing/Apparel</parent><child>Malls</child>",
+  },
+  links: [
+    { linkId: "1", linkName: "Electronics deals", destination: "https://allegro.cz/elektronika" },
+    { linkId: "2", linkName: "Fashion", destination: "https://allegro.cz/moda" },
+    { linkId: "3", linkName: "Toys", destination: "https://allegro.cz/hracky" },
+    { linkId: "4", linkName: "Home", destination: "https://allegro.cz/dum" },
+  ],
+});
+expect(
+  "allegro_marketplace_or_multi",
+  allegroProfile.merchantType === MERCHANT_TYPE.MARKETPLACE ||
+    allegroProfile.merchantType === MERCHANT_TYPE.UNIVERSAL_ESHOP ||
+    allegroProfile.merchantType === MERCHANT_TYPE.MULTI_ASSORTMENT,
+  allegroProfile.merchantType
+);
+expect(
+  "allegro_multi_groups",
+  (allegroProfile.significantGroups || []).length >= 2,
+  allegroProfile.significantGroups
+);
+
+const secKeep = selectPrimarySectionWithAssortment({
+  baseSection: { sectionId: "aff-moda", confidence: "high", rule: "map" },
+  assortment: allegroProfile,
+  previousSectionId: "aff-moda",
+  knownSections: new Set(["aff-moda", "aff-elektro", "aff-deti-hracky", "aff-inzerce-bazary"]),
+  hysteresis: 100,
+});
+expect("category_hysteresis", secKeep.sectionId === "aff-moda", secKeep);
+expect("category_hysteresis_flag", secKeep.hysteresisKept === true, secKeep);
+
+const bucket = auditLinkCandidateBuckets(
+  [
+    {
+      advertiserId: "1",
+      selectedLinkId: "a",
+      linkInventory: [
+        { linkId: "a", eligibility: "ELIGIBLE" },
+        { linkId: "b", eligibility: "ELIGIBLE" },
+        { linkId: "c", eligibility: "INELIGIBLE" },
+        { linkId: "d", eligibility: "PENDING_EVIDENCE" },
+      ],
+    },
+  ],
+  4
+);
+expect(
+  "candidate_invariant",
+  bucket.selected === 1 &&
+    bucket.eligibleNotSelected === 1 &&
+    bucket.ineligible === 1 &&
+    bucket.pendingEvidence === 1 &&
+    bucket.accounted === 4,
+  bucket
+);
+
+// One weak product signal must not flip specialist primary section.
+const specialist = buildAssortmentProfile({
+  advertiser: {
+    advertiserName: "Dermacol CZ",
+    programUrl: "https://www.dermacol.cz/",
+    primaryCategory: "<parent>Beauty</parent><child>Skin Care</child>",
+  },
+  links: [
+    { linkId: "1", linkName: "Home", destination: "https://www.dermacol.cz/" },
+    { linkId: "2", linkName: "One toy promo", destination: "https://www.dermacol.cz/hracka-akce" },
+  ],
+});
+expect(
+  "specialist_not_flipped_by_one_toy",
+  specialist.merchantType === MERCHANT_TYPE.SPECIALIST ||
+    (specialist.primaryAssortment && specialist.primaryAssortment.sectionId === "aff-kosmetika"),
+  specialist
+);
 
 if (failures.length) {
   console.error("IU_PHASE3Z_PARTNER_REGISTRY_SELFTEST_FAIL");
