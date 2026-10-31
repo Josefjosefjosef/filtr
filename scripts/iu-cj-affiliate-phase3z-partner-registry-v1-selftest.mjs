@@ -977,6 +977,16 @@ const gearOv = applyMerchantEvidenceOverride({
   baseSectionId: "aff-deti-hracky",
 });
 expect("v9_gearup_software", gearOv.applied && gearOv.sectionId === "aff-software", gearOv);
+const argosOv = applyMerchantEvidenceOverride({
+  advertiserId: "8010554",
+  assortment: { merchantType: MERCHANT_TYPE.SPECIALIST },
+  baseSectionId: "aff-dum-zahrada",
+});
+expect(
+  "v9_argos_elektro_not_dum_or_dilna",
+  argosOv.applied && argosOv.sectionId === "aff-elektro",
+  argosOv
+);
 
 const tipaOv = applyMerchantEvidenceOverride({
   advertiserId: "4921612",

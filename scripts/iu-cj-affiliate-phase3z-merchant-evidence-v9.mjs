@@ -299,11 +299,22 @@ export const MERCHANT_EVIDENCE_OVERRIDES = Object.freeze({
     merchantIdentity: "Argos.cz",
     officialDomains: ["argos.cz", "www.argos.cz"],
     merchantType: "SPECIALIST",
-    primaryAssortment: { sectionId: "aff-dilna-naradi", group: "dilna" },
-    significantAssortmentGroups: ["dilna", "elektro"],
+    // Independent content (title/nav) + brand "ARGOS ELEKTRO" → aff-elektro.
+    // Production historically listed Argos under aff-dum-zahrada; that is assortment-incorrect.
+    // Prior robot override aff-dilna-naradi also mismatched weighted website evidence (elektro).
+    primaryAssortment: { sectionId: "aff-elektro", group: "elektro" },
+    secondaryAssortments: [{ sectionId: "aff-dilna-naradi", group: "dilna" }],
+    significantAssortmentGroups: ["elektro", "dilna"],
+    rejectSectionIds: ["aff-dum-zahrada"],
     confidence: "high",
-    rationale: "ARGOS ELEKTRO — electrical installation materials and lighting; dilna-naradi / elektro-trade, not general dum-zahrada.",
-    evidenceSources: ["official_domain:argos.cz", "merchant_positioning:elektroinstalace"],
+    rationale:
+      "ARGOS ELEKTRO sells electrical installation materials, lighting and PV — primary tile is aff-elektro (matches title/nav evidence). Not general dum-zahrada; dilna-naradi is secondary DIY adjacency only.",
+    evidenceSources: [
+      "official_domain:argos.cz",
+      "merchant_positioning:elektroinstalace",
+      "title:ARGOS ELEKTRO",
+      "weighted_nav:elektro",
+    ],
   },
 });
 
@@ -654,6 +665,16 @@ export function extractWeightedAssortmentEvidence(html, { title = null, merchant
     return m ? m[0] : "";
   };
   const titleText = String(title || (cleaned.match(/<title[^>]*>([^<]{0,200})<\/title>/i) || [])[1] || "").trim();
+  const metaDesc = (
+    (cleaned.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']{0,400})["']/i) || [])[1] ||
+    (cleaned.match(/<meta[^>]+content=["']([^"']{0,400})["'][^>]+name=["']description["']/i) || [])[1] ||
+    (cleaned.match(/<meta[^>]+property=["']og:description["'][^>]+content=["']([^"']{0,400})["']/i) || [])[1] ||
+    ""
+  ).trim();
+  const jsonLd = (cleaned.match(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]{0,20000}?)<\/script>/gi) || [])
+    .join(" ")
+    .replace(/<[^>]+>/g, " ")
+    .slice(0, 12000);
   const h1 = (pick(/<h1\b[^>]*>[\s\S]{0,400}?<\/h1>/i) || "").replace(/<[^>]+>/g, " ");
   const nav = [
     pick(/<nav\b[^>]*>[\s\S]{0,12000}?<\/nav>/i),
@@ -713,15 +734,18 @@ export function extractWeightedAssortmentEvidence(html, { title = null, merchant
   add(String(merchantIdentity || ""), 40, "merchant_identity");
   add(h1, 35, "h1");
   add(nav, 30, "nav_or_header");
+  add(metaDesc, 22, "meta_description");
+  add(jsonLd, 18, "json_ld");
   add(main.slice(0, 20000), 12, "main");
   // Remainder of cleaned page (already without footer/script) — very low weight, cannot alone create significant group.
   const rest = cleaned.replace(/<[^>]+>/g, " ").slice(0, 40000);
   add(rest, 2, "body_low_trust");
 
   const ranked = [...scores.values()].sort((a, b) => b.weight - a.weight || a.group.localeCompare(b.group));
-  // Significant only if driven by high-trust sources (title/h1/nav/identity), not body_low_trust alone.
+  // Significant only if driven by high-trust sources — never body_low_trust alone.
+  const HIGH = new Set(["title", "h1", "nav_or_header", "merchant_identity", "meta_description", "json_ld"]);
   let significant = ranked.filter((r) => {
-    const high = (r.sources || []).some((s) => s === "title" || s === "h1" || s === "nav_or_header" || s === "merchant_identity");
+    const high = (r.sources || []).some((s) => HIGH.has(s));
     return high && r.weight >= 30;
   });
   // Identity conflict: software/digital specialists must not pick up marketplace/moda/etc. from a lone nav token.
