@@ -345,6 +345,25 @@ export function classifyDestinationType(destination, linkName = "", opts = {}) {
         return classifyDestinationType(inner, linkName, opts);
       }
     }
+    // ABBYY-style ORDERSTYLE checkout hop: authorized CJ destination stays checkout.*,
+    // but customer landing is DESTURL (pdf.abbyy.com / digital.abbyy.com). Classify DESTURL.
+    // Never rewrite clickUrl / tracking — only destination-type evidence.
+    const destUrlParam = u0.searchParams.get("DESTURL") || u0.searchParams.get("desturl") || "";
+    if (
+      destUrlParam &&
+      (/checkout\./i.test(u0.hostname) || /order\/product/i.test(u0.pathname)) &&
+      /ORDERSTYLE=/i.test(u0.search)
+    ) {
+      let inner = destUrlParam;
+      try {
+        inner = decodeURIComponent(destUrlParam);
+      } catch {
+        /* keep raw */
+      }
+      if (inner && /^https?:\/\//i.test(inner) && !/checkout\./i.test(inner)) {
+        return classifyDestinationType(inner, linkName, opts);
+      }
+    }
   } catch {
     /* fall through */
   }
@@ -355,8 +374,8 @@ export function classifyDestinationType(destination, linkName = "", opts = {}) {
   if (
     /scope=checkout/i.test(query) ||
     /[?&]cart=/i.test(query) ||
-    /checkout|order\/product|payment|platba|objednavka/i.test(blob) ||
-    /checkout\./i.test(host)
+    /\/(checkout|order\/product|payment|platba|objednavka)\b/i.test(path) ||
+    (/checkout\./i.test(host) && !/ORDERSTYLE=/i.test(query))
   ) {
     return DESTINATION_TYPE.CHECKOUT;
   }
@@ -612,14 +631,145 @@ export function httpGetText(url, { timeoutMs = 8000, maxRedirects = 5, headers =
   });
 }
 
+/**
+ * Strip page noise that causes false assortment hits (footers, cookies, ads, scripts).
+ * Prefer title / h1 / nav / header / main for assortment decisions.
+ */
+export function extractWeightedAssortmentEvidence(html, { title = null, merchantIdentity = null } = {}) {
+  const raw = String(html || "");
+  let cleaned = raw
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<noscript[\s\S]*?<\/noscript>/gi, " ")
+    .replace(/<!--[\s\S]*?-->/g, " ");
+  // Drop low-trust regions entirely when tagged.
+  cleaned = cleaned
+    .replace(/<footer[\s\S]*?<\/footer>/gi, " ")
+    .replace(/<(aside)[\s\S]*?<\/\1>/gi, " ")
+    .replace(/id=["'][^"']*(cookie|consent|gdpr|banner|newsletter|promo-ad)[^"']*["'][\s\S]{0,4000}/gi, " ")
+    .replace(/class=["'][^"']*(cookie|consent|gdpr|footer|advert|adsbygoogle|sidebar)[^"']*["'][\s\S]{0,4000}/gi, " ");
+
+  const pick = (re) => {
+    const m = cleaned.match(re);
+    return m ? m[0] : "";
+  };
+  const titleText = String(title || (cleaned.match(/<title[^>]*>([^<]{0,200})<\/title>/i) || [])[1] || "").trim();
+  const h1 = (pick(/<h1\b[^>]*>[\s\S]{0,400}?<\/h1>/i) || "").replace(/<[^>]+>/g, " ");
+  const nav = [
+    pick(/<nav\b[^>]*>[\s\S]{0,12000}?<\/nav>/i),
+    pick(/<header\b[^>]*>[\s\S]{0,16000}?<\/header>/i),
+    pick(/role=["']navigation["'][\s\S]{0,12000}/i),
+  ]
+    .join(" ")
+    .replace(/<[^>]+>/g, " ");
+  const main = [
+    pick(/<main\b[^>]*>[\s\S]{0,40000}?<\/main>/i),
+    pick(/role=["']main["'][\s\S]{0,40000}/i),
+  ]
+    .join(" ")
+    .replace(/<[^>]+>/g, " ");
+
+  const HINTS = [
+    { group: "software", re: /\b(software|antivirus|vpn|saas|pdf|ocr|finereader|abbyy|paragon|security\s*suite|game\s*booster)\b/i, sectionId: "aff-software" },
+    { group: "elektro", re: /\b(elektro|electronics|notebook|laptop|fotografie|camera|svítid|svitid)\b/i, sectionId: "aff-elektro" },
+    { group: "dilna", re: /\b(díln|dilna|nářad|naradi|stavebn|vrtač|bauhaus|hobby\s*market)\b/i, sectionId: "aff-dilna-naradi" },
+    { group: "nabytek", re: /\b(nábytek|nabytek|furniture|židle|zidle|stůl|sofa)\b/i, sectionId: "aff-nabytek" },
+    { group: "kuchyn", re: /\b(kuchyn|kitchen|cookware|gril)\b/i, sectionId: "aff-kuchyn" },
+    { group: "dum", re: /\b(zahrad|garden|koupel|sanit|dům\s+a\s+zahrada)\b/i, sectionId: "aff-dum-zahrada" },
+    { group: "moda", re: /\b(móda|moda|fashion|oblečen|oblecen|apparel|streetwear)\b/i, sectionId: "aff-moda" },
+    { group: "boty", re: /\b(boty|obuv|footwear|barefoot)\b/i, sectionId: "aff-boty" },
+    { group: "kosmetika", re: /\b(kosmetik|beauty|skincare|skin\s*care|make-?up)\b/i, sectionId: "aff-kosmetika" },
+    { group: "drogerie", re: /\b(drogerie|drugstore)\b/i, sectionId: "aff-drogerie" },
+    { group: "lekarny", re: /\b(lékárn|lekarn|pharmacy|pharma)\b/i, sectionId: "aff-lekarny" },
+    { group: "zdravi", re: /\b(doplněk\s+stravy|supplement|vitamin|superfood)\b/i, sectionId: "aff-zdravi-doplnky" },
+    { group: "jidlo", re: /\b(potravin|supermarket|grocery|jídlo|jidlo)\b/i, sectionId: "aff-jidlo" },
+    { group: "zvirata", re: /\b(chovatel|zvířec|zvirec|pet\s*shop|superzoo|obojek)\b/i, sectionId: "aff-zvirata" },
+    { group: "sport", re: /\b(sport|outdoor|fitness|turistik|crossbow)\b/i, sectionId: "aff-sport-outdoor" },
+    { group: "deti", re: /\b(hračk|hrack|toys?|dětsk|detsk|kids)\b/i, sectionId: "aff-deti-hracky" },
+    { group: "pojisteni", re: /\b(pojišt|pojist|insurance|assistance)\b/i, sectionId: "aff-pojisteni" },
+    { group: "ubytovani", re: /\b(hotel|ubytov|spa\s*pobyt|accommodation)\b/i, sectionId: "aff-ubytovani-hotely" },
+    { group: "cestovani", re: /\b(cestovn|dovolen|zájezd|zajezd|travel\s*agency)\b/i, sectionId: "aff-cestovni-kancelare" },
+    { group: "letenky", re: /\b(letenk|flight|airline|letišt)\b/i, sectionId: "aff-letenky-letecka-doprava" },
+    { group: "darky", re: /\b(zážitkov|zazitkov|dárkov|darkov|gift\s*experience)\b/i, sectionId: "aff-kvetiny-darky" },
+    // Require clear marketplace brands — bare "marketplace" appears on SaaS/app stores and causes FPs.
+    { group: "marketplace", re: /\b(allegro|amazon\.|ebay|heureka|bazos|aukro|mall\.cz)\b/i, sectionId: "aff-inzerce-bazary" },
+    { group: "pneu", re: /\b(pneu|pneumatik|tyre|tire\s*service)\b/i, sectionId: "aff-pneu-pneuservis" },
+    { group: "tv", re: /\b(streamování|streaming|iptv|satelit)\b/i, sectionId: "aff-tv-streamovani" },
+  ];
+
+  const scores = new Map();
+  const add = (blob, weight, source) => {
+    if (!blob || weight <= 0) return;
+    for (const h of HINTS) {
+      if (!h.re.test(blob)) continue;
+      const cur = scores.get(h.group) || { group: h.group, sectionId: h.sectionId, weight: 0, sources: [] };
+      cur.weight += weight;
+      if (cur.sources.length < 8) cur.sources.push(source);
+      scores.set(h.group, cur);
+    }
+  };
+
+  add(titleText, 50, "title");
+  add(String(merchantIdentity || ""), 40, "merchant_identity");
+  add(h1, 35, "h1");
+  add(nav, 30, "nav_or_header");
+  add(main.slice(0, 20000), 12, "main");
+  // Remainder of cleaned page (already without footer/script) — very low weight, cannot alone create significant group.
+  const rest = cleaned.replace(/<[^>]+>/g, " ").slice(0, 40000);
+  add(rest, 2, "body_low_trust");
+
+  const ranked = [...scores.values()].sort((a, b) => b.weight - a.weight || a.group.localeCompare(b.group));
+  // Significant only if driven by high-trust sources (title/h1/nav/identity), not body_low_trust alone.
+  let significant = ranked.filter((r) => {
+    const high = (r.sources || []).some((s) => s === "title" || s === "h1" || s === "nav_or_header" || s === "merchant_identity");
+    return high && r.weight >= 30;
+  });
+  // Identity conflict: software/digital specialists must not pick up marketplace/moda/etc. from a lone nav token.
+  const idBlob = `${titleText} ${merchantIdentity || ""}`;
+  const softwareIdentity = /\b(software|abbyy|paragon|vpn|saas|antivirus|finereader|ocr)\b/i.test(idBlob);
+  if (softwareIdentity) {
+    const suppress = new Set(["marketplace", "moda", "kuchyn", "pojisteni", "ubytovani", "zvirata", "pneu", "nabytek", "jidlo"]);
+    significant = significant.filter((r) => !suppress.has(r.group) || r.weight >= 80);
+  }
+  const primary = significant[0] || null;
+  const secondary = significant[1] || null;
+  const contentVerified = Boolean(titleText) && significant.length > 0;
+
+  return {
+    title: titleText || null,
+    contentVerified,
+    primaryAssortment: primary
+      ? { sectionId: primary.sectionId, group: primary.group, weight: primary.weight, sources: primary.sources }
+      : null,
+    secondaryAssortments: secondary
+      ? [{ sectionId: secondary.sectionId, group: secondary.group, weight: secondary.weight, sources: secondary.sources }]
+      : [],
+    significantGroups: significant.map((s) => ({
+      sectionId: s.sectionId,
+      group: s.group,
+      weight: s.weight,
+      sources: s.sources,
+    })),
+    allScored: ranked.slice(0, 10),
+    regionsUsed: {
+      title: Boolean(titleText),
+      h1: Boolean(h1.trim()),
+      nav: Boolean(nav.trim()),
+      main: Boolean(main.trim()),
+    },
+    note: "Assortment from title/h1/nav/main with weights; footer/cookie/ads/scripts stripped. Body-only keyword hits are not significant.",
+  };
+}
+
 /** Lightweight merchant website probe (no affiliate click). */
-export async function probeMerchantHomepage(url, { timeoutMs = 8000 } = {}) {
+export async function probeMerchantHomepage(url, { timeoutMs = 8000, merchantIdentity = null } = {}) {
   const out = {
     url: String(url || ""),
     ok: false,
     httpStatus: null,
     title: null,
     navHints: [],
+    assortmentEvidence: null,
     error: null,
     fetchedAt: new Date().toISOString(),
   };
@@ -645,18 +795,12 @@ export async function probeMerchantHomepage(url, { timeoutMs = 8000 } = {}) {
     const text = res.body || "";
     const titleM = text.match(/<title[^>]*>([^<]{0,200})<\/title>/i);
     out.title = titleM ? titleM[1].trim() : null;
-    const navSlice = text.slice(0, 120000);
-    const hintRes = [
-      [/elektro|electronics|foto|camera|notebook/i, "elektro"],
-      [/móda|moda|fashion|oblečen/i, "moda"],
-      [/marketplace|allegro/i, "marketplace"],
-      [/pojišt|insurance/i, "pojisteni"],
-      [/software|vpn|pdf/i, "software"],
-      [/letenk|flight|airline/i, "letenky"],
-    ];
-    for (const [re, label] of hintRes) {
-      if (re.test(navSlice) && out.navHints.length < 8) out.navHints.push(label);
-    }
+    const evidence = extractWeightedAssortmentEvidence(text, {
+      title: out.title,
+      merchantIdentity,
+    });
+    out.assortmentEvidence = evidence;
+    out.navHints = (evidence.significantGroups || []).slice(0, 8).map((g) => g.group);
     out.ok = res.status >= 200 && res.status < 400;
     if (res.status === 202) {
       out.ok = false;

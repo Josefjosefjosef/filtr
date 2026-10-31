@@ -150,6 +150,7 @@ jobs:
         run: |
           node scripts/iu-cj-affiliate-phase3z-ops-guards-v9-selftest.mjs
           node scripts/iu-cj-affiliate-phase3z-inventory-equality-v9.mjs
+          node scripts/iu-cj-affiliate-phase3z-assortment-evidence-v9-selftest.mjs
 
   fetch-staging:
     needs: selftest

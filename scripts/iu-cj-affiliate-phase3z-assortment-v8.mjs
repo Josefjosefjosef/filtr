@@ -72,10 +72,19 @@ function pushSignal(map, sectionId, group, weight, source) {
   map.set(sectionId, cur);
 }
 
+/** Max total weight any single section may gain from link-inventory keyword hits. */
+export const LINK_INVENTORY_SECTION_CAP = 15;
+
 /**
- * Build assortment profile from CJ advertiser + link inventory (no invented facts).
+ * Build assortment profile from CJ advertiser + link inventory (+ optional website evidence).
+ * Never invents facts. Link keywords alone cannot dominate primary section.
  */
-export function buildAssortmentProfile({ advertiser, links = [], knownSections = null } = {}) {
+export function buildAssortmentProfile({
+  advertiser,
+  links = [],
+  knownSections = null,
+  websiteEvidence = null,
+} = {}) {
   const name = String(advertiser?.advertiserName || "");
   const programUrl = String(advertiser?.programUrl || "");
   const cat = parseCjPrimaryCategory(advertiser?.primaryCategory);
@@ -104,7 +113,25 @@ export function buildAssortmentProfile({ advertiser, links = [], knownSections =
     }
   }
 
+  // High-trust website evidence (title/nav/h1/identity) — never body-only noise.
+  const webGroups = Array.isArray(websiteEvidence?.significantGroups)
+    ? websiteEvidence.significantGroups
+    : websiteEvidence?.primaryAssortment
+      ? [websiteEvidence.primaryAssortment, ...(websiteEvidence.secondaryAssortments || [])]
+      : [];
+  if (webGroups.length) {
+    sources.push("merchant_website_weighted_evidence");
+    for (const g of webGroups) {
+      const sectionId = g.sectionId;
+      if (!sectionId) continue;
+      if (knownSections && !knownSections.has(sectionId)) continue;
+      const w = Math.min(55, Number(g.weight) || 30);
+      pushSignal(bySection, sectionId, g.group || "web", w, "website:" + ((g.sources || [])[0] || "weighted"));
+    }
+  }
+
   let productishHits = 0;
+  const linkWeightBySection = new Map();
   for (const link of links) {
     const blob = `${link.linkName || ""} ${link.destination || ""} ${link.linkType || ""} ${link.promotionType || ""}`;
     let hit = false;
@@ -112,8 +139,12 @@ export function buildAssortmentProfile({ advertiser, links = [], knownSections =
       if (kg.re.test(blob)) {
         hit = true;
         if (!knownSections || knownSections.has(kg.sectionId)) {
-          // Cap per-link contribution so one product cannot flip the primary section.
-          pushSignal(bySection, kg.sectionId, kg.group, 3, "link:" + String(link.linkId || ""));
+          const used = linkWeightBySection.get(kg.sectionId) || 0;
+          if (used >= LINK_INVENTORY_SECTION_CAP) continue;
+          // Cap per-link (3) and per-section total so link spam cannot invent assortment.
+          const add = Math.min(3, LINK_INVENTORY_SECTION_CAP - used);
+          pushSignal(bySection, kg.sectionId, kg.group, add, "link:" + String(link.linkId || ""));
+          linkWeightBySection.set(kg.sectionId, used + add);
         }
       }
     }
@@ -121,7 +152,13 @@ export function buildAssortmentProfile({ advertiser, links = [], knownSections =
   }
 
   const ranked = [...bySection.values()].sort((a, b) => b.weight - a.weight || a.sectionId.localeCompare(b.sectionId));
-  const significant = ranked.filter((r) => r.weight >= 20 || (r.weight >= 12 && ranked.length <= 3));
+  // Require stronger weight when signal is only from capped link inventory.
+  const significant = ranked.filter((r) => {
+    const sourcesList = r.sources || [];
+    const onlyLinks = sourcesList.length > 0 && sourcesList.every((s) => String(s).startsWith("link:"));
+    if (onlyLinks) return r.weight >= LINK_INVENTORY_SECTION_CAP && ranked.length <= 2;
+    return r.weight >= 20 || (r.weight >= 12 && ranked.length <= 3);
+  });
   const top = ranked[0] || null;
   const second = ranked[1] || null;
 
@@ -179,10 +216,12 @@ export function buildAssortmentProfile({ advertiser, links = [], knownSections =
     sources,
     checkedAt,
     notes: [
-      "Assortment inferred from CJ fields + link inventory keywords only.",
-      "Single weak product signal cannot dominate primary section.",
+      "Assortment inferred from CJ fields + capped link inventory + weighted website evidence.",
+      "Single weak product signal / footer keyword cannot dominate primary section.",
+      "Link-inventory keyword contribution capped at LINK_INVENTORY_SECTION_CAP per section.",
       "Public UI still exposes one main button / one primary section.",
     ],
+    linkInventorySectionCap: LINK_INVENTORY_SECTION_CAP,
   };
 }
 

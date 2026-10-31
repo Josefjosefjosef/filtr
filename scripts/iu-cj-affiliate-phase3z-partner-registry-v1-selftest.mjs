@@ -891,6 +891,27 @@ expect(
     DESTINATION_TYPE.CHECKOUT
 );
 expect(
+  "v9_abbyy_orderstyle_desturl_product",
+  classifyDestinationType(
+    "https://checkout.abbyy.com/order/product.php?ORDERSTYLE=nLWsm5TflHM=&DESTURL=" +
+      encodeURIComponent("https://pdf.abbyy.com/cs/finereader-pdf-for-mac/trial/"),
+    "ABBYY FineReader"
+  ) === DESTINATION_TYPE.RELEVANT_PRODUCT ||
+    classifyDestinationType(
+      "https://checkout.abbyy.com/order/product.php?ORDERSTYLE=nLWsm5TflHM=&DESTURL=" +
+        encodeURIComponent("https://pdf.abbyy.com/cs/finereader-pdf-for-mac/trial/"),
+      "ABBYY FineReader"
+    ) === DESTINATION_TYPE.UNKNOWN
+);
+expect(
+  "v9_abbyy_orderstyle_desturl_home",
+  classifyDestinationType(
+    "https://checkout.abbyy.com/order/product.php?ORDERSTYLE=nLWsm5TflHM=&DESTURL=" +
+      encodeURIComponent("https://pdf.abbyy.com/"),
+    "ABBYY FineReader PDF"
+  ) === DESTINATION_TYPE.MERCHANT_HOMEPAGE
+);
+expect(
   "v9_unsuitable_checkout",
   isUnsuitableMainDestination(DESTINATION_TYPE.CHECKOUT, "2624620").unsuitable === true
 );
