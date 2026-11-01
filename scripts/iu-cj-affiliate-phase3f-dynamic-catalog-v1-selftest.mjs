@@ -203,6 +203,11 @@ expect(
 );
 expect("klik_pojisteni_travel_preferred", map["5871720"] === "aff-cestovni-pojisteni");
 
+// Leo Express (6130482) = passenger rail/coach → aff-letenky ("Doprava a cestování").
+// Never flights tile aff-letenky-letecka-doprava (ID name "letenky" is not flights).
+expect("leo_express_ground_transport", map["6130482"] === "aff-letenky");
+expect("leo_express_not_flights", map["6130482"] !== "aff-letenky-letecka-doprava");
+
 const review = JSON.parse(
   fs.readFileSync(path.join(ROOT, "projects", "data", "iu-affiliate-cj-manual-review-v1.json"), "utf8")
 );

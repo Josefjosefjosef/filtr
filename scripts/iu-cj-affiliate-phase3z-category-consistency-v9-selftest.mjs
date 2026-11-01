@@ -70,11 +70,12 @@ const lekEv = extractWeightedAssortmentEvidence(
 expect("lekarna_content_verified", lekEv.contentVerified === true, lekEv);
 expect("lekarna_section", lekEv.primaryAssortment?.sectionId === "aff-lekarny", lekEv.primaryAssortment);
 
-// Leo Express must never land on flights tile.
+// Leo Express → ground transport tile (aff-letenky = "Doprava a cestování"), never flights.
 expect(
-  "leo_override_not_flights",
-  MERCHANT_EVIDENCE_OVERRIDES["6130482"]?.primaryAssortment?.sectionId === "aff-cestovni-kancelare" &&
-    (MERCHANT_EVIDENCE_OVERRIDES["6130482"].rejectSectionIds || []).includes("aff-letenky-letecka-doprava"),
+  "leo_override_ground_transport",
+  MERCHANT_EVIDENCE_OVERRIDES["6130482"]?.primaryAssortment?.sectionId === "aff-letenky" &&
+    (MERCHANT_EVIDENCE_OVERRIDES["6130482"].rejectSectionIds || []).includes("aff-letenky-letecka-doprava") &&
+    !(MERCHANT_EVIDENCE_OVERRIDES["6130482"].rejectSectionIds || []).includes("aff-letenky"),
   MERCHANT_EVIDENCE_OVERRIDES["6130482"]
 );
 const leoEv = extractWeightedAssortmentEvidence(
@@ -82,9 +83,9 @@ const leoEv = extractWeightedAssortmentEvidence(
   { title: "Leo Express – vlaky Praha Ostrava", merchantIdentity: "Leo Express Europe" }
 );
 expect(
-  "leo_evidence_travel_not_flights",
-  leoEv.primaryAssortment?.sectionId === "aff-cestovni-kancelare" &&
-    !(leoEv.significantGroups || []).some((g) => g.group === "letenky"),
+  "leo_evidence_not_flights",
+  !(leoEv.significantGroups || []).some((g) => g.group === "letenky") &&
+    leoEv.primaryAssortment?.sectionId !== "aff-letenky-letecka-doprava",
   leoEv
 );
 

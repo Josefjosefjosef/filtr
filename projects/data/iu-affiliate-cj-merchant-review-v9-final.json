@@ -1,47 +1,64 @@
 {
   "schema": "iu-cj-merchant-review-v9-final",
-  "generatedAt": "2026-10-31T19:59:21.851Z",
+  "generatedAt": "2026-11-01T03:13:34.709Z",
   "stagingGeneratedAt": "2026-10-31T15:27:33.765Z",
   "websitePid": "101883843",
   "total": 175,
-  "sectionTruthCorrections": 175,
+  "sectionTruthCorrections": 174,
   "sectionTruthTotal": 175,
   "goldenCoverage": 175,
   "goldenOverrideCount": 24,
-  "contentVerified": 81,
-  "notContentVerified": 94,
+  "contentVerified": 87,
+  "notContentVerified": 88,
   "reviewStatusCounts": {
-    "CONTENT_VERIFIED": 81,
-    "CONTENT_UNAVAILABLE": 18,
-    "CONTENT_INCOMPLETE": 68,
+    "CONTENT_VERIFIED": 87,
+    "CONTENT_INCOMPLETE": 64,
+    "CONTENT_UNAVAILABLE": 16,
     "BLOCKED": 6,
     "REGION_UNVERIFIED": 1,
     "IDENTITY_VERIFIED": 1
   },
   "contentFailureReasonCounts": {
-    "HTTP_403_WAF_OR_BOT": 14,
-    "THIN_HTML_INSUFFICIENT_NAV_MAIN": 16,
-    "ASSORTMENT_WEIGHT_INSUFFICIENT": 70,
+    "PROBE_TIMEOUT": 3,
+    "ASSORTMENT_WEIGHT_INSUFFICIENT": 66,
+    "HTTP_403_WAF_OR_BOT": 8,
+    "THIN_HTML_INSUFFICIENT_NAV_MAIN": 10,
     "SPA_JS_RENDERED_MINIMAL_HTML": 1,
     "BLOCKED_QUARANTINED": 6,
     "PROBE_ERROR": 2,
     "REGION_UNVERIFIED": 1,
-    "CONTENT_UNAVAILABLE": 1
+    "CONTENT_UNAVAILABLE": 1,
+    "HTTP_429_RATE_LIMIT": 3
   },
-  "categoryMismatches": 0,
-  "categoryMismatchSample": [],
+  "categoryMismatches": 1,
+  "categoryMismatchSample": [
+    {
+      "advertiserCid": "6130482",
+      "merchantIdentity": "Leo Express Europe",
+      "expected": "aff-cestovni-kancelare",
+      "declared": "aff-cestovni-kancelare",
+      "buttonSection": "aff-letenky",
+      "evidenceSection": "aff-cestovni-kancelare",
+      "match": false,
+      "evidenceNoise": false,
+      "preferCategoryReview": false,
+      "fromOverride": true,
+      "mismatchReasons": [
+        "golden_vs_button"
+      ]
+    }
+  ],
   "technicallyReady": 164,
-  "publicationReady": 78,
-  "technicallyReadyWithoutContentVerified": 86,
+  "publicationReady": 84,
+  "technicallyReadyWithoutContentVerified": 82,
   "technicallyReadyWithoutContentSample": [
     {
-      "advertiserCid": "6112132",
-      "merchantIdentity": "Gorenje.cz",
+      "advertiserCid": "8010554",
+      "merchantIdentity": "Argos.cz",
       "reviewStatus": "CONTENT_UNAVAILABLE",
-      "grade": "CONTENT_UNAVAILABLE_WAF",
+      "grade": "CONTENT_UNAVAILABLE",
       "contentFailureReasons": [
-        "HTTP_403_WAF_OR_BOT",
-        "THIN_HTML_INSUFFICIENT_NAV_MAIN"
+        "PROBE_TIMEOUT"
       ]
     },
     {
@@ -85,10 +102,10 @@
     {
       "advertiserCid": "5142212",
       "merchantIdentity": "DEK.cz",
-      "reviewStatus": "CONTENT_INCOMPLETE",
-      "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT",
+      "reviewStatus": "CONTENT_UNAVAILABLE",
+      "grade": "CONTENT_UNAVAILABLE",
       "contentFailureReasons": [
-        "ASSORTMENT_WEIGHT_INSUFFICIENT"
+        "PROBE_TIMEOUT"
       ]
     },
     {
@@ -150,10 +167,10 @@
     {
       "advertiserCid": "4851178",
       "merchantIdentity": "Kytary Europe",
-      "reviewStatus": "CONTENT_INCOMPLETE",
-      "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT",
+      "reviewStatus": "CONTENT_UNAVAILABLE",
+      "grade": "CONTENT_UNAVAILABLE",
       "contentFailureReasons": [
-        "ASSORTMENT_WEIGHT_INSUFFICIENT"
+        "PROBE_TIMEOUT"
       ]
     },
     {
@@ -190,16 +207,6 @@
       "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT",
       "contentFailureReasons": [
         "ASSORTMENT_WEIGHT_INSUFFICIENT"
-      ]
-    },
-    {
-      "advertiserCid": "4882378",
-      "merchantIdentity": "DECODOMA.CZ",
-      "reviewStatus": "CONTENT_UNAVAILABLE",
-      "grade": "CONTENT_UNAVAILABLE_WAF",
-      "contentFailureReasons": [
-        "HTTP_403_WAF_OR_BOT",
-        "THIN_HTML_INSUFFICIENT_NAV_MAIN"
       ]
     },
     {
@@ -264,6 +271,15 @@
       "contentFailureReasons": [
         "PROBE_ERROR"
       ]
+    },
+    {
+      "advertiserCid": "6294181",
+      "merchantIdentity": "Rehabilitacnipomucky.cz/sk/pl",
+      "reviewStatus": "CONTENT_INCOMPLETE",
+      "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT",
+      "contentFailureReasons": [
+        "ASSORTMENT_WEIGHT_INSUFFICIENT"
+      ]
     }
   ],
   "allPublicationReadyContentVerified": true,
@@ -292,71 +308,32 @@
         "elektro",
         "dilna"
       ],
-      "officialNavigationEvidence": [
-        "elektro"
-      ],
+      "officialNavigationEvidence": [],
       "merchantWebsiteEvidence": {
         "programUrl": "https://argos.cz/",
         "probe": {
           "url": "https://argos.cz/",
-          "ok": true,
-          "httpStatus": 200,
-          "title": "ARGOS ELEKTRO – elektroinstalační materiál, světla, fotovoltaika | 20 prodejen",
-          "navHints": [
-            "elektro"
-          ],
-          "assortmentEvidence": {
-            "contentVerified": true,
-            "primaryAssortment": {
-              "sectionId": "aff-elektro",
-              "group": "elektro",
-              "weight": 74,
-              "sources": [
-                "title",
-                "meta_description",
-                "body_low_trust"
-              ]
-            },
-            "significantGroups": [
-              {
-                "sectionId": "aff-elektro",
-                "group": "elektro",
-                "weight": 74,
-                "sources": [
-                  "title",
-                  "meta_description",
-                  "body_low_trust"
-                ]
-              }
-            ],
-            "regionsUsed": {
-              "title": true,
-              "h1": false,
-              "nav": false,
-              "main": false,
-              "meta": true,
-              "jsonLd": false
-            },
-            "diagnostics": {
-              "scriptCount": 45,
-              "textLen": 763,
-              "thinHtml": false,
-              "spaSuspected": false,
-              "cjCategoryCorroborationUsed": true
-            },
-            "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
-          },
-          "error": null,
-          "fetchedAt": "2026-10-31T19:57:50.520Z"
+          "ok": false,
+          "httpStatus": null,
+          "title": null,
+          "navHints": [],
+          "assortmentEvidence": null,
+          "error": "timeout",
+          "fetchedAt": "2026-11-01T03:09:59.178Z"
         },
-        "grade": "CONTENT_VERIFIED"
+        "grade": "CONTENT_VERIFIED_LKG_TRANSIENT_PROBE",
+        "priorPreserved": true
       },
-      "contentFailureReasons": [],
+      "contentFailureReasons": [
+        "TRANSIENT_PROBE_KEPT_PRIOR_CONTENT_VERIFIED"
+      ],
       "czAvailability": "YES",
       "confidence": "high",
-      "lastReviewedAt": "2026-10-31T19:57:51.623Z",
+      "lastReviewedAt": "2026-11-01T03:10:34.116Z",
       "reviewStatus": "CONTENT_VERIFIED",
-      "reviewBlockers": [],
+      "reviewBlockers": [
+        "probe_error:timeout"
+      ],
       "expectedSectionId": "aff-elektro",
       "selectedLinkId": "17366260",
       "selectedDestination": "https://argos.cz/",
@@ -390,14 +367,12 @@
         "merchant_positioning:elektroinstalace",
         "title:ARGOS ELEKTRO",
         "weighted_nav:elektro",
-        "probe_title:ARGOS ELEKTRO – elektroinstalační materiál, světla, fotovoltaika | 20 prodejen",
-        "probe_http:200",
-        "nav_hint:elektro",
         "weighted_assortment_evidence_v9",
         "snapshot:stagingGeneratedAt:2026-10-31T15:27:33.765Z"
       ],
       "sectionTruthApplied": true,
-      "sectionTruthReason": "ARGOS ELEKTRO sells electrical installation materials, lighting and PV — primary tile is aff-elektro (matches title/nav evidence). Not general dum-zahrada; dilna-naradi is secondary DIY adjacency only."
+      "sectionTruthReason": "ARGOS ELEKTRO sells electrical installation materials, lighting and PV — primary tile is aff-elektro (matches title/nav evidence). Not general dum-zahrada; dilna-naradi is secondary DIY adjacency only.",
+      "lkgTransientPreserve": true
     },
     {
       "advertiserCid": "6112132",
@@ -409,58 +384,84 @@
       "brandDomains": [],
       "merchantType": "SPECIALIST",
       "primaryAssortment": {
-        "sectionId": "aff-dum-zahrada",
-        "group": "dum",
-        "weight": 40
+        "sectionId": "aff-kuchyn",
+        "group": "kuchyn",
+        "weight": 87,
+        "sources": [
+          "title",
+          "h1",
+          "body_low_trust"
+        ]
       },
       "secondaryAssortments": [],
-      "significantAssortmentGroups": [],
-      "officialNavigationEvidence": [],
+      "significantAssortmentGroups": [
+        "kuchyn"
+      ],
+      "officialNavigationEvidence": [
+        "kuchyn"
+      ],
       "merchantWebsiteEvidence": {
         "programUrl": "https://cz.gorenje.com/",
         "probe": {
           "url": "https://cz.gorenje.com/",
-          "ok": false,
-          "httpStatus": 403,
-          "title": "Attention Required! | Cloudflare",
-          "navHints": [],
+          "ok": true,
+          "httpStatus": 200,
+          "title": "Gorenje | Spotřebiče a kuchyně jedné značky",
+          "navHints": [
+            "kuchyn"
+          ],
           "assortmentEvidence": {
-            "contentVerified": false,
-            "primaryAssortment": null,
-            "significantGroups": [],
+            "contentVerified": true,
+            "primaryAssortment": {
+              "sectionId": "aff-kuchyn",
+              "group": "kuchyn",
+              "weight": 87,
+              "sources": [
+                "title",
+                "h1",
+                "body_low_trust"
+              ]
+            },
+            "significantGroups": [
+              {
+                "sectionId": "aff-kuchyn",
+                "group": "kuchyn",
+                "weight": 87,
+                "sources": [
+                  "title",
+                  "h1",
+                  "body_low_trust"
+                ]
+              }
+            ],
             "regionsUsed": {
               "title": true,
-              "h1": false,
+              "h1": true,
               "nav": false,
               "main": false,
-              "meta": false,
+              "meta": true,
               "jsonLd": false
             },
             "diagnostics": {
-              "scriptCount": 4,
-              "textLen": 37,
-              "thinHtml": true,
+              "scriptCount": 61,
+              "textLen": 7048,
+              "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
             },
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:57:50.535Z"
+          "fetchedAt": "2026-11-01T03:09:59.669Z"
         },
-        "grade": "CONTENT_UNAVAILABLE_WAF"
+        "grade": "CONTENT_VERIFIED"
       },
-      "contentFailureReasons": [
-        "HTTP_403_WAF_OR_BOT",
-        "THIN_HTML_INSUFFICIENT_NAV_MAIN"
-      ],
+      "contentFailureReasons": [],
       "czAvailability": "YES",
-      "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:57:50.997Z",
-      "reviewStatus": "CONTENT_UNAVAILABLE",
-      "reviewBlockers": [
-        "http_403_bot_waf_suspected"
-      ],
+      "confidence": "medium",
+      "lastReviewedAt": "2026-11-01T03:10:03.909Z",
+      "reviewStatus": "CONTENT_VERIFIED",
+      "reviewBlockers": [],
       "expectedSectionId": "aff-dum-zahrada",
       "selectedLinkId": "15409173",
       "selectedDestination": "https://cz.gorenje.com/",
@@ -468,32 +469,31 @@
       "publishability": "READY_FOR_REVIEW",
       "holdReason": null,
       "technicallyReady": true,
-      "publicationReady": false,
+      "publicationReady": true,
       "publicationReadiness": {
         "technicallyReady": true,
-        "contentVerified": false,
+        "contentVerified": true,
         "regionVerified": true,
         "destinationVerified": true,
         "programAuthorized": true,
-        "publicationReady": false,
-        "contentStatus": "CONTENT_UNAVAILABLE",
+        "publicationReady": true,
+        "contentStatus": "CONTENT_VERIFIED",
         "gates": {
           "TECHNICALLY_READY": true,
-          "CONTENT_VERIFIED": false,
+          "CONTENT_VERIFIED": true,
           "REGION_VERIFIED": true,
           "DESTINATION_VERIFIED": true,
           "PROGRAM_AUTHORIZED": true,
-          "PUBLICATION_READY": false
+          "PUBLICATION_READY": true
         },
-        "blockers": [
-          "content_not_verified:CONTENT_UNAVAILABLE"
-        ],
-        "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
+        "blockers": [],
+        "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "taxonomyGap": null,
       "evidenceSources": [
-        "probe_title:Attention Required! | Cloudflare",
-        "probe_http:403",
+        "probe_title:Gorenje | Spotřebiče a kuchyně jedné značky",
+        "probe_http:200",
+        "nav_hint:kuchyn",
         "weighted_assortment_evidence_v9",
         "snapshot:stagingGeneratedAt:2026-10-31T15:27:33.765Z"
       ],
@@ -578,14 +578,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:57:50.536Z"
+          "fetchedAt": "2026-11-01T03:09:59.194Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:57:54.629Z",
+      "lastReviewedAt": "2026-11-01T03:10:05.805Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-sport-outdoor",
@@ -661,7 +661,7 @@
             },
             "diagnostics": {
               "scriptCount": 33,
-              "textLen": 6102,
+              "textLen": 6086,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -669,7 +669,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:57:50.997Z"
+          "fetchedAt": "2026-11-01T03:10:03.909Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -678,7 +678,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:57:51.861Z",
+      "lastReviewedAt": "2026-11-01T03:10:04.856Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -802,14 +802,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:57:51.623Z"
+          "fetchedAt": "2026-11-01T03:10:04.857Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "high",
-      "lastReviewedAt": "2026-10-31T19:57:58.855Z",
+      "lastReviewedAt": "2026-11-01T03:10:10.515Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-cestovni-kancelare",
@@ -958,14 +958,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:57:53.364Z"
+          "fetchedAt": "2026-11-01T03:10:06.967Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:57:58.188Z",
+      "lastReviewedAt": "2026-11-01T03:10:14.631Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-moda",
@@ -1054,7 +1054,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:57:54.629Z"
+          "fetchedAt": "2026-11-01T03:10:10.515Z"
         },
         "grade": "CONTENT_UNAVAILABLE_WAF"
       },
@@ -1064,7 +1064,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:57:55.826Z",
+      "lastReviewedAt": "2026-11-01T03:10:13.563Z",
       "reviewStatus": "CONTENT_UNAVAILABLE",
       "reviewBlockers": [
         "http_403_bot_waf_suspected"
@@ -1186,14 +1186,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:57:55.826Z"
+          "fetchedAt": "2026-11-01T03:10:13.563Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "UNKNOWN",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:57:57.484Z",
+      "lastReviewedAt": "2026-11-01T03:10:15.066Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-moda",
@@ -1276,7 +1276,7 @@
             },
             "diagnostics": {
               "scriptCount": 17,
-              "textLen": 6398,
+              "textLen": 6405,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -1284,7 +1284,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:57:57.484Z"
+          "fetchedAt": "2026-11-01T03:10:14.631Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -1293,7 +1293,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:57:58.806Z",
+      "lastReviewedAt": "2026-11-01T03:10:15.818Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -1412,14 +1412,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:57:58.188Z"
+          "fetchedAt": "2026-11-01T03:10:15.066Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:57:59.370Z",
+      "lastReviewedAt": "2026-11-01T03:10:16.299Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-moda",
@@ -1557,14 +1557,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:57:58.806Z"
+          "fetchedAt": "2026-11-01T03:10:15.818Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:00.075Z",
+      "lastReviewedAt": "2026-11-01T03:10:17.448Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-software",
@@ -1706,14 +1706,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:57:58.855Z"
+          "fetchedAt": "2026-11-01T03:10:16.299Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "UNKNOWN",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:01.092Z",
+      "lastReviewedAt": "2026-11-01T03:10:19.706Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-kvetiny-darky",
@@ -1805,7 +1805,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:57:59.370Z"
+          "fetchedAt": "2026-11-01T03:10:17.448Z"
         },
         "grade": "CONTENT_UNAVAILABLE_WAF"
       },
@@ -1815,7 +1815,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:57:59.792Z",
+      "lastReviewedAt": "2026-11-01T03:10:21.548Z",
       "reviewStatus": "CONTENT_UNAVAILABLE",
       "reviewBlockers": [
         "http_403_bot_waf_suspected"
@@ -1873,52 +1873,38 @@
         "group": "dum",
         "weight": 40
       },
-      "secondaryAssortments": [],
+      "secondaryAssortments": [
+        {
+          "sectionId": "aff-dilna-naradi",
+          "group": "dilna",
+          "weight": 3
+        }
+      ],
       "significantAssortmentGroups": [],
       "officialNavigationEvidence": [],
       "merchantWebsiteEvidence": {
         "programUrl": "http://dek.cz",
         "probe": {
-          "url": "https://www.dek.cz/",
-          "ok": true,
-          "httpStatus": 200,
-          "title": "Stavebniny DEK",
+          "url": "http://dek.cz",
+          "ok": false,
+          "httpStatus": null,
+          "title": null,
           "navHints": [],
-          "assortmentEvidence": {
-            "contentVerified": false,
-            "primaryAssortment": null,
-            "significantGroups": [],
-            "regionsUsed": {
-              "title": true,
-              "h1": false,
-              "nav": false,
-              "main": false,
-              "meta": true,
-              "jsonLd": false
-            },
-            "diagnostics": {
-              "scriptCount": 47,
-              "textLen": 778,
-              "thinHtml": false,
-              "spaSuspected": false,
-              "cjCategoryCorroborationUsed": true
-            },
-            "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
-          },
-          "error": null,
-          "fetchedAt": "2026-10-31T19:57:59.792Z"
+          "assortmentEvidence": null,
+          "error": "timeout",
+          "fetchedAt": "2026-11-01T03:10:19.706Z"
         },
-        "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
+        "grade": "CONTENT_UNAVAILABLE"
       },
       "contentFailureReasons": [
-        "ASSORTMENT_WEIGHT_INSUFFICIENT"
+        "PROBE_TIMEOUT"
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:04.911Z",
-      "reviewStatus": "CONTENT_INCOMPLETE",
+      "lastReviewedAt": "2026-11-01T03:10:54.991Z",
+      "reviewStatus": "CONTENT_UNAVAILABLE",
       "reviewBlockers": [
-        "assortment_signals_present_but_not_significant"
+        "probe_error:timeout"
       ],
       "expectedSectionId": "aff-dilna-naradi",
       "selectedLinkId": "13457236",
@@ -1935,7 +1921,7 @@
         "destinationVerified": true,
         "programAuthorized": true,
         "publicationReady": false,
-        "contentStatus": "CONTENT_INCOMPLETE",
+        "contentStatus": "CONTENT_UNAVAILABLE",
         "gates": {
           "TECHNICALLY_READY": true,
           "CONTENT_VERIFIED": false,
@@ -1945,14 +1931,12 @@
           "PUBLICATION_READY": false
         },
         "blockers": [
-          "content_not_verified:CONTENT_INCOMPLETE"
+          "content_not_verified:CONTENT_UNAVAILABLE"
         ],
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "taxonomyGap": null,
       "evidenceSources": [
-        "probe_title:Stavebniny DEK",
-        "probe_http:200",
         "weighted_assortment_evidence_v9",
         "snapshot:stagingGeneratedAt:2026-10-31T15:27:33.765Z"
       ],
@@ -2002,7 +1986,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:00.075Z"
+          "fetchedAt": "2026-11-01T03:10:21.548Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -2011,7 +1995,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:01.300Z",
+      "lastReviewedAt": "2026-11-01T03:10:22.482Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -2089,7 +2073,7 @@
               "jsonLd": false
             },
             "diagnostics": {
-              "scriptCount": 32,
+              "scriptCount": 31,
               "textLen": 4914,
               "thinHtml": false,
               "spaSuspected": false,
@@ -2098,7 +2082,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:01.092Z"
+          "fetchedAt": "2026-11-01T03:10:22.482Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -2107,7 +2091,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:01.784Z",
+      "lastReviewedAt": "2026-11-01T03:10:23.145Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -2190,7 +2174,7 @@
             },
             "diagnostics": {
               "scriptCount": 42,
-              "textLen": 19039,
+              "textLen": 19541,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -2198,7 +2182,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:01.300Z"
+          "fetchedAt": "2026-11-01T03:10:23.145Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -2207,7 +2191,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:08.764Z",
+      "lastReviewedAt": "2026-11-01T03:10:25.366Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -2329,14 +2313,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:01.784Z"
+          "fetchedAt": "2026-11-01T03:10:25.366Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:03.106Z",
+      "lastReviewedAt": "2026-11-01T03:10:26.578Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-moda",
@@ -2450,7 +2434,7 @@
             },
             "diagnostics": {
               "scriptCount": 13,
-              "textLen": 8021,
+              "textLen": 8001,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -2458,14 +2442,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:03.106Z"
+          "fetchedAt": "2026-11-01T03:10:26.578Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:06.778Z",
+      "lastReviewedAt": "2026-11-01T03:10:28.506Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-sport-outdoor",
@@ -2580,14 +2564,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:04.911Z"
+          "fetchedAt": "2026-11-01T03:10:28.506Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "high",
-      "lastReviewedAt": "2026-10-31T19:58:06.810Z",
+      "lastReviewedAt": "2026-11-01T03:10:31.162Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-cestovni-kancelare",
@@ -2697,7 +2681,7 @@
             },
             "diagnostics": {
               "scriptCount": 15,
-              "textLen": 15560,
+              "textLen": 15550,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -2705,14 +2689,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:06.778Z"
+          "fetchedAt": "2026-11-01T03:10:31.162Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:08.589Z",
+      "lastReviewedAt": "2026-11-01T03:10:33.210Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-zvirata",
@@ -2800,7 +2784,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:06.810Z"
+          "fetchedAt": "2026-11-01T03:10:33.210Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -2809,7 +2793,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:07.746Z",
+      "lastReviewedAt": "2026-11-01T03:10:34.115Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -2933,14 +2917,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:07.746Z"
+          "fetchedAt": "2026-11-01T03:10:34.115Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "high",
-      "lastReviewedAt": "2026-10-31T19:58:08.821Z",
+      "lastReviewedAt": "2026-11-01T03:10:35.063Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-lekarny",
@@ -3058,14 +3042,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:08.589Z"
+          "fetchedAt": "2026-11-01T03:10:34.116Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:09.539Z",
+      "lastReviewedAt": "2026-11-01T03:10:35.374Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-zdravi-doplnky",
@@ -3181,8 +3165,8 @@
               "jsonLd": false
             },
             "diagnostics": {
-              "scriptCount": 55,
-              "textLen": 10772,
+              "scriptCount": 60,
+              "textLen": 10774,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -3190,14 +3174,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:08.764Z"
+          "fetchedAt": "2026-11-01T03:10:35.063Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:11.645Z",
+      "lastReviewedAt": "2026-11-01T03:10:36.629Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-cestovni-kancelare",
@@ -3291,7 +3275,7 @@
             },
             "diagnostics": {
               "scriptCount": 54,
-              "textLen": 6502,
+              "textLen": 6517,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -3299,7 +3283,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:08.821Z"
+          "fetchedAt": "2026-11-01T03:10:35.374Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -3308,7 +3292,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "high",
-      "lastReviewedAt": "2026-10-31T19:58:10.701Z",
+      "lastReviewedAt": "2026-11-01T03:10:38.944Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -3456,14 +3440,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:09.539Z"
+          "fetchedAt": "2026-11-01T03:10:36.629Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:11.294Z",
+      "lastReviewedAt": "2026-11-01T03:10:37.605Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-moda",
@@ -3610,14 +3594,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:10.701Z"
+          "fetchedAt": "2026-11-01T03:10:37.605Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:11.714Z",
+      "lastReviewedAt": "2026-11-01T03:10:38.812Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-sport-outdoor",
@@ -3734,14 +3718,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:11.294Z"
+          "fetchedAt": "2026-11-01T03:10:38.812Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "high",
-      "lastReviewedAt": "2026-10-31T19:58:11.928Z",
+      "lastReviewedAt": "2026-11-01T03:10:40.552Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-kvetiny-darky",
@@ -3831,7 +3815,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:11.645Z"
+          "fetchedAt": "2026-11-01T03:10:38.945Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -3842,7 +3826,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:14.614Z",
+      "lastReviewedAt": "2026-11-01T03:10:42.522Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -3907,45 +3891,25 @@
         "programUrl": "https://kytary.cz/",
         "probe": {
           "url": "https://kytary.cz/",
-          "ok": true,
-          "httpStatus": 200,
-          "title": "Kytary.cz - Hudebn&#xED; n&#xE1;stroje | A&#x165; v&#xE1;m to hraje! | Kytary.cz",
+          "ok": false,
+          "httpStatus": null,
+          "title": null,
           "navHints": [],
-          "assortmentEvidence": {
-            "contentVerified": false,
-            "primaryAssortment": null,
-            "significantGroups": [],
-            "regionsUsed": {
-              "title": true,
-              "h1": true,
-              "nav": true,
-              "main": true,
-              "meta": true,
-              "jsonLd": false
-            },
-            "diagnostics": {
-              "scriptCount": 35,
-              "textLen": 10636,
-              "thinHtml": false,
-              "spaSuspected": false,
-              "cjCategoryCorroborationUsed": true
-            },
-            "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
-          },
-          "error": null,
-          "fetchedAt": "2026-10-31T19:58:11.714Z"
+          "assortmentEvidence": null,
+          "error": "timeout",
+          "fetchedAt": "2026-11-01T03:10:40.552Z"
         },
-        "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
+        "grade": "CONTENT_UNAVAILABLE"
       },
       "contentFailureReasons": [
-        "ASSORTMENT_WEIGHT_INSUFFICIENT"
+        "PROBE_TIMEOUT"
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:12.579Z",
-      "reviewStatus": "CONTENT_INCOMPLETE",
+      "lastReviewedAt": "2026-11-01T03:10:55.967Z",
+      "reviewStatus": "CONTENT_UNAVAILABLE",
       "reviewBlockers": [
-        "assortment_signals_present_but_not_significant"
+        "probe_error:timeout"
       ],
       "expectedSectionId": "aff-elektro",
       "selectedLinkId": "15156146",
@@ -3962,7 +3926,7 @@
         "destinationVerified": true,
         "programAuthorized": true,
         "publicationReady": false,
-        "contentStatus": "CONTENT_INCOMPLETE",
+        "contentStatus": "CONTENT_UNAVAILABLE",
         "gates": {
           "TECHNICALLY_READY": true,
           "CONTENT_VERIFIED": false,
@@ -3972,14 +3936,12 @@
           "PUBLICATION_READY": false
         },
         "blockers": [
-          "content_not_verified:CONTENT_INCOMPLETE"
+          "content_not_verified:CONTENT_UNAVAILABLE"
         ],
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "taxonomyGap": null,
       "evidenceSources": [
-        "probe_title:Kytary.cz - Hudebn&#xED; n&#xE1;stroje | A&#x165; v&#xE1;m to hraje! | Kytary.cz",
-        "probe_http:200",
         "weighted_assortment_evidence_v9",
         "snapshot:stagingGeneratedAt:2026-10-31T15:27:33.765Z"
       ],
@@ -4033,7 +3995,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:11.928Z"
+          "fetchedAt": "2026-11-01T03:10:42.522Z"
         },
         "grade": "CONTENT_UNAVAILABLE"
       },
@@ -4042,7 +4004,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:15.447Z",
+      "lastReviewedAt": "2026-11-01T03:10:46.042Z",
       "reviewStatus": "CONTENT_UNAVAILABLE",
       "reviewBlockers": [
         "insufficient_website_evidence"
@@ -4169,14 +4131,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:12.579Z"
+          "fetchedAt": "2026-11-01T03:10:46.043Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:14.015Z",
+      "lastReviewedAt": "2026-11-01T03:10:47.422Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-boty",
@@ -4289,14 +4251,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:14.015Z"
+          "fetchedAt": "2026-11-01T03:10:47.423Z"
         },
         "grade": "CONTENT_VERIFIED_OVERRIDE_IDENTITY_WAF"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "high",
-      "lastReviewedAt": "2026-10-31T19:58:14.729Z",
+      "lastReviewedAt": "2026-11-01T03:10:50.332Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [
         "http_403_body_untrusted_identity_assortment_used"
@@ -4388,7 +4350,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:14.614Z"
+          "fetchedAt": "2026-11-01T03:10:50.332Z"
         },
         "grade": "CONTENT_UNAVAILABLE_WAF"
       },
@@ -4397,7 +4359,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:15.178Z",
+      "lastReviewedAt": "2026-11-01T03:10:53.395Z",
       "reviewStatus": "CONTENT_UNAVAILABLE",
       "reviewBlockers": [
         "http_403_bot_waf_suspected"
@@ -4480,7 +4442,7 @@
             },
             "diagnostics": {
               "scriptCount": 24,
-              "textLen": 4472,
+              "textLen": 4479,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -4488,7 +4450,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:14.729Z"
+          "fetchedAt": "2026-11-01T03:10:53.395Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -4497,7 +4459,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:16.179Z",
+      "lastReviewedAt": "2026-11-01T03:10:55.061Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -4646,14 +4608,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:15.178Z"
+          "fetchedAt": "2026-11-01T03:10:54.991Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "high",
-      "lastReviewedAt": "2026-10-31T19:58:16.112Z",
+      "lastReviewedAt": "2026-11-01T03:10:56.012Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-sport-outdoor",
@@ -4771,7 +4733,7 @@
             },
             "diagnostics": {
               "scriptCount": 25,
-              "textLen": 5755,
+              "textLen": 5771,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -4779,14 +4741,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:15.447Z"
+          "fetchedAt": "2026-11-01T03:10:55.061Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:16.319Z",
+      "lastReviewedAt": "2026-11-01T03:10:56.825Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-cestovni-kancelare",
@@ -4866,7 +4828,7 @@
             },
             "diagnostics": {
               "scriptCount": 27,
-              "textLen": 2806,
+              "textLen": 2791,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -4874,7 +4836,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:16.112Z"
+          "fetchedAt": "2026-11-01T03:10:55.967Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -4883,7 +4845,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:16.795Z",
+      "lastReviewedAt": "2026-11-01T03:10:57.345Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -4939,56 +4901,82 @@
       "primaryAssortment": {
         "sectionId": "aff-dum-zahrada",
         "group": "dum",
-        "weight": 40
+        "weight": 32,
+        "sources": [
+          "meta_description",
+          "cj_primary_category_corroboration",
+          "body_low_trust"
+        ]
       },
       "secondaryAssortments": [],
-      "significantAssortmentGroups": [],
-      "officialNavigationEvidence": [],
+      "significantAssortmentGroups": [
+        "dum"
+      ],
+      "officialNavigationEvidence": [
+        "dum"
+      ],
       "merchantWebsiteEvidence": {
         "programUrl": "https://www.decodoma.cz/",
         "probe": {
           "url": "https://www.decodoma.cz/",
-          "ok": false,
-          "httpStatus": 403,
-          "title": "Just a moment...",
-          "navHints": [],
+          "ok": true,
+          "httpStatus": 200,
+          "title": "Napínací potahy, deky a povlečení | Pohodlí, co pohladí | decoDoma",
+          "navHints": [
+            "dum"
+          ],
           "assortmentEvidence": {
-            "contentVerified": false,
-            "primaryAssortment": null,
-            "significantGroups": [],
+            "contentVerified": true,
+            "primaryAssortment": {
+              "sectionId": "aff-dum-zahrada",
+              "group": "dum",
+              "weight": 32,
+              "sources": [
+                "meta_description",
+                "cj_primary_category_corroboration",
+                "body_low_trust"
+              ]
+            },
+            "significantGroups": [
+              {
+                "sectionId": "aff-dum-zahrada",
+                "group": "dum",
+                "weight": 32,
+                "sources": [
+                  "meta_description",
+                  "cj_primary_category_corroboration",
+                  "body_low_trust"
+                ]
+              }
+            ],
             "regionsUsed": {
               "title": true,
-              "h1": false,
-              "nav": false,
-              "main": true,
-              "meta": false,
+              "h1": true,
+              "nav": true,
+              "main": false,
+              "meta": true,
               "jsonLd": false
             },
             "diagnostics": {
-              "scriptCount": 1,
-              "textLen": 16,
-              "thinHtml": true,
+              "scriptCount": 198,
+              "textLen": 12747,
+              "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
             },
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:16.179Z"
+          "fetchedAt": "2026-11-01T03:10:56.511Z"
         },
-        "grade": "CONTENT_UNAVAILABLE_WAF"
+        "grade": "CONTENT_VERIFIED"
       },
-      "contentFailureReasons": [
-        "HTTP_403_WAF_OR_BOT",
-        "THIN_HTML_INSUFFICIENT_NAV_MAIN"
-      ],
+      "contentFailureReasons": [],
       "czAvailability": "YES",
-      "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:16.612Z",
-      "reviewStatus": "CONTENT_UNAVAILABLE",
-      "reviewBlockers": [
-        "http_403_bot_waf_suspected"
-      ],
+      "confidence": "medium",
+      "lastReviewedAt": "2026-11-01T03:10:59.792Z",
+      "reviewStatus": "CONTENT_VERIFIED",
+      "reviewBlockers": [],
       "expectedSectionId": "aff-dum-zahrada",
       "selectedLinkId": "12923226",
       "selectedDestination": "https://www.decodoma.cz/",
@@ -4996,32 +4984,31 @@
       "publishability": "READY_FOR_REVIEW",
       "holdReason": null,
       "technicallyReady": true,
-      "publicationReady": false,
+      "publicationReady": true,
       "publicationReadiness": {
         "technicallyReady": true,
-        "contentVerified": false,
+        "contentVerified": true,
         "regionVerified": true,
         "destinationVerified": true,
         "programAuthorized": true,
-        "publicationReady": false,
-        "contentStatus": "CONTENT_UNAVAILABLE",
+        "publicationReady": true,
+        "contentStatus": "CONTENT_VERIFIED",
         "gates": {
           "TECHNICALLY_READY": true,
-          "CONTENT_VERIFIED": false,
+          "CONTENT_VERIFIED": true,
           "REGION_VERIFIED": true,
           "DESTINATION_VERIFIED": true,
           "PROGRAM_AUTHORIZED": true,
-          "PUBLICATION_READY": false
+          "PUBLICATION_READY": true
         },
-        "blockers": [
-          "content_not_verified:CONTENT_UNAVAILABLE"
-        ],
-        "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
+        "blockers": [],
+        "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "taxonomyGap": null,
       "evidenceSources": [
-        "probe_title:Just a moment...",
-        "probe_http:403",
+        "probe_title:Napínací potahy, deky a povlečení | Pohodlí, co pohladí | decoDoma",
+        "probe_http:200",
+        "nav_hint:dum",
         "weighted_assortment_evidence_v9",
         "snapshot:stagingGeneratedAt:2026-10-31T15:27:33.765Z"
       ],
@@ -5054,9 +5041,9 @@
         "programUrl": "https://www.drmax.cz/",
         "probe": {
           "url": "https://www.drmax.cz/",
-          "ok": false,
-          "httpStatus": 403,
-          "title": "Just a moment...",
+          "ok": true,
+          "httpStatus": 200,
+          "title": "Dr. Max lékárna",
           "navHints": [
             "lekarny"
           ],
@@ -5065,53 +5052,59 @@
             "primaryAssortment": {
               "sectionId": "aff-lekarny",
               "group": "lekarny",
-              "weight": 48,
+              "weight": 152,
               "sources": [
+                "title",
                 "merchant_identity",
-                "cj_primary_category_corroboration"
+                "nav_or_header",
+                "meta_description",
+                "cj_primary_category_corroboration",
+                "body_low_trust"
               ]
             },
             "significantGroups": [
               {
                 "sectionId": "aff-lekarny",
                 "group": "lekarny",
-                "weight": 48,
+                "weight": 152,
                 "sources": [
+                  "title",
                   "merchant_identity",
-                  "cj_primary_category_corroboration"
+                  "nav_or_header",
+                  "meta_description",
+                  "cj_primary_category_corroboration",
+                  "body_low_trust"
                 ]
               }
             ],
             "regionsUsed": {
               "title": true,
               "h1": false,
-              "nav": false,
-              "main": true,
-              "meta": false,
+              "nav": true,
+              "main": false,
+              "meta": true,
               "jsonLd": false
             },
             "diagnostics": {
-              "scriptCount": 1,
-              "textLen": 16,
-              "thinHtml": true,
+              "scriptCount": 32,
+              "textLen": 7811,
+              "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
             },
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:16.319Z"
+          "fetchedAt": "2026-11-01T03:10:57.435Z"
         },
-        "grade": "CONTENT_VERIFIED_OVERRIDE_IDENTITY_WAF"
+        "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "high",
-      "lastReviewedAt": "2026-10-31T19:58:16.828Z",
+      "lastReviewedAt": "2026-11-01T03:11:04.833Z",
       "reviewStatus": "CONTENT_VERIFIED",
-      "reviewBlockers": [
-        "http_403_body_untrusted_identity_assortment_used"
-      ],
+      "reviewBlockers": [],
       "expectedSectionId": "aff-lekarny",
       "selectedLinkId": "12923219",
       "selectedDestination": "https://www.drmax.cz/",
@@ -5144,8 +5137,8 @@
         "official_domain:drmax.cz",
         "cz_retail:pharmacy_chain",
         "merchant_positioning:lekarna",
-        "probe_title:Just a moment...",
-        "probe_http:403",
+        "probe_title:Dr. Max lékárna",
+        "probe_http:200",
         "nav_hint:lekarny",
         "weighted_assortment_evidence_v9",
         "snapshot:stagingGeneratedAt:2026-10-31T15:27:33.765Z"
@@ -5196,7 +5189,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:16.612Z"
+          "fetchedAt": "2026-11-01T03:10:57.345Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -5205,7 +5198,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:17.895Z",
+      "lastReviewedAt": "2026-11-01T03:11:00.025Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -5319,7 +5312,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:16.795Z"
+          "fetchedAt": "2026-11-01T03:10:59.792Z"
         },
         "grade": "BLOCKED"
       },
@@ -5328,7 +5321,7 @@
       ],
       "czAvailability": "UNKNOWN",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:18.030Z",
+      "lastReviewedAt": "2026-11-01T03:11:01.167Z",
       "reviewStatus": "BLOCKED",
       "reviewBlockers": [
         "UNSUITABLE_MAIN_DESTINATION"
@@ -5485,14 +5478,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:16.828Z"
+          "fetchedAt": "2026-11-01T03:11:00.025Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:18.095Z",
+      "lastReviewedAt": "2026-11-01T03:11:02.467Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-inzerce-bazary",
@@ -5618,14 +5611,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:17.895Z"
+          "fetchedAt": "2026-11-01T03:11:01.167Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:18.695Z",
+      "lastReviewedAt": "2026-11-01T03:11:03.001Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-boty",
@@ -5741,7 +5734,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:18.030Z"
+          "fetchedAt": "2026-11-01T03:11:02.467Z"
         },
         "grade": "BLOCKED"
       },
@@ -5750,7 +5743,7 @@
       ],
       "czAvailability": "UNKNOWN",
       "confidence": "high",
-      "lastReviewedAt": "2026-10-31T19:58:18.761Z",
+      "lastReviewedAt": "2026-11-01T03:11:03.590Z",
       "reviewStatus": "BLOCKED",
       "reviewBlockers": [
         "UNSUITABLE_MAIN_DESTINATION"
@@ -5838,7 +5831,7 @@
             },
             "diagnostics": {
               "scriptCount": 33,
-              "textLen": 8229,
+              "textLen": 8517,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -5846,7 +5839,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:18.095Z"
+          "fetchedAt": "2026-11-01T03:11:03.001Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -5855,7 +5848,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:19.018Z",
+      "lastReviewedAt": "2026-11-01T03:11:04.419Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -5942,7 +5935,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:18.695Z"
+          "fetchedAt": "2026-11-01T03:11:03.590Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -5951,7 +5944,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:19.496Z",
+      "lastReviewedAt": "2026-11-01T03:11:04.677Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -6042,7 +6035,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:18.761Z"
+          "fetchedAt": "2026-11-01T03:11:04.419Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -6051,7 +6044,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:19.810Z",
+      "lastReviewedAt": "2026-11-01T03:11:05.343Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -6173,14 +6166,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:19.018Z"
+          "fetchedAt": "2026-11-01T03:11:04.677Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:19.910Z",
+      "lastReviewedAt": "2026-11-01T03:11:05.487Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-nabytek",
@@ -6260,7 +6253,7 @@
             },
             "diagnostics": {
               "scriptCount": 36,
-              "textLen": 2652,
+              "textLen": 2607,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -6268,7 +6261,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:19.497Z"
+          "fetchedAt": "2026-11-01T03:11:04.833Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -6277,7 +6270,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:20.310Z",
+      "lastReviewedAt": "2026-11-01T03:11:06.296Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -6345,7 +6338,7 @@
       "merchantWebsiteEvidence": {
         "programUrl": "http://www.booking.com",
         "probe": {
-          "url": "https://www.booking.com/index.cs.html?aid=304142&label=mkt123sc-27227faa-cb6a-41da-b7ac-a15398e544a5&chal_t=1793476700929&force_referer=",
+          "url": "https://www.booking.com/index.cs.html?aid=304142&label=gen173nr-10CAEoggI46AdIM1gEaDqIAQGYATO4ARfIAQzYAQPoAQH4AQGIAgGoAgG4AszbmtcGwAIB0gIkZDM4YTFiNzMtMzNjOS00M2JkLWE4MzgtZGZkZjRiOTMwOWFm2AIB4AIB&chal_t=1793502666818&force_referer=",
           "ok": true,
           "httpStatus": 202,
           "title": "Booking.com | oficiální stránka | nejlepší hotely, letenky, pronájmy aut a ubytování",
@@ -6387,23 +6380,23 @@
               "jsonLd": false
             },
             "diagnostics": {
-              "scriptCount": 8,
-              "textLen": 3303,
-              "thinHtml": false,
+              "scriptCount": 1,
+              "textLen": 84,
+              "thinHtml": true,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
             },
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:20.545Z"
+          "fetchedAt": "2026-11-01T03:11:05.942Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "high",
-      "lastReviewedAt": "2026-10-31T19:58:23.539Z",
+      "lastReviewedAt": "2026-11-01T03:11:09.460Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-ubytovani-hotely",
@@ -6524,14 +6517,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:19.911Z"
+          "fetchedAt": "2026-11-01T03:11:05.487Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:20.777Z",
+      "lastReviewedAt": "2026-11-01T03:11:06.764Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-kuchyn",
@@ -6677,14 +6670,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:20.310Z"
+          "fetchedAt": "2026-11-01T03:11:06.296Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "high",
-      "lastReviewedAt": "2026-10-31T19:58:24.210Z",
+      "lastReviewedAt": "2026-11-01T03:11:08.312Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-pojisteni",
@@ -6803,14 +6796,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:20.777Z"
+          "fetchedAt": "2026-11-01T03:11:06.764Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "high",
-      "lastReviewedAt": "2026-10-31T19:58:21.602Z",
+      "lastReviewedAt": "2026-11-01T03:11:07.998Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-software",
@@ -6899,7 +6892,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:21.602Z"
+          "fetchedAt": "2026-11-01T03:11:07.998Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -6908,7 +6901,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:23.061Z",
+      "lastReviewedAt": "2026-11-01T03:11:09.076Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -6979,7 +6972,7 @@
           "navHints": [],
           "assortmentEvidence": null,
           "error": "getaddrinfo ENOTFOUND shop.dreamy.cz",
-          "fetchedAt": "2026-10-31T19:58:23.061Z"
+          "fetchedAt": "2026-11-01T03:11:08.312Z"
         },
         "grade": "CONTENT_UNAVAILABLE"
       },
@@ -6988,7 +6981,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:23.477Z",
+      "lastReviewedAt": "2026-11-01T03:11:09.434Z",
       "reviewStatus": "CONTENT_UNAVAILABLE",
       "reviewBlockers": [
         "probe_error:getaddrinfo ENOTFOUND shop.dreamy.cz"
@@ -7108,7 +7101,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:23.477Z"
+          "fetchedAt": "2026-11-01T03:11:09.076Z"
         },
         "grade": "REGION_UNVERIFIED"
       },
@@ -7117,7 +7110,7 @@
       ],
       "czAvailability": "UNKNOWN",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:24.677Z",
+      "lastReviewedAt": "2026-11-01T03:11:10.875Z",
       "reviewStatus": "REGION_UNVERIFIED",
       "reviewBlockers": [
         "cz_eligibility_unknown"
@@ -7280,7 +7273,7 @@
             },
             "diagnostics": {
               "scriptCount": 48,
-              "textLen": 4608,
+              "textLen": 4604,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -7288,14 +7281,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:23.539Z"
+          "fetchedAt": "2026-11-01T03:11:09.434Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:24.257Z",
+      "lastReviewedAt": "2026-11-01T03:11:10.600Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-moda",
@@ -7382,7 +7375,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:24.210Z"
+          "fetchedAt": "2026-11-01T03:11:09.460Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -7391,7 +7384,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:25.345Z",
+      "lastReviewedAt": "2026-11-01T03:11:10.959Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -7482,7 +7475,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:24.258Z"
+          "fetchedAt": "2026-11-01T03:11:10.600Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -7491,7 +7484,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:25.547Z",
+      "lastReviewedAt": "2026-11-01T03:11:12.093Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -7582,7 +7575,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:24.677Z"
+          "fetchedAt": "2026-11-01T03:11:10.875Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -7591,7 +7584,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:25.852Z",
+      "lastReviewedAt": "2026-11-01T03:11:12.143Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -7682,7 +7675,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:25.345Z"
+          "fetchedAt": "2026-11-01T03:11:10.959Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -7691,7 +7684,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:27.758Z",
+      "lastReviewedAt": "2026-11-01T03:11:13.527Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -7810,14 +7803,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:25.548Z"
+          "fetchedAt": "2026-11-01T03:11:12.093Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:26.604Z",
+      "lastReviewedAt": "2026-11-01T03:11:13.561Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-tv-streamovani",
@@ -7901,7 +7894,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:25.852Z"
+          "fetchedAt": "2026-11-01T03:11:12.143Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -7910,7 +7903,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:27.789Z",
+      "lastReviewedAt": "2026-11-01T03:11:13.679Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -8035,14 +8028,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:26.604Z"
+          "fetchedAt": "2026-11-01T03:11:13.527Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:27.661Z",
+      "lastReviewedAt": "2026-11-01T03:11:14.711Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-nabytek",
@@ -8156,7 +8149,7 @@
             },
             "diagnostics": {
               "scriptCount": 126,
-              "textLen": 8480,
+              "textLen": 8327,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -8164,14 +8157,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:27.661Z"
+          "fetchedAt": "2026-11-01T03:11:13.561Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:28.545Z",
+      "lastReviewedAt": "2026-11-01T03:11:14.787Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-moda",
@@ -8293,14 +8286,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:27.758Z"
+          "fetchedAt": "2026-11-01T03:11:13.679Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:28.802Z",
+      "lastReviewedAt": "2026-11-01T03:11:16.384Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-cestovni-pojisteni",
@@ -8376,7 +8369,7 @@
             },
             "diagnostics": {
               "scriptCount": 33,
-              "textLen": 2589,
+              "textLen": 2495,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -8384,7 +8377,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:27.789Z"
+          "fetchedAt": "2026-11-01T03:11:14.711Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -8393,7 +8386,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:29.565Z",
+      "lastReviewedAt": "2026-11-01T03:11:16.501Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -8518,14 +8511,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:28.545Z"
+          "fetchedAt": "2026-11-01T03:11:14.787Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:29.469Z",
+      "lastReviewedAt": "2026-11-01T03:11:15.754Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-nabytek",
@@ -8647,14 +8640,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:28.802Z"
+          "fetchedAt": "2026-11-01T03:11:15.754Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:31.047Z",
+      "lastReviewedAt": "2026-11-01T03:11:17.689Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-sport-outdoor",
@@ -8803,14 +8796,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:29.469Z"
+          "fetchedAt": "2026-11-01T03:11:16.384Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:30.824Z",
+      "lastReviewedAt": "2026-11-01T03:11:17.570Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-moda",
@@ -8899,7 +8892,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:29.565Z"
+          "fetchedAt": "2026-11-01T03:11:16.501Z"
         },
         "grade": "CONTENT_UNAVAILABLE"
       },
@@ -8908,7 +8901,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:30.220Z",
+      "lastReviewedAt": "2026-11-01T03:11:19.807Z",
       "reviewStatus": "CONTENT_UNAVAILABLE",
       "reviewBlockers": [
         "insufficient_website_evidence"
@@ -9019,7 +9012,7 @@
             },
             "diagnostics": {
               "scriptCount": 17,
-              "textLen": 6323,
+              "textLen": 6378,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -9027,14 +9020,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:30.220Z"
+          "fetchedAt": "2026-11-01T03:11:17.570Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:31.111Z",
+      "lastReviewedAt": "2026-11-01T03:11:18.591Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-ubytovani-hotely",
@@ -9150,14 +9143,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:30.824Z"
+          "fetchedAt": "2026-11-01T03:11:17.689Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:31.993Z",
+      "lastReviewedAt": "2026-11-01T03:11:19.491Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-sport-outdoor",
@@ -9265,7 +9258,7 @@
             },
             "diagnostics": {
               "scriptCount": 16,
-              "textLen": 10471,
+              "textLen": 10208,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -9273,14 +9266,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:31.047Z"
+          "fetchedAt": "2026-11-01T03:11:18.591Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:31.885Z",
+      "lastReviewedAt": "2026-11-01T03:11:19.556Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-kosmetika",
@@ -9396,14 +9389,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:31.111Z"
+          "fetchedAt": "2026-11-01T03:11:19.491Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:31.974Z",
+      "lastReviewedAt": "2026-11-01T03:11:20.709Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-zdravi-doplnky",
@@ -9483,7 +9476,7 @@
             },
             "diagnostics": {
               "scriptCount": 25,
-              "textLen": 27797,
+              "textLen": 27808,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -9491,7 +9484,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:31.885Z"
+          "fetchedAt": "2026-11-01T03:11:19.556Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -9500,7 +9493,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:33.017Z",
+      "lastReviewedAt": "2026-11-01T03:11:21.824Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -9611,7 +9604,7 @@
             },
             "diagnostics": {
               "scriptCount": 30,
-              "textLen": 2098,
+              "textLen": 2082,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -9619,14 +9612,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:31.974Z"
+          "fetchedAt": "2026-11-01T03:11:19.808Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:32.710Z",
+      "lastReviewedAt": "2026-11-01T03:11:21.378Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-cestovni-kancelare",
@@ -9706,7 +9699,7 @@
             },
             "diagnostics": {
               "scriptCount": 1,
-              "textLen": 98,
+              "textLen": 100,
               "thinHtml": true,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -9714,7 +9707,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:31.993Z"
+          "fetchedAt": "2026-11-01T03:11:20.709Z"
         },
         "grade": "CONTENT_UNAVAILABLE_WAF"
       },
@@ -9724,7 +9717,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:32.505Z",
+      "lastReviewedAt": "2026-11-01T03:11:24.740Z",
       "reviewStatus": "CONTENT_UNAVAILABLE",
       "reviewBlockers": [
         "http_403_bot_waf_suspected"
@@ -9815,7 +9808,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:32.505Z"
+          "fetchedAt": "2026-11-01T03:11:21.378Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -9824,7 +9817,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:34.375Z",
+      "lastReviewedAt": "2026-11-01T03:11:24.542Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -9914,7 +9907,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:32.710Z"
+          "fetchedAt": "2026-11-01T03:11:21.824Z"
         },
         "grade": "BLOCKED"
       },
@@ -9924,7 +9917,7 @@
       ],
       "czAvailability": "UNKNOWN",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:34.407Z",
+      "lastReviewedAt": "2026-11-01T03:11:23.401Z",
       "reviewStatus": "BLOCKED",
       "reviewBlockers": [
         "UNSUITABLE_MAIN_DESTINATION"
@@ -10088,14 +10081,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:33.017Z"
+          "fetchedAt": "2026-11-01T03:11:23.401Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:34.360Z",
+      "lastReviewedAt": "2026-11-01T03:11:24.725Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-dum-zahrada",
@@ -10217,7 +10210,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:34.360Z"
+          "fetchedAt": "2026-11-01T03:11:24.542Z"
         },
         "grade": "BLOCKED"
       },
@@ -10228,7 +10221,7 @@
       ],
       "czAvailability": "UNKNOWN",
       "confidence": "high",
-      "lastReviewedAt": "2026-10-31T19:58:34.855Z",
+      "lastReviewedAt": "2026-11-01T03:11:27.820Z",
       "reviewStatus": "BLOCKED",
       "reviewBlockers": [
         "CATEGORY_REVIEW_REQUIRED"
@@ -10353,14 +10346,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:34.375Z"
+          "fetchedAt": "2026-11-01T03:11:24.725Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "UNKNOWN",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:35.474Z",
+      "lastReviewedAt": "2026-11-01T03:11:26.478Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-letenky-letecka-doprava",
@@ -10480,7 +10473,7 @@
             },
             "diagnostics": {
               "scriptCount": 16,
-              "textLen": 2416,
+              "textLen": 2408,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -10488,14 +10481,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:34.407Z"
+          "fetchedAt": "2026-11-01T03:11:24.740Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:36.212Z",
+      "lastReviewedAt": "2026-11-01T03:11:27.095Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-lekarny",
@@ -10583,7 +10576,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:34.855Z"
+          "fetchedAt": "2026-11-01T03:11:26.478Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -10592,7 +10585,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:36.030Z",
+      "lastReviewedAt": "2026-11-01T03:11:27.693Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -10683,7 +10676,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:35.474Z"
+          "fetchedAt": "2026-11-01T03:11:27.096Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -10692,7 +10685,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:36.453Z",
+      "lastReviewedAt": "2026-11-01T03:11:27.947Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -10783,7 +10776,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:36.030Z"
+          "fetchedAt": "2026-11-01T03:11:27.693Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -10792,7 +10785,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:36.859Z",
+      "lastReviewedAt": "2026-11-01T03:11:28.559Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -10905,7 +10898,7 @@
               "jsonLd": false
             },
             "diagnostics": {
-              "scriptCount": 77,
+              "scriptCount": 75,
               "textLen": 7330,
               "thinHtml": false,
               "spaSuspected": false,
@@ -10914,14 +10907,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:36.678Z"
+          "fetchedAt": "2026-11-01T03:11:28.407Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:41.758Z",
+      "lastReviewedAt": "2026-11-01T03:11:33.057Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-moda",
@@ -11040,14 +11033,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:36.453Z"
+          "fetchedAt": "2026-11-01T03:11:27.947Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:38.489Z",
+      "lastReviewedAt": "2026-11-01T03:11:29.594Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-auto-moto",
@@ -11127,7 +11120,7 @@
             },
             "diagnostics": {
               "scriptCount": 32,
-              "textLen": 2511,
+              "textLen": 2525,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -11135,7 +11128,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:36.859Z"
+          "fetchedAt": "2026-11-01T03:11:28.559Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -11144,7 +11137,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:37.811Z",
+      "lastReviewedAt": "2026-11-01T03:11:29.869Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -11266,14 +11259,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:37.811Z"
+          "fetchedAt": "2026-11-01T03:11:29.594Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:38.845Z",
+      "lastReviewedAt": "2026-11-01T03:11:31.054Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-kosmetika",
@@ -11384,7 +11377,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:38.489Z"
+          "fetchedAt": "2026-11-01T03:11:29.869Z"
         },
         "grade": "BLOCKED"
       },
@@ -11393,7 +11386,7 @@
       ],
       "czAvailability": "UNKNOWN",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:39.738Z",
+      "lastReviewedAt": "2026-11-01T03:11:31.361Z",
       "reviewStatus": "BLOCKED",
       "reviewBlockers": [
         "UNSUITABLE_MAIN_DESTINATION"
@@ -11539,14 +11532,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:38.845Z"
+          "fetchedAt": "2026-11-01T03:11:31.054Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:39.450Z",
+      "lastReviewedAt": "2026-11-01T03:11:32.426Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-auto-moto",
@@ -11680,7 +11673,7 @@
             },
             "diagnostics": {
               "scriptCount": 26,
-              "textLen": 10020,
+              "textLen": 9990,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -11688,14 +11681,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:39.450Z"
+          "fetchedAt": "2026-11-01T03:11:31.361Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:40.196Z",
+      "lastReviewedAt": "2026-11-01T03:11:32.671Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-moda",
@@ -11812,14 +11805,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:39.738Z"
+          "fetchedAt": "2026-11-01T03:11:32.426Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:40.755Z",
+      "lastReviewedAt": "2026-11-01T03:11:34.424Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-zdravi-doplnky",
@@ -11907,7 +11900,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:40.196Z"
+          "fetchedAt": "2026-11-01T03:11:32.671Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -11916,7 +11909,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:41.492Z",
+      "lastReviewedAt": "2026-11-01T03:11:34.073Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -12007,7 +12000,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:40.755Z"
+          "fetchedAt": "2026-11-01T03:11:33.057Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -12016,7 +12009,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:42.027Z",
+      "lastReviewedAt": "2026-11-01T03:11:35.157Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -12149,7 +12142,7 @@
             },
             "diagnostics": {
               "scriptCount": 107,
-              "textLen": 1435,
+              "textLen": 1264,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -12157,14 +12150,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:41.492Z"
+          "fetchedAt": "2026-11-01T03:11:34.073Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:44.324Z",
+      "lastReviewedAt": "2026-11-01T03:11:36.320Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-knihy",
@@ -12276,7 +12269,7 @@
             },
             "diagnostics": {
               "scriptCount": 68,
-              "textLen": 6807,
+              "textLen": 6995,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -12284,14 +12277,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:41.758Z"
+          "fetchedAt": "2026-11-01T03:11:34.424Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:43.291Z",
+      "lastReviewedAt": "2026-11-01T03:11:36.406Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-cestovni-kancelare",
@@ -12410,14 +12403,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:42.027Z"
+          "fetchedAt": "2026-11-01T03:11:35.157Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:43.524Z",
+      "lastReviewedAt": "2026-11-01T03:11:36.410Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-dum-zahrada",
@@ -12470,56 +12463,85 @@
       "primaryAssortment": {
         "sectionId": "aff-moda",
         "group": "moda",
-        "weight": 40
+        "weight": 82,
+        "sources": [
+          "title",
+          "meta_description",
+          "cj_primary_category_corroboration",
+          "body_low_trust"
+        ]
       },
       "secondaryAssortments": [],
-      "significantAssortmentGroups": [],
-      "officialNavigationEvidence": [],
+      "significantAssortmentGroups": [
+        "moda"
+      ],
+      "officialNavigationEvidence": [
+        "moda"
+      ],
       "merchantWebsiteEvidence": {
         "programUrl": "https://warsawsneakerstore.com/en",
         "probe": {
           "url": "https://warsawsneakerstore.com/en",
-          "ok": false,
-          "httpStatus": 403,
-          "title": "Just a moment...",
-          "navHints": [],
+          "ok": true,
+          "httpStatus": 200,
+          "title": "Sneakers and streetwear - warsawsneakerstore.com",
+          "navHints": [
+            "moda"
+          ],
           "assortmentEvidence": {
-            "contentVerified": false,
-            "primaryAssortment": null,
-            "significantGroups": [],
+            "contentVerified": true,
+            "primaryAssortment": {
+              "sectionId": "aff-moda",
+              "group": "moda",
+              "weight": 82,
+              "sources": [
+                "title",
+                "meta_description",
+                "cj_primary_category_corroboration",
+                "body_low_trust"
+              ]
+            },
+            "significantGroups": [
+              {
+                "sectionId": "aff-moda",
+                "group": "moda",
+                "weight": 82,
+                "sources": [
+                  "title",
+                  "meta_description",
+                  "cj_primary_category_corroboration",
+                  "body_low_trust"
+                ]
+              }
+            ],
             "regionsUsed": {
               "title": true,
-              "h1": false,
-              "nav": false,
-              "main": true,
-              "meta": false,
+              "h1": true,
+              "nav": true,
+              "main": false,
+              "meta": true,
               "jsonLd": false
             },
             "diagnostics": {
-              "scriptCount": 1,
-              "textLen": 16,
-              "thinHtml": true,
+              "scriptCount": 21,
+              "textLen": 774,
+              "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
             },
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:43.292Z"
+          "fetchedAt": "2026-11-01T03:11:36.823Z"
         },
-        "grade": "CONTENT_UNAVAILABLE_WAF"
+        "grade": "CONTENT_VERIFIED"
       },
-      "contentFailureReasons": [
-        "HTTP_403_WAF_OR_BOT",
-        "THIN_HTML_INSUFFICIENT_NAV_MAIN"
-      ],
+      "contentFailureReasons": [],
       "czAvailability": "YES",
-      "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:43.741Z",
-      "reviewStatus": "CONTENT_UNAVAILABLE",
-      "reviewBlockers": [
-        "http_403_bot_waf_suspected"
-      ],
+      "confidence": "medium",
+      "lastReviewedAt": "2026-11-01T03:11:39.539Z",
+      "reviewStatus": "CONTENT_VERIFIED",
+      "reviewBlockers": [],
       "expectedSectionId": "aff-moda",
       "selectedLinkId": "15731087",
       "selectedDestination": "https://warsawsneakerstore.com/cs",
@@ -12527,32 +12549,31 @@
       "publishability": "READY_FOR_REVIEW",
       "holdReason": null,
       "technicallyReady": true,
-      "publicationReady": false,
+      "publicationReady": true,
       "publicationReadiness": {
         "technicallyReady": true,
-        "contentVerified": false,
+        "contentVerified": true,
         "regionVerified": true,
         "destinationVerified": true,
         "programAuthorized": true,
-        "publicationReady": false,
-        "contentStatus": "CONTENT_UNAVAILABLE",
+        "publicationReady": true,
+        "contentStatus": "CONTENT_VERIFIED",
         "gates": {
           "TECHNICALLY_READY": true,
-          "CONTENT_VERIFIED": false,
+          "CONTENT_VERIFIED": true,
           "REGION_VERIFIED": true,
           "DESTINATION_VERIFIED": true,
           "PROGRAM_AUTHORIZED": true,
-          "PUBLICATION_READY": false
+          "PUBLICATION_READY": true
         },
-        "blockers": [
-          "content_not_verified:CONTENT_UNAVAILABLE"
-        ],
-        "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
+        "blockers": [],
+        "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "taxonomyGap": null,
       "evidenceSources": [
-        "probe_title:Just a moment...",
-        "probe_http:403",
+        "probe_title:Sneakers and streetwear - warsawsneakerstore.com",
+        "probe_http:200",
+        "nav_hint:moda",
         "weighted_assortment_evidence_v9",
         "snapshot:stagingGeneratedAt:2026-10-31T15:27:33.765Z"
       ],
@@ -12634,14 +12655,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:43.524Z"
+          "fetchedAt": "2026-11-01T03:11:36.406Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:46.054Z",
+      "lastReviewedAt": "2026-11-01T03:11:39.076Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-sport-outdoor",
@@ -12694,56 +12715,124 @@
       "primaryAssortment": {
         "sectionId": "aff-nabytek",
         "group": "nabytek",
-        "weight": 43
+        "weight": 112,
+        "sources": [
+          "title",
+          "nav_or_header",
+          "meta_description",
+          "cj_primary_category_corroboration",
+          "body_low_trust"
+        ]
       },
-      "secondaryAssortments": [],
-      "significantAssortmentGroups": [],
-      "officialNavigationEvidence": [],
+      "secondaryAssortments": [
+        {
+          "sectionId": "aff-dum-zahrada",
+          "group": "dum",
+          "weight": 40,
+          "sources": [
+            "nav_or_header",
+            "cj_primary_category_corroboration",
+            "body_low_trust"
+          ]
+        }
+      ],
+      "significantAssortmentGroups": [
+        "nabytek",
+        "dum",
+        "kuchyn"
+      ],
+      "officialNavigationEvidence": [
+        "nabytek",
+        "dum",
+        "kuchyn"
+      ],
       "merchantWebsiteEvidence": {
         "programUrl": "https://www.xxxlutz.cz",
         "probe": {
-          "url": "https://www.xxxlutz.cz",
-          "ok": false,
-          "httpStatus": 403,
-          "title": "Just a moment...",
-          "navHints": [],
+          "url": "https://www.xxxlutz.cz/",
+          "ok": true,
+          "httpStatus": 200,
+          "title": "Nábytek a bytové doplňky – nejlepší výběr | XXXLutz",
+          "navHints": [
+            "nabytek",
+            "dum",
+            "kuchyn"
+          ],
           "assortmentEvidence": {
-            "contentVerified": false,
-            "primaryAssortment": null,
-            "significantGroups": [],
+            "contentVerified": true,
+            "primaryAssortment": {
+              "sectionId": "aff-nabytek",
+              "group": "nabytek",
+              "weight": 112,
+              "sources": [
+                "title",
+                "nav_or_header",
+                "meta_description",
+                "cj_primary_category_corroboration",
+                "body_low_trust"
+              ]
+            },
+            "significantGroups": [
+              {
+                "sectionId": "aff-nabytek",
+                "group": "nabytek",
+                "weight": 112,
+                "sources": [
+                  "title",
+                  "nav_or_header",
+                  "meta_description",
+                  "cj_primary_category_corroboration",
+                  "body_low_trust"
+                ]
+              },
+              {
+                "sectionId": "aff-dum-zahrada",
+                "group": "dum",
+                "weight": 40,
+                "sources": [
+                  "nav_or_header",
+                  "cj_primary_category_corroboration",
+                  "body_low_trust"
+                ]
+              },
+              {
+                "sectionId": "aff-kuchyn",
+                "group": "kuchyn",
+                "weight": 32,
+                "sources": [
+                  "nav_or_header",
+                  "body_low_trust"
+                ]
+              }
+            ],
             "regionsUsed": {
               "title": true,
               "h1": false,
-              "nav": false,
-              "main": true,
-              "meta": false,
+              "nav": true,
+              "main": false,
+              "meta": true,
               "jsonLd": false
             },
             "diagnostics": {
-              "scriptCount": 1,
-              "textLen": 16,
-              "thinHtml": true,
+              "scriptCount": 27,
+              "textLen": 3698,
+              "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
             },
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:43.741Z"
+          "fetchedAt": "2026-11-01T03:11:36.888Z"
         },
-        "grade": "CONTENT_UNAVAILABLE_WAF"
+        "grade": "CONTENT_VERIFIED"
       },
-      "contentFailureReasons": [
-        "HTTP_403_WAF_OR_BOT",
-        "THIN_HTML_INSUFFICIENT_NAV_MAIN"
-      ],
+      "contentFailureReasons": [],
       "czAvailability": "YES",
-      "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:44.258Z",
-      "reviewStatus": "CONTENT_UNAVAILABLE",
-      "reviewBlockers": [
-        "http_403_bot_waf_suspected"
-      ],
+      "confidence": "medium",
+      "lastReviewedAt": "2026-11-01T03:11:39.623Z",
+      "reviewStatus": "CONTENT_VERIFIED",
+      "reviewBlockers": [],
       "expectedSectionId": "aff-nabytek",
       "selectedLinkId": "13966880",
       "selectedDestination": "https://www.xxxlutz.cz/",
@@ -12751,32 +12840,33 @@
       "publishability": "READY_FOR_REVIEW",
       "holdReason": null,
       "technicallyReady": true,
-      "publicationReady": false,
+      "publicationReady": true,
       "publicationReadiness": {
         "technicallyReady": true,
-        "contentVerified": false,
+        "contentVerified": true,
         "regionVerified": true,
         "destinationVerified": true,
         "programAuthorized": true,
-        "publicationReady": false,
-        "contentStatus": "CONTENT_UNAVAILABLE",
+        "publicationReady": true,
+        "contentStatus": "CONTENT_VERIFIED",
         "gates": {
           "TECHNICALLY_READY": true,
-          "CONTENT_VERIFIED": false,
+          "CONTENT_VERIFIED": true,
           "REGION_VERIFIED": true,
           "DESTINATION_VERIFIED": true,
           "PROGRAM_AUTHORIZED": true,
-          "PUBLICATION_READY": false
+          "PUBLICATION_READY": true
         },
-        "blockers": [
-          "content_not_verified:CONTENT_UNAVAILABLE"
-        ],
-        "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
+        "blockers": [],
+        "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "taxonomyGap": null,
       "evidenceSources": [
-        "probe_title:Just a moment...",
-        "probe_http:403",
+        "probe_title:Nábytek a bytové doplňky – nejlepší výběr | XXXLutz",
+        "probe_http:200",
+        "nav_hint:nabytek",
+        "nav_hint:dum",
+        "nav_hint:kuchyn",
         "weighted_assortment_evidence_v9",
         "snapshot:stagingGeneratedAt:2026-10-31T15:27:33.765Z"
       ],
@@ -12830,7 +12920,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:44.258Z"
+          "fetchedAt": "2026-11-01T03:11:39.076Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -12839,7 +12929,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:45.495Z",
+      "lastReviewedAt": "2026-11-01T03:11:40.639Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -12930,7 +13020,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:44.324Z"
+          "fetchedAt": "2026-11-01T03:11:39.539Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -12939,7 +13029,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:45.074Z",
+      "lastReviewedAt": "2026-11-01T03:11:40.439Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -13067,14 +13157,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:45.074Z"
+          "fetchedAt": "2026-11-01T03:11:39.623Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:45.918Z",
+      "lastReviewedAt": "2026-11-01T03:11:40.903Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-pojisteni",
@@ -13162,7 +13252,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:45.496Z"
+          "fetchedAt": "2026-11-01T03:11:40.439Z"
         },
         "grade": "IDENTITY_TITLE_ONLY"
       },
@@ -13171,7 +13261,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:47.128Z",
+      "lastReviewedAt": "2026-11-01T03:11:41.855Z",
       "reviewStatus": "IDENTITY_VERIFIED",
       "reviewBlockers": [
         "title_ok_no_significant_assortment"
@@ -13262,7 +13352,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:45.918Z"
+          "fetchedAt": "2026-11-01T03:11:40.639Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -13271,7 +13361,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:48.173Z",
+      "lastReviewedAt": "2026-11-01T03:11:43.789Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -13362,7 +13452,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:46.054Z"
+          "fetchedAt": "2026-11-01T03:11:40.903Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -13371,7 +13461,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:47.134Z",
+      "lastReviewedAt": "2026-11-01T03:11:42.873Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -13462,7 +13552,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:47.128Z"
+          "fetchedAt": "2026-11-01T03:11:41.855Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -13471,7 +13561,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:48.190Z",
+      "lastReviewedAt": "2026-11-01T03:11:42.889Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -13591,7 +13681,7 @@
             },
             "diagnostics": {
               "scriptCount": 25,
-              "textLen": 11589,
+              "textLen": 10549,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -13599,14 +13689,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:47.134Z"
+          "fetchedAt": "2026-11-01T03:11:42.873Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:48.377Z",
+      "lastReviewedAt": "2026-11-01T03:11:44.239Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-lekarny",
@@ -13694,7 +13784,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:48.173Z"
+          "fetchedAt": "2026-11-01T03:11:42.889Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -13703,7 +13793,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:49.857Z",
+      "lastReviewedAt": "2026-11-01T03:11:44.524Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -13817,7 +13907,7 @@
             },
             "diagnostics": {
               "scriptCount": 17,
-              "textLen": 5772,
+              "textLen": 5704,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -13825,7 +13915,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:48.190Z"
+          "fetchedAt": "2026-11-01T03:11:43.789Z"
         },
         "grade": "BLOCKED"
       },
@@ -13834,7 +13924,7 @@
       ],
       "czAvailability": "UNKNOWN",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:50.123Z",
+      "lastReviewedAt": "2026-11-01T03:11:48.088Z",
       "reviewStatus": "BLOCKED",
       "reviewBlockers": [
         "UNSUITABLE_MAIN_DESTINATION"
@@ -13980,14 +14070,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:48.377Z"
+          "fetchedAt": "2026-11-01T03:11:44.239Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:49.505Z",
+      "lastReviewedAt": "2026-11-01T03:11:44.990Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-pneu-pneuservis",
@@ -14110,14 +14200,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:49.505Z"
+          "fetchedAt": "2026-11-01T03:11:44.524Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:52.158Z",
+      "lastReviewedAt": "2026-11-01T03:11:45.705Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-nabytek",
@@ -14205,7 +14295,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:49.857Z"
+          "fetchedAt": "2026-11-01T03:11:44.990Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -14214,7 +14304,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:51.324Z",
+      "lastReviewedAt": "2026-11-01T03:11:46.230Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -14329,14 +14419,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:50.123Z"
+          "fetchedAt": "2026-11-01T03:11:45.705Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "high",
-      "lastReviewedAt": "2026-10-31T19:58:51.274Z",
+      "lastReviewedAt": "2026-11-01T03:11:46.601Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-software",
@@ -14452,7 +14542,7 @@
             },
             "diagnostics": {
               "scriptCount": 33,
-              "textLen": 3923,
+              "textLen": 3920,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -14460,14 +14550,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:51.274Z"
+          "fetchedAt": "2026-11-01T03:11:46.230Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "high",
-      "lastReviewedAt": "2026-10-31T19:58:52.357Z",
+      "lastReviewedAt": "2026-11-01T03:11:47.190Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-dilna-naradi",
@@ -14558,7 +14648,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:51.324Z"
+          "fetchedAt": "2026-11-01T03:11:46.601Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -14567,7 +14657,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:53.443Z",
+      "lastReviewedAt": "2026-11-01T03:11:52.472Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -14650,7 +14740,7 @@
             },
             "diagnostics": {
               "scriptCount": 13,
-              "textLen": 4145,
+              "textLen": 4012,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -14658,7 +14748,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:52.158Z"
+          "fetchedAt": "2026-11-01T03:11:47.190Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -14667,7 +14757,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:53.407Z",
+      "lastReviewedAt": "2026-11-01T03:11:48.255Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -14750,7 +14840,7 @@
             },
             "diagnostics": {
               "scriptCount": 74,
-              "textLen": 4275,
+              "textLen": 4228,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -14758,7 +14848,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:52.357Z"
+          "fetchedAt": "2026-11-01T03:11:48.088Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -14767,7 +14857,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:53.290Z",
+      "lastReviewedAt": "2026-11-01T03:11:49.123Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -14858,7 +14948,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:53.290Z"
+          "fetchedAt": "2026-11-01T03:11:48.255Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -14867,7 +14957,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:54.557Z",
+      "lastReviewedAt": "2026-11-01T03:11:50.022Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -14992,14 +15082,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:53.407Z"
+          "fetchedAt": "2026-11-01T03:11:49.124Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:54.294Z",
+      "lastReviewedAt": "2026-11-01T03:11:50.554Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-dum-zahrada",
@@ -15115,14 +15205,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:53.443Z"
+          "fetchedAt": "2026-11-01T03:11:50.022Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:54.190Z",
+      "lastReviewedAt": "2026-11-01T03:11:51.022Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-moda",
@@ -15224,7 +15314,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:54.190Z"
+          "fetchedAt": "2026-11-01T03:11:50.554Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -15233,7 +15323,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:56.623Z",
+      "lastReviewedAt": "2026-11-01T03:11:52.172Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -15321,7 +15411,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:54.294Z"
+          "fetchedAt": "2026-11-01T03:11:51.022Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -15330,7 +15420,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:55.810Z",
+      "lastReviewedAt": "2026-11-01T03:11:52.904Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -15413,7 +15503,7 @@
             },
             "diagnostics": {
               "scriptCount": 25,
-              "textLen": 9292,
+              "textLen": 9429,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -15421,7 +15511,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:54.557Z"
+          "fetchedAt": "2026-11-01T03:11:52.173Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -15430,7 +15520,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:56.556Z",
+      "lastReviewedAt": "2026-11-01T03:11:53.321Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -15550,7 +15640,7 @@
             },
             "diagnostics": {
               "scriptCount": 55,
-              "textLen": 6849,
+              "textLen": 6855,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -15558,14 +15648,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:55.810Z"
+          "fetchedAt": "2026-11-01T03:11:52.472Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:56.574Z",
+      "lastReviewedAt": "2026-11-01T03:11:53.205Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-boty",
@@ -15645,7 +15735,7 @@
             },
             "diagnostics": {
               "scriptCount": 29,
-              "textLen": 2350,
+              "textLen": 2347,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -15653,7 +15743,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:56.556Z"
+          "fetchedAt": "2026-11-01T03:11:52.904Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -15662,7 +15752,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "high",
-      "lastReviewedAt": "2026-10-31T19:58:57.737Z",
+      "lastReviewedAt": "2026-11-01T03:11:54.210Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -15795,14 +15885,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:56.574Z"
+          "fetchedAt": "2026-11-01T03:11:53.206Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:59.002Z",
+      "lastReviewedAt": "2026-11-01T03:11:54.329Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-nabytek",
@@ -15918,14 +16008,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:56.623Z"
+          "fetchedAt": "2026-11-01T03:11:53.321Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:57.923Z",
+      "lastReviewedAt": "2026-11-01T03:11:54.837Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-zdravi-doplnky",
@@ -16013,7 +16103,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:57.737Z"
+          "fetchedAt": "2026-11-01T03:11:54.210Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -16022,7 +16112,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:58.623Z",
+      "lastReviewedAt": "2026-11-01T03:11:55.104Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -16159,8 +16249,8 @@
               "jsonLd": false
             },
             "diagnostics": {
-              "scriptCount": 104,
-              "textLen": 2121,
+              "scriptCount": 101,
+              "textLen": 2043,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -16168,14 +16258,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:57.923Z"
+          "fetchedAt": "2026-11-01T03:11:54.329Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "high",
-      "lastReviewedAt": "2026-10-31T19:58:59.772Z",
+      "lastReviewedAt": "2026-11-01T03:11:56.341Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-elektro",
@@ -16267,7 +16357,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:58.623Z"
+          "fetchedAt": "2026-11-01T03:11:54.837Z"
         },
         "grade": "CONTENT_UNAVAILABLE_WAF"
       },
@@ -16277,7 +16367,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:59.321Z",
+      "lastReviewedAt": "2026-11-01T03:11:58.202Z",
       "reviewStatus": "CONTENT_UNAVAILABLE",
       "reviewBlockers": [
         "http_403_bot_waf_suspected"
@@ -16402,14 +16492,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:59.002Z"
+          "fetchedAt": "2026-11-01T03:11:55.104Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:58:59.850Z",
+      "lastReviewedAt": "2026-11-01T03:11:56.134Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-dum-zahrada",
@@ -16462,56 +16552,109 @@
       "primaryAssortment": {
         "sectionId": "aff-dum-zahrada",
         "group": "dum",
-        "weight": 40
+        "weight": 82,
+        "sources": [
+          "title",
+          "meta_description",
+          "cj_primary_category_corroboration",
+          "body_low_trust"
+        ]
       },
-      "secondaryAssortments": [],
-      "significantAssortmentGroups": [],
-      "officialNavigationEvidence": [],
+      "secondaryAssortments": [
+        {
+          "sectionId": "aff-kuchyn",
+          "group": "kuchyn",
+          "weight": 74,
+          "sources": [
+            "title",
+            "meta_description",
+            "body_low_trust"
+          ]
+        }
+      ],
+      "significantAssortmentGroups": [
+        "dum",
+        "kuchyn"
+      ],
+      "officialNavigationEvidence": [
+        "dum",
+        "kuchyn"
+      ],
       "merchantWebsiteEvidence": {
         "programUrl": "https://www.siko.cz/",
         "probe": {
           "url": "https://www.siko.cz/",
-          "ok": false,
-          "httpStatus": 403,
-          "title": "Just a moment...",
-          "navHints": [],
+          "ok": true,
+          "httpStatus": 200,
+          "title": "Stylová řešení koupelen a kuchyní | SIKO",
+          "navHints": [
+            "dum",
+            "kuchyn"
+          ],
           "assortmentEvidence": {
-            "contentVerified": false,
-            "primaryAssortment": null,
-            "significantGroups": [],
+            "contentVerified": true,
+            "primaryAssortment": {
+              "sectionId": "aff-dum-zahrada",
+              "group": "dum",
+              "weight": 82,
+              "sources": [
+                "title",
+                "meta_description",
+                "cj_primary_category_corroboration",
+                "body_low_trust"
+              ]
+            },
+            "significantGroups": [
+              {
+                "sectionId": "aff-dum-zahrada",
+                "group": "dum",
+                "weight": 82,
+                "sources": [
+                  "title",
+                  "meta_description",
+                  "cj_primary_category_corroboration",
+                  "body_low_trust"
+                ]
+              },
+              {
+                "sectionId": "aff-kuchyn",
+                "group": "kuchyn",
+                "weight": 74,
+                "sources": [
+                  "title",
+                  "meta_description",
+                  "body_low_trust"
+                ]
+              }
+            ],
             "regionsUsed": {
               "title": true,
               "h1": false,
               "nav": false,
-              "main": true,
-              "meta": false,
+              "main": false,
+              "meta": true,
               "jsonLd": false
             },
             "diagnostics": {
-              "scriptCount": 1,
-              "textLen": 16,
+              "scriptCount": 24,
+              "textLen": 257,
               "thinHtml": true,
-              "spaSuspected": false,
+              "spaSuspected": true,
               "cjCategoryCorroborationUsed": true
             },
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:59.321Z"
+          "fetchedAt": "2026-11-01T03:11:56.590Z"
         },
-        "grade": "CONTENT_UNAVAILABLE_WAF"
+        "grade": "CONTENT_VERIFIED"
       },
-      "contentFailureReasons": [
-        "HTTP_403_WAF_OR_BOT",
-        "THIN_HTML_INSUFFICIENT_NAV_MAIN"
-      ],
+      "contentFailureReasons": [],
       "czAvailability": "YES",
-      "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:58:59.823Z",
-      "reviewStatus": "CONTENT_UNAVAILABLE",
-      "reviewBlockers": [
-        "http_403_bot_waf_suspected"
-      ],
+      "confidence": "medium",
+      "lastReviewedAt": "2026-11-01T03:12:00.267Z",
+      "reviewStatus": "CONTENT_VERIFIED",
+      "reviewBlockers": [],
       "expectedSectionId": "aff-dum-zahrada",
       "selectedLinkId": "12948215",
       "selectedDestination": "https://www.siko.cz/",
@@ -16519,32 +16662,32 @@
       "publishability": "READY_FOR_REVIEW",
       "holdReason": null,
       "technicallyReady": true,
-      "publicationReady": false,
+      "publicationReady": true,
       "publicationReadiness": {
         "technicallyReady": true,
-        "contentVerified": false,
+        "contentVerified": true,
         "regionVerified": true,
         "destinationVerified": true,
         "programAuthorized": true,
-        "publicationReady": false,
-        "contentStatus": "CONTENT_UNAVAILABLE",
+        "publicationReady": true,
+        "contentStatus": "CONTENT_VERIFIED",
         "gates": {
           "TECHNICALLY_READY": true,
-          "CONTENT_VERIFIED": false,
+          "CONTENT_VERIFIED": true,
           "REGION_VERIFIED": true,
           "DESTINATION_VERIFIED": true,
           "PROGRAM_AUTHORIZED": true,
-          "PUBLICATION_READY": false
+          "PUBLICATION_READY": true
         },
-        "blockers": [
-          "content_not_verified:CONTENT_UNAVAILABLE"
-        ],
-        "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
+        "blockers": [],
+        "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "taxonomyGap": null,
       "evidenceSources": [
-        "probe_title:Just a moment...",
-        "probe_http:403",
+        "probe_title:Stylová řešení koupelen a kuchyní | SIKO",
+        "probe_http:200",
+        "nav_hint:dum",
+        "nav_hint:kuchyn",
         "weighted_assortment_evidence_v9",
         "snapshot:stagingGeneratedAt:2026-10-31T15:27:33.765Z"
       ],
@@ -16629,14 +16772,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:59.773Z"
+          "fetchedAt": "2026-11-01T03:11:56.341Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "high",
-      "lastReviewedAt": "2026-10-31T19:59:00.719Z",
+      "lastReviewedAt": "2026-11-01T03:11:57.399Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-software",
@@ -16759,14 +16902,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:59.823Z"
+          "fetchedAt": "2026-11-01T03:11:57.399Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:59:00.989Z",
+      "lastReviewedAt": "2026-11-01T03:11:59.060Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-cestovni-kancelare",
@@ -16854,7 +16997,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:58:59.850Z"
+          "fetchedAt": "2026-11-01T03:11:58.202Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -16863,7 +17006,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:59:01.106Z",
+      "lastReviewedAt": "2026-11-01T03:11:59.890Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -16954,7 +17097,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:00.719Z"
+          "fetchedAt": "2026-11-01T03:11:59.060Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -16963,7 +17106,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:59:02.122Z",
+      "lastReviewedAt": "2026-11-01T03:12:00.578Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -17046,7 +17189,7 @@
             },
             "diagnostics": {
               "scriptCount": 73,
-              "textLen": 4297,
+              "textLen": 4620,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -17054,7 +17197,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:00.989Z"
+          "fetchedAt": "2026-11-01T03:11:59.890Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -17063,7 +17206,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:59:02.658Z",
+      "lastReviewedAt": "2026-11-01T03:12:01.434Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -17185,14 +17328,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:01.106Z"
+          "fetchedAt": "2026-11-01T03:12:00.268Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:59:02.866Z",
+      "lastReviewedAt": "2026-11-01T03:12:02.513Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-deti-hracky",
@@ -17266,7 +17409,7 @@
           "navHints": [],
           "assortmentEvidence": null,
           "error": "unable to verify the first certificate; if the root CA is installed locally, try running Node.js with --use-system-ca",
-          "fetchedAt": "2026-10-31T19:59:02.122Z"
+          "fetchedAt": "2026-11-01T03:12:00.578Z"
         },
         "grade": "CONTENT_UNAVAILABLE"
       },
@@ -17275,7 +17418,7 @@
       ],
       "czAvailability": "UNKNOWN",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:59:02.707Z",
+      "lastReviewedAt": "2026-11-01T03:12:10.852Z",
       "reviewStatus": "CONTENT_UNAVAILABLE",
       "reviewBlockers": [
         "probe_error:unable to verify the first certificate; if the root CA is installed locally, try running Node.js with --use-system-ca"
@@ -17329,58 +17472,81 @@
       "brandDomains": [],
       "merchantType": "SPECIALIST",
       "primaryAssortment": {
-        "sectionId": "aff-moda",
-        "group": "moda",
-        "weight": 40
+        "sectionId": "aff-sport-outdoor",
+        "group": "sport",
+        "weight": 32,
+        "sources": [
+          "nav_or_header",
+          "body_low_trust"
+        ]
       },
       "secondaryAssortments": [],
-      "significantAssortmentGroups": [],
-      "officialNavigationEvidence": [],
+      "significantAssortmentGroups": [
+        "sport"
+      ],
+      "officialNavigationEvidence": [
+        "sport"
+      ],
       "merchantWebsiteEvidence": {
         "programUrl": "http://www.vivantis.cz",
         "probe": {
-          "url": "http://www.vivantis.cz",
-          "ok": false,
-          "httpStatus": 403,
-          "title": "Just a moment...",
-          "navHints": [],
+          "url": "https://www.vivantis.cz/",
+          "ok": true,
+          "httpStatus": 200,
+          "title": "Vivantis.cz - Hello Gorgeous!",
+          "navHints": [
+            "sport"
+          ],
           "assortmentEvidence": {
-            "contentVerified": false,
-            "primaryAssortment": null,
-            "significantGroups": [],
+            "contentVerified": true,
+            "primaryAssortment": {
+              "sectionId": "aff-sport-outdoor",
+              "group": "sport",
+              "weight": 32,
+              "sources": [
+                "nav_or_header",
+                "body_low_trust"
+              ]
+            },
+            "significantGroups": [
+              {
+                "sectionId": "aff-sport-outdoor",
+                "group": "sport",
+                "weight": 32,
+                "sources": [
+                  "nav_or_header",
+                  "body_low_trust"
+                ]
+              }
+            ],
             "regionsUsed": {
               "title": true,
-              "h1": false,
-              "nav": false,
-              "main": true,
+              "h1": true,
+              "nav": true,
+              "main": false,
               "meta": false,
               "jsonLd": false
             },
             "diagnostics": {
-              "scriptCount": 1,
-              "textLen": 16,
-              "thinHtml": true,
+              "scriptCount": 11,
+              "textLen": 16209,
+              "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
             },
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:02.658Z"
+          "fetchedAt": "2026-11-01T03:12:01.907Z"
         },
-        "grade": "CONTENT_UNAVAILABLE_WAF"
+        "grade": "CONTENT_VERIFIED"
       },
-      "contentFailureReasons": [
-        "HTTP_403_WAF_OR_BOT",
-        "THIN_HTML_INSUFFICIENT_NAV_MAIN"
-      ],
+      "contentFailureReasons": [],
       "czAvailability": "YES",
-      "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:59:03.038Z",
-      "reviewStatus": "CONTENT_UNAVAILABLE",
-      "reviewBlockers": [
-        "http_403_bot_waf_suspected"
-      ],
+      "confidence": "medium",
+      "lastReviewedAt": "2026-11-01T03:12:05.750Z",
+      "reviewStatus": "CONTENT_VERIFIED",
+      "reviewBlockers": [],
       "expectedSectionId": "aff-moda",
       "selectedLinkId": "12411812",
       "selectedDestination": "https://www.vivantis.cz/",
@@ -17388,32 +17554,31 @@
       "publishability": "READY_FOR_REVIEW",
       "holdReason": null,
       "technicallyReady": true,
-      "publicationReady": false,
+      "publicationReady": true,
       "publicationReadiness": {
         "technicallyReady": true,
-        "contentVerified": false,
+        "contentVerified": true,
         "regionVerified": true,
         "destinationVerified": true,
         "programAuthorized": true,
-        "publicationReady": false,
-        "contentStatus": "CONTENT_UNAVAILABLE",
+        "publicationReady": true,
+        "contentStatus": "CONTENT_VERIFIED",
         "gates": {
           "TECHNICALLY_READY": true,
-          "CONTENT_VERIFIED": false,
+          "CONTENT_VERIFIED": true,
           "REGION_VERIFIED": true,
           "DESTINATION_VERIFIED": true,
           "PROGRAM_AUTHORIZED": true,
-          "PUBLICATION_READY": false
+          "PUBLICATION_READY": true
         },
-        "blockers": [
-          "content_not_verified:CONTENT_UNAVAILABLE"
-        ],
-        "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
+        "blockers": [],
+        "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "taxonomyGap": null,
       "evidenceSources": [
-        "probe_title:Just a moment...",
-        "probe_http:403",
+        "probe_title:Vivantis.cz - Hello Gorgeous!",
+        "probe_http:200",
+        "nav_hint:sport",
         "weighted_assortment_evidence_v9",
         "snapshot:stagingGeneratedAt:2026-10-31T15:27:33.765Z"
       ],
@@ -17458,8 +17623,8 @@
               "jsonLd": false
             },
             "diagnostics": {
-              "scriptCount": 315,
-              "textLen": 15301,
+              "scriptCount": 306,
+              "textLen": 15089,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -17467,7 +17632,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:02.707Z"
+          "fetchedAt": "2026-11-01T03:12:02.513Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -17476,7 +17641,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:59:04.642Z",
+      "lastReviewedAt": "2026-11-01T03:12:05.519Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -17559,7 +17724,7 @@
             },
             "diagnostics": {
               "scriptCount": 39,
-              "textLen": 4823,
+              "textLen": 4848,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -17567,7 +17732,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:02.866Z"
+          "fetchedAt": "2026-11-01T03:12:05.519Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -17576,7 +17741,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:59:04.639Z",
+      "lastReviewedAt": "2026-11-01T03:12:09.081Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -17667,7 +17832,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:03.038Z"
+          "fetchedAt": "2026-11-01T03:12:05.750Z"
         },
         "grade": "CONTENT_UNAVAILABLE_WAF"
       },
@@ -17677,7 +17842,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:59:03.813Z",
+      "lastReviewedAt": "2026-11-01T03:12:09.297Z",
       "reviewStatus": "CONTENT_UNAVAILABLE",
       "reviewBlockers": [
         "http_403_bot_waf_suspected"
@@ -17768,7 +17933,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:03.813Z"
+          "fetchedAt": "2026-11-01T03:12:09.081Z"
         },
         "grade": "CONTENT_UNAVAILABLE_WAF"
       },
@@ -17778,7 +17943,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:59:04.276Z",
+      "lastReviewedAt": "2026-11-01T03:12:12.232Z",
       "reviewStatus": "CONTENT_UNAVAILABLE",
       "reviewBlockers": [
         "http_403_bot_waf_suspected"
@@ -17869,7 +18034,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:04.276Z"
+          "fetchedAt": "2026-11-01T03:12:09.297Z"
         },
         "grade": "CONTENT_UNAVAILABLE"
       },
@@ -17878,7 +18043,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:59:07.134Z",
+      "lastReviewedAt": "2026-11-01T03:12:12.082Z",
       "reviewStatus": "CONTENT_UNAVAILABLE",
       "reviewBlockers": [
         "insufficient_website_evidence"
@@ -17968,7 +18133,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:04.639Z"
+          "fetchedAt": "2026-11-01T03:12:10.852Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -17977,7 +18142,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:59:12.687Z",
+      "lastReviewedAt": "2026-11-01T03:12:20.599Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -18068,7 +18233,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:04.642Z"
+          "fetchedAt": "2026-11-01T03:12:12.082Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -18077,7 +18242,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:59:05.523Z",
+      "lastReviewedAt": "2026-11-01T03:12:12.990Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -18191,7 +18356,7 @@
             },
             "diagnostics": {
               "scriptCount": 16,
-              "textLen": 865,
+              "textLen": 880,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -18199,14 +18364,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:05.523Z"
+          "fetchedAt": "2026-11-01T03:12:12.232Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:59:06.277Z",
+      "lastReviewedAt": "2026-11-01T03:12:13.340Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-sport-outdoor",
@@ -18323,7 +18488,7 @@
             },
             "diagnostics": {
               "scriptCount": 17,
-              "textLen": 2732,
+              "textLen": 2751,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -18331,14 +18496,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:06.277Z"
+          "fetchedAt": "2026-11-01T03:12:12.990Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:59:08.022Z",
+      "lastReviewedAt": "2026-11-01T03:12:15.221Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-dum-zahrada",
@@ -18418,7 +18583,7 @@
             },
             "diagnostics": {
               "scriptCount": 22,
-              "textLen": 10467,
+              "textLen": 10348,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -18426,7 +18591,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:07.134Z"
+          "fetchedAt": "2026-11-01T03:12:13.340Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -18435,7 +18600,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:59:08.605Z",
+      "lastReviewedAt": "2026-11-01T03:12:14.683Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -18500,9 +18665,9 @@
         "programUrl": "https://vitapur-home.cz/",
         "probe": {
           "url": "https://vitapur-home.cz/",
-          "ok": true,
-          "httpStatus": 200,
-          "title": "Vitapur Home e-shop\n &ndash; Vitapur Home Czechia",
+          "ok": false,
+          "httpStatus": 429,
+          "title": "Too many requests",
           "navHints": [],
           "assortmentEvidence": {
             "contentVerified": false,
@@ -18510,15 +18675,15 @@
             "significantGroups": [],
             "regionsUsed": {
               "title": true,
-              "h1": false,
+              "h1": true,
               "nav": false,
-              "main": true,
-              "meta": true,
+              "main": false,
+              "meta": false,
               "jsonLd": false
             },
             "diagnostics": {
-              "scriptCount": 178,
-              "textLen": 4421,
+              "scriptCount": 0,
+              "textLen": 84,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -18526,19 +18691,19 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:08.022Z"
+          "fetchedAt": "2026-11-01T03:12:14.683Z"
         },
-        "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
+        "grade": "CONTENT_UNAVAILABLE"
       },
       "contentFailureReasons": [
-        "ASSORTMENT_WEIGHT_INSUFFICIENT"
+        "HTTP_429_RATE_LIMIT"
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:59:10.841Z",
-      "reviewStatus": "CONTENT_INCOMPLETE",
+      "lastReviewedAt": "2026-11-01T03:12:15.377Z",
+      "reviewStatus": "CONTENT_UNAVAILABLE",
       "reviewBlockers": [
-        "assortment_signals_present_but_not_significant"
+        "insufficient_website_evidence"
       ],
       "expectedSectionId": "aff-dum-zahrada",
       "selectedLinkId": "17237812",
@@ -18555,7 +18720,7 @@
         "destinationVerified": true,
         "programAuthorized": true,
         "publicationReady": false,
-        "contentStatus": "CONTENT_INCOMPLETE",
+        "contentStatus": "CONTENT_UNAVAILABLE",
         "gates": {
           "TECHNICALLY_READY": true,
           "CONTENT_VERIFIED": false,
@@ -18565,14 +18730,14 @@
           "PUBLICATION_READY": false
         },
         "blockers": [
-          "content_not_verified:CONTENT_INCOMPLETE"
+          "content_not_verified:CONTENT_UNAVAILABLE"
         ],
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "taxonomyGap": null,
       "evidenceSources": [
-        "probe_title:Vitapur Home e-shop\n &ndash; Vitapur Home Czechia",
-        "probe_http:200",
+        "probe_title:Too many requests",
+        "probe_http:429",
         "weighted_assortment_evidence_v9",
         "snapshot:stagingGeneratedAt:2026-10-31T15:27:33.765Z"
       ],
@@ -18618,7 +18783,7 @@
             },
             "diagnostics": {
               "scriptCount": 18,
-              "textLen": 5901,
+              "textLen": 5871,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -18626,7 +18791,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:08.605Z"
+          "fetchedAt": "2026-11-01T03:12:15.222Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -18635,7 +18800,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:59:10.720Z",
+      "lastReviewedAt": "2026-11-01T03:12:16.321Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -18722,7 +18887,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:10.720Z"
+          "fetchedAt": "2026-11-01T03:12:15.377Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -18731,7 +18896,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:59:12.587Z",
+      "lastReviewedAt": "2026-11-01T03:12:16.769Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -18822,7 +18987,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:10.841Z"
+          "fetchedAt": "2026-11-01T03:12:16.321Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -18831,7 +18996,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:59:11.868Z",
+      "lastReviewedAt": "2026-11-01T03:12:17.365Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -18948,7 +19113,7 @@
             },
             "diagnostics": {
               "scriptCount": 30,
-              "textLen": 13510,
+              "textLen": 13396,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -18956,14 +19121,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:11.868Z"
+          "fetchedAt": "2026-11-01T03:12:16.769Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:59:14.203Z",
+      "lastReviewedAt": "2026-11-01T03:12:19.616Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-boty",
@@ -19013,71 +19178,33 @@
       ],
       "brandDomains": [],
       "merchantType": "UNKNOWN",
-      "primaryAssortment": {
-        "sectionId": "aff-boty",
-        "group": "boty",
-        "weight": 86,
-        "sources": [
-          "title",
-          "meta_description",
-          "main",
-          "body_low_trust"
-        ]
-      },
+      "primaryAssortment": null,
       "secondaryAssortments": [],
-      "significantAssortmentGroups": [
-        "boty"
-      ],
-      "officialNavigationEvidence": [
-        "boty"
-      ],
+      "significantAssortmentGroups": [],
+      "officialNavigationEvidence": [],
       "merchantWebsiteEvidence": {
         "programUrl": "https://skinners.cz/",
         "probe": {
           "url": "https://skinners.cz/",
-          "ok": true,
-          "httpStatus": 200,
-          "title": "Skinners – prémiová česká barefoot obuv pro všechny",
-          "navHints": [
-            "boty"
-          ],
+          "ok": false,
+          "httpStatus": 429,
+          "title": "Too many requests",
+          "navHints": [],
           "assortmentEvidence": {
-            "contentVerified": true,
-            "primaryAssortment": {
-              "sectionId": "aff-boty",
-              "group": "boty",
-              "weight": 86,
-              "sources": [
-                "title",
-                "meta_description",
-                "main",
-                "body_low_trust"
-              ]
-            },
-            "significantGroups": [
-              {
-                "sectionId": "aff-boty",
-                "group": "boty",
-                "weight": 86,
-                "sources": [
-                  "title",
-                  "meta_description",
-                  "main",
-                  "body_low_trust"
-                ]
-              }
-            ],
+            "contentVerified": false,
+            "primaryAssortment": null,
+            "significantGroups": [],
             "regionsUsed": {
               "title": true,
               "h1": true,
               "nav": false,
-              "main": true,
-              "meta": true,
+              "main": false,
+              "meta": false,
               "jsonLd": false
             },
             "diagnostics": {
-              "scriptCount": 74,
-              "textLen": 18169,
+              "scriptCount": 0,
+              "textLen": 84,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -19085,16 +19212,21 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:12.587Z"
+          "fetchedAt": "2026-11-01T03:12:17.365Z"
         },
-        "grade": "CONTENT_VERIFIED"
+        "grade": "CONTENT_VERIFIED_LKG_TRANSIENT_PROBE",
+        "priorPreserved": true
       },
-      "contentFailureReasons": [],
+      "contentFailureReasons": [
+        "TRANSIENT_PROBE_KEPT_PRIOR_CONTENT_VERIFIED"
+      ],
       "czAvailability": "YES",
-      "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:59:14.065Z",
+      "confidence": "low",
+      "lastReviewedAt": "2026-11-01T03:12:17.914Z",
       "reviewStatus": "CONTENT_VERIFIED",
-      "reviewBlockers": [],
+      "reviewBlockers": [
+        "insufficient_website_evidence"
+      ],
       "expectedSectionId": "aff-boty",
       "selectedLinkId": "15759555",
       "selectedDestination": "https://skinners.cz/",
@@ -19124,14 +19256,14 @@
       },
       "taxonomyGap": null,
       "evidenceSources": [
-        "probe_title:Skinners – prémiová česká barefoot obuv pro všechny",
-        "probe_http:200",
-        "nav_hint:boty",
+        "probe_title:Too many requests",
+        "probe_http:429",
         "weighted_assortment_evidence_v9",
         "snapshot:stagingGeneratedAt:2026-10-31T15:27:33.765Z"
       ],
       "sectionTruthApplied": false,
-      "sectionTruthReason": null
+      "sectionTruthReason": null,
+      "lkgTransientPreserve": true
     },
     {
       "advertiserCid": "6546769",
@@ -19154,9 +19286,9 @@
         "programUrl": "https://eshop.ledvance.cz/",
         "probe": {
           "url": "https://eshop.ledvance.cz/",
-          "ok": true,
-          "httpStatus": 200,
-          "title": "💡 LEDVANCE e-shop - chytré osvětlení do domácnosti",
+          "ok": false,
+          "httpStatus": 429,
+          "title": "Too many requests",
           "navHints": [],
           "assortmentEvidence": {
             "contentVerified": false,
@@ -19164,15 +19296,15 @@
             "significantGroups": [],
             "regionsUsed": {
               "title": true,
-              "h1": false,
+              "h1": true,
               "nav": false,
               "main": false,
-              "meta": true,
+              "meta": false,
               "jsonLd": false
             },
             "diagnostics": {
-              "scriptCount": 104,
-              "textLen": 2199,
+              "scriptCount": 0,
+              "textLen": 84,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -19180,19 +19312,19 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:12.687Z"
+          "fetchedAt": "2026-11-01T03:12:17.914Z"
         },
-        "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
+        "grade": "CONTENT_UNAVAILABLE"
       },
       "contentFailureReasons": [
-        "ASSORTMENT_WEIGHT_INSUFFICIENT"
+        "HTTP_429_RATE_LIMIT"
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:59:14.503Z",
-      "reviewStatus": "CONTENT_INCOMPLETE",
+      "lastReviewedAt": "2026-11-01T03:12:18.565Z",
+      "reviewStatus": "CONTENT_UNAVAILABLE",
       "reviewBlockers": [
-        "assortment_signals_present_but_not_significant"
+        "insufficient_website_evidence"
       ],
       "expectedSectionId": "aff-elektro",
       "selectedLinkId": "15607577",
@@ -19209,7 +19341,7 @@
         "destinationVerified": true,
         "programAuthorized": true,
         "publicationReady": false,
-        "contentStatus": "CONTENT_INCOMPLETE",
+        "contentStatus": "CONTENT_UNAVAILABLE",
         "gates": {
           "TECHNICALLY_READY": true,
           "CONTENT_VERIFIED": false,
@@ -19219,14 +19351,14 @@
           "PUBLICATION_READY": false
         },
         "blockers": [
-          "content_not_verified:CONTENT_INCOMPLETE"
+          "content_not_verified:CONTENT_UNAVAILABLE"
         ],
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "taxonomyGap": null,
       "evidenceSources": [
-        "probe_title:💡 LEDVANCE e-shop - chytré osvětlení do domácnosti",
-        "probe_http:200",
+        "probe_title:Too many requests",
+        "probe_http:429",
         "weighted_assortment_evidence_v9",
         "snapshot:stagingGeneratedAt:2026-10-31T15:27:33.765Z"
       ],
@@ -19268,7 +19400,7 @@
             },
             "diagnostics": {
               "scriptCount": 17,
-              "textLen": 13353,
+              "textLen": 13264,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -19276,7 +19408,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:14.065Z"
+          "fetchedAt": "2026-11-01T03:12:18.565Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -19285,7 +19417,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:59:16.317Z",
+      "lastReviewedAt": "2026-11-01T03:12:20.078Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -19368,7 +19500,7 @@
             },
             "diagnostics": {
               "scriptCount": 12,
-              "textLen": 5328,
+              "textLen": 5135,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -19376,7 +19508,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:14.203Z"
+          "fetchedAt": "2026-11-01T03:12:19.616Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -19385,7 +19517,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:59:15.401Z",
+      "lastReviewedAt": "2026-11-01T03:12:21.581Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -19510,14 +19642,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:14.503Z"
+          "fetchedAt": "2026-11-01T03:12:20.078Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:59:17.371Z",
+      "lastReviewedAt": "2026-11-01T03:12:25.519Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-elektro",
@@ -19639,14 +19771,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:15.401Z"
+          "fetchedAt": "2026-11-01T03:12:20.599Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:59:16.865Z",
+      "lastReviewedAt": "2026-11-01T03:12:21.969Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-moda",
@@ -19734,7 +19866,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:16.317Z"
+          "fetchedAt": "2026-11-01T03:12:21.581Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -19743,7 +19875,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:59:17.461Z",
+      "lastReviewedAt": "2026-11-01T03:12:22.714Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -19834,7 +19966,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:16.865Z"
+          "fetchedAt": "2026-11-01T03:12:21.969Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -19843,7 +19975,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:59:17.816Z",
+      "lastReviewedAt": "2026-11-01T03:12:22.969Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -19925,8 +20057,8 @@
               "jsonLd": false
             },
             "diagnostics": {
-              "scriptCount": 345,
-              "textLen": 4175,
+              "scriptCount": 218,
+              "textLen": 4114,
               "thinHtml": false,
               "spaSuspected": false,
               "cjCategoryCorroborationUsed": true
@@ -19934,7 +20066,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:17.371Z"
+          "fetchedAt": "2026-11-01T03:12:22.714Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -19943,7 +20075,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:59:18.536Z",
+      "lastReviewedAt": "2026-11-01T03:12:24.732Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -20034,7 +20166,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:17.461Z"
+          "fetchedAt": "2026-11-01T03:12:22.969Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -20043,7 +20175,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:59:21.753Z",
+      "lastReviewedAt": "2026-11-01T03:12:28.315Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -20184,14 +20316,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:17.816Z"
+          "fetchedAt": "2026-11-01T03:12:24.732Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:59:18.905Z",
+      "lastReviewedAt": "2026-11-01T03:12:26.380Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-moda",
@@ -20280,7 +20412,7 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:18.537Z"
+          "fetchedAt": "2026-11-01T03:12:25.519Z"
         },
         "grade": "CONTENT_INCOMPLETE_WEAK_ASSORTMENT"
       },
@@ -20289,7 +20421,7 @@
       ],
       "czAvailability": "YES",
       "confidence": "low",
-      "lastReviewedAt": "2026-10-31T19:59:19.623Z",
+      "lastReviewedAt": "2026-11-01T03:12:26.435Z",
       "reviewStatus": "CONTENT_INCOMPLETE",
       "reviewBlockers": [
         "assortment_signals_present_but_not_significant"
@@ -20448,14 +20580,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:18.905Z"
+          "fetchedAt": "2026-11-01T03:12:26.380Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:59:20.424Z",
+      "lastReviewedAt": "2026-11-01T03:12:27.953Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-pojisteni",
@@ -20578,14 +20710,14 @@
             "note": "Assortment from title/h1/nav/meta/json-ld with weights; footer/cookie/ads stripped. CJ category only corroborates. Body-only hits are not significant."
           },
           "error": null,
-          "fetchedAt": "2026-10-31T19:59:19.623Z"
+          "fetchedAt": "2026-11-01T03:12:26.435Z"
         },
         "grade": "CONTENT_VERIFIED"
       },
       "contentFailureReasons": [],
       "czAvailability": "YES",
       "confidence": "medium",
-      "lastReviewedAt": "2026-10-31T19:59:20.876Z",
+      "lastReviewedAt": "2026-11-01T03:12:27.443Z",
       "reviewStatus": "CONTENT_VERIFIED",
       "reviewBlockers": [],
       "expectedSectionId": "aff-pojisteni",
@@ -20688,12 +20820,14 @@
       "expected": "aff-moda",
       "declared": "aff-moda",
       "buttonSection": "aff-moda",
-      "evidenceSection": null,
+      "evidenceSection": "aff-sport-outdoor",
       "match": true,
-      "evidenceNoise": false,
+      "evidenceNoise": true,
       "preferCategoryReview": false,
       "fromOverride": false,
-      "mismatchReasons": []
+      "mismatchReasons": [
+        "probe_evidence_noise_informational"
+      ]
     },
     {
       "advertiserCid": "4409645",
@@ -20833,7 +20967,7 @@
       "expected": "aff-dum-zahrada",
       "declared": "aff-dum-zahrada",
       "buttonSection": "aff-dum-zahrada",
-      "evidenceSection": null,
+      "evidenceSection": "aff-dum-zahrada",
       "match": true,
       "evidenceNoise": false,
       "preferCategoryReview": false,
@@ -20950,7 +21084,7 @@
       "expected": "aff-dum-zahrada",
       "declared": "aff-dum-zahrada",
       "buttonSection": "aff-dum-zahrada",
-      "evidenceSection": null,
+      "evidenceSection": "aff-dum-zahrada",
       "match": true,
       "evidenceNoise": false,
       "preferCategoryReview": false,
@@ -21413,7 +21547,7 @@
       "expected": "aff-nabytek",
       "declared": "aff-nabytek",
       "buttonSection": "aff-nabytek",
-      "evidenceSection": null,
+      "evidenceSection": "aff-nabytek",
       "match": true,
       "evidenceNoise": false,
       "preferCategoryReview": false,
@@ -22126,12 +22260,14 @@
       "expected": "aff-dum-zahrada",
       "declared": "aff-dum-zahrada",
       "buttonSection": "aff-dum-zahrada",
-      "evidenceSection": null,
+      "evidenceSection": "aff-kuchyn",
       "match": true,
-      "evidenceNoise": false,
+      "evidenceNoise": true,
       "preferCategoryReview": false,
       "fromOverride": false,
-      "mismatchReasons": []
+      "mismatchReasons": [
+        "probe_evidence_noise_informational"
+      ]
     },
     {
       "advertiserCid": "6127623",
@@ -22442,7 +22578,7 @@
       "expected": "aff-moda",
       "declared": "aff-moda",
       "buttonSection": "aff-moda",
-      "evidenceSection": null,
+      "evidenceSection": "aff-moda",
       "match": true,
       "evidenceNoise": false,
       "preferCategoryReview": false,
@@ -22468,7 +22604,7 @@
       "expected": "aff-boty",
       "declared": "aff-boty",
       "buttonSection": "aff-boty",
-      "evidenceSection": "aff-boty",
+      "evidenceSection": null,
       "match": true,
       "evidenceNoise": false,
       "preferCategoryReview": false,
@@ -22942,7 +23078,7 @@
       "expected": "aff-elektro",
       "declared": "aff-elektro",
       "buttonSection": "aff-elektro",
-      "evidenceSection": "aff-elektro",
+      "evidenceSection": null,
       "match": true,
       "evidenceNoise": false,
       "preferCategoryReview": false,
@@ -22950,5 +23086,5 @@
       "mismatchReasons": []
     }
   ],
-  "note": "TECHNICALLY_READY ≠ PUBLICATION_READY. CONTENT_VERIFIED requires weighted high-trust assortment. Title/HTTP alone never CONTENT_VERIFIED. Public swap DISARMED."
+  "note": "TECHNICALLY_READY ≠ PUBLICATION_READY. CONTENT_VERIFIED requires weighted high-trust assortment. Title/HTTP alone never CONTENT_VERIFIED. Public swap DISARMED. | LKG restore for transient probe regressions=2"
 }

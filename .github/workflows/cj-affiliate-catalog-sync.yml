@@ -153,6 +153,7 @@ jobs:
           node scripts/iu-cj-affiliate-phase3z-assortment-evidence-v9-selftest.mjs
           node scripts/iu-cj-affiliate-phase3z-category-consistency-v9-selftest.mjs
           node scripts/iu-cj-affiliate-phase3z-publication-readiness-v9-selftest.mjs
+          node scripts/iu-cj-affiliate-phase3z-deep-content-review-v9-selftest.mjs
 
   fetch-staging:
     needs: selftest
