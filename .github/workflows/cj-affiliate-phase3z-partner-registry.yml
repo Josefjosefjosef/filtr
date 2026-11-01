@@ -140,9 +140,12 @@ jobs:
           ready = int((btn.get("counts") or {}).get("readyForReview") or 0)
           ready_m = sum(1 for r in (reg.get("evidenceMatrix") or []) if r.get("readyForReview") is True)
           assert ready_m == ready, (ready_m, ready)
+          # affiliateUrlVerified includes WAF/rate-limit/timeout identity-preserved evidence;
+          # verifiedOk counts only VERIFIED_HTTP_OK from this probe run — must not be equated.
           url_m = sum(1 for r in (reg.get("evidenceMatrix") or []) if r.get("affiliateUrlVerified") is True)
           url_ok = int((reg.get("urlVerificationRun") or {}).get("verifiedOk") or 0)
-          assert url_m == url_ok, (url_m, url_ok)
+          assert url_m >= url_ok, (url_m, url_ok)
+          assert cons.get("ok") is True, cons
           ready=btn.get("counts",{}).get("readyForReview",0)
           for b in btn.get("buttons",[]):
             if b.get("publishability")=="READY_FOR_REVIEW":
