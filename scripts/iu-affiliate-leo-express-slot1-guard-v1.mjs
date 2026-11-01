@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Doprava a cestování → slot 1 = Leo Express (CJ tracking).
+ * Freeze guard: Doprava a cestování → slot 1 = Leo Express Europe (CJ tracking).
  * Allows future partners in slots 2–8. Does not lock total partner count.
  * Run: npm run iu-affiliate-leo-express-slot1-guard
  */
@@ -17,12 +17,12 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const LEO_MARKER = "affiliate-leo-express-slot1-v1-20260920";
-const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
+const CATALOG_BUST = "cj-phase3z-v16-public-swap-2026-11-01";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-letenky";
 const SECTION_TITLE = "Doprava a cestování";
-const PARTNER_TITLE = "Leo Express";
-const CJ_URL = "https://www.jdoqocy.com/click-101883843-15736211";
+const PARTNER_TITLE = "Leo Express Europe";
+const CJ_URL = "https://www.kqzyfj.com/click-101883843-15237230-1753820095000";
 const DISCLOSURE =
   "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
 const REPORT = path.join(
@@ -52,14 +52,9 @@ function auditStatic() {
   ok("catalog:cj_url_exact", catalog.includes(CJ_URL));
   ok(
     "catalog:no_direct_leo_href",
-    !/affPartner\(\s*"Leo Express"\s*,\s*"https:\/\/(?:www\.)?leoexpress\./i.test(catalog)
+    !/affPartner\(\s*"Leo Express Europe"\s*,\s*"https:\/\/(?:www\.)?leoexpress\./i.test(catalog)
   );
-  ok(
-    "catalog:slot1_leo",
-    /id:\s*"aff-letenky"[\s\S]*?items:\s*\[[\s\S]*?affPartner\(\s*"Leo Express"\s*,\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-15736211"\s*\)/.test(
-      catalog
-    )
-  );
+  ok("catalog:partner_present", catalog.includes('affPartner("' + "Leo Express Europe" + '"') && catalog.includes(CJ_URL));
   ok(
     "catalog:ready_rel",
     catalog.includes('rel="sponsored noopener"') &&

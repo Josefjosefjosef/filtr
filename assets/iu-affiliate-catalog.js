@@ -1407,6 +1407,7 @@
 
   window.iuAffiliateApplyManagedPublicOverlay = applyManagedPublicOverlay;
   window.iuAffiliateLoadManagedPublicOverlay = loadManagedPublicOverlay;
+  window.IU_AFF_PUBLIC_SWAP_ARMED = IU_AFF_PUBLIC_SWAP_ARMED;
 
   window.IU_AFFILIATE_CATALOG = IU_AFFILIATE_CATALOG;
   window.IU_AFFILIATE_SEO = IU_AFFILIATE_SEO;

@@ -17,12 +17,12 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-brasty-kosmetika-v1-20260925";
-const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
+const CATALOG_BUST = "cj-phase3z-v16-public-swap-2026-11-01";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-zdravi-doplnky";
 const SECTION_TITLE = "Zdraví a doplňky";
-const PARTNER_TITLE = "BodyWorld";
-const CJ_URL = "https://www.tkqlhce.com/click-101883843-15735791";
+const PARTNER_TITLE = "Bodyworld Europe";
+const CJ_URL = "https://www.dpbolvw.net/click-101883843-14524963-1708047796000";
 const KLUB_CJ = "https://www.dpbolvw.net/click-101883843-13884010";
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",

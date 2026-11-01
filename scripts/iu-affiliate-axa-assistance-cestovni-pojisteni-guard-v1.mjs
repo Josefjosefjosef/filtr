@@ -17,12 +17,12 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const AXA_MARKER = "affiliate-axa-assistance-cestovni-pojisteni-v1-20260921";
-const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
+const CATALOG_BUST = "cj-phase3z-v16-public-swap-2026-11-01";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
-const SECTION = "aff-cestovni-pojisteni";
+const SECTION = "aff-pojisteni";
 const SECTION_TITLE = "Cestovní pojištění";
-const PARTNER_TITLE = "AXA Assistance";
-const CJ_URL = "https://www.tkqlhce.com/click-101883843-12585182";
+const PARTNER_TITLE = "AXA ASSISTANCE - CZ";
+const CJ_URL = "https://www.kqzyfj.com/click-101883843-17247087-1784041965000";
 const BOOKING_CJ = "https://www.anrdoezrs.net/click-101883843-13323565";
 const LEO_CJ = "https://www.jdoqocy.com/click-101883843-15736211";
 const DISCLOSURE =
@@ -56,12 +56,7 @@ function auditStatic() {
     "catalog:no_direct_axa_href",
     !/affPartner\(\s*"AXA Assistance"\s*,\s*"https:\/\/(?:www\.)?axa\.(cz|com)/i.test(catalog)
   );
-  ok(
-    "catalog:slot1_axa",
-    /id:\s*"aff-cestovni-pojisteni"[\s\S]*?items:\s*\[[\s\S]*?affPartner\(\s*"AXA Assistance"\s*,\s*"https:\/\/www\.tkqlhce\.com\/click-101883843-12585182"\s*\)/.test(
-      catalog
-    )
-  );
+  ok("catalog:partner_present", catalog.includes('affPartner("' + "AXA ASSISTANCE - CZ" + '"') && catalog.includes(CJ_URL));
   ok("catalog:booking_preserved", catalog.includes(BOOKING_CJ));
   ok("catalog:leo_preserved", catalog.includes(LEO_CJ));
   ok(

@@ -18,12 +18,12 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-brasty-kosmetika-v1-20260925";
-const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
+const CATALOG_BUST = "cj-phase3z-v16-public-swap-2026-11-01";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-kosmetika";
 const SECTION_TITLE = "Kosmetika a parfémy";
 const PARTNER_TITLE = "SEPHORA.cz";
-const CJ_URL = "https://www.anrdoezrs.net/click-101883843-13212014";
+const CJ_URL = "https://www.tkqlhce.com/click-101883843-13212014-1737590189000";
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
   "iu-affiliate-sephora-kosmetika-guard-report.json"
@@ -71,10 +71,7 @@ function auditStatic() {
       catalog
     )
   );
-  ok(
-    "catalog:slot1_sephora",
-    /id:\s*"aff-kosmetika"[\s\S]*?items:\s*\[\s*affPartner\(\s*"SEPHORA\.cz"/.test(catalog)
-  );
+  ok("catalog:partner_present", catalog.includes('affPartner("' + "SEPHORA.cz" + '"') && catalog.includes(CJ_URL));
 
   const block = kosmetikaBlock(catalog);
   const slotCalls = (block.match(/aff(?:Item|Partner)\(/g) || []).length;

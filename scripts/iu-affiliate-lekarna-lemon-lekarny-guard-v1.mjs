@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Lékárny → Lékárna Lemon (CJ 14563148), second partner slot (first free after Lékárna.cz).
+ * Freeze guard: Lékárny → Lekarnalemon.cz (CJ 14563148), second partner slot (first free after Lékárna.cz).
  * Does not lock remaining empty slots. Lékárna.cz slot 1 unchanged. Section stays at 8 slots.
  * Run: npm run iu-affiliate-lekarna-lemon-lekarny-guard
  */
@@ -17,12 +17,12 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-lekarna-lemon-lekarny-v1-20260923";
-const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
+const CATALOG_BUST = "cj-phase3z-v16-public-swap-2026-11-01";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-lekarny";
 const SECTION_TITLE = "Lékárny";
-const PARTNER_TITLE = "Lékárna Lemon";
-const CJ_URL = "https://www.jdoqocy.com/click-101883843-14563148";
+const PARTNER_TITLE = "Lekarnalemon.cz";
+const CJ_URL = "https://www.tkqlhce.com/click-101883843-14563148-1734715384000";
 const LEKARNA_CZ_CJ = "https://www.kqzyfj.com/click-101883843-15734937";
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
@@ -55,19 +55,19 @@ function auditStatic() {
   ok("catalog:cj_url_exact", catalog.includes(CJ_URL));
   ok(
     "catalog:no_direct_lemon_href",
-    !/id:\s*"aff-lekarny"[\s\S]*?affPartner\(\s*"Lékárna Lemon"\s*,\s*"https:\/\/(?:www\.)?lekarnalemon\.cz/i.test(
+    !/id:\s*"aff-lekarny"[\s\S]*?affPartner\(\s*"Lekarnalemon.cz"\s*,\s*"https:\/\/(?:www\.)?lekarnalemon\.cz/i.test(
       catalog
     )
   );
   ok(
     "catalog:lemon_partner",
-    /affPartner\(\s*"Lékárna Lemon"\s*,\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-14563148"\s*\)/.test(
+    /affPartner\(\s*"Lekarnalemon.cz"\s*,\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-14563148"\s*\)/.test(
       catalog
     )
   );
   ok(
     "catalog:slot2_lemon_after_lekarna",
-    /id:\s*"aff-lekarny"[\s\S]*?affPartner\(\s*"Lékárna\.cz"[\s\S]*?affPartner\(\s*"Lékárna Lemon"/.test(
+    /id:\s*"aff-lekarny"[\s\S]*?affPartner\(\s*"Lékárna\.cz"[\s\S]*?affPartner\(\s*"Lekarnalemon.cz"/.test(
       catalog
     )
   );

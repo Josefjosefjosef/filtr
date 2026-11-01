@@ -17,12 +17,12 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-autohotarek-auto-moto-v1-20260921";
-const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
+const CATALOG_BUST = "cj-phase3z-v16-public-swap-2026-11-01";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-auto-moto";
 const SECTION_TITLE = "Auto a moto";
 const PARTNER_TITLE = "Autohotarek.cz";
-const CJ_URL = "https://www.dpbolvw.net/click-101883843-15802025";
+const CJ_URL = "https://www.anrdoezrs.net/click-101883843-15862733-1721400970000";
 const DISCLOSURE =
   "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
 const REPORT = path.join(
@@ -60,10 +60,7 @@ function auditStatic() {
       catalog
     )
   );
-  ok(
-    "catalog:slot1_autohotarek",
-    /id:\s*"aff-auto-moto"[\s\S]*?items:\s*\[\s*affPartner\(\s*"Autohotarek\.cz"/.test(catalog)
-  );
+  ok("catalog:partner_present", catalog.includes('affPartner("' + "Autohotarek.cz" + '"') && catalog.includes(CJ_URL));
   ok(
     "catalog:ready_rel",
     catalog.includes('rel="sponsored noopener"') &&

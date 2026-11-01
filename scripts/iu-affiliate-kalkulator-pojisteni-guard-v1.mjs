@@ -17,12 +17,12 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-kalkulator-pojisteni-v1-20260922";
-const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
+const CATALOG_BUST = "cj-phase3z-v16-public-swap-2026-11-01";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-pojisteni";
 const SECTION_TITLE = "Pojištění";
 const PARTNER_TITLE = "Kalkulator.cz";
-const CJ_URL = "https://www.kqzyfj.com/click-101883843-15616442";
+const CJ_URL = "https://www.kqzyfj.com/click-101883843-15616419-1707856260000";
 const KLIK_CJ = "https://www.dpbolvw.net/click-101883843-15024026";
 const DISCLOSURE =
   "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";

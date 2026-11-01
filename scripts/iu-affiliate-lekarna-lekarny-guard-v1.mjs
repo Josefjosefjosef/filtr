@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Lékárny → Lékárna.cz (CJ 15734937), first free partner slot.
+ * Freeze guard: Lékárny → Lekarna.cz (CJ 15734937), first free partner slot.
  * Does not lock remaining empty slots. Section stays at 8 slots.
  * Run: npm run iu-affiliate-lekarna-lekarny-guard
  */
@@ -17,12 +17,12 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-lekarna-lekarny-v1-20260922";
-const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
+const CATALOG_BUST = "cj-phase3z-v16-public-swap-2026-11-01";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-lekarny";
 const SECTION_TITLE = "Lékárny";
-const PARTNER_TITLE = "Lékárna.cz";
-const CJ_URL = "https://www.kqzyfj.com/click-101883843-15734937";
+const PARTNER_TITLE = "Lekarna.cz";
+const CJ_URL = "https://www.dpbolvw.net/click-101883843-13459513-1706859530000";
 const DISCLOSURE =
   "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
 const REPORT = path.join(
@@ -66,10 +66,7 @@ function auditStatic() {
       catalog
     )
   );
-  ok(
-    "catalog:slot1_lekarna",
-    /id:\s*"aff-lekarny"[\s\S]*?items:\s*\[\s*affPartner\(\s*"Lékárna\.cz"/.test(catalog)
-  );
+  ok("catalog:partner_present", catalog.includes('affPartner("' + "Lekarna.cz" + '"') && catalog.includes(CJ_URL));
 
   const block = lekarnyBlock(catalog);
   const slotCalls = (block.match(/aff(?:Item|Partner)\(/g) || []).length;

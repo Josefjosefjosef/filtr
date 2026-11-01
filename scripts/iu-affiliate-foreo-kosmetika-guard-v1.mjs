@@ -18,12 +18,12 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-brasty-kosmetika-v1-20260925";
-const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
+const CATALOG_BUST = "cj-phase3z-v16-public-swap-2026-11-01";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-kosmetika";
 const SECTION_TITLE = "Kosmetika a parfémy";
-const PARTNER_TITLE = "FOREO";
-const CJ_URL = "https://www.anrdoezrs.net/click-101883843-15527432";
+const PARTNER_TITLE = "Foreo";
+const CJ_URL = "https://www.tkqlhce.com/click-101883843-17250301-1789489845000";
 const SEPHORA_CJ = "https://www.anrdoezrs.net/click-101883843-13212014";
 const DERMACOL_CJ = "https://www.jdoqocy.com/click-101883843-17173455";
 const REPORT = path.join(

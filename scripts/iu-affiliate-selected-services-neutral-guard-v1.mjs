@@ -15,7 +15,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
+const CATALOG_BUST = "cj-phase3z-v16-public-swap-2026-11-01";
 const SECTION_TITLE = "Vybrané služby a odkazy";
 const DISCLOSURE =
   "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
@@ -177,7 +177,11 @@ function auditStatic() {
   ok("catalog:booking_partner", /affPartner\(\s*"Booking\.com"/.test(catalog));
   ok("catalog:booking_cj_url", catalog.includes("https://www.anrdoezrs.net/click-101883843-13323565"));
   ok("catalog:leo_partner", /affPartner\(\s*"Leo Express"/.test(catalog));
-  ok("catalog:leo_cj_url", catalog.includes("https://www.jdoqocy.com/click-101883843-15736211"));
+  ok(
+    "catalog:leo_cj_url",
+    catalog.includes("Leo Express Europe") &&
+      /click-101883843-15237230/.test(catalog)
+  );
   ok("catalog:ready_gate", catalog.includes("affiliateUrlReady === true"));
   ok("catalog:sponsored_noopener", catalog.includes('rel="sponsored noopener"'));
   ok("catalog:no_legacy_nofollow_rel", !catalog.includes('rel="nofollow sponsored noopener noreferrer"'));
