@@ -999,13 +999,13 @@ expect("v9_tipa_forbidden_moda", (tipaOv.evidence?.forbiddenSections || []).incl
 const allegroOv = applyMerchantEvidenceOverride({
   advertiserId: "6464420",
   assortment: { merchantType: MERCHANT_TYPE.MARKETPLACE },
-  baseSectionId: "aff-inzerce-bazary",
+  baseSectionId: null,
 });
 expect(
-  "v9_allegro_not_bazar",
+  "v12_allegro_marketplace_inzerce_bazary",
   allegroOv.applied &&
-    allegroOv.categoryReviewRequired === true &&
-    allegroOv.sectionId == null,
+    allegroOv.categoryReviewRequired === false &&
+    allegroOv.sectionId === "aff-inzerce-bazary",
   allegroOv
 );
 

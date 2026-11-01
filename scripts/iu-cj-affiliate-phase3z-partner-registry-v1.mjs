@@ -52,6 +52,8 @@ import {
   httpGetText,
 } from "./iu-cj-affiliate-phase3z-merchant-evidence-v9.mjs";
 import { attachPublicationReadiness } from "./iu-cj-affiliate-phase3z-publication-readiness-v9.mjs";
+import { attachMainButtonReadiness } from "./iu-cj-affiliate-phase3z-main-button-readiness-v12.mjs";
+import { buildDefaultMainButtonEmailHintMap } from "./iu-cj-affiliate-phase3z-main-button-email-hints-v12.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 export const PHASE3Z_SCHEMA = "iu-affiliate-cj-partner-registry-v1";
@@ -3416,6 +3418,12 @@ export async function main(argv = process.argv.slice(2)) {
     attachPublicationReadiness(registry, null);
   }
 
+  // V12 CJ-FIRST: MAIN_BUTTON_READY independent of CONTENT_VERIFIED / merchant crawl.
+  // PUBLIC_SWAP remains DISARMED. Coupons/products deferred.
+  attachMainButtonReadiness(registry, {
+    emailHintsByAdvertiserId: buildDefaultMainButtonEmailHintMap(),
+  });
+
   const writeRepo = argv.includes("--write-repo") || process.env.IU_CJ_PHASE3Z_WRITE_REPO === "1";
   if (writeRepo) {
     assertAllowedDataWrite(paths.outRegistry);
@@ -3432,10 +3440,12 @@ export async function main(argv = process.argv.slice(2)) {
       counts: registry.counts,
       buttonCounts: buttonCatalog.counts,
       publicationSummary: registry.publicationSummary || null,
+      mainButtonSummary: registry.mainButtonSummary || null,
       verifyStats,
       outRegistry: paths.outRegistry,
       outButtons: paths.outButtons,
       publicButtonSwapArmed: false,
+      merchantWebCrawlRequiredForMainButton: false,
       rulesVersion: PHASE3Z_RULES_VERSION,
     })
   );

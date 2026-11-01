@@ -4711,7 +4711,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-elektro",
+        "sectionSource": "merchant_evidence_v9",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:merchant_evidence_v9"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6112132",
@@ -5653,7 +5672,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-dum-zahrada",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6127623",
@@ -6175,7 +6213,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-sport-outdoor",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-4409645",
@@ -6659,7 +6716,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-kvetiny-darky",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6130482",
@@ -7407,7 +7485,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-letenky",
+        "sectionSource": "merchant_evidence_v9",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:merchant_evidence_v9"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-4978487",
@@ -7870,7 +7967,28 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-moda",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "SEM_BRAND_BID_RESTRICTED",
+          "COUPON_PARTNER_RESTRICTED"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis",
+          "email_hint_trusted"
+        ],
+        "emailHintsApplied": true,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5124968",
@@ -8334,7 +8452,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-kosmetika",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7016567",
@@ -13501,7 +13640,29 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": false
+      "technicallyReady": false,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-moda",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CRAWL_HOLD_IGNORED_FOR_MAIN_BUTTON",
+          "crawl_hold:url_http_429_rate_limited",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5260576",
@@ -14842,7 +15003,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-deti-hracky",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7019151",
@@ -15343,7 +15525,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-moda",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5132330",
@@ -15779,7 +15980,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-software",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7889430",
@@ -16454,7 +16674,29 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": false
+      "technicallyReady": false,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-kvetiny-darky",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CRAWL_HOLD_IGNORED_FOR_MAIN_BUTTON",
+          "crawl_hold:url_http_429_rate_limited",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5000412",
@@ -16917,7 +17159,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-dum-zahrada",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5142212",
@@ -17439,7 +17702,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-dilna-naradi",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5143409",
@@ -18042,7 +18326,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-tv-streamovani",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5146426",
@@ -18624,7 +18929,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-lekarny",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5005974",
@@ -19282,7 +19608,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-dum-zahrada",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5147910",
@@ -19733,7 +20080,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-moda",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-4754417",
@@ -20034,7 +20400,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-sport-outdoor",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5006846",
@@ -20557,7 +20942,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-cestovni-kancelare",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-4758296",
@@ -21023,7 +21427,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-zvirata",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5153670",
@@ -21999,7 +22422,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-deti-hracky",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5154182",
@@ -23949,7 +24393,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-lekarny",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7899391",
@@ -24255,7 +24718,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-zdravi-doplnky",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6179554",
@@ -24677,7 +25159,27 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-cestovni-kancelare",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "SEM_BRAND_BID_RESTRICTED"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis",
+          "email_hint_trusted"
+        ],
+        "emailHintsApplied": true,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5954793",
@@ -25646,7 +26148,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-jidlo",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5590289",
@@ -26082,7 +26605,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-moda",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5277391",
@@ -26631,7 +27173,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-sport-outdoor",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7918457",
@@ -27154,7 +27715,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-kvetiny-darky",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5598091",
@@ -27687,7 +28267,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-kuchyn",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-4851178",
@@ -28516,7 +29117,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-elektro",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5043902",
@@ -28929,7 +29551,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-moda",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7923950",
@@ -29331,7 +29974,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-boty",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6358042",
@@ -30355,7 +31017,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-dum-zahrada",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5047092",
@@ -30819,7 +31500,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-kosmetika",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7260722",
@@ -31531,7 +32233,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-deti-hracky",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5603344",
@@ -32056,7 +32779,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-sport-outdoor",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5605390",
@@ -32396,7 +33138,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-cestovni-kancelare",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5611262",
@@ -34048,7 +34809,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-kosmetika",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-4882378",
@@ -34722,7 +35504,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-dum-zahrada",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-4883722",
@@ -35611,7 +36412,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-lekarny",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-4887633",
@@ -36339,7 +37159,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-sport-outdoor",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7947783",
@@ -37276,7 +38117,26 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": false
+      "technicallyReady": false,
+      "mainButtonReadiness": {
+        "mainButtonReady": false,
+        "status": "UNSUITABLE_CUSTOMER_DESTINATION",
+        "sectionId": "aff-letenky-letecka-doprava",
+        "blockers": [
+          "destination_type:AFFILIATE_SIGNUP"
+        ],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "destinationType:AFFILIATE_SIGNUP"
+        ],
+        "note": "Customer destination unsuitable for ordinary main-button promo."
+      },
+      "mainButtonReady": false,
+      "mainButtonStatus": "UNSUITABLE_CUSTOMER_DESTINATION"
     },
     {
       "partnerId": "cj-5078957",
@@ -38911,7 +39771,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-inzerce-bazary",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5992572",
@@ -39601,7 +40480,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-boty",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-4686326",
@@ -41028,7 +41926,26 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": false
+      "technicallyReady": false,
+      "mainButtonReadiness": {
+        "mainButtonReady": false,
+        "status": "UNSUITABLE_CUSTOMER_DESTINATION",
+        "sectionId": "aff-software",
+        "blockers": [
+          "destination_type:CHECKOUT"
+        ],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "destinationType:CHECKOUT"
+        ],
+        "note": "Customer destination unsuitable for ordinary main-button promo."
+      },
+      "mainButtonReady": false,
+      "mainButtonStatus": "UNSUITABLE_CUSTOMER_DESTINATION"
     },
     {
       "partnerId": "cj-6002445",
@@ -41817,7 +42734,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-jidlo",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5096017",
@@ -42246,7 +43184,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-zdravi-doplnky",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5381657",
@@ -42668,7 +43627,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-kosmetika",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5381727",
@@ -43111,7 +44091,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-nabytek",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5654758",
@@ -45344,7 +46343,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-zdravi-doplnky",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5096493",
@@ -46318,7 +47338,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-ubytovani-hotely",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-4694431",
@@ -46961,7 +48000,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-kuchyn",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-4697950",
@@ -47407,7 +48465,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-pojisteni",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6282055",
@@ -48229,7 +49306,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-software",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6393044",
@@ -48972,7 +50068,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-moda",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7318611",
@@ -49394,7 +50511,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-dum-zahrada",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6038648",
@@ -53613,7 +54751,30 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": false
+      "technicallyReady": false,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-sport-outdoor",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CRAWL_HOLD_IGNORED_FOR_MAIN_BUTTON",
+          "crawl_hold:CZ_ELIGIBILITY_UNKNOWN",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6044117",
@@ -54015,7 +55176,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-moda",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6294181",
@@ -55425,7 +56605,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-zdravi-doplnky",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-4711521",
@@ -55941,7 +57142,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-pojisteni",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5393861",
@@ -56566,7 +57788,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-jidlo",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7327751",
@@ -57167,7 +58410,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-kuchyn",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5395330",
@@ -58208,7 +59472,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-tv-streamovani",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5701422",
@@ -59202,7 +60485,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-zdravi-doplnky",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5870560",
@@ -59769,7 +61073,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-nabytek",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6306286",
@@ -60349,7 +61672,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-moda",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5871720",
@@ -60776,7 +62118,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-cestovni-pojisteni",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6203294",
@@ -61973,7 +63334,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-mobily",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5884820",
@@ -62618,7 +64000,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-nabytek",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5401824",
@@ -63563,7 +64964,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-sport-outdoor",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5402439",
@@ -65328,7 +66748,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-moda",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5889034",
@@ -66447,7 +67886,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-nabytek",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5525941",
@@ -66890,7 +68350,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-ubytovani-hotely",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5404810",
@@ -67376,7 +68855,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-sport-outdoor",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5894154",
@@ -68258,7 +69756,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-kosmetika",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5408233",
@@ -70577,7 +72094,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-zdravi-doplnky",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6215286",
@@ -71461,7 +72997,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-sport-outdoor",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5906045",
@@ -72081,7 +73638,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-cestovni-kancelare",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7726276",
@@ -72715,7 +74291,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-moda",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5554901",
@@ -78364,7 +79961,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-zdravi-doplnky",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7520433",
@@ -79766,7 +81384,29 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": false
+      "technicallyReady": false,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-deti-hracky",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored",
+          "CJ_TRACKING_REDIRECT_OK"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5444910",
@@ -81057,7 +82697,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-dum-zahrada",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6464420",
@@ -81078,9 +82737,9 @@
         "meaning": "Listed in slot-policy as CJ-managed chip ownership candidate",
         "note": "Already policy-listed; public swap regenerates from CJ click URL (not historical bake)."
       },
-      "sectionId": null,
+      "sectionId": "aff-inzerce-bazary",
       "sectionTitleCs": null,
-      "sectionSource": "merchant_evidence_v9_category_pending",
+      "sectionSource": "merchant_evidence_v9_cj_first_v12",
       "sectionConfidence": "high",
       "sectionRule": "Allegro.cz is a general marketplace, not classifieds/bazar. Authoritative taxonomy has no marketplace tile → CATEGORY_REVIEW_REQUIRED (external taxonomy gap).",
       "sectionEvidence": [
@@ -81758,7 +83417,7 @@
       "buttonRecordStatus": "CATEGORY_REVIEW_REQUIRED",
       "buttonRecordCreated": true,
       "publishability": "QUARANTINED",
-      "holdReason": "CATEGORY_REVIEW_REQUIRED",
+      "holdReason": null,
       "czEvidence": {
         "cjCooperationJoined": true,
         "affiliateTrackingUrl": true,
@@ -81847,7 +83506,29 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": false
+      "technicallyReady": false,
+      "cjFirstSectionApplied": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-inzerce-bazary",
+        "sectionSource": "merchant_evidence_v9_cj_first_v12",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:merchant_evidence_v9_cj_first_v12"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7226122",
@@ -82918,7 +84599,29 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": false
+      "technicallyReady": false,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-letenky-letecka-doprava",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CRAWL_HOLD_IGNORED_FOR_MAIN_BUTTON",
+          "crawl_hold:url_http_5xx_temporary",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6466592",
@@ -84204,7 +85907,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-lekarny",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6256015",
@@ -86498,7 +88220,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-moda",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5929753",
@@ -87000,7 +88743,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-jidlo",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6258510",
@@ -88067,7 +89831,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-moda",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5938081",
@@ -90299,7 +92084,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-moda",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5476562",
@@ -90848,7 +92652,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-auto-moto",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5477885",
@@ -91525,7 +93348,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-tv-streamovani",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5478796",
@@ -91966,7 +93810,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-kosmetika",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5578976",
@@ -99769,7 +101632,29 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": false
+      "technicallyReady": false,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-deti-hracky",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored",
+          "CJ_TRACKING_REDIRECT_OK"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6492736",
@@ -100350,7 +102235,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-auto-moto",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5780936",
@@ -100894,7 +102798,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-moda",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5706839",
@@ -101417,7 +103340,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-zdravi-doplnky",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5320945",
@@ -111476,7 +113418,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-dilna-naradi",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5482931",
@@ -111980,7 +113943,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-kosmetika",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5321357",
@@ -112344,7 +114328,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-knihy",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6785595",
@@ -112764,7 +114767,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-cestovni-kancelare",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5723506",
@@ -113393,7 +115415,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-dum-zahrada",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6796197",
@@ -113970,7 +116011,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-moda",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5725783",
@@ -116381,7 +118441,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-sport-outdoor",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5335380",
@@ -116871,7 +118950,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-nabytek",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5493235",
@@ -117419,7 +119517,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-nabytek",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5493238",
@@ -118301,7 +120420,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-nabytek",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5812291",
@@ -118610,7 +120750,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-pojisteni",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5819507",
@@ -119113,7 +121272,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-sperky-hodinky",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5823422",
@@ -120059,7 +122239,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-kosmetika",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5744714",
@@ -120716,7 +122917,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-zdravi-doplnky",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7786972",
@@ -121425,7 +123647,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-drogerie",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5842597",
@@ -123168,7 +125411,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-lekarny",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7859657",
@@ -124260,7 +126522,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-nabytek",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5755636",
@@ -126635,7 +128918,29 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": false
+      "technicallyReady": false,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-kosmetika",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored",
+          "CJ_TRACKING_REDIRECT_OK"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7449050",
@@ -127462,7 +129767,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-pneu-pneuservis",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7793108",
@@ -128419,7 +130743,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-nabytek",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7612998",
@@ -128963,7 +131306,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-kosmetika",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7804601",
@@ -130796,7 +133160,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-software",
+        "sectionSource": "merchant_evidence_v9",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:merchant_evidence_v9"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6857406",
@@ -131370,7 +133753,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-dilna-naradi",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7341377",
@@ -132881,7 +135283,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-dum-zahrada",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7702047",
@@ -134234,7 +136657,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-kosmetika",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5292177",
@@ -134848,7 +137292,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-zdravi-doplnky",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6065245",
@@ -135322,7 +137787,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-dum-zahrada",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-4432968",
@@ -135917,7 +138403,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-dum-zahrada",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6065327",
@@ -136501,7 +139006,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-moda",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5193265",
@@ -137067,7 +139591,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-elektro",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-4901154",
@@ -137391,7 +139936,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-deti-hracky",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-4904877",
@@ -137933,7 +140499,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-kosmetika",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-4905039",
@@ -138426,7 +141013,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-boty",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7133039",
@@ -140357,7 +142963,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-kosmetika",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-4920521",
@@ -140926,7 +143553,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-nabytek",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-4322332",
@@ -141234,7 +143880,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-zdravi-doplnky",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5217822",
@@ -142161,7 +144826,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-nabytek",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-4921612",
@@ -142604,7 +145290,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-elektro",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-4327375",
@@ -142990,7 +145695,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-moda",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-4927529",
@@ -143636,7 +146362,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-dum-zahrada",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-4932883",
@@ -144105,7 +146850,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-dum-zahrada",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-2624620",
@@ -145810,7 +148574,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-software",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7995512",
@@ -146145,7 +148928,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-cestovni-kancelare",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5234320",
@@ -147799,7 +150601,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-jidlo",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7149746",
@@ -149601,7 +152424,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-nabytek",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6109393",
@@ -150611,7 +153455,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-dum-zahrada",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-4949011",
@@ -151119,7 +153984,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-deti-hracky",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-2709631",
@@ -151942,7 +154826,30 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": false
+      "technicallyReady": false,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-letenky-letecka-doprava",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CRAWL_HOLD_IGNORED_FOR_MAIN_BUTTON",
+          "crawl_hold:CZ_ELIGIBILITY_UNKNOWN",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-4384608",
@@ -152700,7 +155607,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-moda",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7073996",
@@ -153468,7 +156394,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-elektro",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-4805198",
@@ -154001,7 +156948,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-knihy",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5021212",
@@ -154395,7 +157363,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-sport-outdoor",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7084105",
@@ -154949,7 +157938,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-auto-moto",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5027071",
@@ -155417,7 +158427,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-dilna-naradi",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5950512",
@@ -155830,7 +158861,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-kvetiny-darky",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7917498",
@@ -156325,7 +159377,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-sport-outdoor",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5177969",
@@ -156909,7 +159982,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-sport-outdoor",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7816491",
@@ -157500,7 +160592,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-dum-zahrada",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5284288",
@@ -157913,7 +161024,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-knihy",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6511227",
@@ -159196,7 +162328,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-dum-zahrada",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5284767",
@@ -159660,7 +162813,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-knihy",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7474250",
@@ -160262,7 +163436,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-zdravi-doplnky",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7643241",
@@ -161042,7 +164237,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-dum-zahrada",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6659563",
@@ -161758,7 +164974,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-boty",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6892836",
@@ -162320,7 +165555,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-boty",
+        "sectionSource": "cj_category_exact_v2",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:cj_category_exact_v2"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6546769",
@@ -162783,7 +166037,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-elektro",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6721278",
@@ -163529,7 +166804,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-kancelarske-potreby",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7401912",
@@ -164698,7 +167994,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-kvetiny-darky",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5303370",
@@ -165487,7 +168804,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-elektro",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6754118",
@@ -166110,7 +169446,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-moda",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5306925",
@@ -167020,7 +170375,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-zvirata",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7416299",
@@ -168023,7 +171399,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-jidlo",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6972484",
@@ -168717,7 +172114,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-knihy",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6976980",
@@ -170161,7 +173579,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-dum-zahrada",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5316217",
@@ -170606,7 +174045,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-moda",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-7424533",
@@ -171118,7 +174576,28 @@
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
       "publicationReady": false,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-deti-hracky",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL",
+          "CONTENT_NOT_VERIFIED",
+          "legacy_publication_ready_false_ignored"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6767085",
@@ -171553,7 +175032,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-pojisteni",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-6610500",
@@ -172023,7 +175521,26 @@
         "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
       "publicationReady": true,
-      "technicallyReady": true
+      "technicallyReady": true,
+      "mainButtonReadiness": {
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
+        "sectionId": "aff-pojisteni",
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
+        "diagnostics": [
+          "MISSING_WELCOME_EMAIL"
+        ],
+        "sources": [
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
+        ],
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
+      },
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     }
   ],
   "evidenceMatrix": [
@@ -182560,5 +186077,70 @@
     "allPublicationReadyContentVerified": true,
     "publicButtonSwapArmed": false,
     "note": "TECHNICALLY_READY (READY_FOR_REVIEW) is separate from PUBLICATION_READY. Swap DISARMED."
+  },
+  "cjFirstMainButtonArchitecture": "IMPLEMENTED",
+  "merchantWebCrawlRequiredForMainButton": false,
+  "couponProductRefactor": "DEFERRED",
+  "mainButtonSummary": {
+    "schema": "iu-cj-affiliate-phase3z-main-button-readiness-v12",
+    "joined": 175,
+    "mainButtonReady": 173,
+    "missingMainButtons": 2,
+    "coveragePct": 98.86,
+    "byStatus": {
+      "MAIN_BUTTON_READY": 173,
+      "UNSUITABLE_CUSTOMER_DESTINATION": 2
+    },
+    "remainingBlockers": [
+      {
+        "advertiserId": "7947783",
+        "name": "Cheapvuelos",
+        "status": "UNSUITABLE_CUSTOMER_DESTINATION",
+        "blockers": [
+          "destination_type:AFFILIATE_SIGNUP"
+        ],
+        "holdReason": "UNSUITABLE_MAIN_DESTINATION",
+        "destinationType": "AFFILIATE_SIGNUP",
+        "remediationAttempts": [
+          {
+            "step": "cj_link_search_full_scan",
+            "linkCount": 16,
+            "result": "all_authorized_links_have_unsuitable_customer_destinations"
+          },
+          {
+            "step": "no_fabricated_tracking_url",
+            "result": "skipped_programurl_without_authorized_cj_click"
+          }
+        ],
+        "nextFeasibleFix": "Obtain authorized CJ homepage/service deep-link via Link Search refresh or advertiser; do not invent click URL."
+      },
+      {
+        "advertiserId": "4686326",
+        "name": "Paragon Software Group",
+        "status": "UNSUITABLE_CUSTOMER_DESTINATION",
+        "blockers": [
+          "destination_type:CHECKOUT"
+        ],
+        "holdReason": "UNSUITABLE_MAIN_DESTINATION",
+        "destinationType": "CHECKOUT",
+        "remediationAttempts": [
+          {
+            "step": "cj_link_search_full_scan",
+            "linkCount": 30,
+            "result": "all_authorized_links_have_unsuitable_customer_destinations"
+          },
+          {
+            "step": "no_fabricated_tracking_url",
+            "result": "skipped_programurl_without_authorized_cj_click"
+          }
+        ],
+        "nextFeasibleFix": "Obtain authorized CJ homepage/service deep-link via Link Search refresh or advertiser; do not invent click URL."
+      }
+    ],
+    "duplicates": 0,
+    "publicButtonSwapArmed": false,
+    "merchantWebCrawlRequiredForMainButton": false,
+    "couponProductRefactor": "DEFERRED",
+    "note": "MAIN_BUTTON_READY is CJ-FIRST and independent of CONTENT_VERIFIED. PUBLIC_SWAP DISARMED."
   }
 }

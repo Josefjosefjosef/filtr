@@ -154,6 +154,8 @@ jobs:
           node scripts/iu-cj-affiliate-phase3z-category-consistency-v9-selftest.mjs
           node scripts/iu-cj-affiliate-phase3z-publication-readiness-v9-selftest.mjs
           node scripts/iu-cj-affiliate-phase3z-deep-content-review-v9-selftest.mjs
+          node scripts/iu-cj-affiliate-phase3z-main-button-readiness-v12-selftest.mjs
+          node scripts/iu-cj-affiliate-phase3z-v12-cleanup-inventory.mjs
 
   fetch-staging:
     needs: selftest
