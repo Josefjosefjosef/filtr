@@ -36,8 +36,23 @@ const managedPublic = readJson(
   path.join(ROOT, "projects", "data", "iu-affiliate-cj-managed-public-v1.json")
 );
 
-expect("disarmed", staticCatalog.publicButtonSwapArmed === false && staticCatalog.liveEnabled === false);
 expect("browser_no_cj_api", staticCatalog.browserCjApiDependency === false);
+
+// After V16 public swap the repo catalog is ARMED; V15 hard-coded pre-swap counts no longer apply.
+if (staticCatalog.publicButtonSwapArmed === true || staticCatalog.liveEnabled === true) {
+  const outArmed = {
+    ok: true,
+    schema: "iu-cj-affiliate-phase3z-v15-selftest",
+    skipped: "post_v16_public_swap_armed",
+    note: "V15 pre-swap fixtures superseded by V16 armed static catalog; see v16-selftest.",
+    publicButtonSwapArmed: true,
+    counts: staticCatalog.counts,
+  };
+  console.log(JSON.stringify(outArmed, null, 2));
+  process.exit(0);
+}
+
+expect("disarmed", staticCatalog.publicButtonSwapArmed === false && staticCatalog.liveEnabled === false);
 expect("ready_174", staticCatalog.counts.mainButtonReady === 174, staticCatalog.counts);
 
 const classified = classifyAllLegacy({

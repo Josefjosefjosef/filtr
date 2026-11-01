@@ -1,0 +1,68 @@
+{
+  "schema": "iu-affiliate-cj-atomic-swap-public-v16",
+  "ok": true,
+  "PUBLIC_SWAP": "ARMED_AND_VERIFIED",
+  "publicButtonSwapArmed": true,
+  "liveEnabled": true,
+  "syncRunId": "41344072592",
+  "registrySource": "C:\\Users\\spedk\\AppData\\Local\\Temp\\iu-v16-hotfix-registry\\phase3z-out\\iu-affiliate-cj-partner-registry-v1.json",
+  "counts": {
+    "joined": 176,
+    "newButtons": 175,
+    "removedLegacyCj": 167,
+    "removedManualProtectedCj": 0,
+    "legacyCjAfterSwap": 0,
+    "bakedCjAfterRewrite": 175,
+    "preservedNonCj": 0,
+    "duplicates": 0
+  },
+  "remainingBlockers": [
+    {
+      "advertiserId": "4686326",
+      "name": "Paragon Software Group",
+      "status": "UNSUITABLE_CUSTOMER_DESTINATION",
+      "blockers": [
+        "destination_type:CHECKOUT"
+      ],
+      "destinationType": "CHECKOUT",
+      "holdReason": "UNSUITABLE_MAIN_DESTINATION",
+      "autoRetry": true
+    }
+  ],
+  "sectionCounts": {
+    "aff-auto-moto": 3,
+    "aff-boty": 5,
+    "aff-cestovni-kancelare": 6,
+    "aff-cestovni-pojisteni": 1,
+    "aff-deti-hracky": 8,
+    "aff-dilna-naradi": 4,
+    "aff-drogerie": 1,
+    "aff-dum-zahrada": 18,
+    "aff-elektro": 7,
+    "aff-inzerce-bazary": 2,
+    "aff-jidlo": 6,
+    "aff-kancelarske-potreby": 1,
+    "aff-knihy": 5,
+    "aff-kosmetika": 13,
+    "aff-kuchyn": 3,
+    "aff-kvetiny-darky": 5,
+    "aff-lekarny": 6,
+    "aff-letenky": 1,
+    "aff-letenky-letecka-doprava": 3,
+    "aff-mobily": 1,
+    "aff-moda": 21,
+    "aff-nabytek": 12,
+    "aff-pneu-pneuservis": 1,
+    "aff-pojisteni": 5,
+    "aff-software": 4,
+    "aff-sperky-hodinky": 1,
+    "aff-sport-outdoor": 13,
+    "aff-tv-streamovani": 3,
+    "aff-ubytovani-hotely": 2,
+    "aff-zdravi-doplnky": 12,
+    "aff-zvirata": 2
+  },
+  "singleRenderer": true,
+  "browserCjApiDependency": false,
+  "appliedAt": "2026-11-01T20:03:58.658Z"
+}
