@@ -6099,11 +6099,11 @@
       "merchantIdentity": "Leo Express Europe",
       "merchantType": "SERVICE_PROVIDER",
       "primaryAssortment": {
-        "sectionId": "aff-cestovni-kancelare",
-        "group": "cestovani"
+        "sectionId": "aff-letenky",
+        "group": "vlaky"
       },
       "secondaryAssortments": [],
-      "expectedSectionId": "aff-cestovni-kancelare",
+      "expectedSectionId": "aff-letenky",
       "allowedMainLinkId": "15237230",
       "suitableDestination": "https://www.leoexpress.com/cs/?affiliate=CJ",
       "forbiddenDestinationTypes": [
@@ -6116,7 +6116,6 @@
         "EXTERNAL_TRACKER"
       ],
       "rejectSectionIds": [
-        "aff-letenky",
         "aff-letenky-letecka-doprava"
       ],
       "preferCategoryReview": false,
@@ -6151,7 +6150,7 @@
         "reviewStatus": "CONTENT_VERIFIED",
         "destinationType": "MERCHANT_HOMEPAGE"
       },
-      "note": "Leo Express is a CZ/SK/PL passenger rail operator (leoexpress.com), not an airline. Among existing tiles, aff-cestovni-kancelare is the honest travel fit; aff-letenky* must be rejected."
+      "note": "Ground transport tile aff-letenky (Doprava a cestování); never flights."
     },
     {
       "advertiserCid": "6179554",

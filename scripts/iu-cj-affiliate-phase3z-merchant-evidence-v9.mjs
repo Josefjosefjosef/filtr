@@ -323,19 +323,21 @@ export const MERCHANT_EVIDENCE_OVERRIDES = Object.freeze({
     merchantIdentity: "Leo Express Europe",
     officialDomains: ["leoexpress.com", "www.leoexpress.com"],
     merchantType: "SERVICE_PROVIDER",
-    // No dedicated rail tile in the 36-section SoT. Flights tile is assortment-incorrect.
-    primaryAssortment: { sectionId: "aff-cestovni-kancelare", group: "cestovani" },
-    significantAssortmentGroups: ["cestovani", "vlaky"],
-    rejectSectionIds: ["aff-letenky", "aff-letenky-letecka-doprava"],
+    // Live taxonomy: aff-letenky title = "Doprava a cestování" (ground rail/bus home).
+    // aff-letenky-letecka-doprava = flights only — never for Leo Express.
+    primaryAssortment: { sectionId: "aff-letenky", group: "vlaky" },
+    significantAssortmentGroups: ["vlaky", "cestovani"],
+    rejectSectionIds: ["aff-letenky-letecka-doprava"],
     confidence: "high",
     czAffinityOverride: true,
     preferHomepagePath: true,
     rationale:
-      "Leo Express is a CZ/SK/PL passenger rail operator (leoexpress.com), not an airline. Among existing tiles, aff-cestovni-kancelare is the honest travel fit; aff-letenky* must be rejected.",
+      "Leo Express is a CZ/SK/PL passenger rail/coach operator (leoexpress.com), not an airline and not a travel agency. Correct tile is aff-letenky (Doprava a cestování). Reject flights tile aff-letenky-letecka-doprava.",
     evidenceSources: [
       "official_domain:leoexpress.com",
       "merchant_positioning:passenger_rail",
       "cz_service:leo_express",
+      "taxonomy:aff-letenky=Doprava a cestování",
     ],
   },
   "4883722": {
