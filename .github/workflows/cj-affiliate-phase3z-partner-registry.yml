@@ -56,6 +56,7 @@ jobs:
           node scripts/iu-cj-affiliate-phase3z-v12-cleanup-inventory.mjs
           node scripts/iu-cj-affiliate-phase3z-v13-selftest.mjs
           node scripts/iu-cj-affiliate-phase3z-v14-selftest.mjs
+          node scripts/iu-cj-affiliate-phase3z-v15-selftest.mjs
       - name: Resolve staging source
         id: staging
         env:
