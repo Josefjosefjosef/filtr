@@ -12,18 +12,101 @@
     "ok": true,
     "counts": {
       "preservedNonCj": 0,
-      "preservedPaid": 0,
-      "removedLegacyCj": 167,
+      "preservedPaid": 22,
+      "removedLegacyCj": 145,
       "addedStaticCj": 174,
-      "duplicateAdvertiserIdsAfter": 0
+      "duplicateAdvertiserIdsAfter": 0,
+      "policyProtectedEntries": 43,
+      "fixtureProtectedEntries": 0
     },
     "gates": {
       "nonCjPreserved": true,
       "paidPreserved": true,
       "duplicatesZero": true,
-      "disarmed": true
+      "disarmed": true,
+      "positiveNonCjRequired": false,
+      "positivePaidRequired": true
     },
-    "singlePostSwapCjRenderer": true
+    "singlePostSwapCjRenderer": true,
+    "protectedIndexSummary": {
+      "byAdvertiserId": 0,
+      "byUrl": 43,
+      "bySectionTitle": 43
+    },
+    "preservedSample": [
+      {
+        "kind": "paid_or_manual",
+        "sectionId": "aff-letenky",
+        "title": "Leo Express",
+        "url": "https://www.jdoqocy.com/click-101883843-15736211"
+      },
+      {
+        "kind": "paid_or_manual",
+        "sectionId": "aff-letenky-letecka-doprava",
+        "title": "Skytours",
+        "url": "https://www.jdoqocy.com/click-101883843-15733491"
+      },
+      {
+        "kind": "paid_or_manual",
+        "sectionId": "aff-cestovni-pojisteni",
+        "title": "AXA Assistance",
+        "url": "https://www.tkqlhce.com/click-101883843-12585182"
+      },
+      {
+        "kind": "paid_or_manual",
+        "sectionId": "aff-auto-moto",
+        "title": "Ahifi.cz",
+        "url": "https://www.dpbolvw.net/click-101883843-17006948"
+      },
+      {
+        "kind": "paid_or_manual",
+        "sectionId": "aff-pneu-pneuservis",
+        "title": "BestDrive",
+        "url": "https://www.jdoqocy.com/click-101883843-17045434"
+      },
+      {
+        "kind": "paid_or_manual",
+        "sectionId": "aff-pojisteni",
+        "title": "Klik.cz",
+        "url": "https://www.dpbolvw.net/click-101883843-15024026"
+      },
+      {
+        "kind": "paid_or_manual",
+        "sectionId": "aff-lekarny",
+        "title": "Lékárna Lemon",
+        "url": "https://www.jdoqocy.com/click-101883843-14563148"
+      },
+      {
+        "kind": "paid_or_manual",
+        "sectionId": "aff-zdravi-doplnky",
+        "title": "Klub zdraví",
+        "url": "https://www.dpbolvw.net/click-101883843-13884010"
+      },
+      {
+        "kind": "paid_or_manual",
+        "sectionId": "aff-zdravi-doplnky",
+        "title": "BodyWorld",
+        "url": "https://www.tkqlhce.com/click-101883843-15735791"
+      },
+      {
+        "kind": "paid_or_manual",
+        "sectionId": "aff-zdravi-doplnky",
+        "title": "MentisLab",
+        "url": "https://www.tkqlhce.com/click-101883843-13341068"
+      },
+      {
+        "kind": "paid_or_manual",
+        "sectionId": "aff-zdravi-doplnky",
+        "title": "BrainMarket",
+        "url": "https://www.anrdoezrs.net/click-101883843-17053829"
+      },
+      {
+        "kind": "paid_or_manual",
+        "sectionId": "aff-kosmetika",
+        "title": "Yves Rocher",
+        "url": "https://www.dpbolvw.net/click-101883843-15734904"
+      }
+    ]
   },
   "rollback": {
     "ok": true,
@@ -44,10 +127,12 @@
   "ok": true,
   "dryRunDetailCounts": {
     "preservedNonCj": 0,
-    "preservedPaid": 0,
-    "removedLegacyCj": 167,
+    "preservedPaid": 22,
+    "removedLegacyCj": 145,
     "addedStaticCj": 174,
-    "duplicateAdvertiserIdsAfter": 0
+    "duplicateAdvertiserIdsAfter": 0,
+    "policyProtectedEntries": 43,
+    "fixtureProtectedEntries": 0
   },
   "note": "Dry-run only. No production catalog rewrite. PUBLIC_SWAP DISARMED."
 }

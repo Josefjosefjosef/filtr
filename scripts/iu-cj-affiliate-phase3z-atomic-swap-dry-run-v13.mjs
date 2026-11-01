@@ -68,6 +68,77 @@ export function evaluateSwapPreflight({ registry, staticCatalog, publicButtonSwa
   };
 }
 
+function normTitleKey(t) {
+  try {
+    return String(t || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]+/g, "");
+  } catch {
+    return String(t || "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "");
+  }
+}
+
+function normUrlKey(u) {
+  return String(u || "")
+    .trim()
+    .toLowerCase()
+    .replace(/\/+$/, "");
+}
+
+/**
+ * Build protection indexes from slot policy + optional fixture items.
+ * MANUAL_PROTECTED / PAID_RESERVED historically often lack advertiserId — match by URL and title+section.
+ */
+export function buildProtectedSlotIndexes(slotPolicy = null, extraProtectedItems = []) {
+  const byAdvertiserId = new Set();
+  const byUrl = new Set();
+  const bySectionTitle = new Set();
+  const entries = [];
+
+  function add(p, source) {
+    if (!p) return;
+    const mgmt = String(p.management || "").toUpperCase();
+    if (mgmt && mgmt !== "PAID_RESERVED" && mgmt !== "MANUAL_PROTECTED") return;
+    const advId = p.advertiserId != null && String(p.advertiserId) !== "" ? String(p.advertiserId) : null;
+    const url = normUrlKey(p.url || p.href || "");
+    const sectionId = String(p.sectionId || "");
+    const titleKey = normTitleKey(p.title || p.name || "");
+    if (advId) byAdvertiserId.add(advId);
+    if (url) byUrl.add(url);
+    if (sectionId && titleKey) bySectionTitle.add(sectionId + "::" + titleKey);
+    entries.push({
+      source,
+      management: mgmt || "MANUAL_PROTECTED",
+      advertiserId: advId,
+      url: p.url || p.href || null,
+      sectionId: sectionId || null,
+      title: p.title || p.name || null,
+    });
+  }
+
+  for (const p of slotPolicy?.partners || []) add(p, "slot_policy");
+  for (const p of extraProtectedItems || []) add(p, "fixture");
+
+  return { byAdvertiserId, byUrl, bySectionTitle, entries };
+}
+
+export function isProtectedCatalogItem(it, indexes) {
+  if (!it || !indexes) return false;
+  const advId = it.advertiserId != null && String(it.advertiserId) !== "" ? String(it.advertiserId) : null;
+  if (advId && indexes.byAdvertiserId.has(advId)) return true;
+  const url = normUrlKey(it.url || "");
+  if (url && indexes.byUrl.has(url)) return true;
+  const sectionId = String(it.sectionId || "");
+  const titleKey = normTitleKey(it.title || "");
+  if (sectionId && titleKey && indexes.bySectionTitle.has(sectionId + "::" + titleKey)) return true;
+  const mgmt = String(it.management || "").toUpperCase();
+  return mgmt === "PAID_RESERVED" || mgmt === "MANUAL_PROTECTED";
+}
+
 /**
  * Simulate post-swap section items: static CJ buttons + preserved non-CJ / paid.
  */
@@ -76,18 +147,14 @@ export function simulateAtomicSwap({
   staticCatalog,
   slotPolicy = null,
   publicButtonSwapArmed = false,
+  extraItemsBySection = null,
+  extraProtectedItems = [],
 } = {}) {
   if (publicButtonSwapArmed === true) {
     throw new Error("ATOMIC_SWAP_DRY_RUN_REFUSES_ARMED_STATE");
   }
   const ordered = parseAffiliateCatalogOrdered(catalogJsText || "");
-  const paidOrManual = new Set();
-  for (const p of slotPolicy?.partners || []) {
-    const mgmt = String(p.management || "").toUpperCase();
-    if ((mgmt === "PAID_RESERVED" || mgmt === "MANUAL_PROTECTED") && p.advertiserId != null) {
-      paidOrManual.add(String(p.advertiserId));
-    }
-  }
+  const protectedIdx = buildProtectedSlotIndexes(slotPolicy, extraProtectedItems);
 
   const staticBySection = new Map();
   for (const s of staticCatalog?.sections || []) {
@@ -100,37 +167,86 @@ export function simulateAtomicSwap({
   let preservedPaid = 0;
   let removedLegacyCj = 0;
   let addedStaticCj = 0;
+  const preservedFingerprints = [];
 
+  const sectionMap = new Map();
   for (const sec of ordered?.sections || []) {
+    sectionMap.set(sec.sectionId, {
+      sectionId: sec.sectionId,
+      items: [...(sec.items || [])],
+    });
+  }
+  for (const [sectionId, items] of Object.entries(extraItemsBySection || {})) {
+    if (!sectionMap.has(sectionId)) sectionMap.set(sectionId, { sectionId, items: [] });
+    sectionMap.get(sectionId).items.push(...(items || []));
+  }
+
+  for (const sec of sectionMap.values()) {
     const beforeItems = [];
     const afterItems = [];
+    const staticButtons = staticBySection.get(sec.sectionId) || [];
+    const staticTitleKeys = new Set(staticButtons.map((b) => normTitleKey(b.title)));
     for (const it of sec.items || []) {
       const url = String(it.url || "");
       const cj = isCjTrackingUrl(url);
       const advId = it.advertiserId != null ? String(it.advertiserId) : null;
-      const protectedSlot = advId && paidOrManual.has(advId);
-      beforeItems.push({ title: it.title, url, advertiserId: advId, cj, protectedSlot });
+      const itemForMatch = { ...it, sectionId: sec.sectionId, url, advertiserId: advId };
+      const protectedSlot = isProtectedCatalogItem(itemForMatch, protectedIdx);
+      const titleKey = normTitleKey(it.title);
+      const replacedByStatic = cj && protectedSlot && staticTitleKeys.has(titleKey);
+      beforeItems.push({
+        title: it.title,
+        url,
+        advertiserId: advId,
+        management: it.management || null,
+        cj,
+        protectedSlot,
+        replacedByStatic: Boolean(replacedByStatic),
+        cssClass: it.cssClass || "iuRadioChip iuAffiliateChip",
+      });
       if (!cj) {
         afterItems.push({
           title: it.title,
           url,
           advertiserId: advId,
+          management: it.management || null,
           source: "preserved_non_cj",
+          cssClass: it.cssClass || "iuRadioChip iuAffiliateChip",
+          target: it.target || "_blank",
+          rel: it.rel || "noopener noreferrer",
         });
         preservedNonCj += 1;
-      } else if (protectedSlot) {
+        preservedFingerprints.push({
+          kind: "non_cj",
+          sectionId: sec.sectionId,
+          title: it.title,
+          url,
+        });
+      } else if (protectedSlot && !replacedByStatic) {
+        // Protected CJ chip with no static replacement (not MAIN_BUTTON_READY / not in catalog).
         afterItems.push({
           title: it.title,
           url,
           advertiserId: advId,
+          management: it.management || "MANUAL_PROTECTED",
           source: "preserved_paid_or_manual",
+          cssClass: it.cssClass || "iuRadioChip iuAffiliateChip",
+          target: it.target || "_blank",
+          rel: it.rel || "sponsored noopener",
         });
         preservedPaid += 1;
+        preservedFingerprints.push({
+          kind: "paid_or_manual",
+          sectionId: sec.sectionId,
+          title: it.title,
+          url,
+        });
       } else {
+        // Unprotected legacy CJ, or protected CJ replaced by static catalog entry.
         removedLegacyCj += 1;
       }
     }
-    for (const b of staticBySection.get(sec.sectionId) || []) {
+    for (const b of staticButtons) {
       afterItems.push({
         title: b.title,
         url: b.url,
@@ -138,18 +254,18 @@ export function simulateAtomicSwap({
         source: "static_catalog_v13",
         target: "_blank",
         rel: "sponsored noopener",
+        cssClass: "iuRadioChip iuAffiliateChip",
       });
       addedStaticCj += 1;
     }
-    // Sections that exist only in static catalog
     before.push({ sectionId: sec.sectionId, items: beforeItems });
     after.push({ sectionId: sec.sectionId, items: afterItems });
   }
 
-  // Static-only sections not present in baked catalog
-  const bakedSectionIds = new Set((ordered?.sections || []).map((s) => s.sectionId));
+  // Static-only sections not present in before map
+  const beforeSectionIds = new Set(before.map((s) => s.sectionId));
   for (const s of staticCatalog?.sections || []) {
-    if (bakedSectionIds.has(s.sectionId)) continue;
+    if (beforeSectionIds.has(s.sectionId)) continue;
     after.push({
       sectionId: s.sectionId,
       items: (s.buttons || []).map((b) => ({
@@ -159,25 +275,39 @@ export function simulateAtomicSwap({
         source: "static_catalog_v13",
         target: "_blank",
         rel: "sponsored noopener",
+        cssClass: "iuRadioChip iuAffiliateChip",
       })),
     });
     addedStaticCj += (s.buttons || []).length;
   }
 
-  // Duplicate advertiser check in after state
+  // Duplicate advertiser check in after state (CJ static + preserved with CID)
   const seen = new Set();
   let duplicates = 0;
   for (const sec of after) {
     for (const it of sec.items || []) {
       if (!it.advertiserId) continue;
+      if (it.source === "preserved_non_cj" || it.source === "preserved_paid_or_manual") continue;
       const id = String(it.advertiserId);
       if (seen.has(id)) duplicates += 1;
       else seen.add(id);
     }
   }
 
+  const policyProtectedCount = (protectedIdx.entries || []).filter((e) => e.source === "slot_policy").length;
+  const fixtureProtectedCount = (protectedIdx.entries || []).filter((e) => e.source === "fixture").length;
+  const expectNonCj =
+    (extraProtectedItems || []).some((p) => !isCjTrackingUrl(p.url || p.href || "")) ||
+    Object.values(extraItemsBySection || {})
+      .flat()
+      .some((it) => it && !isCjTrackingUrl(it.url || ""));
+  const expectPaid = policyProtectedCount > 0 || fixtureProtectedCount > 0;
+
   const snapshot = { before, after };
   const rollback = { restoredFrom: "before", ok: true, publicButtonSwapArmed: false };
+
+  const nonCjGate = expectNonCj ? preservedNonCj > 0 : preservedNonCj >= 0;
+  const paidGate = expectPaid ? preservedPaid > 0 : true;
 
   return {
     schema: PHASE3Z_ATOMIC_SWAP_SCHEMA,
@@ -191,16 +321,26 @@ export function simulateAtomicSwap({
       removedLegacyCj,
       addedStaticCj,
       duplicateAdvertiserIdsAfter: duplicates,
+      policyProtectedEntries: policyProtectedCount,
+      fixtureProtectedEntries: fixtureProtectedCount,
     },
     gates: {
-      nonCjPreserved: preservedNonCj >= 0,
-      paidPreserved: true,
+      nonCjPreserved: nonCjGate,
+      paidPreserved: paidGate,
       duplicatesZero: duplicates === 0,
       disarmed: true,
+      positiveNonCjRequired: expectNonCj,
+      positivePaidRequired: expectPaid,
+    },
+    preservedFingerprints,
+    protectedIndexSummary: {
+      byAdvertiserId: protectedIdx.byAdvertiserId.size,
+      byUrl: protectedIdx.byUrl.size,
+      bySectionTitle: protectedIdx.bySectionTitle.size,
     },
     snapshot,
     rollback,
-    ok: duplicates === 0,
+    ok: duplicates === 0 && nonCjGate && paidGate,
     note: "Dry-run only. No production catalog rewrite. PUBLIC_SWAP DISARMED.",
   };
 }
@@ -258,6 +398,8 @@ function main() {
       counts: dry.counts,
       gates: dry.gates,
       singlePostSwapCjRenderer: dry.singlePostSwapCjRenderer,
+      protectedIndexSummary: dry.protectedIndexSummary,
+      preservedSample: (dry.preservedFingerprints || []).slice(0, 12),
     },
     rollback: rb,
     legacyCounts: legacy.counts,
