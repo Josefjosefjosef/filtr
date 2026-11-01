@@ -17791,5 +17791,67 @@
       }
     ],
     "interpretation": "ok=true means prep/registry integrity only — never automatic permission for public chip swap"
+  },
+  "mainButtonSummary": {
+    "schema": "iu-cj-affiliate-phase3z-main-button-readiness-v12",
+    "joined": 175,
+    "mainButtonReady": 173,
+    "missingMainButtons": 2,
+    "coveragePct": 98.86,
+    "byStatus": {
+      "MAIN_BUTTON_READY": 173,
+      "UNSUITABLE_CUSTOMER_DESTINATION": 2
+    },
+    "remainingBlockers": [
+      {
+        "advertiserId": "7947783",
+        "name": "Cheapvuelos",
+        "status": "UNSUITABLE_CUSTOMER_DESTINATION",
+        "blockers": [
+          "destination_type:AFFILIATE_SIGNUP"
+        ],
+        "holdReason": "UNSUITABLE_MAIN_DESTINATION",
+        "destinationType": "AFFILIATE_SIGNUP",
+        "remediationAttempts": [
+          {
+            "step": "cj_link_search_full_scan",
+            "linkCount": 16,
+            "result": "all_authorized_links_have_unsuitable_customer_destinations"
+          },
+          {
+            "step": "no_fabricated_tracking_url",
+            "result": "skipped_programurl_without_authorized_cj_click"
+          }
+        ],
+        "nextFeasibleFix": "Obtain authorized CJ homepage/service deep-link via Link Search refresh or advertiser; do not invent click URL."
+      },
+      {
+        "advertiserId": "4686326",
+        "name": "Paragon Software Group",
+        "status": "UNSUITABLE_CUSTOMER_DESTINATION",
+        "blockers": [
+          "destination_type:CHECKOUT"
+        ],
+        "holdReason": "UNSUITABLE_MAIN_DESTINATION",
+        "destinationType": "CHECKOUT",
+        "remediationAttempts": [
+          {
+            "step": "cj_link_search_full_scan",
+            "linkCount": 30,
+            "result": "all_authorized_links_have_unsuitable_customer_destinations"
+          },
+          {
+            "step": "no_fabricated_tracking_url",
+            "result": "skipped_programurl_without_authorized_cj_click"
+          }
+        ],
+        "nextFeasibleFix": "Obtain authorized CJ homepage/service deep-link via Link Search refresh or advertiser; do not invent click URL."
+      }
+    ],
+    "duplicates": 0,
+    "publicButtonSwapArmed": false,
+    "merchantWebCrawlRequiredForMainButton": false,
+    "couponProductRefactor": "DEFERRED",
+    "note": "MAIN_BUTTON_READY is CJ-FIRST and independent of CONTENT_VERIFIED. PUBLIC_SWAP DISARMED."
   }
 }

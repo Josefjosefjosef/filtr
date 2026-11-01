@@ -52,20 +52,24 @@ export const MERCHANT_EVIDENCE_OVERRIDES = Object.freeze({
     merchantIdentity: "Allegro.cz",
     officialDomains: ["allegro.cz", "www.allegro.cz"],
     merchantType: "MARKETPLACE",
-    // No dedicated marketplace tile in the 36-section SoT. Closest honest fit among
-    // existing tiles is universal home goods / living (still imperfect) — keep review
-    // flag so READY requires explicit taxonomy GO; never map to aff-inzerce-bazary.
-    primaryAssortment: null,
+    // V12 CJ-FIRST: existing tile aff-inzerce-bazary already covers online tržiště
+    // (baked catalog + SEO). Map marketplace here — one main button, no taxonomy gap hold.
+    primaryAssortment: { sectionId: "aff-inzerce-bazary", group: "marketplace" },
     secondaryAssortments: [],
     significantAssortmentGroups: ["marketplace", "universal"],
-    forbiddenSections: ["aff-inzerce-bazary"],
-    preferCategoryReview: true,
-    rejectSectionIds: ["aff-inzerce-bazary"],
-    taxonomyGap: "NO_MARKETPLACE_TILE_IN_36",
+    forbiddenSections: [],
+    preferCategoryReview: false,
+    rejectSectionIds: [],
     confidence: "high",
     rationale:
-      "Allegro.cz is a general marketplace, not classifieds/bazar. Authoritative taxonomy has no marketplace tile → CATEGORY_REVIEW_REQUIRED (external taxonomy gap).",
-    evidenceSources: ["official_domain:allegro.cz", "merchant_type:marketplace", "taxonomy36_no_marketplace_tile"],
+      "Allegro.cz marketplace → aff-inzerce-bazary (Inzerce a bazary / online tržiště). CJ-FIRST V12 removes CATEGORY_REVIEW_REQUIRED taxonomy-gap hold.",
+    evidenceSources: [
+      "official_domain:allegro.cz",
+      "merchant_type:marketplace",
+      "catalog_bake:aff-inzerce-bazary",
+      "section_seo:online_trziste",
+      "cj_first_v12",
+    ],
     preferHomepagePath: true,
   },
   "5096493": {
