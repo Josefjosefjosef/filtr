@@ -5632,29 +5632,27 @@
         "note": "403 may be WAF/bot block; not confirmed broken"
       },
       "merchantReviewStatus": "IDENTITY_VERIFIED_WAF",
-      "contentStatus": "CONTENT_UNAVAILABLE",
+      "contentStatus": "CONTENT_VERIFIED",
       "publicationReadiness": {
         "technicallyReady": true,
-        "contentVerified": false,
+        "contentVerified": true,
         "regionVerified": true,
         "destinationVerified": true,
         "programAuthorized": true,
-        "publicationReady": false,
-        "contentStatus": "CONTENT_UNAVAILABLE",
+        "publicationReady": true,
+        "contentStatus": "CONTENT_VERIFIED",
         "gates": {
           "TECHNICALLY_READY": true,
-          "CONTENT_VERIFIED": false,
+          "CONTENT_VERIFIED": true,
           "REGION_VERIFIED": true,
           "DESTINATION_VERIFIED": true,
           "PROGRAM_AUTHORIZED": true,
-          "PUBLICATION_READY": false
+          "PUBLICATION_READY": true
         },
-        "blockers": [
-          "content_not_verified:CONTENT_UNAVAILABLE"
-        ],
-        "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
+        "blockers": [],
+        "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
-      "publicationReady": false,
+      "publicationReady": true,
       "technicallyReady": true
     },
     {
@@ -17418,7 +17416,7 @@
         "httpStatus": 200,
         "finalHost": "www.dek.cz"
       },
-      "contentStatus": "CONTENT_INCOMPLETE",
+      "contentStatus": "CONTENT_UNAVAILABLE",
       "publicationReadiness": {
         "technicallyReady": true,
         "contentVerified": false,
@@ -17426,7 +17424,7 @@
         "destinationVerified": true,
         "programAuthorized": true,
         "publicationReady": false,
-        "contentStatus": "CONTENT_INCOMPLETE",
+        "contentStatus": "CONTENT_UNAVAILABLE",
         "gates": {
           "TECHNICALLY_READY": true,
           "CONTENT_VERIFIED": false,
@@ -17436,7 +17434,7 @@
           "PUBLICATION_READY": false
         },
         "blockers": [
-          "content_not_verified:CONTENT_INCOMPLETE"
+          "content_not_verified:CONTENT_UNAVAILABLE"
         ],
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
@@ -28495,7 +28493,7 @@
         "httpStatus": 200,
         "finalHost": "kytary.cz"
       },
-      "contentStatus": "CONTENT_INCOMPLETE",
+      "contentStatus": "CONTENT_UNAVAILABLE",
       "publicationReadiness": {
         "technicallyReady": true,
         "contentVerified": false,
@@ -28503,7 +28501,7 @@
         "destinationVerified": true,
         "programAuthorized": true,
         "publicationReady": false,
-        "contentStatus": "CONTENT_INCOMPLETE",
+        "contentStatus": "CONTENT_UNAVAILABLE",
         "gates": {
           "TECHNICALLY_READY": true,
           "CONTENT_VERIFIED": false,
@@ -28513,7 +28511,7 @@
           "PUBLICATION_READY": false
         },
         "blockers": [
-          "content_not_verified:CONTENT_INCOMPLETE"
+          "content_not_verified:CONTENT_UNAVAILABLE"
         ],
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
@@ -34703,29 +34701,27 @@
         "note": "403 may be WAF/bot block; not confirmed broken"
       },
       "merchantReviewStatus": "IDENTITY_VERIFIED_WAF",
-      "contentStatus": "CONTENT_UNAVAILABLE",
+      "contentStatus": "CONTENT_VERIFIED",
       "publicationReadiness": {
         "technicallyReady": true,
-        "contentVerified": false,
+        "contentVerified": true,
         "regionVerified": true,
         "destinationVerified": true,
         "programAuthorized": true,
-        "publicationReady": false,
-        "contentStatus": "CONTENT_UNAVAILABLE",
+        "publicationReady": true,
+        "contentStatus": "CONTENT_VERIFIED",
         "gates": {
           "TECHNICALLY_READY": true,
-          "CONTENT_VERIFIED": false,
+          "CONTENT_VERIFIED": true,
           "REGION_VERIFIED": true,
           "DESTINATION_VERIFIED": true,
           "PROGRAM_AUTHORIZED": true,
-          "PUBLICATION_READY": false
+          "PUBLICATION_READY": true
         },
-        "blockers": [
-          "content_not_verified:CONTENT_UNAVAILABLE"
-        ],
-        "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
+        "blockers": [],
+        "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
-      "publicationReady": false,
+      "publicationReady": true,
       "technicallyReady": true
     },
     {
@@ -113953,29 +113949,27 @@
         "note": "403 may be WAF/bot block; not confirmed broken"
       },
       "merchantReviewStatus": "IDENTITY_VERIFIED_WAF",
-      "contentStatus": "CONTENT_UNAVAILABLE",
+      "contentStatus": "CONTENT_VERIFIED",
       "publicationReadiness": {
         "technicallyReady": true,
-        "contentVerified": false,
+        "contentVerified": true,
         "regionVerified": true,
         "destinationVerified": true,
         "programAuthorized": true,
-        "publicationReady": false,
-        "contentStatus": "CONTENT_UNAVAILABLE",
+        "publicationReady": true,
+        "contentStatus": "CONTENT_VERIFIED",
         "gates": {
           "TECHNICALLY_READY": true,
-          "CONTENT_VERIFIED": false,
+          "CONTENT_VERIFIED": true,
           "REGION_VERIFIED": true,
           "DESTINATION_VERIFIED": true,
           "PROGRAM_AUTHORIZED": true,
-          "PUBLICATION_READY": false
+          "PUBLICATION_READY": true
         },
-        "blockers": [
-          "content_not_verified:CONTENT_UNAVAILABLE"
-        ],
-        "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
+        "blockers": [],
+        "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
-      "publicationReady": false,
+      "publicationReady": true,
       "technicallyReady": true
     },
     {
@@ -116856,29 +116850,27 @@
         "note": "403 may be WAF/bot block; not confirmed broken"
       },
       "merchantReviewStatus": "IDENTITY_VERIFIED_WAF",
-      "contentStatus": "CONTENT_UNAVAILABLE",
+      "contentStatus": "CONTENT_VERIFIED",
       "publicationReadiness": {
         "technicallyReady": true,
-        "contentVerified": false,
+        "contentVerified": true,
         "regionVerified": true,
         "destinationVerified": true,
         "programAuthorized": true,
-        "publicationReady": false,
-        "contentStatus": "CONTENT_UNAVAILABLE",
+        "publicationReady": true,
+        "contentStatus": "CONTENT_VERIFIED",
         "gates": {
           "TECHNICALLY_READY": true,
-          "CONTENT_VERIFIED": false,
+          "CONTENT_VERIFIED": true,
           "REGION_VERIFIED": true,
           "DESTINATION_VERIFIED": true,
           "PROGRAM_AUTHORIZED": true,
-          "PUBLICATION_READY": false
+          "PUBLICATION_READY": true
         },
-        "blockers": [
-          "content_not_verified:CONTENT_UNAVAILABLE"
-        ],
-        "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
+        "blockers": [],
+        "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
-      "publicationReady": false,
+      "publicationReady": true,
       "technicallyReady": true
     },
     {
@@ -144092,29 +144084,27 @@
         "note": "403 may be WAF/bot block; not confirmed broken"
       },
       "merchantReviewStatus": "IDENTITY_VERIFIED_WAF",
-      "contentStatus": "CONTENT_UNAVAILABLE",
+      "contentStatus": "CONTENT_VERIFIED",
       "publicationReadiness": {
         "technicallyReady": true,
-        "contentVerified": false,
+        "contentVerified": true,
         "regionVerified": true,
         "destinationVerified": true,
         "programAuthorized": true,
-        "publicationReady": false,
-        "contentStatus": "CONTENT_UNAVAILABLE",
+        "publicationReady": true,
+        "contentStatus": "CONTENT_VERIFIED",
         "gates": {
           "TECHNICALLY_READY": true,
-          "CONTENT_VERIFIED": false,
+          "CONTENT_VERIFIED": true,
           "REGION_VERIFIED": true,
           "DESTINATION_VERIFIED": true,
           "PROGRAM_AUTHORIZED": true,
-          "PUBLICATION_READY": false
+          "PUBLICATION_READY": true
         },
-        "blockers": [
-          "content_not_verified:CONTENT_UNAVAILABLE"
-        ],
-        "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
+        "blockers": [],
+        "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
-      "publicationReady": false,
+      "publicationReady": true,
       "technicallyReady": true
     },
     {
@@ -152689,29 +152679,27 @@
         "note": "403 may be WAF/bot block; not confirmed broken"
       },
       "merchantReviewStatus": "IDENTITY_VERIFIED_WAF",
-      "contentStatus": "CONTENT_UNAVAILABLE",
+      "contentStatus": "CONTENT_VERIFIED",
       "publicationReadiness": {
         "technicallyReady": true,
-        "contentVerified": false,
+        "contentVerified": true,
         "regionVerified": true,
         "destinationVerified": true,
         "programAuthorized": true,
-        "publicationReady": false,
-        "contentStatus": "CONTENT_UNAVAILABLE",
+        "publicationReady": true,
+        "contentStatus": "CONTENT_VERIFIED",
         "gates": {
           "TECHNICALLY_READY": true,
-          "CONTENT_VERIFIED": false,
+          "CONTENT_VERIFIED": true,
           "REGION_VERIFIED": true,
           "DESTINATION_VERIFIED": true,
           "PROGRAM_AUTHORIZED": true,
-          "PUBLICATION_READY": false
+          "PUBLICATION_READY": true
         },
-        "blockers": [
-          "content_not_verified:CONTENT_UNAVAILABLE"
-        ],
-        "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
+        "blockers": [],
+        "note": "All publication gates passed; public swap still DISARMED until explicit GO."
       },
-      "publicationReady": false,
+      "publicationReady": true,
       "technicallyReady": true
     },
     {
@@ -159185,7 +159173,7 @@
         "note": "temporary_rate_limit_not_confirmed_broken"
       },
       "merchantReviewStatus": "IDENTITY_VERIFIED_RATE_LIMITED",
-      "contentStatus": "CONTENT_INCOMPLETE",
+      "contentStatus": "CONTENT_UNAVAILABLE",
       "publicationReadiness": {
         "technicallyReady": true,
         "contentVerified": false,
@@ -159193,7 +159181,7 @@
         "destinationVerified": true,
         "programAuthorized": true,
         "publicationReady": false,
-        "contentStatus": "CONTENT_INCOMPLETE",
+        "contentStatus": "CONTENT_UNAVAILABLE",
         "gates": {
           "TECHNICALLY_READY": true,
           "CONTENT_VERIFIED": false,
@@ -159203,7 +159191,7 @@
           "PUBLICATION_READY": false
         },
         "blockers": [
-          "content_not_verified:CONTENT_INCOMPLETE"
+          "content_not_verified:CONTENT_UNAVAILABLE"
         ],
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
@@ -162772,7 +162760,7 @@
         "note": "temporary_rate_limit_not_confirmed_broken"
       },
       "merchantReviewStatus": "IDENTITY_VERIFIED_RATE_LIMITED",
-      "contentStatus": "CONTENT_INCOMPLETE",
+      "contentStatus": "CONTENT_UNAVAILABLE",
       "publicationReadiness": {
         "technicallyReady": true,
         "contentVerified": false,
@@ -162780,7 +162768,7 @@
         "destinationVerified": true,
         "programAuthorized": true,
         "publicationReady": false,
-        "contentStatus": "CONTENT_INCOMPLETE",
+        "contentStatus": "CONTENT_UNAVAILABLE",
         "gates": {
           "TECHNICALLY_READY": true,
           "CONTENT_VERIFIED": false,
@@ -162790,7 +162778,7 @@
           "PUBLICATION_READY": false
         },
         "blockers": [
-          "content_not_verified:CONTENT_INCOMPLETE"
+          "content_not_verified:CONTENT_UNAVAILABLE"
         ],
         "note": "Publication blocked until all gates pass; technical READY alone is insufficient."
       },
@@ -182567,8 +182555,8 @@
   "publicationSummary": {
     "joined": 175,
     "technicallyReady": 164,
-    "publicationReady": 78,
-    "contentVerifiedOnPartners": 81,
+    "publicationReady": 84,
+    "contentVerifiedOnPartners": 87,
     "allPublicationReadyContentVerified": true,
     "publicButtonSwapArmed": false,
     "note": "TECHNICALLY_READY (READY_FOR_REVIEW) is separate from PUBLICATION_READY. Swap DISARMED."

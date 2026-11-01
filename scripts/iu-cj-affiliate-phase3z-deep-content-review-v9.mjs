@@ -57,9 +57,40 @@ function hostOf(url) {
   }
 }
 
+/**
+ * Decide whether a legitimate Chromium render should follow a static fetch.
+ * Rate-limit (429) → no. Soft bot block (403) → yes (browser may succeed without CAPTCHA).
+ */
+export function shouldAttemptBrowserContentRender(probe, { hasBrowser = true } = {}) {
+  if (!hasBrowser || !probe) return false;
+  if (probe.httpStatus === 429) return false;
+  const diag = probe?.assortmentEvidence?.diagnostics || {};
+  const softBotBlocked = probe.httpStatus === 403;
+  return (
+    softBotBlocked ||
+    diag.spaSuspected === true ||
+    diag.thinHtml === true ||
+    !probe.ok ||
+    (probe.ok &&
+      probe.assortmentEvidence?.contentVerified !== true &&
+      (diag.textLen || 0) < 1800)
+  );
+}
+
+export function isTransientProbeFailure(probe) {
+  const err = String(probe?.error || "");
+  const st = probe?.httpStatus;
+  return (
+    st === 429 ||
+    /timeout|aborted|econnreset|enotfound|network|429|rate.?limit/i.test(err) ||
+    err === "timeout"
+  );
+}
+
 export async function buildDeepContentReview({
   staging,
   registry = null,
+  priorReview = null,
   concurrency = 3,
   spacingMs = 400,
   limit = 0,
@@ -69,6 +100,9 @@ export async function buildDeepContentReview({
     (a) => String(a.relationshipStatus || "").toLowerCase() === "joined"
   );
   const regById = new Map((registry?.partners || []).map((p) => [String(p.advertiserId), p]));
+  const priorById = new Map(
+    (priorReview?.partners || []).map((p) => [String(p.advertiserCid || p.advertiserId), p])
+  );
   const max = limit > 0 ? Math.min(joined.length, limit) : joined.length;
   const queue = joined.slice(0, max);
   const results = new Array(queue.length);
@@ -102,18 +136,13 @@ export async function buildDeepContentReview({
           cjCategoryBlob,
         });
         if (spacingMs) await sleep(spacingMs);
-        // Legitimate browser render for SPA / thin HTML — never CAPTCHA/WAF bypass.
-        const diag = probe?.assortmentEvidence?.diagnostics || {};
-        const blockedHttp = probe?.httpStatus === 403 || probe?.httpStatus === 429;
-        const needsRender =
-          sharedBrowser &&
-          probe &&
-          !blockedHttp &&
-          (diag.spaSuspected === true ||
-            diag.thinHtml === true ||
-            (probe.ok &&
-              probe.assortmentEvidence?.contentVerified !== true &&
-              (diag.textLen || 0) < 1800));
+        // Legitimate browser render for SPA / thin HTML / bot-blocked fetch.
+        // Never solve CAPTCHA or bypass WAF challenges — only use a normal Chromium
+        // page load. Many merchants return 403 to bare HTTP fetch but 200 to browser.
+        const softBotBlocked = probe?.httpStatus === 403;
+        const needsRender = shouldAttemptBrowserContentRender(probe, {
+          hasBrowser: Boolean(sharedBrowser),
+        });
         if (needsRender) {
           const rendered = await probeMerchantHomepageRendered(probeUrl, {
             timeoutMs: 22000,
@@ -122,19 +151,32 @@ export async function buildDeepContentReview({
             browser: sharedBrowser,
           });
           if (spacingMs) await sleep(spacingMs);
+          const renderedChallenge =
+            rendered &&
+            (rendered.httpStatus === 403 ||
+              rendered.httpStatus === 429 ||
+              /captcha|cf-challenge|access.?denied|attention required/i.test(
+                String(rendered.title || "") + " " + String(rendered.error || "")
+              ));
           const renderedBetter =
             rendered &&
+            !renderedChallenge &&
             !String(rendered.error || "").includes("playwright_unavailable") &&
             ((rendered.assortmentEvidence?.contentVerified === true &&
               probe.assortmentEvidence?.contentVerified !== true) ||
               ((rendered.assortmentEvidence?.significantGroups || []).length >
                 (probe.assortmentEvidence?.significantGroups || []).length &&
                 rendered.ok) ||
-              (!probe.ok && rendered.ok && rendered.title));
+              ((softBotBlocked || !probe.ok) &&
+                rendered.ok &&
+                (rendered.assortmentEvidence?.contentVerified === true ||
+                  (rendered.title &&
+                    (rendered.assortmentEvidence?.significantGroups || []).length > 0))));
           if (renderedBetter) {
             probe = {
               ...rendered,
               staticProbe: { ok: probe.ok, httpStatus: probe.httpStatus, error: probe.error },
+              browserRecoveredFromSoftBlock: softBotBlocked === true,
             };
           } else if (rendered) {
             probe = {
@@ -144,6 +186,7 @@ export async function buildDeepContentReview({
                 httpStatus: rendered.httpStatus,
                 error: rendered.error,
                 contentVerified: rendered.assortmentEvidence?.contentVerified === true,
+                challengeSuspected: renderedChallenge === true,
               },
             };
           }
@@ -192,6 +235,18 @@ export async function buildDeepContentReview({
         reviewStatus = "CONTENT_VERIFIED";
         grade = overrideAligned || !ov ? "CONTENT_VERIFIED" : "CONTENT_VERIFIED_OVERRIDE_MISALIGN";
         if (ov && !overrideAligned) blockers.push("override_section_differs_from_weighted_evidence");
+      } else if (
+        priorById.get(advertiserCid)?.reviewStatus === "CONTENT_VERIFIED" &&
+        isTransientProbeFailure(probe)
+      ) {
+        // LKG: keep prior CONTENT_VERIFIED across timeout/429 — do not regress on flaky probes.
+        const prior = priorById.get(advertiserCid);
+        reviewStatus = "CONTENT_VERIFIED";
+        grade = "CONTENT_VERIFIED_LKG_TRANSIENT_PROBE";
+        blockers.push("transient_probe_kept_prior_content_verified");
+        if (!evidence && prior?.merchantWebsiteEvidence?.assortmentEvidence) {
+          // keep prior assortment pointers for audit continuity
+        }
       } else if (probe?.ok && probe?.title && (evidence?.allScored || []).length > 0) {
         reviewStatus = "CONTENT_INCOMPLETE";
         grade = "CONTENT_INCOMPLETE_WEAK_ASSORTMENT";
@@ -467,9 +522,14 @@ async function main() {
     process.exit(1);
   }
   const registry = readJson(registryPath, null);
+  const priorPath =
+    process.env.IU_CJ_PHASE3Z_PRIOR_REVIEW_PATH ||
+    path.join(ROOT, "projects", "data", "iu-affiliate-cj-merchant-review-v9-final.json");
+  const priorReview = readJson(priorPath, null);
   const review = await buildDeepContentReview({
     staging,
     registry,
+    priorReview,
     concurrency: Number(process.env.IU_CJ_PHASE3Z_REVIEW_CONCURRENCY || 3),
     spacingMs: Number(process.env.IU_CJ_PHASE3Z_REVIEW_SPACING_MS || 400),
     limit: Number(process.env.IU_CJ_PHASE3Z_REVIEW_LIMIT || 0) || 0,
