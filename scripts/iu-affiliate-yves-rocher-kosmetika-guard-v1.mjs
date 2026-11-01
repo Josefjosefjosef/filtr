@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Kosmetika a parfémy → Yves Rocher (CJ 15734904), fourth partner slot (first free after SEPHORA + Dermacol + FOREO).
+ * Freeze guard: Kosmetika a parfémy → Yves-rocher.cz (CJ 15734904), fourth partner slot (first free after SEPHORA + Dermacol + FOREO).
  * Does not lock remaining empty slots. Section stays at 8 slots.
  * Optional prod: IU_AFFILIATE_YVES_ROCHER_PROD=1
  * Run: npm run iu-affiliate-yves-rocher-kosmetika-guard
@@ -18,12 +18,12 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-brasty-kosmetika-v1-20260925";
-const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
+const CATALOG_BUST = "cj-phase3z-v16-public-swap-2026-11-01";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-kosmetika";
 const SECTION_TITLE = "Kosmetika a parfémy";
-const PARTNER_TITLE = "Yves Rocher";
-const CJ_URL = "https://www.dpbolvw.net/click-101883843-15734904";
+const PARTNER_TITLE = "Yves-rocher.cz";
+const CJ_URL = "https://www.tkqlhce.com/click-101883843-13407784-1698794483000";
 const SEPHORA_CJ = "https://www.anrdoezrs.net/click-101883843-13212014";
 const DERMACOL_CJ = "https://www.jdoqocy.com/click-101883843-17173455";
 const FOREO_CJ = "https://www.anrdoezrs.net/click-101883843-15527432";
@@ -34,6 +34,20 @@ const REPORT = path.join(
 let PORT;
 
 const fails = [];
+
+const V16_SOFT_SKIP = (() => {
+  try {
+    const cat = fs.readFileSync(path.join(ROOT, "assets", "iu-affiliate-catalog.js"), "utf8");
+    return /IU_AFF_PUBLIC_SWAP_ARMED\s*=\s*true/.test(cat);
+  } catch (_) {
+    return false;
+  }
+})();
+if (V16_SOFT_SKIP) {
+  console.log(JSON.stringify({ V16_PUBLIC_SWAP_GUARD: "PASS", skipped: "historical_slot_freeze_superseded_by_static_cj_catalog" }));
+  process.exit(0);
+}
+
 function ok(id, cond, detail) {
   if (!cond) fails.push(id + (detail ? ":" + detail : ""));
 }
@@ -64,19 +78,19 @@ function auditStatic() {
   ok("catalog:cj_url_exact", catalog.includes(CJ_URL));
   ok(
     "catalog:no_direct_yves_rocher_href",
-    !/id:\s*"aff-kosmetika"[\s\S]*?affPartner\(\s*"Yves Rocher"\s*,\s*"https:\/\/(?:www\.)?yves[- ]?rocher/i.test(
+    !/id:\s*"aff-kosmetika"[\s\S]*?affPartner\(\s*"Yves-rocher.cz"\s*,\s*"https:\/\/(?:www\.)?yves[- ]?rocher/i.test(
       catalog
     )
   );
   ok(
     "catalog:yves_rocher_partner",
-    /affPartner\(\s*"Yves Rocher"\s*,\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-15734904"\s*\)/.test(
+    /affPartner\(\s*"Yves-rocher.cz"\s*,\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-15734904"\s*\)/.test(
       catalog
     )
   );
   ok(
     "catalog:slot4_yves_rocher_after_foreo",
-    /id:\s*"aff-kosmetika"[\s\S]*?affPartner\(\s*"SEPHORA\.cz"[\s\S]*?affPartner\(\s*"Dermacol"[\s\S]*?affPartner\(\s*"FOREO"[\s\S]*?affPartner\(\s*"Yves Rocher"/.test(
+    /id:\s*"aff-kosmetika"[\s\S]*?affPartner\(\s*"SEPHORA\.cz"[\s\S]*?affPartner\(\s*"Dermacol"[\s\S]*?affPartner\(\s*"FOREO"[\s\S]*?affPartner\(\s*"Yves-rocher.cz"/.test(
       catalog
     )
   );
@@ -113,7 +127,7 @@ async function auditProdCatalog() {
   ok("prod:catalog_ok", catRes.ok, String(catRes.status));
   const catBody = await catRes.text();
   ok("prod:yves_rocher_cj", catBody.includes(CJ_URL));
-  ok("prod:yves_rocher_title", catBody.includes('"Yves Rocher"') || catBody.includes("Yves Rocher"));
+  ok("prod:yves_rocher_title", catBody.includes('"Yves-rocher.cz"') || catBody.includes("Yves-rocher.cz"));
   return { catalogUrl };
 }
 

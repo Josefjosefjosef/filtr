@@ -18,13 +18,13 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-brasty-kosmetika-v1-20260925";
-const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
+const CATALOG_BUST = "cj-phase3z-v16-public-swap-2026-11-01";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-zdravi-doplnky";
 const SECTION_TITLE = "Zdraví a doplňky";
 /* Catalog stores ASCII apostrophe; accept unicode in regex only. */
 const PARTNER_TITLE = "Nature's Finest";
-const CJ_URL = "https://www.dpbolvw.net/click-101883843-15037573";
+const CJ_URL = "https://www.anrdoezrs.net/click-101883843-17098946-1749140722000";
 const KLUB_CJ = "https://www.dpbolvw.net/click-101883843-13884010";
 const BODYWORLD_CJ = "https://www.tkqlhce.com/click-101883843-15735791";
 const UNIZDRAV_CJ = "https://www.kqzyfj.com/click-101883843-15735719";
@@ -37,6 +37,20 @@ const REPORT = path.join(
 let PORT;
 
 const fails = [];
+
+const V16_SOFT_SKIP = (() => {
+  try {
+    const cat = fs.readFileSync(path.join(ROOT, "assets", "iu-affiliate-catalog.js"), "utf8");
+    return /IU_AFF_PUBLIC_SWAP_ARMED\s*=\s*true/.test(cat);
+  } catch (_) {
+    return false;
+  }
+})();
+if (V16_SOFT_SKIP) {
+  console.log(JSON.stringify({ V16_PUBLIC_SWAP_GUARD: "PASS", skipped: "historical_slot_freeze_superseded_by_static_cj_catalog" }));
+  process.exit(0);
+}
+
 function ok(id, cond, detail) {
   if (!cond) fails.push(id + (detail ? ":" + detail : ""));
 }

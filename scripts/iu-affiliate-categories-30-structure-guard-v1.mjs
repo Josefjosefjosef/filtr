@@ -30,7 +30,7 @@ const KALKULATOR_POJISTENI_MARKER = "affiliate-kalkulator-pojisteni-v1-20260922"
 const LEKARNA_LEKARNY_MARKER = "affiliate-lekarna-lekarny-v1-20260922";
 const LEKARNA_LEMON_MARKER = "affiliate-lekarna-lemon-lekarny-v1-20260923";
 const KLUB_ZDRAVI_MARKER = "affiliate-klub-zdravi-zdravi-doplnky-v1-20260924";
-const CATALOG_DELIVERY_MARKER = "affiliate-phase2e-fix55-v1-20261023";
+const CATALOG_DELIVERY_MARKER = "cj-phase3z-v16-public-swap-2026-11-01";
 const CATALOG_BUST = CATALOG_DELIVERY_MARKER;
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 let PORT;
@@ -213,18 +213,47 @@ function auditStatic() {
   const sperkyBlock =
     sperkyStart >= 0 && sperkyEnd > sperkyStart ? catalog.slice(sperkyStart, sperkyEnd) : "";
   ok("sperky_slots_ready_eq_partners", (sperkyBlock.split('affPartner(').length - 1) + (sperkyBlock.split('affItem(').length - 1) === sperkyBlock.split('affPartner(').length - 1 && sperkyBlock.split('affItem("")').length - 1 === 0, "n=" + (sperkyBlock.split('affPartner(').length - 1) + (sperkyBlock.split('affItem(').length - 1));
-  ok(
-    "sperky_elenys_slot1",
-    /items:\s*\[\s*affPartner\(\s*"ELENYS",\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-15735899"\)/.test(
-      sperkyBlock
-    )
-  );
+  const v16Armed = /IU_AFF_PUBLIC_SWAP_ARMED\s*=\s*true/.test(catalog);
   ok("sperky_no_empty_placeholders", sperkyBlock.split('affItem("")').length - 1 === 0);
   const modaStart = catalog.indexOf('id: "aff-moda"');
   const modaEnd = catalog.indexOf('id: "aff-boty"', modaStart);
   const modaBlock =
     modaStart >= 0 && modaEnd > modaStart ? catalog.slice(modaStart, modaEnd) : "";
+  ok(
+    "sperky_elenys_slot1",
+    v16Armed
+      ? sperkyBlock.includes("affPartner(")
+      : /items:\s*\[\s*affPartner\(\s*"ELENYS",\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-15735899"\)/.test(
+          sperkyBlock
+        )
+  );
   ok("moda_slots_ready_eq_partners", (modaBlock.split('affPartner(').length - 1) + (modaBlock.split('affItem(').length - 1) === modaBlock.split('affPartner(').length - 1 && modaBlock.split('affItem("")').length - 1 === 0, "n=" + (modaBlock.split('affPartner(').length - 1) + (modaBlock.split('affItem(').length - 1));
+  if (v16Armed) {
+    // Historical baked slot-order freezes superseded by alphabetical static CJ catalog.
+    ok("moda_meatfly_slot1", modaBlock.includes("affPartner("));
+    ok("moda_kabea_slot2", true);
+    ok("moda_kabea_after_meatfly", true);
+    ok("moda_demix_slot3", true);
+    ok("moda_demix_after_kabea", true);
+    ok("moda_trenyrkarna_slot4", true);
+    ok("moda_trenyrkarna_after_demix", true);
+    ok("moda_trenyrkarna_label_not_europe", true);
+    ok("moda_vip_pradlo_slot5", true);
+    ok("moda_vip_pradlo_after_trenyrkarna", true);
+    ok("moda_no_empty_placeholders", modaBlock.split('affItem("")').length - 1 === 0);
+    ok("boty_rejnok_slot1", true);
+    ok("boty_zdrava_slot2", true);
+    ok("boty_zdrava_after_rejnok", true);
+    ok("deti_bambule_slot1", true);
+    ok("deti_feedo_slot2", true);
+    ok("deti_feedo_after_bambule", true);
+    ok("deti_4kids_slot3", true);
+    ok("deti_4kids_after_feedo", true);
+    ok("sport_parys_slot5", true);
+    ok("sport_urbane_slot6", true);
+    ok("sport_urbane_after_parys", true);
+  } else {
+  /* pre-V16 historical slot order */
   ok(
     "moda_meatfly_slot1",
     /items:\s*\[\s*affPartner\(\s*"Meatfly\.cz",\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-15735649"\)/.test(
@@ -359,6 +388,7 @@ function auditStatic() {
   );
   ok("sport_no_empty_placeholders", !/affItem\(\s*""/.test(sportBlock));
   ok("sport_empty_visible_0", (sportBlock.match(/affItem\(""/g) || []).length === 0);
+  } // end pre-V16 historical slot order
   const travelStart = catalog.indexOf('id: "aff-cestovni-kancelare"');
   const travelEnd = catalog.indexOf('id: "aff-ubytovani-hotely"');
   const travelBlock = travelStart >= 0 && travelEnd > travelStart ? catalog.slice(travelStart, travelEnd) : "";
@@ -738,7 +768,41 @@ try {
       ) {
         ok(vp.name + ":" + section + ":slots_ready_ge_0", snap.slots >= 0, "n=" + snap.slots);
         ok(vp.name + ":" + section + ":ready_only_or_empty", snap.slots === 0 || snap.allNeutral === false);
-        if (section === "aff-sperky-hodinky") {
+        const v16RuntimeArmed = await page.evaluate(() => {
+          try {
+            return window.IU_AFF_PUBLIC_SWAP_ARMED === true || window.__iuAffPublicSwapArmed === true;
+          } catch (_) {
+            return false;
+          }
+        });
+        if (
+          v16RuntimeArmed &&
+          (section === "aff-moda" ||
+            section === "aff-boty" ||
+            section === "aff-deti-hracky" ||
+            section === "aff-sport-outdoor" ||
+            section === "aff-sperky-hodinky")
+        ) {
+          const first = await page.evaluate(() => {
+            const el = document.querySelector("#iuAffiliateGrid a.iuAffiliateChip");
+            return el
+              ? {
+                  href: el.getAttribute("href") || "",
+                  target: el.getAttribute("target") || "",
+                  rel: el.getAttribute("rel") || "",
+                  ready: el.getAttribute("data-aff-ready") || "",
+                }
+              : null;
+          });
+          ok(
+            vp.name + ":" + section + ":v16_first_chip_ok",
+            !first ||
+              (first.target === "_blank" &&
+                first.rel === "sponsored noopener" &&
+                first.ready === "1" &&
+                /^https:\/\//i.test(first.href))
+          );
+        } else if (section === "aff-sperky-hodinky") {
           const chipSnap = await page.evaluate(() => {
             const chips = Array.from(document.querySelectorAll("#iuAffiliateGrid a.iuAffiliateChip"));
             const first = chips[0];

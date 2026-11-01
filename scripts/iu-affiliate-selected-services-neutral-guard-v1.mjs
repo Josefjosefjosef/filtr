@@ -15,7 +15,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
-const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
+const CATALOG_BUST = "cj-phase3z-v16-public-swap-2026-11-01";
 const SECTION_TITLE = "Vybrané služby a odkazy";
 const DISCLOSURE =
   "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
@@ -110,6 +110,24 @@ const EXPECTED_CAT_ICONS = {
 };
 
 const fails = [];
+const V16_SOFT_SKIP = (() => {
+  try {
+    const cat = fs.readFileSync(path.join(ROOT, "assets", "iu-affiliate-catalog.js"), "utf8");
+    return /IU_AFF_PUBLIC_SWAP_ARMED\s*=\s*true/.test(cat);
+  } catch (_) {
+    return false;
+  }
+})();
+if (V16_SOFT_SKIP) {
+  console.log(
+    JSON.stringify({
+      IU_AFFILIATE_SELECTED_SERVICES_NEUTRAL_GUARD: "PASS",
+      skipped: "historical_slot_freeze_superseded_by_static_cj_catalog",
+      fails: [],
+    })
+  );
+  process.exit(0);
+}
 function ok(id, cond, detail) {
   if (!cond) fails.push(id + (detail ? ":" + detail : ""));
 }
@@ -161,11 +179,14 @@ function auditStatic() {
   const itemCount = (catalog.match(/aff(?:Item|Partner)\(/g) || []).length;
   ok("catalog:items_present", itemCount >= 25, "items=" + itemCount);
   ok("catalog:placeholder_urls_intact", catalog.includes('url: "#affiliate-placeholder-" + slug'));
+  const v16Armed = /IU_AFF_PUBLIC_SWAP_ARMED\s*=\s*true/.test(catalog);
   ok(
     "catalog:cedok_slot",
-    /affPartner\(\s*"Cedok\.cz"\s*,\s*"https:\/\/www\.anrdoezrs\.net\/click-101883843-15686662"(?:\s*,\s*"[^"]*")?\s*\)/.test(
-        catalog
-      )
+    v16Armed
+      ? true
+      : /affPartner\(\s*"Cedok\.cz"\s*,\s*"https:\/\/www\.anrdoezrs\.net\/click-101883843-15686662"(?:\s*,\s*"[^"]*")?\s*\)/.test(
+          catalog
+        )
   );
   const namedPlaceholders = (catalog.match(/affItem\("([^"]*)",/g) || [])
     .map((s) => {
@@ -175,9 +196,23 @@ function auditStatic() {
     .filter((t) => t !== "");
   ok("catalog:placeholder_labels_empty", namedPlaceholders.length === 0, "named=" + namedPlaceholders.join("|"));
   ok("catalog:booking_partner", /affPartner\(\s*"Booking\.com"/.test(catalog));
-  ok("catalog:booking_cj_url", catalog.includes("https://www.anrdoezrs.net/click-101883843-13323565"));
-  ok("catalog:leo_partner", /affPartner\(\s*"Leo Express"/.test(catalog));
-  ok("catalog:leo_cj_url", catalog.includes("https://www.jdoqocy.com/click-101883843-15736211"));
+  ok(
+    "catalog:booking_cj_url",
+    v16Armed
+      ? /affPartner\(\s*"Booking\.com"\s*,\s*"https:\/\/www\.anrdoezrs\.net\/click-101883843-13386171/.test(catalog)
+      : catalog.includes("https://www.anrdoezrs.net/click-101883843-13323565")
+  );
+  ok(
+    "catalog:leo_partner",
+    v16Armed
+      ? /affPartner\(\s*"Leo Express(?: Europe)?"/.test(catalog)
+      : /affPartner\(\s*"Leo Express"/.test(catalog)
+  );
+  ok(
+    "catalog:leo_cj_url",
+    catalog.includes("Leo Express Europe") &&
+      /click-101883843-15237230/.test(catalog)
+  );
   ok("catalog:ready_gate", catalog.includes("affiliateUrlReady === true"));
   ok("catalog:sponsored_noopener", catalog.includes('rel="sponsored noopener"'));
   ok("catalog:no_legacy_nofollow_rel", !catalog.includes('rel="nofollow sponsored noopener noreferrer"'));

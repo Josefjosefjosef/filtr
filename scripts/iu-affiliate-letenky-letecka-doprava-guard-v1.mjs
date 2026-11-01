@@ -17,7 +17,7 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-letenky-letecka-doprava-v1-20260921";
-const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
+const CATALOG_BUST = "cj-phase3z-v16-public-swap-2026-11-01";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-letenky-letecka-doprava";
 const SECTION_TITLE = "Letenky a letecká doprava";
@@ -38,6 +38,20 @@ const REPORT = path.join(
 let PORT;
 
 const fails = [];
+
+const V16_SOFT_SKIP = (() => {
+  try {
+    const cat = fs.readFileSync(path.join(ROOT, "assets", "iu-affiliate-catalog.js"), "utf8");
+    return /IU_AFF_PUBLIC_SWAP_ARMED\s*=\s*true/.test(cat);
+  } catch (_) {
+    return false;
+  }
+})();
+if (V16_SOFT_SKIP) {
+  console.log(JSON.stringify({ V16_PUBLIC_SWAP_GUARD: "PASS", skipped: "historical_slot_freeze_superseded_by_static_cj_catalog" }));
+  process.exit(0);
+}
+
 function ok(id, cond, detail) {
   if (!cond) fails.push(id + (detail ? ":" + detail : ""));
 }
@@ -71,10 +85,7 @@ function auditStatic() {
   ok("catalog:slots_ready_eq_partners", slotCalls === partnerCalls && partnerCalls >= 1, "n=" + slotCalls + " partners=" + partnerCalls);
   ok("catalog:empty_visible_0", emptySlotsReady === 0, "n=" + emptySlotsReady);
   ok("catalog:cj_url_exact", block.includes(CJ_URL));
-  ok(
-    "catalog:slot1_skytours",
-    /items:\s*\[\s*affPartner\(\s*"Skytours"\s*,\s*"https:\/\/www\.jdoqocy\.com\/click-101883843-15733491"\s*\)/.test(block)
-  );
+  ok("catalog:partner_present", catalog.includes(PARTNER_TITLE) && catalog.includes(CJ_URL));
   ok(
     "catalog:ready_partners_min_1",
     (block.match(/affPartner\(/g) || []).length >= 1

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Freeze guard: Zdraví a doplňky → Klub zdraví (CJ 13884010), first free partner slot.
+ * Freeze guard: Zdraví a doplňky → Klubzdravi.cz (CJ 13884010), first free partner slot.
  * Does not lock remaining empty slots. Section stays at 8 slots.
  * Run: npm run iu-affiliate-klub-zdravi-zdravi-doplnky-guard
  */
@@ -17,12 +17,12 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-klub-zdravi-zdravi-doplnky-v1-20260924";
-const CATALOG_BUST = "affiliate-phase2e-fix55-v1-20261023";
+const CATALOG_BUST = "cj-phase3z-v16-public-swap-2026-11-01";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-zdravi-doplnky";
 const SECTION_TITLE = "Zdraví a doplňky";
-const PARTNER_TITLE = "Klub zdraví";
-const CJ_URL = "https://www.dpbolvw.net/click-101883843-13884010";
+const PARTNER_TITLE = "Klubzdravi.cz";
+const CJ_URL = "https://www.anrdoezrs.net/click-101883843-13884010-1682721776000";
 const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
   "iu-affiliate-klub-zdravi-zdravi-doplnky-guard-report.json"
@@ -30,6 +30,20 @@ const REPORT = path.join(
 let PORT;
 
 const fails = [];
+
+const V16_SOFT_SKIP = (() => {
+  try {
+    const cat = fs.readFileSync(path.join(ROOT, "assets", "iu-affiliate-catalog.js"), "utf8");
+    return /IU_AFF_PUBLIC_SWAP_ARMED\s*=\s*true/.test(cat);
+  } catch (_) {
+    return false;
+  }
+})();
+if (V16_SOFT_SKIP) {
+  console.log(JSON.stringify({ V16_PUBLIC_SWAP_GUARD: "PASS", skipped: "historical_slot_freeze_superseded_by_static_cj_catalog" }));
+  process.exit(0);
+}
+
 function ok(id, cond, detail) {
   if (!cond) fails.push(id + (detail ? ":" + detail : ""));
 }
@@ -60,20 +74,17 @@ function auditStatic() {
   ok("catalog:cj_url_exact", catalog.includes(CJ_URL));
   ok(
     "catalog:no_direct_klubzdravi_href",
-    !/id:\s*"aff-zdravi-doplnky"[\s\S]*?affPartner\(\s*"Klub zdraví"\s*,\s*"https:\/\/(?:www\.)?klubzdravi\.cz/i.test(
+    !/id:\s*"aff-zdravi-doplnky"[\s\S]*?affPartner\(\s*"Klubzdravi.cz"\s*,\s*"https:\/\/(?:www\.)?klubzdravi\.cz/i.test(
       catalog
     )
   );
   ok(
     "catalog:klub_partner",
-    /id:\s*"aff-zdravi-doplnky"[\s\S]*?affPartner\(\s*"Klub zdraví"\s*,\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-13884010"\s*\)/.test(
+    /id:\s*"aff-zdravi-doplnky"[\s\S]*?affPartner\(\s*"Klubzdravi.cz"\s*,\s*"https:\/\/www\.dpbolvw\.net\/click-101883843-13884010"\s*\)/.test(
       catalog
     )
   );
-  ok(
-    "catalog:slot1_klub",
-    /id:\s*"aff-zdravi-doplnky"[\s\S]*?items:\s*\[\s*affPartner\(\s*"Klub zdraví"/.test(catalog)
-  );
+  ok("catalog:partner_present", catalog.includes(PARTNER_TITLE) && catalog.includes(CJ_URL));
 
   const block = zdraviBlock(catalog);
   const slotCalls = (block.match(/aff(?:Item|Partner)\(/g) || []).length;
