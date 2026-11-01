@@ -1,0 +1,53 @@
+{
+  "schema": "iu-affiliate-cj-atomic-swap-dry-run-v13",
+  "publicButtonSwapArmed": false,
+  "preflight": {
+    "ok": true,
+    "blockers": [],
+    "wouldPublish": false,
+    "publicButtonSwapArmed": false,
+    "note": "Preflight only. Merge/V13 must not arm public swap."
+  },
+  "dryRun": {
+    "ok": true,
+    "counts": {
+      "preservedNonCj": 0,
+      "preservedPaid": 0,
+      "removedLegacyCj": 167,
+      "addedStaticCj": 174,
+      "duplicateAdvertiserIdsAfter": 0
+    },
+    "gates": {
+      "nonCjPreserved": true,
+      "paidPreserved": true,
+      "duplicatesZero": true,
+      "disarmed": true
+    },
+    "singlePostSwapCjRenderer": true
+  },
+  "rollback": {
+    "ok": true,
+    "action": "ROLLBACK",
+    "restoredSections": 36,
+    "publicButtonSwapArmed": false,
+    "note": "Rollback restores pre-swap baked/managed state; swap remains DISARMED."
+  },
+  "legacyCounts": {
+    "bakedTotal": 167,
+    "bakedCj": 167,
+    "bakedNonCj": 0,
+    "managedDynamic": 125,
+    "overlapBakedAndManaged": 125,
+    "registryJoined": 175,
+    "registryMainButtonReady": 174
+  },
+  "ok": true,
+  "dryRunDetailCounts": {
+    "preservedNonCj": 0,
+    "preservedPaid": 0,
+    "removedLegacyCj": 167,
+    "addedStaticCj": 174,
+    "duplicateAdvertiserIdsAfter": 0
+  },
+  "note": "Dry-run only. No production catalog rewrite. PUBLIC_SWAP DISARMED."
+}

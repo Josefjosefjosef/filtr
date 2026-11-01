@@ -449,11 +449,13 @@ export function classifyDestinationType(destination, linkName = "", opts = {}) {
   if (/\/(cart|kosik|košík|bag)(\/|$)/i.test(path) || /[?&]cart=/i.test(query) || /\bcart\b/i.test(name)) {
     return DESTINATION_TYPE.CART;
   }
-  // Partner signup pages (plural affiliates / explicit signup) — NOT merchant /affiliate?redirect_url hops.
+  // Partner signup pages — exact path segment "affiliates" / explicit signup.
+  // NOT merchant promo landings that merely embed "-affiliates" in a compound slug
+  // (e.g. cheapvuelos.com/cheapflights-affiliates/ = customer promo, not program signup).
   if (
-    /affiliates(\/|$)/i.test(path) ||
+    /(^|\/)affiliates(\/|$)/i.test(path) ||
     /partner(s)?-?(signup|program|registr)/i.test(blob) ||
-    /\/(affil|partneri|partners)\b/i.test(path) ||
+    /\/(affil|partneri|partners)(\/|$)/i.test(path) ||
     (/\/affiliate(\/|$)/i.test(path) && !/[?&]redirect_url=/i.test(query))
   ) {
     return DESTINATION_TYPE.AFFILIATE_SIGNUP;

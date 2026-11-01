@@ -3424,10 +3424,55 @@ export async function main(argv = process.argv.slice(2)) {
     emailHintsByAdvertiserId: buildDefaultMainButtonEmailHintMap(),
   });
 
+  // V13: materialize static main-button catalog next to registry (never arms swap).
+  let staticCatalogSummary = null;
+  try {
+    const {
+      buildStaticMainButtonCatalog,
+      buildStaticMainButtonPreview,
+    } = await import("./iu-cj-affiliate-phase3z-static-main-catalog-v13.mjs");
+    const catalogJs = fs.readFileSync(path.join(ROOT, "assets", "iu-affiliate-catalog.js"), "utf8");
+    const ordered = parseAffiliateCatalogOrdered(catalogJs);
+    const titles = new Map((ordered?.sections || []).map((s) => [s.sectionId, s.titleCs || s.title]));
+    const staticCatalog = buildStaticMainButtonCatalog(registry, { sectionTitles: titles });
+    const staticPreview = buildStaticMainButtonPreview(staticCatalog);
+    staticCatalogSummary = {
+      buttons: staticCatalog.counts.buttons,
+      sections: staticCatalog.counts.sections,
+      missing: staticCatalog.counts.missingMainButtons,
+      manifestSha256: staticCatalog.manifest.sha256,
+      publicButtonSwapArmed: false,
+    };
+    registry.staticMainCatalogV13 = staticCatalogSummary;
+    // Stash for write below
+    registry.__staticCatalogV13 = staticCatalog;
+    registry.__staticPreviewV13 = staticPreview;
+  } catch (e) {
+    staticCatalogSummary = { error: String(e?.message || e), publicButtonSwapArmed: false };
+  }
+
   const writeRepo = argv.includes("--write-repo") || process.env.IU_CJ_PHASE3Z_WRITE_REPO === "1";
+  const staticCatalog = registry.__staticCatalogV13 || null;
+  const staticPreview = registry.__staticPreviewV13 || null;
+  delete registry.__staticCatalogV13;
+  delete registry.__staticPreviewV13;
+
   if (writeRepo) {
     assertAllowedDataWrite(paths.outRegistry);
     assertAllowedDataWrite(paths.outButtons);
+    if (staticCatalog) {
+      const outStatic = path.join(ROOT, "projects", "data", "iu-affiliate-cj-main-buttons-static-v13.json");
+      const outPreview = path.join(
+        ROOT,
+        "projects",
+        "data",
+        "iu-affiliate-cj-main-buttons-static-preview-v13.json"
+      );
+      assertAllowedDataWrite(outStatic);
+      assertAllowedDataWrite(outPreview);
+      writeJson(outStatic, staticCatalog);
+      writeJson(outPreview, staticPreview);
+    }
   }
   writeJson(paths.outRegistry, registry);
   writeJson(paths.outButtons, buttonCatalog);
@@ -3441,6 +3486,7 @@ export async function main(argv = process.argv.slice(2)) {
       buttonCounts: buttonCatalog.counts,
       publicationSummary: registry.publicationSummary || null,
       mainButtonSummary: registry.mainButtonSummary || null,
+      staticMainCatalogV13: staticCatalogSummary,
       verifyStats,
       outRegistry: paths.outRegistry,
       outButtons: paths.outButtons,

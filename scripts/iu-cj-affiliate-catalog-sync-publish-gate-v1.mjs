@@ -328,6 +328,10 @@ export function buildPublishPlan({
       "projects/data/iu-affiliate-cj-sync-audit-v1.json",
       "projects/data/iu-affiliate-cj-partner-registry-v1.json",
       "projects/data/iu-affiliate-cj-partner-buttons-preview-v1.json",
+      "projects/data/iu-affiliate-cj-main-buttons-static-v13.json",
+      "projects/data/iu-affiliate-cj-main-buttons-static-preview-v13.json",
+      "projects/data/iu-affiliate-cj-legacy-buttons-inventory-v13.json",
+      "projects/data/iu-affiliate-cj-atomic-swap-dry-run-v13.json",
     ],
   };
 }
@@ -380,6 +384,10 @@ export function assertAllowedDataWrite(filePath) {
     // Phase 3Z non-public robot outputs (liveEnabled/publicButtonSwapArmed must stay false)
     "projects/data/iu-affiliate-cj-partner-registry-v1.json",
     "projects/data/iu-affiliate-cj-partner-buttons-preview-v1.json",
+    "projects/data/iu-affiliate-cj-main-buttons-static-v13.json",
+    "projects/data/iu-affiliate-cj-main-buttons-static-preview-v13.json",
+    "projects/data/iu-affiliate-cj-legacy-buttons-inventory-v13.json",
+    "projects/data/iu-affiliate-cj-atomic-swap-dry-run-v13.json",
   ];
   if (!allowed.some((a) => norm.endsWith(a) || norm.includes("/" + a))) {
     throw new Error("FORBIDDEN_SYNC_WRITE:" + norm);
