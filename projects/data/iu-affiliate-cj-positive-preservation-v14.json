@@ -1,0 +1,487 @@
+{
+  "schema": "iu-affiliate-cj-positive-preservation-v14",
+  "publicButtonSwapArmed": false,
+  "ok": true,
+  "inventory": {
+    "manualProtectedInPolicy": 43,
+    "paidReservedInPolicy": 0,
+    "manualCheckedInBaked": 43,
+    "manualPreserved": 22,
+    "fixtures": [
+      "V14_NON_CJ_FIXTURE",
+      "V14_PAID_RESERVED_FIXTURE"
+    ],
+    "adsSlots": 1
+  },
+  "dryRunCounts": {
+    "preservedNonCj": 1,
+    "preservedPaid": 23,
+    "removedLegacyCj": 145,
+    "addedStaticCj": 174,
+    "duplicateAdvertiserIdsAfter": 0,
+    "policyProtectedEntries": 43,
+    "fixtureProtectedEntries": 2
+  },
+  "gates": {
+    "nonCjPreserved": true,
+    "paidPreserved": true,
+    "duplicatesZero": true,
+    "disarmed": true,
+    "positiveNonCjRequired": true,
+    "positivePaidRequired": true
+  },
+  "proofs": [
+    {
+      "id": "disarmed",
+      "ok": true
+    },
+    {
+      "id": "non_cj_fixture_preserved",
+      "ok": true,
+      "before": {
+        "sectionId": "aff-moda",
+        "title": "V14 Non-CJ Fixture Shop",
+        "url": "https://example.infouzel.local/non-cj-partner-fixture",
+        "management": "MANUAL_PROTECTED",
+        "advertiserId": null,
+        "cssClass": "iuRadioChip iuAffiliateChip"
+      },
+      "after": {
+        "sectionId": "aff-moda",
+        "title": "V14 Non-CJ Fixture Shop",
+        "url": "https://example.infouzel.local/non-cj-partner-fixture",
+        "management": "MANUAL_PROTECTED",
+        "advertiserId": null,
+        "cssClass": "iuRadioChip iuAffiliateChip"
+      }
+    },
+    {
+      "id": "non_cj_fixture_is_non_cj",
+      "ok": true
+    },
+    {
+      "id": "paid_fixture_preserved",
+      "ok": true,
+      "before": {
+        "sectionId": "aff-elektro",
+        "title": "V14 Paid Reserved Fixture",
+        "url": "https://www.anrdoezrs.net/click-101883843-99900001",
+        "management": "PAID_RESERVED",
+        "advertiserId": "99900001",
+        "cssClass": "iuRadioChip iuAffiliateChip iuAffiliateChip--paid"
+      },
+      "after": {
+        "sectionId": "aff-elektro",
+        "title": "V14 Paid Reserved Fixture",
+        "url": "https://www.anrdoezrs.net/click-101883843-99900001",
+        "management": "PAID_RESERVED",
+        "advertiserId": "99900001",
+        "cssClass": "iuRadioChip iuAffiliateChip iuAffiliateChip--paid"
+      }
+    },
+    {
+      "id": "manual_protected_handled",
+      "ok": true,
+      "checked": 43,
+      "preserved": 22,
+      "replacedByStatic": 21,
+      "samples": [
+        {
+          "mode": "replaced_by_static",
+          "before": {
+            "sectionId": "aff-ubytovani-hotely",
+            "title": "Booking.com",
+            "url": "https://www.anrdoezrs.net/click-101883843-13323565",
+            "management": null,
+            "advertiserId": null,
+            "cssClass": "iuRadioChip iuAffiliateChip"
+          },
+          "after": {
+            "sectionId": "aff-ubytovani-hotely",
+            "title": "Booking.com",
+            "url": "https://www.tkqlhce.com/click-101883843-13386171-1779903990000",
+            "management": null,
+            "advertiserId": "5096493",
+            "cssClass": "iuRadioChip iuAffiliateChip"
+          }
+        },
+        {
+          "mode": "preserved",
+          "before": {
+            "sectionId": "aff-letenky",
+            "title": "Leo Express",
+            "url": "https://www.jdoqocy.com/click-101883843-15736211",
+            "management": null,
+            "advertiserId": null,
+            "cssClass": "iuRadioChip iuAffiliateChip"
+          },
+          "after": {
+            "sectionId": "aff-letenky",
+            "title": "Leo Express",
+            "url": "https://www.jdoqocy.com/click-101883843-15736211",
+            "management": "MANUAL_PROTECTED",
+            "advertiserId": null,
+            "cssClass": "iuRadioChip iuAffiliateChip"
+          }
+        },
+        {
+          "mode": "preserved",
+          "before": {
+            "sectionId": "aff-letenky-letecka-doprava",
+            "title": "Skytours",
+            "url": "https://www.jdoqocy.com/click-101883843-15733491",
+            "management": null,
+            "advertiserId": null,
+            "cssClass": "iuRadioChip iuAffiliateChip"
+          },
+          "after": {
+            "sectionId": "aff-letenky-letecka-doprava",
+            "title": "Skytours",
+            "url": "https://www.jdoqocy.com/click-101883843-15733491",
+            "management": "MANUAL_PROTECTED",
+            "advertiserId": null,
+            "cssClass": "iuRadioChip iuAffiliateChip"
+          }
+        },
+        {
+          "mode": "preserved",
+          "before": {
+            "sectionId": "aff-cestovni-pojisteni",
+            "title": "AXA Assistance",
+            "url": "https://www.tkqlhce.com/click-101883843-12585182",
+            "management": null,
+            "advertiserId": null,
+            "cssClass": "iuRadioChip iuAffiliateChip"
+          },
+          "after": {
+            "sectionId": "aff-cestovni-pojisteni",
+            "title": "AXA Assistance",
+            "url": "https://www.tkqlhce.com/click-101883843-12585182",
+            "management": "MANUAL_PROTECTED",
+            "advertiserId": null,
+            "cssClass": "iuRadioChip iuAffiliateChip"
+          }
+        },
+        {
+          "mode": "replaced_by_static",
+          "before": {
+            "sectionId": "aff-cestovni-pojisteni",
+            "title": "Klik.cz",
+            "url": "https://www.dpbolvw.net/click-101883843-15024030",
+            "management": null,
+            "advertiserId": null,
+            "cssClass": "iuRadioChip iuAffiliateChip"
+          },
+          "after": {
+            "sectionId": "aff-cestovni-pojisteni",
+            "title": "Klik.cz",
+            "url": "https://www.kqzyfj.com/click-101883843-15024026-1708048643000",
+            "management": null,
+            "advertiserId": "5871720",
+            "cssClass": "iuRadioChip iuAffiliateChip"
+          }
+        },
+        {
+          "mode": "replaced_by_static",
+          "before": {
+            "sectionId": "aff-auto-moto",
+            "title": "Autohotarek.cz",
+            "url": "https://www.dpbolvw.net/click-101883843-15802025",
+            "management": null,
+            "advertiserId": null,
+            "cssClass": "iuRadioChip iuAffiliateChip"
+          },
+          "after": {
+            "sectionId": "aff-auto-moto",
+            "title": "Autohotarek.cz",
+            "url": "https://www.anrdoezrs.net/click-101883843-15862733-1721400970000",
+            "management": null,
+            "advertiserId": "7084105",
+            "cssClass": "iuRadioChip iuAffiliateChip"
+          }
+        },
+        {
+          "mode": "preserved",
+          "before": {
+            "sectionId": "aff-auto-moto",
+            "title": "Ahifi.cz",
+            "url": "https://www.dpbolvw.net/click-101883843-17006948",
+            "management": null,
+            "advertiserId": null,
+            "cssClass": "iuRadioChip iuAffiliateChip"
+          },
+          "after": {
+            "sectionId": "aff-auto-moto",
+            "title": "Ahifi.cz",
+            "url": "https://www.dpbolvw.net/click-101883843-17006948",
+            "management": "MANUAL_PROTECTED",
+            "advertiserId": null,
+            "cssClass": "iuRadioChip iuAffiliateChip"
+          }
+        },
+        {
+          "mode": "preserved",
+          "before": {
+            "sectionId": "aff-pneu-pneuservis",
+            "title": "BestDrive",
+            "url": "https://www.jdoqocy.com/click-101883843-17045434",
+            "management": null,
+            "advertiserId": null,
+            "cssClass": "iuRadioChip iuAffiliateChip"
+          },
+          "after": {
+            "sectionId": "aff-pneu-pneuservis",
+            "title": "BestDrive",
+            "url": "https://www.jdoqocy.com/click-101883843-17045434",
+            "management": "MANUAL_PROTECTED",
+            "advertiserId": null,
+            "cssClass": "iuRadioChip iuAffiliateChip"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ads_slots_untouched",
+      "ok": true,
+      "count": 1
+    },
+    {
+      "id": "counts_preserved_non_cj_positive",
+      "ok": true,
+      "n": 1
+    },
+    {
+      "id": "counts_preserved_paid_positive",
+      "ok": true,
+      "n": 23
+    },
+    {
+      "id": "gates_positive",
+      "ok": true
+    },
+    {
+      "id": "rollback",
+      "ok": true
+    },
+    {
+      "id": "failure_recovery",
+      "ok": true,
+      "failureRecovery": {
+        "ok": true,
+        "action": "ROLLBACK",
+        "publicButtonSwapArmed": false,
+        "restoredFrom": "before",
+        "note": "Simulated publication failure mid-swap; restore pre-swap snapshot; DISARMED"
+      }
+    },
+    {
+      "id": "idempotent",
+      "ok": true
+    }
+  ],
+  "failures": [],
+  "beforeAfterSamples": {
+    "nonCj": {
+      "id": "non_cj_fixture_preserved",
+      "ok": true,
+      "before": {
+        "sectionId": "aff-moda",
+        "title": "V14 Non-CJ Fixture Shop",
+        "url": "https://example.infouzel.local/non-cj-partner-fixture",
+        "management": "MANUAL_PROTECTED",
+        "advertiserId": null,
+        "cssClass": "iuRadioChip iuAffiliateChip"
+      },
+      "after": {
+        "sectionId": "aff-moda",
+        "title": "V14 Non-CJ Fixture Shop",
+        "url": "https://example.infouzel.local/non-cj-partner-fixture",
+        "management": "MANUAL_PROTECTED",
+        "advertiserId": null,
+        "cssClass": "iuRadioChip iuAffiliateChip"
+      }
+    },
+    "paid": {
+      "id": "paid_fixture_preserved",
+      "ok": true,
+      "before": {
+        "sectionId": "aff-elektro",
+        "title": "V14 Paid Reserved Fixture",
+        "url": "https://www.anrdoezrs.net/click-101883843-99900001",
+        "management": "PAID_RESERVED",
+        "advertiserId": "99900001",
+        "cssClass": "iuRadioChip iuAffiliateChip iuAffiliateChip--paid"
+      },
+      "after": {
+        "sectionId": "aff-elektro",
+        "title": "V14 Paid Reserved Fixture",
+        "url": "https://www.anrdoezrs.net/click-101883843-99900001",
+        "management": "PAID_RESERVED",
+        "advertiserId": "99900001",
+        "cssClass": "iuRadioChip iuAffiliateChip iuAffiliateChip--paid"
+      }
+    },
+    "manual": [
+      {
+        "mode": "replaced_by_static",
+        "before": {
+          "sectionId": "aff-ubytovani-hotely",
+          "title": "Booking.com",
+          "url": "https://www.anrdoezrs.net/click-101883843-13323565",
+          "management": null,
+          "advertiserId": null,
+          "cssClass": "iuRadioChip iuAffiliateChip"
+        },
+        "after": {
+          "sectionId": "aff-ubytovani-hotely",
+          "title": "Booking.com",
+          "url": "https://www.tkqlhce.com/click-101883843-13386171-1779903990000",
+          "management": null,
+          "advertiserId": "5096493",
+          "cssClass": "iuRadioChip iuAffiliateChip"
+        }
+      },
+      {
+        "mode": "preserved",
+        "before": {
+          "sectionId": "aff-letenky",
+          "title": "Leo Express",
+          "url": "https://www.jdoqocy.com/click-101883843-15736211",
+          "management": null,
+          "advertiserId": null,
+          "cssClass": "iuRadioChip iuAffiliateChip"
+        },
+        "after": {
+          "sectionId": "aff-letenky",
+          "title": "Leo Express",
+          "url": "https://www.jdoqocy.com/click-101883843-15736211",
+          "management": "MANUAL_PROTECTED",
+          "advertiserId": null,
+          "cssClass": "iuRadioChip iuAffiliateChip"
+        }
+      },
+      {
+        "mode": "preserved",
+        "before": {
+          "sectionId": "aff-letenky-letecka-doprava",
+          "title": "Skytours",
+          "url": "https://www.jdoqocy.com/click-101883843-15733491",
+          "management": null,
+          "advertiserId": null,
+          "cssClass": "iuRadioChip iuAffiliateChip"
+        },
+        "after": {
+          "sectionId": "aff-letenky-letecka-doprava",
+          "title": "Skytours",
+          "url": "https://www.jdoqocy.com/click-101883843-15733491",
+          "management": "MANUAL_PROTECTED",
+          "advertiserId": null,
+          "cssClass": "iuRadioChip iuAffiliateChip"
+        }
+      },
+      {
+        "mode": "preserved",
+        "before": {
+          "sectionId": "aff-cestovni-pojisteni",
+          "title": "AXA Assistance",
+          "url": "https://www.tkqlhce.com/click-101883843-12585182",
+          "management": null,
+          "advertiserId": null,
+          "cssClass": "iuRadioChip iuAffiliateChip"
+        },
+        "after": {
+          "sectionId": "aff-cestovni-pojisteni",
+          "title": "AXA Assistance",
+          "url": "https://www.tkqlhce.com/click-101883843-12585182",
+          "management": "MANUAL_PROTECTED",
+          "advertiserId": null,
+          "cssClass": "iuRadioChip iuAffiliateChip"
+        }
+      },
+      {
+        "mode": "replaced_by_static",
+        "before": {
+          "sectionId": "aff-cestovni-pojisteni",
+          "title": "Klik.cz",
+          "url": "https://www.dpbolvw.net/click-101883843-15024030",
+          "management": null,
+          "advertiserId": null,
+          "cssClass": "iuRadioChip iuAffiliateChip"
+        },
+        "after": {
+          "sectionId": "aff-cestovni-pojisteni",
+          "title": "Klik.cz",
+          "url": "https://www.kqzyfj.com/click-101883843-15024026-1708048643000",
+          "management": null,
+          "advertiserId": "5871720",
+          "cssClass": "iuRadioChip iuAffiliateChip"
+        }
+      },
+      {
+        "mode": "replaced_by_static",
+        "before": {
+          "sectionId": "aff-auto-moto",
+          "title": "Autohotarek.cz",
+          "url": "https://www.dpbolvw.net/click-101883843-15802025",
+          "management": null,
+          "advertiserId": null,
+          "cssClass": "iuRadioChip iuAffiliateChip"
+        },
+        "after": {
+          "sectionId": "aff-auto-moto",
+          "title": "Autohotarek.cz",
+          "url": "https://www.anrdoezrs.net/click-101883843-15862733-1721400970000",
+          "management": null,
+          "advertiserId": "7084105",
+          "cssClass": "iuRadioChip iuAffiliateChip"
+        }
+      },
+      {
+        "mode": "preserved",
+        "before": {
+          "sectionId": "aff-auto-moto",
+          "title": "Ahifi.cz",
+          "url": "https://www.dpbolvw.net/click-101883843-17006948",
+          "management": null,
+          "advertiserId": null,
+          "cssClass": "iuRadioChip iuAffiliateChip"
+        },
+        "after": {
+          "sectionId": "aff-auto-moto",
+          "title": "Ahifi.cz",
+          "url": "https://www.dpbolvw.net/click-101883843-17006948",
+          "management": "MANUAL_PROTECTED",
+          "advertiserId": null,
+          "cssClass": "iuRadioChip iuAffiliateChip"
+        }
+      },
+      {
+        "mode": "preserved",
+        "before": {
+          "sectionId": "aff-pneu-pneuservis",
+          "title": "BestDrive",
+          "url": "https://www.jdoqocy.com/click-101883843-17045434",
+          "management": null,
+          "advertiserId": null,
+          "cssClass": "iuRadioChip iuAffiliateChip"
+        },
+        "after": {
+          "sectionId": "aff-pneu-pneuservis",
+          "title": "BestDrive",
+          "url": "https://www.jdoqocy.com/click-101883843-17045434",
+          "management": "MANUAL_PROTECTED",
+          "advertiserId": null,
+          "cssClass": "iuRadioChip iuAffiliateChip"
+        }
+      }
+    ]
+  },
+  "failureRecovery": {
+    "ok": true,
+    "action": "ROLLBACK",
+    "publicButtonSwapArmed": false,
+    "restoredFrom": "before",
+    "note": "Simulated publication failure mid-swap; restore pre-swap snapshot; DISARMED"
+  },
+  "note": "Positive preservation uses real MANUAL_PROTECTED inventory + explicit fixtures. PUBLIC_SWAP DISARMED."
+}
