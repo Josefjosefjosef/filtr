@@ -37300,10 +37300,10 @@
         }
       ],
       "categoryHysteresisKept": true,
-      "selectedClickUrl": "https://www.tkqlhce.com/click-101883843-17323048-1786578401000",
+      "selectedClickUrl": "https://www.anrdoezrs.net/click-101883843-17329697-1786578401000",
       "selectedDestination": "https://www.cheapvuelos.com/cheapflights-affiliates/",
       "selectedDestinationRaw": "https://www.cheapvuelos.com/cheapflights-affiliates/",
-      "selectedLinkId": "17323048",
+      "selectedLinkId": "17329697",
       "selectedLinkName": "Fly More, Spend Less",
       "selectedLinkType": "Text Link",
       "selectedTargetedCountries": "null",
@@ -37313,8 +37313,8 @@
       "linkCandidateCount": 16,
       "linkEligibleCandidateCount": 16,
       "destinationRole": "OTHER",
-      "destinationType": "AFFILIATE_SIGNUP",
-      "unsuitableMainDestination": true,
+      "destinationType": "CAMPAIGN",
+      "unsuitableMainDestination": false,
       "destinationDecision": "OTHER",
       "languageDecision": "unknown",
       "countryDecision": "null",
@@ -38026,8 +38026,8 @@
       "czBookingOrServiceVerified": "unknown",
       "buttonRecordStatus": "QUARANTINED_WITH_REASON",
       "buttonRecordCreated": true,
-      "publishability": "QUARANTINED",
-      "holdReason": "UNSUITABLE_MAIN_DESTINATION",
+      "publishability": "READY_FOR_REVIEW",
+      "holdReason": null,
       "czEvidence": {
         "cjCooperationJoined": true,
         "affiliateTrackingUrl": true,
@@ -38119,24 +38119,26 @@
       "publicationReady": false,
       "technicallyReady": false,
       "mainButtonReadiness": {
-        "mainButtonReady": false,
-        "status": "UNSUITABLE_CUSTOMER_DESTINATION",
+        "mainButtonReady": true,
+        "status": "MAIN_BUTTON_READY",
         "sectionId": "aff-letenky-letecka-doprava",
-        "blockers": [
-          "destination_type:AFFILIATE_SIGNUP"
-        ],
+        "sectionSource": "assortment_v8_hysteresis",
+        "blockers": [],
         "diagnostics": [
           "MISSING_WELCOME_EMAIL",
           "CONTENT_NOT_VERIFIED",
           "legacy_publication_ready_false_ignored"
         ],
         "sources": [
-          "destinationType:AFFILIATE_SIGNUP"
+          "relationship:joined",
+          "cj_tracking_click",
+          "section:assortment_v8_hysteresis"
         ],
-        "note": "Customer destination unsuitable for ordinary main-button promo."
+        "emailHintsApplied": false,
+        "note": "CJ-FIRST main button eligible; PUBLIC_SWAP remains DISARMED until explicit GO."
       },
-      "mainButtonReady": false,
-      "mainButtonStatus": "UNSUITABLE_CUSTOMER_DESTINATION"
+      "mainButtonReady": true,
+      "mainButtonStatus": "MAIN_BUTTON_READY"
     },
     {
       "partnerId": "cj-5078957",
@@ -186084,36 +186086,14 @@
   "mainButtonSummary": {
     "schema": "iu-cj-affiliate-phase3z-main-button-readiness-v12",
     "joined": 175,
-    "mainButtonReady": 173,
-    "missingMainButtons": 2,
-    "coveragePct": 98.86,
+    "mainButtonReady": 174,
+    "missingMainButtons": 1,
+    "coveragePct": 99.43,
     "byStatus": {
-      "MAIN_BUTTON_READY": 173,
-      "UNSUITABLE_CUSTOMER_DESTINATION": 2
+      "MAIN_BUTTON_READY": 174,
+      "UNSUITABLE_CUSTOMER_DESTINATION": 1
     },
     "remainingBlockers": [
-      {
-        "advertiserId": "7947783",
-        "name": "Cheapvuelos",
-        "status": "UNSUITABLE_CUSTOMER_DESTINATION",
-        "blockers": [
-          "destination_type:AFFILIATE_SIGNUP"
-        ],
-        "holdReason": "UNSUITABLE_MAIN_DESTINATION",
-        "destinationType": "AFFILIATE_SIGNUP",
-        "remediationAttempts": [
-          {
-            "step": "cj_link_search_full_scan",
-            "linkCount": 16,
-            "result": "all_authorized_links_have_unsuitable_customer_destinations"
-          },
-          {
-            "step": "no_fabricated_tracking_url",
-            "result": "skipped_programurl_without_authorized_cj_click"
-          }
-        ],
-        "nextFeasibleFix": "Obtain authorized CJ homepage/service deep-link via Link Search refresh or advertiser; do not invent click URL."
-      },
       {
         "advertiserId": "4686326",
         "name": "Paragon Software Group",
@@ -186125,16 +186105,24 @@
         "destinationType": "CHECKOUT",
         "remediationAttempts": [
           {
-            "step": "cj_link_search_full_scan",
+            "step": "cj_link_search_full_rescan_v13",
             "linkCount": 30,
-            "result": "all_authorized_links_have_unsuitable_customer_destinations"
+            "okCandidateCount": 0,
+            "destinationTypes": [
+              "CHECKOUT"
+            ]
           },
           {
             "step": "no_fabricated_tracking_url",
             "result": "skipped_programurl_without_authorized_cj_click"
+          },
+          {
+            "step": "schedule_auto_retry",
+            "result": "will_recheck_on_each_catalog_sync"
           }
         ],
-        "nextFeasibleFix": "Obtain authorized CJ homepage/service deep-link via Link Search refresh or advertiser; do not invent click URL."
+        "nextFeasibleFix": "Obtain authorized CJ homepage/service deep-link via Link Search refresh or advertiser; do not invent click URL.",
+        "autoRetryOnCatalogSync": true
       }
     ],
     "duplicates": 0,
@@ -186142,5 +186130,64 @@
     "merchantWebCrawlRequiredForMainButton": false,
     "couponProductRefactor": "DEFERRED",
     "note": "MAIN_BUTTON_READY is CJ-FIRST and independent of CONTENT_VERIFIED. PUBLIC_SWAP DISARMED."
+  },
+  "v13BlockerRemediation": {
+    "at": "2026-11-01T11:36:50.665Z",
+    "results": [
+      {
+        "advertiserId": "7947783",
+        "resolved": true,
+        "attempts": [
+          {
+            "step": "cj_link_search_full_rescan_v13",
+            "linkCount": 16,
+            "okCandidateCount": 16,
+            "destinationTypes": [
+              "CAMPAIGN",
+              "UNKNOWN"
+            ]
+          },
+          {
+            "step": "select_authorized_customer_link",
+            "result": "selected",
+            "via": "scan_ok_candidate",
+            "linkId": "17329697",
+            "destinationType": "CAMPAIGN"
+          }
+        ],
+        "nextFeasibleFix": null,
+        "scanSummary": null
+      },
+      {
+        "advertiserId": "4686326",
+        "resolved": false,
+        "attempts": [
+          {
+            "step": "cj_link_search_full_rescan_v13",
+            "linkCount": 30,
+            "okCandidateCount": 0,
+            "destinationTypes": [
+              "CHECKOUT"
+            ]
+          },
+          {
+            "step": "no_fabricated_tracking_url",
+            "result": "skipped_programurl_without_authorized_cj_click"
+          },
+          {
+            "step": "schedule_auto_retry",
+            "result": "will_recheck_on_each_catalog_sync"
+          }
+        ],
+        "nextFeasibleFix": "Obtain authorized CJ homepage/service deep-link via Link Search refresh or advertiser; do not invent click URL.",
+        "scanSummary": {
+          "linkCount": 30,
+          "okCandidateCount": 0,
+          "destinationTypes": [
+            "CHECKOUT"
+          ]
+        }
+      }
+    ]
   }
 }

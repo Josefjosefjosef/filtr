@@ -858,11 +858,16 @@ expect(
   ) === DESTINATION_ROLE.CHECKOUT
 );
 expect(
-  "v9_cheapvuelos_affiliate",
+  "v13_cheapvuelos_promo_landing_not_signup",
   classifyDestinationType(
     "https://www.cheapvuelos.com/cheapflights-affiliates/",
-    "Affiliate"
-  ) === DESTINATION_TYPE.AFFILIATE_SIGNUP
+    "Cheap Flights Worldwide **Promo Code"
+  ) !== DESTINATION_TYPE.AFFILIATE_SIGNUP
+);
+expect(
+  "v13_true_affiliates_path_is_signup",
+  classifyDestinationType("https://merchant.example/affiliates/", "Join program") ===
+    DESTINATION_TYPE.AFFILIATE_SIGNUP
 );
 expect(
   "v9_allegro_redirect_home",
