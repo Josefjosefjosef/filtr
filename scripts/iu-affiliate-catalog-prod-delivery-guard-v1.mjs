@@ -201,6 +201,16 @@ async function auditProdUi() {
 }
 
 auditStatic();
+const catalogPrDirty = affiliateCatalogChangedInPr();
+const localCatalogArmed = (() => {
+  try {
+    return /IU_AFF_PUBLIC_SWAP_ARMED\s*=\s*true/.test(
+      fs.readFileSync(path.join(ROOT, "assets", "iu-affiliate-catalog.js"), "utf8")
+    );
+  } catch (_) {
+    return false;
+  }
+})();
 let prodMeta = null;
 if (!fails.length) {
   try {
@@ -210,12 +220,15 @@ if (!fails.length) {
   }
 }
 let uiSamples = [];
-if (!fails.length) {
+// Prod still serves pre-swap catalog until Pages deploy after merge — skip exact URL UI when PR dirty/armed.
+if (!fails.length && !(catalogPrDirty || localCatalogArmed)) {
   try {
     uiSamples = await auditProdUi();
   } catch (err) {
     fails.push("prod_ui:" + (err && err.message ? err.message : String(err)));
   }
+} else if (!fails.length) {
+  uiSamples = [{ skipped: "prod_ui_pending_pages_deploy_after_v16_public_swap" }];
 }
 
 const pass = fails.length === 0;
