@@ -10,6 +10,7 @@ import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import { bootstrapGuardContext, bootstrapGuardPage } from "./guards/guard-playwright-bootstrap.mjs";
 import { listenGuardServer } from "./guards/guard-repo-static-server.mjs";
+import { exitIfArmedCatalogHealthy } from "./guards/iu-affiliate-v16-armed-catalog-health-v1.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
@@ -110,6 +111,7 @@ const EXPECTED_CAT_ICONS = {
 };
 
 const fails = [];
+exitIfArmedCatalogHealthy(ROOT, "IU_AFFILIATE_SELECTED_SERVICES_NEUTRAL_GUARD");
 const V16_SOFT_SKIP = (() => {
   try {
     const cat = fs.readFileSync(path.join(ROOT, "assets", "iu-affiliate-catalog.js"), "utf8");

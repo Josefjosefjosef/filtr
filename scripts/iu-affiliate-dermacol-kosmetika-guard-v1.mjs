@@ -12,6 +12,7 @@ import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import { bootstrapGuardContext, bootstrapGuardPage } from "./guards/guard-playwright-bootstrap.mjs";
 import { listenGuardServer } from "./guards/guard-repo-static-server.mjs";
+import { exitIfArmedCatalogHealthy } from "./guards/iu-affiliate-v16-armed-catalog-health-v1.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
@@ -32,19 +33,8 @@ const REPORT = path.join(
 let PORT;
 
 const fails = [];
+exitIfArmedCatalogHealthy(ROOT, "IU_AFFILIATE_DERMACOL_KOSMETIKA");
 
-const V16_SOFT_SKIP = (() => {
-  try {
-    const cat = fs.readFileSync(path.join(ROOT, "assets", "iu-affiliate-catalog.js"), "utf8");
-    return /IU_AFF_PUBLIC_SWAP_ARMED\s*=\s*true/.test(cat);
-  } catch (_) {
-    return false;
-  }
-})();
-if (V16_SOFT_SKIP) {
-  console.log(JSON.stringify({ V16_PUBLIC_SWAP_GUARD: "PASS", skipped: "historical_slot_freeze_superseded_by_static_cj_catalog" }));
-  process.exit(0);
-}
 
 function ok(id, cond, detail) {
   if (!cond) fails.push(id + (detail ? ":" + detail : ""));
