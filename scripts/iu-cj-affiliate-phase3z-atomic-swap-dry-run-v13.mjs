@@ -140,7 +140,9 @@ export function isProtectedCatalogItem(it, indexes) {
 }
 
 /**
- * Simulate post-swap section items: static CJ buttons + preserved non-CJ / paid.
+ * V15 rule: historical CJ tracking URLs are NEVER preserved — not even MANUAL_PROTECTED.
+ * Only true non-CJ affiliate chips survive from the baked catalog.
+ * Paid ad slots (iu-ads-public) are outside this catalog swap and must stay untouched separately.
  */
 export function simulateAtomicSwap({
   catalogJsText,
@@ -154,6 +156,7 @@ export function simulateAtomicSwap({
     throw new Error("ATOMIC_SWAP_DRY_RUN_REFUSES_ARMED_STATE");
   }
   const ordered = parseAffiliateCatalogOrdered(catalogJsText || "");
+  // slotPolicy retained for inventory/classification; MANUAL_PROTECTED no longer blocks CJ purge.
   const protectedIdx = buildProtectedSlotIndexes(slotPolicy, extraProtectedItems);
 
   const staticBySection = new Map();
@@ -164,10 +167,12 @@ export function simulateAtomicSwap({
   const before = [];
   const after = [];
   let preservedNonCj = 0;
-  let preservedPaid = 0;
+  let preservedPaid = 0; // always 0 for catalog chips; ads are external
   let removedLegacyCj = 0;
+  let removedManualProtectedCj = 0;
   let addedStaticCj = 0;
   const preservedFingerprints = [];
+  const removedLegacyCjFingerprints = [];
 
   const sectionMap = new Map();
   for (const sec of ordered?.sections || []) {
@@ -185,23 +190,20 @@ export function simulateAtomicSwap({
     const beforeItems = [];
     const afterItems = [];
     const staticButtons = staticBySection.get(sec.sectionId) || [];
-    const staticTitleKeys = new Set(staticButtons.map((b) => normTitleKey(b.title)));
     for (const it of sec.items || []) {
       const url = String(it.url || "");
       const cj = isCjTrackingUrl(url);
       const advId = it.advertiserId != null ? String(it.advertiserId) : null;
       const itemForMatch = { ...it, sectionId: sec.sectionId, url, advertiserId: advId };
-      const protectedSlot = isProtectedCatalogItem(itemForMatch, protectedIdx);
-      const titleKey = normTitleKey(it.title);
-      const replacedByStatic = cj && protectedSlot && staticTitleKeys.has(titleKey);
+      const hadManualFlag = isProtectedCatalogItem(itemForMatch, protectedIdx);
       beforeItems.push({
         title: it.title,
         url,
         advertiserId: advId,
         management: it.management || null,
         cj,
-        protectedSlot,
-        replacedByStatic: Boolean(replacedByStatic),
+        protectedSlot: hadManualFlag,
+        decision: cj ? "LEGACY_CJ_REMOVE" : "NON_CJ_PRESERVE",
         cssClass: it.cssClass || "iuRadioChip iuAffiliateChip",
       });
       if (!cj) {
@@ -222,28 +224,17 @@ export function simulateAtomicSwap({
           title: it.title,
           url,
         });
-      } else if (protectedSlot && !replacedByStatic) {
-        // Protected CJ chip with no static replacement (not MAIN_BUTTON_READY / not in catalog).
-        afterItems.push({
-          title: it.title,
-          url,
-          advertiserId: advId,
-          management: it.management || "MANUAL_PROTECTED",
-          source: "preserved_paid_or_manual",
-          cssClass: it.cssClass || "iuRadioChip iuAffiliateChip",
-          target: it.target || "_blank",
-          rel: it.rel || "sponsored noopener",
-        });
-        preservedPaid += 1;
-        preservedFingerprints.push({
-          kind: "paid_or_manual",
+      } else {
+        // V15: ALL historical CJ chips removed — MANUAL_PROTECTED is not an exception.
+        removedLegacyCj += 1;
+        if (hadManualFlag) removedManualProtectedCj += 1;
+        removedLegacyCjFingerprints.push({
           sectionId: sec.sectionId,
           title: it.title,
           url,
+          management: it.management || (hadManualFlag ? "MANUAL_PROTECTED" : null),
+          decision: "LEGACY_CJ_REMOVE",
         });
-      } else {
-        // Unprotected legacy CJ, or protected CJ replaced by static catalog entry.
-        removedLegacyCj += 1;
       }
     }
     for (const b of staticButtons) {
@@ -281,13 +272,18 @@ export function simulateAtomicSwap({
     addedStaticCj += (s.buttons || []).length;
   }
 
-  // Duplicate advertiser check in after state (CJ static + preserved with CID)
+  // Duplicate advertiser check among NEW static CJ buttons only
   const seen = new Set();
   let duplicates = 0;
+  let legacyCjAfter = 0;
   for (const sec of after) {
     for (const it of sec.items || []) {
+      if (it.source === "preserved_non_cj") continue;
+      if (it.source !== "static_catalog_v13" && isCjTrackingUrl(it.url || "")) {
+        legacyCjAfter += 1;
+      }
       if (!it.advertiserId) continue;
-      if (it.source === "preserved_non_cj" || it.source === "preserved_paid_or_manual") continue;
+      if (it.source !== "static_catalog_v13") continue;
       const id = String(it.advertiserId);
       if (seen.has(id)) duplicates += 1;
       else seen.add(id);
@@ -301,13 +297,13 @@ export function simulateAtomicSwap({
     Object.values(extraItemsBySection || {})
       .flat()
       .some((it) => it && !isCjTrackingUrl(it.url || ""));
-  const expectPaid = policyProtectedCount > 0 || fixtureProtectedCount > 0;
 
   const snapshot = { before, after };
   const rollback = { restoredFrom: "before", ok: true, publicButtonSwapArmed: false };
 
   const nonCjGate = expectNonCj ? preservedNonCj > 0 : preservedNonCj >= 0;
-  const paidGate = expectPaid ? preservedPaid > 0 : true;
+  const legacyZeroGate = legacyCjAfter === 0;
+  const manualCjPurgedGate = true; // MANUAL_PROTECTED never preserves CJ after V15
 
   return {
     schema: PHASE3Z_ATOMIC_SWAP_SCHEMA,
@@ -319,20 +315,26 @@ export function simulateAtomicSwap({
       preservedNonCj,
       preservedPaid,
       removedLegacyCj,
+      removedManualProtectedCj,
       addedStaticCj,
+      legacyCjAfterSwap: legacyCjAfter,
       duplicateAdvertiserIdsAfter: duplicates,
       policyProtectedEntries: policyProtectedCount,
       fixtureProtectedEntries: fixtureProtectedCount,
     },
     gates: {
       nonCjPreserved: nonCjGate,
-      paidPreserved: paidGate,
+      paidPreserved: true, // ads slots are external; catalog never keeps historical CJ as "paid"
       duplicatesZero: duplicates === 0,
+      legacyCjAfterZero: legacyZeroGate,
+      manualProtectedCjPurged: manualCjPurgedGate,
       disarmed: true,
       positiveNonCjRequired: expectNonCj,
-      positivePaidRequired: expectPaid,
+      positivePaidRequired: false,
+      newButtonsFromCjCatalogOnly: true,
     },
     preservedFingerprints,
+    removedLegacyCjFingerprints,
     protectedIndexSummary: {
       byAdvertiserId: protectedIdx.byAdvertiserId.size,
       byUrl: protectedIdx.byUrl.size,
@@ -340,8 +342,9 @@ export function simulateAtomicSwap({
     },
     snapshot,
     rollback,
-    ok: duplicates === 0 && nonCjGate && paidGate,
-    note: "Dry-run only. No production catalog rewrite. PUBLIC_SWAP DISARMED.",
+    ok: duplicates === 0 && nonCjGate && legacyZeroGate,
+    note:
+      "V15 dry-run: ALL historical CJ chips removed (incl. MANUAL_PROTECTED). Only non-CJ preserved. PUBLIC_SWAP DISARMED.",
   };
 }
 
@@ -400,10 +403,13 @@ function main() {
       singlePostSwapCjRenderer: dry.singlePostSwapCjRenderer,
       protectedIndexSummary: dry.protectedIndexSummary,
       preservedSample: (dry.preservedFingerprints || []).slice(0, 12),
+      removedManualProtectedSample: (dry.removedLegacyCjFingerprints || [])
+        .filter((x) => x.management === "MANUAL_PROTECTED" || x.decision === "LEGACY_CJ_REMOVE")
+        .slice(0, 30),
     },
     rollback: rb,
     legacyCounts: legacy.counts,
-    ok: preflight.ok && dry.ok && rb.ok === true,
+    ok: preflight.ok && dry.ok && rb.ok === true && dry.counts.legacyCjAfterSwap === 0,
   };
 
   const out = path.join(ROOT, "projects", "data", "iu-affiliate-cj-atomic-swap-dry-run-v13.json");

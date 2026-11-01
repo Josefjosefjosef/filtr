@@ -335,6 +335,8 @@ export function buildPublishPlan({
       "projects/data/iu-affiliate-cj-positive-preservation-v14.json",
       "projects/data/iu-affiliate-cj-dom-inventory-v14.json",
       "projects/data/iu-affiliate-cj-cleanup-inventory-v14.json",
+      "projects/data/iu-affiliate-cj-legacy-classify-v15.json",
+      "projects/data/iu-affiliate-cj-atomic-swap-dry-run-v15.json",
     ],
   };
 }
@@ -394,6 +396,8 @@ export function assertAllowedDataWrite(filePath) {
     "projects/data/iu-affiliate-cj-positive-preservation-v14.json",
     "projects/data/iu-affiliate-cj-dom-inventory-v14.json",
     "projects/data/iu-affiliate-cj-cleanup-inventory-v14.json",
+    "projects/data/iu-affiliate-cj-legacy-classify-v15.json",
+    "projects/data/iu-affiliate-cj-atomic-swap-dry-run-v15.json",
   ];
   if (!allowed.some((a) => norm.endsWith(a) || norm.includes("/" + a))) {
     throw new Error("FORBIDDEN_SYNC_WRITE:" + norm);

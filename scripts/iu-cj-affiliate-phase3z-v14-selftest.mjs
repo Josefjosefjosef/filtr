@@ -72,8 +72,9 @@ const dry = simulateAtomicSwap({
   publicButtonSwapArmed: false,
 });
 expect("dry_ok", dry.ok === true, dry.counts);
-expect("dry_removed_legacy", dry.counts.removedLegacyCj > 0, dry.counts);
-expect("dry_paid_positive_from_policy", dry.counts.preservedPaid > 0, dry.counts);
+expect("dry_removed_legacy", dry.counts.removedLegacyCj === 167, dry.counts);
+expect("dry_legacy_after_zero", dry.counts.legacyCjAfterSwap === 0, dry.counts);
+expect("dry_no_manual_cj_exception", dry.counts.preservedPaid === 0, dry.counts);
 expect("dry_gates_paid", dry.gates.paidPreserved === true, dry.gates);
 expect("dry_dups_0", dry.counts.duplicateAdvertiserIdsAfter === 0);
 const rb = simulateRollback(dry);
@@ -82,7 +83,8 @@ expect("rollback_ok", rb.ok === true && rb.publicButtonSwapArmed === false);
 const pos = runPositivePreservation({ catalogJsText: catalogJs, staticCatalog, slotPolicy });
 expect("positive_preservation_ok", pos.ok === true, pos.failures);
 expect("positive_non_cj", pos.dryRunCounts.preservedNonCj > 0, pos.dryRunCounts);
-expect("positive_paid", pos.dryRunCounts.preservedPaid > 0, pos.dryRunCounts);
+expect("positive_legacy_cj_zero", pos.dryRunCounts.legacyCjAfterSwap === 0, pos.dryRunCounts);
+expect("positive_manual_cj_purged", pos.inventory.manualProtectedCjRemoved === 43, pos.inventory);
 
 const inv = buildDomInventory(staticCatalog);
 expect("dom_ok", inv.ok === true, inv.failures);

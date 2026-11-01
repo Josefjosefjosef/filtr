@@ -12,9 +12,11 @@
     "ok": true,
     "counts": {
       "preservedNonCj": 0,
-      "preservedPaid": 22,
-      "removedLegacyCj": 145,
+      "preservedPaid": 0,
+      "removedLegacyCj": 167,
+      "removedManualProtectedCj": 43,
       "addedStaticCj": 174,
+      "legacyCjAfterSwap": 0,
       "duplicateAdvertiserIdsAfter": 0,
       "policyProtectedEntries": 43,
       "fixtureProtectedEntries": 0
@@ -23,9 +25,12 @@
       "nonCjPreserved": true,
       "paidPreserved": true,
       "duplicatesZero": true,
+      "legacyCjAfterZero": true,
+      "manualProtectedCjPurged": true,
       "disarmed": true,
       "positiveNonCjRequired": false,
-      "positivePaidRequired": true
+      "positivePaidRequired": false,
+      "newButtonsFromCjCatalogOnly": true
     },
     "singlePostSwapCjRenderer": true,
     "protectedIndexSummary": {
@@ -33,78 +38,217 @@
       "byUrl": 43,
       "bySectionTitle": 43
     },
-    "preservedSample": [
+    "preservedSample": [],
+    "removedManualProtectedSample": [
       {
-        "kind": "paid_or_manual",
+        "sectionId": "aff-cestovni-kancelare",
+        "title": "Cedok.cz",
+        "url": "https://www.anrdoezrs.net/click-101883843-15686662",
+        "management": null,
+        "decision": "LEGACY_CJ_REMOVE"
+      },
+      {
+        "sectionId": "aff-cestovni-kancelare",
+        "title": "Blue-style.cz",
+        "url": "https://www.dpbolvw.net/click-101883843-14358779",
+        "management": null,
+        "decision": "LEGACY_CJ_REMOVE"
+      },
+      {
+        "sectionId": "aff-cestovni-kancelare",
+        "title": "Eximtours.cz",
+        "url": "https://www.dpbolvw.net/click-101883843-15043859",
+        "management": null,
+        "decision": "LEGACY_CJ_REMOVE"
+      },
+      {
+        "sectionId": "aff-cestovni-kancelare",
+        "title": "Tui.cz",
+        "url": "https://www.kqzyfj.com/click-101883843-15704921",
+        "management": null,
+        "decision": "LEGACY_CJ_REMOVE"
+      },
+      {
+        "sectionId": "aff-cestovni-kancelare",
+        "title": "Cestovnakancelariadaka.sk",
+        "url": "https://www.tkqlhce.com/click-101883843-13148950",
+        "management": null,
+        "decision": "LEGACY_CJ_REMOVE"
+      },
+      {
+        "sectionId": "aff-cestovni-kancelare",
+        "title": "Ergo-cestovni.cz",
+        "url": "https://www.jdoqocy.com/click-101883843-17269644",
+        "management": null,
+        "decision": "LEGACY_CJ_REMOVE"
+      },
+      {
+        "sectionId": "aff-ubytovani-hotely",
+        "title": "Booking.com",
+        "url": "https://www.anrdoezrs.net/click-101883843-13323565",
+        "management": "MANUAL_PROTECTED",
+        "decision": "LEGACY_CJ_REMOVE"
+      },
+      {
+        "sectionId": "aff-ubytovani-hotely",
+        "title": "Spa.cz",
+        "url": "https://www.kqzyfj.com/click-101883843-14446400",
+        "management": null,
+        "decision": "LEGACY_CJ_REMOVE"
+      },
+      {
         "sectionId": "aff-letenky",
         "title": "Leo Express",
-        "url": "https://www.jdoqocy.com/click-101883843-15736211"
+        "url": "https://www.jdoqocy.com/click-101883843-15736211",
+        "management": "MANUAL_PROTECTED",
+        "decision": "LEGACY_CJ_REMOVE"
       },
       {
-        "kind": "paid_or_manual",
         "sectionId": "aff-letenky-letecka-doprava",
         "title": "Skytours",
-        "url": "https://www.jdoqocy.com/click-101883843-15733491"
+        "url": "https://www.jdoqocy.com/click-101883843-15733491",
+        "management": "MANUAL_PROTECTED",
+        "decision": "LEGACY_CJ_REMOVE"
       },
       {
-        "kind": "paid_or_manual",
+        "sectionId": "aff-letenky-letecka-doprava",
+        "title": "Arangrant",
+        "url": "https://www.kqzyfj.com/click-101883843-17039663",
+        "management": null,
+        "decision": "LEGACY_CJ_REMOVE"
+      },
+      {
+        "sectionId": "aff-letenky-letecka-doprava",
+        "title": "Cheapvuelos",
+        "url": "https://www.jdoqocy.com/click-101883843-17322005",
+        "management": null,
+        "decision": "LEGACY_CJ_REMOVE"
+      },
+      {
         "sectionId": "aff-cestovni-pojisteni",
         "title": "AXA Assistance",
-        "url": "https://www.tkqlhce.com/click-101883843-12585182"
+        "url": "https://www.tkqlhce.com/click-101883843-12585182",
+        "management": "MANUAL_PROTECTED",
+        "decision": "LEGACY_CJ_REMOVE"
       },
       {
-        "kind": "paid_or_manual",
+        "sectionId": "aff-cestovni-pojisteni",
+        "title": "Klik.cz",
+        "url": "https://www.dpbolvw.net/click-101883843-15024030",
+        "management": "MANUAL_PROTECTED",
+        "decision": "LEGACY_CJ_REMOVE"
+      },
+      {
+        "sectionId": "aff-auto-moto",
+        "title": "Autohotarek.cz",
+        "url": "https://www.dpbolvw.net/click-101883843-15802025",
+        "management": "MANUAL_PROTECTED",
+        "decision": "LEGACY_CJ_REMOVE"
+      },
+      {
         "sectionId": "aff-auto-moto",
         "title": "Ahifi.cz",
-        "url": "https://www.dpbolvw.net/click-101883843-17006948"
+        "url": "https://www.dpbolvw.net/click-101883843-17006948",
+        "management": "MANUAL_PROTECTED",
+        "decision": "LEGACY_CJ_REMOVE"
       },
       {
-        "kind": "paid_or_manual",
         "sectionId": "aff-pneu-pneuservis",
         "title": "BestDrive",
-        "url": "https://www.jdoqocy.com/click-101883843-17045434"
+        "url": "https://www.jdoqocy.com/click-101883843-17045434",
+        "management": "MANUAL_PROTECTED",
+        "decision": "LEGACY_CJ_REMOVE"
       },
       {
-        "kind": "paid_or_manual",
         "sectionId": "aff-pojisteni",
         "title": "Klik.cz",
-        "url": "https://www.dpbolvw.net/click-101883843-15024026"
+        "url": "https://www.dpbolvw.net/click-101883843-15024026",
+        "management": "MANUAL_PROTECTED",
+        "decision": "LEGACY_CJ_REMOVE"
       },
       {
-        "kind": "paid_or_manual",
+        "sectionId": "aff-pojisteni",
+        "title": "Kalkulator.cz",
+        "url": "https://www.kqzyfj.com/click-101883843-15616442",
+        "management": "MANUAL_PROTECTED",
+        "decision": "LEGACY_CJ_REMOVE"
+      },
+      {
+        "sectionId": "aff-pojisteni",
+        "title": "GeneraliCeska.cz",
+        "url": "https://www.jdoqocy.com/click-101883843-13930623",
+        "management": null,
+        "decision": "LEGACY_CJ_REMOVE"
+      },
+      {
+        "sectionId": "aff-pojisteni",
+        "title": "Direct.cz",
+        "url": "https://www.kqzyfj.com/click-101883843-14550106",
+        "management": null,
+        "decision": "LEGACY_CJ_REMOVE"
+      },
+      {
+        "sectionId": "aff-lekarny",
+        "title": "Lékárna.cz",
+        "url": "https://www.kqzyfj.com/click-101883843-15734937",
+        "management": "MANUAL_PROTECTED",
+        "decision": "LEGACY_CJ_REMOVE"
+      },
+      {
         "sectionId": "aff-lekarny",
         "title": "Lékárna Lemon",
-        "url": "https://www.jdoqocy.com/click-101883843-14563148"
+        "url": "https://www.jdoqocy.com/click-101883843-14563148",
+        "management": "MANUAL_PROTECTED",
+        "decision": "LEGACY_CJ_REMOVE"
       },
       {
-        "kind": "paid_or_manual",
+        "sectionId": "aff-lekarny",
+        "title": "GSKlub.cz",
+        "url": "https://www.dpbolvw.net/click-101883843-13452077",
+        "management": null,
+        "decision": "LEGACY_CJ_REMOVE"
+      },
+      {
+        "sectionId": "aff-lekarny",
+        "title": "DRMAX.CZ",
+        "url": "https://www.jdoqocy.com/click-101883843-12838531",
+        "management": null,
+        "decision": "LEGACY_CJ_REMOVE"
+      },
+      {
         "sectionId": "aff-zdravi-doplnky",
         "title": "Klub zdraví",
-        "url": "https://www.dpbolvw.net/click-101883843-13884010"
+        "url": "https://www.dpbolvw.net/click-101883843-13884010",
+        "management": "MANUAL_PROTECTED",
+        "decision": "LEGACY_CJ_REMOVE"
       },
       {
-        "kind": "paid_or_manual",
         "sectionId": "aff-zdravi-doplnky",
         "title": "BodyWorld",
-        "url": "https://www.tkqlhce.com/click-101883843-15735791"
+        "url": "https://www.tkqlhce.com/click-101883843-15735791",
+        "management": "MANUAL_PROTECTED",
+        "decision": "LEGACY_CJ_REMOVE"
       },
       {
-        "kind": "paid_or_manual",
+        "sectionId": "aff-zdravi-doplnky",
+        "title": "Unizdrav",
+        "url": "https://www.kqzyfj.com/click-101883843-15735719",
+        "management": "MANUAL_PROTECTED",
+        "decision": "LEGACY_CJ_REMOVE"
+      },
+      {
         "sectionId": "aff-zdravi-doplnky",
         "title": "MentisLab",
-        "url": "https://www.tkqlhce.com/click-101883843-13341068"
+        "url": "https://www.tkqlhce.com/click-101883843-13341068",
+        "management": "MANUAL_PROTECTED",
+        "decision": "LEGACY_CJ_REMOVE"
       },
       {
-        "kind": "paid_or_manual",
         "sectionId": "aff-zdravi-doplnky",
-        "title": "BrainMarket",
-        "url": "https://www.anrdoezrs.net/click-101883843-17053829"
-      },
-      {
-        "kind": "paid_or_manual",
-        "sectionId": "aff-kosmetika",
-        "title": "Yves Rocher",
-        "url": "https://www.dpbolvw.net/click-101883843-15734904"
+        "title": "NaZuby.cz",
+        "url": "https://www.anrdoezrs.net/click-101883843-11883390",
+        "management": "MANUAL_PROTECTED",
+        "decision": "LEGACY_CJ_REMOVE"
       }
     ]
   },
@@ -127,12 +271,14 @@
   "ok": true,
   "dryRunDetailCounts": {
     "preservedNonCj": 0,
-    "preservedPaid": 22,
-    "removedLegacyCj": 145,
+    "preservedPaid": 0,
+    "removedLegacyCj": 167,
+    "removedManualProtectedCj": 43,
     "addedStaticCj": 174,
+    "legacyCjAfterSwap": 0,
     "duplicateAdvertiserIdsAfter": 0,
     "policyProtectedEntries": 43,
     "fixtureProtectedEntries": 0
   },
-  "note": "Dry-run only. No production catalog rewrite. PUBLIC_SWAP DISARMED."
+  "note": "V15 dry-run: ALL historical CJ chips removed (incl. MANUAL_PROTECTED). Only non-CJ preserved. PUBLIC_SWAP DISARMED."
 }
