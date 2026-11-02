@@ -30,23 +30,29 @@ const KEYWORD_GROUPS = Object.freeze([
   { group: "sport", sectionId: "aff-sport-outdoor", re: /\b(sport|outdoor|fitness|turistik)\b/i },
   { group: "sport_apparel", sectionId: "aff-sportovni-obleceni", re: /\b(sportovn[íi]\s*obleč|sportswear)\b/i },
   { group: "deti", sectionId: "aff-deti-hracky", re: /\b(dět|deti|hračka|hracka|toy|kids|child)\b/i },
-  { group: "jidlo", sectionId: "aff-jidlo", re: /\b(jídlo|jidlo|potravin|food|gourmet|supermarket)\b/i },
+  // V22: bare "food" matched Weleda "Skin Food" → jidlo FP (Vivantis). Require grocery/food-retail context.
+  { group: "jidlo", sectionId: "aff-jidlo", re: /\b(jídlo|jidlo|potravin(?:y)?|supermarket|grocer(?:y|ies)?|food\s*(?:shop|store|market|delivery)|gourmet\s*food|food\s*&\s*drink)\b/i },
   { group: "zdravi", sectionId: "aff-zdravi-doplnky", re: /\b(zdrav[íi]|doplněk|supplement|vitamin)\b/i },
   { group: "lekarny", sectionId: "aff-lekarny", re: /\b(l[eé]k[aá]rn\w*|pharmacy|pharma(?:cy|ceutical)?s?)\b/i },
   { group: "dum", sectionId: "aff-dum-zahrada", re: /\b(dům|dum|zahrad|garden|home\s*&\s*garden)\b/i },
   { group: "nabytek", sectionId: "aff-nabytek", re: /\b(nábytek|nabytek|furniture|bydlen)\b/i },
   { group: "kuchyn", sectionId: "aff-kuchyn", re: /\b(kuchyn|kitchen|cookware)\b/i },
   { group: "auto", sectionId: "aff-auto-moto", re: /\b(auto|moto|automotive|pneu|car\s*part)\b/i },
-  { group: "cestovani", sectionId: "aff-cestovni-kancelare", re: /\b(cestovn|travel|vacation|tour)\b/i },
-  { group: "ubytovani", sectionId: "aff-ubytovani-hotely", re: /\b(hotel|ubytov|booking|lodging|accommodation)\b/i },
+  // V22: bare cestovn/travel/vacation/tour mapped luggage + Booking travellers → travel agency FP.
+  // Require agency / package-tour context only.
+  { group: "cestovani", sectionId: "aff-cestovni-kancelare", re: /\b(cestovn[íi]\s*kancel|travel\s*agenc|tour\s*operator|zájezd|zajezd|pobytov(?:é|e)\s*(?:a\s*)?poznávac|all[- ]?inclusive\s*(?:dovolen|vacation|holiday))\b/i },
+  { group: "ubytovani", sectionId: "aff-ubytovani-hotely", re: /\b(hotel|ubytov|booking(?:\.com)?|lodging|accommodation|places?\s*to\s*stay|vacation\s*homes?)\b/i },
   { group: "letenky", sectionId: "aff-letenky-letecka-doprava", re: /\b(letenk|flight|airline|air\s*travel)\b/i },
   { group: "pojisteni", sectionId: "aff-pojisteni", re: /\b(pojišt|pojist|insurance)\b/i },
-  { group: "finance", sectionId: "aff-finance", re: /\b(financ|bank|invest|půjč|loan)\b/i },
+  // V22: verb "we invest" matched finance (Kings Camo). Require financial-product context.
+  { group: "finance", sectionId: "aff-finance", re: /\b(financ(?:e|ní|ni)|bankov|investic|investment\s*(?:fund|bank|product)|půjč|hypoték|loan\s*(?:offer|product|rate))\b/i },
   { group: "energie", sectionId: "aff-energie-uspor", re: /\b(energi|elektřin|plyn|utility)\b/i },
   // Books only — music/games must NOT inflate aff-knihy (V18 root-cause: Kytary/toys/Supraphon false primary).
   { group: "knihy", sectionId: "aff-knihy", re: /\b(knih|book|ebook|audioknih)\b/i },
-  // Digital music / media storefronts → streaming tile when taxonomy has no dedicated music section.
-  { group: "hudba", sectionId: "aff-tv-streamovani", re: /\b(hudba|music|hudebn|supraphon|vinyl|stream(?:ing)?\s*music)\b/i },
+  // Streaming music services only — bare "music/hudba" removed (V22: Kytary instruments ≠ streaming).
+  { group: "hudba", sectionId: "aff-tv-streamovani", re: /\b(supraphon|vinyl\s*stream|stream(?:ing)?\s*music|music\s*(?:stream|service|platform)|spotify|apple\s*music)\b/i },
+  // Musical instruments / gear → elektro (physical goods), not streaming.
+  { group: "nastroje", sectionId: "aff-elektro", re: /\b(kytar|guitar|hudebn[íi]\s*nástroj|music\s*instrument|kytary)\b/i },
   // Games/toys → children tile (not books).
   { group: "hry", sectionId: "aff-deti-hracky", re: /\b(hračka|hracka|hry|games|toys?)\b/i },
   { group: "sperky", sectionId: "aff-sperky-hodinky", re: /\b(šperk|sperk|jewelry|hodink|watch)\b/i },
@@ -54,6 +60,9 @@ const KEYWORD_GROUPS = Object.freeze([
   { group: "kvetiny", sectionId: "aff-kvetiny-darky", re: /\b(květin|kvetin|flower|dárek|darek|gift)\b/i },
   // V20: costume/cosplay/Halloween collectibles → gifts tile (Abracadabra root-cause).
   { group: "kostymy", sectionId: "aff-kvetiny-darky", re: /\b(costume|cosplay|halloween|abracadabra|collectibles?\s*gift)\b/i },
+  // V22: luggage / leather goods are fashion accessories, NOT travel agencies (Kabea).
+  // Note: no trailing \b on Czech stems — JS \b is ASCII-only and breaks on kabelky/zavazadla.
+  { group: "zavazadla", sectionId: "aff-moda", re: /(?:^|[^A-Za-z0-9_])(?:cestovn[íi]\s*(?:tašk\w*|zavazadl\w*|kufr\w*)|luggage|suitcase|kožen\w*\s*galanter\w*|kabelk\w*|peněženk\w*|batoh\w*)/i },
   { group: "dilna", sectionId: "aff-dilna-naradi", re: /\b(díln|dilna|nářad|naradi|tool)\b/i },
   // Interior doors / finishes are home, not workshop tools (V18: Erkado).
   { group: "dvere", sectionId: "aff-dum-zahrada", re: /\b(dveř|dver|erkado|zárub|zarubn|interiérov)\b/i },
@@ -160,7 +169,21 @@ export function buildAssortmentProfile({
     if (hit) productishHits += 1;
   }
 
-  const ranked = [...bySection.values()].sort((a, b) => b.weight - a.weight || a.sectionId.localeCompare(b.sectionId));
+  // V22: when lodging + travel-agency scores tie, prefer lodging (Booking.com root-cause).
+  const SECTION_TIE_PREF = {
+    "aff-ubytovani-hotely": 3,
+    "aff-letenky-letecka-doprava": 2,
+    "aff-cestovni-kancelare": 1,
+    "aff-sport-outdoor": 3,
+    "aff-sportovni-obleceni": 2,
+    "aff-moda": 1,
+  };
+  const ranked = [...bySection.values()].sort(
+    (a, b) =>
+      b.weight - a.weight ||
+      (SECTION_TIE_PREF[b.sectionId] || 0) - (SECTION_TIE_PREF[a.sectionId] || 0) ||
+      a.sectionId.localeCompare(b.sectionId)
+  );
   // Require stronger weight when signal is only from capped link inventory.
   const significant = ranked.filter((r) => {
     const sourcesList = r.sources || [];
