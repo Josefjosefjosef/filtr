@@ -456,28 +456,31 @@ function expect(name, cond) {
 }
 
 {
-  // V29: partnerLimit 0 = all active partners; perPartner defaults toward API max 10.
+  // V30: partnerLimit 0 = all active partners; pageSize uses documented CJ max (not artificial 10).
   const partners = [];
   for (let i = 1; i <= 90; i++) partners.push({ advertiserId: String(1000 + i), active: true, title: "P" + i });
   const noCred = await sampleProductsForManagedPartners({
     partners,
     partnerLimit: 0,
-    perPartner: 10,
+    pageSize: 100,
     env: {},
   });
   expect("product_fetch_no_cred_skip", noCred.meta.skippedNoCredentials === true);
   expect("product_fetch_no_artificial_80", noCred.meta.partnerCapApplied === false);
-  expect("product_fetch_per_partner_api_max", noCred.meta.perPartner === 10);
+  expect("product_fetch_page_size_100", noCred.meta.pageSize === 100);
+  expect("product_fetch_ten_cap_removed", noCred.meta.artificialTenCapRemoved === true);
+  expect("product_fetch_api_max_10k", noCred.meta.apiMaxPerQuery === 10000);
   expect("product_fetch_active_all", noCred.meta.activePartners === 90);
 
   const capped = await sampleProductsForManagedPartners({
     partners,
     partnerLimit: 80,
-    perPartner: 3,
+    pageSize: 3,
     env: {},
   });
   expect("product_fetch_cap_flag", capped.meta.partnerCapApplied === true);
   expect("product_fetch_cap_value", capped.meta.partnerLimit === 80);
+  expect("product_fetch_page_size_3", capped.meta.pageSize === 3);
 }
 
 console.log(

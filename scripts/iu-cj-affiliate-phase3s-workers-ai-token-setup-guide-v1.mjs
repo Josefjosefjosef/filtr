@@ -19,7 +19,10 @@ const guide = {
   ],
   currentlyResolvedSecretName: meta.name,
   currentlyHasSomeToken: meta.present === true,
-  knownBlocker: "Live probe returned HTTP 401 — existing tokens lack Workers AI permission or wrong account",
+  knownBlocker:
+    "Live probe returned HTTP 401 — IU_CJ_WORKERS_AI_API_TOKEN missing Workers AI permission or wrong account. V30 uses dedicated token only (no Ads-token fallback masking).",
+  v30Behavior:
+    "When IU_CJ_WORKERS_AI_API_TOKEN is set, HTTP auth failures stop on that token and messages stay RETRY_PENDING (not ANALYZED).",
   accountIdInWorkflow: "577868e9aac9c289e9323100f68fad16",
   endpoint:
     "POST https://api.cloudflare.com/client/v4/accounts/{account_id}/ai/run/@cf/meta/llama-3.1-8b-instruct",

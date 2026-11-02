@@ -84,7 +84,10 @@ jobs:
           set -euo pipefail
           node scripts/iu-cj-affiliate-phase3r-ai-email-event-v1-selftest.mjs
           node scripts/iu-cj-affiliate-phase3r-ai-to-cj-reconcile-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-phase3r-email-content-state-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-phase3r-email-offer-reconcile-v1-selftest.mjs
           node scripts/iu-cj-affiliate-phase3r-pipeline-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-phase2-product-api-pagination-selftest.mjs
 
       - name: Forpsi operator gate (never prints secrets)
         id: gate
@@ -278,6 +281,12 @@ jobs:
               stagingAddPlans:j.cjReconcile&&j.cjReconcile.stagingAddPlans,
               stagingUpdatePlans:j.cjReconcile&&j.cjReconcile.stagingUpdatePlans,
               stagingEndedPlans:j.cjReconcile&&j.cjReconcile.stagingEndedPlans,
+              contentStates:j.contentStates||null,
+              retryPendingCount:j.retryPendingCount||0,
+              emailOfferCorroborated:j.emailOfferReconcile&&j.emailOfferReconcile.corroborated,
+              emailOfferHolds:j.emailOfferReconcile&&j.emailOfferReconcile.holds,
+              emailOnlyPublishBlocked:j.emailOfferReconcile&&j.emailOfferReconcile.emailOnlyPublishBlocked,
+              emailPublishPath:j.emailPublishPath||null,
               cjApiFollowUp:j.cjApiFollowUp,
               mutatePartners:j.mutatePartners,
               liveEnabled:j.liveEnabled,
@@ -285,6 +294,13 @@ jobs:
               cjLivePublishing:j.cjLivePublishing,
               reason:j.reason||null
             };
+            const retryRows=(j.ai&&j.ai.classifiedSample||[]).filter(r=>r&&r.contentState==="RETRY_PENDING");
+            fs.writeFileSync("/tmp/iu-email-retry-pending-v30.json", JSON.stringify({
+              schema:"iu-cj-affiliate-email-retry-pending-v30",
+              count:j.retryPendingCount||0,
+              uids:retryRows.map(r=>r.uid).filter(u=>u!=null),
+              note:"IMAP receipt checkpoint must not imply ANALYZED; retry these UIDs after Workers AI token fix"
+            },null,2));
             console.log(JSON.stringify(summary,null,2));
             fs.writeFileSync("/tmp/iu-phase3r-pipeline-summary.json", JSON.stringify(summary,null,2));
             fs.writeFileSync("/tmp/iu-forpsi-live-poll-summary.json", JSON.stringify(summary,null,2));
@@ -338,6 +354,7 @@ jobs:
             /tmp/iu-forpsi-live-poll-summary.json
             /tmp/iu-workers-ai-probe.json
             /tmp/iu-cj-main-button-email-hints-v19.json
+            /tmp/iu-email-retry-pending-v30.json
             .iu-forpsi-imap-checkpoint/
           if-no-files-found: warn
           retention-days: 30

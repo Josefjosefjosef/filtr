@@ -95,6 +95,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-offers-public-build-v1-selftest.mjs
       - name: Offers live-sync selftest (offline fixtures)
         run: node scripts/iu-cj-affiliate-offers-live-sync-v1-selftest.mjs
+      - name: Product Feed API pagination selftest (V30; offline)
+        run: node scripts/iu-cj-affiliate-phase2-product-api-pagination-selftest.mjs
       - name: Offers UI + production feature-flag gate selftest
         run: |
           node scripts/iu-cj-affiliate-phase2-offers-preview-ui-selftest.mjs
@@ -547,10 +549,16 @@ jobs:
       IU_CJ_OFFERS_PROMOTE_ARMED: ${{ (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && (inputs.arm_offers_live == '1' || inputs.promote_offers_public == '1'))) && '1' || '0' }}
       IU_CJ_OFFERS_LIVE_ENABLED: ${{ github.event_name == 'workflow_dispatch' && inputs.arm_offers_live == '1' && '1' || '0' }}
       IU_CJ_OFFERS_SAMPLE_PRODUCTS: "1"
-      # V29: 0 = all active managed partners (no artificial 80 cap).
-      # Per-partner max 10 = CJ shoppingProducts GraphQL hard limit (not UI "Zobrazit více").
+      # V30: 0 = all active managed partners (no artificial 80 / 10 caps).
+      # Page size uses documented CJ Product Details Search pagination (default 1000, max 10000).
+      # Artificial Math.min(10) source cap removed. Presentation budget optional/separate.
       IU_CJ_OFFERS_PRODUCT_PARTNER_LIMIT: "0"
-      IU_CJ_OFFERS_PRODUCT_LIMIT: "10"
+      IU_CJ_OFFERS_PRODUCT_PAGE_SIZE: "100"
+      IU_CJ_OFFERS_PRODUCT_MAX_PAGES: "100"
+      IU_CJ_OFFERS_PRODUCT_PUBLISH_PER_PARTNER: "0"
+      IU_CJ_OFFERS_INVENTORY_FEEDS: "1"
+      # Legacy alias: treated as page size when PAGE_SIZE unset (no longer capped at 10).
+      IU_CJ_OFFERS_PRODUCT_LIMIT: "100"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
