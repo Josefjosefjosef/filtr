@@ -14,6 +14,7 @@ import {
   runOffersLiveSync,
   sampleProductsForManagedPartners,
 } from "./iu-cj-affiliate-offers-live-sync-v1.mjs";
+import { emptyOffersDocument } from "./iu-cj-affiliate-offers-public-build-v1.mjs";
 
 const PID = "101883843";
 const goodUrl = `https://www.jdoqocy.com/click-${PID}-15735649`;
@@ -481,6 +482,67 @@ function expect(name, cond) {
   expect("product_fetch_cap_flag", capped.meta.partnerCapApplied === true);
   expect("product_fetch_cap_value", capped.meta.partnerLimit === 80);
   expect("product_fetch_page_size_3", capped.meta.pageSize === 3);
+}
+
+{
+  // V30.1: product wipe guard — prior LIVE products must not be overwritten by fetch errors.
+  const prev = emptyOffersDocument({ websitePid: PID });
+  prev.liveEnabled = true;
+  prev.sections = [
+    {
+      sectionKey: "aff-elektro",
+      coupons: [],
+      actions: [],
+      products: [
+        {
+          productId: "p1",
+          advertiserId: "1",
+          publicationReady: true,
+          title: "x",
+          currentPrice: "1",
+          currency: "CZK",
+          imageUrl: "https://example.com/a.png",
+          affiliateUrl: "https://www.kqzyfj.com/click-101883843-1",
+        },
+      ],
+    },
+  ];
+  const staging = {
+    apiOutage: false,
+    advertisers: [{ advertiserId: "1", accountStatus: "joined" }],
+    links: [
+      {
+        advertiserId: "1",
+        linkId: "9",
+        linkType: "banner",
+        promotionType: "coupon",
+        couponCode: "SAVE",
+        linkName: "c",
+        description: "d",
+        clickUrl: "https://www.kqzyfj.com/click-101883843-9",
+      },
+    ],
+  };
+  // Use build path via runOffersLiveSync with empty products + error meta
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "iu-v30-prodguard-"));
+  fs.writeFileSync(path.join(dir, "iu-affiliate-cj-staging-v1.json"), JSON.stringify(staging));
+  fs.writeFileSync(path.join(dir, "iu-affiliate-cj-managed-public-v1.json"), JSON.stringify({ partners: [] }));
+  fs.writeFileSync(path.join(dir, "iu-affiliate-slot-policy-v1.json"), JSON.stringify({ partners: [] }));
+  fs.writeFileSync(path.join(dir, "iu-affiliate-cj-section-map-v1.json"), JSON.stringify({ "1": "aff-elektro" }));
+  fs.writeFileSync(path.join(dir, "iu-affiliate-cj-offers-public-v1.json"), JSON.stringify(prev));
+  const guarded = await runOffersLiveSync({
+    dataDir: dir,
+    sampleProducts: false,
+    products: [],
+    productMeta: { partnersError: 5, sourceProductsFetched: 0, artificialTenCapRemoved: true },
+    env: {
+      IU_CJ_OFFERS_PROMOTE_ARMED: "1",
+      IU_CJ_OFFERS_LIVE_ENABLED: "0",
+      IU_CJ_OFFERS_SAMPLE_PRODUCTS: "0",
+    },
+  });
+  expect("product_wipe_blocked", guarded.ok === false && guarded.reason === "PRODUCT_FETCH_REGRESSION_KEEP_LKG");
+  expect("product_wipe_not_wrote", guarded.wrote === false);
 }
 
 console.log(
