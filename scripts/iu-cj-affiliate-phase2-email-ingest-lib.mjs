@@ -2022,6 +2022,26 @@ export function resolveCjPartnerIdentity(message, catalogAdvertisers, context = 
       (a) => String(a.advertiserName || "").trim().toLowerCase() === declaredName.toLowerCase()
     );
   }
+  // V20: welcome subjects often "Welcome to PartnerName" without declaredPartnerName/CID.
+  if (!catalogByName && !primaryCid && subject) {
+    const subj = subject.toLowerCase();
+    const welcomeish = /welcome|v[ií]tej|schv[aá]len|approv|joined|partner/.test(subj);
+    if (welcomeish) {
+      const ranked = (catalogAdvertisers || [])
+        .map((a) => {
+          const name = String(a.advertiserName || "").trim().toLowerCase();
+          if (!name || name.length < 4) return null;
+          const hit = subj.includes(name) || subj.includes(name.replace(/\.cz$/i, ""));
+          return hit ? { a, len: name.length } : null;
+        })
+        .filter(Boolean)
+        .sort((x, y) => y.len - x.len);
+      if (ranked.length === 1 || (ranked.length > 1 && ranked[0].len >= ranked[1].len + 3)) {
+        catalogByName = ranked[0].a;
+        auditReasons.push("subject_welcome_exact_name_match");
+      }
+    }
+  }
 
   if (primaryCid && !catalogByCid && declaredName) {
     auditReasons.push("unknown_cid_no_fuzzy_name_fallback");
