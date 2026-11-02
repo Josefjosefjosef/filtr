@@ -157,12 +157,16 @@ function rowsToSyntheticEvents(rows = []) {
     const blob = [r.subjectSafe, r.excerptSafe, (r.categories || []).join(" ")].filter(Boolean).join(" | ");
     const idMatch = String(blob).match(/\b(advertiser|cid|advertiserid)[\s#:]*([0-9]{6,})\b/i);
     const bareId = String(blob).match(/\b([0-9]{7})\b/);
-    const advertiserId = idMatch ? idMatch[2] : bareId ? bareId[1] : null;
+    const advertiserId =
+      (r.advertiserId ? String(r.advertiserId).replace(/\D/g, "") : null) ||
+      (idMatch ? idMatch[2] : null) ||
+      (bareId ? bareId[1] : null);
     const cats = r.categories || [];
     const welcome = cats.includes("partner_welcome") || cats.includes("program_approval");
     out.push({
       eventType: welcome ? AI_EVENT_TYPE.PARTNER_APPROVED : AI_EVENT_TYPE.INFORMATIONAL,
       advertiserId,
+      partnerName: r.partnerName || null,
       confidence: advertiserId ? "medium" : "low",
       productHint: blob.slice(0, 400) || null,
       termsSummary: null,

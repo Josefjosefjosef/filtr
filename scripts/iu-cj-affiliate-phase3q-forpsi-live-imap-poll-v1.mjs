@@ -108,6 +108,9 @@ export function buildAiSafeRowsFromBatchResults(batchResults = []) {
       fromSafe: String(row.fromSafe || "").slice(0, 200),
       excerptSafe: String(row.excerptSafe || "").slice(0, FORPSI_IMAP_SYNC_DEFAULTS.aiExcerptChars || 2000),
       state: row.state || null,
+      advertiserId: row.advertiserId || null,
+      partnerName: row.partnerName || null,
+      partnerConfidence: row.partnerConfidence || null,
     });
   }
   return rows;

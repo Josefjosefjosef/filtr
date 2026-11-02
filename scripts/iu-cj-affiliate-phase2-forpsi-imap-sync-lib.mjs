@@ -220,6 +220,9 @@ export async function runMailboxSyncBatch(options = {}) {
           subjectSafe,
           fromSafe,
           excerptSafe: rawExcerpt,
+          advertiserId: result.partnerSummary?.catalogAdvertiserId || result.partnerSummary?.declaredCid || null,
+          partnerName: result.partnerSummary?.catalogMatchName || null,
+          partnerConfidence: result.partnerSummary?.confidence || null,
         });
       } catch (err) {
         state.failedUids[String(uid)] = String(err.message || err).slice(0, 200);
@@ -376,6 +379,9 @@ export async function runMailboxHintsReplayBatch(options = {}) {
           subjectSafe,
           fromSafe,
           excerptSafe: rawExcerpt,
+          advertiserId: result.partnerSummary?.catalogAdvertiserId || result.partnerSummary?.declaredCid || null,
+          partnerName: result.partnerSummary?.catalogMatchName || null,
+          partnerConfidence: result.partnerSummary?.confidence || null,
           hintsReplay: true,
         });
         replay.replayedUids.push(uid);
