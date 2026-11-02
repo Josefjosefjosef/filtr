@@ -355,7 +355,6 @@
         affPartner("Cestovná kancelária DAKA.sk", "https://www.anrdoezrs.net/click-101883843-13149000-1774647386000", "5006846"),
         affPartner("Čedok.cz", "https://www.anrdoezrs.net/click-101883843-15686662-1764016300000", "6179554"),
         affPartner("Eximtours.cz", "https://www.anrdoezrs.net/click-101883843-15043859-1707862333000", "5906045"),
-        affPartner("Svelt World", "https://www.kqzyfj.com/click-101883843-17323349-1787168356000", "7995512"),
         affPartner("Tui.cz", "https://www.dpbolvw.net/click-101883843-15704921-1708047255000", "6785595")
       ],
     },
@@ -670,6 +669,9 @@
         affPartner("Kytary Europe", "https://www.tkqlhce.com/click-101883843-15156146-1708044694000", "4851178"),
         affPartner("LAMAX / LAUBEN / TRUELIFE", "https://www.dpbolvw.net/click-101883843-13897306-1768946965000", "5193265"),
         affPartner("LG CZ", "https://www.tkqlhce.com/click-101883843-15861968-1731638716000", "7073996"),
+        // V23: Svelt World is a portable laptop stand (svelt.us), not a travel agency.
+        // CJ miscategorized as Travel›Accessories → historical aff-cestovni-kancelare error.
+        affPartner("Svelt World", "https://www.kqzyfj.com/click-101883843-17323349-1787168356000", "7995512"),
         affPartner("TIPA.EU", "https://www.anrdoezrs.net/click-101883843-14049044-1708047911000", "4921612")
       ],
     },
