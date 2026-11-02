@@ -18,7 +18,7 @@ const require = createRequire(path.join(ROOT, "package.json"));
 const { chromium } = require("playwright");
 
 const MARKER = "affiliate-lekarna-lemon-lekarny-v1-20260923";
-const CATALOG_BUST = "cj-phase3z-v16-public-swap-2026-11-01";
+const CATALOG_BUST = "cj-phase3z-v25-links-wrap-2026-11-02";
 const SW_TOKEN = "2026-09-26-affiliate-brainmarket-zdravi-doplnky-v1";
 const SECTION = "aff-lekarny";
 const SECTION_TITLE = "Lékárny";
