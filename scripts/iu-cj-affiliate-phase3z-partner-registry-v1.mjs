@@ -704,7 +704,10 @@ export function scoreAffiliateLink(link, advertiser, opts = {}) {
   const role = classifyDestinationRole(dest, name);
   const lang = detectPageLanguage({ url: dest, linkName: name });
   const advertiserId = String(opts.advertiserId || advertiser?.advertiserId || "");
-  const unsuitable = isUnsuitableMainDestination(destinationType, advertiserId);
+  const unsuitable = isUnsuitableMainDestination(destinationType, advertiserId, {
+    clickUrl: click,
+    selectedClickUrl: click,
+  });
 
   if (eligibility.status === LINK_ELIGIBILITY.INELIGIBLE) {
     return {
