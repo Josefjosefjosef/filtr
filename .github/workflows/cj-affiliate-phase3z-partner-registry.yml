@@ -1,4 +1,4 @@
-﻿name: CJ Affiliate phase3z partner registry (non-public)
+name: CJ Affiliate phase3z partner registry (non-public)
 
 # Builds canonical partner registry + button PREVIEW from staging.
 # Never arms publicButtonSwapArmed / managed-public live / catalog JS rewrite.
@@ -79,7 +79,7 @@ jobs:
             HINTS=$(find /tmp/iu-email-hints -name 'iu-cj-main-button-email-hints-v19.json' | head -n 1 || true)
           fi
           if [ -n "${HINTS:-}" ] && [ -s "$HINTS" ]; then
-            # Artifact may be {hints:[...]} wrapper â€” registry loadEmailHintArtifact accepts both.
+            # Artifact may be {hints:[...]} wrapper — registry loadEmailHintArtifact accepts both.
             echo "IU_CJ_MAIN_BUTTON_EMAIL_HINTS_PATH=$HINTS" >> "$GITHUB_ENV"
             echo "EMAIL_HINTS_RESTORED=1"
           else
@@ -123,7 +123,7 @@ jobs:
             fi
           fi
           if [ -z "$STAGING" ]; then
-            echo "STAGING_EMPTY â€” schedule will retry after next catalog-sync; dispatch with use_artifact_run_id"
+            echo "STAGING_EMPTY — schedule will retry after next catalog-sync; dispatch with use_artifact_run_id"
             echo "pending=1" >> "$GITHUB_OUTPUT"
             exit 0
           fi
@@ -170,7 +170,7 @@ jobs:
           ready_m = sum(1 for r in (reg.get("evidenceMatrix") or []) if r.get("readyForReview") is True)
           assert ready_m == ready, (ready_m, ready)
           # affiliateUrlVerified includes WAF/rate-limit/timeout identity-preserved evidence;
-          # verifiedOk counts only VERIFIED_HTTP_OK from this probe run â€” must not be equated.
+          # verifiedOk counts only VERIFIED_HTTP_OK from this probe run — must not be equated.
           url_m = sum(1 for r in (reg.get("evidenceMatrix") or []) if r.get("affiliateUrlVerified") is True)
           url_ok = int((reg.get("urlVerificationRun") or {}).get("verifiedOk") or 0)
           assert url_m >= url_ok, (url_m, url_ok)
@@ -196,4 +196,3 @@ jobs:
         run: |
           echo "PHASE3Z_SCHEDULE_PENDING_STAGING=1"
           echo "Public swap remains DISARMED."
-
