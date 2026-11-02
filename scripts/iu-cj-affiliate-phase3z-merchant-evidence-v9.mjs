@@ -316,6 +316,27 @@ export const MERCHANT_EVIDENCE_OVERRIDES = Object.freeze({
       "v20_content_audit",
     ],
   },
+  "7995512": {
+    advertiserCid: "7995512",
+    merchantIdentity: "Svelt World",
+    officialDomains: ["svelt.us", "www.svelt.us"],
+    merchantType: "SPECIALIST",
+    primaryAssortment: { sectionId: "aff-elektro", group: "laptop_stand" },
+    secondaryAssortments: [{ sectionId: "aff-kancelarske-potreby", group: "kancelar" }],
+    significantAssortmentGroups: ["laptop_stand", "elektro"],
+    confidence: "high",
+    rejectSectionIds: ["aff-cestovni-kancelare", "aff-ubytovani-hotely", "aff-letenky-letecka-doprava"],
+    czAffinityOverride: true,
+    rationale:
+      "V23: Svelt World sells a portable laptop stand (svelt.us). CJ Travel›Accessories miscategorization must not map to travel agency; elektro is the correct main tile.",
+    evidenceSources: [
+      "official_domain:svelt.us",
+      "product:portable_laptop_stand",
+      "cj_click_final:svelt.us",
+      "welcome_email:laptop_stand",
+      "v23_content_audit",
+    ],
+  },
   "4697950": {
     advertiserCid: "4697950",
     merchantIdentity: "AXA ASSISTANCE - CZ",

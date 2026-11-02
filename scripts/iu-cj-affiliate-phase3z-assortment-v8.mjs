@@ -25,6 +25,8 @@ const KEYWORD_GROUPS = Object.freeze([
   { group: "kosmetika", sectionId: "aff-kosmetika", re: /\b(kosmetik|beauty|skin\s*care|makeup|make-up)\b/i },
   { group: "drogerie", sectionId: "aff-drogerie", re: /\b(drogerie|drugstore|hygien)\b/i },
   { group: "elektro", sectionId: "aff-elektro", re: /\b(elektro|electronics|appliance|notebook|laptop|pc\b|tv\b)\b/i },
+  // V23: portable laptop stands / desk laptop accessories (Svelt World) → elektro, never travel agency.
+  { group: "laptop_stand", sectionId: "aff-elektro", re: /\b(laptop\s*stand|notebook\s*stand|portable\s*stand|svelt)\b/i },
   { group: "mobily", sectionId: "aff-mobily", re: /\b(mobil|phone|smartphone|iphone|android)\b/i },
   { group: "software", sectionId: "aff-software", re: /\b(software|vpn|antivirus|security\s*suite|abbyy|paragon)\b/i },
   { group: "sport", sectionId: "aff-sport-outdoor", re: /\b(sport|outdoor|fitness|turistik)\b/i },
@@ -57,7 +59,8 @@ const KEYWORD_GROUPS = Object.freeze([
   { group: "hry", sectionId: "aff-deti-hracky", re: /\b(hračka|hracka|hry|games|toys?)\b/i },
   { group: "sperky", sectionId: "aff-sperky-hodinky", re: /\b(šperk|sperk|jewelry|hodink|watch)\b/i },
   { group: "zvirata", sectionId: "aff-zvirata", re: /\b(zvíř|zvir|pet|chovatel)\b/i },
-  { group: "kvetiny", sectionId: "aff-kvetiny-darky", re: /\b(květin|kvetin|flower|dárek|darek|gift)\b/i },
+  // V23: bare dárek/gift matched promo "dárek zdarma" (Brasty) → gifts FP. Require florist/gift-shop context.
+  { group: "kvetiny", sectionId: "aff-kvetiny-darky", re: /\b(květin|kvetin|flower|florist|gift\s*shop|dárkov(?:ý|é|y|e)\s*obchod)\b/i },
   // V20: costume/cosplay/Halloween collectibles → gifts tile (Abracadabra root-cause).
   { group: "kostymy", sectionId: "aff-kvetiny-darky", re: /\b(costume|cosplay|halloween|abracadabra|collectibles?\s*gift)\b/i },
   // V22: luggage / leather goods are fashion accessories, NOT travel agencies (Kabea).

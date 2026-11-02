@@ -54,6 +54,9 @@ export function sanitizeEmailAssortmentText(text) {
   s = s.replace(/\blink\s*id\s*:\s*\d+/gi, " ");
   // Cosmetic product lines named "Skin Food" must not become grocery.
   s = s.replace(/\bskin\s*food\b/gi, "skin_care_product");
+  // Promo freebies must not become gift-shop assortment (Brasty "dárek zdarma").
+  s = s.replace(/\bd[aá]rek\s*zdarma\b/gi, "promo_freebie");
+  s = s.replace(/\bgift\s*(?:with\s*purchase|free)\b/gi, "promo_freebie");
   return s.replace(/\s+/g, " ").trim();
 }
 
