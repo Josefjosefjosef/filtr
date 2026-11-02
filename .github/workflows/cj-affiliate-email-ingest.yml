@@ -211,13 +211,19 @@ jobs:
           IU_FORPSI_IMAP_HINTS_REPLAY: ${{ (github.event.inputs.mode == 'historical' || github.event.inputs.hints_replay == '1') && '1' || '0' }}
           IU_FORPSI_IMAP_HINTS_REPLAY_RESET: ${{ github.event.inputs.hints_replay_reset == '1' && '1' || '0' }}
           IU_FORPSI_IMAP_HINTS_REPLAY_LIMIT: "80"
-          IU_FORPSI_IMAP_MAX_BATCHES_PER_RUN: ${{ (github.event.inputs.mode == 'historical' || github.event.inputs.hints_replay == '1') && '4' || env.IU_FORPSI_IMAP_MAX_BATCHES_PER_RUN }}
+          # V21: historical needs ≥5 batches for 331 UIDs (V20 capped at 4 → always incomplete).
+          IU_FORPSI_IMAP_MAX_BATCHES_PER_RUN: ${{ (github.event.inputs.mode == 'historical' || github.event.inputs.hints_replay == '1') && '8' || env.IU_FORPSI_IMAP_MAX_BATCHES_PER_RUN }}
         run: |
           set -euo pipefail
           mkdir -p "$IU_FORPSI_IMAP_CHECKPOINT_DIR"
           echo "EMAIL_INGEST_MODE=${IU_CJ_EMAIL_INGEST_MODE:-periodic}"
           echo "HINTS_REPLAY=${IU_FORPSI_IMAP_HINTS_REPLAY:-0}"
+          echo "HINTS_REPLAY_RESET_ONCE=${IU_FORPSI_IMAP_HINTS_REPLAY_RESET:-0}"
+          echo "MAX_BATCHES=${IU_FORPSI_IMAP_MAX_BATCHES_PER_RUN:-4}"
+          # V21: list IMAP folders (no secrets) before drain — proves mailbox identity/scope.
           set +e
+          IU_IMAP_FOLDER_INVENTORY_OUT=/tmp/iu-imap-folder-inventory.json \
+            node scripts/iu-cj-affiliate-phase3z-v21-imap-folder-inventory.mjs
           node scripts/iu-cj-affiliate-phase3r-pipeline-v1.mjs > /tmp/iu-phase3r-pipeline.json
           CODE=$?
           set -e
@@ -226,16 +232,23 @@ jobs:
             const j=JSON.parse(fs.readFileSync("/tmp/iu-phase3r-pipeline.json","utf8"));
             let probe=null;
             try{probe=JSON.parse(fs.readFileSync("/tmp/iu-workers-ai-probe.json","utf8"));}catch{}
+            let folders=null;
+            try{folders=JSON.parse(fs.readFileSync("/tmp/iu-imap-folder-inventory.json","utf8"));}catch{}
             const summary={
               schema:j.schema,
               ok:j.ok,
               status:j.status,
               imapConnected:j.imapConnected,
               authSuccess:j.authSuccess,
+              mailboxTarget:"affiliate@infouzel.cz",
+              folderInventory:folders,
               mailboxInventory:j.mailboxInventory,
               messagesRead:j.messagesRead,
               messagesClassified:j.messagesClassified,
               relevantHints:j.relevantHints,
+              checkpointComplete:j.checkpoint&&j.checkpoint.complete===true,
+              pendingAfterBatch:j.checkpoint&&j.checkpoint.pendingAfterBatch,
+              batches:j.batches,
               duplicates:j.duplicates,
               quarantined:j.quarantined,
               errors:j.errors,

@@ -63,7 +63,13 @@ function resolveCheckpointDir() {
 function mapCategoryToHintKind(categories = []) {
   const set = new Set(categories || []);
   if (set.has("program_rejection_or_end") || set.has("promotion_change_or_end")) return "ended";
-  if (set.has("program_approval") || set.has("partner_welcome")) return "approved";
+  if (
+    set.has("program_approval") ||
+    set.has("partner_welcome") ||
+    set.has("program_welcome")
+  ) {
+    return "approved";
+  }
   if (set.has("coupon") || set.has("limited_time_discount")) return "coupon";
   if (set.has("terms_change") || set.has("program_terms")) return "terms_change";
   if (set.has("product_promotion") || set.has("product_catalog_or_feed")) return "product_promo";
@@ -111,6 +117,7 @@ export function buildAiSafeRowsFromBatchResults(batchResults = []) {
       advertiserId: row.advertiserId || null,
       partnerName: row.partnerName || null,
       partnerConfidence: row.partnerConfidence || null,
+      outcome: row.outcome || null,
     });
   }
   return rows;
@@ -284,20 +291,22 @@ export async function runForpsiLiveImapPoll(options = {}) {
       process.env.IU_FORPSI_IMAP_HINTS_REPLAY === "1" ||
       String(process.env.IU_CJ_EMAIL_INGEST_MODE || "").toLowerCase() === "historical";
     if (hintsReplay) {
-      // V20: re-read checkpointed UIDs for assortment hints only (main processedUids unchanged).
+      // V20/V21: re-read checkpointed UIDs for assortment hints only (main processedUids unchanged).
+      // resetReplay must be true only for the first batch of a run (pipeline clears env after).
       sync = await runMailboxHintsReplayBatch({
         transport: transport2,
         statePath,
         lockPath,
         ownerId: options.ownerId || "gha-hints-replay-" + (process.env.GITHUB_RUN_ID || process.pid),
         mailbox: AFFILIATE_MAILBOX_ADDRESS,
-        folder: "INBOX",
+        folder: options.folder || "INBOX",
         batchSize:
           Number(process.env.IU_FORPSI_IMAP_HINTS_REPLAY_LIMIT || 0) ||
           options.batchSize ||
           FORPSI_IMAP_SYNC_DEFAULTS.batchSize,
         catalogAdvertisers: options.catalogAdvertisers || [],
         maxMessageBytes: FORPSI_IMAP_SYNC_DEFAULTS.maxMessageBytes,
+        resetReplay: options.resetReplay === true,
       });
     } else {
       sync = await runMailboxSyncBatch({

@@ -300,12 +300,15 @@ export async function runMailboxHintsReplayBatch(options = {}) {
     replayStatePath ||
     path.join(path.dirname(statePath || "."), "iu-forpsi-hints-replay-state-v20.json");
   let replay = { version: 1, replayedUids: [], lastBatchAt: null };
+  // V21: options.resetReplay wins. Env IU_FORPSI_IMAP_HINTS_REPLAY_RESET is only a fallback
+  // when options.resetReplay is undefined — callers MUST clear env after the first batch.
   const resetReplay =
-    options.resetReplay === true || process.env.IU_FORPSI_IMAP_HINTS_REPLAY_RESET === "1";
+    options.resetReplay === true ||
+    (options.resetReplay !== false && process.env.IU_FORPSI_IMAP_HINTS_REPLAY_RESET === "1");
   try {
     if (!resetReplay && fs.existsSync(replayPath)) {
       replay = { ...replay, ...JSON.parse(fs.readFileSync(replayPath, "utf8")) };
-    } else if (resetReplay && fs.existsSync(replayPath)) {
+    } else if (resetReplay) {
       // Intentional one-shot re-backfill; does not touch main processedUids.
       replay = { version: 1, replayedUids: [], lastBatchAt: null, resetAt: new Date().toISOString() };
     }
@@ -371,6 +374,18 @@ export async function runMailboxHintsReplayBatch(options = {}) {
           .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, "[REDACTED_EMAIL]")
           .replace(/\b(?:\+?\d[\d\s().-]{7,}\d)\b/g, "[REDACTED_PHONE]")
           .slice(0, FORPSI_IMAP_SYNC_DEFAULTS.aiExcerptChars || 2_000);
+        const outcome =
+          result.state === "duplicate_skipped"
+            ? "DUPLICATE"
+            : result.state === "quarantined"
+              ? "BLOCKED"
+              : (result.affiliateCategories || []).some((c) =>
+                    /partner_welcome|program_approval/.test(String(c))
+                  )
+                ? "PROCESSED_RELEVANT"
+                : result.ok === false
+                  ? "UNREADABLE"
+                  : "PROCESSED_NOT_RELEVANT";
         batchResults.push({
           uid,
           ok: true,
@@ -379,9 +394,14 @@ export async function runMailboxHintsReplayBatch(options = {}) {
           subjectSafe,
           fromSafe,
           excerptSafe: rawExcerpt,
-          advertiserId: result.partnerSummary?.catalogAdvertiserId || result.partnerSummary?.declaredCid || null,
-          partnerName: result.partnerSummary?.catalogMatchName || null,
+          advertiserId:
+            result.partnerSummary?.catalogAdvertiserId || result.partnerSummary?.declaredCid || null,
+          partnerName:
+            result.partnerSummary?.catalogMatchName ||
+            result.partnerSummary?.declaredPartnerName ||
+            null,
           partnerConfidence: result.partnerSummary?.confidence || null,
+          outcome,
           hintsReplay: true,
         });
         replay.replayedUids.push(uid);

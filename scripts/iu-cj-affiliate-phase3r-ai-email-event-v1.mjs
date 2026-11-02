@@ -195,7 +195,12 @@ export function deterministicEventFallback(row = {}) {
     /terminat|ukonč|ended|rejected|declined/.test(text)
   ) {
     eventType = AI_EVENT_TYPE.PARTNER_ENDED;
-  } else if (cats.includes("program_approval") || /approv|schv[aá]len|welcome|joined/.test(text)) {
+  } else if (
+    cats.includes("program_approval") ||
+    cats.includes("partner_welcome") ||
+    cats.includes("program_welcome") ||
+    /approv|schv[aá]len|welcome|joined|přijat|accepted|v[ií]t[aá]me|invitation|thank you for joining/.test(text)
+  ) {
     eventType = AI_EVENT_TYPE.PARTNER_APPROVED;
   } else if (/expir|platnost.*skon|coupon.*end|offer.*end/.test(text) && /coupon|kup[oó]n|promo/.test(text)) {
     eventType = AI_EVENT_TYPE.COUPON_EXPIRED;
