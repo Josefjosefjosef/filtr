@@ -345,7 +345,6 @@ export async function runMailboxHintsReplayBatch(options = {}) {
     const batch = pending.slice(0, Math.min(batchSize, FORPSI_IMAP_SYNC_DEFAULTS.maxBatchSize));
     const batchResults = [];
     const existingKeys = mainState.mailboxKeys || [];
-    const existingActions = mainState.commercialActionRecords || [];
 
     for (const uid of batch) {
       try {
@@ -361,11 +360,14 @@ export async function runMailboxHintsReplayBatch(options = {}) {
           replay.replayedUids.push(uid);
           continue;
         }
+        // V21: hints replay must classify assortment even when main checkpoint already
+        // saw the UID (duplicate_skipped would empty categories and hide welcomes).
         const result = processPartnerMessageForForpsiStaging(msg, {
           catalogAdvertisers,
-          existingKeys,
-          existingCommercialActionRecords: existingActions,
+          existingKeys: [],
+          existingCommercialActionRecords: [],
           uidvalidity,
+          hintsReplay: true,
         });
         const subjectSafe = String(msg.subject || "").slice(0, 240);
         const fromSafe = String(msg.from || "").slice(0, 200);
@@ -374,18 +376,17 @@ export async function runMailboxHintsReplayBatch(options = {}) {
           .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, "[REDACTED_EMAIL]")
           .replace(/\b(?:\+?\d[\d\s().-]{7,}\d)\b/g, "[REDACTED_PHONE]")
           .slice(0, FORPSI_IMAP_SYNC_DEFAULTS.aiExcerptChars || 2_000);
+        const wasMainDup = (existingKeys || []).length > 0 && (mainState.processedUids || []).includes(uid);
         const outcome =
-          result.state === "duplicate_skipped"
-            ? "DUPLICATE"
-            : result.state === "quarantined"
-              ? "BLOCKED"
-              : (result.affiliateCategories || []).some((c) =>
-                    /partner_welcome|program_approval/.test(String(c))
-                  )
-                ? "PROCESSED_RELEVANT"
-                : result.ok === false
-                  ? "UNREADABLE"
-                  : "PROCESSED_NOT_RELEVANT";
+          result.state === "quarantined"
+            ? "BLOCKED"
+            : (result.affiliateCategories || []).some((c) =>
+                  /partner_welcome|program_approval/.test(String(c))
+                )
+              ? "PROCESSED_RELEVANT"
+              : result.state === "duplicate_skipped"
+                ? "DUPLICATE"
+                : "PROCESSED_NOT_RELEVANT";
         batchResults.push({
           uid,
           ok: true,
@@ -402,6 +403,7 @@ export async function runMailboxHintsReplayBatch(options = {}) {
             null,
           partnerConfidence: result.partnerSummary?.confidence || null,
           outcome,
+          mainCheckpointAlreadySeen: wasMainDup === true,
           hintsReplay: true,
         });
         replay.replayedUids.push(uid);
