@@ -48,8 +48,9 @@ const parsed = parseCatalogPartners(catalogSrc);
 expect("catalog_partners", parsed.count >= 100);
 const auto = matchCatalogByName("Autohotarek.cz", parsed.byTitle);
 expect("autohotarek_baked", auto && /click-101883843-/.test(auto.url));
+// V25: Novakid is a published catalog partner (aff-deti-hracky) — name match is expected.
 const nova = matchCatalogByName("Novakid INT", parsed.byTitle);
-expect("novakid_no_false_match", nova == null);
+expect("novakid_catalog_match", !!(nova && /click-101883843-/.test(String(nova.url || ""))));
 
 const map = JSON.parse(
   fs.readFileSync(path.join(ROOT, "projects", "data", "iu-affiliate-cj-section-map-v1.json"), "utf8")

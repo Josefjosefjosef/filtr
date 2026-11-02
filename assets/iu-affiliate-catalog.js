@@ -2,7 +2,7 @@
  * infoUzel.cz — Affiliate services catalog (UI + data).
  * Partner URLs are placeholders until affiliate programs are approved.
  */
-/* iu-affiliate-catalog-bust: cj-phase3z-v16-public-swap-2026-11-01 */
+/* iu-affiliate-catalog-bust: cj-phase3z-v25-links-wrap-2026-11-02 */
 (function iuAffiliateCatalog() {
   "use strict";
 
@@ -1015,15 +1015,20 @@
         var ready = it.affiliateUrlReady === true && /^https:\/\//i.test(String(it.url || ""));
         /* Phase 2C: never render empty / not-ready placeholders publicly. */
         if (!ready) continue;
+        var titleText = String(it.title || "");
         var attrs =
           ' class="iuRadioChip iuAffiliateChip" role="listitem" href="' +
           escapeHtml(String(it.url)) +
-          '" data-aff-ready="1" target="_blank" rel="sponsored noopener"';
+          '" data-aff-ready="1" target="_blank" rel="sponsored noopener" title="' +
+          escapeHtml(titleText) +
+          '" aria-label="' +
+          escapeHtml(titleText) +
+          '"';
         parts.push(
           "<a" +
             attrs +
             '><span class="iuRadioChipTitle">' +
-            escapeHtml(it.title) +
+            escapeHtml(titleText) +
             "</span></a>"
         );
       }
