@@ -52,6 +52,8 @@ const KEYWORD_GROUPS = Object.freeze([
   { group: "sperky", sectionId: "aff-sperky-hodinky", re: /\b(šperk|sperk|jewelry|hodink|watch)\b/i },
   { group: "zvirata", sectionId: "aff-zvirata", re: /\b(zvíř|zvir|pet|chovatel)\b/i },
   { group: "kvetiny", sectionId: "aff-kvetiny-darky", re: /\b(květin|kvetin|flower|dárek|darek|gift)\b/i },
+  // V20: costume/cosplay/Halloween collectibles → gifts tile (Abracadabra root-cause).
+  { group: "kostymy", sectionId: "aff-kvetiny-darky", re: /\b(costume|cosplay|halloween|abracadabra|collectibles?\s*gift)\b/i },
   { group: "dilna", sectionId: "aff-dilna-naradi", re: /\b(díln|dilna|nářad|naradi|tool)\b/i },
   // Interior doors / finishes are home, not workshop tools (V18: Erkado).
   { group: "dvere", sectionId: "aff-dum-zahrada", re: /\b(dveř|dver|erkado|zárub|zarubn|interiérov)\b/i },

@@ -60,6 +60,8 @@ jobs:
           node scripts/iu-cj-affiliate-phase3z-v16-selftest.mjs
           node scripts/iu-cj-affiliate-phase3z-email-hints-bridge-v19-selftest.mjs
           node scripts/iu-cj-affiliate-phase3z-v19-selftest.mjs
+          node scripts/iu-cj-affiliate-phase3z-v20-selftest.mjs
+          node scripts/iu-cj-affiliate-phase2-forpsi-hints-replay-v20-selftest.mjs
       - name: Restore main-button email hints (from email-ingest; optional)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

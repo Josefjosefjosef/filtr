@@ -270,6 +270,159 @@ export async function runMailboxSyncBatch(options = {}) {
 }
 
 /**
+ * V20 — safe historical HINTS REPLAY for already-checkpointed UIDs.
+ * Re-fetches processed messages to rebuild AI-safe excerpts / welcome assortment hints.
+ * NEVER mutates JOINED/ENDED, affiliate URLs, or the main processedUids checkpoint.
+ * Progress is tracked in a separate hints-replay state file (dedupe across runs).
+ */
+export async function runMailboxHintsReplayBatch(options = {}) {
+  const {
+    transport,
+    statePath,
+    replayStatePath = null,
+    lockPath,
+    ownerId = "hints-replay-" + process.pid,
+    mailbox = AFFILIATE_MAILBOX_ADDRESS,
+    folder = "INBOX",
+    batchSize = FORPSI_IMAP_SYNC_DEFAULTS.batchSize,
+    catalogAdvertisers = [],
+    maxMessageBytes = FORPSI_IMAP_SYNC_DEFAULTS.maxMessageBytes,
+  } = options;
+
+  const lock = acquireSyncLock(lockPath, ownerId);
+  if (!lock.ok) return { ok: false, phase: "lock", ...lock };
+
+  const mainState = loadSyncState(statePath) || { processedUids: [], uidvalidity: null };
+  const replayPath =
+    replayStatePath ||
+    path.join(path.dirname(statePath || "."), "iu-forpsi-hints-replay-state-v20.json");
+  let replay = { version: 1, replayedUids: [], lastBatchAt: null };
+  try {
+    if (fs.existsSync(replayPath)) {
+      replay = { ...replay, ...JSON.parse(fs.readFileSync(replayPath, "utf8")) };
+    }
+  } catch {
+    /* keep default */
+  }
+
+  try {
+    await transport.connect();
+    const sel = await transport.selectMailbox(folder);
+    if (!sel.ok) {
+      return { ok: false, phase: "select", reason: sel.reason || "select_failed" };
+    }
+    const uidvalidity = sel.uidvalidity ?? mainState.uidvalidity ?? null;
+    if (
+      mainState.uidvalidity != null &&
+      uidvalidity != null &&
+      Number(mainState.uidvalidity) !== Number(uidvalidity)
+    ) {
+      // UIDVALIDITY changed — refuse silent replay of stale UIDs.
+      return {
+        ok: false,
+        phase: "uidvalidity_mismatch",
+        reason: "uidvalidity_changed_refuse_hints_replay",
+        uidvalidity,
+        previous: mainState.uidvalidity,
+      };
+    }
+
+    const processed = (mainState.processedUids || []).map(Number).filter((n) => Number.isFinite(n));
+    const replayedSet = new Set((replay.replayedUids || []).map(Number));
+    // Prefer lower UIDs first (older welcome mail often earlier); still capped by batchSize.
+    const pending = processed.filter((uid) => !replayedSet.has(uid)).sort((a, b) => a - b);
+    const batch = pending.slice(0, Math.min(batchSize, FORPSI_IMAP_SYNC_DEFAULTS.maxBatchSize));
+    const batchResults = [];
+    const existingKeys = mainState.mailboxKeys || [];
+    const existingActions = mainState.commercialActionRecords || [];
+
+    for (const uid of batch) {
+      try {
+        const fetched = await transport.fetchMessageByUid(uid);
+        if (!fetched.ok) {
+          batchResults.push({ uid, ok: false, reason: fetched.reason || "fetch_failed", hintsReplay: true });
+          replay.replayedUids.push(uid); // don't infinite-loop on permanent fetch fails
+          continue;
+        }
+        const msg = fetched.message;
+        if (msg.sizeBytes > maxMessageBytes) {
+          batchResults.push({ uid, ok: false, reason: "message_too_large", hintsReplay: true });
+          replay.replayedUids.push(uid);
+          continue;
+        }
+        const result = processPartnerMessageForForpsiStaging(msg, {
+          catalogAdvertisers,
+          existingKeys,
+          existingCommercialActionRecords: existingActions,
+          uidvalidity,
+        });
+        const subjectSafe = String(msg.subject || "").slice(0, 240);
+        const fromSafe = String(msg.from || "").slice(0, 200);
+        const rawExcerpt = String(msg.bodyText || msg.bodyHtmlStripped || "")
+          .replace(/\0/g, "")
+          .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, "[REDACTED_EMAIL]")
+          .replace(/\b(?:\+?\d[\d\s().-]{7,}\d)\b/g, "[REDACTED_PHONE]")
+          .slice(0, FORPSI_IMAP_SYNC_DEFAULTS.aiExcerptChars || 2_000);
+        batchResults.push({
+          uid,
+          ok: true,
+          state: result.state,
+          categories: result.affiliateCategories,
+          subjectSafe,
+          fromSafe,
+          excerptSafe: rawExcerpt,
+          hintsReplay: true,
+        });
+        replay.replayedUids.push(uid);
+      } catch (err) {
+        batchResults.push({
+          uid,
+          ok: false,
+          reason: String(err?.message || err).slice(0, 120),
+          hintsReplay: true,
+        });
+        replay.replayedUids.push(uid);
+      }
+    }
+
+    replay.lastBatchAt = new Date().toISOString();
+    replay.uidvalidity = uidvalidity;
+    replay.pendingAfterBatch = Math.max(0, pending.length - batch.length);
+    replay.complete = replay.pendingAfterBatch === 0;
+    fs.mkdirSync(path.dirname(replayPath), { recursive: true });
+    fs.writeFileSync(replayPath, JSON.stringify(replay, null, 2), "utf8");
+
+    return {
+      ok: true,
+      phase: "hints_replay",
+      mode: "hints_replay",
+      batchSize: batch.length,
+      pendingAfterBatch: replay.pendingAfterBatch,
+      complete: replay.complete === true,
+      uidvalidity,
+      stats: {
+        found: processed.length,
+        replayedTotal: (replay.replayedUids || []).length,
+        replayedThisBatch: batch.length,
+      },
+      batchResults,
+      replayStatePath: replayPath,
+      productionSigning: "BLOCKED",
+      autoPublication: false,
+      mutatePartners: false,
+      note: "Historical hints replay only — main IMAP checkpoint processedUids unchanged.",
+    };
+  } finally {
+    releaseSyncLock(lockPath, ownerId);
+    try {
+      await transport.disconnect();
+    } catch {
+      /* ignore */
+    }
+  }
+}
+
+/**
  * Fetch-only batch for GHA ingest — does NOT mark UIDs processed or run staging.
  * Checkpoint completion is owned by D1 store after full pipeline.
  */

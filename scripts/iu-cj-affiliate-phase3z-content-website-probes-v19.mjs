@@ -18,40 +18,79 @@ import { isCjTrackingUrl } from "./iu-cj-affiliate-catalog-sync-publish-gate-v1.
 
 export const CONTENT_PROBE_SCHEMA = "iu-cj-affiliate-phase3z-content-website-probes-v19";
 
+/**
+ * V20 exclusive review outcomes (exactly one per partner):
+ *  BLOCKED_OR_UNAVAILABLE | HTTP_REACHABLE_ONLY | CONTENT_FETCHED_TITLE_ONLY |
+ *  CONTENT_REVIEW_WITH_ASSORTMENT
+ *
+ * CONTENT_REVIEW_COMPLETED (strict) requires ASSORTMENT_EVIDENCE_EXTRACTED.
+ * Title-only HTTP success is NEVER assortment verification.
+ */
 function classifyProbe(probe, opts = {}) {
   const tiers = [];
   const status = probe.httpStatus;
   const err = String(probe.error || "");
-  if (probe.ok && status >= 200 && status < 300) tiers.push("HTTP_REACHABLE");
-  if (status >= 300 && status < 400) tiers.push("HTTP_REACHABLE"); // provisional
-  if (opts.redirectFollowed && probe.ok) tiers.push("REDIRECT_RESOLVED");
-  if (probe.title || (probe.assortmentEvidence && (probe.assortmentEvidence.significantGroups || []).length)) {
-    tiers.push("CONTENT_FETCHED");
-  }
   const sig = probe.assortmentEvidence?.significantGroups || [];
+  const hasTitle = Boolean(probe.title && String(probe.title).trim().length >= 3);
+  const httpOk =
+    (probe.ok && status >= 200 && status < 400) || (status >= 200 && status < 400 && !err);
+
+  if (httpOk) tiers.push("HTTP_REACHABLE");
+  if (opts.redirectFollowed && probe.ok) tiers.push("REDIRECT_RESOLVED");
+  if (hasTitle || sig.length > 0) tiers.push("CONTENT_FETCHED");
   if (sig.length > 0) tiers.push("ASSORTMENT_EVIDENCE_EXTRACTED");
   if (opts.merchantIdentityVerified) tiers.push("MERCHANT_IDENTITY_VERIFIED");
-  if (
-    tiers.includes("CONTENT_FETCHED") &&
-    (tiers.includes("ASSORTMENT_EVIDENCE_EXTRACTED") || (probe.title && String(probe.title).length >= 3))
-  ) {
-    tiers.push("CONTENT_REVIEW_COMPLETED");
-  }
-  if (!probe.ok || /timeout|blocked|403|451|captcha|cloudflare|ECONN|ENOTFOUND|cert/i.test(err)) {
-    if (!tiers.includes("CONTENT_REVIEW_COMPLETED")) tiers.push("BLOCKED_OR_UNAVAILABLE");
-  }
-  // Redirect-only without content is NOT content review.
-  if (status >= 300 && status < 400 && !probe.title && !(sig.length > 0)) {
+
+  // Redirect-only without body content.
+  if (status >= 300 && status < 400 && !hasTitle && sig.length === 0) {
     return {
       tiers: ["HTTP_REACHABLE", "BLOCKED_OR_UNAVAILABLE"],
       contentReviewCompleted: false,
+      assortmentEvidenceExtracted: false,
+      exclusiveOutcome: "BLOCKED_OR_UNAVAILABLE",
       note: "redirect_without_content_body",
     };
   }
+
+  const blockedHard =
+    !probe.ok ||
+    /timeout|blocked|403|451|captcha|cloudflare|ECONN|ENOTFOUND|cert/i.test(err) ||
+    probe.reason === "missing_program_url";
+
+  let exclusiveOutcome = "UNCLASSIFIED";
+  if (blockedHard && sig.length === 0 && !hasTitle) {
+    tiers.push("BLOCKED_OR_UNAVAILABLE");
+    exclusiveOutcome = "BLOCKED_OR_UNAVAILABLE";
+  } else if (sig.length > 0) {
+    tiers.push("CONTENT_REVIEW_COMPLETED");
+    exclusiveOutcome = "CONTENT_REVIEW_WITH_ASSORTMENT";
+  } else if (hasTitle) {
+    // Title fetched — not assortment verification.
+    exclusiveOutcome = "CONTENT_FETCHED_TITLE_ONLY";
+  } else if (httpOk) {
+    exclusiveOutcome = "HTTP_REACHABLE_ONLY";
+  } else {
+    tiers.push("BLOCKED_OR_UNAVAILABLE");
+    exclusiveOutcome = "BLOCKED_OR_UNAVAILABLE";
+  }
+
+  const published = String(opts.publishedSectionId || "");
+  const primary = probe.assortmentEvidence?.primaryAssortment?.sectionId || null;
+  if (published && primary && published === primary) {
+    tiers.push("CATEGORY_SUPPORTED_BY_EVIDENCE");
+  }
+
   return {
     tiers: [...new Set(tiers)],
-    contentReviewCompleted: tiers.includes("CONTENT_REVIEW_COMPLETED"),
-    note: null,
+    contentReviewCompleted: exclusiveOutcome === "CONTENT_REVIEW_WITH_ASSORTMENT",
+    assortmentEvidenceExtracted: sig.length > 0,
+    exclusiveOutcome,
+    note:
+      exclusiveOutcome === "CONTENT_FETCHED_TITLE_ONLY"
+        ? "title_only_not_assortment_verification"
+        : exclusiveOutcome === "HTTP_REACHABLE_ONLY"
+          ? "http_ok_without_title_or_assortment"
+          : null,
   };
 }
 
@@ -125,6 +164,8 @@ export async function runContentWebsiteProbes(opts = {}) {
         ok: false,
         tiers: ["BLOCKED_OR_UNAVAILABLE"],
         contentReviewCompleted: false,
+        assortmentEvidenceExtracted: false,
+        exclusiveOutcome: "BLOCKED_OR_UNAVAILABLE",
         reason: "missing_program_url",
         httpStatus: null,
         title: null,
@@ -147,6 +188,7 @@ export async function runContentWebsiteProbes(opts = {}) {
     const classified = classifyProbe(probe, {
       redirectFollowed,
       merchantIdentityVerified: identity,
+      publishedSectionId: p.sectionId,
     });
     results.push({
       ...base,
@@ -161,6 +203,8 @@ export async function runContentWebsiteProbes(opts = {}) {
       assortmentGroups: (probe.assortmentEvidence?.significantGroups || []).map((g) => g.group).slice(0, 8),
       tiers: classified.tiers,
       contentReviewCompleted: classified.contentReviewCompleted,
+      assortmentEvidenceExtracted: classified.assortmentEvidenceExtracted === true,
+      exclusiveOutcome: classified.exclusiveOutcome,
       note: classified.note,
     });
   }
@@ -177,9 +221,18 @@ export async function runContentWebsiteProbes(opts = {}) {
   }
   await Promise.all(queue);
 
+  const exclusiveCounts = {};
+  for (const r of results) {
+    const k = r.exclusiveOutcome || "UNCLASSIFIED";
+    exclusiveCounts[k] = (exclusiveCounts[k] || 0) + 1;
+  }
+  const exclusiveSum = Object.values(exclusiveCounts).reduce((a, b) => a + b, 0);
   const contentVerified = results.filter((r) => r.contentReviewCompleted).length;
-  const blocked = results.filter((r) => (r.tiers || []).includes("BLOCKED_OR_UNAVAILABLE")).length;
+  const blocked = results.filter((r) => r.exclusiveOutcome === "BLOCKED_OR_UNAVAILABLE").length;
+  const titleOnly = results.filter((r) => r.exclusiveOutcome === "CONTENT_FETCHED_TITLE_ONLY").length;
+  const httpOnly = results.filter((r) => r.exclusiveOutcome === "HTTP_REACHABLE_ONLY").length;
   const redirectOnly = results.filter((r) => r.note === "redirect_without_content_body").length;
+  const completenessOk = exclusiveSum === results.length && !exclusiveCounts.UNCLASSIFIED;
 
   return {
     schema: CONTENT_PROBE_SCHEMA,
@@ -187,14 +240,19 @@ export async function runContentWebsiteProbes(opts = {}) {
     counts: {
       partners: results.length,
       contentReviewCompleted: contentVerified,
+      contentReviewWithAssortment: contentVerified,
+      contentFetchedTitleOnly: titleOnly,
+      httpReachableOnly: httpOnly,
       blockedOrUnavailable: blocked,
       redirectWithoutContent: redirectOnly,
       httpReachable: results.filter((r) => (r.tiers || []).includes("HTTP_REACHABLE")).length,
-      assortmentExtracted: results.filter((r) =>
-        (r.tiers || []).includes("ASSORTMENT_EVIDENCE_EXTRACTED")
-      ).length,
+      assortmentExtracted: results.filter((r) => r.assortmentEvidenceExtracted === true).length,
+      exclusiveSum,
+      exclusiveCounts,
     },
     HTTP_REDIRECTS_NOT_COUNTED_AS_CONTENT_VERIFICATION: true,
+    ASSORTMENT_EVIDENCE_EXPLICITLY_DISTINGUISHED: true,
+    TOTAL_PARTNERS_EQUALS_EXCLUSIVE_OUTCOMES: completenessOk,
     results,
   };
 }
