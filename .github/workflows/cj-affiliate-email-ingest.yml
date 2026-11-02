@@ -283,6 +283,22 @@ jobs:
           echo "CJ LIVE PUBLISHING=DISARMED"
           echo "False PASS forbidden: connect+auth+poll+AI evidenced above"
 
+      - name: Emit main-button email hints artifact (V19 bridge; never arms publish)
+        if: always() && env.LIVE_IMAP_BLOCKED == '0'
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/iu-cj-affiliate-phase3z-email-hints-bridge-v19-selftest.mjs
+          if [ -f /tmp/iu-phase3r-pipeline.json ]; then
+            node scripts/iu-cj-affiliate-phase3z-email-hints-bridge-v19.mjs \
+              /tmp/iu-phase3r-pipeline.json \
+              /tmp/iu-cj-main-button-email-hints-v19.json
+          else
+            echo '{"schema":"iu-cj-affiliate-phase3z-email-hints-bridge-v19","hints":[],"counts":{"eventsIn":0,"hintsOut":0,"trusted":0,"trustedWithSuggestedSection":0},"liveEmailToCategory":"NO_PIPELINE_JSON","authority":{"joinedEnded":"CJ_API_ONLY","affiliateUrl":"CJ_LINK_INVENTORY_ONLY","categoryAssortment":"CJ_PLUS_TRUSTED_EMAIL_HINT_PLUS_WEBSITE"}}' \
+              > /tmp/iu-cj-main-button-email-hints-v19.json
+          fi
+          node -e 'const j=require("/tmp/iu-cj-main-button-email-hints-v19.json"); console.log(JSON.stringify({hints:j.counts||j.hints&&{hintsOut:(j.hints||[]).length}, liveEmailToCategory:j.liveEmailToCategory, authority:j.authority},null,2))'
+
       - name: Upload IMAP/AI pipeline summary + checkpoint (no secrets / no bodies)
         if: always() && env.LIVE_IMAP_BLOCKED == '0'
         uses: actions/upload-artifact@v4
@@ -292,7 +308,17 @@ jobs:
             /tmp/iu-phase3r-pipeline-summary.json
             /tmp/iu-forpsi-live-poll-summary.json
             /tmp/iu-workers-ai-probe.json
+            /tmp/iu-cj-main-button-email-hints-v19.json
             .iu-forpsi-imap-checkpoint/
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Upload main-button email hints (durable name for registry consume)
+        if: always() && env.LIVE_IMAP_BLOCKED == '0'
+        uses: actions/upload-artifact@v4
+        with:
+          name: iu-cj-main-button-email-hints
+          path: /tmp/iu-cj-main-button-email-hints-v19.json
           if-no-files-found: warn
           retention-days: 30
 

@@ -58,6 +58,28 @@ jobs:
           node scripts/iu-cj-affiliate-phase3z-v14-selftest.mjs
           node scripts/iu-cj-affiliate-phase3z-v15-selftest.mjs
           node scripts/iu-cj-affiliate-phase3z-v16-selftest.mjs
+          node scripts/iu-cj-affiliate-phase3z-email-hints-bridge-v19-selftest.mjs
+          node scripts/iu-cj-affiliate-phase3z-v19-selftest.mjs
+      - name: Restore main-button email hints (from email-ingest; optional)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/iu-email-hints
+          HINTS=""
+          LATEST=$(gh run list --workflow "cj-affiliate-email-ingest.yml" --status success --limit 5 --json databaseId -q '.[0].databaseId' || true)
+          if [ -n "${LATEST:-}" ]; then
+            gh run download "$LATEST" -n iu-cj-main-button-email-hints -D /tmp/iu-email-hints || true
+            HINTS=$(find /tmp/iu-email-hints -name 'iu-cj-main-button-email-hints-v19.json' | head -n 1 || true)
+          fi
+          if [ -n "${HINTS:-}" ] && [ -s "$HINTS" ]; then
+            # Artifact may be {hints:[...]} wrapper — registry loadEmailHintArtifact accepts both.
+            echo "IU_CJ_MAIN_BUTTON_EMAIL_HINTS_PATH=$HINTS" >> "$GITHUB_ENV"
+            echo "EMAIL_HINTS_RESTORED=1"
+          else
+            echo "EMAIL_HINTS_RESTORED=0"
+            echo "LIVE_WELCOME_EMAIL_TO_CATEGORY remains EXPLICITLY_UNVERIFIED when no trusted hints file."
+          fi
       - name: Resolve staging source
         id: staging
         env:

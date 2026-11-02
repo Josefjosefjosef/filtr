@@ -8,6 +8,7 @@ import path from "node:path";
 import http from "node:http";
 import https from "node:https";
 import { URL as NodeURL } from "node:url";
+import { isCjTrackingUrl } from "./iu-cj-affiliate-catalog-sync-publish-gate-v1.mjs";
 
 export const DESTINATION_TYPE = Object.freeze({
   MERCHANT_HOMEPAGE: "MERCHANT_HOMEPAGE",
@@ -110,35 +111,41 @@ export const MERCHANT_EVIDENCE_OVERRIDES = Object.freeze({
   "5755636": {
     advertiserCid: "5755636",
     merchantIdentity: "Foreo",
-    officialDomains: ["foreo.com"],
+    officialDomains: ["foreo.com", "www.foreo.com"],
     merchantType: "SPECIALIST",
     primaryAssortment: { sectionId: "aff-kosmetika", group: "kosmetika" },
     confidence: "medium",
+    preferHostnames: ["foreo.com", "www.foreo.com"],
     rejectDestinationTypes: ["EXTERNAL_TRACKER"],
-    rationale: "Main button must not use flip.go2cloud.org tracker as customer destination when merchant origin is unavailable in inventory.",
-    evidenceSources: ["external_tracker:go2cloud"],
+    rationale:
+      "V19: Prefer foreo.com merchant origin over go2cloud hops. Authorized CJ click hosts (tkqlhce/…) remain publishable via cj_tracking_redirect_ok even when link.destination is an external hop.",
+    evidenceSources: ["official_domain:foreo.com", "external_tracker:go2cloud"],
   },
   "5578976": {
     advertiserCid: "5578976",
     merchantIdentity: "Novakid INT",
-    officialDomains: ["novakidschool.com"],
+    officialDomains: ["novakidschool.com", "www.novakidschool.com"],
     merchantType: "SERVICE_PROVIDER",
     primaryAssortment: { sectionId: "aff-deti-hracky", group: "deti" },
     confidence: "medium",
+    preferHostnames: ["novakidschool.com", "www.novakidschool.com"],
     rejectDestinationTypes: ["EXTERNAL_TRACKER"],
-    rationale: "Novakidtracking.com is an external tracker hop — unsuitable as evidenced customer landing without resolved final merchant URL.",
-    evidenceSources: ["external_tracker:novakidtracking"],
+    rationale:
+      "V19: Prefer novakidschool.com over novakidtracking.com hops. Authorized CJ click URL remains suitable for main button (cj_tracking_redirect_ok).",
+    evidenceSources: ["official_domain:novakidschool.com", "external_tracker:novakidtracking"],
   },
   "7520433": {
     advertiserCid: "7520433",
     merchantIdentity: "Hero Wars",
-    officialDomains: ["hero-wars.com"],
+    officialDomains: ["hero-wars.com", "www.hero-wars.com"],
     merchantType: "DIGITAL_SERVICE",
     primaryAssortment: { sectionId: "aff-deti-hracky", group: "deti" },
     confidence: "medium",
+    preferHostnames: ["hero-wars.com", "www.hero-wars.com"],
     rejectDestinationTypes: ["EXTERNAL_TRACKER"],
-    rationale: "g2afse.com click hop is external tracker — not a stable customer landing for main button.",
-    evidenceSources: ["external_tracker:g2afse"],
+    rationale:
+      "V19: Prefer hero-wars.com over g2afse.com hops. Authorized CJ click URL remains suitable for main button (cj_tracking_redirect_ok).",
+    evidenceSources: ["official_domain:hero-wars.com", "external_tracker:g2afse"],
   },
   "2624620": {
     advertiserCid: "2624620",
@@ -660,9 +667,17 @@ export function applyMerchantEvidenceOverride({ advertiserId, assortment, baseSe
 
 /**
  * Hard reject destination for main button based on type + merchant rules.
+ * V19: EXTERNAL_TRACKER alone is NOT unsuitable when selectedClickUrl is an authorized CJ tracker
+ * (aligns with isHardUnsuitableMainButtonDestination / MAIN_BUTTON_DIAG.CJ_TRACKING_REDIRECT_OK).
+ *
+ * @param {string} destinationType
+ * @param {string} advertiserId
+ * @param {{ clickUrl?: string, selectedClickUrl?: string }} [opts]
  */
-export function isUnsuitableMainDestination(destinationType, advertiserId) {
-  const bad = new Set([
+export function isUnsuitableMainDestination(destinationType, advertiserId, opts = {}) {
+  const click = String(opts.clickUrl || opts.selectedClickUrl || "");
+  const cjClickOk = isCjTrackingUrl(click);
+  const hardBad = new Set([
     DESTINATION_TYPE.CHECKOUT,
     DESTINATION_TYPE.CART,
     DESTINATION_TYPE.NEWSLETTER,
@@ -671,11 +686,21 @@ export function isUnsuitableMainDestination(destinationType, advertiserId) {
     DESTINATION_TYPE.AFFILIATE_SIGNUP,
     DESTINATION_TYPE.ERROR_PAGE,
     DESTINATION_TYPE.UNRELATED_DESTINATION,
-    DESTINATION_TYPE.EXTERNAL_TRACKER,
   ]);
-  if (bad.has(destinationType)) return { unsuitable: true, reason: "destination_type:" + destinationType };
+  if (hardBad.has(destinationType)) {
+    return { unsuitable: true, reason: "destination_type:" + destinationType };
+  }
+  if (destinationType === DESTINATION_TYPE.EXTERNAL_TRACKER) {
+    if (cjClickOk) {
+      return { unsuitable: false, reason: null, note: "cj_tracking_redirect_ok" };
+    }
+    return { unsuitable: true, reason: "destination_type:EXTERNAL_TRACKER" };
+  }
   const ev = getMerchantEvidenceOverride(advertiserId);
   if (ev?.rejectDestinationTypes?.includes(destinationType)) {
+    if (destinationType === DESTINATION_TYPE.EXTERNAL_TRACKER && cjClickOk) {
+      return { unsuitable: false, reason: null, note: "cj_tracking_redirect_ok_override_waived" };
+    }
     return { unsuitable: true, reason: "merchant_override_reject:" + destinationType };
   }
   return { unsuitable: false, reason: null };
