@@ -7,7 +7,10 @@
  * - Pairing by advertiser CID (or explicit fixture CID), not fuzzy name alone.
  * - SEM brand-bid / coupon-partner restrictions do NOT ban ordinary main buttons.
  * - Stale welcome email loses to newer CJ program terms when timestamps conflict.
+ * - V18: optional artifact path + assortment websiteEvidence bridge (never CJ authority).
  */
+import fs from "node:fs";
+
 export const PHASE3Z_MAIN_BUTTON_EMAIL_SCHEMA =
   "iu-cj-affiliate-phase3z-main-button-email-hints-v12";
 
@@ -110,6 +113,66 @@ export function buildDefaultMainButtonEmailHintMap() {
     [gant.advertiserId, gant],
     [cedok.advertiserId, cedok],
   ]);
+}
+
+/**
+ * Optional live/offline email-hint artifact (redacted JSON array or {hints:[]}).
+ * Env: IU_CJ_MAIN_BUTTON_EMAIL_HINTS_PATH
+ * Never invents CIDs; untrusted rows are kept but ignored for section authority.
+ */
+export function loadEmailHintArtifact(filePath) {
+  if (!filePath) return [];
+  try {
+    if (!fs.existsSync(filePath)) return [];
+    const raw = JSON.parse(fs.readFileSync(filePath, "utf8"));
+    const list = Array.isArray(raw) ? raw : Array.isArray(raw?.hints) ? raw.hints : [];
+    return list.map((row) => buildMainButtonEmailHint(row)).filter((h) => h.advertiserId);
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Merge fixture map with optional artifact. Artifact trusted rows override fixtures for same CID.
+ */
+export function buildMergedMainButtonEmailHintMap(opts = {}) {
+  const map = buildDefaultMainButtonEmailHintMap();
+  const artifactPath =
+    opts.artifactPath ||
+    process.env.IU_CJ_MAIN_BUTTON_EMAIL_HINTS_PATH ||
+    "";
+  for (const hint of loadEmailHintArtifact(artifactPath)) {
+    if (!hint?.advertiserId) continue;
+    map.set(String(hint.advertiserId), hint);
+  }
+  return map;
+}
+
+/**
+ * Convert a trusted welcome-email hint into assortment websiteEvidence shape.
+ * Email never authorizes JOINED/ENDED/URL — only assortment weight when trusted + section suggested.
+ */
+export function emailHintToWebsiteEvidence(hint) {
+  if (!hint || hint.trusted !== true || !hint.suggestedSectionId) return null;
+  if (hint.staleVsCjTerms === true) return null;
+  return {
+    primaryAssortment: {
+      sectionId: String(hint.suggestedSectionId),
+      group: "email_welcome",
+      weight: 48,
+      sources: ["welcome_email:" + (hint.sourceMessageId || "trusted")],
+    },
+    secondaryAssortments: [],
+    significantGroups: [
+      {
+        sectionId: String(hint.suggestedSectionId),
+        group: "email_welcome",
+        weight: 48,
+        sources: ["welcome_email:" + (hint.sourceMessageId || "trusted")],
+      },
+    ],
+    source: "trusted_welcome_email_v18",
+  };
 }
 
 /**

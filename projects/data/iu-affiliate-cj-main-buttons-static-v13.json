@@ -14,7 +14,8 @@
     "missingMainButtons": 1,
     "sections": 31,
     "buttons": 175,
-    "duplicates": 0
+    "duplicates": 0,
+    "sectionsWithButtons": 31
   },
   "sectionCounts": {
     "aff-auto-moto": 3,
@@ -244,16 +245,6 @@
           "stableId": "cj-main-5153670"
         },
         {
-          "advertiserId": "5260576",
-          "title": "Activa CZ_Bibelot",
-          "url": "https://www.dpbolvw.net/click-101883843-15544489-1708048268000",
-          "sectionId": "aff-deti-hracky",
-          "target": "_blank",
-          "rel": "sponsored noopener",
-          "source": "cj_first_main_button_v13",
-          "stableId": "cj-main-5260576"
-        },
-        {
           "advertiserId": "4949011",
           "title": "BAMBULE.cz",
           "url": "https://www.dpbolvw.net/click-101883843-12990634-1706861500000",
@@ -331,16 +322,6 @@
           "stableId": "cj-main-5142212"
         },
         {
-          "advertiserId": "5027071",
-          "title": "Dvere-Erkado.cz",
-          "url": "https://www.jdoqocy.com/click-101883843-13234841-1748446701000",
-          "sectionId": "aff-dilna-naradi",
-          "target": "_blank",
-          "rel": "sponsored noopener",
-          "source": "cj_first_main_button_v13",
-          "stableId": "cj-main-5027071"
-        },
-        {
           "advertiserId": "5320945",
           "title": "Expondo GMBH",
           "url": "https://www.anrdoezrs.net/click-101883843-14032356-1748654764000",
@@ -376,6 +357,16 @@
           "rel": "sponsored noopener",
           "source": "cj_first_main_button_v13",
           "stableId": "cj-main-7786972"
+        },
+        {
+          "advertiserId": "7612998",
+          "title": "Tierraverde",
+          "url": "https://www.anrdoezrs.net/click-101883843-17313396-1782831175000",
+          "sectionId": "aff-drogerie",
+          "target": "_blank",
+          "rel": "sponsored noopener",
+          "source": "cj_first_main_button_v13",
+          "stableId": "cj-main-7612998"
         }
       ]
     },
@@ -563,6 +554,16 @@
           "rel": "sponsored noopener",
           "source": "cj_first_main_button_v13",
           "stableId": "cj-main-7341377"
+        },
+        {
+          "advertiserId": "5027071",
+          "title": "Dvere-Erkado.cz",
+          "url": "https://www.jdoqocy.com/click-101883843-13234841-1748446701000",
+          "sectionId": "aff-dum-zahrada",
+          "target": "_blank",
+          "rel": "sponsored noopener",
+          "source": "cj_first_main_button_v13",
+          "stableId": "cj-main-5027071"
         }
       ]
     },
@@ -751,6 +752,16 @@
           "rel": "sponsored noopener",
           "source": "cj_first_main_button_v13",
           "stableId": "cj-main-6721278"
+        },
+        {
+          "advertiserId": "5260576",
+          "title": "Activa CZ_Bibelot",
+          "url": "https://www.dpbolvw.net/click-101883843-15544489-1708048268000",
+          "sectionId": "aff-kancelarske-potreby",
+          "target": "_blank",
+          "rel": "sponsored noopener",
+          "source": "cj_first_main_button_v13",
+          "stableId": "cj-main-5260576"
         }
       ]
     },
@@ -925,16 +936,6 @@
           "rel": "sponsored noopener",
           "source": "cj_first_main_button_v13",
           "stableId": "cj-main-5611262"
-        },
-        {
-          "advertiserId": "7612998",
-          "title": "Tierraverde",
-          "url": "https://www.anrdoezrs.net/click-101883843-17313396-1782831175000",
-          "sectionId": "aff-kosmetika",
-          "target": "_blank",
-          "rel": "sponsored noopener",
-          "source": "cj_first_main_button_v13",
-          "stableId": "cj-main-7612998"
         },
         {
           "advertiserId": "5124968",
@@ -3791,5 +3792,36 @@
   },
   "note": "PUBLIC_SWAP ARMED. Single static CJ renderer. Browser does not call CJ API.",
   "activatedAt": "2026-11-01T20:03:58.550Z",
-  "activation": "phase3z-v16-hotfix-explicit-go"
+  "activation": "phase3z-v16-hotfix-explicit-go",
+  "meta": {
+    "v18CategoryMoves": {
+      "at": "2026-11-02T02:15:18.297Z",
+      "moves": [
+        {
+          "id": "5027071",
+          "from": "aff-dilna-naradi",
+          "to": "aff-dum-zahrada",
+          "name": "Dvere-Erkado.cz",
+          "ok": true,
+          "title": "Dvere-Erkado.cz"
+        },
+        {
+          "id": "5260576",
+          "from": "aff-deti-hracky",
+          "to": "aff-kancelarske-potreby",
+          "name": "Activa CZ_Bibelot",
+          "ok": true,
+          "title": "Activa CZ_Bibelot"
+        },
+        {
+          "id": "7612998",
+          "from": "aff-kosmetika",
+          "to": "aff-drogerie",
+          "name": "Tierraverde",
+          "ok": true,
+          "title": "Tierraverde"
+        }
+      ]
+    }
+  }
 }
