@@ -151,22 +151,51 @@ export function aiEventToMainButtonEmailHint(ev = {}, meta = {}) {
 /**
  * Build artifact object from Phase3R pipeline JSON or {events:[]}.
  */
+function rowsToSyntheticEvents(rows = []) {
+  const out = [];
+  for (const r of rows) {
+    const blob = [r.subjectSafe, r.excerptSafe, (r.categories || []).join(" ")].filter(Boolean).join(" | ");
+    const idMatch = String(blob).match(/\b(advertiser|cid|advertiserid)[\s#:]*([0-9]{6,})\b/i);
+    const bareId = String(blob).match(/\b([0-9]{7})\b/);
+    const advertiserId = idMatch ? idMatch[2] : bareId ? bareId[1] : null;
+    const cats = r.categories || [];
+    const welcome = cats.includes("partner_welcome") || cats.includes("program_approval");
+    out.push({
+      eventType: welcome ? AI_EVENT_TYPE.PARTNER_APPROVED : AI_EVENT_TYPE.INFORMATIONAL,
+      advertiserId,
+      confidence: advertiserId ? "medium" : "low",
+      productHint: blob.slice(0, 400) || null,
+      termsSummary: null,
+      evidenceSpan: (cats || []).join(",") || null,
+      source: "email_row_v20",
+      uid: r.uid,
+      fromSafe: r.fromSafe,
+      subjectSafe: r.subjectSafe,
+    });
+  }
+  return out;
+}
+
 export function buildMainButtonEmailHintsArtifact(input = {}, opts = {}) {
-  const events = Array.isArray(input.events)
+  let events = Array.isArray(input.events)
     ? input.events
     : Array.isArray(input.ai?.events)
       ? input.ai.events
-      : Array.isArray(input.poll?.hints)
-        ? input.poll.hints.map((h) => ({
-            eventType: h.eventType || AI_EVENT_TYPE.INFORMATIONAL,
-            advertiserId: h.advertiserId,
-            confidence: h.confidence || "low",
-            productHint: null,
-            termsSummary: null,
-            evidenceSpan: null,
-            source: "poll_hint",
-          }))
-        : [];
+      : [];
+  // V20: also derive from redacted email rows (historical hints replay).
+  if (Array.isArray(input.emailRowsForHints) && input.emailRowsForHints.length) {
+    events = events.concat(rowsToSyntheticEvents(input.emailRowsForHints));
+  } else if (!events.length && Array.isArray(input.poll?.hints)) {
+    events = input.poll.hints.map((h) => ({
+      eventType: h.eventType || AI_EVENT_TYPE.INFORMATIONAL,
+      advertiserId: h.advertiserId,
+      confidence: h.confidence || "low",
+      productHint: null,
+      termsSummary: null,
+      evidenceSpan: null,
+      source: "poll_hint",
+    }));
+  }
 
   const metaBase = {
     fromTrusted: opts.fromTrusted !== false,
@@ -177,8 +206,17 @@ export function buildMainButtonEmailHintsArtifact(input = {}, opts = {}) {
   const hints = [];
   const byAdv = new Map();
   for (const ev of events) {
+    const fromSafe = String(ev.fromSafe || metaBase.from || "");
+    const fromTrusted =
+      metaBase.fromTrusted !== false &&
+      (/@mx\d*\.cj\.com/i.test(fromSafe) ||
+        /owner-membermessaging@/i.test(fromSafe) ||
+        /@cj\.com/i.test(fromSafe) ||
+        opts.fromTrusted === true);
     const hint = aiEventToMainButtonEmailHint(ev, {
       ...metaBase,
+      from: fromSafe || metaBase.from,
+      fromTrusted,
       sourceMessageId: ev.uid != null ? "uid:" + ev.uid : ev.source || null,
       duplicate: ev.duplicate === true,
       forwarded: ev.forwarded === true,
@@ -186,12 +224,16 @@ export function buildMainButtonEmailHintsArtifact(input = {}, opts = {}) {
       matchMethod: ev.advertiserId ? "advertiser_cid" : "none",
     });
     if (!hint.advertiserId) {
-      hints.push(hint);
+      // Keep untrusted incompletes out of dedupe map noise — still countable via eventsIn.
       continue;
     }
-    // Dedupe: keep newest trusted, else first.
+    // Dedupe: keep newest trusted with section, else trusted, else first.
     const prev = byAdv.get(hint.advertiserId);
-    if (!prev || (hint.trusted && !prev.trusted)) {
+    if (
+      !prev ||
+      (hint.trusted && !prev.trusted) ||
+      (hint.trusted && hint.suggestedSectionId && !prev.suggestedSectionId)
+    ) {
       byAdv.set(hint.advertiserId, hint);
     }
   }

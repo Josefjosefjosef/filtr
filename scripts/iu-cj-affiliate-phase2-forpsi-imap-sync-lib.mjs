@@ -297,9 +297,14 @@ export async function runMailboxHintsReplayBatch(options = {}) {
     replayStatePath ||
     path.join(path.dirname(statePath || "."), "iu-forpsi-hints-replay-state-v20.json");
   let replay = { version: 1, replayedUids: [], lastBatchAt: null };
+  const resetReplay =
+    options.resetReplay === true || process.env.IU_FORPSI_IMAP_HINTS_REPLAY_RESET === "1";
   try {
-    if (fs.existsSync(replayPath)) {
+    if (!resetReplay && fs.existsSync(replayPath)) {
       replay = { ...replay, ...JSON.parse(fs.readFileSync(replayPath, "utf8")) };
+    } else if (resetReplay && fs.existsSync(replayPath)) {
+      // Intentional one-shot re-backfill; does not touch main processedUids.
+      replay = { version: 1, replayedUids: [], lastBatchAt: null, resetAt: new Date().toISOString() };
     }
   } catch {
     /* keep default */

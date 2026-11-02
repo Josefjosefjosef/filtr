@@ -174,6 +174,24 @@ const art = buildMainButtonEmailHintsArtifact({
 expect("artifact_trusted_hint", art.counts.trustedWithSuggestedSection >= 1, art.counts);
 expect("artifact_cj_authority", art.authority.joinedEnded === "CJ_API_ONLY", art.authority);
 
+const fromRows = buildMainButtonEmailHintsArtifact({
+  emailRowsForHints: [
+    {
+      uid: 99,
+      categories: ["partner_welcome"],
+      subjectSafe: "Welcome GANT.CZ",
+      fromSafe: "owner-membermessaging@mx6.cj.com",
+      excerptSafe: "Fashion apparel clothing móda oblečení. Advertiser 4978487.",
+    },
+  ],
+});
+expect(
+  "rows_bridge_trusted_section",
+  fromRows.counts.trustedWithSuggestedSection >= 1 &&
+    fromRows.hints.some((h) => h.advertiserId === "4978487" && h.suggestedSectionId === "aff-moda"),
+  fromRows
+);
+
 if (fails.length) {
   console.error(JSON.stringify({ ok: false, fails }, null, 2));
   process.exit(1);

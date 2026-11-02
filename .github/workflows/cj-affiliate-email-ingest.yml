@@ -19,6 +19,10 @@ on:
         description: "Force V20 historical hints replay even in periodic mode (1=yes)"
         required: false
         default: "0"
+      hints_replay_reset:
+        description: "Reset hints-replay cursor (re-read checkpointed UIDs). Never clears main IMAP processedUids. (1=yes)"
+        required: false
+        default: "0"
       run_forpsi_offline_cycle:
         description: "Also run FORPSI mock ingest via unattended runner (1=yes)"
         required: false
@@ -205,6 +209,7 @@ jobs:
         env:
           IU_CJ_EMAIL_INGEST_MODE: ${{ github.event.inputs.mode || 'periodic' }}
           IU_FORPSI_IMAP_HINTS_REPLAY: ${{ (github.event.inputs.mode == 'historical' || github.event.inputs.hints_replay == '1') && '1' || '0' }}
+          IU_FORPSI_IMAP_HINTS_REPLAY_RESET: ${{ github.event.inputs.hints_replay_reset == '1' && '1' || '0' }}
           IU_FORPSI_IMAP_HINTS_REPLAY_LIMIT: "80"
           IU_FORPSI_IMAP_MAX_BATCHES_PER_RUN: ${{ (github.event.inputs.mode == 'historical' || github.event.inputs.hints_replay == '1') && '4' || env.IU_FORPSI_IMAP_MAX_BATCHES_PER_RUN }}
         run: |

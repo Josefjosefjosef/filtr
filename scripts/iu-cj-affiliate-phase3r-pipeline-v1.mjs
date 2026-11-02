@@ -238,6 +238,33 @@ export async function runPhase3rPipeline(options = {}) {
     (e) => e.eventType && e.eventType !== AI_EVENT_TYPE.INFORMATIONAL
   ).length;
 
+  // V20: export redacted events + email rows so main-button hints bridge can consume live/replay data.
+  const rowByUid = new Map(classifyRows.map((r) => [r.uid, r]));
+  const eventsForHints = allEvents.map((e) => {
+    const row = rowByUid.get(e.uid) || {};
+    const excerpt = String(row.excerptSafe || "").slice(0, 400);
+    return {
+      eventType: e.eventType || null,
+      advertiserId: e.advertiserId || null,
+      partnerName: e.partnerName || null,
+      confidence: e.confidence || null,
+      productHint: e.productHint || excerpt || null,
+      termsSummary: e.termsSummary || null,
+      evidenceSpan: e.evidenceSpan || null,
+      source: e.source || "ai_event",
+      uid: e.uid ?? null,
+      fromSafe: String(row.fromSafe || "").slice(0, 200),
+      subjectSafe: String(row.subjectSafe || "").slice(0, 240),
+    };
+  });
+  const emailRowsForHints = classifyRows.map((r) => ({
+    uid: r.uid ?? null,
+    categories: r.categories || [],
+    subjectSafe: String(r.subjectSafe || "").slice(0, 240),
+    fromSafe: String(r.fromSafe || "").slice(0, 200),
+    excerptSafe: String(r.excerptSafe || "").slice(0, 500),
+  }));
+
   return {
     schema: PHASE3R_PIPELINE_SCHEMA,
     ok: true,
@@ -253,6 +280,8 @@ export async function runPhase3rPipeline(options = {}) {
     errors,
     batches,
     checkpoint: lastPoll?.checkpoint || null,
+    events: eventsForHints,
+    emailRowsForHints,
     ai: {
       aiActuallyRan,
       aiHttpAttempted,
