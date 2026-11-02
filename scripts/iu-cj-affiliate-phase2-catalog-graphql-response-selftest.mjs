@@ -15,8 +15,28 @@ expect(
     ok: true,
     status: 200,
     gqlErrors: [],
-    json: { data: { shoppingProducts: { totalCount: 1, resultList: [productRow] } } },
+    json: { data: { shoppingProducts: { totalCount: 1, count: 1, limit: 100, page: null, resultList: [productRow] } } },
   }).kind === "success"
+);
+
+expect(
+  "page_token_surfaced",
+  parseShoppingProductsGraphqlResponse({
+    ok: true,
+    status: 200,
+    gqlErrors: [],
+    json: {
+      data: {
+        shoppingProducts: {
+          totalCount: 20000,
+          count: 10000,
+          limit: 10000,
+          page: "abc",
+          resultList: [productRow],
+        },
+      },
+    },
+  }).page === "abc"
 );
 
 expect(

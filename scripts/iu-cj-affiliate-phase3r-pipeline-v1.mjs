@@ -19,6 +19,12 @@ import {
   resolveAiOutcome,
 } from "./iu-cj-affiliate-phase3r-ai-email-event-v1.mjs";
 import { reconcileAiEventBatch } from "./iu-cj-affiliate-phase3r-ai-to-cj-reconcile-v1.mjs";
+import {
+  EMAIL_CONTENT_STATE,
+  resolveEmailContentState,
+  summarizeEmailContentStates,
+} from "./iu-cj-affiliate-phase3r-email-content-state-v1.mjs";
+import { reconcileEmailOffersWithCjStaging } from "./iu-cj-affiliate-phase3r-email-offer-reconcile-v1.mjs";
 import { parseAffiliateCatalogOrdered } from "./iu-cj-affiliate-phase2-partner-slot-inventory-v1.mjs";
 import { isCjTrackingUrl } from "./iu-cj-affiliate-catalog-sync-publish-gate-v1.mjs";
 
@@ -274,10 +280,21 @@ export async function runPhase3rPipeline(options = {}) {
       subject: row.subjectSafe,
       fromTrusted: /cj\.com/i.test(String(row.fromSafe || "")) || options.trustFrom !== false,
     });
+    const content = resolveEmailContentState({
+      uid: row.uid,
+      parsed: true,
+      aiOutcome: outcome,
+      aiError: cls.aiError || null,
+      acceptDeterministicFallback: options.acceptDeterministicFallback === true,
+    });
     classified.push({
       uid: row.uid,
       backend: cls.backend,
       aiActuallyRan: cls.aiActuallyRan === true,
+      aiOutcome: outcome,
+      contentState: content.state,
+      contentReason: content.reason,
+      analyzed: content.analyzed === true,
       eventTypes: events.map((e) => e.eventType),
       hintsCount: hints.length,
     });
@@ -291,6 +308,34 @@ export async function runPhase3rPipeline(options = {}) {
     forceConfirmedEnded: options.forceConfirmedEnded === true,
     slotByAdvertiserId: options.slotByAdvertiserId || {},
   });
+
+  const emailOfferReconcile = reconcileEmailOffersWithCjStaging({
+    events: allEvents,
+    stagingLinks: options.stagingLinks || [],
+    managedPartners: options.managedPartners || catalogAdvertisers.map((a) => ({
+      advertiserId: a.advertiserId || a.advertiserCid,
+      active: true,
+    })),
+    stagingAdvertisers: options.stagingAdvertisers || catalogAdvertisers,
+    emailOfferStagingArmed: options.emailOfferStagingArmed === true || env.IU_CJ_EMAIL_OFFER_STAGING_ARMED === "1",
+  });
+
+  // Attach HOLD/RETRY onto classified rows when offer reconcile held the uid.
+  const holdUids = new Set((emailOfferReconcile.holds || []).map((h) => h.uid).filter((u) => u != null));
+  for (const row of classified) {
+    if (row.contentState === EMAIL_CONTENT_STATE.RETRY_PENDING) continue;
+    if (holdUids.has(row.uid) && row.contentState === EMAIL_CONTENT_STATE.ANALYZED) {
+      row.contentState = EMAIL_CONTENT_STATE.HOLD;
+      row.contentReason = "email_offer_hold";
+    } else if (
+      (emailOfferReconcile.corroborated || []).some((c) => c.uid === row.uid) &&
+      row.analyzed
+    ) {
+      row.contentState = EMAIL_CONTENT_STATE.RECONCILED;
+      row.contentReason = "cj_email_corroborated";
+    }
+  }
+  const contentStateSummary = summarizeEmailContentStates(classified);
 
   const relevantHints = allEvents.filter(
     (e) => e.eventType && e.eventType !== AI_EVENT_TYPE.INFORMATIONAL
@@ -384,6 +429,16 @@ export async function runPhase3rPipeline(options = {}) {
       manualReview: reconcile.counts?.manualReview ?? 0,
       protectedSkip: reconcile.counts?.protectedSkip ?? 0,
     },
+    emailOfferReconcile: {
+      corroborated: emailOfferReconcile.counts?.corroborated ?? 0,
+      holds: emailOfferReconcile.counts?.holds ?? 0,
+      emailOnlyPublishBlocked: emailOfferReconcile.counts?.emailOnlyPublishBlocked ?? 0,
+      cjPlusEmail: emailOfferReconcile.counts?.cjPlusEmail ?? 0,
+      sampleHolds: (emailOfferReconcile.holds || []).slice(0, 20),
+      sampleCorroborated: (emailOfferReconcile.corroborated || []).slice(0, 20),
+    },
+    contentStates: contentStateSummary,
+    retryPendingCount: contentStateSummary.counts?.[EMAIL_CONTENT_STATE.RETRY_PENDING] || 0,
     poll: stripBodiesFromPoll(lastPoll),
     liveEnabled: false,
     publishArmed: false,
@@ -391,6 +446,8 @@ export async function runPhase3rPipeline(options = {}) {
     mutatePartners: false,
     authority: "CJ_API_ONLY",
     cjApiFollowUp: "EMAIL_HINT_REQUIRES_CJ_RECONCILE_ONLY",
+    emailPublishPath:
+      "corroborate_cj_staging_or_HOLD_until_authorized_cj_tracking_url; never email-alone publish",
     startedAt,
     finishedAt: new Date().toISOString(),
     exitCode: 0,

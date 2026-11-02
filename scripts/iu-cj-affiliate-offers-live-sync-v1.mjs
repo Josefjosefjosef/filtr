@@ -27,9 +27,11 @@ import {
 } from "./iu-cj-affiliate-offers-public-build-v1.mjs";
 import { isCjTrackingUrl } from "./iu-cj-affiliate-catalog-sync-publish-gate-v1.mjs";
 import {
-  buildPublisherProductsQuery,
-  cjGraphql,
-  parseShoppingProductsGraphqlResponse,
+  CJ_PRODUCT_SEARCH_MAX_LIMIT,
+  CJ_PRODUCT_SEARCH_PAGE_SIZE_DEFAULT,
+  fetchAllShoppingProductsForPartner,
+  inventoryShoppingProductFeedsForPartner,
+  mapGraphqlProductRow,
 } from "./iu-cj-affiliate-phase2-product-api.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -437,10 +439,11 @@ export function buildOffersPublicFromStaging(opts = {}) {
 }
 
 /**
- * Fetch shoppingProducts for managed partners.
- * V29: partnerLimit 0 / unset-high = all active partners (no artificial 80 cap).
- * perPartner capped at CJ GraphQL max 10 (API hard limit in buildPublisherProductsQuery).
- * Presentation “Zobrazit více” must not be confused with this source fetch limit.
+ * Fetch shoppingProducts for managed partners with documented CJ pagination.
+ * V30: removes artificial Math.min(10) source cap. Uses offset/limit (≤10k) + page token.
+ * partnerLimit 0 = all active partners.
+ * Optional publishPerPartner is a presentation budget only (VALID_NOT_PUBLISHED), never a source cap.
+ * Presentation “Zobrazit více” must not be confused with source fetch completeness.
  */
 export async function sampleProductsForManagedPartners(opts = {}) {
   const env = opts.env || process.env;
@@ -456,27 +459,63 @@ export async function sampleProductsForManagedPartners(opts = {}) {
       : 0;
   // 0 = no partner cap (fetch all active managed partners).
   const partnerLimit = Number.isFinite(rawPartnerLimit) ? rawPartnerLimit : 0;
-  const rawPer = opts.perPartner != null
-    ? Number(opts.perPartner)
-    : env.IU_CJ_OFFERS_PRODUCT_LIMIT != null && String(env.IU_CJ_OFFERS_PRODUCT_LIMIT).trim() !== ""
-      ? Number(env.IU_CJ_OFFERS_PRODUCT_LIMIT)
-      : 10;
-  // CJ shoppingProducts GraphQL accepts max 10 per request (enforced in product-api).
-  const perPartner = Math.max(1, Math.min(10, Number.isFinite(rawPer) ? rawPer : 10));
+  const rawPageSize = opts.pageSize != null
+    ? Number(opts.pageSize)
+    : env.IU_CJ_OFFERS_PRODUCT_PAGE_SIZE != null && String(env.IU_CJ_OFFERS_PRODUCT_PAGE_SIZE).trim() !== ""
+      ? Number(env.IU_CJ_OFFERS_PRODUCT_PAGE_SIZE)
+      : opts.perPartner != null
+        ? Number(opts.perPartner)
+        : env.IU_CJ_OFFERS_PRODUCT_LIMIT != null && String(env.IU_CJ_OFFERS_PRODUCT_LIMIT).trim() !== ""
+          ? Number(env.IU_CJ_OFFERS_PRODUCT_LIMIT)
+          : CJ_PRODUCT_SEARCH_PAGE_SIZE_DEFAULT;
+  const pageSize = Math.max(
+    1,
+    Math.min(
+      CJ_PRODUCT_SEARCH_MAX_LIMIT,
+      Number.isFinite(rawPageSize) && rawPageSize > 0 ? Math.floor(rawPageSize) : CJ_PRODUCT_SEARCH_PAGE_SIZE_DEFAULT
+    )
+  );
+  const rawMaxPages = opts.maxPagesPerPartner != null
+    ? Number(opts.maxPagesPerPartner)
+    : env.IU_CJ_OFFERS_PRODUCT_MAX_PAGES != null && String(env.IU_CJ_OFFERS_PRODUCT_MAX_PAGES).trim() !== ""
+      ? Number(env.IU_CJ_OFFERS_PRODUCT_MAX_PAGES)
+      : 100;
+  const maxPagesPerPartner = Math.max(1, Math.min(500, Number.isFinite(rawMaxPages) ? rawMaxPages : 100));
+  const rawPublish = opts.publishPerPartner != null
+    ? Number(opts.publishPerPartner)
+    : env.IU_CJ_OFFERS_PRODUCT_PUBLISH_PER_PARTNER != null &&
+        String(env.IU_CJ_OFFERS_PRODUCT_PUBLISH_PER_PARTNER).trim() !== ""
+      ? Number(env.IU_CJ_OFFERS_PRODUCT_PUBLISH_PER_PARTNER)
+      : 0;
+  // 0 = publish all publicationReady rows from the fetched source inventory.
+  const publishPerPartner = Number.isFinite(rawPublish) && rawPublish > 0 ? Math.floor(rawPublish) : 0;
+  const inventoryFeeds = opts.inventoryFeeds === true || env.IU_CJ_OFFERS_INVENTORY_FEEDS === "1";
   const meta = {
     sampledPartners: 0,
     activePartners: 0,
     partnerCapApplied: partnerLimit > 0,
     partnerLimit: partnerLimit > 0 ? partnerLimit : null,
-    perPartner,
-    apiMaxPerPartner: 10,
+    pageSize,
+    maxPagesPerPartner,
+    publishPerPartner: publishPerPartner || null,
+    perPartner: pageSize,
+    apiMaxPerQuery: CJ_PRODUCT_SEARCH_MAX_LIMIT,
+    apiDefaultLimit: 1000,
+    artificialTenCapRemoved: true,
     partnersWithFeed: 0,
     partnersEmptyFeed: 0,
     partnersError: 0,
+    partnersIncompletePagination: 0,
     partnersTruncatedByApiLimit: 0,
+    sourceProductsFetched: 0,
+    sourceProductsPublishReady: 0,
+    sourceProductsDeferredPresentationBudget: 0,
+    feedsInventoried: 0,
+    feedDeclaredProductCount: 0,
+    partnerFetch: [],
     skippedNoCredentials: false,
     note:
-      "Source fetch uses up to 10 products/partner (CJ GraphQL hard max). Not a UI presentation limit.",
+      "V30 source fetch paginates shoppingProducts (offset/limit ≤10000, page token above). Presentation budget is optional and separate from source completeness.",
   };
   const active = partners.filter((p) => p && p.active !== false && p.advertiserId != null);
   meta.activePartners = active.length;
@@ -485,59 +524,132 @@ export async function sampleProductsForManagedPartners(opts = {}) {
   meta.sampledPartners = sample.length;
   if (!pat || !publisherCid) {
     meta.skippedNoCredentials = true;
-    return { products: [], meta };
+    return { products: [], sourceProducts: [], feedInventory: [], meta };
   }
+  const gqlEnv = { pat, publisherCid, websitePid };
   const products = [];
+  const sourceProducts = [];
+  const feedInventory = [];
   for (const p of sample) {
     const partnerId = String(p.advertiserId);
+    const partnerMeta = {
+      advertiserId: partnerId,
+      partnerName: p.title || null,
+      fetched: 0,
+      totalCount: null,
+      complete: false,
+      error: null,
+      feeds: 0,
+      declaredProductCount: null,
+    };
     try {
-      const q = buildPublisherProductsQuery(publisherCid, partnerId, websitePid, perPartner);
-      const gql = await cjGraphql(q, pat);
-      const parsed = parseShoppingProductsGraphqlResponse(gql);
-      if (!parsed.ok) {
+      if (inventoryFeeds) {
+        const inv = await inventoryShoppingProductFeedsForPartner(gqlEnv, partnerId, {
+          pageSize: 50,
+          maxPages: 20,
+        });
+        partnerMeta.feeds = inv.feedCount;
+        partnerMeta.declaredProductCount = inv.declaredProductCount;
+        meta.feedsInventoried += inv.feedCount;
+        meta.feedDeclaredProductCount += inv.declaredProductCount || 0;
+        for (const f of inv.feeds || []) {
+          feedInventory.push({
+            advertiserId: partnerId,
+            partnerName: p.title || null,
+            adId: f.adId != null ? String(f.adId) : null,
+            feedName: f.feedName || null,
+            productCount: f.productCount != null ? Number(f.productCount) : null,
+            lastUpdated: f.lastUpdated || null,
+            sourceFeedType: f.sourceFeedType || null,
+            currency: f.currency || null,
+            language: f.language || null,
+            advertiserCountry: f.advertiserCountry || null,
+            inventoryComplete: inv.complete === true,
+          });
+        }
+      }
+      const fetched = await fetchAllShoppingProductsForPartner(gqlEnv, partnerId, {
+        pageSize,
+        maxPages: maxPagesPerPartner,
+      });
+      partnerMeta.fetched = fetched.fetchedCount;
+      partnerMeta.totalCount = fetched.totalCount;
+      partnerMeta.complete = fetched.complete === true;
+      partnerMeta.error = fetched.error || null;
+      if (fetched.error && fetched.fetchedCount === 0) {
         meta.partnersError += 1;
+        meta.partnerFetch.push(partnerMeta);
         continue;
       }
-      if (parsed.kind === "empty_catalog" || !(parsed.resultList || []).length) {
+      if (!fetched.resultList?.length) {
         meta.partnersEmptyFeed += 1;
+        meta.partnerFetch.push(partnerMeta);
         continue;
       }
       meta.partnersWithFeed += 1;
-      const totalCount = Number(parsed.totalCount);
-      const got = (parsed.resultList || []).length;
-      if (Number.isFinite(totalCount) && totalCount > got) {
+      if (!fetched.complete || fetched.incompleteResponse || fetched.truncated) {
+        meta.partnersIncompletePagination += 1;
         meta.partnersTruncatedByApiLimit += 1;
       }
-      for (const item of parsed.resultList || []) {
-        const img = item?.imageLink || item?.imageUrl || null;
-        const amount = item?.price?.amount ?? null;
-        const currency = item?.price?.currency ?? null;
-        const click = item?.linkCode?.clickUrl || null;
+      let readyForPartner = 0;
+      for (const item of fetched.resultList || []) {
+        const mapped = mapGraphqlProductRow(item, websitePid);
+        const img = mapped.imageUrl;
+        const amount = mapped.price;
+        const currency = mapped.currency;
+        const click = mapped.affiliateClickUrl;
         const trusted = isCjTrackingUrl(click);
-        products.push({
+        const publicationReady = Boolean(
+          trusted && amount != null && currency && typeof img === "string" && /^https:\/\//i.test(img)
+        );
+        const row = {
           advertiserId: partnerId,
           partnerName: p.title || null,
           sectionKey: p.sectionId || null,
-          productId: item?.id || null,
-          title: item?.title || null,
-          description: item?.description || null,
+          productId: mapped.productId,
+          title: mapped.name,
+          description: mapped.description,
           imageUrl: typeof img === "string" && /^https:\/\//i.test(img) ? img : null,
           currentPrice: amount,
           originalPrice: null,
           currency,
           affiliateUrl: trusted ? click : null,
-          availability: item?.availability || null,
-          sourceTotalCount: Number.isFinite(totalCount) ? totalCount : null,
-          publicationReady: Boolean(
-            trusted && amount != null && currency && typeof img === "string" && /^https:\/\//i.test(img)
-          ),
-        });
+          availability: mapped.availability,
+          sourceTotalCount: fetched.totalCount,
+          sourceFetchComplete: fetched.complete === true,
+          publicationReady,
+          rejectReason: null,
+        };
+        meta.sourceProductsFetched += 1;
+        sourceProducts.push(row);
+        if (!publicationReady) {
+          sourceProducts[sourceProducts.length - 1].rejectReason = "not_publication_ready";
+          continue;
+        }
+        meta.sourceProductsPublishReady += 1;
+        if (publishPerPartner > 0 && readyForPartner >= publishPerPartner) {
+          meta.sourceProductsDeferredPresentationBudget += 1;
+          sourceProducts[sourceProducts.length - 1].rejectReason =
+            "valid_not_published_presentation_budget";
+          sourceProducts[sourceProducts.length - 1].publicationReady = false;
+          continue;
+        }
+        readyForPartner += 1;
+        products.push(row);
       }
-    } catch {
+    } catch (e) {
       meta.partnersError += 1;
+      partnerMeta.error = String(e?.message || e).slice(0, 120);
     }
+    meta.partnerFetch.push(partnerMeta);
   }
-  return { products, meta };
+  // Cap partnerFetch audit size in meta for huge partner sets
+  if (meta.partnerFetch.length > 40) {
+    meta.partnerFetchSample = meta.partnerFetch.slice(0, 40);
+    meta.partnerFetchCount = meta.partnerFetch.length;
+    delete meta.partnerFetch;
+  }
+  return { products, sourceProducts, feedInventory, meta };
 }
 
 function readyCounts(doc) {
@@ -581,6 +693,8 @@ export async function runOffersLiveSync(opts = {}) {
 
   let products = opts.products || [];
   let productMeta = opts.productMeta || null;
+  let sourceProducts = opts.sourceProducts || null;
+  let feedInventory = opts.feedInventory || null;
   if (sampleProducts && products.length === 0) {
     const sampled = await sampleProductsForManagedPartners({
       env,
@@ -588,9 +702,15 @@ export async function runOffersLiveSync(opts = {}) {
       websitePid: WEBSITE_PID,
       partnerLimit: opts.productPartnerLimit,
       perPartner: opts.productLimitPerPartner,
+      pageSize: opts.productPageSize,
+      maxPagesPerPartner: opts.productMaxPages,
+      publishPerPartner: opts.productPublishPerPartner,
+      inventoryFeeds: opts.inventoryFeeds,
     });
     products = sampled.products;
     productMeta = sampled.meta;
+    sourceProducts = sampled.sourceProducts || null;
+    feedInventory = sampled.feedInventory || null;
   }
 
   const built = buildOffersPublicFromStaging({
@@ -705,6 +825,15 @@ export async function runOffersLiveSync(opts = {}) {
     counts: nextReady,
     prevReady,
     productMeta,
+    sourceInventory: {
+      fetched: Array.isArray(sourceProducts) ? sourceProducts.length : null,
+      publishedSelected: products.length,
+      feeds: Array.isArray(feedInventory) ? feedInventory.length : null,
+      feedDeclaredProductCount: productMeta?.feedDeclaredProductCount ?? null,
+      artificialTenCapRemoved: productMeta?.artificialTenCapRemoved === true,
+      incompletePartners: productMeta?.partnersIncompletePagination ?? null,
+    },
+    feedInventorySample: Array.isArray(feedInventory) ? feedInventory.slice(0, 40) : null,
     rejectReasons: built.rejectReasons,
     layerLossAudit,
     sha256: crypto.createHash("sha256").update(JSON.stringify(doc)).digest("hex"),

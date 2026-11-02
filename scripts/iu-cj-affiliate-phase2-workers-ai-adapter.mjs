@@ -10,19 +10,37 @@ import { validateAiOfferJson } from "./iu-cj-affiliate-phase2-ai-offer-evidence-
 
 export const WORKERS_AI_MODEL_CZECH_CANDIDATE = "@cf/meta/llama-3.1-8b-instruct";
 
-/** Prefer dedicated Workers AI token; never log token values. */
+/**
+ * Prefer dedicated Workers AI token; never log token values.
+ * V30: when IU_CJ_WORKERS_AI_API_TOKEN is present, do not mask auth failures by
+ * falling through to unrelated Ads/staging tokens (common source of HTTP 401 noise).
+ */
 export function resolveCloudflareAiApiToken(env = process.env) {
+  const dedicated = String(env.IU_CJ_WORKERS_AI_API_TOKEN || "").trim();
+  if (dedicated) return { name: "IU_CJ_WORKERS_AI_API_TOKEN", present: true, dedicatedOnly: true };
   const candidates = [
-    "IU_CJ_WORKERS_AI_API_TOKEN",
     "CLOUDFLARE_CJ_STAGING_API_TOKEN",
     "CLOUDFLARE_ADS_API_TOKEN",
     "CLOUDFLARE_API_TOKEN",
   ];
   for (const name of candidates) {
     const v = String(env[name] || "").trim();
-    if (v) return { name, present: true };
+    if (v) return { name, present: true, dedicatedOnly: false };
   }
-  return { name: null, present: false };
+  return { name: null, present: false, dedicatedOnly: false };
+}
+
+/** Ordered token candidates for live HTTP (dedicated-only when dedicated secret set). */
+export function listCloudflareAiApiTokenCandidates(env = process.env) {
+  const dedicated = String(env.IU_CJ_WORKERS_AI_API_TOKEN || "").trim();
+  if (dedicated) return [{ name: "IU_CJ_WORKERS_AI_API_TOKEN", token: dedicated }];
+  return [
+    "CLOUDFLARE_CJ_STAGING_API_TOKEN",
+    "CLOUDFLARE_ADS_API_TOKEN",
+    "CLOUDFLARE_API_TOKEN",
+  ]
+    .map((name) => ({ name, token: String(env[name] || "").trim() }))
+    .filter((t) => t.token);
 }
 
 export function readCloudflareAiApiToken(env = process.env) {
@@ -152,14 +170,7 @@ async function workersAiHttpRun(safeText, options = {}) {
   bodies.push({ prompt });
 
   const headers = { "Content-Type": "application/json" };
-  const tokenCandidates = [
-    "IU_CJ_WORKERS_AI_API_TOKEN",
-    "CLOUDFLARE_CJ_STAGING_API_TOKEN",
-    "CLOUDFLARE_ADS_API_TOKEN",
-    "CLOUDFLARE_API_TOKEN",
-  ]
-    .map((name) => ({ name, token: String(env[name] || "").trim() }))
-    .filter((t) => t.token);
+  const tokenCandidates = listCloudflareAiApiTokenCandidates(env);
   if (!testUrl && tokenCandidates.length === 0) {
     return {
       ok: false,
@@ -219,8 +230,11 @@ async function workersAiHttpRun(safeText, options = {}) {
           cfErrorMessage: cfMessage,
           apiTokenSecretName: auth.name,
           requestPathSafe: "/accounts/{id}/ai/run/" + modelPath,
+          retryRecommended: res.status === 401 || res.status === 403,
+          dedicatedTokenOnly: auth.name === "IU_CJ_WORKERS_AI_API_TOKEN",
         };
-        // try next token on auth errors; otherwise try next body shape
+        // Dedicated Workers AI token: stop immediately on auth errors (do not mask with Ads tokens).
+        // Fallback tokens: try next token on 401/403; otherwise try next body shape.
         if (res.status === 401 || res.status === 403) break;
         continue;
       }
