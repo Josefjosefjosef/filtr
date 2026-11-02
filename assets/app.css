@@ -22856,8 +22856,38 @@ header#topbarWrap.topbar-new.iuTopbar:has(#iuTopbarInfoBtn)::after{
   border-radius:12px;
   box-shadow:0 1px 0 #fffc inset,0 1px 2px rgba(11,27,43,.05),0 10px 22px rgba(11,27,43,.04)!important;
   transition:transform .12s ease,box-shadow .12s ease,border-color .14s ease,background .14s ease,color .14s ease,filter .14s ease;
+  /* V25 affiliate-chip-title-wrap-v1-20261102: keep compact chip; title wraps ≤2 lines */
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  overflow:hidden;
+  min-width:0;
 }
-#newsList #iuAffiliateView .iuAffiliateGrid a.iuAffiliateChip .iuRadioChipTitle{color:rgba(11,27,43,.92)!important}
+/* Scoped to CJ affiliate chips only — do not alter Radio/TV/Maps/paid chips. */
+#iuAffiliateView a.iuAffiliateChip .iuRadioChipTitle,
+#newsList #iuAffiliateView .iuAffiliateGrid a.iuAffiliateChip .iuRadioChipTitle{
+  color:rgba(11,27,43,.92)!important;
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  line-clamp:2;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  hyphens:auto;
+  max-width:100%;
+  max-height:calc(1.25em * 2);
+  height:auto;
+  flex:0 0 auto;
+  align-self:center;
+  margin:0;
+  padding:0 2px;
+  box-sizing:border-box;
+  text-align:center;
+  line-height:1.25;
+}
 @media (hover:hover) and (pointer:fine){
   #newsList #iuAffiliateView .iuAffiliateGrid a.iuAffiliateChip:hover{
     color:rgba(11,27,43,.93)!important;

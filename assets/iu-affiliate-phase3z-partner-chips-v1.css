@@ -36,12 +36,23 @@
   overflow-wrap: anywhere;
   word-break: break-word;
   hyphens: auto;
-  display: block;
+  /* V25: max two lines; full name remains in accessible name / title attr when truncated */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   white-space: normal;
-  overflow: visible;
-  text-overflow: clip;
-  /* Explicitly NO -webkit-line-clamp / ellipsis — full partner name must remain readable */
+  overflow: hidden;
+  text-overflow: ellipsis;
   max-width: 100%;
+  max-height: calc(1.25em * 2);
+  height: auto;
+  flex: 0 0 auto;
+  align-self: center;
+  text-align: center;
+  margin: 0;
+  padding: 0 2px;
+  box-sizing: border-box;
 }
 
 /* Long names: slightly smaller type, still fully visible */
