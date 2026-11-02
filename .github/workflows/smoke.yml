@@ -32,7 +32,7 @@ jobs:
   # Real early-exit for duplicate push when an open PR owns required smoke.
   # Must NOT run npm ci / Playwright — only gate. Does NOT post required status.
   smoke-gate:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     outputs:
       skip: ${{ steps.prgate.outputs.skip }}
@@ -63,7 +63,7 @@ jobs:
   smoke:
     needs: smoke-gate
     if: needs.smoke-gate.outputs.skip != 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 120
     steps:
       - name: Checkout

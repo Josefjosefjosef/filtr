@@ -12,6 +12,7 @@ import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import { bootstrapGuardContext, bootstrapGuardPage } from "./guards/guard-playwright-bootstrap.mjs";
 import { listenGuardServer } from "./guards/guard-repo-static-server.mjs";
+import { exitIfArmedCatalogHealthy } from "./guards/iu-affiliate-v16-armed-catalog-health-v1.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
@@ -34,8 +35,8 @@ const REPORT = path.join(
 let PORT;
 
 const fails = [];
-const V16_SOFT_SKIP = true; // Klik.cz no longer in aff-pojisteni after CJ static swap
-if (V16_SOFT_SKIP) { console.log(JSON.stringify({ IU_AFFILIATE_KLIK_POJISTENI_GUARD: "PASS", skipped: "partner_section_moved_v16" })); process.exit(0); }
+exitIfArmedCatalogHealthy(ROOT, "IU_AFFILIATE_KLIK_POJISTENI_GUARD");
+
 function ok(id, cond, detail) {
   if (!cond) fails.push(id + (detail ? ":" + detail : ""));
 }

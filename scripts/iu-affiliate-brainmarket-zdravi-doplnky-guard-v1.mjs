@@ -14,6 +14,7 @@ import {
   startGuardStaticServer,
   stopGuardProcess,
 } from "./guards/guard-playwright-lifecycle.mjs";
+import { exitIfArmedCatalogHealthy } from "./guards/iu-affiliate-v16-armed-catalog-health-v1.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
@@ -36,19 +37,8 @@ const REPORT = path.join(
   "iu-affiliate-brainmarket-zdravi-doplnky-guard-report.json"
 );
 const fails = [];
+exitIfArmedCatalogHealthy(ROOT, "IU_AFFILIATE_BRAINMARKET_ZDRAVI_DOPLNKY");
 
-const V16_SOFT_SKIP = (() => {
-  try {
-    const cat = fs.readFileSync(path.join(ROOT, "assets", "iu-affiliate-catalog.js"), "utf8");
-    return /IU_AFF_PUBLIC_SWAP_ARMED\s*=\s*true/.test(cat);
-  } catch (_) {
-    return false;
-  }
-})();
-if (V16_SOFT_SKIP) {
-  console.log(JSON.stringify({ V16_PUBLIC_SWAP_GUARD: "PASS", skipped: "historical_slot_freeze_superseded_by_static_cj_catalog" }));
-  process.exit(0);
-}
 
 function ok(id, cond, detail) {
   if (!cond) fails.push(id + (detail ? ":" + detail : ""));

@@ -12,6 +12,7 @@ import { createRequire } from "node:module";
 import { bootstrapGuardContext, bootstrapGuardPage } from "./guards/guard-playwright-bootstrap.mjs";
 import { listenGuardServer } from "./guards/guard-repo-static-server.mjs";
 import { swHasAllowedCacheVersion } from "./guards/iu-sw-cache-version-allowlist.mjs";
+import { exitIfArmedCatalogHealthy } from "./guards/iu-affiliate-v16-armed-catalog-health-v1.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
@@ -39,24 +40,7 @@ const REPORT = path.join(
   process.env.TEMP || process.env.TMPDIR || "/tmp",
   "iu_affiliate_categories_34_structure_guard.json"
 );
-const V16_SOFT_SKIP = (() => {
-  try {
-    const cat = fs.readFileSync(path.join(ROOT, "assets", "iu-affiliate-catalog.js"), "utf8");
-    return /IU_AFF_PUBLIC_SWAP_ARMED\s*=\s*true/.test(cat);
-  } catch (_) {
-    return false;
-  }
-})();
-if (V16_SOFT_SKIP) {
-  const out = {
-    IU_AFFILIATE_CATEGORIES_34_STRUCTURE_GUARD: "PASS",
-    skipped: "historical_slot_freeze_superseded_by_static_cj_catalog",
-    fails: [],
-  };
-  fs.writeFileSync(REPORT, JSON.stringify(out, null, 2));
-  console.log(JSON.stringify(out, null, 2));
-  process.exit(0);
-}
+exitIfArmedCatalogHealthy(ROOT, "IU_AFFILIATE_CATEGORIES_34_STRUCTURE_GUARD");
 
 /** Original 30 — must remain prefix in this order. */
 const BASE_ORDER = [
@@ -156,6 +140,7 @@ const EXPECTED_ORDER = BASE_ORDER.concat(NEW_ORDER);
 const EXPECTED_TITLES = BASE_TITLES.concat(NEW_TITLES);
 
 const fails = [];
+exitIfArmedCatalogHealthy(ROOT, "IU_AFFILIATE_CATEGORIES_34_STRUCTURE_GUARD");
 function ok(id, cond, detail) {
   if (!cond) fails.push(id + (detail ? ":" + detail : ""));
 }

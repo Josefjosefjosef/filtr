@@ -100,7 +100,11 @@ async function auditProdHttp() {
   const catRes = await fetch(catalogUrl, { cache: "no-store" });
   ok("prod:catalog_ok", catRes.ok, String(catRes.status));
   const catBody = await catRes.text();
-  ok("prod:catalog_leo", catBody.includes("Leo Express") && catBody.includes("15736211"));
+  ok(
+    "prod:catalog_leo",
+    /Leo Express(?: Europe)?/.test(catBody) && catBody.includes(LEO_CJ),
+    "expected_current_leo_cj"
+  );
 
   const cc = catRes.headers.get("cache-control") || "";
   const cf = catRes.headers.get("cf-cache-status") || "";
