@@ -12,6 +12,7 @@ import {
   sectionIdsFromMainButtons,
   resolveOfferSectionKeys,
   runOffersLiveSync,
+  sampleProductsForManagedPartners,
 } from "./iu-cj-affiliate-offers-live-sync-v1.mjs";
 
 const PID = "101883843";
@@ -452,6 +453,31 @@ function expect(name, cond) {
   const prod = (gated.doc.sections || []).flatMap((s) => s.products || []);
   expect("zero_not_present", !prod.some((p) => String(p.productId) === "166769"));
   expect("ok_price_present", prod.some((p) => String(p.productId) === "ok-1"));
+}
+
+{
+  // V29: partnerLimit 0 = all active partners; perPartner defaults toward API max 10.
+  const partners = [];
+  for (let i = 1; i <= 90; i++) partners.push({ advertiserId: String(1000 + i), active: true, title: "P" + i });
+  const noCred = await sampleProductsForManagedPartners({
+    partners,
+    partnerLimit: 0,
+    perPartner: 10,
+    env: {},
+  });
+  expect("product_fetch_no_cred_skip", noCred.meta.skippedNoCredentials === true);
+  expect("product_fetch_no_artificial_80", noCred.meta.partnerCapApplied === false);
+  expect("product_fetch_per_partner_api_max", noCred.meta.perPartner === 10);
+  expect("product_fetch_active_all", noCred.meta.activePartners === 90);
+
+  const capped = await sampleProductsForManagedPartners({
+    partners,
+    partnerLimit: 80,
+    perPartner: 3,
+    env: {},
+  });
+  expect("product_fetch_cap_flag", capped.meta.partnerCapApplied === true);
+  expect("product_fetch_cap_value", capped.meta.partnerLimit === 80);
 }
 
 console.log(

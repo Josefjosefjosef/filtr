@@ -9,6 +9,7 @@ import {
   proveEmailToCategoryChain,
   suggestSectionIdFromEmailText,
   redactEmailUrls,
+  isPlausibleCjAdvertiserId,
 } from "./iu-cj-affiliate-phase3z-email-hints-bridge-v19.mjs";
 import { emailHintToWebsiteEvidence } from "./iu-cj-affiliate-phase3z-main-button-email-hints-v12.mjs";
 import { AI_EVENT_TYPE } from "./iu-cj-affiliate-phase3r-ai-email-event-v1.mjs";
@@ -190,6 +191,24 @@ expect(
   fromRows.counts.trustedWithSuggestedSection >= 1 &&
     fromRows.hints.some((h) => h.advertiserId === "4978487" && h.suggestedSectionId === "aff-moda"),
   fromRows
+);
+
+// V29: reject hallucinated short advertiser IDs (e.g. AI "6" from e-armyshop email).
+expect("plausible_id_ok", isPlausibleCjAdvertiserId("7917498") === "7917498");
+expect("plausible_id_reject_short", isPlausibleCjAdvertiserId("6") === null);
+const badId = aiEventToMainButtonEmailHint(
+  {
+    eventType: AI_EVENT_TYPE.INFORMATIONAL,
+    advertiserId: "6",
+    productHint: "ukončení proma 10 % slevy e-armyshop.cz",
+    source: "ai_bad_id",
+  },
+  { fromTrusted: true, from: "owner-membermessaging@mx6.cj.com", sourceMessageId: "uid:test-bad-id" }
+);
+expect(
+  "reject_implausible_advertiser_id",
+  badId.trusted !== true && !badId.advertiserId,
+  badId
 );
 
 if (fails.length) {

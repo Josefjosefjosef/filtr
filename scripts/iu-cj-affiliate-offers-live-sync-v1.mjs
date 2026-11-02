@@ -436,6 +436,12 @@ export function buildOffersPublicFromStaging(opts = {}) {
   };
 }
 
+/**
+ * Fetch shoppingProducts for managed partners.
+ * V29: partnerLimit 0 / unset-high = all active partners (no artificial 80 cap).
+ * perPartner capped at CJ GraphQL max 10 (API hard limit in buildPublisherProductsQuery).
+ * Presentation “Zobrazit více” must not be confused with this source fetch limit.
+ */
 export async function sampleProductsForManagedPartners(opts = {}) {
   const env = opts.env || process.env;
   const pat =
@@ -443,22 +449,44 @@ export async function sampleProductsForManagedPartners(opts = {}) {
   const publisherCid = String(env.IU_CJ_PUBLISHER_CID || "").trim();
   const websitePid = String(opts.websitePid || env.IU_CJ_WEBSITE_PID || WEBSITE_PID).trim();
   const partners = Array.isArray(opts.partners) ? opts.partners : [];
-  const partnerLimit = Number(opts.partnerLimit || env.IU_CJ_OFFERS_PRODUCT_PARTNER_LIMIT || 60);
-  const perPartner = Number(opts.perPartner || env.IU_CJ_OFFERS_PRODUCT_LIMIT || 3);
+  const rawPartnerLimit = opts.partnerLimit != null
+    ? Number(opts.partnerLimit)
+    : env.IU_CJ_OFFERS_PRODUCT_PARTNER_LIMIT != null && String(env.IU_CJ_OFFERS_PRODUCT_PARTNER_LIMIT).trim() !== ""
+      ? Number(env.IU_CJ_OFFERS_PRODUCT_PARTNER_LIMIT)
+      : 0;
+  // 0 = no partner cap (fetch all active managed partners).
+  const partnerLimit = Number.isFinite(rawPartnerLimit) ? rawPartnerLimit : 0;
+  const rawPer = opts.perPartner != null
+    ? Number(opts.perPartner)
+    : env.IU_CJ_OFFERS_PRODUCT_LIMIT != null && String(env.IU_CJ_OFFERS_PRODUCT_LIMIT).trim() !== ""
+      ? Number(env.IU_CJ_OFFERS_PRODUCT_LIMIT)
+      : 10;
+  // CJ shoppingProducts GraphQL accepts max 10 per request (enforced in product-api).
+  const perPartner = Math.max(1, Math.min(10, Number.isFinite(rawPer) ? rawPer : 10));
   const meta = {
     sampledPartners: 0,
+    activePartners: 0,
+    partnerCapApplied: partnerLimit > 0,
+    partnerLimit: partnerLimit > 0 ? partnerLimit : null,
+    perPartner,
+    apiMaxPerPartner: 10,
     partnersWithFeed: 0,
     partnersEmptyFeed: 0,
     partnersError: 0,
+    partnersTruncatedByApiLimit: 0,
     skippedNoCredentials: false,
+    note:
+      "Source fetch uses up to 10 products/partner (CJ GraphQL hard max). Not a UI presentation limit.",
   };
+  const active = partners.filter((p) => p && p.active !== false && p.advertiserId != null);
+  meta.activePartners = active.length;
+  const sample =
+    partnerLimit > 0 ? active.slice(0, Math.max(0, partnerLimit)) : active.slice();
+  meta.sampledPartners = sample.length;
   if (!pat || !publisherCid) {
     meta.skippedNoCredentials = true;
     return { products: [], meta };
   }
-  const active = partners.filter((p) => p && p.active !== false && p.advertiserId != null);
-  const sample = active.slice(0, Math.max(0, partnerLimit));
-  meta.sampledPartners = sample.length;
   const products = [];
   for (const p of sample) {
     const partnerId = String(p.advertiserId);
@@ -475,6 +503,11 @@ export async function sampleProductsForManagedPartners(opts = {}) {
         continue;
       }
       meta.partnersWithFeed += 1;
+      const totalCount = Number(parsed.totalCount);
+      const got = (parsed.resultList || []).length;
+      if (Number.isFinite(totalCount) && totalCount > got) {
+        meta.partnersTruncatedByApiLimit += 1;
+      }
       for (const item of parsed.resultList || []) {
         const img = item?.imageLink || item?.imageUrl || null;
         const amount = item?.price?.amount ?? null;
@@ -494,6 +527,7 @@ export async function sampleProductsForManagedPartners(opts = {}) {
           currency,
           affiliateUrl: trusted ? click : null,
           availability: item?.availability || null,
+          sourceTotalCount: Number.isFinite(totalCount) ? totalCount : null,
           publicationReady: Boolean(
             trusted && amount != null && currency && typeof img === "string" && /^https:\/\//i.test(img)
           ),

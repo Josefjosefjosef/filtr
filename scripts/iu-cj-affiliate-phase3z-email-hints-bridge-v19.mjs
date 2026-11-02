@@ -103,11 +103,18 @@ export function redactEmailUrls(text) {
     .replace(/\bwww\.\S+/gi, "[URL_REDACTED]");
 }
 
+/** CJ advertiser CIDs are multi-digit (typically 7). Reject AI hallucinations like "6". */
+export function isPlausibleCjAdvertiserId(raw) {
+  const id = String(raw || "").replace(/\D/g, "");
+  return /^\d{5,12}$/.test(id) ? id : null;
+}
+
 /**
  * Convert one AI/email event (+ meta) into a main-button hint row (or null).
  */
 export function aiEventToMainButtonEmailHint(ev = {}, meta = {}) {
-  const advertiserId = String(ev.advertiserId || meta.advertiserId || "").trim();
+  const advertiserId =
+    isPlausibleCjAdvertiserId(ev.advertiserId || meta.advertiserId) || "";
   const fromTrusted =
     meta.fromTrusted === true ||
     /@mx\d*\.cj\.com$/i.test(String(meta.from || "")) ||
@@ -148,8 +155,9 @@ export function aiEventToMainButtonEmailHint(ev = {}, meta = {}) {
         ? meta.suggestedSectionId
         : null;
 
-  // Without advertiserId → untrusted incomplete.
+  // Without plausible advertiserId → untrusted incomplete (V29: reject short/hallucinated IDs).
   if (!advertiserId) {
+    const rawId = String(ev.advertiserId || meta.advertiserId || "").trim();
     return buildMainButtonEmailHint({
       advertiserId: "",
       trusted: false,
@@ -159,7 +167,9 @@ export function aiEventToMainButtonEmailHint(ev = {}, meta = {}) {
       suggestedSectionId: null,
       sourceMessageId: meta.sourceMessageId || meta.messageId || ev.source || null,
       receivedAt: meta.receivedAt || null,
-      note: "Missing advertiserId — ignored for category authority.",
+      note: rawId
+        ? "Implausible advertiserId rejected (need 5–12 digits) — ignored for category authority."
+        : "Missing advertiserId — ignored for category authority.",
     });
   }
 
@@ -192,9 +202,9 @@ function rowsToSyntheticEvents(rows = []) {
     const idMatch = String(blob).match(/\b(advertiser|cid|advertiserid)[\s#:]*([0-9]{6,})\b/i);
     const bareId = String(blob).match(/\b([0-9]{7})\b/);
     const advertiserId =
-      (r.advertiserId ? String(r.advertiserId).replace(/\D/g, "") : null) ||
-      (idMatch ? idMatch[2] : null) ||
-      (bareId ? bareId[1] : null);
+      isPlausibleCjAdvertiserId(r.advertiserId) ||
+      (idMatch ? isPlausibleCjAdvertiserId(idMatch[2]) : null) ||
+      (bareId ? isPlausibleCjAdvertiserId(bareId[1]) : null);
     const cats = r.categories || [];
     const welcome = cats.includes("partner_welcome") || cats.includes("program_approval");
     out.push({
