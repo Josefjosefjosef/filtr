@@ -1,7 +1,11 @@
 #!/usr/bin/env node
 /**
- * Phase 3Z V14 — pre-production gates: positive preservation, DOM inventory,
- * deterministic catalog, DISARMED, Paragon blocker, audit integrity helper.
+ * Phase 3Z V14 — production gates: positive preservation, DOM inventory,
+ * deterministic catalog, armed static overlay invariants, Paragon blocker,
+ * audit integrity helper.
+ *
+ * V24: public swap is intentionally ARMED in production static catalog.
+ * Counts track authoritative joined/buttons (Paragon held = missingMainButtons).
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -41,21 +45,33 @@ const staticCatalog = readJson(
 );
 const slotPolicy = readJson(path.join(ROOT, "projects", "data", "iu-affiliate-slot-policy-v1.json"));
 
-expect("public_swap_disarmed_catalog", staticCatalog.publicButtonSwapArmed === false);
-expect("live_disabled", staticCatalog.liveEnabled === false);
+const buttonCount = Number(staticCatalog.counts?.buttons || 0);
+const joinedCount = Number(staticCatalog.counts?.joined || 0);
+const readyCount = Number(staticCatalog.counts?.mainButtonReady || 0);
+
+expect("public_swap_armed_catalog", staticCatalog.publicButtonSwapArmed === true);
+expect("live_enabled", staticCatalog.liveEnabled === true);
 expect("browser_no_cj_api", staticCatalog.browserCjApiDependency === false);
-expect("joined_175", staticCatalog.counts.joined === 175, staticCatalog.counts);
-expect("ready_174", staticCatalog.counts.mainButtonReady === 174, staticCatalog.counts);
+expect("joined_176", joinedCount === 176, staticCatalog.counts);
+expect("ready_175", readyCount === 175, staticCatalog.counts);
+expect("buttons_175", buttonCount === 175, staticCatalog.counts);
+expect("missing_main_1", Number(staticCatalog.counts?.missingMainButtons || 0) === 1, staticCatalog.counts);
 expect("dups_0", staticCatalog.counts.duplicates === 0);
 expect("paragon_blocked", (staticCatalog.remainingBlockers || []).some((b) => String(b.advertiserId) === "4686326"));
+expect("svelt_elektro", (staticCatalog.buttons || []).some((b) => String(b.advertiserId) === "7995512" && b.sectionId === "aff-elektro"));
 
 const rebuilt = buildStaticMainButtonCatalog(registry);
 expect("rebuild_count", rebuilt.counts.buttons === staticCatalog.counts.buttons, rebuilt.counts);
 expect("deterministic", assertCatalogDeterministic(rebuilt, staticCatalog) === true);
 
+// Armed production catalog must be detected by disarmed preflight (fail-closed signal).
 const pre = evaluateSwapPreflight({ registry, staticCatalog, publicButtonSwapArmed: false });
-expect("preflight_ok", pre.ok === true, pre.blockers);
-expect("preflight_disarmed", pre.publicButtonSwapArmed === false && pre.wouldPublish === false);
+expect(
+  "preflight_detects_armed_catalog",
+  pre.ok === false && Array.isArray(pre.blockers) && pre.blockers.includes("catalog_claims_armed"),
+  pre.blockers
+);
+expect("preflight_would_not_publish_when_caller_disarmed", pre.wouldPublish === false);
 
 let armedThrew = false;
 try {
@@ -72,7 +88,7 @@ const dry = simulateAtomicSwap({
   publicButtonSwapArmed: false,
 });
 expect("dry_ok", dry.ok === true, dry.counts);
-expect("dry_removed_legacy", dry.counts.removedLegacyCj === 167, dry.counts);
+expect("dry_removed_legacy", dry.counts.removedLegacyCj === buttonCount, dry.counts);
 expect("dry_legacy_after_zero", dry.counts.legacyCjAfterSwap === 0, dry.counts);
 expect("dry_no_manual_cj_exception", dry.counts.preservedPaid === 0, dry.counts);
 expect("dry_gates_paid", dry.gates.paidPreserved === true, dry.gates);
@@ -88,14 +104,11 @@ expect("positive_manual_cj_purged", pos.inventory.manualProtectedCjRemoved === 4
 
 const inv = buildDomInventory(staticCatalog);
 expect("dom_ok", inv.ok === true, inv.failures);
-expect("dom_all_174", inv.counts.buttons === 174, inv.counts);
+expect("dom_all_buttons", inv.counts.buttons === buttonCount, inv.counts);
 expect("dom_gt8", inv.gt8Sections.length >= 1, inv.gt8Sections);
 const html = buildPreviewHtml(staticCatalog, inv);
-expect(
-  "preview_html_has_174_chips",
-  (html.match(/<a class="iuRadioChip iuAffiliateChip"/g) || []).length === 174,
-  { n: (html.match(/<a class="iuRadioChip iuAffiliateChip"/g) || []).length }
-);
+const chipN = (html.match(/<a class="iuRadioChip iuAffiliateChip"/g) || []).length;
+expect("preview_html_chip_count", chipN === buttonCount, { n: chipN, expected: buttonCount });
 expect("preview_attrs_blank", html.includes('target="_blank"') && html.includes('rel="sponsored noopener"'));
 expect("preview_no_logo_img", !/<img\b/i.test(html));
 
@@ -139,10 +152,11 @@ const out = {
   schema: "iu-cj-affiliate-phase3z-v14-selftest",
   proofs: proofs.length,
   failures,
-  publicButtonSwapArmed: false,
-  readyForExplicitPublicSwapApproval:
+  publicButtonSwapArmed: staticCatalog.publicButtonSwapArmed === true,
+  productionArmedVerified:
     failures.length === 0 &&
-    staticCatalog.publicButtonSwapArmed === false &&
+    staticCatalog.publicButtonSwapArmed === true &&
+    staticCatalog.liveEnabled === true &&
     pos.ok === true &&
     inv.ok === true,
 };
