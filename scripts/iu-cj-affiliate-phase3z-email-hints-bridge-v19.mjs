@@ -44,19 +44,50 @@ export function detectEmailInstructionAttempt(text) {
 }
 
 /**
+ * V22: strip affiliate campaign boilerplate that is not assortment evidence.
+ * Keeps merchant identity / product lines; drops publisher greetings & code promos noise.
+ */
+export function sanitizeEmailAssortmentText(text) {
+  let s = String(text || "");
+  s = s.replace(/v[aá]žen[íi]\s*publish\w*[\s\S]{0,80}informovat[\s\S]{0,80}:/gi, " ");
+  s = s.replace(/\b(?:extra\s*)?sleva\s*\d+\s*%[\s\S]{0,60}k[oó]dem?\s*\S+/gi, " ");
+  s = s.replace(/\blink\s*id\s*:\s*\d+/gi, " ");
+  // Cosmetic product lines named "Skin Food" must not become grocery.
+  s = s.replace(/\bskin\s*food\b/gi, "skin_care_product");
+  return s.replace(/\s+/g, " ").trim();
+}
+
+/**
  * Suggest section from redacted assortment / product / terms text via shared keyword groups.
  * Returns null when evidence is too weak.
+ * V22: higher bar for email-only single signals; campaign noise sanitized first.
  */
 export function suggestSectionIdFromEmailText(text) {
-  const blob = String(text || "").trim();
+  const blob = sanitizeEmailAssortmentText(redactEmailUrls(String(text || "").trim()));
   if (!blob || blob.length < 8) return null;
+  // Pure welcome/approval with no assortment words → no section suggestion.
+  if (
+    /welcome|v[ií]tej|schv[aá]len|approv|affiliate\s*program/i.test(blob) &&
+    blob.length < 120 &&
+    !/kancel|hotel|fashion|sport|kosmetik|potravin|nábytek|nabytek|elektro|zájezd|zajezd|zavazadl|tašk|kytar/i.test(
+      blob
+    )
+  ) {
+    return null;
+  }
   const profile = buildAssortmentProfile({
     advertiser: { advertiserName: blob, programUrl: "", primaryCategory: "" },
     links: [],
   });
   const top = profile?.primaryAssortment || null;
   if (!top?.sectionId) return null;
-  if ((top.weight || 0) < 20) return null;
+  // Email-only: require weight >= 25 (name hit). Equal weak ties must not invent moves.
+  if ((top.weight || 0) < 25) return null;
+  const second = profile?.secondaryAssortment || null;
+  // If top barely leads a conflicting section, defer (insufficient for change).
+  if (second && second.sectionId !== top.sectionId && second.weight >= top.weight * 0.85) {
+    return null;
+  }
   return String(top.sectionId);
 }
 
