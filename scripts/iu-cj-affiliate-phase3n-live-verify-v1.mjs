@@ -60,7 +60,18 @@ if (offersPublic.liveEnabled === true) {
 }
 expect("baked_partners", inv.counts.bakedPartners > 0);
 expect("managed_active", inv.counts.managedActive > 0);
-expect("cid_overlap_complete", inv.counts.bakedOnlyCid === 0);
+// V25: static main catalog (public swap) can publish CID partners not yet mirrored in managed-public.
+// Require every baked partner to have a CID; allow baked-only CIDs while swap is the public authority.
+const staticMain = JSON.parse(
+  fs.readFileSync(path.join(ROOT, "projects", "data", "iu-affiliate-cj-main-buttons-static-v13.json"), "utf8")
+);
+const publicSwapArmed =
+  staticMain.publicButtonSwapArmed === true && staticMain.liveEnabled === true;
+expect("cid_no_baked_without_cid", inv.counts.bakedWithoutCid === 0);
+expect(
+  "cid_overlap_complete_or_static_swap",
+  inv.counts.bakedOnlyCid === 0 || publicSwapArmed === true
+);
 
 const mig = planBakedMigrationUnderManaged({
   inventory: inv,
