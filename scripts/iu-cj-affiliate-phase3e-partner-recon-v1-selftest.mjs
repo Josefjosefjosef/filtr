@@ -92,9 +92,16 @@ expect(
   proposal.autoAssigned.some((a) => a.advertiserId === "5954793" && a.sectionId === "aff-jidlo") ||
     proposal.reconciliation.assigned.some((a) => a.advertiserId === "5954793" && a.sectionId === "aff-jidlo")
 );
+// V24: Novakid is now a published catalog partner (aff-deti-hracky) → unique brand
+// lookup auto-assigns; manual-review expectation from Phase 3E is obsolete.
 expect(
-  "novakid_manual",
-  proposal.stillManualReview.some((a) => a.advertiserId === "5578976")
+  "novakid_catalog_assign",
+  proposal.autoAssigned.some(
+    (a) => a.advertiserId === "5578976" && a.sectionId === "aff-deti-hracky"
+  ) ||
+    proposal.reconciliation.assigned.some(
+      (a) => a.advertiserId === "5578976" && a.sectionId === "aff-deti-hracky"
+    )
 );
 expect(
   "royalfashion_jewelry_assigned",
