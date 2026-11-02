@@ -9,6 +9,7 @@ import path from "node:path";
 import {
   buildOffersPublicFromStaging,
   buildSectionByAdvertiser,
+  sectionIdsFromMainButtons,
   resolveOfferSectionKeys,
   runOffersLiveSync,
 } from "./iu-cj-affiliate-offers-live-sync-v1.mjs";
@@ -31,6 +32,82 @@ function expect(name, cond) {
   expect("map_managed", sectionByAdv["100"] === "aff-moda");
   expect("map_policy", sectionByAdv["200"] === "aff-boty");
   expect("map_section", sectionByAdv["300"] === "aff-jidlo");
+}
+
+// V28: main-button partners missing from managed-public must still map for offers.
+{
+  const fromMain = sectionIdsFromMainButtons({
+    buttons: [
+      { advertiserId: "6892836", sectionId: "aff-boty", title: "Skinners Europe" },
+      { advertiserId: "7917498", sectionId: "aff-sport-outdoor", title: "E-armyshop.cz" },
+    ],
+  });
+  expect("main_buttons_skinners", fromMain["6892836"] === "aff-boty");
+  expect("main_buttons_armyshop", fromMain["7917498"] === "aff-sport-outdoor");
+
+  const withoutMain = buildSectionByAdvertiser({
+    managedPublic: { partners: [{ advertiserId: "100", sectionId: "aff-moda" }] },
+    policy: { partners: [] },
+    sectionMap: {},
+  });
+  expect("without_main_no_skinners", withoutMain["6892836"] == null);
+
+  const withMain = buildSectionByAdvertiser({
+    managedPublic: { partners: [{ advertiserId: "100", sectionId: "aff-moda" }] },
+    policy: { partners: [] },
+    sectionMap: {},
+    mainButtons: {
+      buttons: [{ advertiserId: "6892836", sectionId: "aff-boty", title: "Skinners Europe" }],
+    },
+  });
+  expect("with_main_skinners_mapped", withMain["6892836"] === "aff-boty");
+  expect("with_main_keeps_managed", withMain["100"] === "aff-moda");
+
+  // Main buttons must not override an existing managed mapping.
+  const noOverride = buildSectionByAdvertiser({
+    managedPublic: { partners: [{ advertiserId: "6892836", sectionId: "aff-sport-outdoor" }] },
+    policy: { partners: [] },
+    sectionMap: {},
+    mainButtons: {
+      buttons: [{ advertiserId: "6892836", sectionId: "aff-boty" }],
+    },
+  });
+  expect("main_does_not_override_managed", noOverride["6892836"] === "aff-sport-outdoor");
+
+  const stagingSkinners = {
+    apiOutage: false,
+    advertisers: [{ advertiserId: "6892836", relationshipStatus: "joined" }],
+    links: [
+      {
+        linkId: "16991292",
+        advertiserId: "6892836",
+        advertiserName: "Skinners Europe",
+        linkName: "CZ: 15% SLEVA NA VŠE!",
+        couponCode: "CJ15",
+        clickUrl: goodUrl,
+        description: "15% sleva",
+        promotionType: "Coupon",
+        targetedCountries: "CZ",
+        promotionStartDate: "2026-01-01 00:00:00.0",
+        promotionEndDate: "2027-12-31 23:59:00.0",
+      },
+    ],
+  };
+  const lost = buildOffersPublicFromStaging({
+    staging: stagingSkinners,
+    sectionByAdv: withoutMain,
+    products: [],
+    refDate: new Date("2026-11-02T12:00:00Z"),
+  });
+  expect("skinners_lost_without_main_map", (lost.doc?.stats?.coupons || 0) === 0);
+
+  const recovered = buildOffersPublicFromStaging({
+    staging: stagingSkinners,
+    sectionByAdv: withMain,
+    products: [],
+    refDate: new Date("2026-11-02T12:00:00Z"),
+  });
+  expect("skinners_recovered_with_main_map", (recovered.doc?.stats?.coupons || 0) >= 1);
 }
 
 {
