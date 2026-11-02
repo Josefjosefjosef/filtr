@@ -43,12 +43,19 @@ const KEYWORD_GROUPS = Object.freeze([
   { group: "pojisteni", sectionId: "aff-pojisteni", re: /\b(pojišt|pojist|insurance)\b/i },
   { group: "finance", sectionId: "aff-finance", re: /\b(financ|bank|invest|půjč|loan)\b/i },
   { group: "energie", sectionId: "aff-energie-uspor", re: /\b(energi|elektřin|plyn|utility)\b/i },
-  { group: "knihy", sectionId: "aff-knihy", re: /\b(knih|book|ebook|hudba|music|hry|games)\b/i },
+  // Books only — music/games must NOT inflate aff-knihy (V18 root-cause: Kytary/toys/Supraphon false primary).
+  { group: "knihy", sectionId: "aff-knihy", re: /\b(knih|book|ebook|audioknih)\b/i },
+  // Digital music / media storefronts → streaming tile when taxonomy has no dedicated music section.
+  { group: "hudba", sectionId: "aff-tv-streamovani", re: /\b(hudba|music|hudebn|supraphon|vinyl|stream(?:ing)?\s*music)\b/i },
+  // Games/toys → children tile (not books).
+  { group: "hry", sectionId: "aff-deti-hracky", re: /\b(hračka|hracka|hry|games|toys?)\b/i },
   { group: "sperky", sectionId: "aff-sperky-hodinky", re: /\b(šperk|sperk|jewelry|hodink|watch)\b/i },
   { group: "zvirata", sectionId: "aff-zvirata", re: /\b(zvíř|zvir|pet|chovatel)\b/i },
   { group: "kvetiny", sectionId: "aff-kvetiny-darky", re: /\b(květin|kvetin|flower|dárek|darek|gift)\b/i },
   { group: "dilna", sectionId: "aff-dilna-naradi", re: /\b(díln|dilna|nářad|naradi|tool)\b/i },
-  { group: "kancelar", sectionId: "aff-kancelarske-potreby", re: /\b(kancelář|kancelar|office\s*suppl)\b/i },
+  // Interior doors / finishes are home, not workshop tools (V18: Erkado).
+  { group: "dvere", sectionId: "aff-dum-zahrada", re: /\b(dveř|dver|erkado|zárub|zarubn|interiérov)\b/i },
+  { group: "kancelar", sectionId: "aff-kancelarske-potreby", re: /\b(kancelář|kancelar|office\s*suppl|activa)\b/i },
   { group: "reality", sectionId: "aff-reality-nemovitosti", re: /\b(realit|nemovit|real\s*estate)\b/i },
   { group: "inzerce", sectionId: "aff-inzerce-bazary", re: /\b(inzerce|bazar|marketplace|allegro|aukro)\b/i },
   { group: "tv", sectionId: "aff-tv-streamovani", re: /\b(stream|iptv|netflix|tv\s*service)\b/i },

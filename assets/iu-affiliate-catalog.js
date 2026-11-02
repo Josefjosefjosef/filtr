@@ -2,7 +2,7 @@
  * infoUzel.cz — Affiliate services catalog (UI + data).
  * Partner URLs are placeholders until affiliate programs are approved.
  */
-/* iu-affiliate-catalog-bust: cj-phase3z-v16-public-swap-2026-11-01 */
+/* iu-affiliate-catalog-bust: cj-phase3z-v18-category-2026-11-02*/
 (function iuAffiliateCatalog() {
   "use strict";
 

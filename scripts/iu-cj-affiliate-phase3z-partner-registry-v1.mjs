@@ -53,7 +53,10 @@ import {
 } from "./iu-cj-affiliate-phase3z-merchant-evidence-v9.mjs";
 import { attachPublicationReadiness } from "./iu-cj-affiliate-phase3z-publication-readiness-v9.mjs";
 import { attachMainButtonReadiness } from "./iu-cj-affiliate-phase3z-main-button-readiness-v12.mjs";
-import { buildDefaultMainButtonEmailHintMap } from "./iu-cj-affiliate-phase3z-main-button-email-hints-v12.mjs";
+import {
+  buildMergedMainButtonEmailHintMap,
+  emailHintToWebsiteEvidence,
+} from "./iu-cj-affiliate-phase3z-main-button-email-hints-v12.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 export const PHASE3Z_SCHEMA = "iu-affiliate-cj-partner-registry-v1";
@@ -2027,6 +2030,8 @@ export function buildPhase3zPartnerRegistry({
   const partners = [];
   const buttons = [];
   const quarantined = [];
+  // V18: welcome-email hints feed assortment weights when trusted (never CJ JOINED/URL authority).
+  const emailHintsByAdvertiserId = buildMergedMainButtonEmailHintMap();
 
   for (const adv of advertisers) {
     const advertiserId = String(adv.advertiserId || "");
@@ -2043,10 +2048,13 @@ export function buildPhase3zPartnerRegistry({
       sectionMap,
     });
     const advLinks = linksByAdv.get(advertiserId) || [];
+    const emailHint = emailHintsByAdvertiserId.get(advertiserId) || null;
+    const emailWebEvidence = emailHintToWebsiteEvidence(emailHint);
     const assortment = buildAssortmentProfile({
       advertiser: adv,
       links: advLinks,
       knownSections,
+      websiteEvidence: emailWebEvidence,
     });
     const sectionPick = selectPrimarySectionWithAssortment({
       baseSection,
@@ -3420,8 +3428,9 @@ export async function main(argv = process.argv.slice(2)) {
 
   // V12 CJ-FIRST: MAIN_BUTTON_READY independent of CONTENT_VERIFIED / merchant crawl.
   // PUBLIC_SWAP remains DISARMED. Coupons/products deferred.
+  // V18: same merged email-hint map used during assortment (fixtures + optional artifact).
   attachMainButtonReadiness(registry, {
-    emailHintsByAdvertiserId: buildDefaultMainButtonEmailHintMap(),
+    emailHintsByAdvertiserId: buildMergedMainButtonEmailHintMap(),
   });
 
   // V13: materialize static main-button catalog next to registry (never arms swap).

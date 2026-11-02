@@ -233,6 +233,62 @@ export const MERCHANT_EVIDENCE_OVERRIDES = Object.freeze({
       "Sanitino sells bathroom/sanitary fittings and home fixtures — not energy-saving utilities. CJ home_utilities map must not land on aff-energie-uspor.",
     evidenceSources: ["official_domain:sanitino.cz", "merchant_positioning:bathroom_sanitary"],
   },
+  // V18 content audit — confirmed misfiles (website identity vs published tile).
+  "5027071": {
+    advertiserCid: "5027071",
+    merchantIdentity: "Dvere-Erkado.cz",
+    officialDomains: ["dvere-erkado.cz", "www.dvere-erkado.cz"],
+    merchantType: "SPECIALIST",
+    primaryAssortment: { sectionId: "aff-dum-zahrada", group: "dum" },
+    significantAssortmentGroups: ["dum"],
+    confidence: "high",
+    rejectSectionIds: ["aff-dilna-naradi"],
+    rationale:
+      "ERKADO sells interior doors/frames (home finishes). CJ home&garden|construction → aff-dilna-naradi is too coarse; hysteresis kept tools tile. Correct primary is aff-dum-zahrada.",
+    evidenceSources: [
+      "official_domain:dvere-erkado.cz",
+      "merchant_positioning:interior_doors",
+      "title:Oficiální Eshop|dveří",
+      "v18_content_audit",
+    ],
+  },
+  "5260576": {
+    advertiserCid: "5260576",
+    merchantIdentity: "Activa CZ_Bibelot",
+    officialDomains: ["activa.cz", "www.activa.cz", "obchod.activa.cz"],
+    merchantType: "SPECIALIST",
+    primaryAssortment: { sectionId: "aff-kancelarske-potreby", group: "kancelar" },
+    secondaryAssortments: [{ sectionId: "aff-deti-hracky", group: "deti" }],
+    significantAssortmentGroups: ["kancelar", "deti"],
+    confidence: "high",
+    rejectSectionIds: ["aff-deti-hracky", "aff-cestovni-kancelare"],
+    rationale:
+      "ACTIVA is a CZ office-supply wholesaler/retailer (papír, psací potřeby, kancelář). CJ education|children mis-maps to toys; school supplies are secondary only.",
+    evidenceSources: [
+      "official_domain:activa.cz",
+      "program_url:obchod.activa.cz",
+      "merchant_positioning:office_supplies",
+      "v18_content_audit",
+    ],
+  },
+  "7612998": {
+    advertiserCid: "7612998",
+    merchantIdentity: "Tierraverde",
+    officialDomains: ["tierraverde.cz", "www.tierraverde.cz"],
+    merchantType: "SPECIALIST",
+    primaryAssortment: { sectionId: "aff-drogerie", group: "drogerie" },
+    secondaryAssortments: [{ sectionId: "aff-kosmetika", group: "kosmetika" }],
+    significantAssortmentGroups: ["drogerie", "kosmetika"],
+    confidence: "high",
+    rejectSectionIds: ["aff-kosmetika"],
+    rationale:
+      "Tierra Verde identity is ekodrogerie + ekokosmetika; primary customer intent on InfoUzel is drogerie (cleaning/household eco chemistry), cosmetics secondary. CJ beauty|cosmetics alone over-weights kosmetika.",
+    evidenceSources: [
+      "official_domain:tierraverde.cz",
+      "merchant_positioning:ekodrogerie",
+      "v18_content_audit",
+    ],
+  },
   "4697950": {
     advertiserCid: "4697950",
     merchantIdentity: "AXA ASSISTANCE - CZ",
