@@ -19,6 +19,33 @@ import {
   resolveAiOutcome,
 } from "./iu-cj-affiliate-phase3r-ai-email-event-v1.mjs";
 import { reconcileAiEventBatch } from "./iu-cj-affiliate-phase3r-ai-to-cj-reconcile-v1.mjs";
+import { parseAffiliateCatalogOrdered } from "./iu-cj-affiliate-phase2-partner-slot-inventory-v1.mjs";
+import { isCjTrackingUrl } from "./iu-cj-affiliate-catalog-sync-publish-gate-v1.mjs";
+
+/** Load JOINED-shaped advertiser list from baked catalog for IMAP partner matching. */
+export function loadCatalogAdvertisersFromBakedCatalog(root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")) {
+  try {
+    const catalogJs = fs.readFileSync(path.join(root, "assets", "iu-affiliate-catalog.js"), "utf8");
+    const parsed = parseAffiliateCatalogOrdered(catalogJs);
+    const out = [];
+    for (const s of parsed.sections || []) {
+      for (const it of s.items || []) {
+        if (!it.url || !isCjTrackingUrl(it.url)) continue;
+        const id = String(it.advertiserId || "").trim();
+        if (!id) continue;
+        out.push({
+          advertiserId: id,
+          advertiserCid: id,
+          advertiserName: String(it.label || it.name || it.title || ""),
+          relationshipStatus: "joined",
+        });
+      }
+    }
+    return out;
+  } catch {
+    return [];
+  }
+}
 
 export const PHASE3R_PIPELINE_SCHEMA = "iu-cj-affiliate-phase3r-pipeline-v1";
 
@@ -64,6 +91,10 @@ export async function runPhase3rPipeline(options = {}) {
   );
   const useMockAi = options.useMockAi === true || process.env.IU_CJ_WORKERS_AI_FORCE_MOCK === "1";
   const forceMockImap = options.forceMockImap === true || process.env.IU_FORPSI_IMAP_FORCE_MOCK === "1";
+  const catalogAdvertisers =
+    Array.isArray(options.catalogAdvertisers) && options.catalogAdvertisers.length
+      ? options.catalogAdvertisers
+      : loadCatalogAdvertisersFromBakedCatalog();
 
   const batches = [];
   const allRows = [];
@@ -81,7 +112,7 @@ export async function runPhase3rPipeline(options = {}) {
       checkpointDir: options.checkpointDir,
       batchSize,
       ownerId: options.ownerId || "phase3r-" + (process.env.GITHUB_RUN_ID || process.pid) + "-b" + i,
-      catalogAdvertisers: options.catalogAdvertisers || [],
+      catalogAdvertisers,
     });
     lastPoll = poll;
     if (!poll.ok) {
@@ -238,6 +269,35 @@ export async function runPhase3rPipeline(options = {}) {
     (e) => e.eventType && e.eventType !== AI_EVENT_TYPE.INFORMATIONAL
   ).length;
 
+  // V20: export redacted events + email rows so main-button hints bridge can consume live/replay data.
+  const rowByUid = new Map(classifyRows.map((r) => [r.uid, r]));
+  const eventsForHints = allEvents.map((e) => {
+    const row = rowByUid.get(e.uid) || {};
+    const excerpt = String(row.excerptSafe || "").slice(0, 400);
+    return {
+      eventType: e.eventType || null,
+      advertiserId: e.advertiserId || row.advertiserId || null,
+      partnerName: e.partnerName || row.partnerName || null,
+      confidence: e.confidence || null,
+      productHint: e.productHint || excerpt || null,
+      termsSummary: e.termsSummary || null,
+      evidenceSpan: e.evidenceSpan || null,
+      source: e.source || "ai_event",
+      uid: e.uid ?? null,
+      fromSafe: String(row.fromSafe || "").slice(0, 200),
+      subjectSafe: String(row.subjectSafe || "").slice(0, 240),
+    };
+  });
+  const emailRowsForHints = classifyRows.map((r) => ({
+    uid: r.uid ?? null,
+    categories: r.categories || [],
+    subjectSafe: String(r.subjectSafe || "").slice(0, 240),
+    fromSafe: String(r.fromSafe || "").slice(0, 200),
+    excerptSafe: String(r.excerptSafe || "").slice(0, 500),
+    advertiserId: r.advertiserId || null,
+    partnerName: r.partnerName || null,
+  }));
+
   return {
     schema: PHASE3R_PIPELINE_SCHEMA,
     ok: true,
@@ -253,6 +313,8 @@ export async function runPhase3rPipeline(options = {}) {
     errors,
     batches,
     checkpoint: lastPoll?.checkpoint || null,
+    events: eventsForHints,
+    emailRowsForHints,
     ai: {
       aiActuallyRan,
       aiHttpAttempted,

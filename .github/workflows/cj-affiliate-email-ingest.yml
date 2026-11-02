@@ -12,9 +12,17 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "ingest mode (periodic|historical)"
+        description: "ingest mode (periodic|historical). historical = V20 hints replay of checkpointed UIDs (no lifecycle mutate)."
         required: false
         default: periodic
+      hints_replay:
+        description: "Force V20 historical hints replay even in periodic mode (1=yes)"
+        required: false
+        default: "0"
+      hints_replay_reset:
+        description: "Reset hints-replay cursor (re-read checkpointed UIDs). Never clears main IMAP processedUids. (1=yes)"
+        required: false
+        default: "0"
       run_forpsi_offline_cycle:
         description: "Also run FORPSI mock ingest via unattended runner (1=yes)"
         required: false
@@ -198,9 +206,17 @@ jobs:
         if: env.LIVE_IMAP_BLOCKED == '0'
         id: live_pipeline
         shell: bash
+        env:
+          IU_CJ_EMAIL_INGEST_MODE: ${{ github.event.inputs.mode || 'periodic' }}
+          IU_FORPSI_IMAP_HINTS_REPLAY: ${{ (github.event.inputs.mode == 'historical' || github.event.inputs.hints_replay == '1') && '1' || '0' }}
+          IU_FORPSI_IMAP_HINTS_REPLAY_RESET: ${{ github.event.inputs.hints_replay_reset == '1' && '1' || '0' }}
+          IU_FORPSI_IMAP_HINTS_REPLAY_LIMIT: "80"
+          IU_FORPSI_IMAP_MAX_BATCHES_PER_RUN: ${{ (github.event.inputs.mode == 'historical' || github.event.inputs.hints_replay == '1') && '4' || env.IU_FORPSI_IMAP_MAX_BATCHES_PER_RUN }}
         run: |
           set -euo pipefail
           mkdir -p "$IU_FORPSI_IMAP_CHECKPOINT_DIR"
+          echo "EMAIL_INGEST_MODE=${IU_CJ_EMAIL_INGEST_MODE:-periodic}"
+          echo "HINTS_REPLAY=${IU_FORPSI_IMAP_HINTS_REPLAY:-0}"
           set +e
           node scripts/iu-cj-affiliate-phase3r-pipeline-v1.mjs > /tmp/iu-phase3r-pipeline.json
           CODE=$?

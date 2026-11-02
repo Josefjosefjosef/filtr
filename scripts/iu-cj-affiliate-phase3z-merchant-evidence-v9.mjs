@@ -296,6 +296,26 @@ export const MERCHANT_EVIDENCE_OVERRIDES = Object.freeze({
       "v18_content_audit",
     ],
   },
+  "7889430": {
+    advertiserCid: "7889430",
+    merchantIdentity: "Abracadabra NYC",
+    officialDomains: ["abracadabranyc.com", "www.abracadabranyc.com"],
+    merchantType: "SPECIALIST",
+    primaryAssortment: { sectionId: "aff-kvetiny-darky", group: "kostymy" },
+    secondaryAssortments: [{ sectionId: "aff-deti-hracky", group: "deti" }],
+    significantAssortmentGroups: ["kostymy", "darky"],
+    confidence: "high",
+    rejectSectionIds: ["aff-kosmetika"],
+    czAffinityOverride: true,
+    rationale:
+      "V20: Abracadabra NYC is a Halloween costume / cosplay / collectibles gift shop (CJ gifts&flowers|collectibles). Title 'makeup' must not map to kosmetika; gifts tile is correct LKG.",
+    evidenceSources: [
+      "official_domain:abracadabranyc.com",
+      "title:Halloween Costume Store|Cosplay|Collectibles Gift Shop",
+      "cj_primary:gifts & flowers|collectibles",
+      "v20_content_audit",
+    ],
+  },
   "4697950": {
     advertiserCid: "4697950",
     merchantIdentity: "AXA ASSISTANCE - CZ",
@@ -842,6 +862,12 @@ export function extractWeightedAssortmentEvidence(
     { group: "dum", re: /\b(zahrad\w*|garden|koupeln?\w*|sanit\w*|dům\s+a\s+zahrada)\b/i, sectionId: "aff-dum-zahrada" },
     { group: "moda", re: /\b(móda|moda|fashion|oblečen|oblecen|apparel|streetwear)\b/i, sectionId: "aff-moda" },
     { group: "boty", re: /\b(boty|obuv|footwear|barefoot)\b/i, sectionId: "aff-boty" },
+    // Costume / cosplay / Halloween collectibles → gifts tile (not kosmetika from "makeup").
+    {
+      group: "kostymy",
+      re: /\b(costume|cosplay|halloween|collectibles?\s*gift|abracadabra)\b/i,
+      sectionId: "aff-kvetiny-darky",
+    },
     { group: "kosmetika", re: /\b(kosmetik|beauty|skincare|skin\s*care|make-?up)\b/i, sectionId: "aff-kosmetika" },
     { group: "drogerie", re: /\b(drogerie|drugstore)\b/i, sectionId: "aff-drogerie" },
     // Stem match: trailing \b breaks on "lékárna" (next char is word-ish in some engines / stems).
@@ -906,6 +932,16 @@ export function extractWeightedAssortmentEvidence(
   if (softwareIdentity) {
     const suppress = new Set(["marketplace", "moda", "kuchyn", "pojisteni", "ubytovani", "zvirata", "pneu", "nabytek", "jidlo"]);
     significant = significant.filter((r) => !suppress.has(r.group) || r.weight >= 80);
+  }
+  // V20: costume/cosplay/Halloween gift shops — "makeup" must not force kosmetika primary.
+  const costumeIdentity = /\b(costume|cosplay|halloween|collectibles?\s*gift|abracadabra)\b/i.test(idBlob);
+  if (costumeIdentity) {
+    significant = significant.filter((r) => r.group !== "kosmetika" || r.weight >= 90);
+    // Prefer kostymy/darky when present.
+    significant.sort((a, b) => {
+      const boost = (g) => (g === "kostymy" || g === "darky" ? 20 : 0);
+      return b.weight + boost(b.group) - (a.weight + boost(a.group)) || a.group.localeCompare(b.group);
+    });
   }
   const primary = significant[0] || null;
   const secondary = significant[1] || null;

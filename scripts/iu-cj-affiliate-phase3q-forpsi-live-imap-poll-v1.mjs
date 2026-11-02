@@ -35,6 +35,7 @@ import {
   defaultForpsiSyncLockPath,
   defaultForpsiSyncStatePath,
   runMailboxSyncBatch,
+  runMailboxHintsReplayBatch,
 } from "./iu-cj-affiliate-phase2-forpsi-imap-sync-lib.mjs";
 import { emailHintToLifecycleAction } from "./iu-cj-affiliate-phase3m-unified-lifecycle-v1.mjs";
 
@@ -107,6 +108,9 @@ export function buildAiSafeRowsFromBatchResults(batchResults = []) {
       fromSafe: String(row.fromSafe || "").slice(0, 200),
       excerptSafe: String(row.excerptSafe || "").slice(0, FORPSI_IMAP_SYNC_DEFAULTS.aiExcerptChars || 2000),
       state: row.state || null,
+      advertiserId: row.advertiserId || null,
+      partnerName: row.partnerName || null,
+      partnerConfidence: row.partnerConfidence || null,
     });
   }
   return rows;
@@ -275,18 +279,40 @@ export async function runForpsiLiveImapPoll(options = {}) {
       host: FORPSI_IMAP_HOST,
       tlsModeId: DEFAULT_FORPSI_IMAP_TLS_MODE,
     });
-    sync = await runMailboxSyncBatch({
-      transport: transport2,
-      statePath,
-      lockPath,
-      ownerId: options.ownerId || "gha-live-poll-" + (process.env.GITHUB_RUN_ID || process.pid),
-      mailbox: AFFILIATE_MAILBOX_ADDRESS,
-      folder: "INBOX",
-      batchSize: options.batchSize || FORPSI_IMAP_SYNC_DEFAULTS.batchSize,
-      mode: "incremental",
-      catalogAdvertisers: options.catalogAdvertisers || [],
-      maxMessageBytes: FORPSI_IMAP_SYNC_DEFAULTS.maxMessageBytes,
-    });
+    const hintsReplay =
+      options.hintsReplay === true ||
+      process.env.IU_FORPSI_IMAP_HINTS_REPLAY === "1" ||
+      String(process.env.IU_CJ_EMAIL_INGEST_MODE || "").toLowerCase() === "historical";
+    if (hintsReplay) {
+      // V20: re-read checkpointed UIDs for assortment hints only (main processedUids unchanged).
+      sync = await runMailboxHintsReplayBatch({
+        transport: transport2,
+        statePath,
+        lockPath,
+        ownerId: options.ownerId || "gha-hints-replay-" + (process.env.GITHUB_RUN_ID || process.pid),
+        mailbox: AFFILIATE_MAILBOX_ADDRESS,
+        folder: "INBOX",
+        batchSize:
+          Number(process.env.IU_FORPSI_IMAP_HINTS_REPLAY_LIMIT || 0) ||
+          options.batchSize ||
+          FORPSI_IMAP_SYNC_DEFAULTS.batchSize,
+        catalogAdvertisers: options.catalogAdvertisers || [],
+        maxMessageBytes: FORPSI_IMAP_SYNC_DEFAULTS.maxMessageBytes,
+      });
+    } else {
+      sync = await runMailboxSyncBatch({
+        transport: transport2,
+        statePath,
+        lockPath,
+        ownerId: options.ownerId || "gha-live-poll-" + (process.env.GITHUB_RUN_ID || process.pid),
+        mailbox: AFFILIATE_MAILBOX_ADDRESS,
+        folder: "INBOX",
+        batchSize: options.batchSize || FORPSI_IMAP_SYNC_DEFAULTS.batchSize,
+        mode: "incremental",
+        catalogAdvertisers: options.catalogAdvertisers || [],
+        maxMessageBytes: FORPSI_IMAP_SYNC_DEFAULTS.maxMessageBytes,
+      });
+    }
   } catch (err) {
     const msg = redact(err?.message || err);
     const authFail = /credentials|login|auth|AUTHENTICATIONFAILED/i.test(msg);
@@ -327,16 +353,19 @@ export async function runForpsiLiveImapPoll(options = {}) {
 
   const hints = buildHintsFromBatchResults(sync.batchResults || []);
   const aiRows = buildAiSafeRowsFromBatchResults(sync.batchResults || []);
+  const hintsReplayMode = sync.mode === "hints_replay" || sync.phase === "hints_replay";
   return {
     ...base,
     ok: true,
-    mode: "live",
-    status: "LIVE_POLL_OK",
+    mode: hintsReplayMode ? "live_hints_replay" : "live",
+    status: hintsReplayMode ? "HINTS_REPLAY_OK" : "LIVE_POLL_OK",
     imapConnected: true,
     authSuccess: true,
+    hintsReplay: hintsReplayMode,
     messagesChecked: sync.stats?.found ?? 0,
     messagesInBatch: sync.batchSize ?? 0,
-    messagesProcessed: sync.stats?.processed ?? 0,
+    messagesProcessed:
+      sync.stats?.processed ?? sync.stats?.replayedThisBatch ?? (sync.batchResults || []).filter((r) => r.ok).length,
     duplicates: sync.stats?.duplicates ?? 0,
     quarantined: sync.stats?.quarantined ?? 0,
     errors: sync.stats?.errors ?? 0,
@@ -349,9 +378,13 @@ export async function runForpsiLiveImapPoll(options = {}) {
       pendingAfterBatch: sync.pendingAfterBatch ?? 0,
       uidvalidity: sync.uidvalidity ?? null,
       lastBatchAt: null,
+      hintsReplay: hintsReplayMode,
+      replayStatePath: sync.replayStatePath || null,
     },
     cjApiFollowUp: "EMAIL_HINT_REQUIRES_CJ_RECONCILE_ONLY",
-    note: "Email never mutates partners/buttons/coupons/products; reconcile via CJ API only",
+    note: hintsReplayMode
+      ? "V20 hints replay: historical checkpointed UIDs re-read for assortment hints only; processedUids unchanged; no lifecycle mutate."
+      : "Email never mutates partners/buttons/coupons/products; reconcile via CJ API only",
     finishedAt: new Date().toISOString(),
     exitCode: 0,
   };

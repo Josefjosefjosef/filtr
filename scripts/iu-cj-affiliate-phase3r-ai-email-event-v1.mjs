@@ -214,10 +214,19 @@ export function deterministicEventFallback(row = {}) {
   }
   const cidMatch = (subject + "\n" + excerpt).match(/\bCID[:\s#]*([0-9]{4,12})\b/i);
   const couponMatch = (subject + "\n" + excerpt).match(/\b([A-Z0-9]{4,16})\b/);
+  const advertiserId =
+    (row.advertiserId ? String(row.advertiserId).replace(/\D/g, "").slice(0, 12) : null) ||
+    (cidMatch ? cidMatch[1] : null);
+  const partnerName = row.partnerName ? String(row.partnerName).slice(0, 120) : null;
+  // Welcome / approval: use redacted subject+excerpt as assortment signal for category bridge.
+  const productHint =
+    eventType === AI_EVENT_TYPE.PARTNER_APPROVED || eventType === AI_EVENT_TYPE.PRODUCT_NEW
+      ? String(subject + " | " + excerpt).slice(0, 400)
+      : null;
   return {
     eventType,
-    partnerName: null,
-    advertiserId: cidMatch ? cidMatch[1] : null,
+    partnerName,
+    advertiserId,
     effectiveDate: null,
     couponCode:
       eventType === AI_EVENT_TYPE.COUPON_NEW || eventType === AI_EVENT_TYPE.COUPON_EXPIRED
@@ -226,7 +235,7 @@ export function deterministicEventFallback(row = {}) {
           : null
         : null,
     termsSummary: null,
-    productHint: null,
+    productHint,
     source: "email",
     confidence: "medium",
     evidenceSpan: subject.slice(0, 120) || cats[0] || "deterministic",
