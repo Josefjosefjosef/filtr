@@ -1627,7 +1627,12 @@ export function classifyPartnerEmail(message) {
   if (/commission|proviz/i.test(body)) {
     commercialKinds.push(COMMERCIAL_KIND.commission_change);
   }
-  if (/welcome|vítáme|uvítací|joined the program/i.test(body)) {
+  // V21: welcome/approval signals in subject OR body (CS/SK/EN); not limited to "Welcome".
+  if (
+    /welcome|v[ií]tejte|v[ií]t[aá]me|uv[ií]tac[ií]|joined the program|schv[aá]len|approv(?:ed|al)|accepted|přijat[aiy]?|ž[aá]dost byla přijata|[uú]čet byl schv[aá]len|partnership approved|advertiser invitation|publisher application|thank you for joining|congratulat|partnersk(?:ém|y|ého)? program/i.test(
+      subject + "\n" + body
+    )
+  ) {
     commercialKinds.push(COMMERCIAL_KIND.program_welcome);
   }
   if (/booking\.com|marketing|inspir/i.test(subject + body) && !/\b(kód|code|coupon|sleva|kupón)\b/i.test(body)) {
@@ -2022,10 +2027,13 @@ export function resolveCjPartnerIdentity(message, catalogAdvertisers, context = 
       (a) => String(a.advertiserName || "").trim().toLowerCase() === declaredName.toLowerCase()
     );
   }
-  // V20: welcome subjects often "Welcome to PartnerName" without declaredPartnerName/CID.
+  // V20/V21: welcome/approval subjects often lack CID — match catalog name in subject.
   if (!catalogByName && !primaryCid && subject) {
     const subj = subject.toLowerCase();
-    const welcomeish = /welcome|v[ií]tej|schv[aá]len|approv|joined|partner/.test(subj);
+    const welcomeish =
+      /welcome|v[ií]tej|v[ií]t[aá]me|schv[aá]len|approv|joined|partner|přijat|accepted|invitation|affiliate|program/.test(
+        subj
+      );
     if (welcomeish) {
       const ranked = (catalogAdvertisers || [])
         .map((a) => {

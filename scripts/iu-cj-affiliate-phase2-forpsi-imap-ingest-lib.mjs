@@ -52,8 +52,14 @@ export function mapToAffiliateCategories(message, classification, partnerIdentit
   if (classification.commercialKinds.includes(COMMERCIAL_KIND.program_welcome)) {
     out.add(AFFILIATE_EMAIL_CATEGORY.partner_welcome);
   }
-  if (/approved|schválen|accepted|welcome to the program|vítáme v programu/i.test(text)) {
+  // V21: broad multi-language welcome / approval recognition (CS/SK/EN).
+  if (
+    /approved|schv[aá]len|accepted|accept(?:ed)?|welcome to (?:the |our )?(?:program|affiliate)|v[ií]tejte|v[ií]t[aá]me v (?:na[šs]em )?program|partnersk(?:ém|y|ého)? program|byli jste přijati|va[šs]e ž[aá]dost byla přijata|[uú]čet byl schv[aá]len|partnership approved|advertiser invitation|publisher application|congratulat(?:ions)?.*accept|thank you for joining|you've been approved|application (?:has been )?accepted|program approval|joined (?:the |our )?program/i.test(
+      text
+    )
+  ) {
     out.add(AFFILIATE_EMAIL_CATEGORY.program_approval);
+    out.add(AFFILIATE_EMAIL_CATEGORY.partner_welcome);
   }
   if (/rejected|declined|terminated|ukončen|zamítn/i.test(text)) {
     out.add(AFFILIATE_EMAIL_CATEGORY.program_rejection_or_end);
@@ -225,9 +231,11 @@ export function processPartnerMessageForForpsiStaging(message, context = {}) {
     pipelineState: OFFER_PIPELINE_STATE.classified,
     partnerSummary: {
       declaredCid: partner.declaredCid ?? null,
+      declaredPartnerName: partner.declaredPartnerName ?? null,
       linkId: partner.linkId ?? null,
       confidence: partner.confidence,
       catalogAdvertiserId: partner.catalogMatch?.advertiserId ?? null,
+      catalogMatchName: partner.catalogMatch?.advertiserName ?? null,
       relationshipStatus: partner.catalogMatch?.relationshipStatus ?? null,
     },
     auth,

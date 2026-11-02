@@ -105,6 +105,23 @@ export async function runPhase3rPipeline(options = {}) {
   let quarantined = 0;
   let errors = 0;
 
+  // V21 ROOT-CAUSE FIX: IU_FORPSI_IMAP_HINTS_REPLAY_RESET must apply once per process.
+  // V20 left RESET=1 in env for all maxBatches → every batch re-read the same first 80 UIDs
+  // (messagesRead=320 with pendingAfterBatch stuck at ~251, checkpointComplete=false forever).
+  const hintsReplayMode =
+    process.env.IU_FORPSI_IMAP_HINTS_REPLAY === "1" ||
+    String(process.env.IU_CJ_EMAIL_INGEST_MODE || "").toLowerCase() === "historical";
+  let resetReplayFirstBatch =
+    options.resetReplay === true || process.env.IU_FORPSI_IMAP_HINTS_REPLAY_RESET === "1";
+  if (resetReplayFirstBatch) {
+    process.env.IU_FORPSI_IMAP_HINTS_REPLAY_RESET = "0";
+  }
+
+  let folderInventory = null;
+  if (typeof options.folderInventory === "object") {
+    folderInventory = options.folderInventory;
+  }
+
   for (let i = 0; i < maxBatches; i++) {
     const poll = await runForpsiLiveImapPoll({
       forceMock: forceMockImap,
@@ -113,6 +130,9 @@ export async function runPhase3rPipeline(options = {}) {
       batchSize,
       ownerId: options.ownerId || "phase3r-" + (process.env.GITHUB_RUN_ID || process.pid) + "-b" + i,
       catalogAdvertisers,
+      hintsReplay: hintsReplayMode || options.hintsReplay === true,
+      resetReplay: resetReplayFirstBatch && i === 0,
+      folder: options.folder || "INBOX",
     });
     lastPoll = poll;
     if (!poll.ok) {
@@ -147,12 +167,19 @@ export async function runPhase3rPipeline(options = {}) {
         ? options.injectBatchRows
         : [];
     for (const r of rows) allRows.push(r);
+    const batchOutcomes = {};
+    for (const r of rows) {
+      const o = String(r.outcome || "PROCESSED_NOT_RELEVANT");
+      batchOutcomes[o] = (batchOutcomes[o] || 0) + 1;
+    }
     batches.push({
       index: i,
       messagesInBatch: poll.messagesInBatch ?? 0,
       pendingAfterBatch: poll.checkpoint?.pendingAfterBatch ?? null,
       complete: poll.checkpoint?.complete === true,
       uidvalidity: poll.checkpoint?.uidvalidity ?? null,
+      resetReplay: resetReplayFirstBatch && i === 0,
+      outcomes: batchOutcomes,
     });
     if (poll.checkpoint?.complete === true) break;
     if ((poll.messagesInBatch ?? 0) === 0) break;
