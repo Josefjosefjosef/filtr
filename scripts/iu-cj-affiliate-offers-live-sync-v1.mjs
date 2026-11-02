@@ -53,7 +53,34 @@ function normalizeSectionMap(raw) {
   return out;
 }
 
-export function buildSectionByAdvertiser({ managedPublic, policy, sectionMap }) {
+/**
+ * Published main-button partners are authoritative for section placement.
+ * managed-public can lag behind static main buttons; without this fill,
+ * JOINED partners with a live main button lose otherwise-ready coupons/actions
+ * via partner_section_unmapped (V28 audit: Skinners Europe, E-armyshop.cz).
+ */
+export function sectionIdsFromMainButtons(mainButtons) {
+  const out = {};
+  if (!mainButtons || typeof mainButtons !== "object") return out;
+  const ingest = (btn) => {
+    const id = String(btn?.advertiserId ?? "").trim();
+    const sec = String(btn?.sectionId || btn?.sectionKey || "").trim();
+    if (!id || !sec.startsWith("aff-")) return;
+    if (!out[id]) out[id] = sec;
+  };
+  for (const b of mainButtons.buttons || []) ingest(b);
+  for (const s of mainButtons.sections || []) {
+    for (const b of s.buttons || []) {
+      ingest({
+        ...b,
+        sectionId: b.sectionId || b.sectionKey || s.sectionId || s.sectionKey,
+      });
+    }
+  }
+  return out;
+}
+
+export function buildSectionByAdvertiser({ managedPublic, policy, sectionMap, mainButtons }) {
   const sectionByAdv = {};
   for (const p of managedPublic?.partners || []) {
     if (p?.advertiserId != null && p.sectionId) {
@@ -66,6 +93,10 @@ export function buildSectionByAdvertiser({ managedPublic, policy, sectionMap }) 
     if (p.sectionId) sectionByAdv[id] = String(p.sectionId);
   }
   for (const [id, sec] of Object.entries(normalizeSectionMap(sectionMap))) {
+    if (!sectionByAdv[id]) sectionByAdv[id] = sec;
+  }
+  // Fill gaps from published main buttons (never override an existing mapping).
+  for (const [id, sec] of Object.entries(sectionIdsFromMainButtons(mainButtons))) {
     if (!sectionByAdv[id]) sectionByAdv[id] = sec;
   }
   return sectionByAdv;
@@ -507,9 +538,12 @@ export async function runOffersLiveSync(opts = {}) {
   });
   const policy = readJson(path.join(dataDir, "iu-affiliate-slot-policy-v1.json"), { partners: [] });
   const sectionMap = readJson(path.join(dataDir, "iu-affiliate-cj-section-map-v1.json"), {});
+  const mainButtons = readJson(path.join(dataDir, "iu-affiliate-cj-main-buttons-static-v13.json"), null);
   const prevPublic = readJson(path.join(dataDir, "iu-affiliate-cj-offers-public-v1.json"), null);
 
-  const sectionByAdv = buildSectionByAdvertiser({ managedPublic, policy, sectionMap });
+  const sectionByAdvWithoutMain = buildSectionByAdvertiser({ managedPublic, policy, sectionMap });
+  const sectionByAdv = buildSectionByAdvertiser({ managedPublic, policy, sectionMap, mainButtons });
+  const mainButtonSectionFillIds = Object.keys(sectionByAdv).filter((id) => !sectionByAdvWithoutMain[id]);
 
   let products = opts.products || [];
   let productMeta = opts.productMeta || null;
@@ -612,6 +646,22 @@ export async function runOffersLiveSync(opts = {}) {
   const lkgPath = path.join(dataDir, path.basename(OFFERS_LKG_REL));
   const auditPath = path.join(dataDir, "iu-affiliate-cj-offers-sync-audit-v1.json");
 
+  // Layer loss audit: unexplained ready drop vs prior LIVE catalog (expiration is OK;
+  // zero unauthorized pipeline loss is required). Does not invent offers.
+  const layerLossAudit = {
+    sectionMapSize: Object.keys(sectionByAdv).length,
+    mainButtonSectionFillCount: mainButtonSectionFillIds.length,
+    mainButtonSectionFillIdsSample: mainButtonSectionFillIds.slice(0, 20),
+    rejectPartnerSectionUnmapped: built.rejectReasons?.partner_section_unmapped || 0,
+    prevReadyTotal: prevReady.total,
+    nextReadyTotal: nextReady.total,
+    readyDelta: nextReady.total - prevReady.total,
+    // Negative delta alone is not a failure (legitimate expiry). Flag only empty wipe path.
+    unexplainedEmptyWipeBlocked: false,
+    note:
+      "Compare rejectReasons + mainButtonSectionFillCount. Legitimate expiry reduces counts; section fill recovers main-button partner offers.",
+  };
+
   const audit = {
     at: new Date().toISOString(),
     armed,
@@ -622,6 +672,7 @@ export async function runOffersLiveSync(opts = {}) {
     prevReady,
     productMeta,
     rejectReasons: built.rejectReasons,
+    layerLossAudit,
     sha256: crypto.createHash("sha256").update(JSON.stringify(doc)).digest("hex"),
   };
 
