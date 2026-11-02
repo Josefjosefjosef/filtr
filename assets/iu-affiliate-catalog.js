@@ -2,7 +2,7 @@
  * infoUzel.cz — Affiliate services catalog (UI + data).
  * Partner URLs are placeholders until affiliate programs are approved.
  */
-/* iu-affiliate-catalog-bust: cj-phase3z-v18-category-2026-11-02*/
+/* iu-affiliate-catalog-bust: cj-phase3z-v16-public-swap-2026-11-01 */
 (function iuAffiliateCatalog() {
   "use strict";
 
@@ -499,7 +499,6 @@
         affPartner("Salononline.cz", "https://www.anrdoezrs.net/click-101883843-14099303-1707242734000", "5482931"),
         affPartner("SEPHORA.cz", "https://www.tkqlhce.com/click-101883843-13212014-1737590189000", "5047092"),
         affPartner("SvetKadernictvi.cz / SvetKadernictva.sk", "https://www.dpbolvw.net/click-101883843-14386407-1708047783000", "5611262"),
-        affPartner("Tierraverde", "https://www.anrdoezrs.net/click-101883843-17313396-1782831175000", "7612998"),
         affPartner("Yves-rocher.cz", "https://www.tkqlhce.com/click-101883843-13407784-1698794483000", "5124968")
       ],
     },
@@ -509,6 +508,8 @@
       icon: "iu-aff-bottle",
       description: "Odkazy na vybrané drogerie a související obchody.",
       items: [
+
+        affPartner("Tierraverde", "https://www.anrdoezrs.net/click-101883843-17313396-1782831175000", "7612998"),
         affPartner("Rossmann.cz", "https://www.tkqlhce.com/click-101883843-17236887-1769733415000", "7786972")
       ],
     },
@@ -561,7 +562,6 @@
       description: "Odkazy na vybrané obchody se sortimentem pro děti a hračkami.",
       items: [
         affPartner("4kids.cz", "https://www.kqzyfj.com/click-101883843-13469142-1708047875000", "5153670"),
-        affPartner("Activa CZ_Bibelot", "https://www.dpbolvw.net/click-101883843-15544489-1708048268000", "5260576"),
         affPartner("BAMBULE.cz", "https://www.dpbolvw.net/click-101883843-12990634-1706861500000", "4949011"),
         affPartner("Bruderland Europe", "https://www.jdoqocy.com/click-101883843-17073660-1746481013000", "7424533"),
         affPartner("Feedo.cz", "https://www.anrdoezrs.net/click-101883843-12984087-1708046991000", "4901154"),
@@ -605,6 +605,8 @@
       icon: "iu-home-hobby",
       description: "Odkazy na vybrané obchody pro dům, zahradu a hobby.",
       items: [
+
+        affPartner("Dvere-Erkado.cz", "https://www.jdoqocy.com/click-101883843-13234841-1748446701000", "5027071"),
         affPartner("Butlers.cz", "https://www.kqzyfj.com/click-101883843-12070030-1606779891000", "4432968"),
         affPartner("DECODOMA.CZ", "https://www.anrdoezrs.net/click-101883843-12923226-1706861546000", "4882378"),
         affPartner("Dedoma.sk", "https://www.anrdoezrs.net/click-101883843-13219578-1706861751000", "5000412"),
@@ -769,7 +771,6 @@
       description: "Odkazy na vybrané obchody s nářadím a vybavením dílny.",
       items: [
         affPartner("DEK.cz", "https://www.jdoqocy.com/click-101883843-13457236-1708044985000", "5142212"),
-        affPartner("Dvere-Erkado.cz", "https://www.jdoqocy.com/click-101883843-13234841-1748446701000", "5027071"),
         affPartner("Expondo GMBH", "https://www.anrdoezrs.net/click-101883843-14032356-1748654764000", "5320945"),
         affPartner("OBI CZ", "https://www.dpbolvw.net/click-101883843-15816967-1717693778000", "6857406")
       ],
@@ -806,6 +807,8 @@
       icon: "iu-aff-office",
       description: "Odkazy na vybrané obchody a služby zaměřené na kancelářské potřeby a vybavení.",
       items: [
+
+        affPartner("Activa CZ_Bibelot", "https://www.dpbolvw.net/click-101883843-15544489-1708048268000", "5260576"),
         affPartner("Eobaly", "https://www.jdoqocy.com/click-101883843-15756667-1709047038000", "6721278")
       ],
     },
@@ -1106,7 +1109,6 @@
     ensureAffiliateViewMountPoint();
     return renderAffiliateSection(section);
   }
-
 
   var IU_AFF_PUBLIC_SWAP_ARMED = true;
   var IU_AFF_STATIC_MAIN_CATALOG_PATH = "/projects/data/iu-affiliate-cj-main-buttons-static-v13.json";
