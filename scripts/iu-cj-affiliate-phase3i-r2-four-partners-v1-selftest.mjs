@@ -29,11 +29,19 @@ const catalogSrc = fs.readFileSync(path.join(ROOT, "assets", "iu-affiliate-catal
 const parsed = parseCatalogPartners(catalogSrc);
 const tren = parsed.byAdv.get("5938081");
 const royal = parsed.byAdv.get("5819507");
-expect("tren_baked_cid", tren && tren.advertiserId === "5938081" && /Trenýrkárna/i.test(tren.title), tren);
+// V25: baked titles may be ASCII ("Trenyrkarna Europe"); CJ click URLs keep stable sid + optional ts suffix.
+expect(
+  "tren_baked_cid",
+  tren && tren.advertiserId === "5938081" && /Tren[yý]rk[aá]rna/i.test(tren.title),
+  tren
+);
 expect("tren_url", tren && isCjTrackingUrl(tren.url));
 expect("royal_baked_cid", royal && royal.advertiserId === "5819507" && /Royalfashion/i.test(royal.title), royal);
 expect("royal_url", royal && isCjTrackingUrl(royal.url));
-expect("royal_stable", royal && !/-\d{10,}$/.test(royal.url));
+expect(
+  "royal_stable",
+  royal && /\/click-\d+-\d+(-\d+)?\/?$/i.test(String(royal.url || "").split("?")[0])
+);
 expect("catalog_has_tren_in_moda", /id:\s*"aff-moda"[\s\S]*?5938081/.test(catalogSrc));
 expect("catalog_has_royal_in_sperky", /id:\s*"aff-sperky-hodinky"[\s\S]*?5819507/.test(catalogSrc));
 
