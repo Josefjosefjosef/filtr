@@ -186,8 +186,13 @@ export function parseShoppingProductsGraphqlResponse(res) {
 
 /**
  * Build shoppingProducts GraphQL selection.
- * Supports documented pagination: limit (≤10000), offset (≤10k window), page token (>10k).
+ * Supports documented pagination args: limit (≤10000), offset (≤10k window), page token (>10k).
  * Do NOT pass offset together with page (CJ docs).
+ *
+ * V30.1: selection stays on fields proven in production (`totalCount` + `resultList`).
+ * Requesting `count`/`limit`/`page` as response fields caused HTTP 400 on ads.api.cj.com
+ * (feeds inventory still OK). Page-token continuation therefore relies on args only when
+ * the API returns usable continuation via totalCount vs fetched length.
  */
 export function buildPublisherProductsQuery(companyId, partnerId, websitePid, limit = CJ_PRODUCT_SEARCH_PAGE_SIZE_DEFAULT, opts = {}) {
   const cid = String(companyId).replace(/"/g, "");
@@ -204,8 +209,9 @@ export function buildPublisherProductsQuery(companyId, partnerId, websitePid, li
   if (pageTok) {
     parts.push(`page: "${pageTok}"`);
   } else if (opts.offset != null && Number.isFinite(Number(opts.offset))) {
+    // Omit offset=0/1-first when explicitly disabled; first page should omit offset entirely.
     const off = Math.max(0, Math.floor(Number(opts.offset)));
-    parts.push(`offset: ${off}`);
+    if (off > 0) parts.push(`offset: ${off}`);
   }
   if (opts.adIds?.length) {
     parts.push(`adIds: [${opts.adIds.map((id) => `"${String(id).replace(/"/g, "")}"`).join(", ")}]`);
@@ -213,7 +219,7 @@ export function buildPublisherProductsQuery(companyId, partnerId, websitePid, li
   if (opts.keywords?.length) {
     parts.push(`keywords: [${opts.keywords.map((k) => `"${String(k).replace(/"/g, "").slice(0, 40)}"`).join(", ")}]`);
   }
-  return `{ shoppingProducts(${parts.join(", ")}) { totalCount count limit page resultList { advertiserId id title description availability price { amount currency } imageLink linkCode(pid: "${wp}") { clickUrl } } } }`;
+  return `{ shoppingProducts(${parts.join(", ")}) { totalCount resultList { advertiserId id title description availability price { amount currency } imageLink linkCode(pid: "${wp}") { clickUrl } } } }`;
 }
 
 export function buildTravelProductsQuery(companyId, partnerId, websitePid, limit = 3, adIds = []) {
@@ -505,7 +511,9 @@ export async function fetchAllShoppingProductsForPartner(env, partnerId, opts = 
     const req =
       mode === "page" || pageToken
         ? { limit: Math.min(pageSize, CJ_PRODUCT_SEARCH_MAX_LIMIT), page: pageToken, adIds: opts.adIds }
-        : { limit: pageSize, offset, adIds: opts.adIds };
+        : pageIdx === 0 && offset <= CJ_PRODUCT_SEARCH_OFFSET_FIRST
+          ? { limit: pageSize, adIds: opts.adIds } // first page: omit offset (avoids http_400 on some schemas)
+          : { limit: pageSize, offset, adIds: opts.adIds };
     if (pageToken) mode = "page";
     const parsed = await fetchShoppingProductsPage(env, partnerId, req);
     pageLog.push({

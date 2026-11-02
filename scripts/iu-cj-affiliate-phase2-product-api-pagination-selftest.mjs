@@ -22,11 +22,15 @@ expect("no_artificial_ten", clampProductSearchLimit(100) === 100);
 expect("allows_1000", clampProductSearchLimit(1000) === 1000);
 expect("allows_10000", clampProductSearchLimit(10000) === 10000);
 
-const q = buildPublisherProductsQuery("111", "222", "101883843", 100, { offset: 1 });
-expect("query_limit_100", /limit:\s*100/.test(q));
-expect("query_offset", /offset:\s*1/.test(q));
-expect("query_requests_page_field", /\bpage\b/.test(q) && /totalCount/.test(q) && /count/.test(q));
-expect("query_no_ten_cap", !/limit:\s*10\b/.test(q) || /limit:\s*100/.test(q));
+const qFirst = buildPublisherProductsQuery("111", "222", "101883843", 100, {});
+expect("query_limit_100", /limit:\s*100/.test(qFirst));
+expect("query_first_omits_offset", !/offset:/.test(qFirst));
+expect("query_totalCount_resultList", /totalCount/.test(qFirst) && /resultList/.test(qFirst));
+expect("query_no_response_page_field", !/\{\s*totalCount count limit page/.test(qFirst));
+expect("query_no_ten_cap", !/limit:\s*10\b/.test(qFirst) || /limit:\s*100/.test(qFirst));
+
+const qOff = buildPublisherProductsQuery("111", "222", "101883843", 100, { offset: 101 });
+expect("query_offset_when_gt_zero", /offset:\s*101/.test(qOff));
 
 const qPage = buildPublisherProductsQuery("111", "222", "101883843", 10000, { page: "tok123" });
 expect("page_token_mode", /page:\s*"tok123"/.test(qPage) && !/offset:/.test(qPage));

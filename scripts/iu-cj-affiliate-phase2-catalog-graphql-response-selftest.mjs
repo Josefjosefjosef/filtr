@@ -20,7 +20,7 @@ expect(
 );
 
 expect(
-  "page_token_surfaced",
+  "optional_page_token_surfaced_when_present",
   parseShoppingProductsGraphqlResponse({
     ok: true,
     status: 200,

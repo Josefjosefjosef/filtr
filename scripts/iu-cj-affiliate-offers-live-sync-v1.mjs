@@ -767,6 +767,28 @@ export async function runOffersLiveSync(opts = {}) {
     };
   }
 
+  // V30.1: refuse product-catalog wipe when prior LIVE had products but rebuild fetched none
+  // (e.g. GraphQL http_400 on all partners). Coupons/actions alone must not overwrite product LKG.
+  if (
+    armed &&
+    prevPublic?.liveEnabled === true &&
+    prevReady.products > 0 &&
+    nextReady.products === 0 &&
+    (productMeta?.partnersError > 0 || productMeta?.sourceProductsFetched === 0)
+  ) {
+    return {
+      ok: false,
+      armed,
+      wrote: false,
+      reason: "PRODUCT_FETCH_REGRESSION_KEEP_LKG",
+      liveEnabled: false,
+      counts: nextReady,
+      prevReady,
+      productMeta,
+      note: "Product source fetch failed or empty while prior LIVE had products — keep LKG, do not promote.",
+    };
+  }
+
   // Refuse arming LIVE with zero ready items (transparent zero, not false success).
   if (armed && liveWanted && nextReady.total === 0) {
     return {
