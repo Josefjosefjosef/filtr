@@ -1196,6 +1196,8 @@ export async function runOffersLiveSync(opts = {}) {
     liveEnabled: doc.liveEnabled === true,
     counts: nextReady,
     productMeta,
+    refreshMeta,
+    freshness: freshApplied.stats,
     doc,
     publicPath,
     lkgPath,
