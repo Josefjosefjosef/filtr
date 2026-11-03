@@ -594,6 +594,8 @@ jobs:
           path: projects/data
       - name: Restore policy/section-map/offers LKG + prefer LIVE managed-public
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           mkdir -p projects/data
