@@ -978,19 +978,36 @@ export async function runOffersLiveSync(opts = {}) {
   let refreshMeta = null;
   const doRefresh =
     opts.refreshPublished !== false && env.IU_CJ_OFFERS_REFRESH_PUBLISHED !== "0";
+  const refreshPageSize =
+    opts.refreshPageSize != null
+      ? Number(opts.refreshPageSize)
+      : env.IU_CJ_OFFERS_REFRESH_PAGE_SIZE != null && String(env.IU_CJ_OFFERS_REFRESH_PAGE_SIZE).trim() !== ""
+        ? Number(env.IU_CJ_OFFERS_REFRESH_PAGE_SIZE)
+        : 100;
+  const refreshMaxPages =
+    opts.refreshMaxPages != null
+      ? Number(opts.refreshMaxPages)
+      : env.IU_CJ_OFFERS_REFRESH_MAX_PAGES != null && String(env.IU_CJ_OFFERS_REFRESH_MAX_PAGES).trim() !== ""
+        ? Number(env.IU_CJ_OFFERS_REFRESH_MAX_PAGES)
+        : 3;
 
-  // V32: refresh already-published products BEFORE / independently of discovery window.
+  // V32/V34: refresh already-published products BEFORE / independently of discovery window.
   let refreshedByKey = new Map();
   if (doRefresh && prevPublic?.liveEnabled === true) {
     const refreshed = await refreshPublishedProductsFromCj({
       env,
       prevPublic,
       websitePid: WEBSITE_PID,
-      pageSize: opts.refreshPageSize,
-      maxPages: opts.refreshMaxPages,
+      pageSize: Number.isFinite(refreshPageSize) ? refreshPageSize : 100,
+      maxPages: Number.isFinite(refreshMaxPages) ? refreshMaxPages : 3,
     });
     refreshedByKey = refreshed.refreshedByKey;
-    refreshMeta = refreshed.meta;
+    refreshMeta = {
+      ...(refreshed.meta || {}),
+      mode: env.IU_CJ_OFFERS_MODE || null,
+      refreshPageSize: Number.isFinite(refreshPageSize) ? refreshPageSize : 100,
+      refreshMaxPages: Number.isFinite(refreshMaxPages) ? refreshMaxPages : 3,
+    };
   }
 
   if (sampleProducts && products.length === 0) {
@@ -1231,6 +1248,8 @@ if (isMain) {
             liveEnabled: r.liveEnabled,
             counts: r.counts,
             productMeta: r.productMeta,
+            refreshMeta: r.refreshMeta || null,
+            freshness: r.freshness || null,
             errors: r.errors || null,
           },
           null,

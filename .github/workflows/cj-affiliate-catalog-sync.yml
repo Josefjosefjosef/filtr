@@ -6,8 +6,11 @@
 
 on:
   schedule:
-    # Off-peak UTC (~03:17) â€” ~25 req/min spacing enforced in fetch script
+    # Daily full inventory + deeper discovery (UTC ~03:17).
     - cron: "17 3 * * *"
+    # V34: refresh-priority cadence (~every 3h). Target published price/availability refresh
+    # within 1–3h when CJ quotas allow; discovery continues lightly without inventory.
+    - cron: "17 0,6,9,12,15,18,21 * * *"
   workflow_dispatch:
     inputs:
       execute_live_fetch:
@@ -18,6 +21,14 @@ on:
         options:
           - "0"
           - "1"
+      offers_mode:
+        description: "Offers sync mode (full=inventory+deep discovery; refresh_priority=refresh published first)"
+        required: true
+        default: "full"
+        type: choice
+        options:
+          - "full"
+          - "refresh_priority"
       arm_publish:
         description: "Arm publish gate write to managed registry (infra-approved only)"
         required: true
@@ -101,6 +112,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-product-feed-checkpoint-v31-selftest.mjs
       - name: Offers freshness policy selftest (V32; offline)
         run: node scripts/iu-cj-affiliate-phase3z-offers-freshness-v32-selftest.mjs
+      - name: Refresh capacity + cadence selftest (V34; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-refresh-capacity-v34-selftest.mjs
       - name: Offers UI + production feature-flag gate selftest
         run: |
           node scripts/iu-cj-affiliate-phase2-offers-preview-ui-selftest.mjs
@@ -615,14 +628,18 @@ jobs:
       IU_CJ_OFFERS_PRODUCT_PARTNER_LIMIT: "0"
       IU_CJ_OFFERS_PRODUCT_PAGE_SIZE: "100"
       # Continueable paging window (not API 10-cap). Early-stop once presentation budget filled.
-      IU_CJ_OFFERS_PRODUCT_MAX_PAGES: "5"
+      # V34: refresh_priority schedules use light discovery (1 page); daily 03:17 + full dispatch keep 5.
+      IU_CJ_OFFERS_PRODUCT_MAX_PAGES: ${{ (github.event_name == 'schedule' && github.event.schedule != '17 3 * * *') && '1' || (github.event_name == 'workflow_dispatch' && inputs.offers_mode == 'refresh_priority' && '1' || '5') }}
       # Presentation/runtime budget (prevents RangeError on mega-feeds). Not a CJ API source cap.
       IU_CJ_OFFERS_PRODUCT_PUBLISH_PER_PARTNER: "25"
       IU_CJ_OFFERS_KEEP_SOURCE_ROWS: "0"
-      # Feed summary inventory is expensive across 165 partners; enable via repo var/dispatch later.
-      # V32: enable feed inventory on schedule (bounded); dispatch can override via env later.
-      IU_CJ_OFFERS_INVENTORY_FEEDS: ${{ github.event_name == 'schedule' && '1' || '0' }}
+      # Feed inventory only on daily full schedule (expensive across ~165 partners).
+      IU_CJ_OFFERS_INVENTORY_FEEDS: ${{ (github.event_name == 'schedule' && github.event.schedule == '17 3 * * *') && '1' || '0' }}
       IU_CJ_OFFERS_REFRESH_PUBLISHED: "1"
+      # Deeper published-key scan on refresh-priority runs (still not an API source invent).
+      IU_CJ_OFFERS_REFRESH_PAGE_SIZE: "100"
+      IU_CJ_OFFERS_REFRESH_MAX_PAGES: ${{ (github.event_name == 'schedule' && github.event.schedule != '17 3 * * *') && '5' || (github.event_name == 'workflow_dispatch' && inputs.offers_mode == 'refresh_priority' && '5' || '3') }}
+      IU_CJ_OFFERS_MODE: ${{ (github.event_name == 'schedule' && github.event.schedule == '17 3 * * *') && 'full' || (github.event_name == 'schedule' && 'refresh_priority' || (github.event_name == 'workflow_dispatch' && inputs.offers_mode || 'full')) }}
       # Legacy alias: treated as page size when PAGE_SIZE unset (no longer capped at 10).
       IU_CJ_OFFERS_PRODUCT_LIMIT: "100"
     steps:
@@ -931,25 +948,40 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Fetch offers-public from sync branch (API, no full git history)
+      # V34: prefer same-run offers artifact (avoids stale sync-branch/production fallback).
+      - name: Download offers artifact from this run
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: iu-affiliate-cj-offers-public
+          path: /tmp/iu-offers-artifact
+      - name: Resolve offers-public incoming (artifact → sync branch → production LKG)
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           SYNC_BRANCH="data/cj-affiliate-catalog-sync"
-          # Avoid git fetch of all refs (previous cancel during deep checkout).
-          set +e
-          gh api \
-            "repos/${GITHUB_REPOSITORY}/contents/projects/data/iu-affiliate-cj-offers-public-v1.json?ref=${SYNC_BRANCH}" \
-            -H "Accept: application/vnd.github.raw" \
-            > /tmp/iu-offers-public-incoming.json
-          api_rc=$?
-          set -e
-          if [ "$api_rc" -ne 0 ] || [ ! -s /tmp/iu-offers-public-incoming.json ]; then
-            echo "NOTE=SYNC_BRANCH_OFFERS_MISSING_OR_EMPTY_FALLBACK_PRODUCTION"
-            curl -fsSL "https://infouzel.cz/projects/data/iu-affiliate-cj-offers-public-v1.json" \
-              -o /tmp/iu-offers-public-incoming.json
+          ART="/tmp/iu-offers-artifact/iu-affiliate-cj-offers-public-v1.json"
+          if [ -s "$ART" ]; then
+            cp "$ART" /tmp/iu-offers-public-incoming.json
+            echo "INCOMING_SOURCE=run_artifact"
+          else
+            set +e
+            gh api \
+              "repos/${GITHUB_REPOSITORY}/contents/projects/data/iu-affiliate-cj-offers-public-v1.json?ref=data%2Fcj-affiliate-catalog-sync" \
+              -H "Accept: application/vnd.github.raw" \
+              > /tmp/iu-offers-public-incoming.json
+            api_rc=$?
+            set -e
+            if [ "$api_rc" -eq 0 ] && [ -s /tmp/iu-offers-public-incoming.json ]; then
+              echo "INCOMING_SOURCE=sync_branch_api"
+            else
+              echo "NOTE=SYNC_BRANCH_OFFERS_MISSING_OR_EMPTY_FALLBACK_PRODUCTION"
+              curl -fsSL "https://infouzel.cz/projects/data/iu-affiliate-cj-offers-public-v1.json" \
+                -o /tmp/iu-offers-public-incoming.json
+              echo "INCOMING_SOURCE=production_lkg_fallback"
+            fi
           fi
           python3 - <<'PY'
           import json, os
@@ -959,6 +991,9 @@ jobs:
           d=json.load(open(path))
           print("INCOMING_LIVE", d.get("liveEnabled") is True)
           print("INCOMING_STATS", json.dumps(d.get("stats") or {}))
+          print("INCOMING_UPDATED_AT", d.get("updatedAt"))
+          fr=(d.get("stats") or {}).get("freshness") or {}
+          print("INCOMING_FRESHNESS", json.dumps(fr))
           if d.get("ok") is False:
             raise SystemExit("BLOCKER=OFFERS_DOC_NOT_OK")
           if d.get("liveEnabled") is not True:
