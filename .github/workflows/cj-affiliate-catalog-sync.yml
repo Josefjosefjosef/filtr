@@ -114,6 +114,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-offers-freshness-v32-selftest.mjs
       - name: Refresh capacity + cadence selftest (V34; offline)
         run: node scripts/iu-cj-affiliate-phase3z-refresh-capacity-v34-selftest.mjs
+      - name: Refresh coverage ledger selftest (V35; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-refresh-coverage-v35-selftest.mjs
       - name: Offers UI + production feature-flag gate selftest
         run: |
           node scripts/iu-cj-affiliate-phase2-offers-preview-ui-selftest.mjs
@@ -638,8 +640,9 @@ jobs:
       IU_CJ_OFFERS_REFRESH_PUBLISHED: "1"
       # Deeper published-key scan on refresh-priority runs (still not an API source invent).
       IU_CJ_OFFERS_REFRESH_PAGE_SIZE: "100"
-      IU_CJ_OFFERS_REFRESH_MAX_PAGES: ${{ (github.event_name == 'schedule' && github.event.schedule != '17 3 * * *') && '5' || (github.event_name == 'workflow_dispatch' && inputs.offers_mode == 'refresh_priority' && '5' || '3') }}
+      IU_CJ_OFFERS_REFRESH_MAX_PAGES: ${{ (github.event_name == 'schedule' && github.event.schedule != '17 3 * * *') && '5' || (github.event_name == 'workflow_dispatch' && inputs.offers_mode == 'refresh_priority' && '5' || '5') }}
       IU_CJ_OFFERS_MODE: ${{ (github.event_name == 'schedule' && github.event.schedule == '17 3 * * *') && 'full' || (github.event_name == 'schedule' && 'refresh_priority' || (github.event_name == 'workflow_dispatch' && inputs.offers_mode || 'full')) }}
+      IU_CJ_REFRESH_CHECKPOINT_PATH: projects/data/iu-affiliate-cj-refresh-coverage-v35.json
       # Legacy alias: treated as page size when PAGE_SIZE unset (no longer capped at 10).
       IU_CJ_OFFERS_PRODUCT_LIMIT: "100"
     steps:
@@ -809,12 +812,15 @@ jobs:
             projects/data/iu-affiliate-cj-offers-public-lkg-v1.json
             projects/data/iu-affiliate-cj-offers-sync-audit-v1.json
             projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json
+            projects/data/iu-affiliate-cj-refresh-coverage-v35.json
           if-no-files-found: warn
       - name: Upload product-feed checkpoints (V31 continuation)
         uses: actions/upload-artifact@v4
         with:
           name: iu-affiliate-cj-product-feed-checkpoints
-          path: projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json
+          path: |
+            projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json
+            projects/data/iu-affiliate-cj-refresh-coverage-v35.json
           if-no-files-found: warn
           retention-days: 90
       # Artifacts are per-run; without promote arm they were lost. Always persist checkpoints on sync branch.
@@ -885,7 +891,7 @@ jobs:
             if [ -f "$f" ]; then cp "$f" "${STASH}/iu-affiliate-cj-${name}-v1.json"; fi
           done
           # offers file names differ slightly
-          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json; do
+          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json; do
             if [ -f "projects/data/${f}" ]; then cp "projects/data/${f}" "${STASH}/${f}"; fi
           done
           git config user.name "iu-cj-catalog-sync-bot"
@@ -895,7 +901,7 @@ jobs:
             git show "origin/${SYNC_BRANCH}:projects/data/iu-affiliate-cj-${name}-v1.json" \
               > "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" 2>/dev/null || true
           done
-          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json; do
+          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json; do
             tmp="${STASH}/prev/${f}.tmp"
             if git show "origin/${SYNC_BRANCH}:projects/data/${f}" > "${tmp}" 2>/dev/null; then
               if [ -s "${tmp}" ]; then mv "${tmp}" "${STASH}/prev/${f}"; else rm -f "${tmp}"; fi
@@ -918,7 +924,7 @@ jobs:
               cp "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" "projects/data/iu-affiliate-cj-${name}-v1.json"
             fi
           done
-          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json; do
+          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json; do
             if [ -s "${STASH}/${f}" ]; then cp "${STASH}/${f}" "projects/data/${f}"
             elif [ -s "${STASH}/prev/${f}" ]; then cp "${STASH}/prev/${f}" "projects/data/${f}"; fi
           done

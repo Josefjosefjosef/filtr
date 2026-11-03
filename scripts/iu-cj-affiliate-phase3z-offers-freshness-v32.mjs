@@ -287,6 +287,11 @@ export function applyFreshnessToOffersDocument(doc, opts = {}) {
     };
     for (const c of sec.coupons || []) {
       const ex = isOfferExpiredAt(c, nowMs);
+      const hasId = c.offerId != null && String(c.offerId).trim() !== "";
+      if (!hasId) {
+        stats.couponsUnknownValidityHidden += 1;
+        continue;
+      }
       if (ex.expired) {
         stats.couponsExpiredHidden += 1;
         continue;
@@ -295,17 +300,28 @@ export function applyFreshnessToOffersDocument(doc, opts = {}) {
         stats.couponsUnknownValidityHidden += 1;
         continue;
       }
+      // publicationReady must not follow from mere existence — require identity + bounded (or explicit) validity.
+      const validityStatus = ex.unknownValidity ? "UNKNOWN" : "BOUNDED";
       next.coupons.push({
         ...c,
+        offerId: String(c.offerId),
+        validFrom: c.validFrom || c.validFromDate || c.startDate || null,
+        validTo: c.validTo || c.validUntil || c.endDate || null,
         lastCheckedAt: c.lastCheckedAt || null,
         fetchedAt: c.fetchedAt || null,
         freshnessStatus: ex.unknownValidity ? FRESHNESS_STATUS.UNVERIFIED : FRESHNESS_STATUS.SOURCE_FRESH,
         freshnessReason: ex.reason,
-        validityStatus: ex.unknownValidity ? "UNKNOWN" : "BOUNDED",
+        validityStatus,
+        publicationReady: c.publicationReady === true && !ex.unknownValidity && hasId,
       });
     }
     for (const a of sec.actions || []) {
       const ex = isOfferExpiredAt(a, nowMs);
+      const hasId = a.offerId != null && String(a.offerId).trim() !== "";
+      if (!hasId) {
+        stats.actionsUnknownValidityHidden += 1;
+        continue;
+      }
       if (ex.expired) {
         stats.actionsExpiredHidden += 1;
         continue;
@@ -314,13 +330,18 @@ export function applyFreshnessToOffersDocument(doc, opts = {}) {
         stats.actionsUnknownValidityHidden += 1;
         continue;
       }
+      const validityStatus = ex.unknownValidity ? "UNKNOWN" : "BOUNDED";
       next.actions.push({
         ...a,
+        offerId: String(a.offerId),
+        validFrom: a.validFrom || a.validFromDate || a.startDate || null,
+        validTo: a.validTo || a.validUntil || a.endDate || null,
         lastCheckedAt: a.lastCheckedAt || null,
         fetchedAt: a.fetchedAt || null,
         freshnessStatus: ex.unknownValidity ? FRESHNESS_STATUS.UNVERIFIED : FRESHNESS_STATUS.SOURCE_FRESH,
         freshnessReason: ex.reason,
-        validityStatus: ex.unknownValidity ? "UNKNOWN" : "BOUNDED",
+        validityStatus,
+        publicationReady: a.publicationReady === true && !ex.unknownValidity && hasId,
       });
     }
     for (const p of sec.products || []) {
