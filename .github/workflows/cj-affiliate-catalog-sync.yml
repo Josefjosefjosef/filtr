@@ -593,30 +593,54 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p projects/data
+          # Never leave empty files from failed git show (blocks later restores).
+          restore_git_file() {
+            local src="$1" dest="$2"
+            local tmp="${dest}.tmp.$$"
+            if git show "${src}" > "${tmp}" 2>/dev/null; then
+              if [ -s "${tmp}" ]; then
+                mv "${tmp}" "${dest}"
+                return 0
+              fi
+            fi
+            rm -f "${tmp}"
+            return 1
+          }
           for f in \
             iu-affiliate-slot-policy-v1.json \
             iu-affiliate-cj-section-map-v1.json \
             iu-affiliate-cj-offers-public-v1.json \
-            iu-affiliate-cj-main-buttons-static-v13.json \
-            iu-affiliate-cj-product-feed-checkpoints-v31.json \
-            iu-affiliate-cj-email-only-offers-bridge-v31.json
+            iu-affiliate-cj-main-buttons-static-v13.json
           do
-            if [ ! -f "projects/data/${f}" ]; then
-              git show "HEAD:projects/data/${f}" > "projects/data/${f}" 2>/dev/null || true
+            if [ ! -f "projects/data/${f}" ] || [ ! -s "projects/data/${f}" ]; then
+              restore_git_file "HEAD:projects/data/${f}" "projects/data/${f}" || true
             fi
           done
-          # Prefer sync-branch durable checkpoints when artifact missing.
-          if [ ! -f projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json ]; then
+          # Durable checkpoints live on sync branch (not main). Drop empty/missing then restore.
+          CP="projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json"
+          if [ -f "$CP" ] && [ ! -s "$CP" ]; then rm -f "$CP"; fi
+          if [ ! -f "$CP" ]; then
             git fetch origin data/cj-affiliate-catalog-sync --depth=1 || true
-            git show "origin/data/cj-affiliate-catalog-sync:projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json" \
-              > projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json 2>/dev/null || true
+            restore_git_file \
+              "origin/data/cj-affiliate-catalog-sync:projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json" \
+              "$CP" || true
           fi
-          if [ -f projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json ]; then
+          if [ -f "$CP" ] && [ -s "$CP" ]; then
             echo "PRODUCT_FEED_CHECKPOINT_RESTORED=1"
+            python3 - <<'PY'
+          import json
+          p="projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json"
+          j=json.load(open(p))
+          partners=j.get("partners") or {}
+          resumed=sum(1 for v in partners.values() if (v or {}).get("resumeOffset") not in (None,1,"1") or (v or {}).get("resumePage"))
+          print("CHECKPOINT_PARTNERS", len(partners), "RESUMABLE", resumed)
+          PY
           else
             echo "PRODUCT_FEED_CHECKPOINT_RESTORED=0"
           fi
-          if [ -f projects/data/iu-affiliate-cj-email-only-offers-bridge-v31.json ]; then
+          EB="projects/data/iu-affiliate-cj-email-only-offers-bridge-v31.json"
+          if [ -f "$EB" ] && [ ! -s "$EB" ]; then rm -f "$EB"; fi
+          if [ -f "$EB" ] && [ -s "$EB" ]; then
             echo "EMAIL_ONLY_BRIDGE_RESTORED=1"
           else
             echo "EMAIL_ONLY_BRIDGE_RESTORED=0"
