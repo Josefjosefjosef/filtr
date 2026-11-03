@@ -47,7 +47,9 @@ import {
   applyFreshnessToOffersDocument,
   collectPublishedProductKeys,
   mergeRefreshedProductIntoCard,
+  stampProductFetchClocks,
   FRESHNESS_STATUS,
+  SOURCE_UPDATED_AT_STATUS,
 } from "./iu-cj-affiliate-phase3z-offers-freshness-v32.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -263,9 +265,12 @@ function toPublicProductCard(p, sectionKey) {
     sectionKey: sectionKey || null,
     partnerName: p.partnerName || null,
     sourceUpdatedAt: p.sourceUpdatedAt || null,
+    sourceUpdatedAtStatus: p.sourceUpdatedAtStatus || SOURCE_UPDATED_AT_STATUS.NOT_PROVIDED,
+    fetchedAt: p.fetchedAt || null,
     lastCheckedAt: p.lastCheckedAt || null,
     lastSuccessfulRefreshAt: p.lastSuccessfulRefreshAt || null,
     freshnessStatus: p.freshnessStatus || FRESHNESS_STATUS.UNVERIFIED,
+    freshnessReason: p.freshnessReason || null,
     publicationReady: true,
     publishable: true,
     blockers: [],
@@ -330,21 +335,26 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
         found.add(mapped.productId);
         const click = mapped.affiliateClickUrl;
         const trusted = isCjTrackingUrl(click);
-        refreshedByKey.set(advertiserId + "|" + mapped.productId, {
-          productId: mapped.productId,
-          advertiserId,
-          feedId: mapped.feedId,
-          feedIdStatus: mapped.feedIdStatus,
-          currentPrice: mapped.price != null ? Number(mapped.price) || mapped.price : null,
-          originalPrice: null,
-          currency: mapped.currency,
-          availability: mapped.availability,
-          imageUrl: mapped.imageUrl,
-          affiliateUrl: trusted ? click : null,
-          sourceUpdatedAt: nowIso,
-          lastCheckedAt: nowIso,
-          lastSuccessfulRefreshAt: nowIso,
-        });
+        // CJ shoppingProducts rows do not expose product lastUpdated → never invent sourceUpdatedAt.
+        refreshedByKey.set(
+          advertiserId + "|" + mapped.productId,
+          stampProductFetchClocks(
+            {
+              productId: mapped.productId,
+              advertiserId,
+              feedId: mapped.feedId,
+              feedIdStatus: mapped.feedIdStatus,
+              currentPrice: mapped.price != null ? Number(mapped.price) || mapped.price : null,
+              originalPrice: null,
+              currency: mapped.currency,
+              availability: mapped.availability,
+              imageUrl: mapped.imageUrl,
+              affiliateUrl: trusted ? click : null,
+            },
+            nowIso,
+            { sourceUpdatedAt: null, sourceUpdatedAtStatus: SOURCE_UPDATED_AT_STATUS.NOT_PROVIDED }
+          )
+        );
         meta.matched += 1;
       }
       for (const pid of want.keys()) {
@@ -814,31 +824,31 @@ export async function sampleProductsForManagedPartners(opts = {}) {
         const publicationReady = Boolean(
           trusted && amount != null && currency && typeof img === "string" && /^https:\/\//i.test(img)
         );
-        const row = {
-          advertiserId: partnerId,
-          partnerName: p.title || null,
-          sectionKey: p.sectionId || null,
-          productId: mapped.productId,
-          feedId: mapped.feedId,
-          feedIdStatus: mapped.feedIdStatus || "NOT_PROVIDED",
-          title: mapped.name,
-          description: mapped.description,
-          imageUrl: typeof img === "string" && /^https:\/\//i.test(img) ? img : null,
-          currentPrice: amount,
-          originalPrice: null,
-          currency,
-          affiliateUrl: trusted ? click : null,
-          availability: mapped.availability,
-          sourceTotalCount: fetched.totalCount,
-          sourceFetchComplete: fetched.complete === true,
-          sourceResumeOffset: resumeOffset,
-          sourceUpdatedAt: nowIso,
-          lastCheckedAt: nowIso,
-          lastSuccessfulRefreshAt: nowIso,
-          freshnessStatus: FRESHNESS_STATUS.FRESH,
-          publicationReady,
-          rejectReason: null,
-        };
+        const row = stampProductFetchClocks(
+          {
+            advertiserId: partnerId,
+            partnerName: p.title || null,
+            sectionKey: p.sectionId || null,
+            productId: mapped.productId,
+            feedId: mapped.feedId,
+            feedIdStatus: mapped.feedIdStatus || "NOT_PROVIDED",
+            title: mapped.name,
+            description: mapped.description,
+            imageUrl: typeof img === "string" && /^https:\/\//i.test(img) ? img : null,
+            currentPrice: amount,
+            originalPrice: null,
+            currency,
+            affiliateUrl: trusted ? click : null,
+            availability: mapped.availability,
+            sourceTotalCount: fetched.totalCount,
+            sourceFetchComplete: fetched.complete === true,
+            sourceResumeOffset: resumeOffset,
+            publicationReady,
+            rejectReason: null,
+          },
+          nowIso,
+          { sourceUpdatedAt: null, sourceUpdatedAtStatus: SOURCE_UPDATED_AT_STATUS.NOT_PROVIDED }
+        );
         meta.sourceProductsFetched += 1;
         if (keepFullSourceRows) sourceProducts.push(row);
         if (!publicationReady) {
