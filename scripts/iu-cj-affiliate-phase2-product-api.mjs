@@ -219,7 +219,10 @@ export function buildPublisherProductsQuery(companyId, partnerId, websitePid, li
   if (opts.keywords?.length) {
     parts.push(`keywords: [${opts.keywords.map((k) => `"${String(k).replace(/"/g, "").slice(0, 40)}"`).join(", ")}]`);
   }
-  return `{ shoppingProducts(${parts.join(", ")}) { totalCount resultList { advertiserId id title description availability price { amount currency } imageLink linkCode(pid: "${wp}") { clickUrl } } } }`;
+  // Do NOT request undocumented adId on shoppingProducts resultList — unsupported fields caused V30 http_400 wipe.
+  // Feed traceability: pass opts.adIds when querying a known feed; mapGraphqlProductRow uses scopedFeedId.
+  const extraFields = opts.includeAdIdField === true ? " adId" : "";
+  return `{ shoppingProducts(${parts.join(", ")}) { totalCount resultList { advertiserId id${extraFields} title description availability price { amount currency } imageLink linkCode(pid: "${wp}") { clickUrl } } } }`;
 }
 
 export function buildTravelProductsQuery(companyId, partnerId, websitePid, limit = 3, adIds = []) {
@@ -312,15 +315,25 @@ export async function cjGraphql(query, pat) {
   }
 }
 
-export function mapGraphqlProductRow(row, websitePid) {
+export function mapGraphqlProductRow(row, websitePid, opts = {}) {
   const price = row?.price || {};
   const click = row?.linkCode?.clickUrl || "";
   const affiliate = parseAffiliateClickUrl(click, websitePid);
   const title = row?.title != null ? String(row.title) : "";
   const desc = row?.description != null ? String(row.description) : "";
+  const feedIdRaw =
+    row?.adId != null
+      ? row.adId
+      : row?.feedId != null
+        ? row.feedId
+        : opts.scopedFeedId != null
+          ? opts.scopedFeedId
+          : null;
   return {
     productId: row?.id != null ? String(row.id) : null,
     advertiserId: row?.advertiserId != null ? String(row.advertiserId) : null,
+    feedId: feedIdRaw != null && String(feedIdRaw).trim() !== "" ? String(feedIdRaw) : null,
+    feedIdStatus: feedIdRaw != null && String(feedIdRaw).trim() !== "" ? "PROVIDED" : "NOT_PROVIDED",
     name: title || null,
     variant: null,
     description: desc || null,

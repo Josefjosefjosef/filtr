@@ -99,6 +99,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase2-product-api-pagination-selftest.mjs
       - name: Product feed checkpoint continuation selftest (V31; offline)
         run: node scripts/iu-cj-affiliate-phase3z-product-feed-checkpoint-v31-selftest.mjs
+      - name: Offers freshness policy selftest (V32; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-offers-freshness-v32-selftest.mjs
       - name: Offers UI + production feature-flag gate selftest
         run: |
           node scripts/iu-cj-affiliate-phase2-offers-preview-ui-selftest.mjs
@@ -563,7 +565,9 @@ jobs:
       IU_CJ_OFFERS_PRODUCT_PUBLISH_PER_PARTNER: "25"
       IU_CJ_OFFERS_KEEP_SOURCE_ROWS: "0"
       # Feed summary inventory is expensive across 165 partners; enable via repo var/dispatch later.
-      IU_CJ_OFFERS_INVENTORY_FEEDS: "0"
+      # V32: enable feed inventory on schedule (bounded); dispatch can override via env later.
+      IU_CJ_OFFERS_INVENTORY_FEEDS: ${{ github.event_name == 'schedule' && '1' || '0' }}
+      IU_CJ_OFFERS_REFRESH_PUBLISHED: "1"
       # Legacy alias: treated as page size when PAGE_SIZE unset (no longer capped at 10).
       IU_CJ_OFFERS_PRODUCT_LIMIT: "100"
     steps:
@@ -730,22 +734,35 @@ jobs:
             git show "origin/${SYNC_BRANCH}:projects/data/iu-affiliate-cj-${name}-v1.json" \
               > "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" 2>/dev/null || true
           done
+          # Never redirect failed git show into empty files (V31 wiped offers-public to size 0).
           for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json; do
-            git show "origin/${SYNC_BRANCH}:projects/data/${f}" > "${STASH}/prev/${f}" 2>/dev/null || true
+            tmp="${STASH}/prev/${f}.tmp"
+            if git show "origin/${SYNC_BRANCH}:projects/data/${f}" > "${tmp}" 2>/dev/null; then
+              if [ -s "${tmp}" ]; then mv "${tmp}" "${STASH}/prev/${f}"; else rm -f "${tmp}"; fi
+            else
+              rm -f "${tmp}"
+            fi
           done
+          # Prefer live production offers when sync-branch copy is missing/empty.
+          if [ ! -s "${STASH}/prev/iu-affiliate-cj-offers-public-v1.json" ]; then
+            curl -fsSL "https://infouzel.cz/projects/data/iu-affiliate-cj-offers-public-v1.json" \
+              -o "${STASH}/prev/iu-affiliate-cj-offers-public-v1.json" || true
+          fi
           git checkout --orphan "iu-cj-cp-slim-$$"
           git reset --hard
           git clean -fdx
           mkdir -p projects/data
           for name in managed-public managed-registry staging sync-audit; do
-            if [ -f "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" ]; then
+            if [ -s "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" ]; then
               cp "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" "projects/data/iu-affiliate-cj-${name}-v1.json"
             fi
           done
           for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json; do
-            if [ -f "${STASH}/prev/${f}" ]; then cp "${STASH}/prev/${f}" "projects/data/${f}"; fi
+            if [ -s "${STASH}/prev/${f}" ]; then cp "${STASH}/prev/${f}" "projects/data/${f}"; fi
           done
           cp "${STASH}/$(basename "$CP")" "projects/data/$(basename "$CP")"
+          # Refuse to stage zero-byte JSON (would brick schedule promote).
+          find projects/data -name 'iu-affiliate-cj-*.json' -size 0 -delete || true
           git add projects/data/iu-affiliate-cj-*.json
           if git diff --cached --quiet; then
             echo "NO_CHECKPOINT_CHANGES"
@@ -778,23 +795,33 @@ jobs:
               > "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" 2>/dev/null || true
           done
           for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json; do
-            git show "origin/${SYNC_BRANCH}:projects/data/${f}" > "${STASH}/prev/${f}" 2>/dev/null || true
+            tmp="${STASH}/prev/${f}.tmp"
+            if git show "origin/${SYNC_BRANCH}:projects/data/${f}" > "${tmp}" 2>/dev/null; then
+              if [ -s "${tmp}" ]; then mv "${tmp}" "${STASH}/prev/${f}"; else rm -f "${tmp}"; fi
+            else
+              rm -f "${tmp}"
+            fi
           done
+          if [ ! -s "${STASH}/iu-affiliate-cj-offers-public-v1.json" ] && [ ! -s "${STASH}/prev/iu-affiliate-cj-offers-public-v1.json" ]; then
+            curl -fsSL "https://infouzel.cz/projects/data/iu-affiliate-cj-offers-public-v1.json" \
+              -o "${STASH}/prev/iu-affiliate-cj-offers-public-v1.json" || true
+          fi
           git checkout --orphan "iu-cj-offers-slim-$$"
           git reset --hard
           git clean -fdx
           mkdir -p projects/data
           for name in managed-public managed-registry staging sync-audit; do
-            if [ -f "${STASH}/iu-affiliate-cj-${name}-v1.json" ]; then
+            if [ -s "${STASH}/iu-affiliate-cj-${name}-v1.json" ]; then
               cp "${STASH}/iu-affiliate-cj-${name}-v1.json" "projects/data/iu-affiliate-cj-${name}-v1.json"
-            elif [ -f "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" ]; then
+            elif [ -s "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" ]; then
               cp "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" "projects/data/iu-affiliate-cj-${name}-v1.json"
             fi
           done
           for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json; do
-            if [ -f "${STASH}/${f}" ]; then cp "${STASH}/${f}" "projects/data/${f}"
-            elif [ -f "${STASH}/prev/${f}" ]; then cp "${STASH}/prev/${f}" "projects/data/${f}"; fi
+            if [ -s "${STASH}/${f}" ]; then cp "${STASH}/${f}" "projects/data/${f}"
+            elif [ -s "${STASH}/prev/${f}" ]; then cp "${STASH}/prev/${f}" "projects/data/${f}"; fi
           done
+          find projects/data -name 'iu-affiliate-cj-*.json' -size 0 -delete || true
           git add projects/data/iu-affiliate-cj-*.json
           if git diff --cached --quiet; then
             echo "NO_OFFERS_CHANGES"
@@ -828,13 +855,24 @@ jobs:
           set -euo pipefail
           SYNC_BRANCH="data/cj-affiliate-catalog-sync"
           # Avoid git fetch of all refs (previous cancel during deep checkout).
+          set +e
           gh api \
             "repos/${GITHUB_REPOSITORY}/contents/projects/data/iu-affiliate-cj-offers-public-v1.json?ref=${SYNC_BRANCH}" \
             -H "Accept: application/vnd.github.raw" \
             > /tmp/iu-offers-public-incoming.json
+          api_rc=$?
+          set -e
+          if [ "$api_rc" -ne 0 ] || [ ! -s /tmp/iu-offers-public-incoming.json ]; then
+            echo "NOTE=SYNC_BRANCH_OFFERS_MISSING_OR_EMPTY_FALLBACK_PRODUCTION"
+            curl -fsSL "https://infouzel.cz/projects/data/iu-affiliate-cj-offers-public-v1.json" \
+              -o /tmp/iu-offers-public-incoming.json
+          fi
           python3 - <<'PY'
-          import json
-          d=json.load(open("/tmp/iu-offers-public-incoming.json"))
+          import json, os
+          path="/tmp/iu-offers-public-incoming.json"
+          if not os.path.getsize(path):
+            raise SystemExit("BLOCKER=OFFERS_INCOMING_EMPTY")
+          d=json.load(open(path))
           print("INCOMING_LIVE", d.get("liveEnabled") is True)
           print("INCOMING_STATS", json.dumps(d.get("stats") or {}))
           if d.get("ok") is False:
