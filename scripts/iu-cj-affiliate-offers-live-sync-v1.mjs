@@ -49,7 +49,13 @@ const WEBSITE_PID = "101883843";
 
 function readJson(p, fallback) {
   if (!fs.existsSync(p)) return fallback;
-  return JSON.parse(fs.readFileSync(p, "utf8"));
+  try {
+    const raw = fs.readFileSync(p, "utf8");
+    if (!String(raw || "").trim()) return fallback;
+    return JSON.parse(raw);
+  } catch {
+    return fallback;
+  }
 }
 
 function normalizeSectionMap(raw) {
