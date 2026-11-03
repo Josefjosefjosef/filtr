@@ -554,14 +554,16 @@ jobs:
       # Page size uses documented CJ Product Details Search pagination (default 1000, max 10000).
       # Artificial Math.min(10) source cap removed. Presentation budget optional/separate.
       IU_CJ_OFFERS_PRODUCT_PARTNER_LIMIT: "0"
-      IU_CJ_OFFERS_PRODUCT_PAGE_SIZE: "250"
-      # Continueable: 20×250 = up to 5000 products/partner per run (not a permanent source loss).
-      IU_CJ_OFFERS_PRODUCT_MAX_PAGES: "20"
-      IU_CJ_OFFERS_PRODUCT_PUBLISH_PER_PARTNER: "0"
+      IU_CJ_OFFERS_PRODUCT_PAGE_SIZE: "100"
+      # Continueable paging window (not API 10-cap). Early-stop once presentation budget filled.
+      IU_CJ_OFFERS_PRODUCT_MAX_PAGES: "5"
+      # Presentation/runtime budget (prevents RangeError on mega-feeds). Not a CJ API source cap.
+      IU_CJ_OFFERS_PRODUCT_PUBLISH_PER_PARTNER: "25"
+      IU_CJ_OFFERS_KEEP_SOURCE_ROWS: "0"
       # Feed summary inventory is expensive across 165 partners; enable via repo var/dispatch later.
       IU_CJ_OFFERS_INVENTORY_FEEDS: "0"
       # Legacy alias: treated as page size when PAGE_SIZE unset (no longer capped at 10).
-      IU_CJ_OFFERS_PRODUCT_LIMIT: "250"
+      IU_CJ_OFFERS_PRODUCT_LIMIT: "100"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
