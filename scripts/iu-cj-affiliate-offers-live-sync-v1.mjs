@@ -28,11 +28,21 @@ import {
 import { isCjTrackingUrl } from "./iu-cj-affiliate-catalog-sync-publish-gate-v1.mjs";
 import {
   CJ_PRODUCT_SEARCH_MAX_LIMIT,
+  CJ_PRODUCT_SEARCH_OFFSET_FIRST,
   CJ_PRODUCT_SEARCH_PAGE_SIZE_DEFAULT,
   fetchAllShoppingProductsForPartner,
   inventoryShoppingProductFeedsForPartner,
   mapGraphqlProductRow,
 } from "./iu-cj-affiliate-phase2-product-api.mjs";
+import {
+  advancePartnerCheckpoint,
+  emptyProductFeedCheckpointState,
+  getPartnerCheckpoint,
+  loadProductFeedCheckpointState,
+  recordCheckpointRun,
+  saveProductFeedCheckpointState,
+  selectPresentationSlice,
+} from "./iu-cj-affiliate-phase3z-product-feed-checkpoint-v31.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const WEBSITE_PID = "101883843";
@@ -491,6 +501,24 @@ export async function sampleProductsForManagedPartners(opts = {}) {
   const publishPerPartner = Number.isFinite(rawPublish) && rawPublish > 0 ? Math.floor(rawPublish) : 0;
   const keepFullSourceRows = opts.keepFullSourceRows === true || env.IU_CJ_OFFERS_KEEP_SOURCE_ROWS === "1";
   const inventoryFeeds = opts.inventoryFeeds === true || env.IU_CJ_OFFERS_INVENTORY_FEEDS === "1";
+  const checkpointPath =
+    opts.checkpointPath ||
+    (env.IU_CJ_PRODUCT_FEED_CHECKPOINT_PATH
+      ? String(env.IU_CJ_PRODUCT_FEED_CHECKPOINT_PATH)
+      : path.join(ROOT, "projects", "data", "iu-affiliate-cj-product-feed-checkpoints-v31.json"));
+  const persistCheckpoints =
+    opts.skipCheckpointPersist === true
+      ? false
+      : opts.checkpointPath != null ||
+        Boolean(env.IU_CJ_PRODUCT_FEED_CHECKPOINT_PATH) ||
+        env.IU_CJ_OFFERS_PROMOTE_ARMED === "1" ||
+        env.IU_CJ_PRODUCT_FEED_CHECKPOINT_PERSIST === "1";
+  let checkpointState =
+    opts.checkpointState ||
+    (persistCheckpoints
+      ? loadProductFeedCheckpointState(checkpointPath)
+      : emptyProductFeedCheckpointState({ websitePid }));
+  if (!checkpointState.partners) checkpointState.partners = {};
   const meta = {
     sampledPartners: 0,
     activePartners: 0,
@@ -505,20 +533,24 @@ export async function sampleProductsForManagedPartners(opts = {}) {
     apiDefaultLimit: 1000,
     artificialTenCapRemoved: true,
     presentationBudgetNotApiCap: true,
+    durableCheckpoints: true,
+    checkpointPath,
     partnersWithFeed: 0,
     partnersEmptyFeed: 0,
     partnersError: 0,
     partnersIncompletePagination: 0,
     partnersTruncatedByApiLimit: 0,
+    partnersResumedFromCheckpoint: 0,
     sourceProductsFetched: 0,
     sourceProductsPublishReady: 0,
     sourceProductsDeferredPresentationBudget: 0,
     feedsInventoried: 0,
     feedDeclaredProductCount: 0,
+    continuationSamples: [],
     partnerFetch: [],
     skippedNoCredentials: false,
     note:
-      "V30 source fetch paginates shoppingProducts (offset/limit ≤10000, page token above). Presentation budget is optional and separate from source completeness.",
+      "V31: durable per-partner checkpoints resume offset/page across sync runs; presentation budget rotates and is not an API source cap.",
   };
   const active = partners.filter((p) => p && p.active !== false && p.advertiserId != null);
   meta.activePartners = active.length;
@@ -571,19 +603,54 @@ export async function sampleProductsForManagedPartners(opts = {}) {
           });
         }
       }
-      // Fetch enough rows to fill presentation budget (+ buffer), not entire mega-catalogs into RAM.
+      // V31: resume from durable checkpoint so successive syncs continue past prior window.
+      const prevCp = getPartnerCheckpoint(checkpointState, partnerId);
+      const resumeOffset =
+        prevCp.resumeOffset != null && Number.isFinite(Number(prevCp.resumeOffset))
+          ? Number(prevCp.resumeOffset)
+          : CJ_PRODUCT_SEARCH_OFFSET_FIRST;
+      const resumePage = prevCp.resumePage || null;
+      if (resumeOffset > CJ_PRODUCT_SEARCH_OFFSET_FIRST || resumePage) {
+        meta.partnersResumedFromCheckpoint += 1;
+      }
+      partnerMeta.resumeOffset = resumeOffset;
+      partnerMeta.resumePagePresent = Boolean(resumePage);
+      // Fetch a continueable window (not entire mega-catalogs into RAM).
       const stopAfter =
-        publishPerPartner > 0 ? Math.min(pageSize * maxPagesPerPartner, publishPerPartner * 4) : null;
+        publishPerPartner > 0 ? Math.min(pageSize * maxPagesPerPartner, Math.max(publishPerPartner * 4, pageSize)) : null;
       const fetched = await fetchAllShoppingProductsForPartner(gqlEnv, partnerId, {
         pageSize,
         maxPages: maxPagesPerPartner,
         stopAfterCount: stopAfter,
+        resumeOffset: resumePage ? undefined : resumeOffset,
+        resumePage: resumePage || undefined,
       });
       partnerMeta.fetched = fetched.fetchedCount;
       partnerMeta.totalCount = fetched.totalCount;
       partnerMeta.complete = fetched.complete === true;
       partnerMeta.stoppedEarlyForBudget = fetched.stoppedEarlyForBudget === true;
       partnerMeta.error = fetched.error || null;
+      partnerMeta.nextOffset = fetched.checkpoint?.nextOffset ?? null;
+      partnerMeta.nextPagePresent = Boolean(fetched.checkpoint?.nextPage);
+      const advanced = advancePartnerCheckpoint(
+        prevCp,
+        {
+          ...fetched,
+          startedOffset: resumeOffset,
+        },
+        { pageSize, publishPerPartner }
+      );
+      checkpointState.partners[partnerId] = advanced;
+      if (meta.continuationSamples.length < 12) {
+        meta.continuationSamples.push({
+          advertiserId: partnerId,
+          startedOffset: resumeOffset,
+          nextOffset: advanced.resumeOffset,
+          fetched: fetched.fetchedCount,
+          totalCount: fetched.totalCount,
+          resumed: resumeOffset > CJ_PRODUCT_SEARCH_OFFSET_FIRST || Boolean(resumePage),
+        });
+      }
       if (fetched.error && fetched.fetchedCount === 0) {
         meta.partnersError += 1;
         meta.partnerFetch.push(partnerMeta);
@@ -599,7 +666,7 @@ export async function sampleProductsForManagedPartners(opts = {}) {
         meta.partnersIncompletePagination += 1;
         meta.partnersTruncatedByApiLimit += 1;
       }
-      let readyForPartner = 0;
+      const readyRows = [];
       for (const item of fetched.resultList || []) {
         const mapped = mapGraphqlProductRow(item, websitePid);
         const img = mapped.imageUrl;
@@ -625,6 +692,7 @@ export async function sampleProductsForManagedPartners(opts = {}) {
           availability: mapped.availability,
           sourceTotalCount: fetched.totalCount,
           sourceFetchComplete: fetched.complete === true,
+          sourceResumeOffset: resumeOffset,
           publicationReady,
           rejectReason: null,
         };
@@ -635,17 +703,20 @@ export async function sampleProductsForManagedPartners(opts = {}) {
           continue;
         }
         meta.sourceProductsPublishReady += 1;
-        if (publishPerPartner > 0 && readyForPartner >= publishPerPartner) {
-          meta.sourceProductsDeferredPresentationBudget += 1;
-          if (keepFullSourceRows) {
-            sourceProducts[sourceProducts.length - 1].rejectReason =
-              "valid_not_published_presentation_budget";
-            sourceProducts[sourceProducts.length - 1].publicationReady = false;
+        readyRows.push(row);
+      }
+      const slice = selectPresentationSlice(readyRows, publishPerPartner, prevCp.presentationCursor || 0);
+      for (const row of slice.selected) products.push(row);
+      meta.sourceProductsDeferredPresentationBudget += slice.deferred;
+      if (keepFullSourceRows) {
+        const selectedIds = new Set(slice.selected.map((r) => String(r.productId || "")));
+        for (const sp of sourceProducts) {
+          if (String(sp.advertiserId) !== partnerId) continue;
+          if (sp.publicationReady && !selectedIds.has(String(sp.productId || ""))) {
+            sp.rejectReason = "valid_not_published_presentation_budget";
+            sp.publicationReady = false;
           }
-          continue;
         }
-        readyForPartner += 1;
-        products.push(row);
       }
       if (Number.isFinite(fetched.totalCount) && fetched.totalCount > (fetched.fetchedCount || 0)) {
         meta.sourceProductsDeferredPresentationBudget += Math.max(
@@ -665,7 +736,26 @@ export async function sampleProductsForManagedPartners(opts = {}) {
     meta.partnerFetchCount = meta.partnerFetch.length;
     delete meta.partnerFetch;
   }
-  return { products, sourceProducts, feedInventory, meta };
+  checkpointState = recordCheckpointRun(checkpointState, {
+    sampledPartners: meta.sampledPartners,
+    partnersResumedFromCheckpoint: meta.partnersResumedFromCheckpoint,
+    sourceProductsFetched: meta.sourceProductsFetched,
+    productsPublished: products.length,
+    continuationSamples: meta.continuationSamples,
+  });
+  meta.checkpointPersistArmed = persistCheckpoints;
+  if (persistCheckpoints) {
+    try {
+      saveProductFeedCheckpointState(checkpointPath, checkpointState);
+      meta.checkpointSaved = true;
+    } catch (e) {
+      meta.checkpointSaved = false;
+      meta.checkpointSaveError = String(e?.message || e).slice(0, 120);
+    }
+  } else {
+    meta.checkpointSaved = false;
+  }
+  return { products, sourceProducts, feedInventory, meta, checkpointState };
 }
 
 function readyCounts(doc) {
@@ -702,6 +792,27 @@ export async function runOffersLiveSync(opts = {}) {
   const sectionMap = readJson(path.join(dataDir, "iu-affiliate-cj-section-map-v1.json"), {});
   const mainButtons = readJson(path.join(dataDir, "iu-affiliate-cj-main-buttons-static-v13.json"), null);
   const prevPublic = readJson(path.join(dataDir, "iu-affiliate-cj-offers-public-v1.json"), null);
+  // V31: merge email-only offers that already passed partner-authorized-URL gates (never fixtureOnly).
+  const emailOnlyBridge = readJson(
+    path.join(dataDir, "iu-affiliate-cj-email-only-offers-bridge-v31.json"),
+    null
+  );
+  const emailOnlyLinks = Array.isArray(emailOnlyBridge?.links)
+    ? emailOnlyBridge.links.filter((l) => l && l.fixtureOnly !== true && isCjTrackingUrl(l.clickUrl || l.affiliateUrl))
+    : [];
+  if (emailOnlyLinks.length > 0 && Array.isArray(staging.links)) {
+    const seenIds = new Set(staging.links.map((l) => String(l.linkId || "")));
+    for (const link of emailOnlyLinks) {
+      const id = String(link.linkId || "");
+      if (id && seenIds.has(id)) continue;
+      if (id) seenIds.add(id);
+      staging.links.push({
+        ...link,
+        clickUrl: link.clickUrl || link.affiliateUrl,
+        sourceSystem: link.sourceSystem || "email_plus_partner_authorized_cj_url",
+      });
+    }
+  }
 
   const sectionByAdvWithoutMain = buildSectionByAdvertiser({ managedPublic, policy, sectionMap });
   const sectionByAdv = buildSectionByAdvertiser({ managedPublic, policy, sectionMap, mainButtons });

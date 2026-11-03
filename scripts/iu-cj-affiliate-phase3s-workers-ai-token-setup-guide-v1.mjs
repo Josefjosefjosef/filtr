@@ -20,9 +20,11 @@ const guide = {
   currentlyResolvedSecretName: meta.name,
   currentlyHasSomeToken: meta.present === true,
   knownBlocker:
-    "Live probe returned HTTP 401 — IU_CJ_WORKERS_AI_API_TOKEN missing Workers AI permission or wrong account. V30 uses dedicated token only (no Ads-token fallback masking).",
+    "Live probe returned HTTP 401 — IU_CJ_WORKERS_AI_API_TOKEN missing Workers AI permission or wrong account. V30/V31 uses dedicated token only (no Ads-token fallback masking).",
   v30Behavior:
     "When IU_CJ_WORKERS_AI_API_TOKEN is set, HTTP auth failures stop on that token and messages stay RETRY_PENDING (not ANALYZED).",
+  v31OwnerMinimalFix:
+    "Owner-only: recreate Cloudflare API token with Account.Workers AI Edit on account 577868e9aac9c289e9323100f68fad16, set GitHub secret IU_CJ_WORKERS_AI_API_TOKEN, re-run email-ingest. Do not bypass auth. Robot keeps RETRY_PENDING until probe OK.",
   accountIdInWorkflow: "577868e9aac9c289e9323100f68fad16",
   endpoint:
     "POST https://api.cloudflare.com/client/v4/accounts/{account_id}/ai/run/@cf/meta/llama-3.1-8b-instruct",

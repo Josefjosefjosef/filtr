@@ -557,8 +557,17 @@ export async function fetchAllShoppingProductsForPartner(env, partnerId, opts = 
     if (stopAfterCount != null && rows.length >= stopAfterCount) {
       stoppedEarlyForBudget = true;
       // Not a technical loss of API paging — intentional presentation/runtime budget stop.
+      // V31: still advance checkpoint past this window so the next sync continues deeper.
       complete = Number.isFinite(totalCount) ? rows.length >= totalCount : false;
       truncated = !complete;
+      if (!complete && mode === "offset") {
+        offset = (req.offset != null ? Number(req.offset) : offset) + pageSize;
+        if (!Number.isFinite(offset) || offset < CJ_PRODUCT_SEARCH_OFFSET_FIRST) {
+          offset = startOffset + pageSize;
+        }
+      } else if (!complete && mode === "page" && parsed.page) {
+        pageToken = parsed.page;
+      }
       break;
     }
     if (mode === "offset" && Number.isFinite(totalCount) && totalCount > CJ_PRODUCT_SEARCH_MAX_LIMIT && offset + batch.length - 1 >= CJ_PRODUCT_SEARCH_MAX_LIMIT) {
@@ -630,9 +639,19 @@ export async function fetchAllShoppingProductsForPartner(env, partnerId, opts = 
     error,
     pageLog,
     checkpoint: {
-      nextOffset: complete || stoppedEarlyForBudget ? null : offset,
-      nextPage: complete || stoppedEarlyForBudget ? null : pageToken,
-      mode,
+      // V31: budget early-stop must NOT null nextOffset (that caused perpetual first-page replay).
+      nextOffset: complete
+        ? CJ_PRODUCT_SEARCH_OFFSET_FIRST
+        : mode === "page"
+          ? null
+          : offset,
+      nextPage: complete ? null : mode === "page" ? pageToken : null,
+      mode: complete ? "offset" : mode,
+      startedOffset: startOffset,
+      stoppedEarlyForBudget,
+      complete,
+      fetchedCount: rows.length,
+      totalCount,
     },
   };
 }
