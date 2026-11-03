@@ -961,7 +961,6 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          SYNC_BRANCH="data/cj-affiliate-catalog-sync"
           ART="/tmp/iu-offers-artifact/iu-affiliate-cj-offers-public-v1.json"
           if [ -s "$ART" ]; then
             cp "$ART" /tmp/iu-offers-public-incoming.json
