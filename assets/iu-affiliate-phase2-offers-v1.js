@@ -11,7 +11,7 @@
   var PREVIEW_JSON_LOCAL = "/assets/cj-phase2-preview-autohotarek.local-dev.json";
   var PREVIEW_JSON_STUB = "/assets/cj-phase2-preview-autohotarek.json";
   var OFFERS_PUBLIC_PATH = "/projects/data/iu-affiliate-cj-offers-public-v1.json";
-  var CSS_HREF = "/assets/iu-affiliate-phase2-offers-v1.css?v=cj-phase3y-offers-v4";
+  var CSS_HREF = "/assets/iu-affiliate-phase2-offers-v1.css?v=cj-phase3z-offers-v33";
 
   function escapeHtml(s) {
     return String(s == null ? "" : s)
@@ -30,15 +30,32 @@
     return Date.parse(normalized);
   }
 
-  /** Defense-in-depth: hide expired / not-yet-started offers even if JSON is stale. */
-  function offerInPublicTimeWindow(item, nowMs) {
+  /**
+   * Defense-in-depth: hide expired / not-yet-started offers even if JSON is stale.
+   * opts.requireEndDate: coupons/actions must have validTo — unknown validity ≠ unlimited.
+   */
+  function offerInPublicTimeWindow(item, nowMs, opts) {
     if (!item) return false;
     var now = typeof nowMs === "number" ? nowMs : Date.now();
+    var requireEnd = opts && opts.requireEndDate === true;
     var from = parseOfferInstantMs(item.validFrom);
-    var to = parseOfferInstantMs(item.validTo);
+    var to = parseOfferInstantMs(item.validTo || item.validUntil || item.endDate || item.expiresAt);
+    if (requireEnd && !Number.isFinite(to)) return false;
     if (Number.isFinite(from) && from > now) return false;
     if (Number.isFinite(to) && to < now) return false;
     return true;
+  }
+
+  function productPubliclyShowable(item, preview) {
+    if (!item) return false;
+    if (preview) return true;
+    if (item.publicationReady !== true) return false;
+    if (item.freshnessStatus === "HIDDEN_STALE" || item.freshnessStatus === "SOURCE_UNAVAILABLE") {
+      return false;
+    }
+    if (item.priceHiddenReason) return false;
+    if (!isPositiveSalePrice(item.currentPrice)) return false;
+    return offerInPublicTimeWindow(item);
   }
 
   function isPositiveSalePrice(raw) {
@@ -168,7 +185,7 @@
     var preview = opts && opts.preview;
     if (!preview && coupon.publicationReady !== true) return;
     if (!preview && !coupon.couponCode) return;
-    if (!preview && !offerInPublicTimeWindow(coupon)) return;
+    if (!preview && !offerInPublicTimeWindow(coupon, Date.now(), { requireEndDate: true })) return;
     if (preview && !coupon.couponCode) return;
 
     var parts = [
@@ -241,7 +258,7 @@
     if (!action) return;
     var preview = opts && opts.preview;
     if (!preview && action.publicationReady !== true) return;
-    if (!preview && !offerInPublicTimeWindow(action)) return;
+    if (!preview && !offerInPublicTimeWindow(action, Date.now(), { requireEndDate: true })) return;
     var parts = [
       '<div class="iuAffiliatePhase2Offers__action" role="region" aria-label="Nabídka bez kódu">',
       partnerHeaderHtml(action.partnerName, action.partnerLogoUrl),
@@ -283,12 +300,7 @@
   function renderProducts(host, cards, display, opts) {
     var preview = opts && opts.preview;
     var list = (cards || []).filter(function (c) {
-      if (!c) return false;
-      if (preview) return true;
-      if (c.publicationReady !== true) return false;
-      if (!isPositiveSalePrice(c.currentPrice)) return false;
-      if (!offerInPublicTimeWindow(c)) return false;
-      return true;
+      return productPubliclyShowable(c, preview);
     });
     if (!list.length) return;
     var visible = (display && display.defaultVisibleProducts) || 3;
