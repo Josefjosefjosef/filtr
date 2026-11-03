@@ -620,10 +620,35 @@ jobs:
           CP="projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json"
           if [ -f "$CP" ] && [ ! -s "$CP" ]; then rm -f "$CP"; fi
           if [ ! -f "$CP" ]; then
-            git fetch origin data/cj-affiliate-catalog-sync --depth=1 || true
+            git fetch origin refs/heads/data/cj-affiliate-catalog-sync:refs/remotes/origin/data/cj-affiliate-catalog-sync --depth=1 \
+              || git fetch origin data/cj-affiliate-catalog-sync --depth=1 \
+              || true
             restore_git_file \
               "origin/data/cj-affiliate-catalog-sync:projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json" \
-              "$CP" || true
+              "$CP" \
+              || restore_git_file "FETCH_HEAD:projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json" "$CP" \
+              || true
+          fi
+          # API fallback when shallow fetch cannot resolve the sync-branch path.
+          if [ ! -f "$CP" ] || [ ! -s "$CP" ]; then
+            python3 - <<'PY'
+          import base64, json, os, urllib.request
+          token=os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN") or ""
+          repo=os.environ.get("GITHUB_REPOSITORY","Josefjosefjosef/filtr")
+          url=f"https://api.github.com/repos/{repo}/contents/projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json?ref=data/cj-affiliate-catalog-sync"
+          req=urllib.request.Request(url, headers={"Accept":"application/vnd.github+json","User-Agent":"iu-cj-checkpoint-restore", **({"Authorization":f"Bearer {token}"} if token else {})})
+          try:
+            with urllib.request.urlopen(req, timeout=60) as r:
+              body=json.load(r)
+            raw=base64.b64decode(body.get("content") or "")
+            if raw.strip():
+              open("projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json","wb").write(raw)
+              print("CHECKPOINT_API_RESTORE", len(raw))
+            else:
+              print("CHECKPOINT_API_RESTORE_EMPTY")
+          except Exception as e:
+            print("CHECKPOINT_API_RESTORE_FAIL", type(e).__name__)
+          PY
           fi
           if [ -f "$CP" ] && [ -s "$CP" ]; then
             echo "PRODUCT_FEED_CHECKPOINT_RESTORED=1"
