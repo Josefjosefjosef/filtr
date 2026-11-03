@@ -663,6 +663,48 @@ jobs:
           path: projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json
           if-no-files-found: warn
           retention-days: 90
+      # Artifacts are per-run; without promote arm they were lost. Always persist checkpoints on sync branch.
+      - name: Persist product-feed checkpoints to sync branch (always)
+        if: hashFiles('projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json') != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          SYNC_BRANCH="data/cj-affiliate-catalog-sync"
+          CP="projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json"
+          STASH="${RUNNER_TEMP}/iu-cj-cp"
+          mkdir -p "${STASH}/prev" projects/data
+          cp "$CP" "${STASH}/$(basename "$CP")"
+          git config user.name "iu-cj-catalog-sync-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "${SYNC_BRANCH}" --depth=1 || true
+          for name in managed-public managed-registry staging sync-audit; do
+            git show "origin/${SYNC_BRANCH}:projects/data/iu-affiliate-cj-${name}-v1.json" \
+              > "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" 2>/dev/null || true
+          done
+          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json; do
+            git show "origin/${SYNC_BRANCH}:projects/data/${f}" > "${STASH}/prev/${f}" 2>/dev/null || true
+          done
+          git checkout --orphan "iu-cj-cp-slim-$$"
+          git reset --hard
+          git clean -fdx
+          mkdir -p projects/data
+          for name in managed-public managed-registry staging sync-audit; do
+            if [ -f "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" ]; then
+              cp "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" "projects/data/iu-affiliate-cj-${name}-v1.json"
+            fi
+          done
+          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json; do
+            if [ -f "${STASH}/prev/${f}" ]; then cp "${STASH}/prev/${f}" "projects/data/${f}"; fi
+          done
+          cp "${STASH}/$(basename "$CP")" "projects/data/$(basename "$CP")"
+          git add projects/data/iu-affiliate-cj-*.json
+          if git diff --cached --quiet; then
+            echo "NO_CHECKPOINT_CHANGES"
+            exit 0
+          fi
+          git commit --trailer "Co-authored-by: Cursor <cursoragent@cursor.com>" -m "chore(data): CJ product-feed checkpoints v31"
+          git push --force origin "HEAD:${SYNC_BRANCH}"
+          echo "PRODUCT_FEED_CHECKPOINTS_SYNC_BRANCH_UPDATED=true"
       - name: Commit offers to sync branch (slim tip preserve)
         if: env.IU_CJ_OFFERS_PROMOTE_ARMED == '1'
         shell: bash
