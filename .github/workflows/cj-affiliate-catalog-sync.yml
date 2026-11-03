@@ -594,6 +594,8 @@ jobs:
           path: projects/data
       - name: Restore policy/section-map/offers LKG + prefer LIVE managed-public
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           mkdir -p projects/data
@@ -633,26 +635,22 @@ jobs:
               || restore_git_file "FETCH_HEAD:projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json" "$CP" \
               || true
           fi
-          # API fallback when shallow fetch cannot resolve the sync-branch path.
+          # API fallback via gh (same path that successfully restores offers-public).
           if [ ! -f "$CP" ] || [ ! -s "$CP" ]; then
-            python3 - <<'PY'
-          import base64, json, os, urllib.request
-          token=os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN") or ""
-          repo=os.environ.get("GITHUB_REPOSITORY","Josefjosefjosef/filtr")
-          url=f"https://api.github.com/repos/{repo}/contents/projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json?ref=data/cj-affiliate-catalog-sync"
-          req=urllib.request.Request(url, headers={"Accept":"application/vnd.github+json","User-Agent":"iu-cj-checkpoint-restore", **({"Authorization":f"Bearer {token}"} if token else {})})
-          try:
-            with urllib.request.urlopen(req, timeout=60) as r:
-              body=json.load(r)
-            raw=base64.b64decode(body.get("content") or "")
-            if raw.strip():
-              open("projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json","wb").write(raw)
-              print("CHECKPOINT_API_RESTORE", len(raw))
-            else:
-              print("CHECKPOINT_API_RESTORE_EMPTY")
-          except Exception as e:
-            print("CHECKPOINT_API_RESTORE_FAIL", type(e).__name__)
-          PY
+            set +e
+            gh api \
+              "repos/${GITHUB_REPOSITORY}/contents/projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json?ref=data/cj-affiliate-catalog-sync" \
+              -H "Accept: application/vnd.github.raw" \
+              > "${CP}.gh.tmp"
+            gh_rc=$?
+            set -e
+            if [ "$gh_rc" -eq 0 ] && [ -s "${CP}.gh.tmp" ]; then
+              mv "${CP}.gh.tmp" "$CP"
+              echo "CHECKPOINT_GH_API_RESTORE=$(wc -c < "$CP" | tr -d ' ')"
+            else
+              rm -f "${CP}.gh.tmp"
+              echo "CHECKPOINT_GH_API_RESTORE_FAIL rc=${gh_rc}"
+            fi
           fi
           if [ -f "$CP" ] && [ -s "$CP" ]; then
             echo "PRODUCT_FEED_CHECKPOINT_RESTORED=1"
