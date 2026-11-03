@@ -486,9 +486,10 @@ export async function sampleProductsForManagedPartners(opts = {}) {
     : env.IU_CJ_OFFERS_PRODUCT_PUBLISH_PER_PARTNER != null &&
         String(env.IU_CJ_OFFERS_PRODUCT_PUBLISH_PER_PARTNER).trim() !== ""
       ? Number(env.IU_CJ_OFFERS_PRODUCT_PUBLISH_PER_PARTNER)
-      : 0;
-  // 0 = publish all publicationReady rows from the fetched source inventory.
+      : 25;
+  // Presentation/runtime budget (not API source cap). 0 = unlimited (unsafe for huge feeds in one JSON).
   const publishPerPartner = Number.isFinite(rawPublish) && rawPublish > 0 ? Math.floor(rawPublish) : 0;
+  const keepFullSourceRows = opts.keepFullSourceRows === true || env.IU_CJ_OFFERS_KEEP_SOURCE_ROWS === "1";
   const inventoryFeeds = opts.inventoryFeeds === true || env.IU_CJ_OFFERS_INVENTORY_FEEDS === "1";
   const meta = {
     sampledPartners: 0,
@@ -498,10 +499,12 @@ export async function sampleProductsForManagedPartners(opts = {}) {
     pageSize,
     maxPagesPerPartner,
     publishPerPartner: publishPerPartner || null,
+    keepFullSourceRows,
     perPartner: pageSize,
     apiMaxPerQuery: CJ_PRODUCT_SEARCH_MAX_LIMIT,
     apiDefaultLimit: 1000,
     artificialTenCapRemoved: true,
+    presentationBudgetNotApiCap: true,
     partnersWithFeed: 0,
     partnersEmptyFeed: 0,
     partnersError: 0,
@@ -568,13 +571,18 @@ export async function sampleProductsForManagedPartners(opts = {}) {
           });
         }
       }
+      // Fetch enough rows to fill presentation budget (+ buffer), not entire mega-catalogs into RAM.
+      const stopAfter =
+        publishPerPartner > 0 ? Math.min(pageSize * maxPagesPerPartner, publishPerPartner * 4) : null;
       const fetched = await fetchAllShoppingProductsForPartner(gqlEnv, partnerId, {
         pageSize,
         maxPages: maxPagesPerPartner,
+        stopAfterCount: stopAfter,
       });
       partnerMeta.fetched = fetched.fetchedCount;
       partnerMeta.totalCount = fetched.totalCount;
       partnerMeta.complete = fetched.complete === true;
+      partnerMeta.stoppedEarlyForBudget = fetched.stoppedEarlyForBudget === true;
       partnerMeta.error = fetched.error || null;
       if (fetched.error && fetched.fetchedCount === 0) {
         meta.partnersError += 1;
@@ -587,7 +595,7 @@ export async function sampleProductsForManagedPartners(opts = {}) {
         continue;
       }
       meta.partnersWithFeed += 1;
-      if (!fetched.complete || fetched.incompleteResponse || fetched.truncated) {
+      if ((!fetched.complete && !fetched.stoppedEarlyForBudget) || fetched.incompleteResponse) {
         meta.partnersIncompletePagination += 1;
         meta.partnersTruncatedByApiLimit += 1;
       }
@@ -621,21 +629,29 @@ export async function sampleProductsForManagedPartners(opts = {}) {
           rejectReason: null,
         };
         meta.sourceProductsFetched += 1;
-        sourceProducts.push(row);
+        if (keepFullSourceRows) sourceProducts.push(row);
         if (!publicationReady) {
-          sourceProducts[sourceProducts.length - 1].rejectReason = "not_publication_ready";
+          if (keepFullSourceRows) sourceProducts[sourceProducts.length - 1].rejectReason = "not_publication_ready";
           continue;
         }
         meta.sourceProductsPublishReady += 1;
         if (publishPerPartner > 0 && readyForPartner >= publishPerPartner) {
           meta.sourceProductsDeferredPresentationBudget += 1;
-          sourceProducts[sourceProducts.length - 1].rejectReason =
-            "valid_not_published_presentation_budget";
-          sourceProducts[sourceProducts.length - 1].publicationReady = false;
+          if (keepFullSourceRows) {
+            sourceProducts[sourceProducts.length - 1].rejectReason =
+              "valid_not_published_presentation_budget";
+            sourceProducts[sourceProducts.length - 1].publicationReady = false;
+          }
           continue;
         }
         readyForPartner += 1;
         products.push(row);
+      }
+      if (Number.isFinite(fetched.totalCount) && fetched.totalCount > (fetched.fetchedCount || 0)) {
+        meta.sourceProductsDeferredPresentationBudget += Math.max(
+          0,
+          fetched.totalCount - (fetched.fetchedCount || 0)
+        );
       }
     } catch (e) {
       meta.partnersError += 1;

@@ -489,6 +489,10 @@ export async function fetchAllShoppingProductsForPartner(env, partnerId, opts = 
     CJ_PRODUCT_SEARCH_PAGE_SIZE_DEFAULT
   );
   const maxPages = Math.max(1, Math.min(500, Number(opts.maxPages) || 100));
+  const stopAfterCount =
+    opts.stopAfterCount != null && Number.isFinite(Number(opts.stopAfterCount)) && Number(opts.stopAfterCount) > 0
+      ? Math.floor(Number(opts.stopAfterCount))
+      : null;
   const startOffset =
     opts.resumeOffset != null && Number.isFinite(Number(opts.resumeOffset))
       ? Math.max(CJ_PRODUCT_SEARCH_OFFSET_FIRST, Math.floor(Number(opts.resumeOffset)))
@@ -501,6 +505,7 @@ export async function fetchAllShoppingProductsForPartner(env, partnerId, opts = 
   let truncated = false;
   let repeatedCursor = false;
   let incompleteResponse = false;
+  let stoppedEarlyForBudget = false;
   let error = null;
   let mode = "offset";
   let offset = startOffset;
@@ -547,6 +552,13 @@ export async function fetchAllShoppingProductsForPartner(env, partnerId, opts = 
       repeatedCursor = true;
       incompleteResponse = true;
       error = "repeated_or_stale_cursor";
+      break;
+    }
+    if (stopAfterCount != null && rows.length >= stopAfterCount) {
+      stoppedEarlyForBudget = true;
+      // Not a technical loss of API paging — intentional presentation/runtime budget stop.
+      complete = Number.isFinite(totalCount) ? rows.length >= totalCount : false;
+      truncated = !complete;
       break;
     }
     if (mode === "offset" && Number.isFinite(totalCount) && totalCount > CJ_PRODUCT_SEARCH_MAX_LIMIT && offset + batch.length - 1 >= CJ_PRODUCT_SEARCH_MAX_LIMIT) {
@@ -614,11 +626,12 @@ export async function fetchAllShoppingProductsForPartner(env, partnerId, opts = 
     truncated,
     repeatedCursor,
     incompleteResponse,
+    stoppedEarlyForBudget,
     error,
     pageLog,
     checkpoint: {
-      nextOffset: complete ? null : offset,
-      nextPage: complete ? null : pageToken,
+      nextOffset: complete || stoppedEarlyForBudget ? null : offset,
+      nextPage: complete || stoppedEarlyForBudget ? null : pageToken,
       mode,
     },
   };
