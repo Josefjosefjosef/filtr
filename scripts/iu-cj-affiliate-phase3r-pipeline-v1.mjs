@@ -315,16 +315,27 @@ export async function runPhase3rPipeline(options = {}) {
     managedPartners: options.managedPartners || catalogAdvertisers.map((a) => ({
       advertiserId: a.advertiserId || a.advertiserCid,
       active: true,
+      affiliateUrl: a.affiliateUrl || a.clickUrl || null,
     })),
     stagingAdvertisers: options.stagingAdvertisers || catalogAdvertisers,
+    partnerAuthorizedUrls: options.partnerAuthorizedUrls || {},
+    mainButtons: options.mainButtons || [],
+    mainButtonsDoc: options.mainButtonsDoc || null,
+    paragonHoldIds: options.paragonHoldIds || [],
     emailOfferStagingArmed: options.emailOfferStagingArmed === true || env.IU_CJ_EMAIL_OFFER_STAGING_ARMED === "1",
   });
 
-  // Attach HOLD/RETRY onto classified rows when offer reconcile held the uid.
+  // Attach HOLD/RETRY/PUBLISHED onto classified rows when offer reconcile decided the uid.
   const holdUids = new Set((emailOfferReconcile.holds || []).map((h) => h.uid).filter((u) => u != null));
+  const publishedUids = new Set(
+    (emailOfferReconcile.emailOnlyPublishable || []).map((h) => h.uid).filter((u) => u != null)
+  );
   for (const row of classified) {
     if (row.contentState === EMAIL_CONTENT_STATE.RETRY_PENDING) continue;
-    if (holdUids.has(row.uid) && row.contentState === EMAIL_CONTENT_STATE.ANALYZED) {
+    if (publishedUids.has(row.uid) && row.analyzed) {
+      row.contentState = EMAIL_CONTENT_STATE.PUBLISHED;
+      row.contentReason = "email_only_partner_authorized_url";
+    } else if (holdUids.has(row.uid) && row.contentState === EMAIL_CONTENT_STATE.ANALYZED) {
       row.contentState = EMAIL_CONTENT_STATE.HOLD;
       row.contentReason = "email_offer_hold";
     } else if (
@@ -433,9 +444,13 @@ export async function runPhase3rPipeline(options = {}) {
       corroborated: emailOfferReconcile.counts?.corroborated ?? 0,
       holds: emailOfferReconcile.counts?.holds ?? 0,
       emailOnlyPublishBlocked: emailOfferReconcile.counts?.emailOnlyPublishBlocked ?? 0,
+      emailOnlyPublishArmed: emailOfferReconcile.counts?.emailOnlyPublishArmed ?? 0,
+      emailOnlyPublishable: emailOfferReconcile.counts?.emailOnlyPublishable ?? 0,
       cjPlusEmail: emailOfferReconcile.counts?.cjPlusEmail ?? 0,
       sampleHolds: (emailOfferReconcile.holds || []).slice(0, 20),
       sampleCorroborated: (emailOfferReconcile.corroborated || []).slice(0, 20),
+      sampleEmailOnly: (emailOfferReconcile.emailOnlyPublishable || []).slice(0, 20),
+      emailOnlyStagingLinks: emailOfferReconcile.emailOnlyStagingLinks || [],
     },
     contentStates: contentStateSummary,
     retryPendingCount: contentStateSummary.counts?.[EMAIL_CONTENT_STATE.RETRY_PENDING] || 0,

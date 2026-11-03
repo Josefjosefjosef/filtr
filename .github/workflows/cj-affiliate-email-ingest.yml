@@ -344,6 +344,48 @@ jobs:
           fi
           node -e 'const j=require("/tmp/iu-cj-main-button-email-hints-v19.json"); console.log(JSON.stringify({hints:j.counts||j.hints&&{hintsOut:(j.hints||[]).length}, liveEmailToCategory:j.liveEmailToCategory, authority:j.authority},null,2))'
 
+      - name: Emit email-only offers bridge (V31; partner-authorized CJ URL only)
+        if: always() && env.LIVE_IMAP_BLOCKED == '0'
+        shell: bash
+        env:
+          IU_CJ_EMAIL_OFFER_STAGING_ARMED: ${{ vars.IU_CJ_EMAIL_OFFER_STAGING_ARMED || '0' }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, pathlib
+          out = {
+            "schema": "iu-affiliate-cj-email-only-offers-bridge-v31",
+            "updatedAt": __import__("datetime").datetime.utcnow().isoformat() + "Z",
+            "emailOfferStagingArmed": os.environ.get("IU_CJ_EMAIL_OFFER_STAGING_ARMED") == "1",
+            "links": [],
+            "holdsSample": [],
+            "counts": {},
+            "note": "Email-only links use partner authorized CJ tracking URL; never email-body URLs. fixtureOnly excluded.",
+          }
+          p = pathlib.Path("/tmp/iu-phase3r-pipeline.json")
+          if p.exists():
+            j = json.loads(p.read_text(encoding="utf-8"))
+            rec = (j.get("emailOfferReconcile") or {})
+            links = rec.get("emailOnlyStagingLinks") or []
+            out["links"] = [l for l in links if not l.get("fixtureOnly")]
+            out["counts"] = {
+              "emailOnlyPublishable": rec.get("emailOnlyPublishable"),
+              "emailOnlyPublishBlocked": rec.get("emailOnlyPublishBlocked"),
+              "emailOnlyPublishArmed": rec.get("emailOnlyPublishArmed"),
+              "holds": rec.get("holds"),
+              "corroborated": rec.get("corroborated"),
+              "linksOut": len(out["links"]),
+            }
+            out["holdsSample"] = (rec.get("sampleHolds") or [])[:20]
+            out["retryPendingCount"] = j.get("retryPendingCount")
+          pathlib.Path("/tmp/iu-affiliate-cj-email-only-offers-bridge-v31.json").write_text(
+            json.dumps(out, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+          )
+          print(json.dumps({"EMAIL_ONLY_BRIDGE": out["counts"], "armed": out["emailOfferStagingArmed"]}))
+          PY
+          mkdir -p projects/data
+          cp /tmp/iu-affiliate-cj-email-only-offers-bridge-v31.json projects/data/iu-affiliate-cj-email-only-offers-bridge-v31.json
+
       - name: Upload IMAP/AI pipeline summary + checkpoint (no secrets / no bodies)
         if: always() && env.LIVE_IMAP_BLOCKED == '0'
         uses: actions/upload-artifact@v4
@@ -365,6 +407,17 @@ jobs:
         with:
           name: iu-cj-main-button-email-hints
           path: /tmp/iu-cj-main-button-email-hints-v19.json
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Upload email-only offers bridge (V31)
+        if: always() && env.LIVE_IMAP_BLOCKED == '0'
+        uses: actions/upload-artifact@v4
+        with:
+          name: iu-affiliate-cj-email-only-offers-bridge
+          path: |
+            /tmp/iu-affiliate-cj-email-only-offers-bridge-v31.json
+            projects/data/iu-affiliate-cj-email-only-offers-bridge-v31.json
           if-no-files-found: warn
           retention-days: 30
 

@@ -97,6 +97,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-offers-live-sync-v1-selftest.mjs
       - name: Product Feed API pagination selftest (V30; offline)
         run: node scripts/iu-cj-affiliate-phase2-product-api-pagination-selftest.mjs
+      - name: Product feed checkpoint continuation selftest (V31; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-product-feed-checkpoint-v31-selftest.mjs
       - name: Offers UI + production feature-flag gate selftest
         run: |
           node scripts/iu-cj-affiliate-phase2-offers-preview-ui-selftest.mjs
@@ -574,6 +576,18 @@ jobs:
         with:
           name: iu-affiliate-cj-staging
           path: projects/data
+      - name: Restore product-feed checkpoints (V31 continuation)
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: iu-affiliate-cj-product-feed-checkpoints
+          path: projects/data
+      - name: Restore email-only offers bridge (V31; optional)
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: iu-affiliate-cj-email-only-offers-bridge
+          path: projects/data
       - name: Restore policy/section-map/offers LKG + prefer LIVE managed-public
         shell: bash
         run: |
@@ -583,12 +597,30 @@ jobs:
             iu-affiliate-slot-policy-v1.json \
             iu-affiliate-cj-section-map-v1.json \
             iu-affiliate-cj-offers-public-v1.json \
-            iu-affiliate-cj-main-buttons-static-v13.json
+            iu-affiliate-cj-main-buttons-static-v13.json \
+            iu-affiliate-cj-product-feed-checkpoints-v31.json \
+            iu-affiliate-cj-email-only-offers-bridge-v31.json
           do
             if [ ! -f "projects/data/${f}" ]; then
-              git show "HEAD:projects/data/${f}" > "projects/data/${f}" || true
+              git show "HEAD:projects/data/${f}" > "projects/data/${f}" 2>/dev/null || true
             fi
           done
+          # Prefer sync-branch durable checkpoints when artifact missing.
+          if [ ! -f projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json ]; then
+            git fetch origin data/cj-affiliate-catalog-sync --depth=1 || true
+            git show "origin/data/cj-affiliate-catalog-sync:projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json" \
+              > projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json 2>/dev/null || true
+          fi
+          if [ -f projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json ]; then
+            echo "PRODUCT_FEED_CHECKPOINT_RESTORED=1"
+          else
+            echo "PRODUCT_FEED_CHECKPOINT_RESTORED=0"
+          fi
+          if [ -f projects/data/iu-affiliate-cj-email-only-offers-bridge-v31.json ]; then
+            echo "EMAIL_ONLY_BRIDGE_RESTORED=1"
+          else
+            echo "EMAIL_ONLY_BRIDGE_RESTORED=0"
+          fi
           # Prefer R2/public LIVE partner overlay for section mapping (not stale Pages tip).
           if curl -fsSL "https://infouzel.cz/projects/data/iu-affiliate-cj-managed-public-v1.json" \
             -o projects/data/iu-affiliate-cj-managed-public-v1.json; then
@@ -611,6 +643,8 @@ jobs:
           print("PREV_OFFERS_LIVE", off.get("liveEnabled") is True)
           PY
       - name: Build/promote offers-public (fail-closed)
+        env:
+          IU_CJ_PRODUCT_FEED_CHECKPOINT_PATH: projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json
         run: node scripts/iu-cj-affiliate-offers-live-sync-v1.mjs
       - name: Upload offers artifact
         uses: actions/upload-artifact@v4
@@ -620,7 +654,15 @@ jobs:
             projects/data/iu-affiliate-cj-offers-public-v1.json
             projects/data/iu-affiliate-cj-offers-public-lkg-v1.json
             projects/data/iu-affiliate-cj-offers-sync-audit-v1.json
+            projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json
           if-no-files-found: warn
+      - name: Upload product-feed checkpoints (V31 continuation)
+        uses: actions/upload-artifact@v4
+        with:
+          name: iu-affiliate-cj-product-feed-checkpoints
+          path: projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json
+          if-no-files-found: warn
+          retention-days: 90
       - name: Commit offers to sync branch (slim tip preserve)
         if: env.IU_CJ_OFFERS_PROMOTE_ARMED == '1'
         shell: bash
@@ -634,7 +676,7 @@ jobs:
             if [ -f "$f" ]; then cp "$f" "${STASH}/iu-affiliate-cj-${name}-v1.json"; fi
           done
           # offers file names differ slightly
-          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json; do
+          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json; do
             if [ -f "projects/data/${f}" ]; then cp "projects/data/${f}" "${STASH}/${f}"; fi
           done
           git config user.name "iu-cj-catalog-sync-bot"
@@ -644,7 +686,7 @@ jobs:
             git show "origin/${SYNC_BRANCH}:projects/data/iu-affiliate-cj-${name}-v1.json" \
               > "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" 2>/dev/null || true
           done
-          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json; do
+          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json; do
             git show "origin/${SYNC_BRANCH}:projects/data/${f}" > "${STASH}/prev/${f}" 2>/dev/null || true
           done
           git checkout --orphan "iu-cj-offers-slim-$$"
@@ -658,7 +700,7 @@ jobs:
               cp "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" "projects/data/iu-affiliate-cj-${name}-v1.json"
             fi
           done
-          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json; do
+          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json; do
             if [ -f "${STASH}/${f}" ]; then cp "${STASH}/${f}" "projects/data/${f}"
             elif [ -f "${STASH}/prev/${f}" ]; then cp "${STASH}/prev/${f}" "projects/data/${f}"; fi
           done
