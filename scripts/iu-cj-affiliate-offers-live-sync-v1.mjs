@@ -43,6 +43,12 @@ import {
   saveProductFeedCheckpointState,
   selectPresentationSlice,
 } from "./iu-cj-affiliate-phase3z-product-feed-checkpoint-v31.mjs";
+import {
+  applyFreshnessToOffersDocument,
+  collectPublishedProductKeys,
+  mergeRefreshedProductIntoCard,
+  FRESHNESS_STATUS,
+} from "./iu-cj-affiliate-phase3z-offers-freshness-v32.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const WEBSITE_PID = "101883843";
@@ -252,13 +258,137 @@ function toPublicProductCard(p, sectionKey) {
     affiliateUrl: p.affiliateUrl,
     ctaLabel: "Zobrazit výrobek",
     advertiserId: p.advertiserId || null,
+    feedId: p.feedId != null ? p.feedId : null,
+    feedIdStatus: p.feedIdStatus || (p.feedId != null ? "PROVIDED" : "NOT_PROVIDED"),
     sectionKey: sectionKey || null,
     partnerName: p.partnerName || null,
+    sourceUpdatedAt: p.sourceUpdatedAt || null,
+    lastCheckedAt: p.lastCheckedAt || null,
+    lastSuccessfulRefreshAt: p.lastSuccessfulRefreshAt || null,
+    freshnessStatus: p.freshnessStatus || FRESHNESS_STATUS.UNVERIFIED,
     publicationReady: true,
     publishable: true,
     blockers: [],
     sourceSystem: "cj_shopping_products_graphql",
     fixtureOnly: false,
+  };
+}
+
+/**
+ * V32: prioritized refresh of already-published products (independent of discovery paging).
+ * Fetches recent pages per advertiser and merges price/availability into published keys.
+ */
+export async function refreshPublishedProductsFromCj(opts = {}) {
+  const env = opts.env || process.env;
+  const prevPublic = opts.prevPublic || null;
+  const websitePid = String(opts.websitePid || WEBSITE_PID);
+  const pat = env.IU_CJ_PAT || env.CJ_API_PAT || env.CJ_PERSONAL_ACCESS_TOKEN || "";
+  const publisherCid = String(env.IU_CJ_PUBLISHER_CID || "").trim();
+  const keys = collectPublishedProductKeys(prevPublic);
+  const meta = {
+    keysIn: keys.length,
+    advertisers: 0,
+    matched: 0,
+    priceChanged: 0,
+    availabilityChanged: 0,
+    notFoundThisPass: 0,
+    errors: 0,
+    skippedNoCredentials: false,
+    note: "Refresh scans recent partner pages for published productIds; does not advance discovery checkpoints.",
+  };
+  const byAdv = new Map();
+  for (const k of keys) {
+    if (!byAdv.has(k.advertiserId)) byAdv.set(k.advertiserId, new Map());
+    byAdv.get(k.advertiserId).set(k.productId, k);
+  }
+  meta.advertisers = byAdv.size;
+  const refreshedByKey = new Map();
+  if (!pat || !publisherCid || keys.length === 0) {
+    meta.skippedNoCredentials = !pat || !publisherCid;
+    return { refreshedByKey, meta };
+  }
+  const gqlEnv = { pat, publisherCid, websitePid };
+  const pageSize = Math.min(100, Number(opts.pageSize) || 100);
+  const maxPages = Math.min(5, Number(opts.maxPages) || 3);
+  const nowIso = new Date().toISOString();
+  for (const [advertiserId, want] of byAdv.entries()) {
+    try {
+      const fetched = await fetchAllShoppingProductsForPartner(gqlEnv, advertiserId, {
+        pageSize,
+        maxPages,
+        stopAfterCount: pageSize * maxPages,
+        resumeOffset: CJ_PRODUCT_SEARCH_OFFSET_FIRST,
+      });
+      if (!fetched.ok && !(fetched.resultList || []).length) {
+        meta.errors += 1;
+        continue;
+      }
+      const found = new Set();
+      for (const item of fetched.resultList || []) {
+        const mapped = mapGraphqlProductRow(item, websitePid, {});
+        if (!mapped.productId || !want.has(mapped.productId)) continue;
+        found.add(mapped.productId);
+        const click = mapped.affiliateClickUrl;
+        const trusted = isCjTrackingUrl(click);
+        refreshedByKey.set(advertiserId + "|" + mapped.productId, {
+          productId: mapped.productId,
+          advertiserId,
+          feedId: mapped.feedId,
+          feedIdStatus: mapped.feedIdStatus,
+          currentPrice: mapped.price != null ? Number(mapped.price) || mapped.price : null,
+          originalPrice: null,
+          currency: mapped.currency,
+          availability: mapped.availability,
+          imageUrl: mapped.imageUrl,
+          affiliateUrl: trusted ? click : null,
+          sourceUpdatedAt: nowIso,
+          lastCheckedAt: nowIso,
+          lastSuccessfulRefreshAt: nowIso,
+        });
+        meta.matched += 1;
+      }
+      for (const pid of want.keys()) {
+        if (!found.has(pid)) meta.notFoundThisPass += 1;
+      }
+    } catch {
+      meta.errors += 1;
+    }
+  }
+  return { refreshedByKey, meta };
+}
+
+/**
+ * Apply refreshed fields onto built public document products.
+ */
+export function applyPublishedRefreshToDoc(doc, refreshedByKey, nowIso) {
+  let priceChanged = 0;
+  let availabilityChanged = 0;
+  let merged = 0;
+  const sections = [];
+  for (const sec of doc?.sections || []) {
+    const products = [];
+    for (const p of sec.products || []) {
+      const key = String(p.advertiserId || "") + "|" + String(p.productId || "");
+      const ref = refreshedByKey?.get(key);
+      if (!ref) {
+        products.push({
+          ...p,
+          lastCheckedAt: p.lastCheckedAt || null,
+          freshnessStatus: p.freshnessStatus || FRESHNESS_STATUS.REFRESH_PENDING,
+        });
+        continue;
+      }
+      const out = mergeRefreshedProductIntoCard(p, ref, nowIso);
+      if (out.priceChanged) priceChanged += 1;
+      if (out.availChanged) availabilityChanged += 1;
+      merged += 1;
+      products.push(out.card);
+    }
+    sections.push({ ...sec, products });
+  }
+  return {
+    doc: { ...doc, sections },
+    stats: { merged, priceChanged, availabilityChanged },
   };
 }
 
@@ -674,12 +804,13 @@ export async function sampleProductsForManagedPartners(opts = {}) {
       }
       const readyRows = [];
       for (const item of fetched.resultList || []) {
-        const mapped = mapGraphqlProductRow(item, websitePid);
+        const mapped = mapGraphqlProductRow(item, websitePid, {});
         const img = mapped.imageUrl;
         const amount = mapped.price;
         const currency = mapped.currency;
         const click = mapped.affiliateClickUrl;
         const trusted = isCjTrackingUrl(click);
+        const nowIso = new Date().toISOString();
         const publicationReady = Boolean(
           trusted && amount != null && currency && typeof img === "string" && /^https:\/\//i.test(img)
         );
@@ -688,6 +819,8 @@ export async function sampleProductsForManagedPartners(opts = {}) {
           partnerName: p.title || null,
           sectionKey: p.sectionId || null,
           productId: mapped.productId,
+          feedId: mapped.feedId,
+          feedIdStatus: mapped.feedIdStatus || "NOT_PROVIDED",
           title: mapped.name,
           description: mapped.description,
           imageUrl: typeof img === "string" && /^https:\/\//i.test(img) ? img : null,
@@ -699,6 +832,10 @@ export async function sampleProductsForManagedPartners(opts = {}) {
           sourceTotalCount: fetched.totalCount,
           sourceFetchComplete: fetched.complete === true,
           sourceResumeOffset: resumeOffset,
+          sourceUpdatedAt: nowIso,
+          lastCheckedAt: nowIso,
+          lastSuccessfulRefreshAt: nowIso,
+          freshnessStatus: FRESHNESS_STATUS.FRESH,
           publicationReady,
           rejectReason: null,
         };
@@ -828,6 +965,24 @@ export async function runOffersLiveSync(opts = {}) {
   let productMeta = opts.productMeta || null;
   let sourceProducts = opts.sourceProducts || null;
   let feedInventory = opts.feedInventory || null;
+  let refreshMeta = null;
+  const doRefresh =
+    opts.refreshPublished !== false && env.IU_CJ_OFFERS_REFRESH_PUBLISHED !== "0";
+
+  // V32: refresh already-published products BEFORE / independently of discovery window.
+  let refreshedByKey = new Map();
+  if (doRefresh && prevPublic?.liveEnabled === true) {
+    const refreshed = await refreshPublishedProductsFromCj({
+      env,
+      prevPublic,
+      websitePid: WEBSITE_PID,
+      pageSize: opts.refreshPageSize,
+      maxPages: opts.refreshMaxPages,
+    });
+    refreshedByKey = refreshed.refreshedByKey;
+    refreshMeta = refreshed.meta;
+  }
+
   if (sampleProducts && products.length === 0) {
     const sampled = await sampleProductsForManagedPartners({
       env,
@@ -863,14 +1018,23 @@ export async function runOffersLiveSync(opts = {}) {
       liveEnabled: false,
       counts: readyCounts(built.doc),
       productMeta,
+      refreshMeta,
       doc: built.doc,
     };
   }
 
   const prevReady = readyCounts(prevPublic);
-  const nextReady = readyCounts(built.doc);
-
   let doc = built.doc;
+  const nowIso = new Date().toISOString();
+  if (refreshedByKey.size > 0) {
+    const appliedRefresh = applyPublishedRefreshToDoc(doc, refreshedByKey, nowIso);
+    doc = appliedRefresh.doc;
+    if (refreshMeta) refreshMeta.mergeStats = appliedRefresh.stats;
+  }
+  // Render-time + sync-time expiry / stale price hide
+  const freshApplied = applyFreshnessToOffersDocument(doc, { nowMs: Date.now() });
+  doc = freshApplied.doc;
+  const nextReady = readyCounts(doc);
   const keepLive =
     armed &&
     prevPublic?.liveEnabled === true &&
@@ -980,6 +1144,8 @@ export async function runOffersLiveSync(opts = {}) {
     counts: nextReady,
     prevReady,
     productMeta,
+    refreshMeta,
+    freshness: freshApplied.stats,
     sourceInventory: {
       fetched: Array.isArray(sourceProducts) ? sourceProducts.length : null,
       publishedSelected: products.length,
@@ -987,6 +1153,7 @@ export async function runOffersLiveSync(opts = {}) {
       feedDeclaredProductCount: productMeta?.feedDeclaredProductCount ?? null,
       artificialTenCapRemoved: productMeta?.artificialTenCapRemoved === true,
       incompletePartners: productMeta?.partnersIncompletePagination ?? null,
+      durableCheckpoints: productMeta?.durableCheckpoints === true,
     },
     feedInventorySample: Array.isArray(feedInventory) ? feedInventory.slice(0, 40) : null,
     rejectReasons: built.rejectReasons,
@@ -1004,6 +1171,8 @@ export async function runOffersLiveSync(opts = {}) {
       liveEnabled: false,
       counts: nextReady,
       productMeta,
+      refreshMeta,
+      freshness: freshApplied.stats,
       doc,
       auditPath,
     };
