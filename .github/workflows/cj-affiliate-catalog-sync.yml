@@ -227,18 +227,46 @@ jobs:
           git config user.name "iu-cj-catalog-sync-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin "${SYNC_BRANCH}" --depth=1 || true
-          for name in managed-public managed-registry staging sync-audit; do
-            git show "origin/${SYNC_BRANCH}:projects/data/iu-affiliate-cj-${name}-v1.json" \
-              > "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" 2>/dev/null || true
+          # V32: staging slim rewrite must NOT wipe durable offers/checkpoints/email bridge.
+          DURABLE_FILES="
+            iu-affiliate-cj-managed-public-v1.json
+            iu-affiliate-cj-managed-registry-v1.json
+            iu-affiliate-cj-staging-v1.json
+            iu-affiliate-cj-sync-audit-v1.json
+            iu-affiliate-cj-offers-public-v1.json
+            iu-affiliate-cj-offers-public-lkg-v1.json
+            iu-affiliate-cj-offers-sync-audit-v1.json
+            iu-affiliate-cj-product-feed-checkpoints-v31.json
+            iu-affiliate-cj-email-only-offers-bridge-v31.json
+          "
+          for f in $DURABLE_FILES; do
+            tmp="${STASH}/prev/${f}.tmp"
+            if git show "origin/${SYNC_BRANCH}:projects/data/${f}" > "${tmp}" 2>/dev/null; then
+              if [ -s "${tmp}" ]; then mv "${tmp}" "${STASH}/prev/${f}"; else rm -f "${tmp}"; fi
+            else
+              rm -f "${tmp}"
+            fi
           done
           git checkout --orphan "iu-cj-sync-slim-$$"
           git reset --hard
           git clean -fdx
           mkdir -p projects/data
-          # Preserve prior managed overlays when this job only refreshes staging.
+          # Preserve prior managed overlays + durable catalog state when this job only refreshes staging.
           for name in managed-public managed-registry; do
             if [ -f "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" ]; then
               cp "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" "projects/data/iu-affiliate-cj-${name}-v1.json"
+            fi
+          done
+          for f in \
+            iu-affiliate-cj-offers-public-v1.json \
+            iu-affiliate-cj-offers-public-lkg-v1.json \
+            iu-affiliate-cj-offers-sync-audit-v1.json \
+            iu-affiliate-cj-product-feed-checkpoints-v31.json \
+            iu-affiliate-cj-email-only-offers-bridge-v31.json
+          do
+            if [ -s "${STASH}/prev/${f}" ]; then
+              cp "${STASH}/prev/${f}" "projects/data/${f}"
+              echo "STAGING_SLIM_PRESERVED=${f}"
             fi
           done
           cp "${STASH}/iu-affiliate-cj-staging-v1.json" projects/data/
@@ -248,7 +276,7 @@ jobs:
             echo "NO_STAGING_CHANGES"
             exit 0
           fi
-          if git diff --cached --name-only | grep -Ev '^projects/data/iu-affiliate-cj-(staging|sync-audit|managed-public|managed-registry)-v1\.json$'; then
+          if git diff --cached --name-only | grep -Ev '^projects/data/iu-affiliate-cj-.*\.json$'; then
             echo "BLOCKER=UNEXPECTED_STAGED_PATHS"
             git diff --cached --name-only
             exit 1
@@ -315,9 +343,24 @@ jobs:
           git config user.name "iu-cj-catalog-sync-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin "${SYNC_BRANCH}" --depth=1 || true
-          for name in managed-public managed-registry staging sync-audit; do
-            git show "origin/${SYNC_BRANCH}:projects/data/iu-affiliate-cj-${name}-v1.json" \
-              > "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" 2>/dev/null || true
+          DURABLE_FILES="
+            iu-affiliate-cj-managed-public-v1.json
+            iu-affiliate-cj-managed-registry-v1.json
+            iu-affiliate-cj-staging-v1.json
+            iu-affiliate-cj-sync-audit-v1.json
+            iu-affiliate-cj-offers-public-v1.json
+            iu-affiliate-cj-offers-public-lkg-v1.json
+            iu-affiliate-cj-offers-sync-audit-v1.json
+            iu-affiliate-cj-product-feed-checkpoints-v31.json
+            iu-affiliate-cj-email-only-offers-bridge-v31.json
+          "
+          for f in $DURABLE_FILES; do
+            tmp="${STASH}/prev/${f}.tmp"
+            if git show "origin/${SYNC_BRANCH}:projects/data/${f}" > "${tmp}" 2>/dev/null; then
+              if [ -s "${tmp}" ]; then mv "${tmp}" "${STASH}/prev/${f}"; else rm -f "${tmp}"; fi
+            else
+              rm -f "${tmp}"
+            fi
           done
           git checkout --orphan "iu-cj-sync-slim-$$"
           git reset --hard
@@ -330,12 +373,24 @@ jobs:
               cp "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" "projects/data/iu-affiliate-cj-${name}-v1.json"
             fi
           done
+          for f in \
+            iu-affiliate-cj-offers-public-v1.json \
+            iu-affiliate-cj-offers-public-lkg-v1.json \
+            iu-affiliate-cj-offers-sync-audit-v1.json \
+            iu-affiliate-cj-product-feed-checkpoints-v31.json \
+            iu-affiliate-cj-email-only-offers-bridge-v31.json
+          do
+            if [ -s "${STASH}/prev/${f}" ]; then
+              cp "${STASH}/prev/${f}" "projects/data/${f}"
+              echo "PUBLISH_SLIM_PRESERVED=${f}"
+            fi
+          done
           git add projects/data/iu-affiliate-cj-*.json
           if git diff --cached --quiet; then
             echo "NO_REGISTRY_CHANGES"
             exit 0
           fi
-          if git diff --cached --name-only | grep -Ev '^projects/data/iu-affiliate-cj-(managed-registry|managed-public|staging|sync-audit)-v1\.json$'; then
+          if git diff --cached --name-only | grep -Ev '^projects/data/iu-affiliate-cj-.*\.json$'; then
             echo "BLOCKER=UNEXPECTED_PUBLISH_PATHS"
             git diff --cached --name-only
             exit 1
@@ -623,6 +678,7 @@ jobs:
             fi
           done
           # Durable checkpoints live on sync branch (not main). Drop empty/missing then restore.
+          # Root cause V32: fetch-staging slim tip historically wiped checkpoints before this job ran.
           CP="projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json"
           if [ -f "$CP" ] && [ ! -s "$CP" ]; then rm -f "$CP"; fi
           if [ ! -f "$CP" ]; then
@@ -639,7 +695,7 @@ jobs:
           if [ ! -f "$CP" ] || [ ! -s "$CP" ]; then
             set +e
             gh api \
-              "repos/${GITHUB_REPOSITORY}/contents/projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json?ref=data/cj-affiliate-catalog-sync" \
+              "repos/${GITHUB_REPOSITORY}/contents/projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json?ref=data%2Fcj-affiliate-catalog-sync" \
               -H "Accept: application/vnd.github.raw" \
               > "${CP}.gh.tmp"
             gh_rc=$?
@@ -651,6 +707,36 @@ jobs:
               rm -f "${CP}.gh.tmp"
               echo "CHECKPOINT_GH_API_RESTORE_FAIL rc=${gh_rc}"
             fi
+          fi
+          # Prior successful run artifact (survives sync-branch slim wipe).
+          if [ ! -f "$CP" ] || [ ! -s "$CP" ]; then
+            set +e
+            PRIOR_RUN=$(gh run list \
+              --workflow cj-affiliate-catalog-sync.yml \
+              --branch main \
+              --status completed \
+              --limit 20 \
+              --json databaseId,conclusion,headBranch \
+              --jq '[.[] | select(.conclusion=="success")][0].databaseId')
+            if [ -n "${PRIOR_RUN}" ] && [ "${PRIOR_RUN}" != "null" ]; then
+              mkdir -p "${RUNNER_TEMP}/iu-cj-cp-prior"
+              gh run download "${PRIOR_RUN}" \
+                -n iu-affiliate-cj-product-feed-checkpoints \
+                -D "${RUNNER_TEMP}/iu-cj-cp-prior" \
+                2>/tmp/iu-cp-prior.err
+              prior_rc=$?
+              PRIOR_CP="${RUNNER_TEMP}/iu-cj-cp-prior/iu-affiliate-cj-product-feed-checkpoints-v31.json"
+              if [ "$prior_rc" -eq 0 ] && [ -s "${PRIOR_CP}" ]; then
+                cp "${PRIOR_CP}" "$CP"
+                echo "CHECKPOINT_PRIOR_RUN_RESTORE=${PRIOR_RUN} bytes=$(wc -c < "$CP" | tr -d ' ')"
+              else
+                echo "CHECKPOINT_PRIOR_RUN_RESTORE_FAIL run=${PRIOR_RUN} rc=${prior_rc}"
+                cat /tmp/iu-cp-prior.err 2>/dev/null || true
+              fi
+            else
+              echo "CHECKPOINT_PRIOR_RUN_NONE"
+            fi
+            set -e
           fi
           if [ -f "$CP" ] && [ -s "$CP" ]; then
             echo "PRODUCT_FEED_CHECKPOINT_RESTORED=1"
