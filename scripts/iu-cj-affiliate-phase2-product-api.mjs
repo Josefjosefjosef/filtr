@@ -216,6 +216,16 @@ export function buildPublisherProductsQuery(companyId, partnerId, websitePid, li
   if (opts.adIds?.length) {
     parts.push(`adIds: [${opts.adIds.map((id) => `"${String(id).replace(/"/g, "")}"`).join(", ")}]`);
   }
+  // Documented Product Feed arg: productIds: [ID!] — unique product identifiers (CJ GraphQL reference).
+  if (opts.productIds?.length) {
+    const ids = opts.productIds
+      .map((id) => String(id || "").replace(/"/g, "").trim())
+      .filter(Boolean)
+      .slice(0, CJ_PRODUCT_SEARCH_MAX_LIMIT);
+    if (ids.length) {
+      parts.push(`productIds: [${ids.map((id) => `"${id}"`).join(", ")}]`);
+    }
+  }
   if (opts.keywords?.length) {
     parts.push(`keywords: [${opts.keywords.map((k) => `"${String(k).replace(/"/g, "").slice(0, 40)}"`).join(", ")}]`);
   }
@@ -478,6 +488,7 @@ export async function fetchShoppingProductsPage(env, partnerId, opts = {}) {
   if (opts.page) qOpts.page = opts.page;
   else if (opts.offset != null) qOpts.offset = opts.offset;
   if (opts.adIds?.length) qOpts.adIds = opts.adIds;
+  if (opts.productIds?.length) qOpts.productIds = opts.productIds;
   if (opts.keywords?.length) qOpts.keywords = opts.keywords;
   const query = "query " + buildPublisherProductsQuery(env.publisherCid, partnerId, env.websitePid, limit, qOpts);
   const res = await cjGraphql(query, env.pat);
@@ -488,6 +499,64 @@ export async function fetchShoppingProductsPage(env, partnerId, opts = {}) {
     requestedLimit: limit,
     requestedOffset: opts.offset ?? null,
     requestedPage: opts.page ?? null,
+  };
+}
+
+/**
+ * V37 — fetch published products by documented productIds filter (not catalog scan).
+ * Batches productIds (max CJ_PRODUCT_SEARCH_MAX_LIMIT per request). Partner-scoped.
+ * Miss ≠ deleted without stronger evidence; caller must not invent SOURCE_UNAVAILABLE.
+ */
+export async function fetchShoppingProductsByProductIds(env, partnerId, productIds, opts = {}) {
+  const ids = [...new Set((productIds || []).map((id) => String(id || "").trim()).filter(Boolean))];
+  const batchSize = Math.max(
+    1,
+    Math.min(CJ_PRODUCT_SEARCH_MAX_LIMIT, Number(opts.batchSize) || Math.min(100, ids.length || 100))
+  );
+  const rows = [];
+  const pageLog = [];
+  const seen = new Set();
+  let error = null;
+  let ok = true;
+  for (let i = 0; i < ids.length; i += batchSize) {
+    const batch = ids.slice(i, i + batchSize);
+    const parsed = await fetchShoppingProductsPage(env, partnerId, {
+      limit: Math.min(CJ_PRODUCT_SEARCH_MAX_LIMIT, Math.max(batch.length, 1)),
+      productIds: batch,
+      adIds: opts.adIds,
+    });
+    pageLog.push({
+      batchStart: i,
+      batchSize: batch.length,
+      ok: parsed.ok === true,
+      kind: parsed.kind,
+      got: (parsed.resultList || []).length,
+      totalCount: parsed.totalCount,
+      errorDetail: parsed.errorDetail || null,
+    });
+    if (!parsed.ok) {
+      ok = false;
+      error = parsed.kind || parsed.errorDetail || "productIds_query_failed";
+      // Fail-closed for this advertiser: do not mix partial batches with scan invent.
+      break;
+    }
+    for (const row of parsed.resultList || []) {
+      const id = String(row?.id || "").trim();
+      if (!id || seen.has(id)) continue;
+      seen.add(id);
+      rows.push(row);
+    }
+  }
+  return {
+    ok,
+    kind: ok ? "success" : error || "productIds_query_failed",
+    resultList: rows,
+    totalCount: rows.length,
+    requestedIds: ids.length,
+    matchedIds: rows.length,
+    pageLog,
+    mode: "productIds",
+    error,
   };
 }
 

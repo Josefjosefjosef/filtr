@@ -32,6 +32,12 @@ expect("query_no_ten_cap", !/limit:\s*10\b/.test(qFirst) || /limit:\s*100/.test(
 const qOff = buildPublisherProductsQuery("111", "222", "101883843", 100, { offset: 101 });
 expect("query_offset_when_gt_zero", /offset:\s*101/.test(qOff));
 
+const qIds = buildPublisherProductsQuery("111", "222", "101883843", 25, {
+  productIds: ["SKU-A", "SKU-B"],
+});
+expect("query_productIds_documented", /productIds:\s*\["SKU-A",\s*"SKU-B"\]/.test(qIds));
+expect("query_productIds_keeps_partner", /partnerIds:\s*\["222"\]/.test(qIds));
+
 const qPage = buildPublisherProductsQuery("111", "222", "101883843", 10000, { page: "tok123" });
 expect("page_token_mode", /page:\s*"tok123"/.test(qPage) && !/offset:/.test(qPage));
 expect("page_limit_10k", /limit:\s*10000/.test(qPage));
