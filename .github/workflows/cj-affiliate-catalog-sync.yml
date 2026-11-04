@@ -116,6 +116,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-refresh-capacity-v34-selftest.mjs
       - name: Refresh coverage ledger selftest (V35; offline)
         run: node scripts/iu-cj-affiliate-phase3z-refresh-coverage-v35-selftest.mjs
+      - name: Product evidence reconcile selftest (V36; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-product-evidence-v36-selftest.mjs
       - name: Offers UI + production feature-flag gate selftest
         run: |
           node scripts/iu-cj-affiliate-phase2-offers-preview-ui-selftest.mjs
