@@ -67,6 +67,14 @@ import {
 import {
   reconcilePublishedProductEvidence,
 } from "./iu-cj-affiliate-phase3z-product-evidence-v36.mjs";
+import {
+  buildMissProductAudit,
+  summarizeMissCauses,
+} from "./iu-cj-affiliate-phase3z-miss-products-v38.mjs";
+import {
+  applyMissDecisionsToDoc,
+  reverifyMissProductsFromCj,
+} from "./iu-cj-affiliate-phase3z-miss-reverify-v38.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const WEBSITE_PID = "101883843";
@@ -1329,12 +1337,148 @@ export async function runOffersLiveSync(opts = {}) {
         fix: "Documented shoppingProducts(productIds) targeted refresh + durable refresh-coverage checkpoint restore/persist.",
       },
     };
+
+    // V38: re-verify productIds misses (scoped retry + omitPartner identity probe). Miss ≠ delete.
+    const missKeys = (coverageLedger?.rows || [])
+      .filter((r) => r.refreshResult === REFRESH_RESULT.NOT_IN_SCAN_WINDOW)
+      .map((r) => ({ advertiserId: r.advertiserId, productId: r.productId }));
+    if (missKeys.length && env.IU_CJ_OFFERS_MISS_REVERIFY !== "0") {
+      const gqlEnv = {
+        pat: env.IU_CJ_PAT || env.CJ_API_PAT || env.CJ_PERSONAL_ACCESS_TOKEN || "",
+        publisherCid: String(env.IU_CJ_PUBLISHER_CID || "").trim(),
+        websitePid: WEBSITE_PID,
+      };
+      const re = await reverifyMissProductsFromCj({
+        missKeys,
+        gqlEnv,
+        websitePid: WEBSITE_PID,
+        refreshedByKey,
+        matchedKeys: new Set(refreshedByKey.keys()),
+        nowIso,
+      });
+      for (const [k, v] of re.refreshedByKey.entries()) refreshedByKey.set(k, v);
+      for (const k of re.matchedKeys) {
+        const row = coverageByKey.get(k);
+        if (row) {
+          coverageByKey.set(k, {
+            ...row,
+            refreshResult: REFRESH_RESULT.SUCCESSFULLY_REFRESHED,
+            refreshReason: "productId_recovered_on_v38_reverify",
+            lastSuccessfulRefreshAt: nowIso,
+            fetchedAt: nowIso,
+          });
+        }
+      }
+      // Rebuild ledger rows/counts after recoveries for honest summary (miss ≠ delete).
+      if (coverageLedger?.rows?.length) {
+        let successfullyRefreshed = 0;
+        let notInScanWindow = 0;
+        let notAttempted = 0;
+        const rows = coverageLedger.rows.map((r) => {
+          const key = r.sourceIdentity || r.advertiserId + "|" + r.productId;
+          const cov = coverageByKey.get(key);
+          const next = cov
+            ? {
+                ...r,
+                refreshResult: cov.refreshResult,
+                refreshReason: cov.refreshReason,
+                lastSuccessfulRefreshAt: cov.lastSuccessfulRefreshAt || r.lastSuccessfulRefreshAt,
+                fetchedAt: cov.fetchedAt || r.fetchedAt,
+              }
+            : r;
+          if (next.refreshResult === REFRESH_RESULT.SUCCESSFULLY_REFRESHED) successfullyRefreshed += 1;
+          else if (next.refreshResult === REFRESH_RESULT.NOT_IN_SCAN_WINDOW) notInScanWindow += 1;
+          else notAttempted += 1;
+          return next;
+        });
+        const uniqueTargets = coverageLedger.counts?.uniqueTargets ?? rows.length;
+        coverageLedger = {
+          ...coverageLedger,
+          rows,
+          counts: {
+            ...(coverageLedger.counts || {}),
+            uniqueTargets,
+            successfullyRefreshed,
+            notInScanWindow,
+            notAttempted,
+            coveragePct:
+              uniqueTargets > 0
+                ? Math.round((successfullyRefreshed / uniqueTargets) * 10000) / 100
+                : null,
+            recoveredOnV38Reverify: (re.meta?.recoveredScoped || 0) + (re.meta?.recoveredIdentityProbe || 0),
+          },
+        };
+        refreshMeta.coverageSummary = {
+          ...(refreshMeta.coverageSummary || {}),
+          ...coverageLedger.counts,
+        };
+      }
+
+      const missKeySet = new Set(missKeys.map((m) => m.advertiserId + "|" + m.productId));
+      const productsForAudit = [];
+      const seenAudit = new Set();
+      for (const sec of doc.sections || []) {
+        for (const p of sec.products || []) {
+          const key = String(p.advertiserId || "") + "|" + String(p.productId || "");
+          if (!missKeySet.has(key) || seenAudit.has(key)) continue;
+          seenAudit.add(key);
+          const cov = coverageByKey.get(key);
+          // Always stamp as miss for audit input; probe.recovered drives RECOVERED decision.
+          productsForAudit.push({
+            ...p,
+            sectionKey: sec.sectionKey,
+            partnerName: sec.partnerName,
+            refreshResult: REFRESH_RESULT.NOT_IN_SCAN_WINDOW,
+            refreshReason: "advertiser_productIds_query_miss_not_deleted",
+            lastSuccessfulRefreshAt:
+              cov?.lastSuccessfulRefreshAt || p.lastSuccessfulRefreshAt || null,
+            lastRefreshAttemptAt: nowIso,
+          });
+        }
+      }
+      const missPath =
+        env.IU_CJ_MISS_AUDIT_PATH ||
+        path.join(ROOT, "projects", "data", "iu-affiliate-cj-miss-products-v38.json");
+      const prevMiss = fs.existsSync(missPath) ? readJson(missPath, null) : null;
+      const prevMissByKey = new Map((prevMiss?.rows || []).map((r) => [r.sourceIdentity, r]));
+      const missAudit = buildMissProductAudit({
+        products: productsForAudit,
+        probeByKey: re.probeByKey,
+        prevMissByKey,
+        nowIso,
+        runId: env.GITHUB_RUN_ID || null,
+        snapshotId: nowIso,
+        hideAfterHours: Number(env.IU_CJ_MISS_HIDE_AFTER_HOURS || 24),
+        hideAfterConsecutiveMisses: Number(env.IU_CJ_MISS_HIDE_AFTER_STREAK || 3),
+      });
+      try {
+        fs.mkdirSync(path.dirname(missPath), { recursive: true });
+        fs.writeFileSync(missPath, JSON.stringify(missAudit, null, 2) + "\n", "utf8");
+      } catch {
+        /* non-fatal */
+      }
+      refreshMeta.missReverify = re.meta;
+      refreshMeta.missAudit = {
+        counts: missAudit.counts,
+        causes: summarizeMissCauses(missAudit),
+        path: missPath,
+      };
+      // Stash for apply after merge refresh
+      refreshMeta._missAudit = missAudit;
+    }
   }
 
   if (refreshedByKey.size > 0 || coverageByKey.size > 0) {
     const appliedRefresh = applyPublishedRefreshToDoc(doc, refreshedByKey, nowIso, coverageByKey);
     doc = appliedRefresh.doc;
     if (refreshMeta) refreshMeta.mergeStats = appliedRefresh.stats;
+  }
+
+  if (refreshMeta?._missAudit) {
+    const appliedMiss = applyMissDecisionsToDoc(doc, refreshMeta._missAudit);
+    doc = appliedMiss.doc;
+    refreshMeta.missApplyStats = appliedMiss.stats;
+    delete refreshMeta._missAudit;
   }
 
   // Render-time + sync-time expiry / stale price hide
@@ -1363,6 +1507,8 @@ export async function runOffersLiveSync(opts = {}) {
     if (refreshMeta?.cumulative) doc.refreshCoverage.cumulative = refreshMeta.cumulative;
     if (refreshMeta?.rootCauseV37) doc.refreshCoverage.rootCauseV37 = refreshMeta.rootCauseV37;
     if (refreshMeta?.scanSamples) doc.refreshCoverage.scanSamples = refreshMeta.scanSamples;
+    if (refreshMeta?.missAudit) doc.refreshCoverage.missAudit = refreshMeta.missAudit;
+    if (refreshMeta?.missReverify) doc.refreshCoverage.missReverify = refreshMeta.missReverify;
   }
   const nextReady = readyCounts(doc);
   const keepLive =

@@ -196,15 +196,18 @@ export function parseShoppingProductsGraphqlResponse(res) {
  */
 export function buildPublisherProductsQuery(companyId, partnerId, websitePid, limit = CJ_PRODUCT_SEARCH_PAGE_SIZE_DEFAULT, opts = {}) {
   const cid = String(companyId).replace(/"/g, "");
-  const pid = String(partnerId).replace(/"/g, "");
+  const pid = String(partnerId || "").replace(/"/g, "");
   const wp = String(websitePid).replace(/"/g, "");
   const lim = clampProductSearchLimit(limit, CJ_PRODUCT_SEARCH_PAGE_SIZE_DEFAULT);
-  const parts = [
-    `companyId: "${cid}"`,
-    `partnerIds: ["${pid}"]`,
-    `partnerStatus: JOINED`,
-    `limit: ${lim}`,
-  ];
+  const omitPartner = opts.omitPartnerIds === true;
+  const parts = [`companyId: "${cid}"`, `limit: ${lim}`];
+  // partnerIds optional per CJ Product Feed docs; omit for V38 identity-repair probes.
+  if (!omitPartner && pid) {
+    parts.push(`partnerIds: ["${pid}"]`);
+    parts.push(`partnerStatus: JOINED`);
+  } else if (!omitPartner) {
+    parts.push(`partnerStatus: JOINED`);
+  }
   const pageTok = opts.page != null && String(opts.page).trim() !== "" ? String(opts.page).replace(/"/g, "") : null;
   if (pageTok) {
     parts.push(`page: "${pageTok}"`);
@@ -490,6 +493,7 @@ export async function fetchShoppingProductsPage(env, partnerId, opts = {}) {
   if (opts.adIds?.length) qOpts.adIds = opts.adIds;
   if (opts.productIds?.length) qOpts.productIds = opts.productIds;
   if (opts.keywords?.length) qOpts.keywords = opts.keywords;
+  if (opts.omitPartnerIds === true) qOpts.omitPartnerIds = true;
   const query = "query " + buildPublisherProductsQuery(env.publisherCid, partnerId, env.websitePid, limit, qOpts);
   const res = await cjGraphql(query, env.pat);
   const parsed = parseShoppingProductsGraphqlResponse(res);
@@ -524,6 +528,7 @@ export async function fetchShoppingProductsByProductIds(env, partnerId, productI
       limit: Math.min(CJ_PRODUCT_SEARCH_MAX_LIMIT, Math.max(batch.length, 1)),
       productIds: batch,
       adIds: opts.adIds,
+      omitPartnerIds: opts.omitPartnerIds === true,
     });
     pageLog.push({
       batchStart: i,
