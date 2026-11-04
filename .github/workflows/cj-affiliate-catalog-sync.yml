@@ -122,6 +122,10 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-refresh-productids-v37-selftest.mjs
       - name: Audit ZIP JSON integrity selftest (V37; offline)
         run: node scripts/iu-cj-affiliate-phase3z-audit-json-integrity-v37-selftest.mjs
+      - name: Miss products decisions selftest (V38; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-miss-products-v38-selftest.mjs
+      - name: Miss reverify apply selftest (V38; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-miss-reverify-v38-selftest.mjs
       - name: Offers UI + production feature-flag gate selftest
         run: |
           node scripts/iu-cj-affiliate-phase2-offers-preview-ui-selftest.mjs
@@ -734,6 +738,20 @@ jobs:
           else
             echo "REFRESH_COVERAGE_CHECKPOINT_RESTORED=0"
           fi
+          MISS="projects/data/iu-affiliate-cj-miss-products-v38.json"
+          if [ -f "$MISS" ] && [ ! -s "$MISS" ]; then rm -f "$MISS"; fi
+          if [ ! -f "$MISS" ]; then
+            restore_git_file \
+              "origin/data/cj-affiliate-catalog-sync:projects/data/iu-affiliate-cj-miss-products-v38.json" \
+              "$MISS" \
+              || restore_git_file "FETCH_HEAD:projects/data/iu-affiliate-cj-miss-products-v38.json" "$MISS" \
+              || true
+          fi
+          if [ -f "$MISS" ] && [ -s "$MISS" ]; then
+            echo "MISS_AUDIT_CHECKPOINT_RESTORED=1"
+          else
+            echo "MISS_AUDIT_CHECKPOINT_RESTORED=0"
+          fi
           # API fallback via gh (same path that successfully restores offers-public).
           if [ ! -f "$CP" ] || [ ! -s "$CP" ]; then
             set +e
@@ -844,21 +862,27 @@ jobs:
           path: |
             projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json
             projects/data/iu-affiliate-cj-refresh-coverage-v35.json
+            projects/data/iu-affiliate-cj-miss-products-v38.json
           if-no-files-found: warn
           retention-days: 90
       # Artifacts are per-run; without promote arm they were lost. Always persist checkpoints on sync branch.
+      # V38: continue-on-error + push retry — commit_refs race must NOT fail the job after successful offers write
+      # (schedule 41816980256 wrote coverage then failed on push → promote skipped).
       - name: Persist product-feed + refresh checkpoints to sync branch (always)
-        if: hashFiles('projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json') != '' || hashFiles('projects/data/iu-affiliate-cj-refresh-coverage-v35.json') != ''
+        if: hashFiles('projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json') != '' || hashFiles('projects/data/iu-affiliate-cj-refresh-coverage-v35.json') != '' || hashFiles('projects/data/iu-affiliate-cj-miss-products-v38.json') != ''
+        continue-on-error: true
         shell: bash
         run: |
           set -euo pipefail
           SYNC_BRANCH="data/cj-affiliate-catalog-sync"
           CP="projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json"
           RCP="projects/data/iu-affiliate-cj-refresh-coverage-v35.json"
+          MISS="projects/data/iu-affiliate-cj-miss-products-v38.json"
           STASH="${RUNNER_TEMP}/iu-cj-cp"
           mkdir -p "${STASH}/prev" projects/data
           if [ -s "$CP" ]; then cp "$CP" "${STASH}/$(basename "$CP")"; fi
           if [ -s "$RCP" ]; then cp "$RCP" "${STASH}/$(basename "$RCP")"; fi
+          if [ -s "$MISS" ]; then cp "$MISS" "${STASH}/$(basename "$MISS")"; fi
           git config user.name "iu-cj-catalog-sync-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin "${SYNC_BRANCH}" --depth=1 || true
@@ -867,7 +891,7 @@ jobs:
               > "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" 2>/dev/null || true
           done
           # Never redirect failed git show into empty files (V31 wiped offers-public to size 0).
-          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json; do
+          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json iu-affiliate-cj-miss-products-v38.json; do
             tmp="${STASH}/prev/${f}.tmp"
             if git show "origin/${SYNC_BRANCH}:projects/data/${f}" > "${tmp}" 2>/dev/null; then
               if [ -s "${tmp}" ]; then mv "${tmp}" "${STASH}/prev/${f}"; else rm -f "${tmp}"; fi
@@ -894,6 +918,7 @@ jobs:
           done
           if [ -s "${STASH}/$(basename "$CP")" ]; then cp "${STASH}/$(basename "$CP")" "projects/data/$(basename "$CP")"; fi
           if [ -s "${STASH}/$(basename "$RCP")" ]; then cp "${STASH}/$(basename "$RCP")" "projects/data/$(basename "$RCP")"; fi
+          if [ -s "${STASH}/$(basename "$MISS")" ]; then cp "${STASH}/$(basename "$MISS")" "projects/data/$(basename "$MISS")"; fi
           # Refuse to stage zero-byte JSON (would brick schedule promote).
           find projects/data -name 'iu-affiliate-cj-*.json' -size 0 -delete || true
           git add projects/data/iu-affiliate-cj-*.json
@@ -901,9 +926,24 @@ jobs:
             echo "NO_CHECKPOINT_CHANGES"
             exit 0
           fi
-          git commit --trailer "Co-authored-by: Cursor <cursoragent@cursor.com>" -m "chore(data): CJ product-feed + refresh checkpoints v37"
-          git push --force origin "HEAD:${SYNC_BRANCH}"
-          echo "PRODUCT_FEED_CHECKPOINTS_SYNC_BRANCH_UPDATED=true"
+          git commit --trailer "Co-authored-by: Cursor <cursoragent@cursor.com>" -m "chore(data): CJ product-feed + refresh checkpoints v38"
+          PUSH_OK=0
+          for attempt in 1 2 3; do
+            if git push --force origin "HEAD:${SYNC_BRANCH}"; then
+              PUSH_OK=1
+              echo "PRODUCT_FEED_CHECKPOINTS_SYNC_BRANCH_UPDATED=true"
+              echo "CHECKPOINT_PUSH_ATTEMPT=${attempt}"
+              break
+            fi
+            echo "CHECKPOINT_PUSH_RETRY=${attempt}"
+            sleep $((attempt * 5))
+            git fetch origin "${SYNC_BRANCH}" --depth=1 || true
+          done
+          if [ "${PUSH_OK}" != "1" ]; then
+            echo "CHECKPOINT_PUSH_FAILED=true"
+            echo "::warning::Checkpoint sync-branch push failed after retries (continue-on-error; offers artifact still valid for promote)"
+            exit 1
+          fi
       - name: Commit offers to sync branch (slim tip preserve)
         if: env.IU_CJ_OFFERS_PROMOTE_ARMED == '1'
         shell: bash
@@ -917,7 +957,7 @@ jobs:
             if [ -f "$f" ]; then cp "$f" "${STASH}/iu-affiliate-cj-${name}-v1.json"; fi
           done
           # offers file names differ slightly
-          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json; do
+          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json iu-affiliate-cj-miss-products-v38.json; do
             if [ -f "projects/data/${f}" ]; then cp "projects/data/${f}" "${STASH}/${f}"; fi
           done
           git config user.name "iu-cj-catalog-sync-bot"
@@ -927,7 +967,7 @@ jobs:
             git show "origin/${SYNC_BRANCH}:projects/data/iu-affiliate-cj-${name}-v1.json" \
               > "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" 2>/dev/null || true
           done
-          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json; do
+          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json iu-affiliate-cj-miss-products-v38.json; do
             tmp="${STASH}/prev/${f}.tmp"
             if git show "origin/${SYNC_BRANCH}:projects/data/${f}" > "${tmp}" 2>/dev/null; then
               if [ -s "${tmp}" ]; then mv "${tmp}" "${STASH}/prev/${f}"; else rm -f "${tmp}"; fi
@@ -950,7 +990,7 @@ jobs:
               cp "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" "projects/data/iu-affiliate-cj-${name}-v1.json"
             fi
           done
-          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json; do
+          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json iu-affiliate-cj-miss-products-v38.json; do
             if [ -s "${STASH}/${f}" ]; then cp "${STASH}/${f}" "projects/data/${f}"
             elif [ -s "${STASH}/prev/${f}" ]; then cp "${STASH}/prev/${f}" "projects/data/${f}"; fi
           done
@@ -961,8 +1001,22 @@ jobs:
             exit 0
           fi
           git commit --trailer "Co-authored-by: Cursor <cursoragent@cursor.com>" -m "chore(data): CJ offers-public sync (slim tip)"
-          git push --force origin "HEAD:${SYNC_BRANCH}"
-          echo "OFFERS_SYNC_BRANCH_UPDATED=true"
+          PUSH_OK=0
+          for attempt in 1 2 3; do
+            if git push --force origin "HEAD:${SYNC_BRANCH}"; then
+              PUSH_OK=1
+              echo "OFFERS_SYNC_BRANCH_UPDATED=true"
+              echo "OFFERS_PUSH_ATTEMPT=${attempt}"
+              break
+            fi
+            echo "OFFERS_PUSH_RETRY=${attempt}"
+            sleep $((attempt * 5))
+            git fetch origin "${SYNC_BRANCH}" --depth=1 || true
+          done
+          if [ "${PUSH_OK}" != "1" ]; then
+            echo "OFFERS_PUSH_FAILED=true"
+            exit 1
+          fi
 
   promote-offers-public-pr:
     needs: offers-live-sync
