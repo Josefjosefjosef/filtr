@@ -1429,6 +1429,44 @@ export async function runOffersLiveSync(opts = {}) {
           ...(refreshMeta.coverageSummary || {}),
           ...coverageLedger.counts,
         };
+        // V41: re-feed cumulative AFTER V38 recoveries so horizons track publication success,
+        // not only pre-reverify productIds first-pass hits. Keep sourceMatched frozen above.
+        try {
+          const refreshCpPath =
+            opts.refreshCheckpointPath ||
+            env.IU_CJ_REFRESH_CHECKPOINT_PATH ||
+            path.join(ROOT, "projects", "data", "iu-affiliate-cj-refresh-coverage-v35.json");
+          const cpDoc = fs.existsSync(refreshCpPath)
+            ? readJson(refreshCpPath, emptyRefreshCheckpointDoc())
+            : emptyRefreshCheckpointDoc();
+          const successKeys = [...coverageByKey.entries()]
+            .filter(([, row]) => row?.refreshResult === REFRESH_RESULT.SUCCESSFULLY_REFRESHED)
+            .map(([k]) => k);
+          const publishedKeys = (coverageLedger.rows || []).map(
+            (r) => r.sourceIdentity || r.advertiserId + "|" + r.productId
+          );
+          cpDoc.cumulative = updateCumulativeCoverage(cpDoc.cumulative, {
+            nowIso,
+            runId: env.GITHUB_RUN_ID || null,
+            refreshMode: refreshMeta.refreshMode || REFRESH_MODE.PRODUCT_IDS,
+            publishedKeys,
+            matchedKeys: successKeys,
+            recovered: coverageLedger.counts?.recoveredOnV38Reverify || 0,
+          });
+          cpDoc.updatedAt = nowIso;
+          fs.mkdirSync(path.dirname(refreshCpPath), { recursive: true });
+          fs.writeFileSync(refreshCpPath, JSON.stringify(cpDoc, null, 2) + "\n", "utf8");
+          refreshMeta.cumulative = cpDoc.cumulative;
+          refreshMeta.cumulativeIncludesV38Recoveries = true;
+          refreshMeta.coverageReconcile = {
+            sourceMatchedFirstPass: coverageLedger.counts?.sourceMatched ?? null,
+            successfullyRefreshedAfterReverify: coverageLedger.counts?.successfullyRefreshed ?? null,
+            recoveredOnV38Reverify: coverageLedger.counts?.recoveredOnV38Reverify ?? null,
+            note: "sourceMatched=raw productIds first-pass; successfullyRefreshed includes V38 recoveries; cumulative updated post-reverify.",
+          };
+        } catch {
+          /* non-fatal */
+        }
       }
 
       const missKeySet = new Set(missKeys.map((m) => m.advertiserId + "|" + m.productId));
