@@ -854,6 +854,7 @@ jobs:
             projects/data/iu-affiliate-cj-offers-sync-audit-v1.json
             projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json
             projects/data/iu-affiliate-cj-refresh-coverage-v35.json
+            projects/data/iu-affiliate-cj-miss-products-v38.json
           if-no-files-found: warn
       - name: Upload product-feed checkpoints (V31 continuation)
         uses: actions/upload-artifact@v4
@@ -879,10 +880,14 @@ jobs:
           RCP="projects/data/iu-affiliate-cj-refresh-coverage-v35.json"
           MISS="projects/data/iu-affiliate-cj-miss-products-v38.json"
           STASH="${RUNNER_TEMP}/iu-cj-cp"
-          mkdir -p "${STASH}/prev" projects/data
+          mkdir -p "${STASH}/prev" "${STASH}/live" projects/data
           if [ -s "$CP" ]; then cp "$CP" "${STASH}/$(basename "$CP")"; fi
           if [ -s "$RCP" ]; then cp "$RCP" "${STASH}/$(basename "$RCP")"; fi
           if [ -s "$MISS" ]; then cp "$MISS" "${STASH}/$(basename "$MISS")"; fi
+          # V38: stash THIS RUN's offers before orphan+clean so Commit offers is not fed prev-only LKG.
+          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json; do
+            if [ -s "projects/data/${f}" ]; then cp "projects/data/${f}" "${STASH}/live/${f}"; fi
+          done
           git config user.name "iu-cj-catalog-sync-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin "${SYNC_BRANCH}" --depth=1 || true
@@ -913,12 +918,21 @@ jobs:
               cp "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" "projects/data/iu-affiliate-cj-${name}-v1.json"
             fi
           done
+          # Prefer this-run offers; fall back to sync-branch/prev LKG.
           for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json; do
-            if [ -s "${STASH}/prev/${f}" ]; then cp "${STASH}/prev/${f}" "projects/data/${f}"; fi
+            if [ -s "${STASH}/live/${f}" ]; then cp "${STASH}/live/${f}" "projects/data/${f}"
+            elif [ -s "${STASH}/prev/${f}" ]; then cp "${STASH}/prev/${f}" "projects/data/${f}"; fi
           done
           if [ -s "${STASH}/$(basename "$CP")" ]; then cp "${STASH}/$(basename "$CP")" "projects/data/$(basename "$CP")"; fi
           if [ -s "${STASH}/$(basename "$RCP")" ]; then cp "${STASH}/$(basename "$RCP")" "projects/data/$(basename "$RCP")"; fi
           if [ -s "${STASH}/$(basename "$MISS")" ]; then cp "${STASH}/$(basename "$MISS")" "projects/data/$(basename "$MISS")"; fi
+          # Restore live offers into workspace for the following Commit offers step (orphan wiped them).
+          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json iu-affiliate-cj-miss-products-v38.json; do
+            if [ -s "${STASH}/live/${f}" ]; then cp "${STASH}/live/${f}" "projects/data/${f}"; fi
+            if [ -s "${STASH}/$(basename "${f}")" ] && [ ! -s "projects/data/${f}" ]; then
+              cp "${STASH}/$(basename "${f}")" "projects/data/${f}"
+            fi
+          done
           # Refuse to stage zero-byte JSON (would brick schedule promote).
           find projects/data -name 'iu-affiliate-cj-*.json' -size 0 -delete || true
           git add projects/data/iu-affiliate-cj-*.json
