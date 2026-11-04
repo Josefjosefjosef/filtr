@@ -75,6 +75,11 @@ import {
   applyMissDecisionsToDoc,
   reverifyMissProductsFromCj,
 } from "./iu-cj-affiliate-phase3z-miss-reverify-v38.mjs";
+import {
+  buildCumulativeCoverageLedgerV40,
+  buildFeedInventoryDocument,
+} from "./iu-cj-affiliate-phase3z-feed-inventory-v40.mjs";
+import { evaluateIdentityRepairBatch } from "./iu-cj-affiliate-phase3z-identity-repair-v39.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const WEBSITE_PID = "101883843";
@@ -1607,6 +1612,96 @@ export async function runOffersLiveSync(opts = {}) {
   const lkgPath = path.join(dataDir, path.basename(OFFERS_LKG_REL));
   const auditPath = path.join(dataDir, "iu-affiliate-cj-offers-sync-audit-v1.json");
 
+  // V40: durable full feed inventory + slim cumulative coverage + identity-repair ledger.
+  try {
+    const inventoryEnabled =
+      opts.inventoryFeeds === true || env.IU_CJ_OFFERS_INVENTORY_FEEDS === "1";
+    const feedInvDoc = buildFeedInventoryDocument({
+      feeds: Array.isArray(feedInventory) ? feedInventory : [],
+      partners: managedPublic.partners || [],
+      nowIso: new Date().toISOString(),
+      runId: env.GITHUB_RUN_ID || null,
+      snapshotId: doc.snapshotId || doc.updatedAt || null,
+      sha: env.GITHUB_SHA || null,
+      inventoryEnabled,
+      evidenceClass: "CURRENT_PRODUCTION",
+    });
+    fs.writeFileSync(
+      path.join(dataDir, "iu-affiliate-cj-feed-inventory-v40.json"),
+      JSON.stringify(feedInvDoc, null, 2) + "\n",
+      "utf8"
+    );
+  } catch {
+    /* non-fatal */
+  }
+  try {
+    const rcpPath =
+      env.IU_CJ_REFRESH_CHECKPOINT_PATH ||
+      path.join(dataDir, "iu-affiliate-cj-refresh-coverage-v35.json");
+    const refreshDoc = fs.existsSync(rcpPath) ? readJson(rcpPath, null) : null;
+    if (refreshDoc) {
+      const cumLedger = buildCumulativeCoverageLedgerV40(refreshDoc, {
+        nowIso: new Date().toISOString(),
+        runId: env.GITHUB_RUN_ID || null,
+        snapshotId: doc.snapshotId || doc.updatedAt || null,
+        sha: env.GITHUB_SHA || null,
+        evidenceClass: "CURRENT_PRODUCTION",
+      });
+      fs.writeFileSync(
+        path.join(dataDir, "iu-affiliate-cj-cumulative-coverage-v40.json"),
+        JSON.stringify(cumLedger, null, 2) + "\n",
+        "utf8"
+      );
+    }
+  } catch {
+    /* non-fatal */
+  }
+  try {
+    const missPath =
+      env.IU_CJ_MISS_AUDIT_PATH || path.join(dataDir, "iu-affiliate-cj-miss-products-v38.json");
+    const missDoc = fs.existsSync(missPath) ? readJson(missPath, null) : null;
+    const repairCandidates = (missDoc?.rows || [])
+      .filter(
+        (r) =>
+          r?.decision === "REPAIR_IDENTITY" ||
+          r?.decision === "HOLD_COLLISION" ||
+          r?.probe?.identityRepair ||
+          r?.probe?.collision
+      )
+      .map((r) => ({
+        ...r,
+        identityRepair:
+          r.probe?.identityRepair ||
+          r.identityRepair ||
+          r.probe?.collision ||
+          r.collision ||
+          null,
+      }));
+    const joinedAdvertiserIds = new Set(
+      (managedPublic.partners || [])
+        .filter((p) => p && p.active !== false)
+        .map((p) => String(p.advertiserId || ""))
+        .filter(Boolean)
+    );
+    const identityLedger = evaluateIdentityRepairBatch(repairCandidates, {
+      joinedAdvertiserIds,
+      minTitleSimilarity: 0.55,
+    });
+    identityLedger.at = new Date().toISOString();
+    identityLedger.runId = env.GITHUB_RUN_ID || null;
+    identityLedger.snapshotId = doc.snapshotId || doc.updatedAt || null;
+    identityLedger.sha = env.GITHUB_SHA || null;
+    identityLedger.evidenceClass = "CURRENT_PRODUCTION";
+    identityLedger.sourceMissPath = "projects/data/iu-affiliate-cj-miss-products-v38.json";
+    fs.writeFileSync(
+      path.join(dataDir, "iu-affiliate-cj-identity-repair-v40.json"),
+      JSON.stringify(identityLedger, null, 2) + "\n",
+      "utf8"
+    );
+  } catch {
+    /* non-fatal */
+  }
+
   // Layer loss audit: unexplained ready drop vs prior LIVE catalog (expiration is OK;
   // zero unauthorized pipeline loss is required). Does not invent offers.
   const layerLossAudit = {
@@ -1644,6 +1739,9 @@ export async function runOffersLiveSync(opts = {}) {
       durableCheckpoints: productMeta?.durableCheckpoints === true,
     },
     feedInventorySample: Array.isArray(feedInventory) ? feedInventory.slice(0, 40) : null,
+    feedInventoryPath: "projects/data/iu-affiliate-cj-feed-inventory-v40.json",
+    cumulativeCoveragePath: "projects/data/iu-affiliate-cj-cumulative-coverage-v40.json",
+    identityRepairPath: "projects/data/iu-affiliate-cj-identity-repair-v40.json",
     rejectReasons: built.rejectReasons,
     layerLossAudit,
     sha256: crypto.createHash("sha256").update(JSON.stringify(doc)).digest("hex"),
