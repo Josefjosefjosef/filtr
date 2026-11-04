@@ -51,6 +51,16 @@ import {
   FRESHNESS_STATUS,
   SOURCE_UPDATED_AT_STATUS,
 } from "./iu-cj-affiliate-phase3z-offers-freshness-v32.mjs";
+import {
+  REFRESH_RESULT,
+  advanceRefreshPartnerCheckpoint,
+  buildRefreshCoverageLedger,
+  emptyRefreshCheckpointDoc,
+  estimateFullCoverageHours,
+  loadRefreshCheckpoint,
+  orderAdvertisersForRefresh,
+  summarizeCoverageFromLedger,
+} from "./iu-cj-affiliate-phase3z-refresh-coverage-v35.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const WEBSITE_PID = "101883843";
@@ -269,6 +279,9 @@ function toPublicProductCard(p, sectionKey) {
     fetchedAt: p.fetchedAt || null,
     lastCheckedAt: p.lastCheckedAt || null,
     lastSuccessfulRefreshAt: p.lastSuccessfulRefreshAt || null,
+    lastRefreshAttemptAt: p.lastRefreshAttemptAt || null,
+    refreshResult: p.refreshResult || null,
+    refreshReason: p.refreshReason || null,
     freshnessStatus: p.freshnessStatus || FRESHNESS_STATUS.UNVERIFIED,
     freshnessReason: p.freshnessReason || null,
     publicationReady: true,
@@ -280,8 +293,9 @@ function toPublicProductCard(p, sectionKey) {
 }
 
 /**
- * V32: prioritized refresh of already-published products (independent of discovery paging).
- * Fetches recent pages per advertiser and merges price/availability into published keys.
+ * V32/V35: prioritized refresh of already-published products (independent of discovery paging).
+ * Continueable per-advertiser scan windows. Window miss ≠ product deleted.
+ * Never invents sourceUpdatedAt. Never claims refresh solely because a partner was queried.
  */
 export async function refreshPublishedProductsFromCj(opts = {}) {
   const env = opts.env || process.env;
@@ -290,6 +304,14 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
   const pat = env.IU_CJ_PAT || env.CJ_API_PAT || env.CJ_PERSONAL_ACCESS_TOKEN || "";
   const publisherCid = String(env.IU_CJ_PUBLISHER_CID || "").trim();
   const keys = collectPublishedProductKeys(prevPublic);
+  const refreshCpPath =
+    opts.refreshCheckpointPath ||
+    (env.IU_CJ_REFRESH_CHECKPOINT_PATH
+      ? String(env.IU_CJ_REFRESH_CHECKPOINT_PATH)
+      : path.join(ROOT, "projects", "data", "iu-affiliate-cj-refresh-coverage-v35.json"));
+  let refreshCheckpoint =
+    opts.refreshCheckpoint ||
+    (fs.existsSync(refreshCpPath) ? loadRefreshCheckpoint(readJson(refreshCpPath, null)) : emptyRefreshCheckpointDoc());
   const meta = {
     keysIn: keys.length,
     advertisers: 0,
@@ -297,35 +319,81 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
     priceChanged: 0,
     availabilityChanged: 0,
     notFoundThisPass: 0,
+    notInScanWindow: 0,
+    notAttempted: 0,
     errors: 0,
     skippedNoCredentials: false,
-    note: "Refresh scans recent partner pages for published productIds; does not advance discovery checkpoints.",
+    refreshCheckpointPath: refreshCpPath,
+    note:
+      "V35: continueable partner scan windows for published productIds; NOT_IN_SCAN_WINDOW ≠ deleted; does not advance discovery checkpoints.",
   };
-  const byAdv = new Map();
-  for (const k of keys) {
-    if (!byAdv.has(k.advertiserId)) byAdv.set(k.advertiserId, new Map());
-    byAdv.get(k.advertiserId).set(k.productId, k);
+  const prevByKey = new Map();
+  for (const sec of prevPublic?.sections || []) {
+    for (const p of sec.products || []) {
+      const k = String(p.advertiserId || "") + "|" + String(p.productId || "");
+      if (k !== "|") prevByKey.set(k, p);
+    }
   }
-  meta.advertisers = byAdv.size;
+  const ordered = orderAdvertisersForRefresh(keys, prevByKey);
+  meta.advertisers = ordered.length;
   const refreshedByKey = new Map();
+  const matchedKeys = new Set();
+  const scannedAdvertisers = new Set();
+  const errorAdvertisers = new Set();
   if (!pat || !publisherCid || keys.length === 0) {
     meta.skippedNoCredentials = !pat || !publisherCid;
-    return { refreshedByKey, meta };
+    const ledger = buildRefreshCoverageLedger({
+      keys,
+      matchedKeys,
+      scannedAdvertisers,
+      errorAdvertisers,
+      prevByKey,
+      nowIso: new Date().toISOString(),
+    });
+    meta.coverage = summarizeCoverageFromLedger(ledger);
+    meta.coverageLedger = ledger;
+    meta.capacity = estimateFullCoverageHours({
+      advertisers: ordered.length || meta.advertisers,
+      refreshPageSize: Number(opts.pageSize) || 100,
+      refreshMaxPages: Number(opts.maxPages) || 5,
+    });
+    return { refreshedByKey, meta, refreshCheckpoint, coverageLedger: ledger };
   }
   const gqlEnv = { pat, publisherCid, websitePid };
   const pageSize = Math.min(100, Number(opts.pageSize) || 100);
-  const maxPages = Math.min(5, Number(opts.maxPages) || 3);
+  const maxPages = Math.min(20, Number(opts.maxPages) || 5);
   const nowIso = new Date().toISOString();
-  for (const [advertiserId, want] of byAdv.entries()) {
+  const scanSamples = [];
+  for (const group of ordered) {
+    const advertiserId = group.advertiserId;
+    const want = new Map(group.keys.map((k) => [k.productId, k]));
+    const prevCp = refreshCheckpoint.partners?.[advertiserId] || null;
+    const resumeOffset =
+      prevCp?.resumeOffset != null && Number.isFinite(Number(prevCp.resumeOffset))
+        ? Math.max(CJ_PRODUCT_SEARCH_OFFSET_FIRST, Number(prevCp.resumeOffset))
+        : CJ_PRODUCT_SEARCH_OFFSET_FIRST;
     try {
+      scannedAdvertisers.add(advertiserId);
       const fetched = await fetchAllShoppingProductsForPartner(gqlEnv, advertiserId, {
         pageSize,
         maxPages,
         stopAfterCount: pageSize * maxPages,
-        resumeOffset: CJ_PRODUCT_SEARCH_OFFSET_FIRST,
+        resumeOffset,
       });
       if (!fetched.ok && !(fetched.resultList || []).length) {
         meta.errors += 1;
+        errorAdvertisers.add(advertiserId);
+        refreshCheckpoint.partners[advertiserId] = advanceRefreshPartnerCheckpoint(prevCp, {
+          advertiserId,
+          startedOffset: resumeOffset,
+          fetchedCount: 0,
+          totalCount: null,
+          matched: 0,
+          notInWindow: want.size,
+          pageSize,
+          maxPages,
+          at: nowIso,
+        });
         continue;
       }
       const found = new Set();
@@ -333,11 +401,12 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
         const mapped = mapGraphqlProductRow(item, websitePid, {});
         if (!mapped.productId || !want.has(mapped.productId)) continue;
         found.add(mapped.productId);
+        const key = advertiserId + "|" + mapped.productId;
+        matchedKeys.add(key);
         const click = mapped.affiliateClickUrl;
         const trusted = isCjTrackingUrl(click);
-        // CJ shoppingProducts rows do not expose product lastUpdated → never invent sourceUpdatedAt.
         refreshedByKey.set(
-          advertiserId + "|" + mapped.productId,
+          key,
           stampProductFetchClocks(
             {
               productId: mapped.productId,
@@ -350,6 +419,8 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
               availability: mapped.availability,
               imageUrl: mapped.imageUrl,
               affiliateUrl: trusted ? click : null,
+              refreshResult: REFRESH_RESULT.SUCCESSFULLY_REFRESHED,
+              refreshReason: "productId_matched_in_scan_window",
             },
             nowIso,
             { sourceUpdatedAt: null, sourceUpdatedAtStatus: SOURCE_UPDATED_AT_STATUS.NOT_PROVIDED }
@@ -357,48 +428,132 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
         );
         meta.matched += 1;
       }
+      let notInWindow = 0;
       for (const pid of want.keys()) {
-        if (!found.has(pid)) meta.notFoundThisPass += 1;
+        if (!found.has(pid)) {
+          notInWindow += 1;
+          meta.notInScanWindow += 1;
+          // legacy alias — do not treat as deleted
+          meta.notFoundThisPass += 1;
+        }
+      }
+      const advanced = advanceRefreshPartnerCheckpoint(prevCp, {
+        advertiserId,
+        startedOffset: resumeOffset,
+        fetchedCount: (fetched.resultList || []).length,
+        totalCount: fetched.totalCount,
+        matched: found.size,
+        notInWindow,
+        pageSize,
+        maxPages,
+        at: nowIso,
+      });
+      refreshCheckpoint.partners[advertiserId] = advanced;
+      if (scanSamples.length < 12) {
+        scanSamples.push({
+          advertiserId,
+          startedOffset: resumeOffset,
+          nextOffset: advanced.resumeOffset,
+          fetched: (fetched.resultList || []).length,
+          totalCount: fetched.totalCount ?? null,
+          matched: found.size,
+          want: want.size,
+          wrapped: advanced.wrapped === true,
+        });
       }
     } catch {
       meta.errors += 1;
+      errorAdvertisers.add(advertiserId);
     }
   }
-  return { refreshedByKey, meta };
+  const ledger = buildRefreshCoverageLedger({
+    keys,
+    matchedKeys,
+    scannedAdvertisers,
+    errorAdvertisers,
+    prevByKey,
+    nowIso,
+  });
+  meta.coverage = summarizeCoverageFromLedger(ledger);
+  meta.coverageLedger = { ...ledger, rows: undefined, rowCount: ledger.rows.length };
+  meta.capacity = estimateFullCoverageHours({
+    advertisers: ordered.length,
+    refreshPageSize: pageSize,
+    refreshMaxPages: maxPages,
+    maxPartnerCatalogDepth: 5000,
+  });
+  meta.scanSamples = scanSamples;
+  meta.notAttempted = meta.coverage.notAttempted;
+  refreshCheckpoint.updatedAt = nowIso;
+  refreshCheckpoint.runs = [
+    ...(refreshCheckpoint.runs || []).slice(-20),
+    {
+      at: nowIso,
+      ...meta.coverage,
+      pageSize,
+      maxPages,
+      scanSamples,
+    },
+  ];
+  try {
+    fs.mkdirSync(path.dirname(refreshCpPath), { recursive: true });
+    fs.writeFileSync(refreshCpPath, JSON.stringify(refreshCheckpoint, null, 2) + "\n", "utf8");
+    meta.refreshCheckpointSaved = true;
+  } catch (e) {
+    meta.refreshCheckpointSaved = false;
+    meta.refreshCheckpointSaveError = String(e?.message || e).slice(0, 120);
+  }
+  return { refreshedByKey, meta, refreshCheckpoint, coverageLedger: ledger };
 }
 
 /**
  * Apply refreshed fields onto built public document products.
+ * coverageByKey (optional): honest per-product refreshResult from V35 ledger.
  */
-export function applyPublishedRefreshToDoc(doc, refreshedByKey, nowIso) {
+export function applyPublishedRefreshToDoc(doc, refreshedByKey, nowIso, coverageByKey = null) {
   let priceChanged = 0;
   let availabilityChanged = 0;
   let merged = 0;
+  let unchanged = 0;
   const sections = [];
   for (const sec of doc?.sections || []) {
     const products = [];
     for (const p of sec.products || []) {
       const key = String(p.advertiserId || "") + "|" + String(p.productId || "");
+      const cov = coverageByKey?.get?.(key) || null;
       const ref = refreshedByKey?.get(key);
       if (!ref) {
         products.push({
           ...p,
           lastCheckedAt: p.lastCheckedAt || null,
-          freshnessStatus: p.freshnessStatus || FRESHNESS_STATUS.REFRESH_PENDING,
+          lastRefreshAttemptAt: cov?.lastRefreshAttemptAt || p.lastRefreshAttemptAt || null,
+          refreshResult: cov?.refreshResult || REFRESH_RESULT.NOT_ATTEMPTED,
+          refreshReason: cov?.refreshReason || "no_match_this_pass",
+          freshnessStatus:
+            p.freshnessStatus ||
+            (cov?.refreshResult === REFRESH_RESULT.NOT_IN_SCAN_WINDOW
+              ? FRESHNESS_STATUS.REFRESH_PENDING
+              : FRESHNESS_STATUS.REFRESH_PENDING),
         });
         continue;
       }
       const out = mergeRefreshedProductIntoCard(p, ref, nowIso);
       if (out.priceChanged) priceChanged += 1;
       if (out.availChanged) availabilityChanged += 1;
+      if (!out.changed) unchanged += 1;
       merged += 1;
-      products.push(out.card);
+      products.push({
+        ...out.card,
+        lastRefreshAttemptAt: nowIso,
+        refreshResult: REFRESH_RESULT.SUCCESSFULLY_REFRESHED,
+        refreshReason: "productId_matched_in_scan_window",
+      });
     }
     sections.push({ ...sec, products });
   }
   return {
     doc: { ...doc, sections },
-    stats: { merged, priceChanged, availabilityChanged },
+    stats: { merged, priceChanged, availabilityChanged, unchanged },
   };
 }
 
@@ -989,24 +1144,32 @@ export async function runOffersLiveSync(opts = {}) {
       ? Number(opts.refreshMaxPages)
       : env.IU_CJ_OFFERS_REFRESH_MAX_PAGES != null && String(env.IU_CJ_OFFERS_REFRESH_MAX_PAGES).trim() !== ""
         ? Number(env.IU_CJ_OFFERS_REFRESH_MAX_PAGES)
-        : 3;
+        : 5;
 
-  // V32/V34: refresh already-published products BEFORE / independently of discovery window.
+  // V32/V35: refresh already-published products BEFORE / independently of discovery window.
   let refreshedByKey = new Map();
+  let coverageByKey = new Map();
+  let coverageLedger = null;
   if (doRefresh && prevPublic?.liveEnabled === true) {
     const refreshed = await refreshPublishedProductsFromCj({
       env,
       prevPublic,
       websitePid: WEBSITE_PID,
       pageSize: Number.isFinite(refreshPageSize) ? refreshPageSize : 100,
-      maxPages: Number.isFinite(refreshMaxPages) ? refreshMaxPages : 3,
+      maxPages: Number.isFinite(refreshMaxPages) ? refreshMaxPages : 5,
+      refreshCheckpointPath: opts.refreshCheckpointPath,
     });
     refreshedByKey = refreshed.refreshedByKey;
+    coverageLedger = refreshed.coverageLedger || null;
+    for (const row of coverageLedger?.rows || []) {
+      coverageByKey.set(row.sourceIdentity, row);
+    }
     refreshMeta = {
       ...(refreshed.meta || {}),
       mode: env.IU_CJ_OFFERS_MODE || null,
       refreshPageSize: Number.isFinite(refreshPageSize) ? refreshPageSize : 100,
-      refreshMaxPages: Number.isFinite(refreshMaxPages) ? refreshMaxPages : 3,
+      refreshMaxPages: Number.isFinite(refreshMaxPages) ? refreshMaxPages : 5,
+      coverageSummary: refreshed.meta?.coverage || null,
     };
   }
 
@@ -1053,10 +1216,22 @@ export async function runOffersLiveSync(opts = {}) {
   const prevReady = readyCounts(prevPublic);
   let doc = built.doc;
   const nowIso = new Date().toISOString();
-  if (refreshedByKey.size > 0) {
-    const appliedRefresh = applyPublishedRefreshToDoc(doc, refreshedByKey, nowIso);
+  if (refreshedByKey.size > 0 || coverageByKey.size > 0) {
+    const appliedRefresh = applyPublishedRefreshToDoc(doc, refreshedByKey, nowIso, coverageByKey);
     doc = appliedRefresh.doc;
     if (refreshMeta) refreshMeta.mergeStats = appliedRefresh.stats;
+  }
+  if (coverageLedger?.counts) {
+    doc = {
+      ...doc,
+      refreshCoverage: {
+        schema: "iu-cj-affiliate-phase3z-refresh-coverage-v35",
+        at: nowIso,
+        counts: coverageLedger.counts,
+        summary: summarizeCoverageFromLedger(coverageLedger),
+        capacity: refreshMeta?.capacity || null,
+      },
+    };
   }
   // Render-time + sync-time expiry / stale price hide
   const freshApplied = applyFreshnessToOffersDocument(doc, { nowMs: Date.now() });
