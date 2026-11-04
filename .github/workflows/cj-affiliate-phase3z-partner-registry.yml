@@ -52,6 +52,7 @@ jobs:
       - name: Selftest
         run: |
           node scripts/iu-cj-affiliate-phase3z-partner-registry-v1-selftest.mjs
+          node scripts/iu-cj-affiliate-phase3z-registry-url-gate-v41-selftest.mjs
           node scripts/iu-cj-affiliate-phase3z-main-button-readiness-v12-selftest.mjs
           node scripts/iu-cj-affiliate-phase3z-v12-cleanup-inventory.mjs
           node scripts/iu-cj-affiliate-phase3z-v13-selftest.mjs
@@ -177,14 +178,49 @@ jobs:
           assert url_m >= url_ok, (url_m, url_ok)
           assert cons.get("ok") is True, cons
           ready=btn.get("counts",{}).get("readyForReview",0)
-          # Enforce READY→HTTP_OK only when this run verified ALL URLs (limit 0 = uncapped).
+          # Enforce READY→sufficient URL evidence when this run verified ALL URLs (limit 0 = uncapped).
+          # Must match scripts urlEvidenceSufficientForReady: HTTP OK OR documented WAF/429/timeout
+          # identity-preserved paths. Bare HTTP_OK-only assert falsely fails 403 WAF READY rows.
           # Capped/off probes leave many READY rows with prior/non-HTTP_OK status — not a gate failure.
           verify_on = os.environ.get("IU_CJ_PHASE3Z_VERIFY_URLS", "0") == "1"
           verify_limit = str(os.environ.get("IU_CJ_PHASE3Z_VERIFY_LIMIT", "0"))
+          def url_evidence_sufficient(b):
+            uv = b.get("urlVerification") or {}
+            st = uv.get("status")
+            mrs = b.get("merchantReviewStatus")
+            if st == "VERIFIED_HTTP_OK":
+              return True
+            if (
+              st == "HTTP_FORBIDDEN"
+              and mrs == "IDENTITY_VERIFIED_WAF"
+              and (uv.get("classification") == "BOT_BLOCK_SUSPECTED" or uv.get("clientBlockedPossible") is True)
+            ):
+              return True
+            if (
+              st == "HTTP_NOT_OK"
+              and uv.get("httpStatus") == 429
+              and mrs == "IDENTITY_VERIFIED_RATE_LIMITED"
+              and uv.get("classification") == "RATE_LIMITED"
+            ):
+              return True
+            if (
+              st in ("NOT_VERIFIED", "ERROR")
+              and mrs == "IDENTITY_VERIFIED_CLICK_TIMEOUT"
+              and "click_probe_timeout_identity_preserved" in str(uv.get("note") or "")
+            ):
+              return True
+            return False
           if verify_on and verify_limit == "0":
-            for b in btn.get("buttons",[]):
-              if b.get("publishability")=="READY_FOR_REVIEW":
-                assert (b.get("urlVerification") or {}).get("status")=="VERIFIED_HTTP_OK"
+            bad = []
+            for b in btn.get("buttons", []):
+              if b.get("publishability") == "READY_FOR_REVIEW" and not url_evidence_sufficient(b):
+                bad.append({
+                  "advertiserId": b.get("advertiserId"),
+                  "status": (b.get("urlVerification") or {}).get("status"),
+                  "merchantReviewStatus": b.get("merchantReviewStatus"),
+                  "httpStatus": (b.get("urlVerification") or {}).get("httpStatus"),
+                })
+            assert not bad, bad[:20]
           print("DISARMED_OK", reg.get("counts"), btn.get("counts"), "ready", ready, "verify_on", verify_on, "limit", verify_limit)
           PY
       - name: Upload non-public registry artifacts

@@ -58,6 +58,48 @@ jobs:
           echo "IN_PROGRESS=${INPROG}"
           LATEST="$(echo "${RAW}" | jq -r '.workflow_runs[0] // empty | "\(.id) \(.conclusion) \(.created_at)"')"
           echo "LATEST_SCHEDULE=${LATEST:-none}"
+          # V41: compare observed schedule starts vs declared 3h cadence (UTC :17 at 0/6/9/12/15/18/21 + daily 03:17).
+          # GitHub Actions cron is not minute-precise; report delay, never invent missing runs.
+          echo "${RAW}" > /tmp/iu-cj-schedule-raw.json
+          python3 - <<'PY' || true
+          import json, datetime as dt
+          raw = json.load(open("/tmp/iu-cj-schedule-raw.json"))
+          runs = raw.get("workflow_runs") or []
+          hours = {0, 3, 6, 9, 12, 15, 18, 21}
+          now = dt.datetime.now(dt.timezone.utc)
+          observed = []
+          for r in runs:
+            ts = r.get("created_at")
+            if not ts: continue
+            t = dt.datetime.fromisoformat(ts.replace("Z", "+00:00"))
+            observed.append((t, r.get("id"), r.get("conclusion"), r.get("head_sha")))
+          print("OBSERVED_SCHEDULE_COUNT=%d" % len(observed))
+          if observed:
+            latest = observed[0][0]
+            age_h = (now - latest).total_seconds() / 3600.0
+            print("LATEST_SCHEDULE_AGE_HOURS=%.2f" % age_h)
+            missing = []
+            for h in sorted(hours):
+              slot = now.replace(minute=17, second=0, microsecond=0, hour=h)
+              if slot > now:
+                slot -= dt.timedelta(days=1)
+              if (now - slot).total_seconds() > 24 * 3600:
+                continue
+              hit = None
+              for t, rid, conc, sha in observed:
+                delta_m = (t - slot).total_seconds() / 60.0
+                if -5 <= delta_m <= 180:
+                  hit = (rid, conc, sha, delta_m)
+                  break
+              if hit:
+                print("SLOT_HIT hour=%02d run=%s conclusion=%s delay_min=%.1f sha=%s" % (h, hit[0], hit[1], hit[3], (hit[2] or "")[:12]))
+              else:
+                missing.append(h)
+                print("SLOT_MISS hour=%02d expected_utc=%s" % (h, slot.isoformat()))
+            print("SLOT_MISS_COUNT_24H=%d" % len(missing))
+            if age_h > 6:
+              print("CADENCE_NOTE=latest_schedule_older_than_6h_possible_github_delay_or_skip")
+          PY
           if [ "${SUCCESS_48}" -ge 1 ]; then
             echo "WATCH_RESULT=PASS"
             echo "BURNIN_STATUS=VERIFIED_RECENT_SCHEDULE_SUCCESS"
