@@ -164,8 +164,10 @@
       tab = null;
     }
     if (!tab) {
+      /* V43: popup blocked must NOT swallow the click — fall through to in-page
+         persistNavState so affiliate/tool sections still mount on first click. */
       showTabBlockedNotice();
-      return true;
+      return false;
     }
     try {
       tab.opener = null;
