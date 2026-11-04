@@ -1,11 +1,12 @@
-# Phase 3K: watch real catalog-sync *schedule* runs (never treat workflow_dispatch as schedule).
+# Phase 3K / V42: watch real catalog-sync *schedule* runs (never treat workflow_dispatch as schedule).
 # Does NOT publish. Does NOT arm CJ LIVE. Read-only Actions API.
+# V42: run after each expected 3h slot (+30m buffer) so SLOT_MISS is visible the same day.
 name: CJ Affiliate catalog-sync schedule watch
 
 on:
   schedule:
-    # After expected catalog-sync cron 03:17 UTC (+ GitHub delay buffer)
-    - cron: "47 5 * * *"
+    # After each catalog-sync cron :17 (+30m GitHub delay buffer) at hours 0/3/6/9/12/15/18/21 UTC
+    - cron: "47 0,3,6,9,12,15,18,21 * * *"
   workflow_dispatch:
 
 concurrency:
@@ -21,11 +22,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Slot-watch selftest (offline)
+        run: node scripts/iu-cj-affiliate-phase3z-schedule-slot-watch-v42-selftest.mjs
       - name: Inspect last schedule runs
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
-          # Workflow file path → resolve ID at runtime
           WORKFLOW_PATH: cj-affiliate-catalog-sync.yml
         run: |
           set -euo pipefail
@@ -36,12 +42,11 @@ jobs:
             exit 1
           fi
           echo "WORKFLOW_ID=${WF_ID}"
-          RAW="$(gh api "repos/${REPO}/actions/workflows/${WF_ID}/runs?event=schedule&per_page=10")"
+          RAW="$(gh api "repos/${REPO}/actions/workflows/${WF_ID}/runs?event=schedule&per_page=30")"
           echo "${RAW}" | jq -r '.workflow_runs[] | "\(.id)\t\(.conclusion // "null")\t\(.status)\t\(.created_at)\t\(.actor.login // "")"' \
             | tee /tmp/iu-cj-schedule-runs.tsv || true
           TOTAL="$(echo "${RAW}" | jq '.total_count')"
           echo "SCHEDULE_TOTAL_COUNT=${TOTAL}"
-          # Eval window: 48h
           CUTOFF="$(date -u -d '48 hours ago' +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v-48H +%Y-%m-%dT%H:%M:%SZ)"
           echo "CUTOFF_UTC=${CUTOFF}"
           SUCCESS_48="$(echo "${RAW}" | jq --arg c "$CUTOFF" \
@@ -58,53 +63,12 @@ jobs:
           echo "IN_PROGRESS=${INPROG}"
           LATEST="$(echo "${RAW}" | jq -r '.workflow_runs[0] // empty | "\(.id) \(.conclusion) \(.created_at)"')"
           echo "LATEST_SCHEDULE=${LATEST:-none}"
-          # V41: compare observed schedule starts vs declared 3h cadence (UTC :17 at 0/6/9/12/15/18/21 + daily 03:17).
-          # GitHub Actions cron is not minute-precise; report delay, never invent missing runs.
           echo "${RAW}" > /tmp/iu-cj-schedule-raw.json
-          python3 - <<'PY' || true
-          import json, datetime as dt
-          raw = json.load(open("/tmp/iu-cj-schedule-raw.json"))
-          runs = raw.get("workflow_runs") or []
-          hours = {0, 3, 6, 9, 12, 15, 18, 21}
-          now = dt.datetime.now(dt.timezone.utc)
-          observed = []
-          for r in runs:
-            ts = r.get("created_at")
-            if not ts: continue
-            t = dt.datetime.fromisoformat(ts.replace("Z", "+00:00"))
-            observed.append((t, r.get("id"), r.get("conclusion"), r.get("head_sha")))
-          print("OBSERVED_SCHEDULE_COUNT=%d" % len(observed))
-          if observed:
-            latest = observed[0][0]
-            age_h = (now - latest).total_seconds() / 3600.0
-            print("LATEST_SCHEDULE_AGE_HOURS=%.2f" % age_h)
-            missing = []
-            for h in sorted(hours):
-              slot = now.replace(minute=17, second=0, microsecond=0, hour=h)
-              if slot > now:
-                slot -= dt.timedelta(days=1)
-              if (now - slot).total_seconds() > 24 * 3600:
-                continue
-              hit = None
-              for t, rid, conc, sha in observed:
-                delta_m = (t - slot).total_seconds() / 60.0
-                if -5 <= delta_m <= 180:
-                  hit = (rid, conc, sha, delta_m)
-                  break
-              if hit:
-                print("SLOT_HIT hour=%02d run=%s conclusion=%s delay_min=%.1f sha=%s" % (h, hit[0], hit[1], hit[3], (hit[2] or "")[:12]))
-              else:
-                missing.append(h)
-                print("SLOT_MISS hour=%02d expected_utc=%s" % (h, slot.isoformat()))
-            print("SLOT_MISS_COUNT_24H=%d" % len(missing))
-            if age_h > 6:
-              print("CADENCE_NOTE=latest_schedule_older_than_6h_possible_github_delay_or_skip")
-          PY
-          if [ "${SUCCESS_48}" -ge 1 ]; then
-            echo "WATCH_RESULT=PASS"
-            echo "BURNIN_STATUS=VERIFIED_RECENT_SCHEDULE_SUCCESS"
-            exit 0
-          fi
+          # V42: authoritative slot classification (FAIL on multiple SLOT_MISS — do not mask with one 48h success).
+          set +e
+          node scripts/iu-cj-affiliate-phase3z-schedule-slot-watch-v42.mjs /tmp/iu-cj-schedule-raw.json | tee /tmp/iu-cj-slot-watch.txt
+          SLOT_RC=$?
+          set -e
           if [ "${INPROG}" -ge 1 ]; then
             echo "WATCH_RESULT=PENDING"
             echo "BURNIN_STATUS=SCHEDULE_IN_PROGRESS"
@@ -115,12 +79,21 @@ jobs:
             echo "BURNIN_STATUS=NO_SCHEDULE_RUNS_YET"
             exit 0
           fi
-          if [ "${FAIL_48}" -ge 1 ]; then
+          if [ "${SLOT_RC}" -ne 0 ]; then
+            echo "WATCH_RESULT=FAIL"
+            echo "BURNIN_STATUS=CADENCE_DEGRADED_MULTIPLE_SLOT_MISS"
+            exit 1
+          fi
+          if [ "${FAIL_48}" -ge 1 ] && [ "${SUCCESS_48}" -eq 0 ]; then
             echo "WATCH_RESULT=FAIL"
             echo "BURNIN_STATUS=SCHEDULE_FAILURE_IN_WINDOW"
             exit 1
           fi
-          # Cancelled-only / stale: not a code failure — keep PENDING so CI does not block merges.
+          if [ "${SUCCESS_48}" -ge 1 ]; then
+            echo "WATCH_RESULT=PASS"
+            echo "BURNIN_STATUS=VERIFIED_RECENT_SCHEDULE_SUCCESS"
+            exit 0
+          fi
           echo "WATCH_RESULT=PENDING"
           echo "BURNIN_STATUS=NO_SUCCESS_IN_48H_MANUAL_OR_DELAY"
           exit 0

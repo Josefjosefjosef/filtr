@@ -134,6 +134,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-feed-inventory-v40-selftest.mjs
       - name: Registry URL gate parity selftest (V41; offline)
         run: node scripts/iu-cj-affiliate-phase3z-registry-url-gate-v41-selftest.mjs
+      - name: Schedule slot watch selftest (V42; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-schedule-slot-watch-v42-selftest.mjs
       - name: Offers UI + production feature-flag gate selftest
         run: |
           node scripts/iu-cj-affiliate-phase2-offers-preview-ui-selftest.mjs
