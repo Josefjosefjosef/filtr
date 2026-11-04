@@ -126,6 +126,10 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-miss-products-v38-selftest.mjs
       - name: Miss reverify apply selftest (V38; offline)
         run: node scripts/iu-cj-affiliate-phase3z-miss-reverify-v38-selftest.mjs
+      - name: Identity repair collision guard selftest (V39; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-identity-repair-v39-selftest.mjs
+      - name: Production mount URL contract selftest (V39; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-prod-mount-v39-selftest.mjs
       - name: Offers UI + production feature-flag gate selftest
         run: |
           node scripts/iu-cj-affiliate-phase2-offers-preview-ui-selftest.mjs

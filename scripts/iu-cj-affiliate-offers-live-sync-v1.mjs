@@ -1348,6 +1348,16 @@ export async function runOffersLiveSync(opts = {}) {
         publisherCid: String(env.IU_CJ_PUBLISHER_CID || "").trim(),
         websitePid: WEBSITE_PID,
       };
+      const titleByKey = new Map();
+      for (const sec of doc.sections || []) {
+        for (const p of sec.products || []) {
+          const k = String(p.advertiserId || "") + "|" + String(p.productId || "");
+          if (!titleByKey.has(k)) titleByKey.set(k, p.title || p.name || null);
+        }
+      }
+      const joinedAdvertiserIds = new Set(
+        (doc.sections || []).map((s) => String(s.advertiserId || "")).filter(Boolean)
+      );
       const re = await reverifyMissProductsFromCj({
         missKeys,
         gqlEnv,
@@ -1355,6 +1365,8 @@ export async function runOffersLiveSync(opts = {}) {
         refreshedByKey,
         matchedKeys: new Set(refreshedByKey.keys()),
         nowIso,
+        titleByKey,
+        joinedAdvertiserIds,
       });
       for (const [k, v] of re.refreshedByKey.entries()) refreshedByKey.set(k, v);
       for (const k of re.matchedKeys) {
