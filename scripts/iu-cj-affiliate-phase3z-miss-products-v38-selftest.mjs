@@ -40,6 +40,14 @@ const repair = decideMissProduct({
 assert(repair.decision === MISS_DECISION.REPAIR_IDENTITY, "identity repair");
 assert(repair.cause === MISS_CAUSE.IDENTITY_CHANGED, "identity cause");
 
+const holdCollision = decideMissProduct({
+  consecutiveMisses: 2,
+  collision: { oldAdvertiserId: "1", newAdvertiserId: "2", oldProductId: "x", newProductId: "x" },
+  identityRepairVerdict: { decision: "HOLD_COLLISION", applyRemap: false },
+});
+assert(holdCollision.decision === MISS_DECISION.HOLD_COLLISION, "v40 hold collision");
+assert(holdCollision.hidePrice === false, "collision keeps LKG price visible policy");
+
 const ended = decideMissProduct({ partnerEnded: true, consecutiveMisses: 1 });
 assert(ended.decision === MISS_DECISION.REMOVE_CONFIRMED, "ended only with explicit flag");
 assert(ended.cause === MISS_CAUSE.PARTNER_ENDED, "ended cause");

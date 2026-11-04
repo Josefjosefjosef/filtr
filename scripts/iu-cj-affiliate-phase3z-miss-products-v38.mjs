@@ -8,6 +8,7 @@ export const MISS_DECISION = Object.freeze({
   KEEP_PENDING: "KEEP_PENDING",
   TEMPORARILY_HIDE: "TEMPORARILY_HIDE",
   REPAIR_IDENTITY: "REPAIR_IDENTITY",
+  HOLD_COLLISION: "HOLD_COLLISION",
   RECOVERED: "RECOVERED",
   REMOVE_CONFIRMED: "REMOVE_CONFIRMED",
   UNVERIFIED: "UNVERIFIED",
@@ -52,6 +53,27 @@ export function decideMissProduct(row = {}, opts = {}) {
       publicationSafe: true,
       hidePrice: false,
       note: "Re-found via authorized CJ productIds (or identity repair).",
+    };
+  }
+  // V40: V39 collision verdict / collision payload must not become REPAIR_IDENTITY or KEEP_PENDING.
+  const verdictDecision = String(row.identityRepairVerdict?.decision || "");
+  const collision = row.collision || null;
+  if (
+    verdictDecision === "HOLD_COLLISION" ||
+    (collision &&
+      String(collision.oldAdvertiserId || "") &&
+      String(collision.newAdvertiserId || "") &&
+      String(collision.oldAdvertiserId) !== String(collision.newAdvertiserId))
+  ) {
+    return {
+      decision: MISS_DECISION.HOLD_COLLISION,
+      cause: MISS_CAUSE.IDENTITY_MAP_ERROR,
+      publicationSafe: true,
+      hidePrice: false,
+      collision: collision || null,
+      identityRepairVerdict: row.identityRepairVerdict || null,
+      note:
+        "Same productId under a different advertiser without verified remap proof — HOLD_COLLISION; do not remap or delete.",
     };
   }
   if (identityRepair?.newAdvertiserId || identityRepair?.newProductId) {
@@ -126,6 +148,7 @@ export function buildMissProductAudit(opts = {}) {
     KEEP_PENDING: 0,
     TEMPORARILY_HIDE: 0,
     REPAIR_IDENTITY: 0,
+    HOLD_COLLISION: 0,
     RECOVERED: 0,
     REMOVE_CONFIRMED: 0,
     UNVERIFIED: 0,
@@ -154,6 +177,8 @@ export function buildMissProductAudit(opts = {}) {
         lastSuccessfulRefreshAt: p.lastSuccessfulRefreshAt || prev.lastSuccessfulRefreshAt || null,
         recovered: probe?.recovered === true,
         identityRepair: probe?.identityRepair || null,
+        collision: probe?.collision || null,
+        identityRepairVerdict: probe?.identityRepairVerdict || null,
         partnerEnded: probe?.partnerEnded === true,
         confirmedRemoved: probe?.confirmedRemoved === true,
       },
@@ -176,7 +201,11 @@ export function buildMissProductAudit(opts = {}) {
       endpoint: "shoppingProducts",
       filter: "productIds+partnerIds",
       apiResult: probe?.apiResult || "productIds_miss",
-      sourceIdentityStatus: probe?.identityRepair ? "REPAIR_CANDIDATE" : "AS_PUBLISHED",
+      sourceIdentityStatus: probe?.identityRepair
+        ? "REPAIR_CANDIDATE"
+        : decided.decision === MISS_DECISION.HOLD_COLLISION
+          ? "HOLD_COLLISION"
+          : "AS_PUBLISHED",
       consecutiveMisses,
       cause: decided.cause || MISS_CAUSE.UNVERIFIED,
       decision: decided.decision,
@@ -187,6 +216,8 @@ export function buildMissProductAudit(opts = {}) {
         ? {
             recovered: probe.recovered === true,
             identityRepair: probe.identityRepair || null,
+            collision: probe.collision || null,
+            identityRepairVerdict: probe.identityRepairVerdict || null,
             apiResult: probe.apiResult || null,
           }
         : null,
