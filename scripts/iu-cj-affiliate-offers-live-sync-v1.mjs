@@ -61,6 +61,9 @@ import {
   orderAdvertisersForRefresh,
   summarizeCoverageFromLedger,
 } from "./iu-cj-affiliate-phase3z-refresh-coverage-v35.mjs";
+import {
+  reconcilePublishedProductEvidence,
+} from "./iu-cj-affiliate-phase3z-product-evidence-v36.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const WEBSITE_PID = "101883843";
@@ -334,7 +337,18 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
       if (k !== "|") prevByKey.set(k, p);
     }
   }
-  const ordered = orderAdvertisersForRefresh(keys, prevByKey);
+  // Fairness: among equal age cohorts, prefer partners with oldest lastScanAt (avoid starving large catalogs).
+  const ordered = orderAdvertisersForRefresh(keys, prevByKey).map((g) => {
+    const cp = refreshCheckpoint.partners?.[g.advertiserId];
+    const lastScanMs = cp?.lastScanAt ? Date.parse(cp.lastScanAt) : 0;
+    return { ...g, lastScanMs: Number.isFinite(lastScanMs) ? lastScanMs : 0 };
+  });
+  ordered.sort((a, b) => {
+    if (a.anyRefresh !== b.anyRefresh) return a.anyRefresh ? 1 : -1;
+    if (a.oldestMs !== b.oldestMs) return a.oldestMs - b.oldestMs;
+    if (a.lastScanMs !== b.lastScanMs) return a.lastScanMs - b.lastScanMs;
+    return String(a.advertiserId).localeCompare(String(b.advertiserId));
+  });
   meta.advertisers = ordered.length;
   const refreshedByKey = new Map();
   const matchedKeys = new Set();
@@ -1146,32 +1160,11 @@ export async function runOffersLiveSync(opts = {}) {
         ? Number(env.IU_CJ_OFFERS_REFRESH_MAX_PAGES)
         : 5;
 
-  // V32/V35: refresh already-published products BEFORE / independently of discovery window.
+  // V36: discovery FIRST, then refresh the FINAL published key set so summary↔individual reconcile.
+  // Refresh remains independent of discovery *checkpoints* (does not advance them).
   let refreshedByKey = new Map();
   let coverageByKey = new Map();
   let coverageLedger = null;
-  if (doRefresh && prevPublic?.liveEnabled === true) {
-    const refreshed = await refreshPublishedProductsFromCj({
-      env,
-      prevPublic,
-      websitePid: WEBSITE_PID,
-      pageSize: Number.isFinite(refreshPageSize) ? refreshPageSize : 100,
-      maxPages: Number.isFinite(refreshMaxPages) ? refreshMaxPages : 5,
-      refreshCheckpointPath: opts.refreshCheckpointPath,
-    });
-    refreshedByKey = refreshed.refreshedByKey;
-    coverageLedger = refreshed.coverageLedger || null;
-    for (const row of coverageLedger?.rows || []) {
-      coverageByKey.set(row.sourceIdentity, row);
-    }
-    refreshMeta = {
-      ...(refreshed.meta || {}),
-      mode: env.IU_CJ_OFFERS_MODE || null,
-      refreshPageSize: Number.isFinite(refreshPageSize) ? refreshPageSize : 100,
-      refreshMaxPages: Number.isFinite(refreshMaxPages) ? refreshMaxPages : 5,
-      coverageSummary: refreshed.meta?.coverage || null,
-    };
-  }
 
   if (sampleProducts && products.length === 0) {
     const sampled = await sampleProductsForManagedPartners({
@@ -1216,26 +1209,68 @@ export async function runOffersLiveSync(opts = {}) {
   const prevReady = readyCounts(prevPublic);
   let doc = built.doc;
   const nowIso = new Date().toISOString();
+
+  // Refresh targets = keys in the catalog we are about to publish (authoritative).
+  // Fall back to previous LIVE public when the new build has no products yet.
+  const refreshTargetDoc =
+    collectPublishedProductKeys(doc).length > 0
+      ? { liveEnabled: true, sections: doc.sections }
+      : prevPublic?.liveEnabled === true
+        ? prevPublic
+        : null;
+  if (doRefresh && refreshTargetDoc) {
+    const refreshed = await refreshPublishedProductsFromCj({
+      env,
+      prevPublic: refreshTargetDoc,
+      websitePid: WEBSITE_PID,
+      pageSize: Number.isFinite(refreshPageSize) ? refreshPageSize : 100,
+      maxPages: Number.isFinite(refreshMaxPages) ? refreshMaxPages : 5,
+      refreshCheckpointPath: opts.refreshCheckpointPath,
+    });
+    refreshedByKey = refreshed.refreshedByKey;
+    coverageLedger = refreshed.coverageLedger || null;
+    for (const row of coverageLedger?.rows || []) {
+      coverageByKey.set(row.sourceIdentity, row);
+    }
+    refreshMeta = {
+      ...(refreshed.meta || {}),
+      mode: env.IU_CJ_OFFERS_MODE || null,
+      refreshPageSize: Number.isFinite(refreshPageSize) ? refreshPageSize : 100,
+      refreshMaxPages: Number.isFinite(refreshMaxPages) ? refreshMaxPages : 5,
+      coverageSummary: refreshed.meta?.coverage || null,
+      refreshTarget: "final_published_catalog",
+    };
+  }
+
   if (refreshedByKey.size > 0 || coverageByKey.size > 0) {
     const appliedRefresh = applyPublishedRefreshToDoc(doc, refreshedByKey, nowIso, coverageByKey);
     doc = appliedRefresh.doc;
     if (refreshMeta) refreshMeta.mergeStats = appliedRefresh.stats;
   }
-  if (coverageLedger?.counts) {
-    doc = {
-      ...doc,
-      refreshCoverage: {
-        schema: "iu-cj-affiliate-phase3z-refresh-coverage-v35",
-        at: nowIso,
-        counts: coverageLedger.counts,
-        summary: summarizeCoverageFromLedger(coverageLedger),
-        capacity: refreshMeta?.capacity || null,
-      },
-    };
-  }
+
   // Render-time + sync-time expiry / stale price hide
   const freshApplied = applyFreshnessToOffersDocument(doc, { nowMs: Date.now() });
   doc = freshApplied.doc;
+
+  // V36: single authoritative stamp + counts derived from final published occurrences.
+  const reconciled = reconcilePublishedProductEvidence({
+    doc,
+    nowIso,
+    snapshotId: nowIso,
+    sourceRunId: env.GITHUB_RUN_ID || null,
+    refreshRunId: env.GITHUB_RUN_ID || null,
+    coverageByKey,
+    refreshedByKey,
+    targetPassCounts: coverageLedger?.counts || null,
+  });
+  doc = reconciled.doc;
+  if (refreshMeta) {
+    refreshMeta.reconcileOk = reconciled.evidence.reconcileOk;
+    refreshMeta.publishedCatalog = reconciled.evidence.publishedCatalog;
+  }
+  if (doc.refreshCoverage && refreshMeta?.capacity) {
+    doc.refreshCoverage.capacity = refreshMeta.capacity;
+  }
   const nextReady = readyCounts(doc);
   const keepLive =
     armed &&
