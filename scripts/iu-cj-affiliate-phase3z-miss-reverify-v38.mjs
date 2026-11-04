@@ -15,6 +15,7 @@ import {
 } from "./iu-cj-affiliate-phase3z-offers-freshness-v32.mjs";
 import { REFRESH_RESULT } from "./iu-cj-affiliate-phase3z-refresh-coverage-v35.mjs";
 import { MISS_DECISION } from "./iu-cj-affiliate-phase3z-miss-products-v38.mjs";
+import { decideIdentityRepair } from "./iu-cj-affiliate-phase3z-identity-repair-v39.mjs";
 
 /**
  * @param {object} opts
@@ -146,16 +147,45 @@ export async function reverifyMissProductsFromCj(opts = {}) {
         }
         const newAdv = hit.rawAdvertiserId || s.advertiserId;
         if (newAdv && newAdv !== s.advertiserId) {
-          meta.identityRepairCandidates += 1;
-          probeByKey.set(s.key, {
-            recovered: false,
-            apiResult: "omitPartner_hit_different_advertiser",
-            identityRepair: {
-              oldAdvertiserId: s.advertiserId,
-              newAdvertiserId: newAdv,
-              newProductId: s.productId,
+          // V39: productId is not globally unique — bare cross-advertiser hit is usually a collision.
+          const candidate = {
+            oldAdvertiserId: s.advertiserId,
+            newAdvertiserId: newAdv,
+            newProductId: s.productId,
+          };
+          const publishedTitle =
+            opts.titleByKey instanceof Map ? opts.titleByKey.get(s.key) : null;
+          const verdict = decideIdentityRepair(
+            {
+              advertiserId: s.advertiserId,
+              productId: s.productId,
+              title: publishedTitle || null,
+              identityRepair: candidate,
             },
-          });
+            {
+              joinedAdvertiserIds: opts.joinedAdvertiserIds,
+              probeTitle: hit.mapped?.title || hit.mapped?.name || null,
+              minTitleSimilarity: opts.minTitleSimilarity,
+            }
+          );
+          meta.identityRepairCandidates += 1;
+          if (verdict.applyRemap) {
+            probeByKey.set(s.key, {
+              recovered: false,
+              apiResult: "omitPartner_hit_different_advertiser_verified",
+              identityRepair: candidate,
+              identityRepairVerdict: verdict,
+            });
+          } else {
+            meta.identityCollisions = (meta.identityCollisions || 0) + 1;
+            probeByKey.set(s.key, {
+              recovered: false,
+              apiResult: "omitPartner_productId_collision_hold",
+              identityRepair: null,
+              collision: candidate,
+              identityRepairVerdict: verdict,
+            });
+          }
         } else {
           // Same advertiser found without partner filter — treat as recovered
           const mapped = hit.mapped;
