@@ -31,6 +31,7 @@ import {
   CJ_PRODUCT_SEARCH_OFFSET_FIRST,
   CJ_PRODUCT_SEARCH_PAGE_SIZE_DEFAULT,
   fetchAllShoppingProductsForPartner,
+  fetchShoppingProductsByProductIds,
   inventoryShoppingProductFeedsForPartner,
   mapGraphqlProductRow,
 } from "./iu-cj-affiliate-phase2-product-api.mjs";
@@ -52,6 +53,7 @@ import {
   SOURCE_UPDATED_AT_STATUS,
 } from "./iu-cj-affiliate-phase3z-offers-freshness-v32.mjs";
 import {
+  REFRESH_MODE,
   REFRESH_RESULT,
   advanceRefreshPartnerCheckpoint,
   buildRefreshCoverageLedger,
@@ -60,6 +62,7 @@ import {
   loadRefreshCheckpoint,
   orderAdvertisersForRefresh,
   summarizeCoverageFromLedger,
+  updateCumulativeCoverage,
 } from "./iu-cj-affiliate-phase3z-refresh-coverage-v35.mjs";
 import {
   reconcilePublishedProductEvidence,
@@ -296,9 +299,9 @@ function toPublicProductCard(p, sectionKey) {
 }
 
 /**
- * V32/V35: prioritized refresh of already-published products (independent of discovery paging).
- * Continueable per-advertiser scan windows. Window miss ≠ product deleted.
- * Never invents sourceUpdatedAt. Never claims refresh solely because a partner was queried.
+ * V37: prefer documented shoppingProducts(productIds) for published keys.
+ * Scan-window remains fallback when productIds mode is disabled or fails closed per advertiser.
+ * Window/productIds miss ≠ product deleted. Never invents sourceUpdatedAt.
  */
 export async function refreshPublishedProductsFromCj(opts = {}) {
   const env = opts.env || process.env;
@@ -315,6 +318,8 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
   let refreshCheckpoint =
     opts.refreshCheckpoint ||
     (fs.existsSync(refreshCpPath) ? loadRefreshCheckpoint(readJson(refreshCpPath, null)) : emptyRefreshCheckpointDoc());
+  const preferProductIds =
+    opts.preferProductIds !== false && String(env.IU_CJ_OFFERS_REFRESH_PRODUCT_IDS || "1") !== "0";
   const meta = {
     keysIn: keys.length,
     advertisers: 0,
@@ -325,10 +330,13 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
     notInScanWindow: 0,
     notAttempted: 0,
     errors: 0,
+    apiRequests: 0,
     skippedNoCredentials: false,
+    refreshMode: preferProductIds ? REFRESH_MODE.PRODUCT_IDS : REFRESH_MODE.SCAN_WINDOW,
     refreshCheckpointPath: refreshCpPath,
-    note:
-      "V35: continueable partner scan windows for published productIds; NOT_IN_SCAN_WINDOW ≠ deleted; does not advance discovery checkpoints.",
+    note: preferProductIds
+      ? "V37: documented shoppingProducts(productIds) targeted refresh; miss ≠ deleted; does not advance discovery checkpoints."
+      : "V35: continueable partner scan windows for published productIds; NOT_IN_SCAN_WINDOW ≠ deleted; does not advance discovery checkpoints.",
   };
   const prevByKey = new Map();
   for (const sec of prevPublic?.sections || []) {
@@ -354,6 +362,8 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
   const matchedKeys = new Set();
   const scannedAdvertisers = new Set();
   const errorAdvertisers = new Set();
+  const pageSize = Math.min(100, Number(opts.pageSize) || 100);
+  const maxPages = Math.min(20, Number(opts.maxPages) || 5);
   if (!pat || !publisherCid || keys.length === 0) {
     meta.skippedNoCredentials = !pat || !publisherCid;
     const ledger = buildRefreshCoverageLedger({
@@ -363,24 +373,29 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
       errorAdvertisers,
       prevByKey,
       nowIso: new Date().toISOString(),
+      refreshMode: meta.refreshMode,
     });
     meta.coverage = summarizeCoverageFromLedger(ledger);
     meta.coverageLedger = ledger;
     meta.capacity = estimateFullCoverageHours({
+      mode: meta.refreshMode,
       advertisers: ordered.length || meta.advertisers,
-      refreshPageSize: Number(opts.pageSize) || 100,
-      refreshMaxPages: Number(opts.maxPages) || 5,
+      publishedProducts: keys.length,
+      refreshPageSize: pageSize,
+      refreshMaxPages: maxPages,
     });
     return { refreshedByKey, meta, refreshCheckpoint, coverageLedger: ledger };
   }
   const gqlEnv = { pat, publisherCid, websitePid };
-  const pageSize = Math.min(100, Number(opts.pageSize) || 100);
-  const maxPages = Math.min(20, Number(opts.maxPages) || 5);
   const nowIso = new Date().toISOString();
   const scanSamples = [];
+  let usedProductIdsMode = preferProductIds;
+  let productIdsFallbackCount = 0;
+
   for (const group of ordered) {
     const advertiserId = group.advertiserId;
     const want = new Map(group.keys.map((k) => [k.productId, k]));
+    const wantIds = [...want.keys()];
     const prevCp = refreshCheckpoint.partners?.[advertiserId] || null;
     const resumeOffset =
       prevCp?.resumeOffset != null && Number.isFinite(Number(prevCp.resumeOffset))
@@ -388,26 +403,55 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
         : CJ_PRODUCT_SEARCH_OFFSET_FIRST;
     try {
       scannedAdvertisers.add(advertiserId);
-      const fetched = await fetchAllShoppingProductsForPartner(gqlEnv, advertiserId, {
-        pageSize,
-        maxPages,
-        stopAfterCount: pageSize * maxPages,
-        resumeOffset,
-      });
+      let fetched = null;
+      let modeUsed = REFRESH_MODE.SCAN_WINDOW;
+      if (preferProductIds) {
+        fetched = await fetchShoppingProductsByProductIds(gqlEnv, advertiserId, wantIds, {
+          batchSize: Math.min(100, Math.max(wantIds.length, 1)),
+        });
+        meta.apiRequests += (fetched.pageLog || []).length || 1;
+        if (fetched.ok) {
+          modeUsed = REFRESH_MODE.PRODUCT_IDS;
+        } else {
+          productIdsFallbackCount += 1;
+          fetched = await fetchAllShoppingProductsForPartner(gqlEnv, advertiserId, {
+            pageSize,
+            maxPages,
+            stopAfterCount: pageSize * maxPages,
+            resumeOffset,
+          });
+          meta.apiRequests += Math.max(1, Number(fetched.pages) || 1);
+          modeUsed = REFRESH_MODE.SCAN_WINDOW;
+          usedProductIdsMode = false;
+        }
+      } else {
+        fetched = await fetchAllShoppingProductsForPartner(gqlEnv, advertiserId, {
+          pageSize,
+          maxPages,
+          stopAfterCount: pageSize * maxPages,
+          resumeOffset,
+        });
+        meta.apiRequests += Math.max(1, Number(fetched.pages) || 1);
+      }
+
       if (!fetched.ok && !(fetched.resultList || []).length) {
         meta.errors += 1;
         errorAdvertisers.add(advertiserId);
-        refreshCheckpoint.partners[advertiserId] = advanceRefreshPartnerCheckpoint(prevCp, {
-          advertiserId,
-          startedOffset: resumeOffset,
-          fetchedCount: 0,
-          totalCount: null,
-          matched: 0,
-          notInWindow: want.size,
-          pageSize,
-          maxPages,
-          at: nowIso,
-        });
+        refreshCheckpoint.partners[advertiserId] = {
+          ...advanceRefreshPartnerCheckpoint(prevCp, {
+            advertiserId,
+            startedOffset: resumeOffset,
+            fetchedCount: 0,
+            totalCount: null,
+            matched: 0,
+            notInWindow: want.size,
+            pageSize,
+            maxPages,
+            at: nowIso,
+          }),
+          refreshMode: modeUsed,
+          lastError: fetched.kind || fetched.error || "refresh_failed",
+        };
         continue;
       }
       const found = new Set();
@@ -434,7 +478,10 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
               imageUrl: mapped.imageUrl,
               affiliateUrl: trusted ? click : null,
               refreshResult: REFRESH_RESULT.SUCCESSFULLY_REFRESHED,
-              refreshReason: "productId_matched_in_scan_window",
+              refreshReason:
+                modeUsed === REFRESH_MODE.PRODUCT_IDS
+                  ? "productId_matched_by_productIds_query"
+                  : "productId_matched_in_scan_window",
             },
             nowIso,
             { sourceUpdatedAt: null, sourceUpdatedAtStatus: SOURCE_UPDATED_AT_STATUS.NOT_PROVIDED }
@@ -447,7 +494,6 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
         if (!found.has(pid)) {
           notInWindow += 1;
           meta.notInScanWindow += 1;
-          // legacy alias — do not treat as deleted
           meta.notFoundThisPass += 1;
         }
       }
@@ -462,17 +508,25 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
         maxPages,
         at: nowIso,
       });
-      refreshCheckpoint.partners[advertiserId] = advanced;
-      if (scanSamples.length < 12) {
+      refreshCheckpoint.partners[advertiserId] = {
+        ...advanced,
+        refreshMode: modeUsed,
+        lastWant: want.size,
+        lastMatched: found.size,
+        lastNotInWindow: notInWindow,
+      };
+      if (scanSamples.length < 16) {
         scanSamples.push({
           advertiserId,
-          startedOffset: resumeOffset,
+          mode: modeUsed,
+          startedOffset: modeUsed === REFRESH_MODE.SCAN_WINDOW ? resumeOffset : null,
           nextOffset: advanced.resumeOffset,
           fetched: (fetched.resultList || []).length,
           totalCount: fetched.totalCount ?? null,
           matched: found.size,
           want: want.size,
           wrapped: advanced.wrapped === true,
+          requestedIds: modeUsed === REFRESH_MODE.PRODUCT_IDS ? wantIds.length : null,
         });
       }
     } catch {
@@ -480,6 +534,18 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
       errorAdvertisers.add(advertiserId);
     }
   }
+
+  meta.refreshMode =
+    usedProductIdsMode && productIdsFallbackCount === 0
+      ? REFRESH_MODE.PRODUCT_IDS
+      : productIdsFallbackCount > 0 && preferProductIds
+        ? "productIds_with_scan_fallback"
+        : meta.refreshMode;
+  meta.productIdsFallbackCount = productIdsFallbackCount;
+
+  const ledgerMode = String(meta.refreshMode).startsWith("productIds")
+    ? REFRESH_MODE.PRODUCT_IDS
+    : REFRESH_MODE.SCAN_WINDOW;
   const ledger = buildRefreshCoverageLedger({
     keys,
     matchedKeys,
@@ -487,18 +553,31 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
     errorAdvertisers,
     prevByKey,
     nowIso,
+    refreshMode: ledgerMode,
   });
   meta.coverage = summarizeCoverageFromLedger(ledger);
   meta.coverageLedger = { ...ledger, rows: undefined, rowCount: ledger.rows.length };
   meta.capacity = estimateFullCoverageHours({
+    mode: ledgerMode,
     advertisers: ordered.length,
+    publishedProducts: keys.length,
     refreshPageSize: pageSize,
     refreshMaxPages: maxPages,
     maxPartnerCatalogDepth: 5000,
   });
   meta.scanSamples = scanSamples;
   meta.notAttempted = meta.coverage.notAttempted;
+
   refreshCheckpoint.updatedAt = nowIso;
+  refreshCheckpoint.cumulative = updateCumulativeCoverage(refreshCheckpoint.cumulative, {
+    nowIso,
+    runId: env.GITHUB_RUN_ID || opts.runId || null,
+    refreshMode: meta.refreshMode,
+    publishedKeys: keys.map((k) => k.advertiserId + "|" + k.productId),
+    matchedKeys,
+    apiRequests: meta.apiRequests,
+    errors: meta.errors,
+  });
   refreshCheckpoint.runs = [
     ...(refreshCheckpoint.runs || []).slice(-20),
     {
@@ -506,7 +585,11 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
       ...meta.coverage,
       pageSize,
       maxPages,
+      refreshMode: meta.refreshMode,
+      apiRequests: meta.apiRequests,
+      productIdsFallbackCount,
       scanSamples,
+      cumulativeCoveragePct: refreshCheckpoint.cumulative?.lastPass?.cumulativeCoveragePct ?? null,
     },
   ];
   try {
@@ -1239,6 +1322,12 @@ export async function runOffersLiveSync(opts = {}) {
       refreshMaxPages: Number.isFinite(refreshMaxPages) ? refreshMaxPages : 5,
       coverageSummary: refreshed.meta?.coverage || null,
       refreshTarget: "final_published_catalog",
+      cumulative: refreshed.refreshCheckpoint?.cumulative || null,
+      rootCauseV37: {
+        priorLowCoverage:
+          "Scan-window refresh (pageSize×maxPages≈500) against deep catalogs (e.g. totalCount 82k) + refresh checkpoint not restored between runs (always startedOffset=1).",
+        fix: "Documented shoppingProducts(productIds) targeted refresh + durable refresh-coverage checkpoint restore/persist.",
+      },
     };
   }
 
@@ -1268,8 +1357,12 @@ export async function runOffersLiveSync(opts = {}) {
     refreshMeta.reconcileOk = reconciled.evidence.reconcileOk;
     refreshMeta.publishedCatalog = reconciled.evidence.publishedCatalog;
   }
-  if (doc.refreshCoverage && refreshMeta?.capacity) {
-    doc.refreshCoverage.capacity = refreshMeta.capacity;
+  if (doc.refreshCoverage) {
+    if (refreshMeta?.capacity) doc.refreshCoverage.capacity = refreshMeta.capacity;
+    if (refreshMeta?.refreshMode) doc.refreshCoverage.refreshMode = refreshMeta.refreshMode;
+    if (refreshMeta?.cumulative) doc.refreshCoverage.cumulative = refreshMeta.cumulative;
+    if (refreshMeta?.rootCauseV37) doc.refreshCoverage.rootCauseV37 = refreshMeta.rootCauseV37;
+    if (refreshMeta?.scanSamples) doc.refreshCoverage.scanSamples = refreshMeta.scanSamples;
   }
   const nextReady = readyCounts(doc);
   const keepLive =

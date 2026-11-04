@@ -1,20 +1,25 @@
 #!/usr/bin/env node
 /**
- * V35 — honest per-product refresh coverage for published offers.
+ * V35/V37 — honest per-product refresh coverage for published offers.
  *
- * CJ shoppingProducts is partner-window based (offset/limit). Matching a published
- * productId requires it to appear in the scanned window. Partner scan ≠ product refresh.
+ * V35: partner-window scan (offset/limit). Window miss ≠ deleted.
+ * V37: prefer documented shoppingProducts(productIds: [...]) targeted refresh when available.
  *
  * Statuses (never invent sourceUpdatedAt):
- * - SUCCESSFULLY_REFRESHED: productId matched in this pass scan window
- * - NOT_IN_SCAN_WINDOW: advertiser scanned; productId not in fetched pages (may still exist deeper)
+ * - SUCCESSFULLY_REFRESHED: productId matched this pass (window or productIds query)
+ * - NOT_IN_SCAN_WINDOW: advertiser queried; productId not returned (may still exist / ID drift)
  * - NOT_ATTEMPTED: advertiser not scanned this pass
- * - SOURCE_UNAVAILABLE: explicit gone/remove signal (rare; not inferred from window miss)
+ * - SOURCE_UNAVAILABLE: explicit gone/remove signal (rare; not inferred from miss)
  */
 import { CJ_CALL_MIN_INTERVAL_MS } from "./iu-cj-affiliate-phase1-lib.mjs";
 import { CJ_PRODUCT_SEARCH_OFFSET_FIRST } from "./iu-cj-affiliate-phase2-product-api.mjs";
 
 export const REFRESH_COVERAGE_SCHEMA = "iu-cj-affiliate-phase3z-refresh-coverage-v35";
+export const REFRESH_COVERAGE_SCHEMA_V37 = "iu-cj-affiliate-phase3z-refresh-coverage-v37";
+export const REFRESH_MODE = Object.freeze({
+  PRODUCT_IDS: "productIds",
+  SCAN_WINDOW: "scanWindow",
+});
 
 export const REFRESH_RESULT = Object.freeze({
   SUCCESSFULLY_REFRESHED: "SUCCESSFULLY_REFRESHED",
@@ -26,22 +31,48 @@ export const REFRESH_RESULT = Object.freeze({
 
 export function emptyRefreshCheckpointDoc(nowIso = new Date().toISOString()) {
   return {
-    schema: REFRESH_COVERAGE_SCHEMA,
-    version: 1,
+    schema: REFRESH_COVERAGE_SCHEMA_V37,
+    version: 2,
     updatedAt: nowIso,
     partners: {},
     runs: [],
-    note: "Continueable refresh scan offsets per advertiser; independent of discovery checkpoints.",
+    cumulative: emptyCumulativeCoverage(),
+    note:
+      "V37: prefer productIds targeted refresh; scan-window offsets remain as fallback. Independent of discovery checkpoints.",
+  };
+}
+
+export function emptyCumulativeCoverage() {
+  return {
+    schema: REFRESH_COVERAGE_SCHEMA_V37,
+    everMatchedUniqueKeys: [],
+    everMatchedCount: 0,
+    firstSeenAtByKey: {},
+    horizons: {
+      "1pass": { status: "PENDING_OBSERVATION", note: "filled after first measured pass" },
+      "3h": { status: "PENDING_OBSERVATION" },
+      "6h": { status: "PENDING_OBSERVATION" },
+      "12h": { status: "PENDING_OBSERVATION" },
+      "24h": { status: "PENDING_OBSERVATION" },
+      "48h": { status: "PENDING_OBSERVATION" },
+    },
+    snapshots: [],
   };
 }
 
 export function loadRefreshCheckpoint(raw) {
   if (!raw || typeof raw !== "object") return emptyRefreshCheckpointDoc();
+  const base = emptyRefreshCheckpointDoc(raw.updatedAt || undefined);
   return {
-    ...emptyRefreshCheckpointDoc(raw.updatedAt || undefined),
+    ...base,
     ...raw,
+    schema: raw.schema || REFRESH_COVERAGE_SCHEMA_V37,
     partners: raw.partners && typeof raw.partners === "object" ? raw.partners : {},
     runs: Array.isArray(raw.runs) ? raw.runs : [],
+    cumulative:
+      raw.cumulative && typeof raw.cumulative === "object"
+        ? { ...emptyCumulativeCoverage(), ...raw.cumulative }
+        : emptyCumulativeCoverage(),
   };
 }
 
@@ -83,11 +114,39 @@ export function orderAdvertisersForRefresh(keys, prevByKey = new Map()) {
 }
 
 export function estimateFullCoverageHours(input = {}) {
+  const mode = String(input.mode || REFRESH_MODE.SCAN_WINDOW);
   const advertisers = Math.max(0, Number(input.advertisers) || 0);
+  const publishedProducts = Math.max(0, Number(input.publishedProducts) || 0);
   const maxDepthProducts = Math.max(0, Number(input.maxPartnerCatalogDepth) || 5000);
   const pageSize = Math.max(1, Number(input.refreshPageSize) || 100);
   const maxPages = Math.max(1, Number(input.refreshMaxPages) || 5);
   const intervalMs = Math.max(1, Number(input.callIntervalMs) || CJ_CALL_MIN_INTERVAL_MS);
+  const productIdsBatchSize = Math.max(1, Number(input.productIdsBatchSize) || 100);
+
+  if (mode === REFRESH_MODE.PRODUCT_IDS) {
+    // One (or few) targeted calls per advertiser with published keys — independent of catalog depth.
+    const gqlCallsPerPass = Math.max(
+      advertisers,
+      Math.ceil(publishedProducts / productIdsBatchSize) || advertisers
+    );
+    const minutesPerPass = (gqlCallsPerPass * intervalMs) / 60000;
+    return {
+      schema: REFRESH_COVERAGE_SCHEMA_V37,
+      mode: REFRESH_MODE.PRODUCT_IDS,
+      advertisers,
+      publishedProducts,
+      productIdsBatchSize,
+      windowProducts: null,
+      passesNeeded: 1,
+      gqlCallsPerPass,
+      minutesPerPass: Number(minutesPerPass.toFixed(2)),
+      achievableFullCoverageHours: Number((minutesPerPass / 60).toFixed(2)),
+      meetsAllProductsEvery3h: minutesPerPass <= 180,
+      caveat:
+        "V37 productIds mode uses documented shoppingProducts(productIds) filter. Miss ≠ deleted without stronger evidence. Capacity is advertiser/batch based, not catalog-depth scan.",
+    };
+  }
+
   const windowProducts = pageSize * maxPages;
   const passesNeeded = Math.max(1, Math.ceil(maxDepthProducts / windowProducts));
   const gqlCallsPerPass = advertisers * maxPages;
@@ -95,6 +154,7 @@ export function estimateFullCoverageHours(input = {}) {
   const hoursPerFullCoverage = passesNeeded * Math.max(3, Math.ceil(minutesPerPass / 60) || 3);
   return {
     schema: REFRESH_COVERAGE_SCHEMA,
+    mode: REFRESH_MODE.SCAN_WINDOW,
     advertisers,
     maxPartnerCatalogDepth: maxDepthProducts,
     windowProducts,
@@ -143,13 +203,19 @@ export function buildRefreshCoverageLedger(opts = {}) {
       counts.refreshAttempted += 1;
     } else if (matchedKeys.has(key)) {
       refreshResult = REFRESH_RESULT.SUCCESSFULLY_REFRESHED;
-      refreshReason = "productId_matched_in_scan_window";
+      refreshReason =
+        opts.refreshMode === REFRESH_MODE.PRODUCT_IDS
+          ? "productId_matched_by_productIds_query"
+          : "productId_matched_in_scan_window";
       counts.sourceMatched += 1;
       counts.successfullyRefreshed += 1;
       counts.refreshAttempted += 1;
     } else if (scannedAdvertisers.has(k.advertiserId)) {
       refreshResult = REFRESH_RESULT.NOT_IN_SCAN_WINDOW;
-      refreshReason = "advertiser_scanned_productId_not_in_window";
+      refreshReason =
+        opts.refreshMode === REFRESH_MODE.PRODUCT_IDS
+          ? "advertiser_productIds_query_miss_not_deleted"
+          : "advertiser_scanned_productId_not_in_window";
       counts.notInScanWindow += 1;
       counts.refreshAttempted += 1;
     } else {
@@ -177,6 +243,7 @@ export function buildRefreshCoverageLedger(opts = {}) {
   }
   return {
     schema: REFRESH_COVERAGE_SCHEMA,
+    refreshMode: opts.refreshMode || REFRESH_MODE.SCAN_WINDOW,
     at: nowIso,
     counts,
     rows,
@@ -220,6 +287,7 @@ export function summarizeCoverageFromLedger(ledger) {
   const attempted = Number(c.refreshAttempted) || 0;
   const matched = Number(c.sourceMatched) || 0;
   const published = Number(c.publishedProducts) || 0;
+  const mode = ledger?.refreshMode || null;
   return {
     publishedProducts: published,
     refreshAttempted: attempted,
@@ -230,7 +298,120 @@ export function summarizeCoverageFromLedger(ledger) {
     errors: Number(c.errors) || 0,
     matchRateOfAttempted: attempted > 0 ? Number((matched / attempted).toFixed(4)) : null,
     matchRateOfPublished: published > 0 ? Number((matched / published).toFixed(4)) : null,
+    refreshMode: mode,
     honestNote:
-      "successfullyRefreshed counts only productId matches in the scanned partner window; notInScanWindow is not treated as deleted.",
+      mode === REFRESH_MODE.PRODUCT_IDS
+        ? "successfullyRefreshed counts only productId matches from shoppingProducts(productIds); miss is not treated as deleted."
+        : "successfullyRefreshed counts only productId matches in the scanned partner window; notInScanWindow is not treated as deleted.",
+  };
+}
+
+/**
+ * Record measured pass into cumulative coverage. Never extrapolates horizons.
+ * Horizons without elapsed wall-clock remain PENDING_OBSERVATION.
+ */
+export function updateCumulativeCoverage(prevCumulative, opts = {}) {
+  const nowIso = opts.nowIso || new Date().toISOString();
+  const nowMs = Date.parse(nowIso);
+  const publishedKeys = (opts.publishedKeys || []).map(String);
+  const matchedKeys = [...(opts.matchedKeys instanceof Set ? opts.matchedKeys : opts.matchedKeys || [])].map(String);
+  const publishedN = publishedKeys.length;
+  const base = { ...emptyCumulativeCoverage(), ...(prevCumulative || {}) };
+  const ever = new Set([...(base.everMatchedUniqueKeys || []), ...matchedKeys]);
+  const firstSeen = { ...(base.firstSeenAtByKey || {}) };
+  for (const k of matchedKeys) {
+    if (!firstSeen[k]) firstSeen[k] = nowIso;
+  }
+  const passMatched = matchedKeys.length;
+  const passCoveragePct =
+    publishedN > 0 ? Number(((passMatched / publishedN) * 100).toFixed(2)) : null;
+  const cumulativeMatched = [...ever].filter((k) => publishedKeys.includes(k)).length;
+  const cumulativePct =
+    publishedN > 0 ? Number(((cumulativeMatched / publishedN) * 100).toFixed(2)) : null;
+
+  const snapshot = {
+    at: nowIso,
+    runId: opts.runId || null,
+    refreshMode: opts.refreshMode || null,
+    publishedUnique: publishedN,
+    passMatchedUnique: passMatched,
+    passNotMatchedUnique: Math.max(0, publishedN - passMatched),
+    passCoveragePct,
+    cumulativeMatchedUnique: cumulativeMatched,
+    cumulativeNotMatchedUnique: Math.max(0, publishedN - cumulativeMatched),
+    cumulativeCoveragePct: cumulativePct,
+    apiRequests: opts.apiRequests != null ? Number(opts.apiRequests) : null,
+    repeatedProducts: opts.repeatedProducts != null ? Number(opts.repeatedProducts) : null,
+    priceChanges: opts.priceChanges != null ? Number(opts.priceChanges) : null,
+    availabilityChanges: opts.availabilityChanges != null ? Number(opts.availabilityChanges) : null,
+    errors: opts.errors != null ? Number(opts.errors) : null,
+    staleHidden: opts.staleHidden != null ? Number(opts.staleHidden) : null,
+    recovered: opts.recovered != null ? Number(opts.recovered) : null,
+    measured: true,
+    note: "Measured pass only — not a simulation or capacity estimate.",
+  };
+
+  const snapshots = [...(base.snapshots || []), snapshot].slice(-48);
+  const originMs = snapshots.length
+    ? Date.parse(snapshots[0].at)
+    : Number.isFinite(nowMs)
+      ? nowMs
+      : null;
+
+  function horizonStatus(hours) {
+    if (!Number.isFinite(originMs) || !Number.isFinite(nowMs)) {
+      return { status: "PENDING_OBSERVATION", reason: "clock_unavailable" };
+    }
+    const elapsedH = (nowMs - originMs) / 3600000;
+    if (elapsedH + 1e-9 < hours) {
+      return {
+        status: "PENDING_OBSERVATION",
+        elapsedHours: Number(elapsedH.toFixed(2)),
+        requiredHours: hours,
+        note: "Wall-clock horizon not yet elapsed; not extrapolated.",
+      };
+    }
+    // Best measured cumulative snapshot at/after horizon window end.
+    const targetMs = originMs + hours * 3600000;
+    let best = null;
+    for (const s of snapshots) {
+      const ms = Date.parse(s.at);
+      if (!Number.isFinite(ms) || ms < targetMs) continue;
+      if (!best || Date.parse(best.at) > ms) best = s;
+    }
+    // If none exactly after target, use latest (horizon elapsed).
+    if (!best) best = snapshots[snapshots.length - 1];
+    return {
+      status: "MEASURED",
+      elapsedHours: Number(elapsedH.toFixed(2)),
+      requiredHours: hours,
+      publishedUnique: best.publishedUnique,
+      cumulativeMatchedUnique: best.cumulativeMatchedUnique,
+      cumulativeNotMatchedUnique: best.cumulativeNotMatchedUnique,
+      cumulativeCoveragePct: best.cumulativeCoveragePct,
+      at: best.at,
+      measured: true,
+    };
+  }
+
+  return {
+    schema: REFRESH_COVERAGE_SCHEMA_V37,
+    everMatchedUniqueKeys: [...ever].sort(),
+    everMatchedCount: ever.size,
+    firstSeenAtByKey: firstSeen,
+    lastPass: snapshot,
+    horizons: {
+      "1pass": {
+        status: "MEASURED",
+        ...snapshot,
+        note: "Single-pass measured coverage (not cumulative across time).",
+      },
+      "3h": horizonStatus(3),
+      "6h": horizonStatus(6),
+      "12h": horizonStatus(12),
+      "24h": horizonStatus(24),
+      "48h": horizonStatus(48),
+    },
+    snapshots,
   };
 }

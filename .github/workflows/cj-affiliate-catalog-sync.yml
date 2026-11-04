@@ -118,6 +118,10 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-refresh-coverage-v35-selftest.mjs
       - name: Product evidence reconcile selftest (V36; offline)
         run: node scripts/iu-cj-affiliate-phase3z-product-evidence-v36-selftest.mjs
+      - name: ProductIds refresh + cumulative coverage selftest (V37; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-refresh-productids-v37-selftest.mjs
+      - name: Audit ZIP JSON integrity selftest (V37; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-audit-json-integrity-v37-selftest.mjs
       - name: Offers UI + production feature-flag gate selftest
         run: |
           node scripts/iu-cj-affiliate-phase2-offers-preview-ui-selftest.mjs
@@ -640,6 +644,8 @@ jobs:
       # Feed inventory only on daily full schedule (expensive across ~165 partners).
       IU_CJ_OFFERS_INVENTORY_FEEDS: ${{ (github.event_name == 'schedule' && github.event.schedule == '17 3 * * *') && '1' || '0' }}
       IU_CJ_OFFERS_REFRESH_PUBLISHED: "1"
+      # V37: documented shoppingProducts(productIds) targeted refresh (fallback scan window if query fails).
+      IU_CJ_OFFERS_REFRESH_PRODUCT_IDS: "1"
       # Deeper published-key scan on refresh-priority runs (still not an API source invent).
       IU_CJ_OFFERS_REFRESH_PAGE_SIZE: "100"
       IU_CJ_OFFERS_REFRESH_MAX_PAGES: ${{ (github.event_name == 'schedule' && github.event.schedule != '17 3 * * *') && '5' || (github.event_name == 'workflow_dispatch' && inputs.offers_mode == 'refresh_priority' && '5' || '5') }}
@@ -701,17 +707,32 @@ jobs:
           done
           # Durable checkpoints live on sync branch (not main). Drop empty/missing then restore.
           # Root cause V32: fetch-staging slim tip historically wiped checkpoints before this job ran.
+          # Root cause V37: refresh-coverage checkpoint was uploaded but not restored → every pass restarted at offset 1.
+          git fetch origin refs/heads/data/cj-affiliate-catalog-sync:refs/remotes/origin/data/cj-affiliate-catalog-sync --depth=1 \
+            || git fetch origin data/cj-affiliate-catalog-sync --depth=1 \
+            || true
           CP="projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json"
           if [ -f "$CP" ] && [ ! -s "$CP" ]; then rm -f "$CP"; fi
           if [ ! -f "$CP" ]; then
-            git fetch origin refs/heads/data/cj-affiliate-catalog-sync:refs/remotes/origin/data/cj-affiliate-catalog-sync --depth=1 \
-              || git fetch origin data/cj-affiliate-catalog-sync --depth=1 \
-              || true
             restore_git_file \
               "origin/data/cj-affiliate-catalog-sync:projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json" \
               "$CP" \
               || restore_git_file "FETCH_HEAD:projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json" "$CP" \
               || true
+          fi
+          RCP="projects/data/iu-affiliate-cj-refresh-coverage-v35.json"
+          if [ -f "$RCP" ] && [ ! -s "$RCP" ]; then rm -f "$RCP"; fi
+          if [ ! -f "$RCP" ]; then
+            restore_git_file \
+              "origin/data/cj-affiliate-catalog-sync:projects/data/iu-affiliate-cj-refresh-coverage-v35.json" \
+              "$RCP" \
+              || restore_git_file "FETCH_HEAD:projects/data/iu-affiliate-cj-refresh-coverage-v35.json" "$RCP" \
+              || true
+          fi
+          if [ -f "$RCP" ] && [ -s "$RCP" ]; then
+            echo "REFRESH_COVERAGE_CHECKPOINT_RESTORED=1"
+          else
+            echo "REFRESH_COVERAGE_CHECKPOINT_RESTORED=0"
           fi
           # API fallback via gh (same path that successfully restores offers-public).
           if [ ! -f "$CP" ] || [ ! -s "$CP" ]; then
@@ -826,16 +847,18 @@ jobs:
           if-no-files-found: warn
           retention-days: 90
       # Artifacts are per-run; without promote arm they were lost. Always persist checkpoints on sync branch.
-      - name: Persist product-feed checkpoints to sync branch (always)
-        if: hashFiles('projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json') != ''
+      - name: Persist product-feed + refresh checkpoints to sync branch (always)
+        if: hashFiles('projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json') != '' || hashFiles('projects/data/iu-affiliate-cj-refresh-coverage-v35.json') != ''
         shell: bash
         run: |
           set -euo pipefail
           SYNC_BRANCH="data/cj-affiliate-catalog-sync"
           CP="projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json"
+          RCP="projects/data/iu-affiliate-cj-refresh-coverage-v35.json"
           STASH="${RUNNER_TEMP}/iu-cj-cp"
           mkdir -p "${STASH}/prev" projects/data
-          cp "$CP" "${STASH}/$(basename "$CP")"
+          if [ -s "$CP" ]; then cp "$CP" "${STASH}/$(basename "$CP")"; fi
+          if [ -s "$RCP" ]; then cp "$RCP" "${STASH}/$(basename "$RCP")"; fi
           git config user.name "iu-cj-catalog-sync-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin "${SYNC_BRANCH}" --depth=1 || true
@@ -844,7 +867,7 @@ jobs:
               > "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" 2>/dev/null || true
           done
           # Never redirect failed git show into empty files (V31 wiped offers-public to size 0).
-          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json; do
+          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json; do
             tmp="${STASH}/prev/${f}.tmp"
             if git show "origin/${SYNC_BRANCH}:projects/data/${f}" > "${tmp}" 2>/dev/null; then
               if [ -s "${tmp}" ]; then mv "${tmp}" "${STASH}/prev/${f}"; else rm -f "${tmp}"; fi
@@ -869,7 +892,8 @@ jobs:
           for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json; do
             if [ -s "${STASH}/prev/${f}" ]; then cp "${STASH}/prev/${f}" "projects/data/${f}"; fi
           done
-          cp "${STASH}/$(basename "$CP")" "projects/data/$(basename "$CP")"
+          if [ -s "${STASH}/$(basename "$CP")" ]; then cp "${STASH}/$(basename "$CP")" "projects/data/$(basename "$CP")"; fi
+          if [ -s "${STASH}/$(basename "$RCP")" ]; then cp "${STASH}/$(basename "$RCP")" "projects/data/$(basename "$RCP")"; fi
           # Refuse to stage zero-byte JSON (would brick schedule promote).
           find projects/data -name 'iu-affiliate-cj-*.json' -size 0 -delete || true
           git add projects/data/iu-affiliate-cj-*.json
@@ -877,7 +901,7 @@ jobs:
             echo "NO_CHECKPOINT_CHANGES"
             exit 0
           fi
-          git commit --trailer "Co-authored-by: Cursor <cursoragent@cursor.com>" -m "chore(data): CJ product-feed checkpoints v31"
+          git commit --trailer "Co-authored-by: Cursor <cursoragent@cursor.com>" -m "chore(data): CJ product-feed + refresh checkpoints v37"
           git push --force origin "HEAD:${SYNC_BRANCH}"
           echo "PRODUCT_FEED_CHECKPOINTS_SYNC_BRANCH_UPDATED=true"
       - name: Commit offers to sync branch (slim tip preserve)
