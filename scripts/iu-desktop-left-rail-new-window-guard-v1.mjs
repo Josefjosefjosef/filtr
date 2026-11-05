@@ -55,6 +55,10 @@ function auditStaticOpenImplementation() {
   }
   if (src.includes("openWindows")) fails.push("named window reuse map still present");
   if (!src.includes('window.open(targetUrl, "_blank"')) fails.push('expected window.open(..., "_blank", ...)');
+  /* V43: blocked popup must return false so app.js in-page nav still applies aff-* sections. */
+  if (!/if\s*\(\s*!tab\s*\)\s*\{[\s\S]*?showTabBlockedNotice\(\);\s*return false;/.test(src)) {
+    fails.push("blocked popup must return false (in-page fallback for first-click affiliate/tools)");
+  }
   if (!shell.includes("#newsList > #iuLeftRail")) fails.push("tool shell must show left rail");
   if (!shell.includes("iuToolWindowRightReserve")) fails.push("tool shell must reserve right column");
   if (!rail.includes("iuToolWindowMindMenuBtn")) fails.push("tool rail must inject MindMenu button");
