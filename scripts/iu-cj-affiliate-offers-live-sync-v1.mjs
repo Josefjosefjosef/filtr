@@ -78,6 +78,8 @@ import {
 import {
   buildCumulativeCoverageLedgerV40,
   buildFeedInventoryDocument,
+  mergeFeedInventoryDocuments,
+  selectPartnersForProgressiveInventory,
 } from "./iu-cj-affiliate-phase3z-feed-inventory-v40.mjs";
 import { evaluateIdentityRepairBatch } from "./iu-cj-affiliate-phase3z-identity-repair-v39.mjs";
 
@@ -912,6 +914,25 @@ export async function sampleProductsForManagedPartners(opts = {}) {
   const publishPerPartner = Number.isFinite(rawPublish) && rawPublish > 0 ? Math.floor(rawPublish) : 0;
   const keepFullSourceRows = opts.keepFullSourceRows === true || env.IU_CJ_OFFERS_KEEP_SOURCE_ROWS === "1";
   const inventoryFeeds = opts.inventoryFeeds === true || env.IU_CJ_OFFERS_INVENTORY_FEEDS === "1";
+  const inventoryProgressive =
+    !inventoryFeeds &&
+    (opts.inventoryFeedsProgressive === true || env.IU_CJ_OFFERS_INVENTORY_FEEDS_PROGRESSIVE === "1");
+  const progressiveLimitRaw =
+    opts.inventoryProgressiveLimit != null
+      ? Number(opts.inventoryProgressiveLimit)
+      : env.IU_CJ_OFFERS_INVENTORY_PROGRESSIVE_LIMIT != null &&
+          String(env.IU_CJ_OFFERS_INVENTORY_PROGRESSIVE_LIMIT).trim() !== ""
+        ? Number(env.IU_CJ_OFFERS_INVENTORY_PROGRESSIVE_LIMIT)
+        : 30;
+  const progressiveLimit = Math.max(0, Math.min(500, Number.isFinite(progressiveLimitRaw) ? progressiveLimitRaw : 30));
+  const feedInventoryPath =
+    opts.feedInventoryPath ||
+    (env.IU_CJ_FEED_INVENTORY_PATH
+      ? String(env.IU_CJ_FEED_INVENTORY_PATH)
+      : path.join(ROOT, "projects", "data", "iu-affiliate-cj-feed-inventory-v40.json"));
+  const prevFeedInventory =
+    opts.prevFeedInventory ||
+    (fs.existsSync(feedInventoryPath) ? readJson(feedInventoryPath, null) : null);
   const checkpointPath =
     opts.checkpointPath ||
     (env.IU_CJ_PRODUCT_FEED_CHECKPOINT_PATH
@@ -957,17 +978,40 @@ export async function sampleProductsForManagedPartners(opts = {}) {
     sourceProductsDeferredPresentationBudget: 0,
     feedsInventoried: 0,
     feedDeclaredProductCount: 0,
+    inventoryMode: inventoryFeeds ? "full" : inventoryProgressive ? "progressive" : "disabled",
+    inventoryProgressiveLimit: inventoryProgressive ? progressiveLimit : null,
+    inventoryPartnersSelected: 0,
+    inventoryPartnersRemaining: null,
     continuationSamples: [],
     partnerFetch: [],
+    partnerInventoryErrors: {},
+    inventoriedAdvertiserIds: [],
     skippedNoCredentials: false,
     note:
-      "V31: durable per-partner checkpoints resume offset/page across sync runs; presentation budget rotates and is not an API source cap.",
+      "V45: durable feed inventory (full or progressive merge) + per-partner checkpoints; presentation budget rotates and is not an API source cap.",
   };
   const active = partners.filter((p) => p && p.active !== false && p.advertiserId != null);
   meta.activePartners = active.length;
   const sample =
     partnerLimit > 0 ? active.slice(0, Math.max(0, partnerLimit)) : active.slice();
   meta.sampledPartners = sample.length;
+  const progressivePick = inventoryProgressive
+    ? selectPartnersForProgressiveInventory(active, prevFeedInventory, {
+        limit: progressiveLimit,
+        retryErrors: true,
+      })
+    : null;
+  const inventoryPartnerIds = new Set(
+    inventoryFeeds
+      ? sample.map((p) => String(p.advertiserId))
+      : (progressivePick?.selected || []).map((p) => String(p.advertiserId))
+  );
+  if (progressivePick) {
+    meta.inventoryPartnersSelected = progressivePick.selected.length;
+    meta.inventoryPartnersRemaining = progressivePick.remaining;
+    meta.inventoryAlreadyInventoried = progressivePick.alreadyInventoried;
+    meta.inventoryNeeding = progressivePick.needingInventory;
+  }
   if (!pat || !publisherCid) {
     meta.skippedNoCredentials = true;
     return { products: [], sourceProducts: [], feedInventory: [], meta };
@@ -976,6 +1020,8 @@ export async function sampleProductsForManagedPartners(opts = {}) {
   const products = [];
   const sourceProducts = [];
   const feedInventory = [];
+  const inventoriedAdvertiserIds = new Set();
+  const partnerInventoryErrors = {};
   for (const p of sample) {
     const partnerId = String(p.advertiserId);
     const partnerMeta = {
@@ -989,13 +1035,17 @@ export async function sampleProductsForManagedPartners(opts = {}) {
       declaredProductCount: null,
     };
     try {
-      if (inventoryFeeds) {
+      if (inventoryPartnerIds.has(partnerId)) {
         const inv = await inventoryShoppingProductFeedsForPartner(gqlEnv, partnerId, {
           pageSize: 50,
           maxPages: 20,
         });
+        inventoriedAdvertiserIds.add(partnerId);
         partnerMeta.feeds = inv.feedCount;
         partnerMeta.declaredProductCount = inv.declaredProductCount;
+        partnerMeta.inventoryComplete = inv.complete === true;
+        partnerMeta.inventoryError = inv.error || null;
+        if (inv.error) partnerInventoryErrors[partnerId] = String(inv.error);
         meta.feedsInventoried += inv.feedCount;
         meta.feedDeclaredProductCount += inv.declaredProductCount || 0;
         for (const f of inv.feeds || []) {
@@ -1011,6 +1061,9 @@ export async function sampleProductsForManagedPartners(opts = {}) {
             language: f.language || null,
             advertiserCountry: f.advertiserCountry || null,
             inventoryComplete: inv.complete === true,
+            inventoryError: inv.error || null,
+            inventoriedAt: new Date().toISOString(),
+            runId: env.GITHUB_RUN_ID || null,
           });
         }
       }
@@ -1154,6 +1207,8 @@ export async function sampleProductsForManagedPartners(opts = {}) {
     meta.partnerFetchCount = meta.partnerFetch.length;
     delete meta.partnerFetch;
   }
+  meta.inventoriedAdvertiserIds = [...inventoriedAdvertiserIds];
+  meta.partnerInventoryErrors = partnerInventoryErrors;
   checkpointState = recordCheckpointRun(checkpointState, {
     sampledPartners: meta.sampledPartners,
     partnersResumedFromCheckpoint: meta.partnersResumedFromCheckpoint,
@@ -1650,27 +1705,90 @@ export async function runOffersLiveSync(opts = {}) {
   const lkgPath = path.join(dataDir, path.basename(OFFERS_LKG_REL));
   const auditPath = path.join(dataDir, "iu-affiliate-cj-offers-sync-audit-v1.json");
 
-  // V40: durable full feed inventory + slim cumulative coverage + identity-repair ledger.
+  // V45: durable feed inventory (full or progressive merge) + slim cumulative + identity-repair.
+  // Write errors are recorded in audit (never silent loss of 502-feed runs).
+  let feedInventoryWrite = {
+    ok: false,
+    path: "projects/data/iu-affiliate-cj-feed-inventory-v40.json",
+    bytes: null,
+    error: null,
+    mode: productMeta?.inventoryMode || null,
+    counts: null,
+  };
+  let cumulativeWrite = { ok: false, path: "projects/data/iu-affiliate-cj-cumulative-coverage-v40.json", error: null };
   try {
+    fs.mkdirSync(dataDir, { recursive: true });
     const inventoryEnabled =
       opts.inventoryFeeds === true || env.IU_CJ_OFFERS_INVENTORY_FEEDS === "1";
-    const feedInvDoc = buildFeedInventoryDocument({
-      feeds: Array.isArray(feedInventory) ? feedInventory : [],
-      partners: managedPublic.partners || [],
-      nowIso: new Date().toISOString(),
-      runId: env.GITHUB_RUN_ID || null,
-      snapshotId: doc.snapshotId || doc.updatedAt || null,
-      sha: env.GITHUB_SHA || null,
-      inventoryEnabled,
-      evidenceClass: "CURRENT_PRODUCTION",
-    });
-    fs.writeFileSync(
-      path.join(dataDir, "iu-affiliate-cj-feed-inventory-v40.json"),
-      JSON.stringify(feedInvDoc, null, 2) + "\n",
-      "utf8"
+    const inventoryProgressive =
+      !inventoryEnabled &&
+      (opts.inventoryFeedsProgressive === true || env.IU_CJ_OFFERS_INVENTORY_FEEDS_PROGRESSIVE === "1");
+    const feedInvPath = path.join(dataDir, "iu-affiliate-cj-feed-inventory-v40.json");
+    const prevInv = fs.existsSync(feedInvPath) ? readJson(feedInvPath, null) : null;
+    const inventoriedIds = new Set(
+      Array.isArray(productMeta?.inventoriedAdvertiserIds) ? productMeta.inventoriedAdvertiserIds.map(String) : []
     );
-  } catch {
-    /* non-fatal */
+    const thisFeeds = Array.isArray(feedInventory) ? feedInventory : [];
+    const inventoryMode = inventoryEnabled ? "full" : inventoryProgressive ? "progressive" : "disabled";
+    const feedInvDoc =
+      inventoryMode === "disabled" && thisFeeds.length === 0 && !prevInv
+        ? buildFeedInventoryDocument({
+            feeds: [],
+            partners: managedPublic.partners || [],
+            nowIso: new Date().toISOString(),
+            runId: env.GITHUB_RUN_ID || null,
+            snapshotId: doc.snapshotId || doc.updatedAt || null,
+            sha: env.GITHUB_SHA || null,
+            inventoryEnabled: false,
+            inventoryMode: "disabled",
+            evidenceClass: "CURRENT_PRODUCTION",
+          })
+        : mergeFeedInventoryDocuments(prevInv, thisFeeds, {
+            partners: managedPublic.partners || [],
+            nowIso: new Date().toISOString(),
+            runId: env.GITHUB_RUN_ID || null,
+            snapshotId: doc.snapshotId || doc.updatedAt || null,
+            sha: env.GITHUB_SHA || null,
+            inventoryEnabled,
+            inventoryMode,
+            progressiveLimit: productMeta?.inventoryProgressiveLimit ?? null,
+            inventoriedAdvertiserIds: inventoriedIds,
+            partnerErrors: productMeta?.partnerInventoryErrors || {},
+            evidenceClass: "CURRENT_PRODUCTION",
+          });
+    const payload = JSON.stringify(feedInvDoc, null, 2) + "\n";
+    fs.writeFileSync(feedInvPath, payload, "utf8");
+    const st = fs.statSync(feedInvPath);
+    feedInventoryWrite = {
+      ok: st.size > 0,
+      path: "projects/data/iu-affiliate-cj-feed-inventory-v40.json",
+      bytes: st.size,
+      error: st.size > 0 ? null : "zero_byte_after_write",
+      mode: inventoryMode,
+      counts: feedInvDoc.counts || null,
+    };
+    if (!feedInventoryWrite.ok) {
+      console.error(JSON.stringify({ IU_CJ_FEED_INVENTORY_WRITE: "FAIL", ...feedInventoryWrite }));
+    } else {
+      console.log(
+        JSON.stringify({
+          IU_CJ_FEED_INVENTORY_WRITE: "OK",
+          mode: inventoryMode,
+          bytes: st.size,
+          counts: feedInvDoc.counts,
+        })
+      );
+    }
+  } catch (e) {
+    feedInventoryWrite = {
+      ok: false,
+      path: "projects/data/iu-affiliate-cj-feed-inventory-v40.json",
+      bytes: null,
+      error: String(e && e.stack ? e.stack : e).slice(0, 500),
+      mode: productMeta?.inventoryMode || null,
+      counts: null,
+    };
+    console.error(JSON.stringify({ IU_CJ_FEED_INVENTORY_WRITE: "FAIL", error: feedInventoryWrite.error }));
   }
   try {
     const rcpPath =
@@ -1685,14 +1803,20 @@ export async function runOffersLiveSync(opts = {}) {
         sha: env.GITHUB_SHA || null,
         evidenceClass: "CURRENT_PRODUCTION",
       });
-      fs.writeFileSync(
-        path.join(dataDir, "iu-affiliate-cj-cumulative-coverage-v40.json"),
-        JSON.stringify(cumLedger, null, 2) + "\n",
-        "utf8"
-      );
+      const cumPath = path.join(dataDir, "iu-affiliate-cj-cumulative-coverage-v40.json");
+      fs.writeFileSync(cumPath, JSON.stringify(cumLedger, null, 2) + "\n", "utf8");
+      cumulativeWrite = {
+        ok: fs.existsSync(cumPath) && fs.statSync(cumPath).size > 0,
+        path: "projects/data/iu-affiliate-cj-cumulative-coverage-v40.json",
+        error: null,
+      };
     }
-  } catch {
-    /* non-fatal */
+  } catch (e) {
+    cumulativeWrite = {
+      ok: false,
+      path: "projects/data/iu-affiliate-cj-cumulative-coverage-v40.json",
+      error: String(e && e.message ? e.message : e).slice(0, 240),
+    };
   }
   try {
     const missPath =
@@ -1778,7 +1902,9 @@ export async function runOffersLiveSync(opts = {}) {
     },
     feedInventorySample: Array.isArray(feedInventory) ? feedInventory.slice(0, 40) : null,
     feedInventoryPath: "projects/data/iu-affiliate-cj-feed-inventory-v40.json",
+    feedInventoryWrite,
     cumulativeCoveragePath: "projects/data/iu-affiliate-cj-cumulative-coverage-v40.json",
+    cumulativeWrite,
     identityRepairPath: "projects/data/iu-affiliate-cj-identity-repair-v40.json",
     rejectReasons: built.rejectReasons,
     layerLossAudit,
