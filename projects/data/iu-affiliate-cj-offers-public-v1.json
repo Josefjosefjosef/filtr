@@ -160743,7 +160743,14 @@
         "STALE": 0,
         "UNKNOWN": 3609,
         "UNAVAILABLE": 0,
-        "note": "CURRENT=SOURCE_FRESH only (authoritative sourceUpdatedAt). UNKNOWN must never be presented as CURRENT. Fetch time Ôëá source time."
+        "note": "CURRENT=SOURCE_FRESH only (authoritative sourceUpdatedAt). UNKNOWN must never be presented as CURRENT. Fetch time ≠ source time."
+      },
+      "verificationClass": {
+        "VERIFIED_RECENT": 3609,
+        "SOURCE_CURRENT": 0,
+        "STALE": 0,
+        "UNAVAILABLE": 0,
+        "note": "VERIFIED_RECENT=successful fetch/refresh within policy window (not inventable as CURRENT). SOURCE_CURRENT requires CJ sourceUpdatedAt."
       }
     }
   },
@@ -160762,7 +160769,7 @@
   },
   "note": "KEEP_LIVE: rebuilt from CJ staging; previous public was liveEnabled=true.",
   "ok": true,
-  "freshnessAppliedAt": "2026-11-05T18:14:30.903Z",
+  "freshnessAppliedAt": "2026-11-05T20:40:02.326Z",
   "freshnessPolicy": {
     "productPriceAvailabilityMs": 10800000,
     "stalePublicHideMs": 86400000,
