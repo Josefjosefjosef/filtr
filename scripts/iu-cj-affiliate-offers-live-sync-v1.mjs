@@ -1232,8 +1232,8 @@ export async function sampleProductsForManagedPartners(opts = {}) {
   meta.partnerInventoryErrors = partnerInventoryErrors;
   // V47: prefer samples that prove cursor advancement (not empty-API head of list).
   meta.continuationSamples = selectContinuationSamples(meta.continuationEvents, 12);
+  // hasFeed = partners that actually returned feed rows — NOT all inventoried IDs.
   const feedAdvIds = new Set((feedInventory || []).map((f) => String(f.advertiserId || "")).filter(Boolean));
-  for (const id of inventoriedAdvertiserIds) feedAdvIds.add(String(id));
   const invForLedger = partners.map((p) => {
     const id = String(p.advertiserId || "");
     return {
