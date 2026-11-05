@@ -1926,7 +1926,16 @@ export async function runOffersLiveSync(opts = {}) {
       JSON.stringify(declaredDoc, null, 2) + "\n",
       "utf8"
     );
-    const byAdv = invDoc?.byAdvertiser || {};
+    // Inventory byAdvertiser is stored as array of partner rows; index by advertiserId.
+    const byAdv = {};
+    for (const row of invDoc?.byAdvertiser || invDoc?.partners || []) {
+      const id = String(row?.advertiserId || "");
+      if (!id) continue;
+      byAdv[id] = {
+        ...row,
+        feeds: (invDoc?.feeds || []).filter((f) => String(f.advertiserId || "") === id),
+      };
+    }
     const missingDoc = buildMissingFeedPartnersAudit({
       funnelPartners: funnelDoc.partners || [],
       inventoryByAdvertiser: byAdv,
