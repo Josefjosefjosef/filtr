@@ -1,6 +1,10 @@
 # Phase 3K / V42: watch real catalog-sync *schedule* runs (never treat workflow_dispatch as schedule).
-# Does NOT publish. Does NOT arm CJ LIVE. Read-only Actions API.
+# Does NOT arm CJ LIVE / publicButtonSwapArmed. Does NOT open a second publisher.
 # V42: run after each expected 3h slot (+30m buffer) so SLOT_MISS is visible the same day.
+# V44: bounded catch-up dispatch (max 1/UTC day) via same catalog-sync concurrency group.
+# GitHub Actions cron is best-effort — NOT a guarantee of exact 3h delivery.
+# schedule-reregister: 2026-11-05T07:00Z — V44 cadence rebind after multi-slot SLOT_MISS window
+# (comment-only rebind; do NOT disable/enable workflow). Prior: V42 multi-slot cron.
 name: CJ Affiliate catalog-sync schedule watch
 
 on:
@@ -14,7 +18,7 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
-  actions: read
+  actions: write
   contents: read
 
 jobs:
@@ -26,8 +30,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Slot-watch selftest (offline)
-        run: node scripts/iu-cj-affiliate-phase3z-schedule-slot-watch-v42-selftest.mjs
+      - name: Slot-watch + catch-up selftests (offline)
+        run: |
+          node scripts/iu-cj-affiliate-phase3z-schedule-slot-watch-v42-selftest.mjs
+          node scripts/iu-cj-affiliate-phase3z-schedule-catchup-v44-selftest.mjs
       - name: Inspect last schedule runs
         env:
           GH_TOKEN: ${{ github.token }}
@@ -57,10 +63,16 @@ jobs:
             '[.workflow_runs[] | select(.conclusion=="cancelled" and .created_at >= $c)] | length')"
           INPROG="$(echo "${RAW}" | jq \
             '[.workflow_runs[] | select(.status=="in_progress" or .status=="queued")] | length')"
+          # Any event in-flight (schedule OR dispatch) blocks catch-up.
+          INPROG_ANY="$(gh api "repos/${REPO}/actions/workflows/${WF_ID}/runs?per_page=20" --jq \
+            '[.workflow_runs[] | select(.status=="in_progress" or .status=="queued")] | length')"
+          ALL_RECENT="$(gh api "repos/${REPO}/actions/workflows/${WF_ID}/runs?per_page=30")"
+          echo "${ALL_RECENT}" > /tmp/iu-cj-catalog-all-recent.json
           echo "SUCCESS_48H=${SUCCESS_48}"
           echo "FAIL_48H=${FAIL_48}"
           echo "CANCEL_48H=${CANCEL_48}"
           echo "IN_PROGRESS=${INPROG}"
+          echo "IN_PROGRESS_ANY=${INPROG_ANY}"
           LATEST="$(echo "${RAW}" | jq -r '.workflow_runs[0] // empty | "\(.id) \(.conclusion) \(.created_at)"')"
           echo "LATEST_SCHEDULE=${LATEST:-none}"
           echo "${RAW}" > /tmp/iu-cj-schedule-raw.json
@@ -69,7 +81,41 @@ jobs:
           node scripts/iu-cj-affiliate-phase3z-schedule-slot-watch-v42.mjs /tmp/iu-cj-schedule-raw.json | tee /tmp/iu-cj-slot-watch.txt
           SLOT_RC=$?
           set -e
-          if [ "${INPROG}" -ge 1 ]; then
+          export INPROG_ANY
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+          import { classifyScheduleSlots } from "./scripts/iu-cj-affiliate-phase3z-schedule-slot-watch-v42.mjs";
+          import { decideScheduleCatchup } from "./scripts/iu-cj-affiliate-phase3z-schedule-catchup-v44.mjs";
+          const raw = JSON.parse(fs.readFileSync("/tmp/iu-cj-schedule-raw.json", "utf8"));
+          const all = JSON.parse(fs.readFileSync("/tmp/iu-cj-catalog-all-recent.json", "utf8"));
+          const report = classifyScheduleSlots(raw.workflow_runs || [], new Date());
+          fs.writeFileSync("/tmp/iu-cj-slot-report.json", JSON.stringify(report, null, 2));
+          const decision = decideScheduleCatchup({
+            slotReport: report,
+            catalogInProgressCount: Number(process.env.INPROG_ANY || 0),
+            recentCatalogRuns: all.workflow_runs || [],
+          });
+          fs.writeFileSync("/tmp/iu-cj-catchup-decision.json", JSON.stringify(decision, null, 2));
+          console.log("CATCHUP_ALLOW=" + decision.allow);
+          console.log("CATCHUP_REASON=" + decision.reason);
+          console.log(JSON.stringify(decision));
+          NODE
+          ALLOW="$(jq -r '.allow' /tmp/iu-cj-catchup-decision.json)"
+          if [ "${ALLOW}" = "true" ]; then
+            echo "CATCHUP_DISPATCH=1 (NOT schedule; refresh_priority; same concurrency group)"
+            gh workflow run "${WORKFLOW_PATH}" \
+              -f execute_live_fetch=1 \
+              -f offers_mode=refresh_priority \
+              -f arm_publish=0 \
+              -f promote_managed_public=0 \
+              -f publish_managed_public_r2=0 \
+              -f arm_offers_live=0 \
+              -f promote_offers_public=1 \
+              || echo "CATCHUP_DISPATCH_FAILED"
+          else
+            echo "CATCHUP_DISPATCH=0 reason=$(jq -r '.reason' /tmp/iu-cj-catchup-decision.json)"
+          fi
+          if [ "${INPROG}" -ge 1 ] || [ "${INPROG_ANY}" -ge 1 ]; then
             echo "WATCH_RESULT=PENDING"
             echo "BURNIN_STATUS=SCHEDULE_IN_PROGRESS"
             exit 0
@@ -82,6 +128,7 @@ jobs:
           if [ "${SLOT_RC}" -ne 0 ]; then
             echo "WATCH_RESULT=FAIL"
             echo "BURNIN_STATUS=CADENCE_DEGRADED_MULTIPLE_SLOT_MISS"
+            # Still exit 1 for visibility; catch-up (if allowed) already requested above.
             exit 1
           fi
           if [ "${FAIL_48}" -ge 1 ] && [ "${SUCCESS_48}" -eq 0 ]; then

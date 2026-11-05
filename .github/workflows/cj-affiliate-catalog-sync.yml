@@ -3,6 +3,10 @@
 # Phase 2C PR B: daily fetch â†’ staging artifacts; publish only CJ_MANAGED via gate.
 # Never force-pushes main. Never rewrites catalog JS / freeze guards / slot policy.
 # Prod deploy remains Pages/PR merge after human approval.
+# Single publication owner: concurrency group cj-affiliate-catalog-sync (cancel-in-progress: false).
+# GitHub Actions cron is best-effort — NOT a guarantee of exact 3h delivery.
+# schedule-reregister: 2026-11-05T07:00Z — V44 cadence rebind after post-#13768 SLOT_MISS window
+# (comment-only rebind; do NOT disable/enable workflow).
 
 on:
   schedule:
@@ -136,6 +140,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-registry-url-gate-v41-selftest.mjs
       - name: Schedule slot watch selftest (V42; offline)
         run: node scripts/iu-cj-affiliate-phase3z-schedule-slot-watch-v42-selftest.mjs
+      - name: Schedule catch-up + gap-deepen selftest (V44; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-schedule-catchup-v44-selftest.mjs
       - name: Offers UI + production feature-flag gate selftest
         run: |
           node scripts/iu-cj-affiliate-phase2-offers-preview-ui-selftest.mjs
@@ -850,6 +856,46 @@ jobs:
           off=json.load(open("projects/data/iu-affiliate-cj-offers-public-v1.json"))
           print("PREV_OFFERS_LIVE", off.get("liveEnabled") is True)
           PY
+      - name: V44 gap-deepen when schedule fires after long miss window
+        if: ${{ github.event_name == 'schedule' }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          THIS_SCHEDULE: ${{ github.event.schedule }}
+        run: |
+          set -euo pipefail
+          WF_ID="$(gh api "repos/${REPO}/actions/workflows" --jq \
+            '.workflows[] | select(.path==".github/workflows/cj-affiliate-catalog-sync.yml") | .id')"
+          RAW="$(gh api "repos/${REPO}/actions/workflows/${WF_ID}/runs?event=schedule&per_page=10")"
+          echo "${RAW}" > /tmp/iu-cj-gap-schedules.json
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+          import { decideGapDeepen } from "./scripts/iu-cj-affiliate-phase3z-schedule-catchup-v44.mjs";
+          const raw = JSON.parse(fs.readFileSync("/tmp/iu-cj-gap-schedules.json", "utf8"));
+          const runs = (raw.workflow_runs || []).filter((r) => String(r.id) !== String(process.env.GITHUB_RUN_ID || ""));
+          const prior = runs[0];
+          let ageH = null;
+          if (prior?.created_at) {
+            ageH = (Date.now() - new Date(prior.created_at).getTime()) / 3600000;
+          }
+          const d = decideGapDeepen({
+            eventName: "schedule",
+            scheduleExpr: process.env.THIS_SCHEDULE || "",
+            latestScheduleAgeHours: ageH,
+          });
+          fs.writeFileSync("/tmp/iu-cj-gap-deepen.json", JSON.stringify({ ...d, priorRunId: prior?.id || null }, null, 2));
+          console.log(JSON.stringify({ ...d, priorRunId: prior?.id || null, priorAgeHours: ageH }));
+          if (d.deepen && d.productMaxPages) {
+            fs.appendFileSync(
+              process.env.GITHUB_ENV,
+              "IU_CJ_OFFERS_PRODUCT_MAX_PAGES=" + d.productMaxPages + "\n"
+            );
+            console.log("GAP_DEEPEN_APPLIED=" + d.productMaxPages);
+          } else {
+            console.log("GAP_DEEPEN_APPLIED=0 reason=" + d.reason);
+          }
+          NODE
       - name: Build/promote offers-public (fail-closed)
         env:
           IU_CJ_PRODUCT_FEED_CHECKPOINT_PATH: projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json
@@ -865,6 +911,8 @@ jobs:
             projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json
             projects/data/iu-affiliate-cj-refresh-coverage-v35.json
             projects/data/iu-affiliate-cj-miss-products-v38.json
+            projects/data/iu-affiliate-cj-feed-inventory-v40.json
+            projects/data/iu-affiliate-cj-cumulative-coverage-v40.json
           if-no-files-found: warn
       - name: Upload product-feed checkpoints (V31 continuation)
         uses: actions/upload-artifact@v4
@@ -874,6 +922,8 @@ jobs:
             projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json
             projects/data/iu-affiliate-cj-refresh-coverage-v35.json
             projects/data/iu-affiliate-cj-miss-products-v38.json
+            projects/data/iu-affiliate-cj-feed-inventory-v40.json
+            projects/data/iu-affiliate-cj-cumulative-coverage-v40.json
           if-no-files-found: warn
           retention-days: 90
       # Artifacts are per-run; without promote arm they were lost. Always persist checkpoints on sync branch.

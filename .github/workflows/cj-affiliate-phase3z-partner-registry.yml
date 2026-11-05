@@ -4,6 +4,10 @@ name: CJ Affiliate phase3z partner registry (non-public)
 # Never arms publicButtonSwapArmed / managed-public live / catalog JS rewrite.
 # Does not touch paid ads.
 # Scheduled after catalog-sync off-peak window; also callable from catalog-sync.
+# Standalone schedule ≠ workflow_call (catalog-embedded registry artifact is not schedule proof).
+# GitHub Actions cron is best-effort — NOT a guarantee of exact daily 03:47 delivery.
+# schedule-reregister: 2026-11-05T07:00Z — V44 rebind after repeated schedule FAIL/SLOT_MISS
+# (comment-only rebind; do NOT disable/enable workflow). Prior: V41 READY URL WAF gate.
 
 on:
   schedule:
