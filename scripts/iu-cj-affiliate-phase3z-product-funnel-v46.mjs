@@ -154,8 +154,12 @@ export function buildProductFunnelDocument(opts = {}) {
     });
   }
 
-  const withFeed = rows.filter((r) => r.stages.FEED).length;
+  const withFeedRows = rows.filter((r) => r.stages.FEED);
+  const withFeed = withFeedRows.length;
   const inCatalog = rows.filter((r) => r.inPublicCatalog).length;
+  const withFeedInCatalog = withFeedRows.filter((r) => r.inPublicCatalog).length;
+  const missingFromCatalog = withFeedRows.filter((r) => !r.inPublicCatalog).length;
+  const noFeedButPublished = rows.filter((r) => !r.stages.FEED && r.inPublicCatalog).length;
   const reasons = {};
   for (const r of rows) {
     if (!r.excludeReason) continue;
@@ -169,12 +173,14 @@ export function buildProductFunnelDocument(opts = {}) {
     runId: opts.runId || null,
     sha: opts.sha || null,
     note:
-      "Feed metadata declared counts are not loaded catalog. PUBLISHED is offers-public occurrences. DOM_RENDERED requires separate browser proof.",
+      "Feed metadata declared counts are not loaded catalog. PUBLISHED is offers-public occurrences. DOM_RENDERED requires separate browser proof. missingFromCatalog counts only withFeed partners absent from offers.",
     counts: {
       partnersListed: rows.length,
       withFeed,
       inPublicCatalog: inCatalog,
-      missingFromCatalog: withFeed - inCatalog,
+      withFeedInCatalog,
+      missingFromCatalog,
+      noFeedButPublished,
       excludeReasons: reasons,
     },
     partners: rows,
