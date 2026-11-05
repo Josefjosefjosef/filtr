@@ -661,8 +661,11 @@ jobs:
       # Presentation/runtime budget (prevents RangeError on mega-feeds). Not a CJ API source cap.
       IU_CJ_OFFERS_PRODUCT_PUBLISH_PER_PARTNER: "25"
       IU_CJ_OFFERS_KEEP_SOURCE_ROWS: "0"
-      # Feed inventory only on daily full schedule (expensive across ~165 partners).
-      IU_CJ_OFFERS_INVENTORY_FEEDS: ${{ (github.event_name == 'schedule' && github.event.schedule == '17 3 * * *') && '1' || '0' }}
+      # V45: full inventory on daily 03:17 + workflow_dispatch offers_mode=full.
+      # Progressive inventory on other schedules merges into durable feed-inventory-v40.
+      IU_CJ_OFFERS_INVENTORY_FEEDS: ${{ (github.event_name == 'schedule' && github.event.schedule == '17 3 * * *') && '1' || (github.event_name == 'workflow_dispatch' && inputs.offers_mode == 'full' && '1' || '0') }}
+      IU_CJ_OFFERS_INVENTORY_FEEDS_PROGRESSIVE: ${{ (github.event_name == 'schedule' && github.event.schedule != '17 3 * * *') && '1' || (github.event_name == 'workflow_dispatch' && inputs.offers_mode == 'refresh_priority' && '1' || '0') }}
+      IU_CJ_OFFERS_INVENTORY_PROGRESSIVE_LIMIT: "30"
       IU_CJ_OFFERS_REFRESH_PUBLISHED: "1"
       # V37: documented shoppingProducts(productIds) targeted refresh (fallback scan window if query fails).
       IU_CJ_OFFERS_REFRESH_PRODUCT_IDS: "1"
@@ -732,7 +735,23 @@ jobs:
             || git fetch origin data/cj-affiliate-catalog-sync --depth=1 \
             || true
           CP="projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json"
+          INV="projects/data/iu-affiliate-cj-feed-inventory-v40.json"
+          CUM="projects/data/iu-affiliate-cj-cumulative-coverage-v40.json"
           if [ -f "$CP" ] && [ ! -s "$CP" ]; then rm -f "$CP"; fi
+          if [ -f "$INV" ] && [ ! -s "$INV" ]; then rm -f "$INV"; fi
+          if [ -f "$CUM" ] && [ ! -s "$CUM" ]; then rm -f "$CUM"; fi
+          if [ ! -f "$INV" ]; then
+            restore_git_file \
+              "origin/data/cj-affiliate-catalog-sync:projects/data/iu-affiliate-cj-feed-inventory-v40.json" \
+              "$INV" \
+              || true
+          fi
+          if [ ! -f "$CUM" ]; then
+            restore_git_file \
+              "origin/data/cj-affiliate-catalog-sync:projects/data/iu-affiliate-cj-cumulative-coverage-v40.json" \
+              "$CUM" \
+              || true
+          fi
           if [ ! -f "$CP" ]; then
             restore_git_file \
               "origin/data/cj-affiliate-catalog-sync:projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json" \
@@ -913,6 +932,7 @@ jobs:
             projects/data/iu-affiliate-cj-miss-products-v38.json
             projects/data/iu-affiliate-cj-feed-inventory-v40.json
             projects/data/iu-affiliate-cj-cumulative-coverage-v40.json
+            projects/data/iu-affiliate-cj-identity-repair-v40.json
           if-no-files-found: warn
       - name: Upload product-feed checkpoints (V31 continuation)
         uses: actions/upload-artifact@v4
@@ -924,13 +944,14 @@ jobs:
             projects/data/iu-affiliate-cj-miss-products-v38.json
             projects/data/iu-affiliate-cj-feed-inventory-v40.json
             projects/data/iu-affiliate-cj-cumulative-coverage-v40.json
+            projects/data/iu-affiliate-cj-identity-repair-v40.json
           if-no-files-found: warn
           retention-days: 90
       # Artifacts are per-run; without promote arm they were lost. Always persist checkpoints on sync branch.
       # V38: continue-on-error + push retry — commit_refs race must NOT fail the job after successful offers write
       # (schedule 41816980256 wrote coverage then failed on push → promote skipped).
       - name: Persist product-feed + refresh checkpoints to sync branch (always)
-        if: hashFiles('projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json') != '' || hashFiles('projects/data/iu-affiliate-cj-refresh-coverage-v35.json') != '' || hashFiles('projects/data/iu-affiliate-cj-miss-products-v38.json') != ''
+        if: hashFiles('projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json') != '' || hashFiles('projects/data/iu-affiliate-cj-refresh-coverage-v35.json') != '' || hashFiles('projects/data/iu-affiliate-cj-miss-products-v38.json') != '' || hashFiles('projects/data/iu-affiliate-cj-feed-inventory-v40.json') != ''
         continue-on-error: true
         shell: bash
         run: |
@@ -939,11 +960,17 @@ jobs:
           CP="projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json"
           RCP="projects/data/iu-affiliate-cj-refresh-coverage-v35.json"
           MISS="projects/data/iu-affiliate-cj-miss-products-v38.json"
+          INV="projects/data/iu-affiliate-cj-feed-inventory-v40.json"
+          CUM="projects/data/iu-affiliate-cj-cumulative-coverage-v40.json"
+          IDR="projects/data/iu-affiliate-cj-identity-repair-v40.json"
           STASH="${RUNNER_TEMP}/iu-cj-cp"
           mkdir -p "${STASH}/prev" "${STASH}/live" projects/data
           if [ -s "$CP" ]; then cp "$CP" "${STASH}/$(basename "$CP")"; fi
           if [ -s "$RCP" ]; then cp "$RCP" "${STASH}/$(basename "$RCP")"; fi
           if [ -s "$MISS" ]; then cp "$MISS" "${STASH}/$(basename "$MISS")"; fi
+          if [ -s "$INV" ]; then cp "$INV" "${STASH}/$(basename "$INV")"; fi
+          if [ -s "$CUM" ]; then cp "$CUM" "${STASH}/$(basename "$CUM")"; fi
+          if [ -s "$IDR" ]; then cp "$IDR" "${STASH}/$(basename "$IDR")"; fi
           # V38: stash THIS RUN's offers before orphan+clean so Commit offers is not fed prev-only LKG.
           for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json; do
             if [ -s "projects/data/${f}" ]; then cp "projects/data/${f}" "${STASH}/live/${f}"; fi
@@ -956,7 +983,7 @@ jobs:
               > "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" 2>/dev/null || true
           done
           # Never redirect failed git show into empty files (V31 wiped offers-public to size 0).
-          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json iu-affiliate-cj-miss-products-v38.json; do
+          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json iu-affiliate-cj-miss-products-v38.json iu-affiliate-cj-feed-inventory-v40.json iu-affiliate-cj-cumulative-coverage-v40.json iu-affiliate-cj-identity-repair-v40.json; do
             tmp="${STASH}/prev/${f}.tmp"
             if git show "origin/${SYNC_BRANCH}:projects/data/${f}" > "${tmp}" 2>/dev/null; then
               if [ -s "${tmp}" ]; then mv "${tmp}" "${STASH}/prev/${f}"; else rm -f "${tmp}"; fi
@@ -986,8 +1013,11 @@ jobs:
           if [ -s "${STASH}/$(basename "$CP")" ]; then cp "${STASH}/$(basename "$CP")" "projects/data/$(basename "$CP")"; fi
           if [ -s "${STASH}/$(basename "$RCP")" ]; then cp "${STASH}/$(basename "$RCP")" "projects/data/$(basename "$RCP")"; fi
           if [ -s "${STASH}/$(basename "$MISS")" ]; then cp "${STASH}/$(basename "$MISS")" "projects/data/$(basename "$MISS")"; fi
+          if [ -s "${STASH}/$(basename "$INV")" ]; then cp "${STASH}/$(basename "$INV")" "projects/data/$(basename "$INV")"; fi
+          if [ -s "${STASH}/$(basename "$CUM")" ]; then cp "${STASH}/$(basename "$CUM")" "projects/data/$(basename "$CUM")"; fi
+          if [ -s "${STASH}/$(basename "$IDR")" ]; then cp "${STASH}/$(basename "$IDR")" "projects/data/$(basename "$IDR")"; fi
           # Restore live offers into workspace for the following Commit offers step (orphan wiped them).
-          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json iu-affiliate-cj-miss-products-v38.json; do
+          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json iu-affiliate-cj-miss-products-v38.json iu-affiliate-cj-feed-inventory-v40.json iu-affiliate-cj-cumulative-coverage-v40.json iu-affiliate-cj-identity-repair-v40.json; do
             if [ -s "${STASH}/live/${f}" ]; then cp "${STASH}/live/${f}" "projects/data/${f}"; fi
             if [ -s "${STASH}/$(basename "${f}")" ] && [ ! -s "projects/data/${f}" ]; then
               cp "${STASH}/$(basename "${f}")" "projects/data/${f}"
@@ -1000,7 +1030,7 @@ jobs:
             echo "NO_CHECKPOINT_CHANGES"
             exit 0
           fi
-          git commit --trailer "Co-authored-by: Cursor <cursoragent@cursor.com>" -m "chore(data): CJ product-feed + refresh checkpoints v38"
+          git commit --trailer "Co-authored-by: Cursor <cursoragent@cursor.com>" -m "chore(data): CJ product-feed + feed-inventory checkpoints v45"
           PUSH_OK=0
           for attempt in 1 2 3; do
             if git push --force origin "HEAD:${SYNC_BRANCH}"; then
