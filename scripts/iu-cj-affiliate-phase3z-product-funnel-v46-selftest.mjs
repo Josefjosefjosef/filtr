@@ -55,6 +55,8 @@ const funnel = buildProductFunnelDocument({
 assert(funnel.schema === PRODUCT_FUNNEL_SCHEMA, "schema");
 assert(funnel.counts.withFeed === 2, "with feed");
 assert(funnel.counts.inPublicCatalog === 1, "in catalog");
+assert(funnel.counts.withFeedInCatalog === 1, "with feed in catalog");
+assert(funnel.counts.missingFromCatalog === 1, "missing from catalog among withFeed");
 assert(funnel.partners.find((p) => p.advertiserId === "2").excludeReason === FUNNEL_EXCLUDE.PRODUCT_API_EMPTY, "empty api");
 assert(funnel.partners.find((p) => p.advertiserId === "3").excludeReason === FUNNEL_EXCLUDE.NO_FEED, "no feed");
 
