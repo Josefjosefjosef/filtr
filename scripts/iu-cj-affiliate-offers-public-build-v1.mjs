@@ -283,11 +283,14 @@ export function buildOffersDocumentFromCatalogBatch(batch, opts = {}) {
     websitePid: String(opts.websitePid || "101883843"),
     sections,
     stats: {
+      // V46: partners = unique advertisers when countable; fixtures often 1 section.
       partners: sections.length,
+      sections: sections.length,
       coupons,
       actions,
       products,
       publicationReady,
+      statsSemantics: "fixture build — partners historically mirrored sections; live-sync uses unique advertisers",
     },
     note:
       "DISARMED fixture/offline offers catalog. liveEnabled=false. Not live CJ account verification.",
