@@ -86,8 +86,10 @@ export function buildFeedContinuationLedger(opts = {}) {
       nextCursor.page != null;
     const completePassBumped =
       Number(curr?.completePassCount || 0) > Number(prev?.completePassCount || 0);
-    // lastComplete alone is not progress (empty feeds often complete at offset 1).
-    const progressed = offsetAdvanced || pageAdvanced || completePassBumped;
+    // Empty API feeds bump completePassCount every run at offset 1 — not catalog progress.
+    const meaningfulCompletePass =
+      completePassBumped && (Number(curr?.lastTotalCount) || 0) > 0;
+    const progressed = offsetAdvanced || pageAdvanced || meaningfulCompletePass;
     const empty =
       (currentLoaded === 0 || currentLoaded == null) &&
       (currentTotal === 0 || currentTotal == null) &&
