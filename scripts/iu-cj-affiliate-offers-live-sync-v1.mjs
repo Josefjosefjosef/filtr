@@ -81,6 +81,10 @@ import {
   mergeFeedInventoryDocuments,
   selectPartnersForProgressiveInventory,
 } from "./iu-cj-affiliate-phase3z-feed-inventory-v40.mjs";
+import {
+  buildProductFunnelDocument,
+  computeHonestOffersStats,
+} from "./iu-cj-affiliate-phase3z-product-funnel-v46.mjs";
 import { evaluateIdentityRepairBatch } from "./iu-cj-affiliate-phase3z-identity-repair-v39.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -803,19 +807,10 @@ export function buildOffersPublicFromStaging(opts = {}) {
   }
 
   const sections = [];
-  let coupons = 0;
-  let actions = 0;
-  let products = 0;
-  let publicationReady = 0;
-  let crossCategoryOfferPlacements = 0;
   const offerIdSections = new Map();
   for (const sec of bySection.values()) {
     delete sec.seenOfferIds;
     delete sec.seenProductKeys;
-    coupons += sec.coupons.length;
-    actions += sec.actions.length;
-    products += sec.products.length;
-    publicationReady += sec.coupons.length + sec.actions.length + sec.products.length;
     for (const item of [...sec.coupons, ...sec.actions, ...sec.products]) {
       const oid = item.offerId || item.productId;
       if (!oid) continue;
@@ -824,9 +819,11 @@ export function buildOffersPublicFromStaging(opts = {}) {
     }
     sections.push(sec);
   }
+  let crossCategoryOfferPlacements = 0;
   for (const set of offerIdSections.values()) {
     if (set.size > 1) crossCategoryOfferPlacements += 1;
   }
+  const stats = computeHonestOffersStats(sections, { crossCategoryOfferPlacements });
 
   const doc = {
     schema: OFFERS_SCHEMA,
@@ -836,19 +833,9 @@ export function buildOffersPublicFromStaging(opts = {}) {
     sourceKind: "cj_staging_live_sync_v1",
     websitePid,
     sections,
-    stats: {
-      partners: sections.length,
-      coupons,
-      actions,
-      products,
-      publicationReady,
-      crossCategoryOfferPlacements,
-      sectionsWithOffers: sections.filter(
-        (s) => (s.coupons?.length || 0) + (s.actions?.length || 0) + (s.products?.length || 0) > 0
-      ).length,
-    },
+    stats,
     rejectReasons,
-    note: "Built from CJ staging; liveEnabled disarmed until both arm flags set.",
+    note: "Built from CJ staging; liveEnabled disarmed until both arm flags set. V46 stats.partners = unique advertisers.",
     ok: true,
   };
 
@@ -1033,6 +1020,10 @@ export async function sampleProductsForManagedPartners(opts = {}) {
       error: null,
       feeds: 0,
       declaredProductCount: null,
+      validated: 0,
+      publishReady: 0,
+      publishedSelected: 0,
+      deferredPresentation: 0,
     };
     try {
       if (inventoryPartnerIds.has(partnerId)) {
@@ -1079,9 +1070,9 @@ export async function sampleProductsForManagedPartners(opts = {}) {
       }
       partnerMeta.resumeOffset = resumeOffset;
       partnerMeta.resumePagePresent = Boolean(resumePage);
-      // Fetch a continueable window (not entire mega-catalogs into RAM).
-      const stopAfter =
-        publishPerPartner > 0 ? Math.min(pageSize * maxPagesPerPartner, Math.max(publishPerPartner * 4, pageSize)) : null;
+      // V46: discover the full configured page window; presentation slice still caps published rows.
+      // Prior formula capped stopAfter at publishPerPartner*4 (=100) and wasted maxPages>1 continuation depth.
+      const stopAfter = pageSize * maxPagesPerPartner;
       const fetched = await fetchAllShoppingProductsForPartner(gqlEnv, partnerId, {
         pageSize,
         maxPages: maxPagesPerPartner,
@@ -1168,16 +1159,20 @@ export async function sampleProductsForManagedPartners(opts = {}) {
           { sourceUpdatedAt: null, sourceUpdatedAtStatus: SOURCE_UPDATED_AT_STATUS.NOT_PROVIDED }
         );
         meta.sourceProductsFetched += 1;
+        partnerMeta.validated += 1;
         if (keepFullSourceRows) sourceProducts.push(row);
         if (!publicationReady) {
           if (keepFullSourceRows) sourceProducts[sourceProducts.length - 1].rejectReason = "not_publication_ready";
           continue;
         }
         meta.sourceProductsPublishReady += 1;
+        partnerMeta.publishReady += 1;
         readyRows.push(row);
       }
       const slice = selectPresentationSlice(readyRows, publishPerPartner, prevCp.presentationCursor || 0);
       for (const row of slice.selected) products.push(row);
+      partnerMeta.publishedSelected = slice.selected.length;
+      partnerMeta.deferredPresentation = slice.deferred;
       meta.sourceProductsDeferredPresentationBudget += slice.deferred;
       if (keepFullSourceRows) {
         const selectedIds = new Set(slice.selected.map((r) => String(r.productId || "")));
@@ -1200,6 +1195,20 @@ export async function sampleProductsForManagedPartners(opts = {}) {
       partnerMeta.error = String(e?.message || e).slice(0, 120);
     }
     meta.partnerFetch.push(partnerMeta);
+  }
+  // Slim per-partner fetch map retained for V46 funnel (full partnerFetch may be truncated).
+  meta.funnelFetchMeta = {};
+  for (const row of meta.partnerFetch) {
+    if (!row?.advertiserId) continue;
+    meta.funnelFetchMeta[String(row.advertiserId)] = {
+      fetched: row.fetched,
+      totalCount: row.totalCount,
+      validated: row.validated,
+      publishReady: row.publishReady,
+      publishedSelected: row.publishedSelected,
+      deferredPresentation: row.deferredPresentation,
+      error: row.error || row.inventoryError || null,
+    };
   }
   // Cap partnerFetch audit size in meta for huge partner sets
   if (meta.partnerFetch.length > 40) {
@@ -1817,6 +1826,68 @@ export async function runOffersLiveSync(opts = {}) {
       path: "projects/data/iu-affiliate-cj-cumulative-coverage-v40.json",
       error: String(e && e.message ? e.message : e).slice(0, 240),
     };
+  }
+  // V46: durable FEED→PUBLISHED funnel (honest; DOM_RENDERED left null without browser proof).
+  try {
+    const invPath = path.join(dataDir, "iu-affiliate-cj-feed-inventory-v40.json");
+    const invDoc = fs.existsSync(invPath) ? readJson(invPath, null) : null;
+    const publishedByAdvertiser = {};
+    for (const sec of doc.sections || []) {
+      for (const pr of sec.products || []) {
+        const id = String(pr.advertiserId || "");
+        if (!id) continue;
+        if (!publishedByAdvertiser[id]) {
+          publishedByAdvertiser[id] = { occurrences: 0, unique: 0, ids: new Set(), sections: new Set() };
+        }
+        publishedByAdvertiser[id].occurrences += 1;
+        publishedByAdvertiser[id].ids.add(String(pr.productId || ""));
+        publishedByAdvertiser[id].sections.add(String(sec.sectionKey || sec.sectionId || ""));
+      }
+    }
+    for (const id of Object.keys(publishedByAdvertiser)) {
+      publishedByAdvertiser[id].unique = publishedByAdvertiser[id].ids.size;
+      publishedByAdvertiser[id].sections = [...publishedByAdvertiser[id].sections];
+      delete publishedByAdvertiser[id].ids;
+    }
+    const fetchMetaByAdvertiser =
+      productMeta?.funnelFetchMeta && typeof productMeta.funnelFetchMeta === "object"
+        ? productMeta.funnelFetchMeta
+        : {};
+    const cpPath =
+      env.IU_CJ_PRODUCT_FEED_CHECKPOINT_PATH ||
+      path.join(dataDir, "iu-affiliate-cj-product-feed-checkpoints-v31.json");
+    const cpDoc = fs.existsSync(cpPath) ? readJson(cpPath, null) : null;
+    const funnelDoc = buildProductFunnelDocument({
+      inventoryPartners: invDoc?.partners || managedPublic.partners || [],
+      checkpoints: cpDoc?.partners || {},
+      publishedByAdvertiser,
+      fetchMetaByAdvertiser,
+      nowIso: new Date().toISOString(),
+      runId: env.GITHUB_RUN_ID || null,
+      sha: env.GITHUB_SHA || null,
+      evidenceClass: "CURRENT_PRODUCTION",
+    });
+    fs.writeFileSync(
+      path.join(dataDir, "iu-affiliate-cj-product-funnel-v46.json"),
+      JSON.stringify(funnelDoc, null, 2) + "\n",
+      "utf8"
+    );
+    console.log(
+      JSON.stringify({
+        IU_CJ_PRODUCT_FUNNEL_V46_WRITE: "OK",
+        counts: funnelDoc.counts,
+        statsPartners: doc.stats?.partners,
+        productAdvertisers: doc.stats?.productAdvertisers,
+        sections: doc.stats?.sections,
+      })
+    );
+  } catch (e) {
+    console.error(
+      JSON.stringify({
+        IU_CJ_PRODUCT_FUNNEL_V46_WRITE: "FAIL",
+        error: String(e && e.message ? e.message : e).slice(0, 240),
+      })
+    );
   }
   try {
     const missPath =

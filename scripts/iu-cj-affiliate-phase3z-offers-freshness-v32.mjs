@@ -388,16 +388,30 @@ export function applyFreshnessToOffersDocument(doc, opts = {}) {
     actions += (s.actions || []).length;
     products += (s.products || []).length;
   }
+  // V46: do not overwrite honest unique-advertiser partners with section count.
+  const prevStats = doc?.stats && typeof doc.stats === "object" ? doc.stats : {};
   out.stats = {
-    ...(doc?.stats || {}),
-    partners: out.sections.length,
+    ...prevStats,
+    partners: prevStats.partners != null ? prevStats.partners : out.sections.length,
+    sections: prevStats.sections != null ? prevStats.sections : out.sections.length,
+    productAdvertisers: prevStats.productAdvertisers,
     coupons,
     actions,
     products,
     publicationReady: coupons + actions + products,
-    freshness: stats,
+    freshness: {
+      ...stats,
+      displayClass: {
+        CURRENT: stats.productsSourceFresh,
+        STALE: (stats.productsStaleMarked || 0) + (stats.productsPriceHidden || 0),
+        UNKNOWN: stats.productsFetchRecentSourceAgeUnknown || 0,
+        UNAVAILABLE: 0,
+        note:
+          "CURRENT=SOURCE_FRESH only (authoritative sourceUpdatedAt). UNKNOWN must never be presented as CURRENT. Fetch time ≠ source time.",
+      },
+    },
   };
-  return { doc: out, stats };
+  return { doc: out, stats: out.stats.freshness };
 }
 
 /**
