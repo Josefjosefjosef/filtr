@@ -91,6 +91,13 @@ import {
   decomposeDeclaredProductCounts,
   buildMissingFeedPartnersAudit,
 } from "./iu-cj-affiliate-phase3z-feed-continuation-v47.mjs";
+import {
+  buildProductProgressLedger,
+  buildFetchedPublishedFunnel,
+  buildPriceAvailabilityHistory,
+  collectChangeRowsFromOffersDoc,
+  summarizeHonestContinuationCounts,
+} from "./iu-cj-affiliate-phase3z-product-progress-v48.mjs";
 import { evaluateIdentityRepairBatch } from "./iu-cj-affiliate-phase3z-identity-repair-v39.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -1232,15 +1239,30 @@ export async function sampleProductsForManagedPartners(opts = {}) {
   meta.partnerInventoryErrors = partnerInventoryErrors;
   // V47: prefer samples that prove cursor advancement (not empty-API head of list).
   meta.continuationSamples = selectContinuationSamples(meta.continuationEvents, 12);
-  // hasFeed = partners that actually returned feed rows — NOT all inventoried IDs.
+  // hasFeed = durable inventory OR feed rows this run — never "all inventoried partners".
   const feedAdvIds = new Set((feedInventory || []).map((f) => String(f.advertiserId || "")).filter(Boolean));
+  const durableHasFeed = new Set();
+  try {
+    const prevInvPath =
+      env.IU_CJ_FEED_INVENTORY_PATH ||
+      path.join(path.dirname(checkpointPath), "iu-affiliate-cj-feed-inventory-v40.json");
+    const prevInv = fs.existsSync(prevInvPath) ? readJson(prevInvPath, null) : null;
+    for (const row of prevInv?.partners || []) {
+      if (row && (row.hasFeed === true || Number(row.feedCount) > 0) && row.advertiserId != null) {
+        durableHasFeed.add(String(row.advertiserId));
+      }
+    }
+  } catch {
+    /* non-fatal */
+  }
   const invForLedger = partners.map((p) => {
     const id = String(p.advertiserId || "");
+    const hasFeed = feedAdvIds.has(id) || durableHasFeed.has(id);
     return {
       advertiserId: id,
       partnerName: p.title || p.partnerName || null,
-      hasFeed: feedAdvIds.has(id),
-      feedCount: feedAdvIds.has(id) ? 1 : 0,
+      hasFeed,
+      feedCount: hasFeed ? 1 : 0,
     };
   });
   meta.continuationLedger = buildFeedContinuationLedger({
@@ -1251,6 +1273,17 @@ export async function sampleProductsForManagedPartners(opts = {}) {
     runId: env.GITHUB_RUN_ID || null,
     sha: env.GITHUB_SHA || null,
   });
+  // V48: honest product-progress classification (cursor ≠ products).
+  meta.productProgressLedger = buildProductProgressLedger({
+    previousPartners: previousCheckpointPartners,
+    currentPartners: checkpointState.partners,
+    inventoryPartners: invForLedger,
+    fetchMetaByAdvertiser: meta.funnelFetchMeta || {},
+    nowIso: new Date().toISOString(),
+    runId: env.GITHUB_RUN_ID || null,
+    sha: env.GITHUB_SHA || null,
+  });
+  meta.honestContinuationCounts = summarizeHonestContinuationCounts(meta.productProgressLedger);
   delete meta.continuationEvents;
   checkpointState = recordCheckpointRun(checkpointState, {
     sampledPartners: meta.sampledPartners,
@@ -1259,6 +1292,7 @@ export async function sampleProductsForManagedPartners(opts = {}) {
     productsPublished: products.length,
     continuationSamples: meta.continuationSamples,
     continuationCounts: meta.continuationLedger?.counts || null,
+    honestContinuationCounts: meta.honestContinuationCounts || null,
   });
   meta.checkpointPersistArmed = persistCheckpoints;
   if (persistCheckpoints) {
@@ -1947,12 +1981,80 @@ export async function runOffersLiveSync(opts = {}) {
       JSON.stringify(missingDoc, null, 2) + "\n",
       "utf8"
     );
+
+    // V48: prefer durable inventory hasFeed flags when present (authoritative 87).
+    const invPartnersForProgress =
+      Array.isArray(invDoc?.partners) && invDoc.partners.length
+        ? invDoc.partners
+        : Object.values(byAdv);
+    const progressDoc =
+      productMeta?.productProgressLedger ||
+      buildProductProgressLedger({
+        previousPartners: {},
+        currentPartners: cpDoc?.partners || {},
+        inventoryPartners: invPartnersForProgress,
+        fetchMetaByAdvertiser: productMeta?.funnelFetchMeta || {},
+        nowIso: new Date().toISOString(),
+        runId: env.GITHUB_RUN_ID || null,
+        sha: env.GITHUB_SHA || null,
+      });
+    fs.writeFileSync(
+      path.join(dataDir, "iu-affiliate-cj-product-progress-v48.json"),
+      JSON.stringify(progressDoc, null, 2) + "\n",
+      "utf8"
+    );
+    const honestCounts = summarizeHonestContinuationCounts(progressDoc);
+    const publishedUnique = Object.values(publishedByAdvertiser || {}).reduce(
+      (n, r) => n + (Number(r?.unique) || 0),
+      0
+    );
+    const funnelFp = buildFetchedPublishedFunnel({
+      fetchedRows: productMeta?.sourceProductsFetched || 0,
+      validated: productMeta?.sourceProductsPublishReady || null,
+      ready: productMeta?.sourceProductsPublishReady || null,
+      published: doc.stats?.products || 0,
+      publishedUnique: publishedUnique || null,
+      rejectReasons: doc.rejectReasons || {},
+      runId: env.GITHUB_RUN_ID || null,
+      sha: env.GITHUB_SHA || null,
+    });
+    fs.writeFileSync(
+      path.join(dataDir, "iu-affiliate-cj-fetched-published-funnel-v48.json"),
+      JSON.stringify(funnelFp, null, 2) + "\n",
+      "utf8"
+    );
+    const nowIsoHist = new Date().toISOString();
+    const collected = collectChangeRowsFromOffersDoc(doc, {
+      nowIso: nowIsoHist,
+      runId: env.GITHUB_RUN_ID || null,
+      // Accept cards that carry a stamped priceChangedAt/availabilityChangedAt (real merge trail).
+      acceptAny: true,
+    });
+    // Cap production history payload; full trail remains on product cards.
+    const histDoc = buildPriceAvailabilityHistory({
+      priceChanges: collected.priceChanges.slice(0, 500),
+      availabilityChanges: collected.availabilityChanges.slice(0, 500),
+      nowIso: nowIsoHist,
+      runId: env.GITHUB_RUN_ID || null,
+      sha: env.GITHUB_SHA || null,
+      evidenceClass: "CURRENT_PRODUCTION",
+    });
+    fs.writeFileSync(
+      path.join(dataDir, "iu-affiliate-cj-price-availability-history-v48.json"),
+      JSON.stringify(histDoc, null, 2) + "\n",
+      "utf8"
+    );
+
     console.log(
       JSON.stringify({
         IU_CJ_PRODUCT_FUNNEL_V46_WRITE: "OK",
         IU_CJ_FEED_CONTINUATION_V47_WRITE: "OK",
+        IU_CJ_PRODUCT_PROGRESS_V48_WRITE: "OK",
         counts: funnelDoc.counts,
         continuationCounts: continuationDoc.counts,
+        honestContinuationCounts: honestCounts,
+        fetchedPublished: funnelFp.snapshot,
+        priceAvailability: histDoc.counts,
         declaredSum: declaredDoc.declaredProductCountSum,
         missingFeedPartners: missingDoc.count,
         statsPartners: doc.stats?.partners,

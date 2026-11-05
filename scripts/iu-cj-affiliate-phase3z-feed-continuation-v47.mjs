@@ -56,9 +56,10 @@ export function buildFeedContinuationLedger(opts = {}) {
   let stuck = 0;
   let emptyApi = 0;
   let firstSeen = 0;
+  // V48: when inventory withFeed set is present, only those partners enter counts.
+  const idList = withFeedIds.size ? [...withFeedIds].sort() : [...ids].sort();
 
-  for (const id of [...ids].sort()) {
-    if (withFeedIds.size && !withFeedIds.has(id) && !currPartners[id] && !prevPartners[id]) continue;
+  for (const id of idList) {
     const prev = prevPartners[id] || null;
     const curr = currPartners[id] || null;
     const previousCursor = {
@@ -96,9 +97,12 @@ export function buildFeedContinuationLedger(opts = {}) {
       !prev;
 
     if (!prev && curr) firstSeen += 1;
-    if (completePassBumped || (curr?.lastComplete === true && completePassBumped)) completedPass += 1;
-    else if (curr?.lastComplete === true && !prev) completedPass += 1;
-    if (progressed) advanced += 1;
+    if (meaningfulCompletePass) completedPass += 1;
+    // V48: "advanced" means product-bearing progress (rows fetched or meaningful complete pass),
+    // not empty 1→1 completePass bumps or timestamp-only updates.
+    if (progressed && ((Number(curr?.lastFetchedCount) || 0) > 0 || meaningfulCompletePass)) {
+      advanced += 1;
+    }
     else if (
       previousCursor.offset != null &&
       nextCursor.offset != null &&
