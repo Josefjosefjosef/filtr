@@ -85,6 +85,12 @@ import {
   buildProductFunnelDocument,
   computeHonestOffersStats,
 } from "./iu-cj-affiliate-phase3z-product-funnel-v46.mjs";
+import {
+  selectContinuationSamples,
+  buildFeedContinuationLedger,
+  decomposeDeclaredProductCounts,
+  buildMissingFeedPartnersAudit,
+} from "./iu-cj-affiliate-phase3z-feed-continuation-v47.mjs";
 import { evaluateIdentityRepairBatch } from "./iu-cj-affiliate-phase3z-identity-repair-v39.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -970,13 +976,18 @@ export async function sampleProductsForManagedPartners(opts = {}) {
     inventoryPartnersSelected: 0,
     inventoryPartnersRemaining: null,
     continuationSamples: [],
+    continuationEvents: [],
     partnerFetch: [],
     partnerInventoryErrors: {},
     inventoriedAdvertiserIds: [],
     skippedNoCredentials: false,
     note:
-      "V45: durable feed inventory (full or progressive merge) + per-partner checkpoints; presentation budget rotates and is not an API source cap.",
+      "V47: durable feed inventory + checkpoints + continuation ledger; presentation budget rotates and is not an API source cap.",
   };
+  // Snapshot prior checkpoints before this run advances them (continuation proof).
+  const previousCheckpointPartners = JSON.parse(
+    JSON.stringify(checkpointState.partners && typeof checkpointState.partners === "object" ? checkpointState.partners : {})
+  );
   const active = partners.filter((p) => p && p.active !== false && p.advertiserId != null);
   meta.activePartners = active.length;
   const sample =
@@ -1096,16 +1107,17 @@ export async function sampleProductsForManagedPartners(opts = {}) {
         { pageSize, publishPerPartner }
       );
       checkpointState.partners[partnerId] = advanced;
-      if (meta.continuationSamples.length < 12) {
-        meta.continuationSamples.push({
-          advertiserId: partnerId,
-          startedOffset: resumeOffset,
-          nextOffset: advanced.resumeOffset,
-          fetched: fetched.fetchedCount,
-          totalCount: fetched.totalCount,
-          resumed: resumeOffset > CJ_PRODUCT_SEARCH_OFFSET_FIRST || Boolean(resumePage),
-        });
-      }
+      meta.continuationEvents.push({
+        advertiserId: partnerId,
+        startedOffset: resumeOffset,
+        nextOffset: advanced.resumeOffset,
+        fetched: fetched.fetchedCount,
+        totalCount: fetched.totalCount,
+        resumed: resumeOffset > CJ_PRODUCT_SEARCH_OFFSET_FIRST || Boolean(resumePage),
+        completePass: advanced.lastComplete === true,
+        previousLoaded: prevCp.lastFetchedCount ?? null,
+        currentLoaded: fetched.fetchedCount,
+      });
       if (fetched.error && fetched.fetchedCount === 0) {
         meta.partnersError += 1;
         meta.partnerFetch.push(partnerMeta);
@@ -1218,12 +1230,35 @@ export async function sampleProductsForManagedPartners(opts = {}) {
   }
   meta.inventoriedAdvertiserIds = [...inventoriedAdvertiserIds];
   meta.partnerInventoryErrors = partnerInventoryErrors;
+  // V47: prefer samples that prove cursor advancement (not empty-API head of list).
+  meta.continuationSamples = selectContinuationSamples(meta.continuationEvents, 12);
+  const feedAdvIds = new Set((feedInventory || []).map((f) => String(f.advertiserId || "")).filter(Boolean));
+  for (const id of inventoriedAdvertiserIds) feedAdvIds.add(String(id));
+  const invForLedger = partners.map((p) => {
+    const id = String(p.advertiserId || "");
+    return {
+      advertiserId: id,
+      partnerName: p.title || p.partnerName || null,
+      hasFeed: feedAdvIds.has(id),
+      feedCount: feedAdvIds.has(id) ? 1 : 0,
+    };
+  });
+  meta.continuationLedger = buildFeedContinuationLedger({
+    previousPartners: previousCheckpointPartners,
+    currentPartners: checkpointState.partners,
+    inventoryPartners: invForLedger,
+    nowIso: new Date().toISOString(),
+    runId: env.GITHUB_RUN_ID || null,
+    sha: env.GITHUB_SHA || null,
+  });
+  delete meta.continuationEvents;
   checkpointState = recordCheckpointRun(checkpointState, {
     sampledPartners: meta.sampledPartners,
     partnersResumedFromCheckpoint: meta.partnersResumedFromCheckpoint,
     sourceProductsFetched: meta.sourceProductsFetched,
     productsPublished: products.length,
     continuationSamples: meta.continuationSamples,
+    continuationCounts: meta.continuationLedger?.counts || null,
   });
   meta.checkpointPersistArmed = persistCheckpoints;
   if (persistCheckpoints) {
@@ -1872,13 +1907,49 @@ export async function runOffersLiveSync(opts = {}) {
       JSON.stringify(funnelDoc, null, 2) + "\n",
       "utf8"
     );
+    // V47 continuation ledger + declared decomposition + missing-7 audit
+    const contPath = path.join(dataDir, "iu-affiliate-cj-feed-continuation-v47.json");
+    const continuationDoc =
+      productMeta?.continuationLedger ||
+      buildFeedContinuationLedger({
+        previousPartners: {},
+        currentPartners: cpDoc?.partners || {},
+        inventoryPartners: invDoc?.partners || [],
+        nowIso: new Date().toISOString(),
+        runId: env.GITHUB_RUN_ID || null,
+        sha: env.GITHUB_SHA || null,
+      });
+    fs.writeFileSync(contPath, JSON.stringify(continuationDoc, null, 2) + "\n", "utf8");
+    const declaredDoc = decomposeDeclaredProductCounts(invDoc?.feeds || []);
+    fs.writeFileSync(
+      path.join(dataDir, "iu-affiliate-cj-declared-product-decomposition-v47.json"),
+      JSON.stringify(declaredDoc, null, 2) + "\n",
+      "utf8"
+    );
+    const byAdv = invDoc?.byAdvertiser || {};
+    const missingDoc = buildMissingFeedPartnersAudit({
+      funnelPartners: funnelDoc.partners || [],
+      inventoryByAdvertiser: byAdv,
+      checkpoints: cpDoc?.partners || {},
+      nowIso: new Date().toISOString(),
+    });
+    fs.writeFileSync(
+      path.join(dataDir, "iu-affiliate-cj-missing-feed-partners-v47.json"),
+      JSON.stringify(missingDoc, null, 2) + "\n",
+      "utf8"
+    );
     console.log(
       JSON.stringify({
         IU_CJ_PRODUCT_FUNNEL_V46_WRITE: "OK",
+        IU_CJ_FEED_CONTINUATION_V47_WRITE: "OK",
         counts: funnelDoc.counts,
+        continuationCounts: continuationDoc.counts,
+        declaredSum: declaredDoc.declaredProductCountSum,
+        missingFeedPartners: missingDoc.count,
         statsPartners: doc.stats?.partners,
         productAdvertisers: doc.stats?.productAdvertisers,
         sections: doc.stats?.sections,
+        verificationClass: doc.stats?.freshness?.verificationClass || null,
       })
     );
   } catch (e) {

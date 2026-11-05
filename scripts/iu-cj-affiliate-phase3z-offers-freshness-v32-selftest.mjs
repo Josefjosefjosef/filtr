@@ -141,6 +141,12 @@ const merged = mergeRefreshedProductIntoCard(
 );
 expect("price_changed", merged.priceChanged === true && merged.card.currentPrice === 45);
 expect(
+  "price_history_trail",
+  merged.card.previousPrice === 50 &&
+    merged.card.priceChangedAt === "2026-11-03T12:00:00Z" &&
+    merged.card.verifiedAt === "2026-11-03T12:00:00Z"
+);
+expect(
   "merged_keeps_authoritative_source",
   merged.card.sourceUpdatedAtStatus === SOURCE_UPDATED_AT_STATUS.PROVIDED &&
     merged.card.sourceUpdatedAt === "2026-11-03T11:00:00.000Z"

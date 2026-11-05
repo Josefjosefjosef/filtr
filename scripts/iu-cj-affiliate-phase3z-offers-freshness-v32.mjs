@@ -409,6 +409,15 @@ export function applyFreshnessToOffersDocument(doc, opts = {}) {
         note:
           "CURRENT=SOURCE_FRESH only (authoritative sourceUpdatedAt). UNKNOWN must never be presented as CURRENT. Fetch time ≠ source time.",
       },
+      // V47: verification clock ≠ source freshness. VERIFIED_RECENT uses lastSuccessfulRefreshAt only.
+      verificationClass: {
+        VERIFIED_RECENT: stats.productsFetchRecentSourceAgeUnknown || 0,
+        SOURCE_CURRENT: stats.productsSourceFresh || 0,
+        STALE: (stats.productsStaleMarked || 0) + (stats.productsPriceHidden || 0),
+        UNAVAILABLE: 0,
+        note:
+          "VERIFIED_RECENT=successful fetch/refresh within policy window (not inventable as CURRENT). SOURCE_CURRENT requires CJ sourceUpdatedAt.",
+      },
     },
   };
   return { doc: out, stats: out.stats.freshness };
@@ -503,6 +512,19 @@ export function mergeRefreshedProductIntoCard(card, refreshed, nowIso) {
       acceptUntaggedSource: nextProv.sourceUpdatedAtStatus === SOURCE_UPDATED_AT_STATUS.PROVIDED,
     }
   );
+
+  // V47: durable per-product price/availability change trail (compound identity unchanged).
+  stamped.verifiedAt = nowIso;
+  if (priceChanged) {
+    stamped.previousPrice = card.currentPrice;
+    stamped.priceChangedAt = nowIso;
+    stamped.priceChangeSource = "cj_product_refresh";
+  }
+  if (availChanged) {
+    stamped.previousAvailability = card.availability ?? null;
+    stamped.availabilityChangedAt = nowIso;
+    stamped.availabilityChangeSource = "cj_product_refresh";
+  }
 
   if (refreshed.gone === true || refreshed.removeFromPublic === true) {
     stamped.publicationReady = false;
