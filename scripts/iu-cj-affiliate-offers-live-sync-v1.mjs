@@ -99,6 +99,17 @@ import {
   summarizeHonestContinuationCounts,
 } from "./iu-cj-affiliate-phase3z-product-progress-v48.mjs";
 import { evaluateIdentityRepairBatch } from "./iu-cj-affiliate-phase3z-identity-repair-v39.mjs";
+import {
+  appendDurablePriceHistory,
+  assertDurableHistoryReadable,
+  emptyDurablePriceHistory,
+} from "./iu-cj-affiliate-phase3z-durable-price-history-v50.mjs";
+import {
+  buildProductReverifyLedger,
+  compareReverifyRuns,
+  indexProductsByCompoundIdentity,
+} from "./iu-cj-affiliate-phase3z-product-reverify-v50.mjs";
+import { buildProductIdentityLedger } from "./iu-cj-affiliate-phase3z-product-identity-v50.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const WEBSITE_PID = "101883843";
@@ -998,6 +1009,9 @@ export async function sampleProductsForManagedPartners(opts = {}) {
     JSON.stringify(checkpointState.partners && typeof checkpointState.partners === "object" ? checkpointState.partners : {})
   );
   const uniqueIdentityKeys = new Set();
+  // V50: slim identity samples for UNIQUE ledger (cap memory; compound key is authoritative).
+  const fetchedIdentityRows = [];
+  const FETCHED_IDENTITY_SAMPLE_CAP = 5000;
   const active = partners.filter((p) => p && p.active !== false && p.advertiserId != null);
   meta.activePartners = active.length;
   const sample =
@@ -1183,6 +1197,16 @@ export async function sampleProductsForManagedPartners(opts = {}) {
         meta.sourceProductsFetched += 1;
         if (mapped.productId != null && String(mapped.productId)) {
           uniqueIdentityKeys.add(String(partnerId) + "|" + String(mapped.productId));
+          if (fetchedIdentityRows.length < FETCHED_IDENTITY_SAMPLE_CAP) {
+            fetchedIdentityRows.push({
+              advertiserId: partnerId,
+              productId: String(mapped.productId),
+              feedId: mapped.feedId != null ? String(mapped.feedId) : null,
+              currency: currency || null,
+              language: mapped.language || null,
+              categoryKey: p.sectionId || null,
+            });
+          }
         }
         partnerMeta.validated += 1;
         if (keepFullSourceRows) sourceProducts.push(row);
@@ -1230,6 +1254,8 @@ export async function sampleProductsForManagedPartners(opts = {}) {
     meta.partnerFetch.push(partnerMeta);
   }
   meta.sourceProductsUnique = uniqueIdentityKeys.size;
+  meta.fetchedIdentityRows = fetchedIdentityRows;
+  meta.fetchedIdentityRowsCapped = fetchedIdentityRows.length >= FETCHED_IDENTITY_SAMPLE_CAP;
   // Slim per-partner fetch map retained for V46 funnel (full partnerFetch may be truncated).
   meta.funnelFetchMeta = {};
   for (const row of meta.partnerFetch) {
@@ -2072,16 +2098,107 @@ export async function runOffersLiveSync(opts = {}) {
       "utf8"
     );
 
+    // V50: append-only durable price history (idempotent eventKey; next-run readable).
+    const durablePath = path.join(dataDir, "iu-affiliate-cj-durable-price-history-v50.json");
+    const priorDurable = fs.existsSync(durablePath)
+      ? readJson(durablePath, null)
+      : emptyDurablePriceHistory({ nowIso: nowIsoHist, runId: env.GITHUB_RUN_ID || null });
+    const durableDoc = appendDurablePriceHistory(priorDurable, {
+      nowIso: nowIsoHist,
+      runId: env.GITHUB_RUN_ID || null,
+      sha: env.GITHUB_SHA || null,
+      evidenceClass: "CURRENT_PRODUCTION",
+      priceChanges: collected.priceChanges || [],
+      formatOnlyChanges: collected.formatOnlyChanges || [],
+      availabilityChanges: collected.availabilityChanges || [],
+    });
+    durableDoc.readProof = assertDurableHistoryReadable(priorDurable, durableDoc);
+    fs.writeFileSync(durablePath, JSON.stringify(durableDoc, null, 2) + "\n", "utf8");
+
+    // V50: per-product reverify ledger (source re-compare only).
+    const prevRevPath = path.join(dataDir, "iu-affiliate-cj-product-reverify-v50.json");
+    const prevRevDoc = fs.existsSync(prevRevPath) ? readJson(prevRevPath, null) : null;
+    const previousByKey = indexProductsByCompoundIdentity(prevPublic || {});
+    const prevRevByKey = new Map(
+      (prevRevDoc?.rows || []).map((r) => [r.compoundIdentity, r])
+    );
+    const reverifyDoc = buildProductReverifyLedger({
+      doc,
+      coverageByKey,
+      refreshedByKey,
+      previousByKey,
+      previousReverifyByKey: prevRevByKey,
+      nowIso: nowIsoHist,
+      runId: env.GITHUB_RUN_ID || null,
+      sha: env.GITHUB_SHA || null,
+    });
+    reverifyDoc.crossRun = compareReverifyRuns(prevRevDoc, reverifyDoc);
+    fs.writeFileSync(prevRevPath, JSON.stringify(reverifyDoc, null, 2) + "\n", "utf8");
+
+    // V50: identity UNIQUE ledger (compound; not row count).
+    const identityFetched =
+      Array.isArray(productMeta?.fetchedIdentityRows) && productMeta.fetchedIdentityRows.length
+        ? productMeta.fetchedIdentityRows
+        : [];
+    const identityDoc = buildProductIdentityLedger({
+      fetchedRows: identityFetched,
+      publishedDoc: doc,
+      nowIso: nowIsoHist,
+      runId: env.GITHUB_RUN_ID || null,
+      sha: env.GITHUB_SHA || null,
+      maxRows: 500,
+    });
+    // Prefer authoritative live-sync counters when samples are capped or empty.
+    if (productMeta?.sourceProductsFetched != null) {
+      identityDoc.accounting.fetchedRowsWithIdentity = Number(productMeta.sourceProductsFetched);
+    }
+    if (productMeta?.sourceProductsUnique != null) {
+      identityDoc.accounting.uniqueIdentitiesInRun = Number(productMeta.sourceProductsUnique);
+    }
+    if (
+      identityDoc.accounting.fetchedRowsWithIdentity != null &&
+      identityDoc.accounting.uniqueIdentitiesInRun != null
+    ) {
+      identityDoc.accounting.duplicateApiRows = Math.max(
+        0,
+        identityDoc.accounting.fetchedRowsWithIdentity - identityDoc.accounting.uniqueIdentitiesInRun
+      );
+      identityDoc.accounting.uniqueEqualsFetchedRows =
+        identityDoc.accounting.fetchedRowsWithIdentity ===
+        identityDoc.accounting.uniqueIdentitiesInRun;
+    }
+    identityDoc.sampleRows = identityFetched.length;
+    identityDoc.sampleCapped = productMeta?.fetchedIdentityRowsCapped === true;
+    identityDoc.presentationBudgetDeferred =
+      productMeta?.sourceProductsDeferredPresentationBudget ?? null;
+    identityDoc.publishPerPartner = productMeta?.publishPerPartner ?? null;
+    identityDoc.evidenceClass = identityFetched.length
+      ? "COMPOUND_IDENTITY_SET_PLUS_SAMPLES"
+      : "AGGREGATE_FROM_LIVE_SYNC_UNIQUE_SET";
+    fs.writeFileSync(
+      path.join(dataDir, "iu-affiliate-cj-product-identity-v50.json"),
+      JSON.stringify(identityDoc, null, 2) + "\n",
+      "utf8"
+    );
+
     console.log(
       JSON.stringify({
         IU_CJ_PRODUCT_FUNNEL_V46_WRITE: "OK",
         IU_CJ_FEED_CONTINUATION_V47_WRITE: "OK",
         IU_CJ_PRODUCT_PROGRESS_V48_WRITE: "OK",
+        IU_CJ_DURABLE_PRICE_V50_WRITE: "OK",
+        IU_CJ_PRODUCT_REVERIFY_V50_WRITE: "OK",
+        IU_CJ_PRODUCT_IDENTITY_V50_WRITE: "OK",
         counts: funnelDoc.counts,
         continuationCounts: continuationDoc.counts,
         honestContinuationCounts: honestCounts,
         fetchedPublished: funnelFp.snapshot,
         priceAvailability: histDoc.counts,
+        durablePrice: durableDoc.counts,
+        durableReadProof: durableDoc.readProof,
+        reverify: reverifyDoc.counts,
+        reverifyCrossRun: reverifyDoc.crossRun,
+        identity: identityDoc.accounting,
         declaredSum: declaredDoc.declaredProductCountSum,
         missingFeedPartners: missingDoc.count,
         statsPartners: doc.stats?.partners,
