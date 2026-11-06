@@ -974,8 +974,10 @@ export async function sampleProductsForManagedPartners(opts = {}) {
     partnersTruncatedByApiLimit: 0,
     partnersResumedFromCheckpoint: 0,
     sourceProductsFetched: 0,
+    sourceProductsUnique: 0,
     sourceProductsPublishReady: 0,
     sourceProductsDeferredPresentationBudget: 0,
+    rejectReasonCounts: {},
     feedsInventoried: 0,
     feedDeclaredProductCount: 0,
     inventoryMode: inventoryFeeds ? "full" : inventoryProgressive ? "progressive" : "disabled",
@@ -995,6 +997,7 @@ export async function sampleProductsForManagedPartners(opts = {}) {
   const previousCheckpointPartners = JSON.parse(
     JSON.stringify(checkpointState.partners && typeof checkpointState.partners === "object" ? checkpointState.partners : {})
   );
+  const uniqueIdentityKeys = new Set();
   const active = partners.filter((p) => p && p.active !== false && p.advertiserId != null);
   meta.activePartners = active.length;
   const sample =
@@ -1178,10 +1181,21 @@ export async function sampleProductsForManagedPartners(opts = {}) {
           { sourceUpdatedAt: null, sourceUpdatedAtStatus: SOURCE_UPDATED_AT_STATUS.NOT_PROVIDED }
         );
         meta.sourceProductsFetched += 1;
+        if (mapped.productId != null && String(mapped.productId)) {
+          uniqueIdentityKeys.add(String(partnerId) + "|" + String(mapped.productId));
+        }
         partnerMeta.validated += 1;
         if (keepFullSourceRows) sourceProducts.push(row);
         if (!publicationReady) {
-          if (keepFullSourceRows) sourceProducts[sourceProducts.length - 1].rejectReason = "not_publication_ready";
+          const reason = !trusted
+            ? "invalid_affiliate_url"
+            : amount == null || !currency
+              ? "invalid_price_or_currency"
+              : !(typeof img === "string" && /^https:\/\//i.test(img))
+                ? "missing_https_image"
+                : "not_publication_ready";
+          meta.rejectReasonCounts[reason] = (meta.rejectReasonCounts[reason] || 0) + 1;
+          if (keepFullSourceRows) sourceProducts[sourceProducts.length - 1].rejectReason = reason;
           continue;
         }
         meta.sourceProductsPublishReady += 1;
@@ -1215,6 +1229,7 @@ export async function sampleProductsForManagedPartners(opts = {}) {
     }
     meta.partnerFetch.push(partnerMeta);
   }
+  meta.sourceProductsUnique = uniqueIdentityKeys.size;
   // Slim per-partner fetch map retained for V46 funnel (full partnerFetch may be truncated).
   meta.funnelFetchMeta = {};
   for (const row of meta.partnerFetch) {
@@ -2010,11 +2025,21 @@ export async function runOffersLiveSync(opts = {}) {
     );
     const funnelFp = buildFetchedPublishedFunnel({
       fetchedRows: productMeta?.sourceProductsFetched || 0,
+      uniqueInWindow: productMeta?.sourceProductsUnique || null,
       validated: productMeta?.sourceProductsPublishReady || null,
       ready: productMeta?.sourceProductsPublishReady || null,
+      selected: doc.stats?.products || 0,
       published: doc.stats?.products || 0,
+      publishedOccurrences: doc.stats?.products || 0,
       publishedUnique: publishedUnique || null,
-      rejectReasons: doc.rejectReasons || {},
+      rejectReasons: {
+        ...(doc.rejectReasons || {}),
+        ...(productMeta?.rejectReasonCounts || {}),
+      },
+      duplicateApiRows:
+        productMeta?.sourceProductsUnique != null && productMeta?.sourceProductsFetched != null
+          ? Math.max(0, Number(productMeta.sourceProductsFetched) - Number(productMeta.sourceProductsUnique))
+          : null,
       runId: env.GITHUB_RUN_ID || null,
       sha: env.GITHUB_SHA || null,
     });
@@ -2031,8 +2056,10 @@ export async function runOffersLiveSync(opts = {}) {
       acceptAny: true,
     });
     // Cap production history payload; full trail remains on product cards.
+    // V49: economic priceChanges only; FORMAT_ONLY kept separately.
     const histDoc = buildPriceAvailabilityHistory({
       priceChanges: collected.priceChanges.slice(0, 500),
+      formatOnlyChanges: (collected.formatOnlyChanges || []).slice(0, 500),
       availabilityChanges: collected.availabilityChanges.slice(0, 500),
       nowIso: nowIsoHist,
       runId: env.GITHUB_RUN_ID || null,

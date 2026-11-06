@@ -6,6 +6,11 @@
  * V33: never invent sourceUpdatedAt from fetch/check time.
  * Distinguish SOURCE_FRESH vs FETCH_RECENT_SOURCE_AGE_UNKNOWN.
  */
+import {
+  classifyPriceTransition,
+  PRICE_CHANGE_CLASS,
+} from "./iu-cj-affiliate-phase3z-price-normalize-v49.mjs";
+
 export const OFFERS_FRESHNESS_SCHEMA = "iu-cj-affiliate-phase3z-offers-freshness-v33";
 
 /** Target intervals (ms). Documented targets; infrastructure may be slower — never claim met without proof. */
@@ -487,8 +492,16 @@ export function mergeRefreshedProductIntoCard(card, refreshed, nowIso) {
     };
   }
 
-  const priceChanged =
-    refreshed.currentPrice != null && String(refreshed.currentPrice) !== String(card.currentPrice);
+  // V49: economic price compare via normalized minor units (format-only ≠ change).
+  const priceClass = classifyPriceTransition(
+    card.currentPrice,
+    refreshed.currentPrice != null ? refreshed.currentPrice : card.currentPrice,
+    card.currency,
+    refreshed.currency || card.currency
+  );
+  const priceChanged = priceClass.economicChange === true;
+  const formatOnly = priceClass.class === PRICE_CHANGE_CLASS.FORMAT_ONLY;
+  const currencyChanged = priceClass.class === PRICE_CHANGE_CLASS.CURRENCY_CHANGED;
   const availChanged =
     refreshed.availability != null &&
     String(refreshed.availability) !== String(card.availability ?? "");
@@ -513,12 +526,23 @@ export function mergeRefreshedProductIntoCard(card, refreshed, nowIso) {
     }
   );
 
-  // V47: durable per-product price/availability change trail (compound identity unchanged).
+  // V47/V49: durable per-product price/availability change trail (compound identity unchanged).
   stamped.verifiedAt = nowIso;
+  stamped.priceChangeClassification = priceClass.class;
   if (priceChanged) {
     stamped.previousPrice = card.currentPrice;
+    stamped.previousNormalizedPrice = priceClass.prev?.decimalString ?? null;
+    stamped.currentNormalizedPrice = priceClass.next?.decimalString ?? null;
     stamped.priceChangedAt = nowIso;
     stamped.priceChangeSource = "cj_product_refresh";
+  } else if (formatOnly) {
+    // Diagnostic only — do not invent an economic previousPrice trail.
+    stamped.priceFormatOnlyAt = nowIso;
+    stamped.previousRawPriceFormatOnly = card.currentPrice;
+    stamped.currentRawPriceFormatOnly = refreshed.currentPrice;
+  } else if (currencyChanged) {
+    stamped.currencyChangedAt = nowIso;
+    stamped.previousCurrency = card.currency || null;
   }
   if (availChanged) {
     stamped.previousAvailability = card.availability ?? null;
@@ -532,7 +556,15 @@ export function mergeRefreshedProductIntoCard(card, refreshed, nowIso) {
     stamped.freshnessReason = refreshed.rejectReason || "source_unavailable";
     stamped.rejectReason = refreshed.rejectReason || "source_unavailable";
   }
-  return { card: stamped, changed: priceChanged || availChanged, priceChanged, availChanged };
+  return {
+    card: stamped,
+    changed: priceChanged || availChanged,
+    priceChanged,
+    availChanged,
+    formatOnly,
+    currencyChanged,
+    priceChangeClassification: priceClass.class,
+  };
 }
 
 export function describeFreshnessPolicy() {

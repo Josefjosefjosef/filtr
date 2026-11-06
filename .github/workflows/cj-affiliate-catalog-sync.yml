@@ -142,6 +142,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-feed-continuation-v47-selftest.mjs
       - name: Product progress + fetched/published funnel selftest (V48; offline)
         run: node scripts/iu-cj-affiliate-phase3z-product-progress-v48-selftest.mjs
+      - name: Price normalize + format-only classification selftest (V49; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-price-normalize-v49-selftest.mjs
       - name: Registry URL gate parity selftest (V41; offline)
         run: node scripts/iu-cj-affiliate-phase3z-registry-url-gate-v41-selftest.mjs
       - name: Schedule slot watch selftest (V42; offline)

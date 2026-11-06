@@ -7,6 +7,10 @@
  * sourceProductsFetched is API rows in one discovery window — not unique published catalog size.
  */
 import { CJ_PRODUCT_SEARCH_OFFSET_FIRST } from "./iu-cj-affiliate-phase2-product-api.mjs";
+import {
+  classifyPriceTransition,
+  PRICE_CHANGE_CLASS,
+} from "./iu-cj-affiliate-phase3z-price-normalize-v49.mjs";
 
 export const PRODUCT_PROGRESS_SCHEMA = "iu-cj-affiliate-phase3z-product-progress-v48";
 export const FETCHED_PUBLISHED_FUNNEL_SCHEMA =
@@ -262,6 +266,8 @@ export function buildProductProgressLedger(opts = {}) {
 
 /**
  * Explain sourceProductsFetched (API rows this run) vs published occurrences.
+ * V49: never treat UNKNOWN accepted as rejected=all; expose unknown explicitly.
+ * Occurrences in multiple sections are not automatic identity duplicates.
  */
 export function buildFetchedPublishedFunnel(opts = {}) {
   const nowIso = opts.nowIso || new Date().toISOString();
@@ -272,27 +278,62 @@ export function buildFetchedPublishedFunnel(opts = {}) {
   const authorized = Number(opts.authorized);
   const categoryAssigned = Number(opts.categoryAssigned);
   const ready = Number(opts.ready);
+  const selected = Number(opts.selected);
   const published = Number(opts.published);
   const publishedUnique = Number(opts.publishedUnique);
+  const publishedOccurrences = Number(
+    opts.publishedOccurrences != null ? opts.publishedOccurrences : opts.published
+  );
   const domRendered = opts.domRendered != null ? Number(opts.domRendered) : null;
   const rejectReasons = opts.rejectReasons && typeof opts.rejectReasons === "object" ? opts.rejectReasons : {};
+  const duplicateApiRows = Number(opts.duplicateApiRows);
 
-  const stage = (name, input, accepted, rejected, note) => ({
-    name,
-    input,
-    accepted,
-    rejected: rejected != null ? rejected : Math.max(0, (input || 0) - (accepted || 0)),
-    note: note || null,
-  });
+  const stage = (name, input, accepted, extra = {}) => {
+    const knownAccepted = accepted != null && Number.isFinite(Number(accepted));
+    const acc = knownAccepted ? Number(accepted) : null;
+    const dup = extra.duplicates != null && Number.isFinite(Number(extra.duplicates))
+      ? Number(extra.duplicates)
+      : null;
+    let unknown = extra.unknown != null ? Number(extra.unknown) : null;
+    let rejected = extra.rejected != null ? Number(extra.rejected) : null;
+    if (!knownAccepted) {
+      // V49 fix: unknown accepted must NOT become rejected = input.
+      if (unknown == null) unknown = Number(input) || 0;
+      if (rejected == null) rejected = null;
+    } else if (rejected == null) {
+      rejected = Math.max(0, (Number(input) || 0) - acc - (dup || 0));
+    }
+    return {
+      name,
+      input: Number(input) || 0,
+      accepted: acc,
+      rejected,
+      unknown: unknown != null ? unknown : 0,
+      duplicates: dup,
+      reasonCode: extra.reasonCode || null,
+      note: extra.note || null,
+    };
+  };
 
   const uniq = Number.isFinite(uniqueInWindow) ? uniqueInWindow : null;
+  const dupApi =
+    Number.isFinite(duplicateApiRows)
+      ? duplicateApiRows
+      : uniq != null
+        ? Math.max(0, fetchedRows - uniq)
+        : null;
   const val = Number.isFinite(validated) ? validated : null;
   const cze = Number.isFinite(czEligible) ? czEligible : val;
   const auth = Number.isFinite(authorized) ? authorized : cze;
   const cat = Number.isFinite(categoryAssigned) ? categoryAssigned : auth;
   const rdy = Number.isFinite(ready) ? ready : cat;
-  const pub = Number.isFinite(published) ? published : 0;
-  const pubU = Number.isFinite(publishedUnique) ? publishedUnique : pub;
+  const sel = Number.isFinite(selected) ? selected : Number.isFinite(published) ? published : null;
+  const pubOcc = Number.isFinite(publishedOccurrences)
+    ? publishedOccurrences
+    : Number.isFinite(published)
+      ? published
+      : 0;
+  const pubU = Number.isFinite(publishedUnique) ? publishedUnique : null;
 
   return {
     schema: FETCHED_PUBLISHED_FUNNEL_SCHEMA,
@@ -303,40 +344,67 @@ export function buildFetchedPublishedFunnel(opts = {}) {
       fetchedRowsMeaning:
         "API shoppingProducts rows returned in this discovery window (sum across partners/pages). Includes duplicates across partners, window re-reads, and rows later rejected. NOT unique published catalog size.",
       publishedMeaning:
-        "Offer occurrences in offers-public after presentation budget + validation gates. Unique identities ≤ occurrences.",
+        "Offer occurrences in offers-public after presentation budget + validation gates. Unique identities ≤ occurrences. Multi-section placement is intentional, not an identity error.",
       whyFetchedExceedsPublished:
         "Presentation budget (publishPerPartner), validation rejects, empty/incomplete partners, and multi-page windows accumulate rows far above the public slice.",
+      uniqueUnknownRule:
+        "If uniqueInWindow was not measured, UNIQUE.accepted=null and UNIQUE.unknown=input — never UNIQUE.rejected=input.",
     },
     stages: [
-      stage("FETCHED", fetchedRows, fetchedRows, 0, "raw API rows this run"),
-      stage("UNIQUE", fetchedRows, uniq, null, "unique advertiserId|productId in discovery window when measured"),
-      stage("VALIDATED", uniq ?? fetchedRows, val, null, "trusted URL + price + currency + https image"),
-      stage("CZ_ELIGIBLE", val ?? uniq ?? fetchedRows, cze, null, "CZ usability gates"),
-      stage("AUTHORIZED", cze ?? val ?? fetchedRows, auth, null, "joined/managed publication permission"),
-      stage("CATEGORY_ASSIGNED", auth ?? cze ?? fetchedRows, cat, null, "section map assignment"),
-      stage("READY", cat ?? auth ?? fetchedRows, rdy, null, "publicationReady=true"),
-      stage("PUBLISHED", rdy ?? fetchedRows, pub, null, "selected into offers-public (presentation budget applies)"),
-      stage("PUBLISHED_UNIQUE", pub, pubU, null, "unique identities in public catalog"),
-      stage("DOM_RENDERED", pub, domRendered, null, "requires browser proof; null=not measured this run"),
+      stage("API_FETCHED", fetchedRows, fetchedRows, { rejected: 0, note: "raw API rows this run" }),
+      stage("UNIQUE_IDENTITIES", fetchedRows, uniq, {
+        duplicates: dupApi,
+        note: "unique advertiserId|productId in discovery window when measured",
+        reasonCode: uniq == null ? "UNIQUE_NOT_MEASURED" : null,
+      }),
+      stage("VALIDATED", uniq ?? fetchedRows, val, {
+        note: "trusted URL + price + currency + https image",
+        reasonCode: val == null ? "VALIDATED_NOT_SEPARATED" : null,
+      }),
+      stage("CZ_ELIGIBLE", val ?? uniq ?? fetchedRows, cze, { note: "CZ usability gates" }),
+      stage("AUTHORIZED", cze ?? val ?? fetchedRows, auth, { note: "joined/managed publication permission" }),
+      stage("CATEGORY_ASSIGNED", auth ?? cze ?? fetchedRows, cat, { note: "section map assignment" }),
+      stage("PUBLICATION_READY", cat ?? auth ?? fetchedRows, rdy, { note: "publicationReady=true" }),
+      stage("SELECTED", rdy ?? fetchedRows, sel, {
+        note: "presentation budget selection (publishPerPartner / rotate)",
+      }),
+      stage("PUBLISHED_UNIQUE", sel ?? pubOcc, pubU, {
+        note: "unique identities in public catalog",
+        reasonCode: pubU == null ? "PUBLISHED_UNIQUE_NOT_MEASURED" : null,
+      }),
+      stage("PUBLISHED_OCCURRENCES", pubU ?? sel ?? rdy ?? fetchedRows, pubOcc, {
+        note: "section occurrences (one identity may appear in multiple sections)",
+      }),
+      stage("DOM_RENDERED", pubOcc, domRendered, {
+        note: "requires browser proof; unknown when not measured",
+        reasonCode: domRendered == null ? "DOM_NOT_MEASURED" : null,
+      }),
     ],
     rejectReasons,
     snapshot: {
       fetchedRows,
-      publishedOccurrences: pub,
+      uniqueInWindow: uniq,
+      uniqueMeasured: uniq != null,
+      duplicateApiRows: dupApi,
+      ready: rdy,
+      selected: sel,
+      publishedOccurrences: pubOcc,
       publishedUnique: pubU,
       ratioPublishedToFetched:
-        fetchedRows > 0 ? Number((pub / fetchedRows).toFixed(6)) : null,
+        fetchedRows > 0 ? Number((pubOcc / fetchedRows).toFixed(6)) : null,
     },
   };
 }
 
 /**
  * Append-only price/availability change records (compound identity).
- * ZERO_OBSERVED_CHANGES when empty for the run.
+ * V49: priceChanges = economic PRICE_CHANGED only; formatOnly separate.
+ * ZERO_OBSERVED_CHANGES when economic array empty.
  */
 export function buildPriceAvailabilityHistory(opts = {}) {
   const nowIso = opts.nowIso || new Date().toISOString();
   const priceChanges = Array.isArray(opts.priceChanges) ? opts.priceChanges : [];
+  const formatOnlyChanges = Array.isArray(opts.formatOnlyChanges) ? opts.formatOnlyChanges : [];
   const availabilityChanges = Array.isArray(opts.availabilityChanges)
     ? opts.availabilityChanges
     : [];
@@ -347,51 +415,82 @@ export function buildPriceAvailabilityHistory(opts = {}) {
     sha: opts.sha || null,
     evidenceClass: opts.evidenceClass || "CURRENT_PRODUCTION",
     note:
-      "Only real deltas from refresh merge. Synthetic selftest must stay out of production ledger. ZERO_OBSERVED_CHANGES when arrays empty.",
+      "V49: priceChanges are economic PRICE_CHANGED only. FORMAT_ONLY is diagnostic and must not inflate priceStatus. Synthetic selftest must stay out of production ledger.",
     counts: {
       priceChanges: priceChanges.length,
+      formatOnlyChanges: formatOnlyChanges.length,
       availabilityChanges: availabilityChanges.length,
       priceStatus: priceChanges.length ? "OBSERVED" : "ZERO_OBSERVED_CHANGES",
+      formatOnlyStatus: formatOnlyChanges.length ? "OBSERVED_FORMAT_ONLY" : "ZERO_FORMAT_ONLY",
       availabilityStatus: availabilityChanges.length ? "OBSERVED" : "ZERO_OBSERVED_CHANGES",
     },
     priceChanges,
+    formatOnlyChanges,
     availabilityChanges,
   };
 }
 
 /**
  * Collect change rows from applyPublishedRefreshToDoc merge trail on cards.
+ * V49: re-validate with normalize; format-only never enters priceChanges.
  */
 export function collectChangeRowsFromOffersDoc(doc, opts = {}) {
   const nowIso = opts.nowIso || new Date().toISOString();
   const runId = opts.runId || null;
   const priceChanges = [];
+  const formatOnlyChanges = [];
   const availabilityChanges = [];
+
   for (const sec of doc?.sections || []) {
     for (const p of sec.products || []) {
       const adv = p.advertiserId != null ? String(p.advertiserId) : "";
       const pid = p.productId != null ? String(p.productId) : "";
       if (!adv || !pid) continue;
-      if (p.priceChangedAt && p.previousPrice != null && String(p.previousPrice) !== String(p.currentPrice)) {
-        // Only count if change stamped this run (or opts.acceptAny).
-        if (opts.acceptAny === true || p.priceChangedAt === nowIso || p.verifiedAt === nowIso) {
-          priceChanges.push({
+
+      const stampedEconomic = Boolean(p.priceChangedAt && p.previousPrice != null);
+      const stampedFormat = Boolean(p.priceFormatOnlyAt);
+      const hasPrev =
+        p.previousPrice != null || p.previousRawPriceFormatOnly != null;
+      if (stampedEconomic || stampedFormat || (opts.acceptAny === true && hasPrev)) {
+        if (
+          opts.acceptAny === true ||
+          p.priceChangedAt === nowIso ||
+          p.priceFormatOnlyAt === nowIso ||
+          p.verifiedAt === nowIso
+        ) {
+          const prevRaw =
+            p.previousPrice != null ? p.previousPrice : p.previousRawPriceFormatOnly;
+          const c = classifyPriceTransition(prevRaw, p.currentPrice, p.currency, p.currency);
+          const classification = c.class;
+          const economic = c.economicChange === true;
+
+          const row = {
             advertiserId: adv,
             productId: pid,
-            previousPrice: p.previousPrice,
+            previousRawPrice: prevRaw,
+            currentRawPrice: p.currentPrice,
+            previousPrice: prevRaw,
             newPrice: p.currentPrice,
+            previousNormalizedPrice: c.prev?.decimalString ?? null,
+            currentNormalizedPrice: c.next?.decimalString ?? null,
             currency: p.currency || null,
             previousOriginalPrice: p.previousOriginalPrice ?? null,
             newOriginalPrice: p.originalPrice ?? null,
             source: p.priceChangeSource || "cj_product_refresh",
             sourceTimestamp: p.sourceUpdatedAt || null,
             fetchTimestamp: p.fetchedAt || null,
-            verificationTimestamp: p.verifiedAt || p.priceChangedAt || null,
+            verificationTimestamp: p.verifiedAt || p.priceChangedAt || p.priceFormatOnlyAt || null,
             publicationTimestamp: nowIso,
             runId,
-            changeClassification: "PRICE_DELTA",
+            changeClassification: classification,
             publicationResult: p.publicationReady === false ? "NOT_READY" : "PUBLISHED_CARD",
-          });
+          };
+
+          if (economic || classification === PRICE_CHANGE_CLASS.PRICE_CHANGED) {
+            priceChanges.push(row);
+          } else if (classification === PRICE_CHANGE_CLASS.FORMAT_ONLY || stampedFormat) {
+            formatOnlyChanges.push(row);
+          }
         }
       }
       if (
@@ -419,7 +518,7 @@ export function collectChangeRowsFromOffersDoc(doc, opts = {}) {
       }
     }
   }
-  return { priceChanges, availabilityChanges };
+  return { priceChanges, formatOnlyChanges, availabilityChanges };
 }
 
 /**

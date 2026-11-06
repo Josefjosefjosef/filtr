@@ -78,7 +78,19 @@ const funnel = buildFetchedPublishedFunnel({
 });
 assert(funnel.snapshot.fetchedRows === 52225, "fetched");
 assert(funnel.snapshot.publishedOccurrences === 3609, "published");
-assert(funnel.stages[0].name === "FETCHED", "stage0");
+assert(funnel.stages[0].name === "API_FETCHED", "stage0");
+assert(funnel.stages[1].name === "UNIQUE_IDENTITIES", "stage1");
+assert(funnel.stages[1].accepted === 18000, "unique accepted");
+assert(funnel.stages[1].rejected === 0 || funnel.stages[1].duplicates === 34225, "unique dups accounted");
+
+const funnelUnknownUnique = buildFetchedPublishedFunnel({
+  fetchedRows: 100,
+  ready: 80,
+  published: 10,
+});
+assert(funnelUnknownUnique.stages[1].accepted == null, "unique unknown accepted null");
+assert(funnelUnknownUnique.stages[1].rejected == null, "unique unknown not rejected-all");
+assert(funnelUnknownUnique.stages[1].unknown === 100, "unique unknown=input");
 
 // Deterministic synthetic price change (selftest only — not production ledger)
 const nowIso = "2026-11-05T20:00:00.000Z";
@@ -94,8 +106,10 @@ const doc = {
 };
 const collected = collectChangeRowsFromOffersDoc(doc, { nowIso, runId: "selftest", acceptAny: true });
 assert(collected.priceChanges.length === 1, "collected price change");
+assert(collected.priceChanges[0].changeClassification === "PRICE_CHANGED", "economic class");
 const hist = buildPriceAvailabilityHistory({
   priceChanges: collected.priceChanges,
+  formatOnlyChanges: [],
   availabilityChanges: [],
   nowIso,
   evidenceClass: "SELFTEST_SYNTHETIC",
@@ -103,6 +117,19 @@ const hist = buildPriceAvailabilityHistory({
 assert(hist.counts.priceStatus === "OBSERVED", "observed in selftest");
 const zero = buildPriceAvailabilityHistory({ priceChanges: [], availabilityChanges: [] });
 assert(zero.counts.priceStatus === "ZERO_OBSERVED_CHANGES", "zero observed");
+
+const fmtMerged = mergeRefreshedProductIntoCard(
+  { advertiserId: "9", productId: "p2", currentPrice: "4490.00", currency: "CZK" },
+  { currentPrice: 4490, currency: "CZK" },
+  nowIso
+);
+assert(fmtMerged.priceChanged === false, "format merge not economic");
+const fmtDoc = {
+  sections: [{ products: [{ ...fmtMerged.card, advertiserId: "9", productId: "p2" }] }],
+};
+const fmtCollected = collectChangeRowsFromOffersDoc(fmtDoc, { nowIso, runId: "selftest", acceptAny: true });
+assert(fmtCollected.priceChanges.length === 0, "format not in priceChanges");
+assert((fmtCollected.formatOnlyChanges || []).length === 1, "format diagnostic row");
 
 // Idempotent: same change twice should still be one logical event when deduped by caller
 assert(collected.priceChanges[0].advertiserId === "9", "compound advertiser");
