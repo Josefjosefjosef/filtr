@@ -148,6 +148,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-durable-reverify-v50-selftest.mjs
       - name: First-click classification selftest (V50; offline)
         run: node scripts/iu-cj-affiliate-phase3z-first-click-v50-selftest.mjs
+      - name: Staging empty VERIFY_ONLY durable ledgers selftest (V51; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-staging-verify-only-v51-selftest.mjs
       - name: Registry URL gate parity selftest (V41; offline)
         run: node scripts/iu-cj-affiliate-phase3z-registry-url-gate-v41-selftest.mjs
       - name: Schedule slot watch selftest (V42; offline)
@@ -248,6 +250,10 @@ jobs:
           if [ -n "${IU_CJ_PUBLISHER_CID:-}" ]; then echo "IU_CJ_PUBLISHER_CID=CONFIGURED"; else echo "IU_CJ_PUBLISHER_CID=MISSING"; fi
           if [ -n "${IU_CJ_WEBSITE_PID:-}" ]; then echo "IU_CJ_WEBSITE_PID=CONFIGURED"; else echo "IU_CJ_WEBSITE_PID=MISSING"; fi
           echo "HTTP_EXECUTE=${IU_CJ_SYNC_HTTP_EXECUTE}"
+          if [ "${IU_CJ_SYNC_HTTP_EXECUTE}" != "1" ]; then
+            echo "STAGING_CLASS=DRY_RUN_NO_HTTP"
+            echo "NOTE=workflow_dispatch without execute_live_fetch=1 produces empty staging (not a CJ outage). offers-live-sync may still VERIFY_ONLY against LIVE LKG."
+          fi
           if [ "${IU_CJ_SYNC_HTTP_EXECUTE}" = "1" ]; then
             if [ -z "${IU_CJ_PAT:-}" ] || [ -z "${IU_CJ_PUBLISHER_CID:-}" ] || [ -z "${IU_CJ_WEBSITE_PID:-}" ]; then
               echo "BLOCKER=SECRETS_MISSING_FOR_LIVE_FETCH"
@@ -799,6 +805,27 @@ jobs:
           else
             echo "MISS_AUDIT_CHECKPOINT_RESTORED=0"
           fi
+          # V51: restore durable price/reverify/identity ledgers so append-only survives orphan slim tips.
+          for DUR in \
+            iu-affiliate-cj-durable-price-history-v50.json \
+            iu-affiliate-cj-product-reverify-v50.json \
+            iu-affiliate-cj-product-identity-v50.json
+          do
+            DP="projects/data/${DUR}"
+            if [ -f "$DP" ] && [ ! -s "$DP" ]; then rm -f "$DP"; fi
+            if [ ! -f "$DP" ]; then
+              restore_git_file \
+                "origin/data/cj-affiliate-catalog-sync:projects/data/${DUR}" \
+                "$DP" \
+                || restore_git_file "FETCH_HEAD:projects/data/${DUR}" "$DP" \
+                || true
+            fi
+            if [ -f "$DP" ] && [ -s "$DP" ]; then
+              echo "DURABLE_LEDGER_RESTORED=${DUR}"
+            else
+              echo "DURABLE_LEDGER_MISSING=${DUR}"
+            fi
+          done
           # API fallback via gh (same path that successfully restores offers-public).
           if [ ! -f "$CP" ] || [ ! -s "$CP" ]; then
             set +e

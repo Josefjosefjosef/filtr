@@ -1363,6 +1363,137 @@ function readyCounts(doc) {
 }
 
 /**
+ * V51: durable price / reverify / identity ledgers are SOURCE_VERIFIED artifacts.
+ * They must be writable even when publication staging is empty (KEEP_LKG verify-only).
+ * Never invent events without a real offers doc + optional refresh maps.
+ */
+export function writeDurableVerificationLedgers(opts = {}) {
+  const dataDir = opts.dataDir;
+  const env = opts.env || process.env;
+  const doc = opts.doc;
+  const prevPublic = opts.prevPublic || null;
+  const coverageByKey = opts.coverageByKey || new Map();
+  const refreshedByKey = opts.refreshedByKey || new Map();
+  const productMeta = opts.productMeta || null;
+  const nowIsoHist = opts.nowIso || new Date().toISOString();
+  const evidenceClass = opts.evidenceClass || "CURRENT_PRODUCTION";
+  const publicationGate = opts.publicationGate || "PUBLICATION_NOT_REQUIRED_FOR_LEDGER";
+
+  if (!dataDir || !doc) {
+    return { ok: false, reason: "MISSING_DOC_OR_DIR" };
+  }
+
+  const collected = collectChangeRowsFromOffersDoc(doc, {
+    nowIso: nowIsoHist,
+    runId: env.GITHUB_RUN_ID || null,
+    acceptAny: true,
+  });
+  const histDoc = buildPriceAvailabilityHistory({
+    priceChanges: collected.priceChanges.slice(0, 500),
+    formatOnlyChanges: (collected.formatOnlyChanges || []).slice(0, 500),
+    availabilityChanges: collected.availabilityChanges.slice(0, 500),
+    nowIso: nowIsoHist,
+    runId: env.GITHUB_RUN_ID || null,
+    sha: env.GITHUB_SHA || null,
+    evidenceClass,
+  });
+  fs.writeFileSync(
+    path.join(dataDir, "iu-affiliate-cj-price-availability-history-v48.json"),
+    JSON.stringify(histDoc, null, 2) + "\n",
+    "utf8"
+  );
+
+  const durablePath = path.join(dataDir, "iu-affiliate-cj-durable-price-history-v50.json");
+  const priorDurable = fs.existsSync(durablePath)
+    ? readJson(durablePath, null)
+    : emptyDurablePriceHistory({ nowIso: nowIsoHist, runId: env.GITHUB_RUN_ID || null });
+  const durableDoc = appendDurablePriceHistory(priorDurable, {
+    nowIso: nowIsoHist,
+    runId: env.GITHUB_RUN_ID || null,
+    sha: env.GITHUB_SHA || null,
+    evidenceClass,
+    priceChanges: collected.priceChanges || [],
+    formatOnlyChanges: collected.formatOnlyChanges || [],
+    availabilityChanges: collected.availabilityChanges || [],
+  });
+  durableDoc.readProof = assertDurableHistoryReadable(priorDurable, durableDoc);
+  durableDoc.publicationGate = publicationGate;
+  fs.writeFileSync(durablePath, JSON.stringify(durableDoc, null, 2) + "\n", "utf8");
+
+  const prevRevPath = path.join(dataDir, "iu-affiliate-cj-product-reverify-v50.json");
+  const prevRevDoc = fs.existsSync(prevRevPath) ? readJson(prevRevPath, null) : null;
+  const previousByKey = indexProductsByCompoundIdentity(prevPublic || {});
+  const prevRevByKey = new Map((prevRevDoc?.rows || []).map((r) => [r.compoundIdentity, r]));
+  const reverifyDoc = buildProductReverifyLedger({
+    doc,
+    coverageByKey,
+    refreshedByKey,
+    previousByKey,
+    previousReverifyByKey: prevRevByKey,
+    nowIso: nowIsoHist,
+    runId: env.GITHUB_RUN_ID || null,
+    sha: env.GITHUB_SHA || null,
+  });
+  reverifyDoc.crossRun = compareReverifyRuns(prevRevDoc, reverifyDoc);
+  reverifyDoc.publicationGate = publicationGate;
+  fs.writeFileSync(prevRevPath, JSON.stringify(reverifyDoc, null, 2) + "\n", "utf8");
+
+  const identityFetched =
+    Array.isArray(productMeta?.fetchedIdentityRows) && productMeta.fetchedIdentityRows.length
+      ? productMeta.fetchedIdentityRows
+      : [];
+  const identityDoc = buildProductIdentityLedger({
+    fetchedRows: identityFetched,
+    publishedDoc: doc,
+    nowIso: nowIsoHist,
+    runId: env.GITHUB_RUN_ID || null,
+    sha: env.GITHUB_SHA || null,
+    maxRows: 500,
+  });
+  if (productMeta?.sourceProductsFetched != null) {
+    identityDoc.accounting.fetchedRowsWithIdentity = Number(productMeta.sourceProductsFetched);
+  }
+  if (productMeta?.sourceProductsUnique != null) {
+    identityDoc.accounting.uniqueIdentitiesInRun = Number(productMeta.sourceProductsUnique);
+  }
+  if (
+    identityDoc.accounting.fetchedRowsWithIdentity != null &&
+    identityDoc.accounting.uniqueIdentitiesInRun != null
+  ) {
+    identityDoc.accounting.duplicateApiRows = Math.max(
+      0,
+      identityDoc.accounting.fetchedRowsWithIdentity - identityDoc.accounting.uniqueIdentitiesInRun
+    );
+    identityDoc.accounting.uniqueEqualsFetchedRows =
+      identityDoc.accounting.fetchedRowsWithIdentity ===
+      identityDoc.accounting.uniqueIdentitiesInRun;
+  }
+  identityDoc.sampleRows = identityFetched.length;
+  identityDoc.sampleCapped = productMeta?.fetchedIdentityRowsCapped === true;
+  identityDoc.presentationBudgetDeferred =
+    productMeta?.sourceProductsDeferredPresentationBudget ?? null;
+  identityDoc.publishPerPartner = productMeta?.publishPerPartner ?? null;
+  identityDoc.evidenceClass = identityFetched.length
+    ? "COMPOUND_IDENTITY_SET_PLUS_SAMPLES"
+    : "AGGREGATE_FROM_LIVE_SYNC_UNIQUE_SET";
+  identityDoc.publicationGate = publicationGate;
+  fs.writeFileSync(
+    path.join(dataDir, "iu-affiliate-cj-product-identity-v50.json"),
+    JSON.stringify(identityDoc, null, 2) + "\n",
+    "utf8"
+  );
+
+  return {
+    ok: true,
+    histDoc,
+    durableDoc,
+    reverifyDoc,
+    identityDoc,
+    durableReadProof: durableDoc.readProof,
+  };
+}
+
+/**
  * Atomic write of offers-public when armed. Default dry-run.
  */
 export async function runOffersLiveSync(opts = {}) {
@@ -1462,23 +1593,51 @@ export async function runOffersLiveSync(opts = {}) {
     refDate: opts.refDate || new Date(),
   });
 
+  const prevReady = readyCounts(prevPublic);
+  const nowIso = new Date().toISOString();
+  let verificationOnly = false;
+  let stagingBlockReason = null;
+
   if (!built.ok) {
-    return {
-      ok: false,
-      armed,
-      wrote: false,
-      reason: built.reason,
-      liveEnabled: false,
-      counts: readyCounts(built.doc),
-      productMeta,
-      refreshMeta,
-      doc: built.doc,
-    };
+    const canVerifyLkg =
+      (built.reason === "STAGING_EMPTY" || built.reason === "API_OUTAGE_KEEP_LKG") &&
+      prevPublic?.liveEnabled === true &&
+      prevReady.products > 0;
+    if (!canVerifyLkg) {
+      return {
+        ok: false,
+        armed,
+        wrote: false,
+        reason: built.reason,
+        liveEnabled: false,
+        counts: readyCounts(built.doc),
+        productMeta,
+        refreshMeta,
+        doc: built.doc,
+        verificationLedgersWritten: false,
+        note:
+          built.reason === "STAGING_EMPTY"
+            ? "Empty staging and no LIVE LKG products — no durable ledger invent."
+            : undefined,
+      };
+    }
+    // V51: SOURCE_VERIFIED path independent of publication staging.
+    verificationOnly = true;
+    stagingBlockReason = built.reason;
   }
 
-  const prevReady = readyCounts(prevPublic);
-  let doc = built.doc;
-  const nowIso = new Date().toISOString();
+  let doc = verificationOnly
+    ? JSON.parse(JSON.stringify(prevPublic))
+    : built.doc;
+  if (verificationOnly) {
+    doc.note =
+      (doc.note ? String(doc.note) + " | " : "") +
+      "V51_VERIFY_ONLY: publication staging blocked (" +
+      stagingBlockReason +
+      "); product reverify/durable ledgers still run against LIVE LKG.";
+    doc.verificationOnly = true;
+    doc.stagingBlockReason = stagingBlockReason;
+  }
 
   // Refresh targets = keys in the catalog we are about to publish (authoritative).
   // Fall back to previous LIVE public when the new build has no products yet.
@@ -1740,6 +1899,80 @@ export async function runOffersLiveSync(opts = {}) {
     if (refreshMeta?.missReverify) doc.refreshCoverage.missReverify = refreshMeta.missReverify;
   }
   const nextReady = readyCounts(doc);
+
+  // V51: staging empty/outage must not block SOURCE_VERIFIED durable ledgers when LIVE LKG exists.
+  if (verificationOnly) {
+    const ledgerWrite = writeDurableVerificationLedgers({
+      dataDir,
+      env,
+      doc,
+      prevPublic,
+      coverageByKey,
+      refreshedByKey,
+      productMeta,
+      nowIso: new Date().toISOString(),
+      evidenceClass: "VERIFY_ONLY_LKG",
+      publicationGate: "STAGING_BLOCKED_LEDGER_ONLY",
+    });
+    console.log(
+      JSON.stringify({
+        IU_CJ_V51_VERIFY_ONLY: "OK",
+        stagingBlockReason,
+        durableWrite: ledgerWrite.ok,
+        durablePrice: ledgerWrite.durableDoc?.counts || null,
+        durableReadProof: ledgerWrite.durableReadProof || null,
+        reverify: ledgerWrite.reverifyDoc?.counts || null,
+        identity: ledgerWrite.identityDoc?.accounting || null,
+      })
+    );
+    const auditPath = path.join(dataDir, "iu-affiliate-cj-offers-sync-audit-v1.json");
+    fs.writeFileSync(
+      auditPath,
+      JSON.stringify(
+        {
+          at: new Date().toISOString(),
+          armed,
+          liveWanted,
+          wrote: false,
+          reason:
+            stagingBlockReason === "STAGING_EMPTY"
+              ? "STAGING_EMPTY_VERIFY_ONLY"
+              : "API_OUTAGE_VERIFY_ONLY",
+          verificationOnly: true,
+          verificationLedgersWritten: ledgerWrite.ok === true,
+          stagingBlockReason,
+          counts: nextReady,
+          prevReady,
+          productMeta,
+          refreshMeta,
+          durableReadProof: ledgerWrite.durableReadProof || null,
+        },
+        null,
+        2
+      ) + "\n",
+      "utf8"
+    );
+    return {
+      ok: false,
+      armed,
+      wrote: false,
+      reason:
+        stagingBlockReason === "STAGING_EMPTY"
+          ? "STAGING_EMPTY_VERIFY_ONLY"
+          : "API_OUTAGE_VERIFY_ONLY",
+      liveEnabled: false,
+      counts: nextReady,
+      prevReady,
+      productMeta,
+      refreshMeta,
+      verificationLedgersWritten: ledgerWrite.ok === true,
+      durableReadProof: ledgerWrite.durableReadProof || null,
+      reverifyCounts: ledgerWrite.reverifyDoc?.counts || null,
+      doc,
+      auditPath,
+    };
+  }
+
   const keepLive =
     armed &&
     prevPublic?.liveEnabled === true &&
@@ -2074,131 +2307,45 @@ export async function runOffersLiveSync(opts = {}) {
       JSON.stringify(funnelFp, null, 2) + "\n",
       "utf8"
     );
-    const nowIsoHist = new Date().toISOString();
-    const collected = collectChangeRowsFromOffersDoc(doc, {
-      nowIso: nowIsoHist,
-      runId: env.GITHUB_RUN_ID || null,
-      // Accept cards that carry a stamped priceChangedAt/availabilityChangedAt (real merge trail).
-      acceptAny: true,
-    });
-    // Cap production history payload; full trail remains on product cards.
-    // V49: economic priceChanges only; FORMAT_ONLY kept separately.
-    const histDoc = buildPriceAvailabilityHistory({
-      priceChanges: collected.priceChanges.slice(0, 500),
-      formatOnlyChanges: (collected.formatOnlyChanges || []).slice(0, 500),
-      availabilityChanges: collected.availabilityChanges.slice(0, 500),
-      nowIso: nowIsoHist,
-      runId: env.GITHUB_RUN_ID || null,
-      sha: env.GITHUB_SHA || null,
-      evidenceClass: "CURRENT_PRODUCTION",
-    });
-    fs.writeFileSync(
-      path.join(dataDir, "iu-affiliate-cj-price-availability-history-v48.json"),
-      JSON.stringify(histDoc, null, 2) + "\n",
-      "utf8"
-    );
-
-    // V50: append-only durable price history (idempotent eventKey; next-run readable).
-    const durablePath = path.join(dataDir, "iu-affiliate-cj-durable-price-history-v50.json");
-    const priorDurable = fs.existsSync(durablePath)
-      ? readJson(durablePath, null)
-      : emptyDurablePriceHistory({ nowIso: nowIsoHist, runId: env.GITHUB_RUN_ID || null });
-    const durableDoc = appendDurablePriceHistory(priorDurable, {
-      nowIso: nowIsoHist,
-      runId: env.GITHUB_RUN_ID || null,
-      sha: env.GITHUB_SHA || null,
-      evidenceClass: "CURRENT_PRODUCTION",
-      priceChanges: collected.priceChanges || [],
-      formatOnlyChanges: collected.formatOnlyChanges || [],
-      availabilityChanges: collected.availabilityChanges || [],
-    });
-    durableDoc.readProof = assertDurableHistoryReadable(priorDurable, durableDoc);
-    fs.writeFileSync(durablePath, JSON.stringify(durableDoc, null, 2) + "\n", "utf8");
-
-    // V50: per-product reverify ledger (source re-compare only).
-    const prevRevPath = path.join(dataDir, "iu-affiliate-cj-product-reverify-v50.json");
-    const prevRevDoc = fs.existsSync(prevRevPath) ? readJson(prevRevPath, null) : null;
-    const previousByKey = indexProductsByCompoundIdentity(prevPublic || {});
-    const prevRevByKey = new Map(
-      (prevRevDoc?.rows || []).map((r) => [r.compoundIdentity, r])
-    );
-    const reverifyDoc = buildProductReverifyLedger({
+    const ledgerWrite = writeDurableVerificationLedgers({
+      dataDir,
+      env,
       doc,
+      prevPublic,
       coverageByKey,
       refreshedByKey,
-      previousByKey,
-      previousReverifyByKey: prevRevByKey,
-      nowIso: nowIsoHist,
-      runId: env.GITHUB_RUN_ID || null,
-      sha: env.GITHUB_SHA || null,
+      productMeta,
+      nowIso: new Date().toISOString(),
+      evidenceClass: verificationOnly ? "VERIFY_ONLY_LKG" : "CURRENT_PRODUCTION",
+      publicationGate: verificationOnly
+        ? "STAGING_BLOCKED_LEDGER_ONLY"
+        : "PUBLICATION_PIPELINE",
     });
-    reverifyDoc.crossRun = compareReverifyRuns(prevRevDoc, reverifyDoc);
-    fs.writeFileSync(prevRevPath, JSON.stringify(reverifyDoc, null, 2) + "\n", "utf8");
-
-    // V50: identity UNIQUE ledger (compound; not row count).
-    const identityFetched =
-      Array.isArray(productMeta?.fetchedIdentityRows) && productMeta.fetchedIdentityRows.length
-        ? productMeta.fetchedIdentityRows
-        : [];
-    const identityDoc = buildProductIdentityLedger({
-      fetchedRows: identityFetched,
-      publishedDoc: doc,
-      nowIso: nowIsoHist,
-      runId: env.GITHUB_RUN_ID || null,
-      sha: env.GITHUB_SHA || null,
-      maxRows: 500,
-    });
-    // Prefer authoritative live-sync counters when samples are capped or empty.
-    if (productMeta?.sourceProductsFetched != null) {
-      identityDoc.accounting.fetchedRowsWithIdentity = Number(productMeta.sourceProductsFetched);
-    }
-    if (productMeta?.sourceProductsUnique != null) {
-      identityDoc.accounting.uniqueIdentitiesInRun = Number(productMeta.sourceProductsUnique);
-    }
-    if (
-      identityDoc.accounting.fetchedRowsWithIdentity != null &&
-      identityDoc.accounting.uniqueIdentitiesInRun != null
-    ) {
-      identityDoc.accounting.duplicateApiRows = Math.max(
-        0,
-        identityDoc.accounting.fetchedRowsWithIdentity - identityDoc.accounting.uniqueIdentitiesInRun
-      );
-      identityDoc.accounting.uniqueEqualsFetchedRows =
-        identityDoc.accounting.fetchedRowsWithIdentity ===
-        identityDoc.accounting.uniqueIdentitiesInRun;
-    }
-    identityDoc.sampleRows = identityFetched.length;
-    identityDoc.sampleCapped = productMeta?.fetchedIdentityRowsCapped === true;
-    identityDoc.presentationBudgetDeferred =
-      productMeta?.sourceProductsDeferredPresentationBudget ?? null;
-    identityDoc.publishPerPartner = productMeta?.publishPerPartner ?? null;
-    identityDoc.evidenceClass = identityFetched.length
-      ? "COMPOUND_IDENTITY_SET_PLUS_SAMPLES"
-      : "AGGREGATE_FROM_LIVE_SYNC_UNIQUE_SET";
-    fs.writeFileSync(
-      path.join(dataDir, "iu-affiliate-cj-product-identity-v50.json"),
-      JSON.stringify(identityDoc, null, 2) + "\n",
-      "utf8"
-    );
+    const histDoc = ledgerWrite.histDoc;
+    const durableDoc = ledgerWrite.durableDoc;
+    const reverifyDoc = ledgerWrite.reverifyDoc;
+    const identityDoc = ledgerWrite.identityDoc;
 
     console.log(
       JSON.stringify({
         IU_CJ_PRODUCT_FUNNEL_V46_WRITE: "OK",
         IU_CJ_FEED_CONTINUATION_V47_WRITE: "OK",
         IU_CJ_PRODUCT_PROGRESS_V48_WRITE: "OK",
-        IU_CJ_DURABLE_PRICE_V50_WRITE: "OK",
-        IU_CJ_PRODUCT_REVERIFY_V50_WRITE: "OK",
-        IU_CJ_PRODUCT_IDENTITY_V50_WRITE: "OK",
+        IU_CJ_DURABLE_PRICE_V50_WRITE: ledgerWrite.ok ? "OK" : "FAIL",
+        IU_CJ_PRODUCT_REVERIFY_V50_WRITE: ledgerWrite.ok ? "OK" : "FAIL",
+        IU_CJ_PRODUCT_IDENTITY_V50_WRITE: ledgerWrite.ok ? "OK" : "FAIL",
+        verificationOnly: verificationOnly === true,
+        stagingBlockReason: stagingBlockReason || null,
         counts: funnelDoc.counts,
         continuationCounts: continuationDoc.counts,
         honestContinuationCounts: honestCounts,
         fetchedPublished: funnelFp.snapshot,
-        priceAvailability: histDoc.counts,
-        durablePrice: durableDoc.counts,
-        durableReadProof: durableDoc.readProof,
-        reverify: reverifyDoc.counts,
-        reverifyCrossRun: reverifyDoc.crossRun,
-        identity: identityDoc.accounting,
+        priceAvailability: histDoc?.counts || null,
+        durablePrice: durableDoc?.counts || null,
+        durableReadProof: durableDoc?.readProof || null,
+        reverify: reverifyDoc?.counts || null,
+        reverifyCrossRun: reverifyDoc?.crossRun || null,
+        identity: identityDoc?.accounting || null,
         declaredSum: declaredDoc.declaredProductCountSum,
         missingFeedPartners: missingDoc.count,
         statsPartners: doc.stats?.partners,

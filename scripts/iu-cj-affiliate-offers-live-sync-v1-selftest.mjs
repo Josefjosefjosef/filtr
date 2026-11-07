@@ -275,9 +275,22 @@ function expect(name, cond) {
     "empty_refused",
     refused.ok === false &&
       (refused.reason === "STAGING_EMPTY" ||
+        refused.reason === "STAGING_EMPTY_VERIFY_ONLY" ||
         refused.reason === "EMPTY_OFFERS_REGRESSION_KEEP_LKG" ||
         refused.reason === "ZERO_PUBLICATION_READY_REFUSED")
   );
+  // V51: with LIVE LKG products, empty staging still writes durable verification ledgers.
+  if (refused.reason === "STAGING_EMPTY_VERIFY_ONLY") {
+    expect("verify_only_ledgers", refused.verificationLedgersWritten === true);
+    expect(
+      "verify_only_durable_file",
+      fs.existsSync(path.join(dataDir, "iu-affiliate-cj-durable-price-history-v50.json"))
+    );
+    expect(
+      "verify_only_reverify_file",
+      fs.existsSync(path.join(dataDir, "iu-affiliate-cj-product-reverify-v50.json"))
+    );
+  }
 }
 
 {
