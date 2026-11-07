@@ -150,6 +150,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-first-click-v50-selftest.mjs
       - name: Staging empty VERIFY_ONLY durable ledgers selftest (V51; offline)
         run: node scripts/iu-cj-affiliate-phase3z-staging-verify-only-v51-selftest.mjs
+      - name: Durable slim-tip preserve + prior-run restore selftest (V51.1; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-durable-slim-preserve-v51-selftest.mjs
       - name: Registry URL gate parity selftest (V41; offline)
         run: node scripts/iu-cj-affiliate-phase3z-registry-url-gate-v41-selftest.mjs
       - name: Schedule slot watch selftest (V42; offline)
@@ -287,6 +289,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin "${SYNC_BRANCH}" --depth=1 || true
           # V32: staging slim rewrite must NOT wipe durable offers/checkpoints/email bridge.
+          # V51.1: also preserve price/reverify/identity + refresh/miss (fetch-staging orphan was wiping them → DURABLE_LEDGER_MISSING).
           DURABLE_FILES="
             iu-affiliate-cj-managed-public-v1.json
             iu-affiliate-cj-managed-registry-v1.json
@@ -297,6 +300,13 @@ jobs:
             iu-affiliate-cj-offers-sync-audit-v1.json
             iu-affiliate-cj-product-feed-checkpoints-v31.json
             iu-affiliate-cj-email-only-offers-bridge-v31.json
+            iu-affiliate-cj-refresh-coverage-v35.json
+            iu-affiliate-cj-miss-products-v38.json
+            iu-affiliate-cj-feed-inventory-v40.json
+            iu-affiliate-cj-cumulative-coverage-v40.json
+            iu-affiliate-cj-durable-price-history-v50.json
+            iu-affiliate-cj-product-reverify-v50.json
+            iu-affiliate-cj-product-identity-v50.json
           "
           for f in $DURABLE_FILES; do
             tmp="${STASH}/prev/${f}.tmp"
@@ -321,7 +331,14 @@ jobs:
             iu-affiliate-cj-offers-public-lkg-v1.json \
             iu-affiliate-cj-offers-sync-audit-v1.json \
             iu-affiliate-cj-product-feed-checkpoints-v31.json \
-            iu-affiliate-cj-email-only-offers-bridge-v31.json
+            iu-affiliate-cj-email-only-offers-bridge-v31.json \
+            iu-affiliate-cj-refresh-coverage-v35.json \
+            iu-affiliate-cj-miss-products-v38.json \
+            iu-affiliate-cj-feed-inventory-v40.json \
+            iu-affiliate-cj-cumulative-coverage-v40.json \
+            iu-affiliate-cj-durable-price-history-v50.json \
+            iu-affiliate-cj-product-reverify-v50.json \
+            iu-affiliate-cj-product-identity-v50.json
           do
             if [ -s "${STASH}/prev/${f}" ]; then
               cp "${STASH}/prev/${f}" "projects/data/${f}"
@@ -402,6 +419,7 @@ jobs:
           git config user.name "iu-cj-catalog-sync-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin "${SYNC_BRANCH}" --depth=1 || true
+          # V51.1: publish-gate slim tip must also keep durable ledgers / refresh / miss.
           DURABLE_FILES="
             iu-affiliate-cj-managed-public-v1.json
             iu-affiliate-cj-managed-registry-v1.json
@@ -412,6 +430,13 @@ jobs:
             iu-affiliate-cj-offers-sync-audit-v1.json
             iu-affiliate-cj-product-feed-checkpoints-v31.json
             iu-affiliate-cj-email-only-offers-bridge-v31.json
+            iu-affiliate-cj-refresh-coverage-v35.json
+            iu-affiliate-cj-miss-products-v38.json
+            iu-affiliate-cj-feed-inventory-v40.json
+            iu-affiliate-cj-cumulative-coverage-v40.json
+            iu-affiliate-cj-durable-price-history-v50.json
+            iu-affiliate-cj-product-reverify-v50.json
+            iu-affiliate-cj-product-identity-v50.json
           "
           for f in $DURABLE_FILES; do
             tmp="${STASH}/prev/${f}.tmp"
@@ -437,7 +462,14 @@ jobs:
             iu-affiliate-cj-offers-public-lkg-v1.json \
             iu-affiliate-cj-offers-sync-audit-v1.json \
             iu-affiliate-cj-product-feed-checkpoints-v31.json \
-            iu-affiliate-cj-email-only-offers-bridge-v31.json
+            iu-affiliate-cj-email-only-offers-bridge-v31.json \
+            iu-affiliate-cj-refresh-coverage-v35.json \
+            iu-affiliate-cj-miss-products-v38.json \
+            iu-affiliate-cj-feed-inventory-v40.json \
+            iu-affiliate-cj-cumulative-coverage-v40.json \
+            iu-affiliate-cj-durable-price-history-v50.json \
+            iu-affiliate-cj-product-reverify-v50.json \
+            iu-affiliate-cj-product-identity-v50.json
           do
             if [ -s "${STASH}/prev/${f}" ]; then
               cp "${STASH}/prev/${f}" "projects/data/${f}"
@@ -820,6 +852,60 @@ jobs:
                 || restore_git_file "FETCH_HEAD:projects/data/${DUR}" "$DP" \
                 || true
             fi
+          done
+          # V51.1: prior-run artifact restore (survives fetch-staging slim wipe; reverify >1MB so skip gh contents).
+          NEED_DUR=0
+          for DUR in \
+            iu-affiliate-cj-durable-price-history-v50.json \
+            iu-affiliate-cj-product-reverify-v50.json \
+            iu-affiliate-cj-product-identity-v50.json
+          do
+            if [ ! -f "projects/data/${DUR}" ] || [ ! -s "projects/data/${DUR}" ]; then NEED_DUR=1; fi
+          done
+          if [ "$NEED_DUR" = "1" ]; then
+            set +e
+            PRIOR_DUR_RUN=$(gh run list \
+              --workflow cj-affiliate-catalog-sync.yml \
+              --branch main \
+              --status completed \
+              --limit 20 \
+              --json databaseId,conclusion \
+              --jq '[.[] | select(.conclusion=="success")][0].databaseId')
+            if [ -n "${PRIOR_DUR_RUN}" ] && [ "${PRIOR_DUR_RUN}" != "null" ]; then
+              mkdir -p "${RUNNER_TEMP}/iu-cj-dur-prior"
+              gh run download "${PRIOR_DUR_RUN}" \
+                -n iu-affiliate-cj-product-feed-checkpoints \
+                -D "${RUNNER_TEMP}/iu-cj-dur-prior" \
+                2>/tmp/iu-dur-prior.err
+              dur_rc=$?
+              if [ "$dur_rc" -eq 0 ]; then
+                for DUR in \
+                  iu-affiliate-cj-durable-price-history-v50.json \
+                  iu-affiliate-cj-product-reverify-v50.json \
+                  iu-affiliate-cj-product-identity-v50.json
+                do
+                  SRC="${RUNNER_TEMP}/iu-cj-dur-prior/${DUR}"
+                  DP="projects/data/${DUR}"
+                  if [ ! -s "$DP" ] && [ -s "$SRC" ]; then
+                    cp "$SRC" "$DP"
+                    echo "DURABLE_PRIOR_RUN_RESTORE=${DUR} run=${PRIOR_DUR_RUN} bytes=$(wc -c < "$DP" | tr -d ' ')"
+                  fi
+                done
+              else
+                echo "DURABLE_PRIOR_RUN_RESTORE_FAIL run=${PRIOR_DUR_RUN} rc=${dur_rc}"
+                cat /tmp/iu-dur-prior.err 2>/dev/null || true
+              fi
+            else
+              echo "DURABLE_PRIOR_RUN_NONE"
+            fi
+            set -e
+          fi
+          for DUR in \
+            iu-affiliate-cj-durable-price-history-v50.json \
+            iu-affiliate-cj-product-reverify-v50.json \
+            iu-affiliate-cj-product-identity-v50.json
+          do
+            DP="projects/data/${DUR}"
             if [ -f "$DP" ] && [ -s "$DP" ]; then
               echo "DURABLE_LEDGER_RESTORED=${DUR}"
             else
