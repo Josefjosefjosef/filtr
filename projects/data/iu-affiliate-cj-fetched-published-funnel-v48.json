@@ -1,0 +1,149 @@
+{
+  "schema": "iu-cj-affiliate-phase3z-fetched-published-funnel-v48",
+  "at": "2026-11-07T15:08:46.541Z",
+  "runId": "42378932874",
+  "sha": "c0769cf2e969954cca7226997ccf4231516a826c",
+  "interpretation": {
+    "fetchedRowsMeaning": "API shoppingProducts rows returned in this discovery window (sum across partners/pages). Includes duplicates across partners, window re-reads, and rows later rejected. NOT unique published catalog size.",
+    "publishedMeaning": "Offer occurrences in offers-public after presentation budget + validation gates. Unique identities ≤ occurrences. Multi-section placement is intentional, not an identity error.",
+    "whyFetchedExceedsPublished": "Presentation budget (publishPerPartner), validation rejects, empty/incomplete partners, and multi-page windows accumulate rows far above the public slice.",
+    "uniqueUnknownRule": "If uniqueInWindow was not measured, UNIQUE.accepted=null and UNIQUE.unknown=input — never UNIQUE.rejected=input."
+  },
+  "stages": [
+    {
+      "name": "API_FETCHED",
+      "input": 51483,
+      "accepted": 51483,
+      "rejected": 0,
+      "unknown": 0,
+      "duplicates": null,
+      "reasonCode": null,
+      "note": "raw API rows this run"
+    },
+    {
+      "name": "UNIQUE_IDENTITIES",
+      "input": 51483,
+      "accepted": 51483,
+      "rejected": 0,
+      "unknown": 0,
+      "duplicates": 0,
+      "reasonCode": null,
+      "note": "unique advertiserId|productId in discovery window when measured"
+    },
+    {
+      "name": "VALIDATED",
+      "input": 51483,
+      "accepted": 50527,
+      "rejected": 956,
+      "unknown": 0,
+      "duplicates": null,
+      "reasonCode": null,
+      "note": "trusted URL + price + currency + https image"
+    },
+    {
+      "name": "CZ_ELIGIBLE",
+      "input": 50527,
+      "accepted": 50527,
+      "rejected": 0,
+      "unknown": 0,
+      "duplicates": null,
+      "reasonCode": null,
+      "note": "CZ usability gates"
+    },
+    {
+      "name": "AUTHORIZED",
+      "input": 50527,
+      "accepted": 50527,
+      "rejected": 0,
+      "unknown": 0,
+      "duplicates": null,
+      "reasonCode": null,
+      "note": "joined/managed publication permission"
+    },
+    {
+      "name": "CATEGORY_ASSIGNED",
+      "input": 50527,
+      "accepted": 50527,
+      "rejected": 0,
+      "unknown": 0,
+      "duplicates": null,
+      "reasonCode": null,
+      "note": "section map assignment"
+    },
+    {
+      "name": "PUBLICATION_READY",
+      "input": 50527,
+      "accepted": 50527,
+      "rejected": 0,
+      "unknown": 0,
+      "duplicates": null,
+      "reasonCode": null,
+      "note": "publicationReady=true"
+    },
+    {
+      "name": "SELECTED",
+      "input": 50527,
+      "accepted": 3534,
+      "rejected": 46993,
+      "unknown": 0,
+      "duplicates": null,
+      "reasonCode": null,
+      "note": "presentation budget selection (publishPerPartner / rotate)"
+    },
+    {
+      "name": "PUBLISHED_UNIQUE",
+      "input": 3534,
+      "accepted": 3258,
+      "rejected": 276,
+      "unknown": 0,
+      "duplicates": null,
+      "reasonCode": null,
+      "note": "unique identities in public catalog"
+    },
+    {
+      "name": "PUBLISHED_OCCURRENCES",
+      "input": 3258,
+      "accepted": 3534,
+      "rejected": 0,
+      "unknown": 0,
+      "duplicates": null,
+      "reasonCode": null,
+      "note": "section occurrences (one identity may appear in multiple sections)"
+    },
+    {
+      "name": "DOM_RENDERED",
+      "input": 3534,
+      "accepted": null,
+      "rejected": null,
+      "unknown": 3534,
+      "duplicates": null,
+      "reasonCode": "DOM_NOT_MEASURED",
+      "note": "requires browser proof; unknown when not measured"
+    }
+  ],
+  "rejectReasons": {
+    "time_window": 157,
+    "future_start": 157,
+    "market_not_targeting_cz": 2519,
+    "partner_section_unmapped": 39,
+    "partner_not_in_approved_hint_map": 1171,
+    "incomplete_fields": 1158,
+    "time_not_proven": 1155,
+    "not_classified_as_publishable_discount": 1175,
+    "product_rejected": 5,
+    "product_unplaced": 6,
+    "duplicate_product": 1,
+    "missing_https_image": 956
+  },
+  "snapshot": {
+    "fetchedRows": 51483,
+    "uniqueInWindow": 51483,
+    "uniqueMeasured": true,
+    "duplicateApiRows": 0,
+    "ready": 50527,
+    "selected": 3534,
+    "publishedOccurrences": 3534,
+    "publishedUnique": 3258,
+    "ratioPublishedToFetched": 0.068644
+  }
+}

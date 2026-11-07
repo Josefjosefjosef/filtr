@@ -1,0 +1,99 @@
+{
+  "schema": "iu-cj-affiliate-phase3z-cumulative-coverage-v40",
+  "evidenceClass": "CURRENT_PRODUCTION",
+  "at": "2026-11-07T15:08:46.524Z",
+  "runId": "42378932874",
+  "snapshotId": "2026-11-07T14:55:45.339Z",
+  "sha": "c0769cf2e969954cca7226997ccf4231516a826c",
+  "source": "iu-affiliate-cj-refresh-coverage-v35.json#cumulative",
+  "everMatchedCount": 3181,
+  "lastPass": {
+    "at": "2026-11-07T14:55:45.339Z",
+    "runId": "42378932874",
+    "refreshMode": "productIds_with_scan_fallback",
+    "publishedUnique": 3258,
+    "passMatchedUnique": 3181,
+    "passNotMatchedUnique": 77,
+    "passCoveragePct": 97.64,
+    "cumulativeMatchedUnique": 3181,
+    "cumulativeNotMatchedUnique": 77,
+    "cumulativeCoveragePct": 97.64,
+    "apiRequests": null,
+    "repeatedProducts": null,
+    "priceChanges": null,
+    "availabilityChanges": null,
+    "errors": null,
+    "staleHidden": null,
+    "recovered": 270,
+    "measured": true,
+    "note": "Measured pass only — not a simulation or capacity estimate."
+  },
+  "horizons": {
+    "3h": {
+      "status": "PENDING_OBSERVATION",
+      "elapsedHours": 0,
+      "requiredHours": 3,
+      "note": "Wall-clock horizon not yet elapsed; not extrapolated."
+    },
+    "6h": {
+      "status": "PENDING_OBSERVATION",
+      "elapsedHours": 0,
+      "requiredHours": 6,
+      "note": "Wall-clock horizon not yet elapsed; not extrapolated."
+    },
+    "12h": {
+      "status": "PENDING_OBSERVATION",
+      "elapsedHours": 0,
+      "requiredHours": 12,
+      "note": "Wall-clock horizon not yet elapsed; not extrapolated."
+    },
+    "24h": {
+      "status": "PENDING_OBSERVATION",
+      "elapsedHours": 0,
+      "requiredHours": 24,
+      "note": "Wall-clock horizon not yet elapsed; not extrapolated."
+    },
+    "48h": {
+      "status": "PENDING_OBSERVATION",
+      "elapsedHours": 0,
+      "requiredHours": 48,
+      "note": "Wall-clock horizon not yet elapsed; not extrapolated."
+    }
+  },
+  "snapshotCount": 2,
+  "snapshots": [
+    {
+      "at": "2026-11-07T14:55:45.348Z",
+      "runId": "42378932874",
+      "refreshMode": "productIds_with_scan_fallback",
+      "publishedUnique": 3258,
+      "passMatchedUnique": 2911,
+      "passNotMatchedUnique": 347,
+      "passCoveragePct": 89.35,
+      "cumulativeMatchedUnique": 2911,
+      "cumulativeNotMatchedUnique": 347,
+      "cumulativeCoveragePct": 89.35,
+      "priceChanges": null,
+      "availabilityChanges": null,
+      "errors": 0,
+      "measured": true
+    },
+    {
+      "at": "2026-11-07T14:55:45.339Z",
+      "runId": "42378932874",
+      "refreshMode": "productIds_with_scan_fallback",
+      "publishedUnique": 3258,
+      "passMatchedUnique": 3181,
+      "passNotMatchedUnique": 77,
+      "passCoveragePct": 97.64,
+      "cumulativeMatchedUnique": 3181,
+      "cumulativeNotMatchedUnique": 77,
+      "cumulativeCoveragePct": 97.64,
+      "priceChanges": null,
+      "availabilityChanges": null,
+      "errors": null,
+      "measured": true
+    }
+  ],
+  "note": "Horizons use wall-clock elapsed evidence only; never extrapolated."
+}

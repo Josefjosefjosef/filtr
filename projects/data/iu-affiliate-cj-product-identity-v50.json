@@ -1,0 +1,7527 @@
+{
+  "schema": "iu-cj-affiliate-phase3z-product-identity-v50",
+  "at": "2026-11-07T15:08:46.541Z",
+  "runId": "42378932874",
+  "sha": "c0769cf2e969954cca7226997ccf4231516a826c",
+  "note": "UNIQUE = distinct compoundIdentity(advertiserId|productId) in this fetch window. Same productId across partners is NOT a collision. UNIQUE ≠ fetchedRows unless zero duplicates.",
+  "accounting": {
+    "fetchedRowsWithIdentity": 51483,
+    "uniqueIdentitiesInRun": 51483,
+    "duplicateApiRows": 0,
+    "uniqueEqualsFetchedRows": true,
+    "publishedUnique": 3258,
+    "publishedOccurrences": 3534,
+    "duplicateSameFeedSignals": 0,
+    "duplicateCrossFeedSamePartner": 0,
+    "crossPartnerSameProductIdCount": 90
+  },
+  "presentationBudgetNote": "READY→PUBLISHED gap is driven by per-partner presentation budget (selectPresentationSlice), not by wiping UNIQUE identities.",
+  "rows": [
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-ABU086_00X",
+      "compoundIdentity": "4327375|99KK-ABU086_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-AKD9DP_GLD",
+      "compoundIdentity": "4327375|99KK-AKD9DP_GLD",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-AKDAHJ_GLD",
+      "compoundIdentity": "4327375|99KK-AKDAHJ_GLD",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-AKDAIN_GLD",
+      "compoundIdentity": "4327375|99KK-AKDAIN_GLD",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-AKDZLY_SLV",
+      "compoundIdentity": "4327375|99KK-AKDZLY_SLV",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-AKDZN0_GLA",
+      "compoundIdentity": "4327375|99KK-AKDZN0_GLA",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-AKM4F0_SLV",
+      "compoundIdentity": "4327375|99KK-AKM4F0_SLV",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-AKM4JN_GLD",
+      "compoundIdentity": "4327375|99KK-AKM4JN_GLD",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-AKU5Z9_99X",
+      "compoundIdentity": "4327375|99KK-AKU5Z9_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-AKU6AT_88X",
+      "compoundIdentity": "4327375|99KK-AKU6AT_88X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-AKU6JG_50X",
+      "compoundIdentity": "4327375|99KK-AKU6JG_50X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-AKUZS2_55X",
+      "compoundIdentity": "4327375|99KK-AKUZS2_55X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-ATUZUI_TSP",
+      "compoundIdentity": "4327375|99KK-ATUZUI_TSP",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-BID0P8_99X",
+      "compoundIdentity": "4327375|99KK-BID0P8_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-BIM0Z8_90X",
+      "compoundIdentity": "4327375|99KK-BIM0Z8_90X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-BIM12L_92A",
+      "compoundIdentity": "4327375|99KK-BIM12L_92A",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-BIM15I_99A",
+      "compoundIdentity": "4327375|99KK-BIM15I_99A",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-BIMZZ7_90A",
+      "compoundIdentity": "4327375|99KK-BIMZZ7_90A",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-DBU0JD_90X",
+      "compoundIdentity": "4327375|99KK-DBU0JD_90X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-DEU26O_90X",
+      "compoundIdentity": "4327375|99KK-DEU26O_90X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-DEU70K_33X",
+      "compoundIdentity": "4327375|99KK-DEU70K_33X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-DRU0NK_77X",
+      "compoundIdentity": "4327375|99KK-DRU0NK_77X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-DRUZGR_48X",
+      "compoundIdentity": "4327375|99KK-DRUZGR_48X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-DRUZM7_MLC",
+      "compoundIdentity": "4327375|99KK-DRUZM7_MLC",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-EGU2UZ_MLC",
+      "compoundIdentity": "4327375|99KK-EGU2UZ_MLC",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-EGU2YO_MLC",
+      "compoundIdentity": "4327375|99KK-EGU2YO_MLC",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-FIU075_33X",
+      "compoundIdentity": "4327375|99KK-FIU075_33X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-FIU0G6_83X",
+      "compoundIdentity": "4327375|99KK-FIU0G6_83X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-FIU0GB_MLC",
+      "compoundIdentity": "4327375|99KK-FIU0GB_MLC",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-GOU03I_99X",
+      "compoundIdentity": "4327375|99KK-GOU03I_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-KBU1OJ_MLC",
+      "compoundIdentity": "4327375|99KK-KBU1OJ_MLC",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-KBU46D_MLC",
+      "compoundIdentity": "4327375|99KK-KBU46D_MLC",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-KFU02D_TSP",
+      "compoundIdentity": "4327375|99KK-KFU02D_TSP",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-KNU00F_05X",
+      "compoundIdentity": "4327375|99KK-KNU00F_05X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-LGD0H3_00X",
+      "compoundIdentity": "4327375|99KK-LGD0H3_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-OKM0CK_90X",
+      "compoundIdentity": "4327375|99KK-OKM0CK_90X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-OKM146_99X",
+      "compoundIdentity": "4327375|99KK-OKM146_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-OLU04Z_90X",
+      "compoundIdentity": "4327375|99KK-OLU04Z_90X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-OPU09E_08X",
+      "compoundIdentity": "4327375|99KK-OPU09E_08X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-OPUZSU_08X",
+      "compoundIdentity": "4327375|99KK-OPUZSU_08X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-PDU0A2_88X",
+      "compoundIdentity": "4327375|99KK-PDU0A2_88X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-PDU0C1_MLC",
+      "compoundIdentity": "4327375|99KK-PDU0C1_MLC",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-PFM02D_99X",
+      "compoundIdentity": "4327375|99KK-PFM02D_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-PLUZYM_MLC",
+      "compoundIdentity": "4327375|99KK-PLUZYM_MLC",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": true
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-PLUZZA_09X",
+      "compoundIdentity": "4327375|99KK-PLUZZA_09X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-PSUZY9_07X",
+      "compoundIdentity": "4327375|99KK-PSUZY9_07X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-SEU0CJ_33X",
+      "compoundIdentity": "4327375|99KK-SEU0CJ_33X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-SEUZZ9_MLC",
+      "compoundIdentity": "4327375|99KK-SEUZZ9_MLC",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-SJD0KN_55J",
+      "compoundIdentity": "4327375|99KK-SJD0KN_55J",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-SJDZZJ_55J",
+      "compoundIdentity": "4327375|99KK-SJDZZJ_55J",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-SJM010_59X",
+      "compoundIdentity": "4327375|99KK-SJM010_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-SLU00A_TSP",
+      "compoundIdentity": "4327375|99KK-SLU00A_TSP",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-SPK017_90X",
+      "compoundIdentity": "4327375|99KK-SPK017_90X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-SPM0O2_97X",
+      "compoundIdentity": "4327375|99KK-SPM0O2_97X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-SWDZZZ_88X",
+      "compoundIdentity": "4327375|99KK-SWDZZZ_88X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": true
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-TOU0M8_99X",
+      "compoundIdentity": "4327375|99KK-TOU0M8_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-TSDZZU_00X",
+      "compoundIdentity": "4327375|99KK-TSDZZU_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-ZSU00S_00X",
+      "compoundIdentity": "4327375|99KK-ZSU00S_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-ZSU0GL_12X",
+      "compoundIdentity": "4327375|99KK-ZSU0GL_12X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "99KK-ZWU00G_99X",
+      "compoundIdentity": "4327375|99KK-ZWU00G_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-ABU00A_MLC",
+      "compoundIdentity": "4327375|9BY2-ABU00A_MLC",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-AKDZ03_GLD",
+      "compoundIdentity": "4327375|9BY2-AKDZ03_GLD",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-AKDZ29_GLD",
+      "compoundIdentity": "4327375|9BY2-AKDZ29_GLD",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-AKDZ2E_GLD",
+      "compoundIdentity": "4327375|9BY2-AKDZ2E_GLD",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-AKDZN1_03A",
+      "compoundIdentity": "4327375|9BY2-AKDZN1_03A",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-AKDZOT_GLD",
+      "compoundIdentity": "4327375|9BY2-AKDZOT_GLD",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-AKMZYP_30X",
+      "compoundIdentity": "4327375|9BY2-AKMZYP_30X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-AKUZI9_55X",
+      "compoundIdentity": "4327375|9BY2-AKUZI9_55X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": true
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BDDZNN_08X",
+      "compoundIdentity": "4327375|9BY2-BDDZNN_08X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BDDZWK_93X",
+      "compoundIdentity": "4327375|9BY2-BDDZWK_93X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BDDZZS_01X",
+      "compoundIdentity": "4327375|9BY2-BDDZZS_01X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BIBZWN_30X",
+      "compoundIdentity": "4327375|9BY2-BIBZWN_30X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BIDYB7_59X",
+      "compoundIdentity": "4327375|9BY2-BIDYB7_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BIDYDM_99X",
+      "compoundIdentity": "4327375|9BY2-BIDYDM_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BIDYDU_00X",
+      "compoundIdentity": "4327375|9BY2-BIDYDU_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BIDYIP_99X",
+      "compoundIdentity": "4327375|9BY2-BIDYIP_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": true
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BIDYJZ_93X",
+      "compoundIdentity": "4327375|9BY2-BIDYJZ_93X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BIDYKW_84X",
+      "compoundIdentity": "4327375|9BY2-BIDYKW_84X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BIDYLD_93X",
+      "compoundIdentity": "4327375|9BY2-BIDYLD_93X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BIDYME_30X",
+      "compoundIdentity": "4327375|9BY2-BIDYME_30X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BIDYMH_30X",
+      "compoundIdentity": "4327375|9BY2-BIDYMH_30X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BIDYOM_99X",
+      "compoundIdentity": "4327375|9BY2-BIDYOM_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BIDYYP_59X",
+      "compoundIdentity": "4327375|9BY2-BIDYYP_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BIDZI6_98X",
+      "compoundIdentity": "4327375|9BY2-BIDZI6_98X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BIDZI9_MLC",
+      "compoundIdentity": "4327375|9BY2-BIDZI9_MLC",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BIDZZS_33X",
+      "compoundIdentity": "4327375|9BY2-BIDZZS_33X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BIMZWI_99A",
+      "compoundIdentity": "4327375|9BY2-BIMZWI_99A",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BLDZ67_99X",
+      "compoundIdentity": "4327375|9BY2-BLDZ67_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BLDZZA_01X",
+      "compoundIdentity": "4327375|9BY2-BLDZZA_01X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BLGZUH_99X",
+      "compoundIdentity": "4327375|9BY2-BLGZUH_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BLKZRI_30X",
+      "compoundIdentity": "4327375|9BY2-BLKZRI_30X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BLKZZ0_83X",
+      "compoundIdentity": "4327375|9BY2-BLKZZ0_83X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BLM02M_99X",
+      "compoundIdentity": "4327375|9BY2-BLM02M_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BLM03P_99X",
+      "compoundIdentity": "4327375|9BY2-BLM03P_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BLMZ32_81X",
+      "compoundIdentity": "4327375|9BY2-BLMZ32_81X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BLMZ3F_90X",
+      "compoundIdentity": "4327375|9BY2-BLMZ3F_90X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BLMZE7_01X",
+      "compoundIdentity": "4327375|9BY2-BLMZE7_01X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BLMZHL_99X",
+      "compoundIdentity": "4327375|9BY2-BLMZHL_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BLMZI9_99X",
+      "compoundIdentity": "4327375|9BY2-BLMZI9_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": true
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BLMZMT_99X",
+      "compoundIdentity": "4327375|9BY2-BLMZMT_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BLMZO7_09X",
+      "compoundIdentity": "4327375|9BY2-BLMZO7_09X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BLMZU9_05X",
+      "compoundIdentity": "4327375|9BY2-BLMZU9_05X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BLUZYP_59X",
+      "compoundIdentity": "4327375|9BY2-BLUZYP_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BLUZZ5_59X",
+      "compoundIdentity": "4327375|9BY2-BLUZZ5_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BUBZTW_96X",
+      "compoundIdentity": "4327375|9BY2-BUBZTW_96X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BUDZME_80X",
+      "compoundIdentity": "4327375|9BY2-BUDZME_80X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BUDZNO_99X",
+      "compoundIdentity": "4327375|9BY2-BUDZNO_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BUDZOJ_99X",
+      "compoundIdentity": "4327375|9BY2-BUDZOJ_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BUDZOY_90X",
+      "compoundIdentity": "4327375|9BY2-BUDZOY_90X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BUDZRC_99X",
+      "compoundIdentity": "4327375|9BY2-BUDZRC_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": true
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BUGZRR_59X",
+      "compoundIdentity": "4327375|9BY2-BUGZRR_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BUKZWG_99X",
+      "compoundIdentity": "4327375|9BY2-BUKZWG_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-BUMZZK_99C",
+      "compoundIdentity": "4327375|9BY2-BUMZZK_99C",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-CABZYU_55X",
+      "compoundIdentity": "4327375|9BY2-CABZYU_55X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-CADZM9_99X",
+      "compoundIdentity": "4327375|9BY2-CADZM9_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-CADZMW_83X",
+      "compoundIdentity": "4327375|9BY2-CADZMW_83X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-CAMZWF_99X",
+      "compoundIdentity": "4327375|9BY2-CAMZWF_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-CAU01O_03X",
+      "compoundIdentity": "4327375|9BY2-CAU01O_03X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-CAUZJU_69X",
+      "compoundIdentity": "4327375|9BY2-CAUZJU_69X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-CAUZM5_01X",
+      "compoundIdentity": "4327375|9BY2-CAUZM5_01X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-DKBZWD_92X",
+      "compoundIdentity": "4327375|9BY2-DKBZWD_92X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-DKGZWH_59X",
+      "compoundIdentity": "4327375|9BY2-DKGZWH_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-DSU04Y_00X",
+      "compoundIdentity": "4327375|9BY2-DSU04Y_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-GOU00F_00X",
+      "compoundIdentity": "4327375|9BY2-GOU00F_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-KDDZIO_59X",
+      "compoundIdentity": "4327375|9BY2-KDDZIO_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-KDDZW6_50X",
+      "compoundIdentity": "4327375|9BY2-KDDZW6_50X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-KDMZEP_33E",
+      "compoundIdentity": "4327375|9BY2-KDMZEP_33E",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-KDMZGT_55X",
+      "compoundIdentity": "4327375|9BY2-KDMZGT_55X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-KDMZL4_55X",
+      "compoundIdentity": "4327375|9BY2-KDMZL4_55X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-KDMZLD_99X",
+      "compoundIdentity": "4327375|9BY2-KDMZLD_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-KDMZZK_50J",
+      "compoundIdentity": "4327375|9BY2-KDMZZK_50J",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-KPDZMK_82X",
+      "compoundIdentity": "4327375|9BY2-KPDZMK_82X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-KUBZPE_80X",
+      "compoundIdentity": "4327375|9BY2-KUBZPE_80X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-KUBZY8_80X",
+      "compoundIdentity": "4327375|9BY2-KUBZY8_80X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-KUDYG0_80X",
+      "compoundIdentity": "4327375|9BY2-KUDYG0_80X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-KUDYJC_88X",
+      "compoundIdentity": "4327375|9BY2-KUDYJC_88X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-KUDYR6_89X",
+      "compoundIdentity": "4327375|9BY2-KUDYR6_89X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-KUDZCT_99X",
+      "compoundIdentity": "4327375|9BY2-KUDZCT_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-KUDZJJ_80X",
+      "compoundIdentity": "4327375|9BY2-KUDZJJ_80X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-KUDZRB_89X",
+      "compoundIdentity": "4327375|9BY2-KUDZRB_89X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": true
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-KUGZN2_30X",
+      "compoundIdentity": "4327375|9BY2-KUGZN2_30X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-KUGZN4_65X",
+      "compoundIdentity": "4327375|9BY2-KUGZN4_65X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-KUKZSA_01X",
+      "compoundIdentity": "4327375|9BY2-KUKZSA_01X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-KUMZBS_99X",
+      "compoundIdentity": "4327375|9BY2-KUMZBS_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": true
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-KUMZEZ_59X",
+      "compoundIdentity": "4327375|9BY2-KUMZEZ_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-KUMZI3_99X",
+      "compoundIdentity": "4327375|9BY2-KUMZI3_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-KUMZMR_80X",
+      "compoundIdentity": "4327375|9BY2-KUMZMR_80X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-KUMZZC_77X",
+      "compoundIdentity": "4327375|9BY2-KUMZZC_77X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-LGBZZE_99X",
+      "compoundIdentity": "4327375|9BY2-LGBZZE_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-LGDZLZ_59X",
+      "compoundIdentity": "4327375|9BY2-LGDZLZ_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-LGDZNW_09X",
+      "compoundIdentity": "4327375|9BY2-LGDZNW_09X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-LGDZPM_01X",
+      "compoundIdentity": "4327375|9BY2-LGDZPM_01X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-LGDZW7_99X",
+      "compoundIdentity": "4327375|9BY2-LGDZW7_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-LGDZWR_99X",
+      "compoundIdentity": "4327375|9BY2-LGDZWR_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-LGMZWI_83X",
+      "compoundIdentity": "4327375|9BY2-LGMZWI_83X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBBZRW_59X",
+      "compoundIdentity": "4327375|9BY2-OBBZRW_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": true
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBBZT4_57X",
+      "compoundIdentity": "4327375|9BY2-OBBZT4_57X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBD01N_83X",
+      "compoundIdentity": "4327375|9BY2-OBD01N_83X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBDTYN_99X",
+      "compoundIdentity": "4327375|9BY2-OBDTYN_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": true
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBDU39_89X",
+      "compoundIdentity": "4327375|9BY2-OBDU39_89X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBDU3D_99X",
+      "compoundIdentity": "4327375|9BY2-OBDU3D_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBDUI7_99X",
+      "compoundIdentity": "4327375|9BY2-OBDUI7_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBDUJ2_99X",
+      "compoundIdentity": "4327375|9BY2-OBDUJ2_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBDWEO_99X",
+      "compoundIdentity": "4327375|9BY2-OBDWEO_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBDWIR_11X",
+      "compoundIdentity": "4327375|9BY2-OBDWIR_11X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBDWT6_83X",
+      "compoundIdentity": "4327375|9BY2-OBDWT6_83X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBDYPL_83X",
+      "compoundIdentity": "4327375|9BY2-OBDYPL_83X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBDYR5_88X",
+      "compoundIdentity": "4327375|9BY2-OBDYR5_88X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBDZ3C_99X",
+      "compoundIdentity": "4327375|9BY2-OBDZ3C_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBDZ4K_80X",
+      "compoundIdentity": "4327375|9BY2-OBDZ4K_80X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBDZC4_80X",
+      "compoundIdentity": "4327375|9BY2-OBDZC4_80X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBDZGS_80X",
+      "compoundIdentity": "4327375|9BY2-OBDZGS_80X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBDZS9_80X",
+      "compoundIdentity": "4327375|9BY2-OBDZS9_80X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBGZAT_88X",
+      "compoundIdentity": "4327375|9BY2-OBGZAT_88X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": true
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBGZUF_30X",
+      "compoundIdentity": "4327375|9BY2-OBGZUF_30X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBGZZ8_30X",
+      "compoundIdentity": "4327375|9BY2-OBGZZ8_30X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBKZ21_99X",
+      "compoundIdentity": "4327375|9BY2-OBKZ21_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBKZ3C_99B",
+      "compoundIdentity": "4327375|9BY2-OBKZ3C_99B",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBKZ6I_59X",
+      "compoundIdentity": "4327375|9BY2-OBKZ6I_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBKZC8_89X",
+      "compoundIdentity": "4327375|9BY2-OBKZC8_89X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBKZE2_30X",
+      "compoundIdentity": "4327375|9BY2-OBKZE2_30X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBKZHZ_00X",
+      "compoundIdentity": "4327375|9BY2-OBKZHZ_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBMYBE_99X",
+      "compoundIdentity": "4327375|9BY2-OBMYBE_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBMYJG_99X",
+      "compoundIdentity": "4327375|9BY2-OBMYJG_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBMYK2_59X",
+      "compoundIdentity": "4327375|9BY2-OBMYK2_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBMZ0I_99X",
+      "compoundIdentity": "4327375|9BY2-OBMZ0I_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OBMZEC_88X",
+      "compoundIdentity": "4327375|9BY2-OBMZEC_88X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OKDZT9_90X",
+      "compoundIdentity": "4327375|9BY2-OKDZT9_90X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OKDZTT_GLD",
+      "compoundIdentity": "4327375|9BY2-OKDZTT_GLD",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OKMZZZ_99X",
+      "compoundIdentity": "4327375|9BY2-OKMZZZ_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-OKUZYK_99X",
+      "compoundIdentity": "4327375|9BY2-OKUZYK_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-PAMZT2_99X",
+      "compoundIdentity": "4327375|9BY2-PAMZT2_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-PAMZZ0_99X",
+      "compoundIdentity": "4327375|9BY2-PAMZZ0_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-PFDZYN_99X",
+      "compoundIdentity": "4327375|9BY2-PFDZYN_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-PFDZZH_99X",
+      "compoundIdentity": "4327375|9BY2-PFDZZH_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-PFDZZP_99X",
+      "compoundIdentity": "4327375|9BY2-PFDZZP_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-PFMZZI_99X",
+      "compoundIdentity": "4327375|9BY2-PFMZZI_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-PKDZWB_89X",
+      "compoundIdentity": "4327375|9BY2-PKDZWB_89X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-PKUZKP_39X",
+      "compoundIdentity": "4327375|9BY2-PKUZKP_39X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-PKUZTB_00A",
+      "compoundIdentity": "4327375|9BY2-PKUZTB_00A",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-POBZYL_78X",
+      "compoundIdentity": "4327375|9BY2-POBZYL_78X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-REK002_30X",
+      "compoundIdentity": "4327375|9BY2-REK002_30X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SADZMN_90Y",
+      "compoundIdentity": "4327375|9BY2-SADZMN_90Y",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SAGZZJ_01X",
+      "compoundIdentity": "4327375|9BY2-SAGZZJ_01X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": true
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SAGZZM_03X",
+      "compoundIdentity": "4327375|9BY2-SAGZZM_03X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SDDZJ5_88X",
+      "compoundIdentity": "4327375|9BY2-SDDZJ5_88X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": true
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SDDZKS_99X",
+      "compoundIdentity": "4327375|9BY2-SDDZKS_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SDDZUK_99X",
+      "compoundIdentity": "4327375|9BY2-SDDZUK_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SDDZYM_45X",
+      "compoundIdentity": "4327375|9BY2-SDDZYM_45X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SDGZZP_77X",
+      "compoundIdentity": "4327375|9BY2-SDGZZP_77X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SJD00H_88X",
+      "compoundIdentity": "4327375|9BY2-SJD00H_88X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SJDZ9O_59J",
+      "compoundIdentity": "4327375|9BY2-SJDZ9O_59J",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SJDZAC_55X",
+      "compoundIdentity": "4327375|9BY2-SJDZAC_55X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SJDZC1_99X",
+      "compoundIdentity": "4327375|9BY2-SJDZC1_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SJDZKA_90J",
+      "compoundIdentity": "4327375|9BY2-SJDZKA_90J",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": true
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SJGZZE_95X",
+      "compoundIdentity": "4327375|9BY2-SJGZZE_95X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SJMZLI_59J",
+      "compoundIdentity": "4327375|9BY2-SJMZLI_59J",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SJMZYH_90X",
+      "compoundIdentity": "4327375|9BY2-SJMZYH_90X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SPBZTR_06X",
+      "compoundIdentity": "4327375|9BY2-SPBZTR_06X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SPDZ5I_99X",
+      "compoundIdentity": "4327375|9BY2-SPDZ5I_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SPGZTJ_03X",
+      "compoundIdentity": "4327375|9BY2-SPGZTJ_03X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SPGZYJ_38X",
+      "compoundIdentity": "4327375|9BY2-SPGZYJ_38X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SPM00W_95X",
+      "compoundIdentity": "4327375|9BY2-SPM00W_95X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SUDYMO_99X",
+      "compoundIdentity": "4327375|9BY2-SUDYMO_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SUDYP0_01X",
+      "compoundIdentity": "4327375|9BY2-SUDYP0_01X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SUDZK8_99X",
+      "compoundIdentity": "4327375|9BY2-SUDZK8_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SUGZY1_30X",
+      "compoundIdentity": "4327375|9BY2-SUGZY1_30X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SWBZUS_90X",
+      "compoundIdentity": "4327375|9BY2-SWBZUS_90X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SWD02M_50X",
+      "compoundIdentity": "4327375|9BY2-SWD02M_50X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SWDYMZ_97X",
+      "compoundIdentity": "4327375|9BY2-SWDYMZ_97X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SWDYN0_80X",
+      "compoundIdentity": "4327375|9BY2-SWDYN0_80X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SWDYYT_30X",
+      "compoundIdentity": "4327375|9BY2-SWDYYT_30X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SWDZ7C_01X",
+      "compoundIdentity": "4327375|9BY2-SWDZ7C_01X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SWDZC0_99X",
+      "compoundIdentity": "4327375|9BY2-SWDZC0_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SWDZKA_MLC",
+      "compoundIdentity": "4327375|9BY2-SWDZKA_MLC",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SWDZMC_01X",
+      "compoundIdentity": "4327375|9BY2-SWDZMC_01X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SWGZYY_08X",
+      "compoundIdentity": "4327375|9BY2-SWGZYY_08X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SWGZZ6_01X",
+      "compoundIdentity": "4327375|9BY2-SWGZZ6_01X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SWMZWR_59X",
+      "compoundIdentity": "4327375|9BY2-SWMZWR_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-SZDZYH_99J",
+      "compoundIdentity": "4327375|9BY2-SZDZYH_99J",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-TEKZWA_59X",
+      "compoundIdentity": "4327375|9BY2-TEKZWA_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-TEKZY0_01X",
+      "compoundIdentity": "4327375|9BY2-TEKZY0_01X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-TEKZY3_01X",
+      "compoundIdentity": "4327375|9BY2-TEKZY3_01X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-TODWMA_99X",
+      "compoundIdentity": "4327375|9BY2-TODWMA_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-TODWPP_88X",
+      "compoundIdentity": "4327375|9BY2-TODWPP_88X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-TODY1T_12X",
+      "compoundIdentity": "4327375|9BY2-TODY1T_12X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-TODYDS_01X",
+      "compoundIdentity": "4327375|9BY2-TODYDS_01X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-TODYG9_93X",
+      "compoundIdentity": "4327375|9BY2-TODYG9_93X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-TODYZT_88X",
+      "compoundIdentity": "4327375|9BY2-TODYZT_88X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-TODZ5L_99X",
+      "compoundIdentity": "4327375|9BY2-TODZ5L_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-TOG006_99X",
+      "compoundIdentity": "4327375|9BY2-TOG006_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-TOGZW8_99X",
+      "compoundIdentity": "4327375|9BY2-TOGZW8_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-TOMZU3_99X",
+      "compoundIdentity": "4327375|9BY2-TOMZU3_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-TOUZT1_78X",
+      "compoundIdentity": "4327375|9BY2-TOUZT1_78X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-TSDZ8D_00X",
+      "compoundIdentity": "4327375|9BY2-TSDZ8D_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-TSDZA7_89X",
+      "compoundIdentity": "4327375|9BY2-TSDZA7_89X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-TSGZWK_03X",
+      "compoundIdentity": "4327375|9BY2-TSGZWK_03X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": true
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-TSMZ3N_00X",
+      "compoundIdentity": "4327375|9BY2-TSMZ3N_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-TSMZ3P_01X",
+      "compoundIdentity": "4327375|9BY2-TSMZ3P_01X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-TSMZJ3_59X",
+      "compoundIdentity": "4327375|9BY2-TSMZJ3_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-TSMZNZ_90X",
+      "compoundIdentity": "4327375|9BY2-TSMZNZ_90X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-TSMZY8_99X",
+      "compoundIdentity": "4327375|9BY2-TSMZY8_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-TSUZYW_00X",
+      "compoundIdentity": "4327375|9BY2-TSUZYW_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-ZBKZTD_30X",
+      "compoundIdentity": "4327375|9BY2-ZBKZTD_30X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-ZBKZUF_99X",
+      "compoundIdentity": "4327375|9BY2-ZBKZUF_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY2-ZBKZZZ_50X",
+      "compoundIdentity": "4327375|9BY2-ZBKZZZ_50X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BY8-OBD3HD_49X",
+      "compoundIdentity": "4327375|9BY8-OBD3HD_49X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-AKM00B_99X",
+      "compoundIdentity": "4327375|9BYA-AKM00B_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-BDD01S_54X",
+      "compoundIdentity": "4327375|9BYA-BDD01S_54X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-BLM0DL_80X",
+      "compoundIdentity": "4327375|9BYA-BLM0DL_80X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-BLM0M9_12X",
+      "compoundIdentity": "4327375|9BYA-BLM0M9_12X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-CAD00S_02X",
+      "compoundIdentity": "4327375|9BYA-CAD00S_02X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-DKM00F_99X",
+      "compoundIdentity": "4327375|9BYA-DKM00F_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-KDB01C_55X",
+      "compoundIdentity": "4327375|9BYA-KDB01C_55X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-KDM01J_55X",
+      "compoundIdentity": "4327375|9BYA-KDM01J_55X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-KUB04P_59X",
+      "compoundIdentity": "4327375|9BYA-KUB04P_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-KUD0A5_90X",
+      "compoundIdentity": "4327375|9BYA-KUD0A5_90X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-KUD13F_98X",
+      "compoundIdentity": "4327375|9BYA-KUD13F_98X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-KUD14W_56X",
+      "compoundIdentity": "4327375|9BYA-KUD14W_56X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-KUD1J9_89A",
+      "compoundIdentity": "4327375|9BYA-KUD1J9_89A",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-LGG069_99X",
+      "compoundIdentity": "4327375|9BYA-LGG069_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-OBD17B_01X",
+      "compoundIdentity": "4327375|9BYA-OBD17B_01X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-OBD2DJ_00X",
+      "compoundIdentity": "4327375|9BYA-OBD2DJ_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-OBD2PN_99X",
+      "compoundIdentity": "4327375|9BYA-OBD2PN_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-OBG05T_59X",
+      "compoundIdentity": "4327375|9BYA-OBG05T_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-OBG0LE_MLC",
+      "compoundIdentity": "4327375|9BYA-OBG0LE_MLC",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-OBM0M1_59X",
+      "compoundIdentity": "4327375|9BYA-OBM0M1_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-PAM02J_89A",
+      "compoundIdentity": "4327375|9BYA-PAM02J_89A",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-POD00B_55X",
+      "compoundIdentity": "4327375|9BYA-POD00B_55X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-RED01U_99X",
+      "compoundIdentity": "4327375|9BYA-RED01U_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-REU01E_01X",
+      "compoundIdentity": "4327375|9BYA-REU01E_01X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-SPD04B_99X",
+      "compoundIdentity": "4327375|9BYA-SPD04B_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-SPD05I_99X",
+      "compoundIdentity": "4327375|9BYA-SPD05I_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-SPM069_90A",
+      "compoundIdentity": "4327375|9BYA-SPM069_90A",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-SPM08F_90X",
+      "compoundIdentity": "4327375|9BYA-SPM08F_90X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-SPM0JL_77D",
+      "compoundIdentity": "4327375|9BYA-SPM0JL_77D",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-SUD0JL_59X",
+      "compoundIdentity": "4327375|9BYA-SUD0JL_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-SUD0TH_80X",
+      "compoundIdentity": "4327375|9BYA-SUD0TH_80X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-SUD1OK_GLD",
+      "compoundIdentity": "4327375|9BYA-SUD1OK_GLD",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-SWD00R_55A",
+      "compoundIdentity": "4327375|9BYA-SWD00R_55A",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-SWD00T_99A",
+      "compoundIdentity": "4327375|9BYA-SWD00T_99A",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-SZM009_55J",
+      "compoundIdentity": "4327375|9BYA-SZM009_55J",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-TOD1JW_03X",
+      "compoundIdentity": "4327375|9BYA-TOD1JW_03X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-TOD2P2_01X",
+      "compoundIdentity": "4327375|9BYA-TOD2P2_01X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-TSD0KC_22X",
+      "compoundIdentity": "4327375|9BYA-TSD0KC_22X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-TSM02O_01X",
+      "compoundIdentity": "4327375|9BYA-TSM02O_01X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYA-TSM0OH_97X",
+      "compoundIdentity": "4327375|9BYA-TSM0OH_97X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYH-BID0MR_99X",
+      "compoundIdentity": "4327375|9BYH-BID0MR_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYH-CAG05M_01X",
+      "compoundIdentity": "4327375|9BYH-CAG05M_01X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYH-CAU01A_09X",
+      "compoundIdentity": "4327375|9BYH-CAU01A_09X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYH-LGD07P_59A",
+      "compoundIdentity": "4327375|9BYH-LGD07P_59A",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": true
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYH-LGD0D2_30X",
+      "compoundIdentity": "4327375|9BYH-LGD0D2_30X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYH-OBB03R_95X",
+      "compoundIdentity": "4327375|9BYH-OBB03R_95X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYH-SPD0TW_59X",
+      "compoundIdentity": "4327375|9BYH-SPD0TW_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYH-SWD0O3_84X",
+      "compoundIdentity": "4327375|9BYH-SWD0O3_84X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": true
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYH-TOD1FR_91X",
+      "compoundIdentity": "4327375|9BYH-TOD1FR_91X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYK-BID0Y7_90X",
+      "compoundIdentity": "4327375|9BYK-BID0Y7_90X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYX-AKU01W_79D",
+      "compoundIdentity": "4327375|9BYX-AKU01W_79D",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": true
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYX-KUM0O0_00X",
+      "compoundIdentity": "4327375|9BYX-KUM0O0_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYX-OBM2BE_99X",
+      "compoundIdentity": "4327375|9BYX-OBM2BE_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYY-BID0TO_55X",
+      "compoundIdentity": "4327375|9BYY-BID0TO_55X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "9BYY-OBG0CO_00X",
+      "compoundIdentity": "4327375|9BYY-OBG0CO_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "B9Y2-BDD021_99X",
+      "compoundIdentity": "4327375|B9Y2-BDD021_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "B9Y2-KUD019_33X",
+      "compoundIdentity": "4327375|B9Y2-KUD019_33X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "B9Y2-SPD019_89X",
+      "compoundIdentity": "4327375|B9Y2-SPD019_89X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "B9YA-SUD015_09X",
+      "compoundIdentity": "4327375|B9YA-SUD015_09X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "B9YA-TOD072_88X",
+      "compoundIdentity": "4327375|B9YA-TOD072_88X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "BBYA-BDD01N_01X",
+      "compoundIdentity": "4327375|BBYA-BDD01N_01X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "BBYA-PFD005_80X",
+      "compoundIdentity": "4327375|BBYA-PFD005_80X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "BBYA-SDD007_99X",
+      "compoundIdentity": "4327375|BBYA-SDD007_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "BPY2-KUD018_99X",
+      "compoundIdentity": "4327375|BPY2-KUD018_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "BPY2-SJD036_55X",
+      "compoundIdentity": "4327375|BPY2-SJD036_55X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "BPY2-SUD130_88X",
+      "compoundIdentity": "4327375|BPY2-SUD130_88X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": true
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "MBY2-AKDZUU_76X",
+      "compoundIdentity": "4327375|MBY2-AKDZUU_76X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "MBY2-AKDZWE_SLV",
+      "compoundIdentity": "4327375|MBY2-AKDZWE_SLV",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "MBYA-SJD007_55X",
+      "compoundIdentity": "4327375|MBYA-SJD007_55X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "MPY2-BDD00S_33X",
+      "compoundIdentity": "4327375|MPY2-BDD00S_33X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "MPY2-SPM001_80X",
+      "compoundIdentity": "4327375|MPY2-SPM001_80X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "MPY2-SUD008_59X",
+      "compoundIdentity": "4327375|MPY2-SUD008_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "MPYA-BDD009_00X",
+      "compoundIdentity": "4327375|MPYA-BDD009_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY1-MUU003_03X",
+      "compoundIdentity": "4327375|PPY1-MUU003_03X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY1-SZD001_30X",
+      "compoundIdentity": "4327375|PPY1-SZD001_30X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": true
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-AKD0N1_SLV",
+      "compoundIdentity": "4327375|PPY2-AKD0N1_SLV",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-AKD17P_GLD",
+      "compoundIdentity": "4327375|PPY2-AKD17P_GLD",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-BDD00C_00X",
+      "compoundIdentity": "4327375|PPY2-BDD00C_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-BDG007_00X",
+      "compoundIdentity": "4327375|PPY2-BDG007_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-BID0JS_88X",
+      "compoundIdentity": "4327375|PPY2-BID0JS_88X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-BID1G4_99X",
+      "compoundIdentity": "4327375|PPY2-BID1G4_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-BID1KC_49X",
+      "compoundIdentity": "4327375|PPY2-BID1KC_49X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-BID1WF_99X",
+      "compoundIdentity": "4327375|PPY2-BID1WF_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-BID26O_43X",
+      "compoundIdentity": "4327375|PPY2-BID26O_43X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-BIDZUZ_22X",
+      "compoundIdentity": "4327375|PPY2-BIDZUZ_22X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-BIG005_42X",
+      "compoundIdentity": "4327375|PPY2-BIG005_42X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-BIM001_99X",
+      "compoundIdentity": "4327375|PPY2-BIM001_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-BIM0EG_69X",
+      "compoundIdentity": "4327375|PPY2-BIM0EG_69X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-BIM0EL_99X",
+      "compoundIdentity": "4327375|PPY2-BIM0EL_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-BLB003_12X",
+      "compoundIdentity": "4327375|PPY2-BLB003_12X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-BLD02T_01X",
+      "compoundIdentity": "4327375|PPY2-BLD02T_01X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-BLG03Z_99X",
+      "compoundIdentity": "4327375|PPY2-BLG03Z_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-BLM006_99X",
+      "compoundIdentity": "4327375|PPY2-BLM006_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-BLM027_77X",
+      "compoundIdentity": "4327375|PPY2-BLM027_77X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-BLM0A0_80X",
+      "compoundIdentity": "4327375|PPY2-BLM0A0_80X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-BLM0U2_76X",
+      "compoundIdentity": "4327375|PPY2-BLM0U2_76X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-BPG00N_MLC",
+      "compoundIdentity": "4327375|PPY2-BPG00N_MLC",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-CAG004_66X",
+      "compoundIdentity": "4327375|PPY2-CAG004_66X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-DKG02E_40X",
+      "compoundIdentity": "4327375|PPY2-DKG02E_40X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-DKG048_30X",
+      "compoundIdentity": "4327375|PPY2-DKG048_30X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-KDD088_00X",
+      "compoundIdentity": "4327375|PPY2-KDD088_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-KDD08U_82X",
+      "compoundIdentity": "4327375|PPY2-KDD08U_82X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-KDM09W_08X",
+      "compoundIdentity": "4327375|PPY2-KDM09W_08X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-KDM0DB_00X",
+      "compoundIdentity": "4327375|PPY2-KDM0DB_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-KDM0GH_00X",
+      "compoundIdentity": "4327375|PPY2-KDM0GH_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-KLD13H_80X",
+      "compoundIdentity": "4327375|PPY2-KLD13H_80X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-KLD173_88X",
+      "compoundIdentity": "4327375|PPY2-KLD173_88X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-KLD1CM_99X",
+      "compoundIdentity": "4327375|PPY2-KLD1CM_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-KLM042_91X",
+      "compoundIdentity": "4327375|PPY2-KLM042_91X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-KPM002_80X",
+      "compoundIdentity": "4327375|PPY2-KPM002_80X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-KUD08R_06X",
+      "compoundIdentity": "4327375|PPY2-KUD08R_06X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-KUM03N_90X",
+      "compoundIdentity": "4327375|PPY2-KUM03N_90X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": true
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-KUM0H2_59X",
+      "compoundIdentity": "4327375|PPY2-KUM0H2_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-KUU00G_59X",
+      "compoundIdentity": "4327375|PPY2-KUU00G_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-LGD01A_99X",
+      "compoundIdentity": "4327375|PPY2-LGD01A_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-LGD041_90X",
+      "compoundIdentity": "4327375|PPY2-LGD041_90X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-LGU05P_00X",
+      "compoundIdentity": "4327375|PPY2-LGU05P_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-OBD03E_82X",
+      "compoundIdentity": "4327375|PPY2-OBD03E_82X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-OBD0CI_00X",
+      "compoundIdentity": "4327375|PPY2-OBD0CI_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-OBD0CL_55X",
+      "compoundIdentity": "4327375|PPY2-OBD0CL_55X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-OBD0RW_59X",
+      "compoundIdentity": "4327375|PPY2-OBD0RW_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-OBD203_82X",
+      "compoundIdentity": "4327375|PPY2-OBD203_82X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-OBD24R_99X",
+      "compoundIdentity": "4327375|PPY2-OBD24R_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-OBD26P_80X",
+      "compoundIdentity": "4327375|PPY2-OBD26P_80X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-OBD2AA_30X",
+      "compoundIdentity": "4327375|PPY2-OBD2AA_30X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-OBD2LT_99X",
+      "compoundIdentity": "4327375|PPY2-OBD2LT_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-OBD372_00X",
+      "compoundIdentity": "4327375|PPY2-OBD372_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": true
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-OBD39M_89X",
+      "compoundIdentity": "4327375|PPY2-OBD39M_89X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-OBG0KD_00X",
+      "compoundIdentity": "4327375|PPY2-OBG0KD_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-OBG0TF_04X",
+      "compoundIdentity": "4327375|PPY2-OBG0TF_04X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-OBG0UO_00X",
+      "compoundIdentity": "4327375|PPY2-OBG0UO_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-OBM0EJ_00X",
+      "compoundIdentity": "4327375|PPY2-OBM0EJ_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-OBM0PI_22X",
+      "compoundIdentity": "4327375|PPY2-OBM0PI_22X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-OKM01T_55B",
+      "compoundIdentity": "4327375|PPY2-OKM01T_55B",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-OKUZZ9_78A",
+      "compoundIdentity": "4327375|PPY2-OKUZZ9_78A",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-PAM01U_99X",
+      "compoundIdentity": "4327375|PPY2-PAM01U_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-PFD06H_83X",
+      "compoundIdentity": "4327375|PPY2-PFD06H_83X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-POM082_55X",
+      "compoundIdentity": "4327375|PPY2-POM082_55X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-SAD003_88X",
+      "compoundIdentity": "4327375|PPY2-SAD003_88X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-SJD0GK_99J",
+      "compoundIdentity": "4327375|PPY2-SJD0GK_99J",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-SJG00M_09X",
+      "compoundIdentity": "4327375|PPY2-SJG00M_09X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-SJM01R_50J",
+      "compoundIdentity": "4327375|PPY2-SJM01R_50J",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-SJM03S_99J",
+      "compoundIdentity": "4327375|PPY2-SJM03S_99J",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-SKD002_80X",
+      "compoundIdentity": "4327375|PPY2-SKD002_80X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-SPD09A_80X",
+      "compoundIdentity": "4327375|PPY2-SPD09A_80X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-SPD0BB_99X",
+      "compoundIdentity": "4327375|PPY2-SPD0BB_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-SUD0UB_99X",
+      "compoundIdentity": "4327375|PPY2-SUD0UB_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-SUD130_50X",
+      "compoundIdentity": "4327375|PPY2-SUD130_50X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-SWD05N_59X",
+      "compoundIdentity": "4327375|PPY2-SWD05N_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": true
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-SWD0ED_81X",
+      "compoundIdentity": "4327375|PPY2-SWD0ED_81X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-SZG00Y_42X",
+      "compoundIdentity": "4327375|PPY2-SZG00Y_42X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-SZG016_90X",
+      "compoundIdentity": "4327375|PPY2-SZG016_90X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-SZM0AS_00X",
+      "compoundIdentity": "4327375|PPY2-SZM0AS_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-TOD088_99X",
+      "compoundIdentity": "4327375|PPY2-TOD088_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-TOD1JB_82X",
+      "compoundIdentity": "4327375|PPY2-TOD1JB_82X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-TOD24P_55X",
+      "compoundIdentity": "4327375|PPY2-TOD24P_55X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-TOD29D_99X",
+      "compoundIdentity": "4327375|PPY2-TOD29D_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-TOD2EB_95X",
+      "compoundIdentity": "4327375|PPY2-TOD2EB_95X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-TOM04Y_99X",
+      "compoundIdentity": "4327375|PPY2-TOM04Y_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-TOM0CO_90Y",
+      "compoundIdentity": "4327375|PPY2-TOM0CO_90Y",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-TSB0ER_18X",
+      "compoundIdentity": "4327375|PPY2-TSB0ER_18X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-TSD07C_00X",
+      "compoundIdentity": "4327375|PPY2-TSD07C_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-TSD0CJ_30X",
+      "compoundIdentity": "4327375|PPY2-TSD0CJ_30X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-TSD0GK_00X",
+      "compoundIdentity": "4327375|PPY2-TSD0GK_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-TSD0LB_04X",
+      "compoundIdentity": "4327375|PPY2-TSD0LB_04X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-TSD0PR_59X",
+      "compoundIdentity": "4327375|PPY2-TSD0PR_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": true
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-TSD0TP_99X",
+      "compoundIdentity": "4327375|PPY2-TSD0TP_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-TSD0W8_83X",
+      "compoundIdentity": "4327375|PPY2-TSD0W8_83X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-TSD1J1_99X",
+      "compoundIdentity": "4327375|PPY2-TSD1J1_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-TSG01R_40X",
+      "compoundIdentity": "4327375|PPY2-TSG01R_40X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-TSM012_50X",
+      "compoundIdentity": "4327375|PPY2-TSM012_50X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": true
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-TSM09B_01X",
+      "compoundIdentity": "4327375|PPY2-TSM09B_01X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-TSM0AR_92X",
+      "compoundIdentity": "4327375|PPY2-TSM0AR_92X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-TSM0H0_00X",
+      "compoundIdentity": "4327375|PPY2-TSM0H0_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-TSM1AH_77X",
+      "compoundIdentity": "4327375|PPY2-TSM1AH_77X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY2-TSM1MC_99X",
+      "compoundIdentity": "4327375|PPY2-TSM1MC_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPY8-AKM010_99X",
+      "compoundIdentity": "4327375|PPY8-AKM010_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-AKU03S_82X",
+      "compoundIdentity": "4327375|PPYA-AKU03S_82X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-BID11P_09X",
+      "compoundIdentity": "4327375|PPYA-BID11P_09X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-BID28I_01X",
+      "compoundIdentity": "4327375|PPYA-BID28I_01X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-BID2AM_30X",
+      "compoundIdentity": "4327375|PPYA-BID2AM_30X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-BIM0DL_90Y",
+      "compoundIdentity": "4327375|PPYA-BIM0DL_90Y",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-BLD0K2_00X",
+      "compoundIdentity": "4327375|PPYA-BLD0K2_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-BLD0P2_05X",
+      "compoundIdentity": "4327375|PPYA-BLD0P2_05X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-CAK03Y_57X",
+      "compoundIdentity": "4327375|PPYA-CAK03Y_57X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-DKM00F_90X",
+      "compoundIdentity": "4327375|PPYA-DKM00F_90X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-DKM026_99X",
+      "compoundIdentity": "4327375|PPYA-DKM026_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-KDD0EO_55X",
+      "compoundIdentity": "4327375|PPYA-KDD0EO_55X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-KLD12F_08X",
+      "compoundIdentity": "4327375|PPYA-KLD12F_08X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-LGM02I_80X",
+      "compoundIdentity": "4327375|PPYA-LGM02I_80X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-OBD15B_00A",
+      "compoundIdentity": "4327375|PPYA-OBD15B_00A",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-OBD1E0_30X",
+      "compoundIdentity": "4327375|PPYA-OBD1E0_30X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-OBD1LJ_39X",
+      "compoundIdentity": "4327375|PPYA-OBD1LJ_39X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-OBD2J0_99X",
+      "compoundIdentity": "4327375|PPYA-OBD2J0_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-OBD4H3_07X",
+      "compoundIdentity": "4327375|PPYA-OBD4H3_07X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-OBD4L3_88X",
+      "compoundIdentity": "4327375|PPYA-OBD4L3_88X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-OBG11G_00E",
+      "compoundIdentity": "4327375|PPYA-OBG11G_00E",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-OBM112_99X",
+      "compoundIdentity": "4327375|PPYA-OBM112_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-OBU0LC_00X",
+      "compoundIdentity": "4327375|PPYA-OBU0LC_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-POM0E9_22X",
+      "compoundIdentity": "4327375|PPYA-POM0E9_22X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-SDD03L_89X",
+      "compoundIdentity": "4327375|PPYA-SDD03L_89X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-SJD0YE_55J",
+      "compoundIdentity": "4327375|PPYA-SJD0YE_55J",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-SPD0AU_99X",
+      "compoundIdentity": "4327375|PPYA-SPD0AU_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-SPD0JD_01X",
+      "compoundIdentity": "4327375|PPYA-SPD0JD_01X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-SWD0R0_12X",
+      "compoundIdentity": "4327375|PPYA-SWD0R0_12X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-TOD39T_99X",
+      "compoundIdentity": "4327375|PPYA-TOD39T_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-TOU04R_03X",
+      "compoundIdentity": "4327375|PPYA-TOU04R_03X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-TSB0HK_99X",
+      "compoundIdentity": "4327375|PPYA-TSB0HK_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-TSD0F7_99X",
+      "compoundIdentity": "4327375|PPYA-TSD0F7_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-TSD1IL_39X",
+      "compoundIdentity": "4327375|PPYA-TSD1IL_39X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-TSD1NI_00X",
+      "compoundIdentity": "4327375|PPYA-TSD1NI_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-TSM0L9_90B",
+      "compoundIdentity": "4327375|PPYA-TSM0L9_90B",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-TSM1DT_95X",
+      "compoundIdentity": "4327375|PPYA-TSM1DT_95X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYA-TSM27C_59X",
+      "compoundIdentity": "4327375|PPYA-TSM27C_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYH-BID29B_80X",
+      "compoundIdentity": "4327375|PPYH-BID29B_80X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYH-BUD05T_99B",
+      "compoundIdentity": "4327375|PPYH-BUD05T_99B",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYH-CAM01K_88X",
+      "compoundIdentity": "4327375|PPYH-CAM01K_88X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYH-KUM0SI_90X",
+      "compoundIdentity": "4327375|PPYH-KUM0SI_90X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYH-OBD0B0_99X",
+      "compoundIdentity": "4327375|PPYH-OBD0B0_99X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYH-OBD0IF_99B",
+      "compoundIdentity": "4327375|PPYH-OBD0IF_99B",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYH-OBD3UP_89X",
+      "compoundIdentity": "4327375|PPYH-OBD3UP_89X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYH-SWM00R_57X",
+      "compoundIdentity": "4327375|PPYH-SWM00R_57X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYH-TOD0DZ_00X",
+      "compoundIdentity": "4327375|PPYH-TOD0DZ_00X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYH-TSB0H3_59X",
+      "compoundIdentity": "4327375|PPYH-TSB0H3_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYH-TSM0GW_90D",
+      "compoundIdentity": "4327375|PPYH-TSM0GW_90D",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYK-SPD06N_55X",
+      "compoundIdentity": "4327375|PPYK-SPD06N_55X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYX-BID0UK_77X",
+      "compoundIdentity": "4327375|PPYX-BID0UK_77X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYX-BIM02S_95X",
+      "compoundIdentity": "4327375|PPYX-BIM02S_95X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYX-KLK04S_20X",
+      "compoundIdentity": "4327375|PPYX-KLK04S_20X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYX-OBG1DC_59X",
+      "compoundIdentity": "4327375|PPYX-OBG1DC_59X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYX-SUD182_MLC",
+      "compoundIdentity": "4327375|PPYX-SUD182_MLC",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4327375",
+      "productId": "PPYY-TSM27E_33X",
+      "compoundIdentity": "4327375|PPYY-TSM27E_33X",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "4883722",
+      "productId": "175316d7-ce78-4e43-b77e-bca4b6af9449",
+      "compoundIdentity": "4883722|175316d7-ce78-4e43-b77e-bca4b6af9449",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-lekarny"
+      ],
+      "published": false
+    }
+  ],
+  "sampleRows": 5000,
+  "sampleCapped": true,
+  "presentationBudgetDeferred": 31163477,
+  "publishPerPartner": 25,
+  "evidenceClass": "COMPOUND_IDENTITY_SET_PLUS_SAMPLES",
+  "publicationGate": "PUBLICATION_PIPELINE"
+}
