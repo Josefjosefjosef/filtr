@@ -183,7 +183,7 @@ export function validatePortableZip(zipPath, manifestPath) {
   };
 }
 
-function listZipEntries(buf) {
+export function listZipEntries(buf) {
   const out = [];
   let i = 0;
   while (i + 30 <= buf.length) {
@@ -219,7 +219,7 @@ function inflateEntry(buf, ent) {
 
 export function buildManifestForDir(dir, { phase = "3Z-V4", rulesVersion = null } = {}) {
   const files = walkFiles(dir)
-    .filter((f) => f.rel !== "MANIFEST.json")
+    .filter((f) => f.rel !== "MANIFEST.json" && f.rel !== "00-manifest.json")
     .sort((a, b) => a.rel.localeCompare(b.rel));
   const manifestFiles = files.map((f) => ({
     path: f.rel,
@@ -233,6 +233,104 @@ export function buildManifestForDir(dir, { phase = "3Z-V4", rulesVersion = null 
     pathStyle: "portable-forward-slash",
     fileCount: manifestFiles.length,
     files: manifestFiles,
+  };
+}
+
+/**
+ * V51.2: pack evidence dir → ZIP with post-pack integrity from FINAL entry list.
+ * Executive summary + integrity reports must be written/refreshed BEFORE zip when
+ * provided via hooks; postPackIntegrity is always derived from the opened ZIP.
+ *
+ * Order: evidence → (optional refresh) → manifest from disk → zip → reopen →
+ * validate CRC/SHA/exact-name → write post-pack integrity beside zip (not inside
+ * unless includePostPackInZip=true with second pass).
+ */
+export function finalizeAuditZip(opts = {}) {
+  const evidenceDir = opts.evidenceDir;
+  const zipPath = opts.zipPath;
+  const phase = opts.phase || "3Z-V51.2";
+  const rulesVersion = opts.rulesVersion || "iu-cj-audit-zip-v51.2";
+  const manifestName = opts.manifestName || "MANIFEST.json";
+  if (!evidenceDir || !zipPath) throw new Error("finalizeAuditZip requires evidenceDir + zipPath");
+
+  if (typeof opts.refreshBeforeManifest === "function") {
+    opts.refreshBeforeManifest(evidenceDir);
+  }
+
+  // Single source of truth: final on-disk evidence list (excluding manifest itself).
+  const manifest = buildManifestForDir(evidenceDir, { phase, rulesVersion });
+  const manifestPath = path.join(evidenceDir, manifestName);
+  fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2), "utf8");
+
+  // Pre-pack integrity explicitly marked as pre-zip snapshot (must not claim final ZIP).
+  if (opts.writePrePackIntegrity !== false) {
+    const prePack = {
+      schema: "iu-cj-affiliate-phase3z-audit-integrity-prepack-v51.2",
+      stage: "PRE_ZIP_DISK_SNAPSHOT",
+      note: "Counts reflect evidence directory BEFORE packing; NOT a final ZIP check.",
+      at: new Date().toISOString(),
+      diskFileCount: walkFiles(evidenceDir).length,
+      manifestFileCount: manifest.fileCount,
+      manifestPaths: manifest.files.map((f) => f.path),
+    };
+    fs.writeFileSync(path.join(evidenceDir, "92-integrity-prepack.json"), JSON.stringify(prePack, null, 2), "utf8");
+    // Rebuild manifest to include prepack file (still excluding MANIFEST.json).
+    const manifest2 = buildManifestForDir(evidenceDir, { phase, rulesVersion });
+    fs.writeFileSync(manifestPath, JSON.stringify(manifest2, null, 2), "utf8");
+    Object.assign(manifest, manifest2);
+  }
+
+  if (typeof opts.refreshExecutiveSummary === "function") {
+    opts.refreshExecutiveSummary(evidenceDir, manifest);
+    const manifest3 = buildManifestForDir(evidenceDir, { phase, rulesVersion });
+    fs.writeFileSync(manifestPath, JSON.stringify(manifest3, null, 2), "utf8");
+    Object.assign(manifest, manifest3);
+  }
+
+  const written = writePortableZip(evidenceDir, zipPath);
+  const zipBuf = fs.readFileSync(zipPath);
+  const entries = listZipEntries(zipBuf);
+  const entryNames = entries.map((e) => e.name).sort((a, b) => a.localeCompare(b));
+  const manifestFiles = (manifest.files || []).map((f) => f.path).sort((a, b) => a.localeCompare(b));
+  const zipWithoutManifest = entryNames.filter((n) => n !== manifestName);
+  const exactNameParity =
+    zipWithoutManifest.length === manifestFiles.length &&
+    zipWithoutManifest.every((n, i) => n === manifestFiles[i]);
+
+  const validation = validatePortableZip(zipPath, manifestPath);
+  const sha256 = crypto.createHash("sha256").update(zipBuf).digest("hex").toUpperCase();
+
+  const postPack = {
+    schema: "iu-cj-affiliate-phase3z-audit-integrity-postpack-v51.2",
+    stage: "FINAL_ZIP_OPENED",
+    at: new Date().toISOString(),
+    zipPath,
+    zipSha256: sha256,
+    zipBytes: zipBuf.length,
+    zipEntryCount: entries.length,
+    manifestFileCount: manifest.fileCount,
+    // +1 for MANIFEST.json inside zip
+    expectedZipEntries: manifest.fileCount + 1,
+    exactNameParity,
+    crcAndShaValidationOk: validation.ok,
+    validationErrors: validation.errors,
+    entryNames,
+    verdict: validation.ok && exactNameParity ? "ZIP_INTEGRITY_PASS" : "ZIP_INTEGRITY_FAIL",
+  };
+
+  const sideIntegrity = zipPath.replace(/\.zip$/i, "") + "-integrity-postpack.json";
+  fs.writeFileSync(sideIntegrity, JSON.stringify(postPack, null, 2), "utf8");
+
+  return {
+    ok: validation.ok && exactNameParity,
+    zipPath,
+    sha256,
+    fileCount: entries.length,
+    manifestEntries: manifest.fileCount,
+    exactNameParity,
+    validation,
+    postPack,
+    sideIntegrity,
   };
 }
 
