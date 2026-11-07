@@ -218,30 +218,93 @@ async function closeSettings(page) {
   }, null, { timeout: 10000 });
 }
 
+async function dumpVisibilityDiag(page, tileId, label) {
+  try {
+    const diag = await page.evaluate(({ gridSel, tileId, label }) => {
+      const tile = document.querySelector(`${gridSel} .iuTile[data-quicktool-id="${tileId}"]`);
+      const cb = document.querySelector(`input[data-iu-quicktools-visible-toggle="${tileId}"]`);
+      let stored = null;
+      try {
+        stored = JSON.parse(localStorage.getItem("infouzel_quicktools") || "null");
+      } catch (_) {}
+      const st = tile ? getComputedStyle(tile) : null;
+      const r = tile ? tile.getBoundingClientRect() : null;
+      return {
+        label,
+        tileId,
+        checkbox: cb ? { checked: cb.checked, w: cb.getBoundingClientRect().width } : null,
+        tile: tile
+          ? {
+              hidden: tile.hidden,
+              display: st.display,
+              w: r.width,
+              h: r.height,
+              ariaHidden: tile.getAttribute("aria-hidden"),
+            }
+          : null,
+        storedVisible: stored && Array.isArray(stored.visible) ? stored.visible.slice() : null,
+      };
+    }, { gridSel: GRID, tileId, label });
+    console.error("QUICKTOOLS_VISIBILITY_DIAG " + JSON.stringify(diag));
+  } catch (e) {
+    console.error("QUICKTOOLS_VISIBILITY_DIAG_FAIL", String(e && e.message ? e.message : e));
+  }
+}
+
 async function setVisibility(page, tileId, visible) {
   await waitForVisibilityToggle(page, tileId);
+  // Always dispatch change (even when checked already matches) so ApplyConfig runs.
   await page.evaluate(({ tileId, visible }) => {
     const cb = document.querySelector(`input[data-iu-quicktools-visible-toggle="${tileId}"]`);
     if (!cb) return;
-    if (cb.checked !== visible) {
-      cb.checked = visible;
-      cb.dispatchEvent(new Event("change", { bubbles: true }));
-    }
+    cb.checked = visible;
+    cb.dispatchEvent(new Event("change", { bubbles: true }));
   }, { tileId, visible });
-  if (!visible) {
-    await waitForTileHidden(page, tileId);
-  } else {
-    await page.waitForFunction(
-      ({ gridSel, tileId }) => {
-        const tile = document.querySelector(`${gridSel} .iuTile[data-quicktool-id="${tileId}"]`);
-        if (!tile) return false;
-        const st = getComputedStyle(tile);
-        const r = tile.getBoundingClientRect();
-        return !tile.hidden && st.display !== "none" && r.width > 0 && r.height > 0;
-      },
-      { gridSel: GRID, tileId },
-      { timeout: 15000 }
-    );
+  try {
+    if (!visible) {
+      await waitForTileHidden(page, tileId);
+      await page.waitForFunction(
+        (id) => {
+          try {
+            const raw = localStorage.getItem("infouzel_quicktools");
+            if (!raw) return false;
+            const cfg = JSON.parse(raw);
+            return Array.isArray(cfg.visible) && cfg.visible.indexOf(id) === -1;
+          } catch (_) {
+            return false;
+          }
+        },
+        tileId,
+        { timeout: 15000 }
+      );
+    } else {
+      await page.waitForFunction(
+        ({ gridSel, tileId }) => {
+          const tile = document.querySelector(`${gridSel} .iuTile[data-quicktool-id="${tileId}"]`);
+          if (!tile) return false;
+          const st = getComputedStyle(tile);
+          const r = tile.getBoundingClientRect();
+          let storedOk = false;
+          try {
+            const raw = localStorage.getItem("infouzel_quicktools");
+            const cfg = raw ? JSON.parse(raw) : null;
+            storedOk = !!(cfg && Array.isArray(cfg.visible) && cfg.visible.indexOf(tileId) !== -1);
+          } catch (_) {}
+          return (
+            storedOk &&
+            !tile.hidden &&
+            st.display !== "none" &&
+            r.width > 0 &&
+            r.height > 0
+          );
+        },
+        { gridSel: GRID, tileId },
+        { timeout: 15000 }
+      );
+    }
+  } catch (err) {
+    await dumpVisibilityDiag(page, tileId, visible ? "restore_timeout" : "hide_timeout");
+    throw err;
   }
 }
 
@@ -473,16 +536,32 @@ async function main() {
   const results = [];
   for (const vp of VIEWPORTS) {
     let result = null;
+    let lastErr = null;
     for (let attempt = 0; attempt < 2; attempt++) {
-      result = await runViewport(browser, vp);
-      if (result.pass) break;
+      try {
+        result = await runViewport(browser, vp);
+        if (result.pass) break;
+        lastErr = new Error("viewport_assertions_failed:" + vp.name);
+      } catch (err) {
+        lastErr = err;
+        result = {
+          viewport: vp.name,
+          pass: false,
+          error: String(err && err.message ? err.message : err),
+          attempt: attempt + 1,
+        };
+      }
     }
-    results.push(result);
+    if (!result || !result.pass) {
+      results.push(result || { viewport: vp.name, pass: false, error: String(lastErr) });
+    } else {
+      results.push(result);
+    }
   }
   await browser.close();
   server.close();
 
-  const pass = results.every((r) => r.pass);
+  const pass = results.every((r) => r && r.pass);
   console.log(JSON.stringify({ result: pass ? "PASS" : "FAIL", static: staticResult, viewports: results }, null, 2));
   process.exit(pass ? 0 : 1);
 }

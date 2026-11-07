@@ -900,6 +900,7 @@ jobs:
             fi
             set -e
           fi
+          DURABLE_MISSING_COUNT=0
           for DUR in \
             iu-affiliate-cj-durable-price-history-v50.json \
             iu-affiliate-cj-product-reverify-v50.json \
@@ -910,8 +911,43 @@ jobs:
               echo "DURABLE_LEDGER_RESTORED=${DUR}"
             else
               echo "DURABLE_LEDGER_MISSING=${DUR}"
+              DURABLE_MISSING_COUNT=$((DURABLE_MISSING_COUNT + 1))
             fi
           done
+          # V51.1 fail-closed: if prior successful sync produced durable artifacts but restore
+          # failed, do NOT silently continue with empty history (would wipe append-only ledger).
+          if [ "$DURABLE_MISSING_COUNT" -gt 0 ]; then
+            set +e
+            PRIOR_DUR_PROBE=$(gh run list \
+              --workflow cj-affiliate-catalog-sync.yml \
+              --branch main \
+              --status completed \
+              --limit 20 \
+              --json databaseId,conclusion \
+              --jq '[.[] | select(.conclusion=="success")][0].databaseId')
+            PRIOR_HAS_DURABLE=0
+            if [ -n "${PRIOR_DUR_PROBE}" ] && [ "${PRIOR_DUR_PROBE}" != "null" ]; then
+              mkdir -p "${RUNNER_TEMP}/iu-cj-dur-probe"
+              gh run download "${PRIOR_DUR_PROBE}" \
+                -n iu-affiliate-cj-product-feed-checkpoints \
+                -D "${RUNNER_TEMP}/iu-cj-dur-probe" \
+                2>/tmp/iu-dur-probe.err
+              if [ -s "${RUNNER_TEMP}/iu-cj-dur-probe/iu-affiliate-cj-durable-price-history-v50.json" ]; then
+                PRIOR_HAS_DURABLE=1
+              fi
+            fi
+            set -e
+            if [ "$PRIOR_HAS_DURABLE" = "1" ]; then
+              echo "DURABLE_RESTORE_BLOCKED=1"
+              echo "BLOCKER=DURABLE_RESTORE_BLOCKED priorRun=${PRIOR_DUR_PROBE} missingCount=${DURABLE_MISSING_COUNT}"
+              echo "::error::DURABLE_RESTORE_BLOCKED — prior durable history exists but restore failed; refusing empty-ledger continue"
+              exit 1
+            fi
+            echo "DURABLE_RESTORE_BLOCKED=0"
+            echo "DURABLE_RESTORE_NOTE=no_prior_durable_artifact_detected"
+          else
+            echo "DURABLE_RESTORE_BLOCKED=0"
+          fi
           # API fallback via gh (same path that successfully restores offers-public).
           if [ ! -f "$CP" ] || [ ! -s "$CP" ]; then
             set +e

@@ -28179,23 +28179,32 @@ function buildVideoAsArticleCard(it) {
     try {
       if (iuVaultIsPersistBlocked(IU_QUICKTOOLS_STORAGE_KEY)) return;
       const payload = JSON.stringify(cfg);
+      // Sync optimistic mirror BEFORE async durableSet. durableSet updates vault
+      // memoryCache only after encrypt+IDB; loadQuickToolsConfig reads via LS shim
+      // (memoryCache). Without this mirror, a concurrent ApplyConfig()/hydrate can
+      // reload the previous visible[] and re-hide tiles (CI: Quicktools restore
+      // waitForFunction timeout at setVisibility(..., true)).
+      function mirrorQuickToolsPayloadSync() {
+        try {
+          if (typeof localStorage === "undefined") return;
+          localStorage.setItem(IU_QUICKTOOLS_STORAGE_KEY, payload);
+        } catch (_) {}
+      }
       if (!isLocalDataProtectionNoticeAccepted()) {
         void ensureLocalDataProtectionBeforeSave().then(function (ok) {
           if (!ok) return;
           try {
+            mirrorQuickToolsPayloadSync();
             if (window.iuVault && typeof window.iuVault.durableSet === "function") {
               void window.iuVault.durableSet(IU_QUICKTOOLS_STORAGE_KEY, payload).catch(function () {});
-            } else if (typeof localStorage !== "undefined") {
-              localStorage.setItem(IU_QUICKTOOLS_STORAGE_KEY, payload);
             }
           } catch (e) {}
         });
         return;
       }
+      mirrorQuickToolsPayloadSync();
       if (window.iuVault && typeof window.iuVault.durableSet === "function") {
         void window.iuVault.durableSet(IU_QUICKTOOLS_STORAGE_KEY, payload).catch(function () {});
-      } else if (typeof localStorage !== "undefined") {
-        localStorage.setItem(IU_QUICKTOOLS_STORAGE_KEY, payload);
       }
     } catch (e) {}
   }
