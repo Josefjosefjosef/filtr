@@ -11,6 +11,25 @@ import {
 export const DURABLE_PRICE_HISTORY_SCHEMA =
   "iu-cj-affiliate-phase3z-durable-price-history-v50";
 
+/** Documented diagnostic retention for format-only / availability windows. */
+export const RETENTION_POLICY_VERSION = "iu-cj-durable-retention-v51.2";
+export const DEFAULT_MAX_ECONOMIC = 2000;
+export const DEFAULT_MAX_FORMAT_ONLY = 1000;
+export const DEFAULT_MAX_AVAILABILITY = 1000;
+
+export const DURABLE_KEY_CLASS = Object.freeze({
+  ECONOMIC_PRESERVED: "ECONOMIC_PRESERVED",
+  ECONOMIC_MISSING: "ECONOMIC_MISSING",
+  FORMAT_ONLY_PRESERVED: "FORMAT_ONLY_PRESERVED",
+  FORMAT_ONLY_RETAINED_OUT: "FORMAT_ONLY_RETAINED_OUT",
+  FORMAT_ONLY_UNEXPECTED_MISSING: "FORMAT_ONLY_UNEXPECTED_MISSING",
+  AVAILABILITY_PRESERVED: "AVAILABILITY_PRESERVED",
+  AVAILABILITY_RETAINED_OUT: "AVAILABILITY_RETAINED_OUT",
+  AVAILABILITY_MISSING: "AVAILABILITY_MISSING",
+  DUPLICATE_KEYS: "DUPLICATE_KEYS",
+  INVALID_KEYS: "INVALID_KEYS",
+});
+
 export function compoundIdentity(advertiserId, productId) {
   return String(advertiserId || "") + "|" + String(productId || "");
 }
@@ -195,25 +214,62 @@ export function appendDurablePriceHistory(priorDoc, opts = {}) {
     appended += 1;
   }
 
-  // Bound growth for Pages/artifact size; keep newest economic first.
-  const MAX_ECON = Number(opts.maxEconomic || 2000);
-  const MAX_FMT = Number(opts.maxFormatOnly || 1000);
-  const MAX_AVAIL = Number(opts.maxAvailability || 1000);
-  const trim = (arr, n) => (arr.length > n ? arr.slice(arr.length - n) : arr);
+  // Bound growth for Pages/artifact size.
+  // Economic: keep newest within MAX_ECON (hard gate: unexpected economic trim = BLOCKED).
+  // Format-only / availability: intentional rolling diagnostic windows (documented retention).
+  const MAX_ECON = Number(opts.maxEconomic || DEFAULT_MAX_ECONOMIC);
+  const MAX_FMT = Number(opts.maxFormatOnly || DEFAULT_MAX_FORMAT_ONLY);
+  const MAX_AVAIL = Number(opts.maxAvailability || DEFAULT_MAX_AVAILABILITY);
+  // Deterministic trim: array order is append order (oldest first). Keep newest = slice(end).
+  // Tie-breaker: eventKey string (stable) when re-sorting by timestamp.
+  const sortOldestFirst = (arr) =>
+    arr
+      .slice()
+      .sort((a, b) => {
+        const ta = String(a.changeTimestamp || a.at || "");
+        const tb = String(b.changeTimestamp || b.at || "");
+        if (ta !== tb) return ta < tb ? -1 : 1;
+        const ka = String(a.eventKey || "");
+        const kb = String(b.eventKey || "");
+        return ka < kb ? -1 : ka > kb ? 1 : 0;
+      });
+  const trimKeepNewest = (arr, n) => {
+    const sorted = sortOldestFirst(arr);
+    if (sorted.length <= n) return { kept: sorted, retired: [] };
+    return { kept: sorted.slice(sorted.length - n), retired: sorted.slice(0, sorted.length - n) };
+  };
 
-  const nextEvents = trim(events, MAX_ECON);
-  const nextFmt = trim(formatOnlyEvents, MAX_FMT);
-  const nextAvail = trim(availabilityEvents, MAX_AVAIL);
+  const econTrim = trimKeepNewest(events, MAX_ECON);
+  const fmtTrim = trimKeepNewest(formatOnlyEvents, MAX_FMT);
+  const availTrim = trimKeepNewest(availabilityEvents, MAX_AVAIL);
+  const nextEvents = econTrim.kept;
+  const nextFmt = fmtTrim.kept;
+  const nextAvail = availTrim.kept;
   const eventKeys = [
     ...nextEvents.map((e) => e.eventKey),
     ...nextFmt.map((e) => e.eventKey),
     ...nextAvail.map((e) => e.eventKey),
   ];
-  // V51.1: document intentional format-only rolling retention (not economic wipe).
-  const retiredFormatOnlyKeys = formatOnlyEvents
-    .slice(0, Math.max(0, formatOnlyEvents.length - nextFmt.length))
-    .map((e) => e.eventKey)
-    .filter(Boolean);
+
+  const retentionLedger = buildFormatOnlyRetentionLedger({
+    retiredEvents: fmtTrim.retired,
+    nowIso,
+    runId,
+    sha: opts.sha || base.sha || null,
+    priorArtifactSha: base.sha || null,
+    maxFormatOnly: MAX_FMT,
+    policyVersion: RETENTION_POLICY_VERSION,
+  });
+  const availabilityRetentionLedger = buildFormatOnlyRetentionLedger({
+    retiredEvents: availTrim.retired,
+    nowIso,
+    runId,
+    sha: opts.sha || base.sha || null,
+    priorArtifactSha: base.sha || null,
+    maxFormatOnly: MAX_AVAIL,
+    policyVersion: RETENTION_POLICY_VERSION,
+    reason: "AVAILABILITY_ROLLING_WINDOW",
+  });
 
   return {
     schema: DURABLE_PRICE_HISTORY_SCHEMA,
@@ -228,11 +284,18 @@ export function appendDurablePriceHistory(priorDoc, opts = {}) {
     availabilityEvents: nextAvail,
     eventKeys,
     retention: {
+      policyVersion: RETENTION_POLICY_VERSION,
       maxEconomic: MAX_ECON,
       maxFormatOnly: MAX_FMT,
       maxAvailability: MAX_AVAIL,
-      retiredFormatOnlyKeysSample: retiredFormatOnlyKeys.slice(-50),
-      retiredFormatOnlyCount: retiredFormatOnlyKeys.length,
+      economicRetiredCount: econTrim.retired.length,
+      retiredFormatOnlyCount: fmtTrim.retired.length,
+      retiredAvailabilityCount: availTrim.retired.length,
+      retiredFormatOnlyKeysSample: fmtTrim.retired.map((e) => e.eventKey).slice(-50),
+      // Active window only — not a durable archive store.
+      archiveStatus: "NOT_ARCHIVED_ACTIVE_WINDOW_ONLY",
+      formatOnlyRetentionLedger: retentionLedger,
+      availabilityRetentionLedger,
     },
     counts: {
       economicEvents: nextEvents.length,
@@ -254,52 +317,264 @@ export function appendDurablePriceHistory(priorDoc, opts = {}) {
 }
 
 /**
- * Prove next-run read: prior ECONOMIC durable keys survive append.
- * Format-only / availability may roll under maxFormatOnly / maxAvailability
- * (documented retention — not treated as silent history wipe).
+ * Individual retention decisions for format-only (or availability) retired rows.
+ * These are NOT archived elsewhere unless a separate archive writer persists them.
  */
-export function assertDurableHistoryReadable(priorDoc, nextDoc) {
-  const priorKeys = new Set(priorDoc?.eventKeys || []);
-  const nextKeys = new Set(nextDoc?.eventKeys || []);
-  let preserved = 0;
-  let missing = 0;
-  for (const k of priorKeys) {
-    if (nextKeys.has(k)) preserved += 1;
-    else missing += 1;
-  }
-  const priorEcon = new Set((priorDoc?.events || []).map((e) => e.eventKey).filter(Boolean));
-  const nextEcon = new Set((nextDoc?.events || []).map((e) => e.eventKey).filter(Boolean));
-  let economicPreserved = 0;
-  let economicMissing = 0;
-  for (const k of priorEcon) {
-    if (nextEcon.has(k)) economicPreserved += 1;
-    else economicMissing += 1;
-  }
-  const priorFmt = new Set((priorDoc?.formatOnlyEvents || []).map((e) => e.eventKey).filter(Boolean));
-  const nextFmt = new Set((nextDoc?.formatOnlyEvents || []).map((e) => e.eventKey).filter(Boolean));
-  let formatOnlyPreserved = 0;
-  let formatOnlyMissing = 0;
-  for (const k of priorFmt) {
-    if (nextFmt.has(k)) formatOnlyPreserved += 1;
-    else formatOnlyMissing += 1;
-  }
+export function buildFormatOnlyRetentionLedger(opts = {}) {
+  const retired = Array.isArray(opts.retiredEvents) ? opts.retiredEvents : [];
+  const nowIso = opts.nowIso || new Date().toISOString();
+  const reason = opts.reason || "FORMAT_ONLY_ROLLING_WINDOW";
+  const rows = retired.map((e) => ({
+    eventKey: e.eventKey || e.storageKey || null,
+    advertiserId: e.advertiserId != null ? String(e.advertiserId) : null,
+    productId: e.productId != null ? String(e.productId) : null,
+    compoundIdentity: e.compoundIdentity || compoundIdentity(e.advertiserId, e.productId),
+    previousTimestamp: e.changeTimestamp || e.at || null,
+    retentionTimestamp: nowIso,
+    retentionReason: reason,
+    retentionPolicyVersion: opts.policyVersion || RETENTION_POLICY_VERSION,
+    sourceRunId: e.runId != null ? String(e.runId) : null,
+    previousArtifactSha: opts.priorArtifactSha || null,
+    newArtifactSha: opts.sha || null,
+    archivedStatus: "NOT_ARCHIVED",
+    archiveLocation: null,
+    maxWindow: opts.maxFormatOnly != null ? Number(opts.maxFormatOnly) : DEFAULT_MAX_FORMAT_ONLY,
+  }));
   return {
-    priorKeys: priorKeys.size,
-    nextKeys: nextKeys.size,
-    preserved,
-    missing,
+    schema: "iu-cj-affiliate-phase3z-format-only-retention-ledger-v51.2",
+    policyVersion: opts.policyVersion || RETENTION_POLICY_VERSION,
+    at: nowIso,
+    runId: opts.runId != null ? String(opts.runId) : null,
+    count: rows.length,
+    rows,
+  };
+}
+
+function listEventKeys(doc, field) {
+  const arr = Array.isArray(doc?.[field]) ? doc[field] : [];
+  return arr.map((e) => String(e?.eventKey || "")).filter(Boolean);
+}
+
+function retentionKeySet(ledger) {
+  const rows = Array.isArray(ledger?.rows) ? ledger.rows : [];
+  return new Set(rows.map((r) => String(r.eventKey || "")).filter(Boolean));
+}
+
+function archivedKeySet(ledger) {
+  const rows = Array.isArray(ledger?.rows) ? ledger.rows : [];
+  return new Set(
+    rows
+      .filter((r) => String(r.archivedStatus || "") === "ARCHIVED" && r.archiveLocation)
+      .map((r) => String(r.eventKey || ""))
+      .filter(Boolean)
+  );
+}
+
+/**
+ * Individual set comparison: previous durable artifact vs current.
+ * Classification uses typed event arrays (not key-prefix heuristics).
+ */
+export function compareDurableKeySets(priorDoc, nextDoc) {
+  const prevEcon = new Set(listEventKeys(priorDoc, "events"));
+  const prevFmt = new Set(listEventKeys(priorDoc, "formatOnlyEvents"));
+  const prevAvail = new Set(listEventKeys(priorDoc, "availabilityEvents"));
+  const nextEcon = new Set(listEventKeys(nextDoc, "events"));
+  const nextFmt = new Set(listEventKeys(nextDoc, "formatOnlyEvents"));
+  const nextAvail = new Set(listEventKeys(nextDoc, "availabilityEvents"));
+  const priorAll = new Set([
+    ...(priorDoc?.eventKeys || []).map(String).filter(Boolean),
+    ...prevEcon,
+    ...prevFmt,
+    ...prevAvail,
+  ]);
+  const nextAll = new Set([
+    ...(nextDoc?.eventKeys || []).map(String).filter(Boolean),
+    ...nextEcon,
+    ...nextFmt,
+    ...nextAvail,
+  ]);
+
+  const fmtLedger = nextDoc?.retention?.formatOnlyRetentionLedger || null;
+  const availLedger = nextDoc?.retention?.availabilityRetentionLedger || null;
+  const fmtRetained = retentionKeySet(fmtLedger);
+  const fmtArchived = archivedKeySet(fmtLedger);
+  const availRetained = retentionKeySet(availLedger);
+  const availArchived = archivedKeySet(availLedger);
+
+  const econPreserved = [...prevEcon].filter((k) => nextEcon.has(k));
+  const econMissing = [...prevEcon].filter((k) => !nextEcon.has(k));
+  const fmtPreserved = [...prevFmt].filter((k) => nextFmt.has(k));
+  const fmtRetainedOut = [...prevFmt].filter((k) => !nextFmt.has(k) && fmtRetained.has(k));
+  const fmtArchivedKeys = [...prevFmt].filter((k) => !nextFmt.has(k) && fmtArchived.has(k));
+  const fmtUnexpected = [...prevFmt].filter(
+    (k) => !nextFmt.has(k) && !fmtRetained.has(k) && !fmtArchived.has(k)
+  );
+  const availPreserved = [...prevAvail].filter((k) => nextAvail.has(k));
+  const availRetainedOut = [...prevAvail].filter((k) => !nextAvail.has(k) && availRetained.has(k));
+  const availArchivedKeys = [...prevAvail].filter((k) => !nextAvail.has(k) && availArchived.has(k));
+  const availUnexpected = [...prevAvail].filter(
+    (k) => !nextAvail.has(k) && !availRetained.has(k) && !availArchived.has(k)
+  );
+
+  const preserved = [...priorAll].filter((k) => nextAll.has(k));
+  const removed = [...priorAll].filter((k) => !nextAll.has(k));
+  const added = [...nextAll].filter((k) => !priorAll.has(k));
+
+  const nextKeyList = [
+    ...listEventKeys(nextDoc, "events"),
+    ...listEventKeys(nextDoc, "formatOnlyEvents"),
+    ...listEventKeys(nextDoc, "availabilityEvents"),
+  ];
+  const seen = new Map();
+  const dupes = [];
+  for (const k of nextKeyList) {
+    const n = (seen.get(k) || 0) + 1;
+    seen.set(k, n);
+    if (n === 2) dupes.push(k);
+  }
+  const invalid = nextKeyList.filter((k) => !k);
+
+  return {
+    schema: "iu-cj-affiliate-phase3z-durable-key-comparison-v51.2",
+    priorKeys: priorAll.size,
+    nextKeys: nextAll.size,
+    preservedTotal: preserved.length,
+    removedTotal: removed.length,
+    addedTotal: added.length,
+    removedKeysSample: removed.slice(0, 20),
     economic: {
-      prior: priorEcon.size,
-      preserved: economicPreserved,
-      missing: economicMissing,
+      previousKeys: [...prevEcon],
+      currentKeys: [...nextEcon],
+      preservedKeys: econPreserved,
+      missingKeys: econMissing,
+      addedKeys: [...nextEcon].filter((k) => !prevEcon.has(k)),
     },
     formatOnly: {
-      prior: priorFmt.size,
-      preserved: formatOnlyPreserved,
-      missing: formatOnlyMissing,
-      retentionCap: Number(nextDoc?.retention?.maxFormatOnly || 1000),
+      previousKeys: [...prevFmt],
+      currentKeys: [...nextFmt],
+      preservedKeys: fmtPreserved,
+      retainedOutKeys: fmtRetainedOut,
+      archivedKeys: fmtArchivedKeys,
+      unexpectedMissingKeys: fmtUnexpected,
+      addedKeys: [...nextFmt].filter((k) => !prevFmt.has(k)),
     },
-    // Economic append-only is the hard gate; format-only rolling is documented.
-    readable: economicMissing === 0,
+    availability: {
+      previousKeys: [...prevAvail],
+      currentKeys: [...nextAvail],
+      preservedKeys: availPreserved,
+      retainedOutKeys: availRetainedOut,
+      archivedKeys: availArchivedKeys,
+      unexpectedMissingKeys: availUnexpected,
+      addedKeys: [...nextAvail].filter((k) => !prevAvail.has(k)),
+    },
+    duplicates: { count: dupes.length, keys: dupes.slice(0, 50) },
+    invalid: { count: invalid.length, keys: invalid.slice(0, 50) },
+  };
+}
+
+/**
+ * Prove next-run read with honest multi-status split (V51.2).
+ * Keeps (priorDoc, nextDoc) signature used by live sync.
+ * readable = economic integrity only (NOT aggregate all-keys preserved).
+ */
+export function assertDurableHistoryReadable(priorDoc, nextDoc) {
+  const ledger = compareDurableKeySets(priorDoc, nextDoc);
+  const economicMissing = ledger.economic.missingKeys.length;
+  const availUnexpected = ledger.availability.unexpectedMissingKeys.length;
+  const fmtUnexpected = ledger.formatOnly.unexpectedMissingKeys.length;
+  const readbackReadable =
+    nextDoc != null && typeof nextDoc === "object" && Array.isArray(nextDoc.eventKeys);
+  const economicHistoryComplete = economicMissing === 0;
+  const availabilityHistoryComplete = availUnexpected === 0;
+  const allHistoricalKeysPreserved =
+    economicMissing === 0 &&
+    availUnexpected === 0 &&
+    fmtUnexpected === 0 &&
+    ledger.formatOnly.retainedOutKeys.length === 0 &&
+    ledger.availability.retainedOutKeys.length === 0;
+  const durableAccountingPass =
+    economicHistoryComplete &&
+    availabilityHistoryComplete &&
+    fmtUnexpected === 0 &&
+    ledger.duplicates.count === 0 &&
+    ledger.invalid.count === 0 &&
+    readbackReadable;
+
+  return {
+    schema: "iu-cj-affiliate-phase3z-durable-history-readproof-v51.2",
+    priorKeys: ledger.priorKeys,
+    nextKeys: ledger.nextKeys,
+    preserved: ledger.preservedTotal,
+    missing: ledger.removedTotal,
+    missingKeysSample: ledger.removedKeysSample,
+    // Hard gate: economic append-only. Aggregate missing may be format-only retention.
+    readable: economicHistoryComplete && readbackReadable,
+    readbackReadable,
+    economicHistoryComplete,
+    availabilityHistoryComplete,
+    allHistoricalKeysPreserved,
+    durableAccountingPass,
+    economic: {
+      prior: ledger.economic.previousKeys.length,
+      preserved: ledger.economic.preservedKeys.length,
+      missing: economicMissing,
+      missingKeysSample: ledger.economic.missingKeys.slice(0, 20),
+      preservedKeysSample: ledger.economic.preservedKeys.slice(0, 20),
+      status: economicHistoryComplete ? "ECONOMIC_INTACT" : "ECONOMIC_HISTORY_LOSS",
+    },
+    formatOnly: {
+      prior: ledger.formatOnly.previousKeys.length,
+      preserved: ledger.formatOnly.preservedKeys.length,
+      missing: ledger.formatOnly.retainedOutKeys.length + fmtUnexpected,
+      retainedOut: ledger.formatOnly.retainedOutKeys.length,
+      archived: ledger.formatOnly.archivedKeys.length,
+      unexpectedMissing: fmtUnexpected,
+      retainedOutKeysSample: ledger.formatOnly.retainedOutKeys.slice(0, 20),
+      unexpectedMissingKeysSample: ledger.formatOnly.unexpectedMissingKeys.slice(0, 20),
+      retentionCap: Number(nextDoc?.retention?.maxFormatOnly || DEFAULT_MAX_FORMAT_ONLY),
+      status:
+        fmtUnexpected === 0
+          ? ledger.formatOnly.retainedOutKeys.length
+            ? "FORMAT_ONLY_RETENTION_DOCUMENTED"
+            : "FORMAT_ONLY_INTACT"
+          : "FORMAT_ONLY_UNEXPECTED_MISSING",
+      note:
+        "Format-only diagnostic history is intentionally capped (default MAX_FMT=1000). " +
+        "retainedOut is documented rolling retention, NOT economic price-history loss. " +
+        "archivedStatus remains NOT_ARCHIVED unless a separate archive writer exists.",
+    },
+    availability: {
+      prior: ledger.availability.previousKeys.length,
+      preserved: ledger.availability.preservedKeys.length,
+      retainedOut: ledger.availability.retainedOutKeys.length,
+      missing: availUnexpected,
+      missingKeysSample: ledger.availability.unexpectedMissingKeys.slice(0, 20),
+      retentionCap: Number(nextDoc?.retention?.maxAvailability || DEFAULT_MAX_AVAILABILITY),
+      status: availabilityHistoryComplete
+        ? ledger.availability.retainedOutKeys.length
+          ? "AVAILABILITY_RETENTION_DOCUMENTED"
+          : "AVAILABILITY_INTACT"
+        : "AVAILABILITY_HISTORY_LOSS",
+    },
+    duplicates: ledger.duplicates,
+    invalid: ledger.invalid,
+    retention: nextDoc?.retention || null,
+    statuses: {
+      readbackTechnical: readbackReadable ? "READBACK_OK" : "READBACK_FAILED",
+      economicIntegrity: economicHistoryComplete ? "PASS" : "BLOCKED",
+      formatOnlyRetentionIntegrity: fmtUnexpected === 0 ? "PASS" : "BLOCKED",
+      availabilityIntegrity: availabilityHistoryComplete ? "PASS" : "BLOCKED",
+      overallDurableIntegrity: durableAccountingPass ? "DURABLE_ACCOUNTING_PASS" : "BLOCKED",
+    },
+    classification: durableAccountingPass
+      ? ledger.formatOnly.retainedOutKeys.length || ledger.availability.retainedOutKeys.length
+        ? "ECONOMIC_AVAIL_INTACT_DIAGNOSTIC_RETENTION"
+        : "FULLY_READABLE"
+      : economicMissing > 0
+        ? "ECONOMIC_HISTORY_LOSS"
+        : availUnexpected > 0
+          ? "AVAILABILITY_HISTORY_LOSS"
+          : "UNEXPECTED_KEY_LOSS_OR_INVALID",
+    ledger,
   };
 }
