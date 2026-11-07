@@ -209,6 +209,11 @@ export function appendDurablePriceHistory(priorDoc, opts = {}) {
     ...nextFmt.map((e) => e.eventKey),
     ...nextAvail.map((e) => e.eventKey),
   ];
+  // V51.1: document intentional format-only rolling retention (not economic wipe).
+  const retiredFormatOnlyKeys = formatOnlyEvents
+    .slice(0, Math.max(0, formatOnlyEvents.length - nextFmt.length))
+    .map((e) => e.eventKey)
+    .filter(Boolean);
 
   return {
     schema: DURABLE_PRICE_HISTORY_SCHEMA,
@@ -222,6 +227,13 @@ export function appendDurablePriceHistory(priorDoc, opts = {}) {
     formatOnlyEvents: nextFmt,
     availabilityEvents: nextAvail,
     eventKeys,
+    retention: {
+      maxEconomic: MAX_ECON,
+      maxFormatOnly: MAX_FMT,
+      maxAvailability: MAX_AVAIL,
+      retiredFormatOnlyKeysSample: retiredFormatOnlyKeys.slice(-50),
+      retiredFormatOnlyCount: retiredFormatOnlyKeys.length,
+    },
     counts: {
       economicEvents: nextEvents.length,
       formatOnlyEvents: nextFmt.length,
@@ -242,7 +254,9 @@ export function appendDurablePriceHistory(priorDoc, opts = {}) {
 }
 
 /**
- * Prove next-run read: prior durable keys are still present after append.
+ * Prove next-run read: prior ECONOMIC durable keys survive append.
+ * Format-only / availability may roll under maxFormatOnly / maxAvailability
+ * (documented retention — not treated as silent history wipe).
  */
 export function assertDurableHistoryReadable(priorDoc, nextDoc) {
   const priorKeys = new Set(priorDoc?.eventKeys || []);
@@ -253,11 +267,39 @@ export function assertDurableHistoryReadable(priorDoc, nextDoc) {
     if (nextKeys.has(k)) preserved += 1;
     else missing += 1;
   }
+  const priorEcon = new Set((priorDoc?.events || []).map((e) => e.eventKey).filter(Boolean));
+  const nextEcon = new Set((nextDoc?.events || []).map((e) => e.eventKey).filter(Boolean));
+  let economicPreserved = 0;
+  let economicMissing = 0;
+  for (const k of priorEcon) {
+    if (nextEcon.has(k)) economicPreserved += 1;
+    else economicMissing += 1;
+  }
+  const priorFmt = new Set((priorDoc?.formatOnlyEvents || []).map((e) => e.eventKey).filter(Boolean));
+  const nextFmt = new Set((nextDoc?.formatOnlyEvents || []).map((e) => e.eventKey).filter(Boolean));
+  let formatOnlyPreserved = 0;
+  let formatOnlyMissing = 0;
+  for (const k of priorFmt) {
+    if (nextFmt.has(k)) formatOnlyPreserved += 1;
+    else formatOnlyMissing += 1;
+  }
   return {
     priorKeys: priorKeys.size,
     nextKeys: nextKeys.size,
     preserved,
     missing,
-    readable: missing === 0,
+    economic: {
+      prior: priorEcon.size,
+      preserved: economicPreserved,
+      missing: economicMissing,
+    },
+    formatOnly: {
+      prior: priorFmt.size,
+      preserved: formatOnlyPreserved,
+      missing: formatOnlyMissing,
+      retentionCap: Number(nextDoc?.retention?.maxFormatOnly || 1000),
+    },
+    // Economic append-only is the hard gate; format-only rolling is documented.
+    readable: economicMissing === 0,
   };
 }
