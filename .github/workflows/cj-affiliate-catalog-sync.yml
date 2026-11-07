@@ -894,12 +894,13 @@ jobs:
           NEED_DUR=0
           for DUR in \
             iu-affiliate-cj-durable-price-history-v50.json \
-            iu-affiliate-cj-durable-price-history-archive-v51.json \
             iu-affiliate-cj-product-reverify-v50.json \
             iu-affiliate-cj-product-identity-v50.json
           do
             if [ ! -f "projects/data/${DUR}" ] || [ ! -s "projects/data/${DUR}" ]; then NEED_DUR=1; fi
           done
+          # Archive is optional for NEED_DUR (bootstrap later if absent). Still attempt restore when missing.
+          if [ ! -s "projects/data/iu-affiliate-cj-durable-price-history-archive-v51.json" ]; then NEED_DUR=1; fi
           if [ "$NEED_DUR" = "1" ]; then
             set +e
             PRIOR_DUR_RUN=$(gh run list \
@@ -939,10 +940,12 @@ jobs:
             fi
             set -e
           fi
+          # V51.3: archive companion is NEW — prior successful runs may lack it.
+          # Required fail-closed set remains price/reverify/identity only.
+          # Missing archive → bootstrap empty file (do NOT DURABLE_RESTORE_BLOCKED).
           DURABLE_MISSING_COUNT=0
           for DUR in \
             iu-affiliate-cj-durable-price-history-v50.json \
-            iu-affiliate-cj-durable-price-history-archive-v51.json \
             iu-affiliate-cj-product-reverify-v50.json \
             iu-affiliate-cj-product-identity-v50.json
           do
@@ -954,6 +957,15 @@ jobs:
               DURABLE_MISSING_COUNT=$((DURABLE_MISSING_COUNT + 1))
             fi
           done
+          ARCH="projects/data/iu-affiliate-cj-durable-price-history-archive-v51.json"
+          if [ -f "$ARCH" ] && [ -s "$ARCH" ]; then
+            echo "DURABLE_LEDGER_RESTORED=iu-affiliate-cj-durable-price-history-archive-v51.json"
+          else
+            mkdir -p projects/data
+            printf '%s\n' '{"schema":"iu-cj-affiliate-phase3z-durable-history-archive-v51.3","at":"'"$(date -u +%Y-%m-%dT%H:%M:%S.000Z)"'","runId":null,"events":[],"availabilityEvents":[],"eventKeys":[],"counts":{"economicEvents":0,"availabilityEvents":0,"appendedThisRun":0,"skippedDuplicateKeys":0},"note":"BOOTSTRAP empty archive — prior runs predate V51.3 archive companion"}' > "$ARCH"
+            echo "DURABLE_ARCHIVE_BOOTSTRAP=1"
+            echo "DURABLE_LEDGER_MISSING=iu-affiliate-cj-durable-price-history-archive-v51.json"
+          fi
           # V51.1 fail-closed: if prior successful sync produced durable artifacts but restore
           # failed, do NOT silently continue with empty history (would wipe append-only ledger).
           if [ "$DURABLE_MISSING_COUNT" -gt 0 ]; then
