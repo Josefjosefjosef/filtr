@@ -11,11 +11,13 @@ import {
 export const DURABLE_PRICE_HISTORY_SCHEMA =
   "iu-cj-affiliate-phase3z-durable-price-history-v50";
 
-/** Documented diagnostic retention for format-only / availability windows. */
-export const RETENTION_POLICY_VERSION = "iu-cj-durable-retention-v51.2";
+/** Documented diagnostic retention for format-only; economic/availability require archive-before-trim. */
+export const RETENTION_POLICY_VERSION = "iu-cj-durable-retention-v51.3";
 export const DEFAULT_MAX_ECONOMIC = 2000;
 export const DEFAULT_MAX_FORMAT_ONLY = 1000;
 export const DEFAULT_MAX_AVAILABILITY = 1000;
+export const DURABLE_ARCHIVE_SCHEMA = "iu-cj-affiliate-phase3z-durable-history-archive-v51.3";
+export const DURABLE_ARCHIVE_FILENAME = "iu-affiliate-cj-durable-price-history-archive-v51.json";
 
 export const DURABLE_KEY_CLASS = Object.freeze({
   ECONOMIC_PRESERVED: "ECONOMIC_PRESERVED",
@@ -239,9 +241,37 @@ export function appendDurablePriceHistory(priorDoc, opts = {}) {
     return { kept: sorted.slice(sorted.length - n), retired: sorted.slice(0, sorted.length - n) };
   };
 
-  const econTrim = trimKeepNewest(events, MAX_ECON);
+  const econTrimPlan = trimKeepNewest(events, MAX_ECON);
   const fmtTrim = trimKeepNewest(formatOnlyEvents, MAX_FMT);
-  const availTrim = trimKeepNewest(availabilityEvents, MAX_AVAIL);
+  const availTrimPlan = trimKeepNewest(availabilityEvents, MAX_AVAIL);
+
+  // V51.3: economic + availability may leave the ACTIVE window only after archive write+read-back.
+  // Format-only remains a documented diagnostic rolling window (NOT archived by default).
+  const priorArchive = opts.priorArchive || emptyDurableArchive({ nowIso, runId });
+  const archiveAttempt = appendToDurableArchive(priorArchive, {
+    economicEvents: econTrimPlan.retired,
+    availabilityEvents: availTrimPlan.retired,
+    nowIso,
+    runId,
+    sha: opts.sha || base.sha || null,
+    priorArtifactSha: base.sha || null,
+    activeArtifactSha: opts.sha || base.sha || null,
+  });
+
+  const econWouldRetire = econTrimPlan.retired.length > 0;
+  const availWouldRetire = availTrimPlan.retired.length > 0;
+  const archiveOk =
+    (!econWouldRetire && !availWouldRetire) ||
+    (archiveAttempt.ok === true && archiveAttempt.readbackOk === true);
+  const archiveBlocked = (econWouldRetire || availWouldRetire) && !archiveOk;
+
+  const econTrim = archiveBlocked
+    ? { kept: sortOldestFirst(events), retired: [] }
+    : econTrimPlan;
+  const availTrim = archiveBlocked
+    ? { kept: sortOldestFirst(availabilityEvents), retired: [] }
+    : availTrimPlan;
+
   const nextEvents = econTrim.kept;
   const nextFmt = fmtTrim.kept;
   const nextAvail = availTrim.kept;
@@ -268,8 +298,30 @@ export function appendDurablePriceHistory(priorDoc, opts = {}) {
     priorArtifactSha: base.sha || null,
     maxFormatOnly: MAX_AVAIL,
     policyVersion: RETENTION_POLICY_VERSION,
-    reason: "AVAILABILITY_ROLLING_WINDOW",
+    reason: archiveBlocked ? "AVAILABILITY_TRIM_BLOCKED_ARCHIVE" : "AVAILABILITY_ARCHIVED_FROM_ACTIVE",
+    archivedStatus: archiveOk && availTrim.retired.length ? "ARCHIVED" : "NOT_ARCHIVED",
+    archiveLocation:
+      archiveOk && availTrim.retired.length ? DURABLE_ARCHIVE_FILENAME : null,
   });
+  if (archiveOk && econTrim.retired.length) {
+    for (const row of availabilityRetentionLedger.rows) {
+      /* availability rows already stamped above */
+    }
+  }
+  const economicArchiveLedger = buildFormatOnlyRetentionLedger({
+    retiredEvents: econTrim.retired,
+    nowIso,
+    runId,
+    sha: opts.sha || base.sha || null,
+    priorArtifactSha: base.sha || null,
+    maxFormatOnly: MAX_ECON,
+    policyVersion: RETENTION_POLICY_VERSION,
+    reason: archiveBlocked ? "ECONOMIC_TRIM_BLOCKED_ARCHIVE" : "ECONOMIC_ARCHIVED_FROM_ACTIVE",
+    archivedStatus: archiveOk && econTrim.retired.length ? "ARCHIVED" : "NOT_ARCHIVED",
+    archiveLocation: archiveOk && econTrim.retired.length ? DURABLE_ARCHIVE_FILENAME : null,
+  });
+
+  const nextArchive = archiveOk ? archiveAttempt.archive : priorArchive;
 
   return {
     schema: DURABLE_PRICE_HISTORY_SCHEMA,
@@ -283,6 +335,7 @@ export function appendDurablePriceHistory(priorDoc, opts = {}) {
     formatOnlyEvents: nextFmt,
     availabilityEvents: nextAvail,
     eventKeys,
+    archive: nextArchive,
     retention: {
       policyVersion: RETENTION_POLICY_VERSION,
       maxEconomic: MAX_ECON,
@@ -292,15 +345,26 @@ export function appendDurablePriceHistory(priorDoc, opts = {}) {
       retiredFormatOnlyCount: fmtTrim.retired.length,
       retiredAvailabilityCount: availTrim.retired.length,
       retiredFormatOnlyKeysSample: fmtTrim.retired.map((e) => e.eventKey).slice(-50),
-      // Active window only — not a durable archive store.
-      archiveStatus: "NOT_ARCHIVED_ACTIVE_WINDOW_ONLY",
+      archiveStatus: archiveBlocked
+        ? "ARCHIVE_WRITE_BLOCKED"
+        : econTrim.retired.length || availTrim.retired.length
+          ? "ARCHIVED_TO_DURABLE_ARCHIVE"
+          : fmtTrim.retired.length
+            ? "FORMAT_ONLY_ACTIVE_WINDOW_ONLY"
+            : "NO_RETENTION_THIS_RUN",
+      archiveWriteBlocked: archiveBlocked,
+      archiveReadbackOk: archiveAttempt.readbackOk === true,
+      archiveFilename: DURABLE_ARCHIVE_FILENAME,
       formatOnlyRetentionLedger: retentionLedger,
       availabilityRetentionLedger,
+      economicArchiveLedger,
     },
     counts: {
       economicEvents: nextEvents.length,
       formatOnlyEvents: nextFmt.length,
       availabilityEvents: nextAvail.length,
+      archivedEconomicEvents: (nextArchive.events || []).length,
+      archivedAvailabilityEvents: (nextArchive.availabilityEvents || []).length,
       appendedThisRun: appended,
       skippedDuplicateKeys: skipped,
       priceStatus: nextEvents.length ? "OBSERVED" : "ZERO_OBSERVED_CHANGES",
@@ -316,6 +380,101 @@ export function appendDurablePriceHistory(priorDoc, opts = {}) {
   };
 }
 
+export function emptyDurableArchive(opts = {}) {
+  return {
+    schema: DURABLE_ARCHIVE_SCHEMA,
+    at: opts.nowIso || new Date().toISOString(),
+    runId: opts.runId || null,
+    sha: opts.sha || null,
+    note: "Append-only archive for economic + availability events retired from the active window. Format-only is not archived here.",
+    events: [],
+    availabilityEvents: [],
+    eventKeys: [],
+    counts: { economicEvents: 0, availabilityEvents: 0, appendedThisRun: 0, skippedDuplicateKeys: 0 },
+  };
+}
+
+/**
+ * Idempotent append into durable archive. Read-back proof required before active trim.
+ */
+export function appendToDurableArchive(priorArchive, opts = {}) {
+  const base = priorArchive && typeof priorArchive === "object" ? priorArchive : emptyDurableArchive(opts);
+  const nowIso = opts.nowIso || new Date().toISOString();
+  const runId = opts.runId != null ? String(opts.runId) : null;
+  const keySet = new Set((base.eventKeys || []).map(String).filter(Boolean));
+  const events = Array.isArray(base.events) ? base.events.slice() : [];
+  const availabilityEvents = Array.isArray(base.availabilityEvents) ? base.availabilityEvents.slice() : [];
+  let appended = 0;
+  let skipped = 0;
+
+  for (const ev of opts.economicEvents || []) {
+    const k = String(ev?.eventKey || "");
+    if (!k) continue;
+    if (keySet.has(k)) {
+      skipped += 1;
+      continue;
+    }
+    keySet.add(k);
+    events.push({
+      ...ev,
+      archivedAt: nowIso,
+      archiveRunId: runId,
+      previousArtifactSha: opts.priorArtifactSha || null,
+      activeArtifactSha: opts.activeArtifactSha || opts.sha || null,
+      archiveLocation: DURABLE_ARCHIVE_FILENAME,
+    });
+    appended += 1;
+  }
+  for (const ev of opts.availabilityEvents || []) {
+    const k = String(ev?.eventKey || "");
+    if (!k) continue;
+    if (keySet.has(k)) {
+      skipped += 1;
+      continue;
+    }
+    keySet.add(k);
+    availabilityEvents.push({
+      ...ev,
+      archivedAt: nowIso,
+      archiveRunId: runId,
+      previousArtifactSha: opts.priorArtifactSha || null,
+      activeArtifactSha: opts.activeArtifactSha || opts.sha || null,
+      archiveLocation: DURABLE_ARCHIVE_FILENAME,
+    });
+    appended += 1;
+  }
+
+  const archive = {
+    schema: DURABLE_ARCHIVE_SCHEMA,
+    at: nowIso,
+    runId,
+    sha: opts.sha || base.sha || null,
+    note: base.note,
+    events,
+    availabilityEvents,
+    eventKeys: [...events.map((e) => e.eventKey), ...availabilityEvents.map((e) => e.eventKey)],
+    counts: {
+      economicEvents: events.length,
+      availabilityEvents: availabilityEvents.length,
+      appendedThisRun: appended,
+      skippedDuplicateKeys: skipped,
+    },
+  };
+
+  const required = [
+    ...(opts.economicEvents || []).map((e) => String(e?.eventKey || "")).filter(Boolean),
+    ...(opts.availabilityEvents || []).map((e) => String(e?.eventKey || "")).filter(Boolean),
+  ];
+  const have = new Set(archive.eventKeys.map(String));
+  const missing = required.filter((k) => !have.has(k));
+  return {
+    ok: missing.length === 0,
+    readbackOk: missing.length === 0,
+    missingKeys: missing,
+    archive,
+  };
+}
+
 /**
  * Individual retention decisions for format-only (or availability) retired rows.
  * These are NOT archived elsewhere unless a separate archive writer persists them.
@@ -324,6 +483,8 @@ export function buildFormatOnlyRetentionLedger(opts = {}) {
   const retired = Array.isArray(opts.retiredEvents) ? opts.retiredEvents : [];
   const nowIso = opts.nowIso || new Date().toISOString();
   const reason = opts.reason || "FORMAT_ONLY_ROLLING_WINDOW";
+  const archivedStatus = opts.archivedStatus || "NOT_ARCHIVED";
+  const archiveLocation = opts.archiveLocation || null;
   const rows = retired.map((e) => ({
     eventKey: e.eventKey || e.storageKey || null,
     advertiserId: e.advertiserId != null ? String(e.advertiserId) : null,
@@ -336,12 +497,12 @@ export function buildFormatOnlyRetentionLedger(opts = {}) {
     sourceRunId: e.runId != null ? String(e.runId) : null,
     previousArtifactSha: opts.priorArtifactSha || null,
     newArtifactSha: opts.sha || null,
-    archivedStatus: "NOT_ARCHIVED",
-    archiveLocation: null,
+    archivedStatus,
+    archiveLocation: archivedStatus === "ARCHIVED" ? archiveLocation : null,
     maxWindow: opts.maxFormatOnly != null ? Number(opts.maxFormatOnly) : DEFAULT_MAX_FORMAT_ONLY,
   }));
   return {
-    schema: "iu-cj-affiliate-phase3z-format-only-retention-ledger-v51.2",
+    schema: "iu-cj-affiliate-phase3z-format-only-retention-ledger-v51.3",
     policyVersion: opts.policyVersion || RETENTION_POLICY_VERSION,
     at: nowIso,
     runId: opts.runId != null ? String(opts.runId) : null,
@@ -381,6 +542,10 @@ export function compareDurableKeySets(priorDoc, nextDoc) {
   const nextEcon = new Set(listEventKeys(nextDoc, "events"));
   const nextFmt = new Set(listEventKeys(nextDoc, "formatOnlyEvents"));
   const nextAvail = new Set(listEventKeys(nextDoc, "availabilityEvents"));
+  const archive = nextDoc?.archive || null;
+  const archiveEcon = new Set(listEventKeys(archive, "events"));
+  const archiveAvail = new Set(listEventKeys(archive, "availabilityEvents"));
+  const archiveAll = new Set([...(archive?.eventKeys || []).map(String).filter(Boolean), ...archiveEcon, ...archiveAvail]);
   const priorAll = new Set([
     ...(priorDoc?.eventKeys || []).map(String).filter(Boolean),
     ...prevEcon,
@@ -392,17 +557,21 @@ export function compareDurableKeySets(priorDoc, nextDoc) {
     ...nextEcon,
     ...nextFmt,
     ...nextAvail,
+    ...archiveAll,
   ]);
 
   const fmtLedger = nextDoc?.retention?.formatOnlyRetentionLedger || null;
   const availLedger = nextDoc?.retention?.availabilityRetentionLedger || null;
+  const econLedger = nextDoc?.retention?.economicArchiveLedger || null;
   const fmtRetained = retentionKeySet(fmtLedger);
   const fmtArchived = archivedKeySet(fmtLedger);
   const availRetained = retentionKeySet(availLedger);
-  const availArchived = archivedKeySet(availLedger);
+  const availArchived = new Set([...archivedKeySet(availLedger), ...archiveAvail]);
+  const econArchived = new Set([...archivedKeySet(econLedger), ...archiveEcon]);
 
   const econPreserved = [...prevEcon].filter((k) => nextEcon.has(k));
-  const econMissing = [...prevEcon].filter((k) => !nextEcon.has(k));
+  const econArchivedKeys = [...prevEcon].filter((k) => !nextEcon.has(k) && econArchived.has(k));
+  const econMissing = [...prevEcon].filter((k) => !nextEcon.has(k) && !econArchived.has(k));
   const fmtPreserved = [...prevFmt].filter((k) => nextFmt.has(k));
   const fmtRetainedOut = [...prevFmt].filter((k) => !nextFmt.has(k) && fmtRetained.has(k));
   const fmtArchivedKeys = [...prevFmt].filter((k) => !nextFmt.has(k) && fmtArchived.has(k));
@@ -410,7 +579,7 @@ export function compareDurableKeySets(priorDoc, nextDoc) {
     (k) => !nextFmt.has(k) && !fmtRetained.has(k) && !fmtArchived.has(k)
   );
   const availPreserved = [...prevAvail].filter((k) => nextAvail.has(k));
-  const availRetainedOut = [...prevAvail].filter((k) => !nextAvail.has(k) && availRetained.has(k));
+  const availRetainedOut = [...prevAvail].filter((k) => !nextAvail.has(k) && availRetained.has(k) && !availArchived.has(k));
   const availArchivedKeys = [...prevAvail].filter((k) => !nextAvail.has(k) && availArchived.has(k));
   const availUnexpected = [...prevAvail].filter(
     (k) => !nextAvail.has(k) && !availRetained.has(k) && !availArchived.has(k)
@@ -446,6 +615,7 @@ export function compareDurableKeySets(priorDoc, nextDoc) {
       previousKeys: [...prevEcon],
       currentKeys: [...nextEcon],
       preservedKeys: econPreserved,
+      archivedKeys: econArchivedKeys,
       missingKeys: econMissing,
       addedKeys: [...nextEcon].filter((k) => !prevEcon.has(k)),
     },

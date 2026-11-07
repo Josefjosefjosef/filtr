@@ -3274,6 +3274,99 @@ export function buildPhase3zSafetyGates(registry, buttonCatalog, { previousButto
   };
 }
 
+/**
+ * V51.3: distinguish intentional dry-run empty staging from live artifact failure.
+ */
+export function classifyRegistryStagingFailure(staging, stagingPath = null) {
+  const source = staging && staging.source != null ? String(staging.source) : null;
+  const advertisersLen = Array.isArray(staging?.advertisers) ? staging.advertisers.length : 0;
+  if (advertisersLen > 0) {
+    return { class: "REGISTRY_STAGING_OK", note: "staging has advertisers", source, stagingPath };
+  }
+  if (source === "dry_run") {
+    return {
+      class: "REGISTRY_EXPECTED_DRY_STAGING",
+      note: "workflow_dispatch without execute_live_fetch=1 produces empty dry_run staging (not a CJ outage)",
+      source,
+      stagingPath,
+    };
+  }
+  if (staging?.apiOutage === true) {
+    return {
+      class: "REGISTRY_API_FAILURE",
+      note: "staging reports apiOutage with empty advertisers",
+      source,
+      stagingPath,
+    };
+  }
+  if (!staging) {
+    return {
+      class: "REGISTRY_ARTIFACT_FAILURE",
+      note: "staging JSON missing or unreadable",
+      source,
+      stagingPath,
+    };
+  }
+  return {
+    class: "REGISTRY_DATA_FAILURE",
+    note: "staging present but advertisers empty without dry_run marker",
+    source,
+    stagingPath,
+  };
+}
+
+/**
+ * Restore prior non-public registry + buttons preview as LKG for dry-run preserve.
+ * Env IU_CJ_PHASE3Z_REGISTRY_LKG_DIR may point at a downloaded prior artifact directory.
+ */
+export function restoreRegistryLkgFromEnv(paths) {
+  const tried = [];
+  const candidates = [];
+  // When LKG_DIR is explicitly set (CI dry-run path), search ONLY that directory.
+  // Fallbacks apply only when env is unset (local/dev).
+  if (process.env.IU_CJ_PHASE3Z_REGISTRY_LKG_DIR) {
+    candidates.push(process.env.IU_CJ_PHASE3Z_REGISTRY_LKG_DIR);
+  } else {
+    candidates.push(path.join(ROOT, "projects", "data"));
+    if (process.env.RUNNER_TEMP) {
+      candidates.push(path.join(process.env.RUNNER_TEMP, "phase3z-registry-lkg"));
+    }
+  }
+  for (const dir of candidates) {
+    const regPath = path.join(dir, "iu-affiliate-cj-partner-registry-v1.json");
+    const btnPath = path.join(dir, "iu-affiliate-cj-partner-buttons-preview-v1.json");
+    tried.push(regPath);
+    const registry = readJson(regPath, null);
+    const buttons = readJson(btnPath, null);
+    if (
+      registry &&
+      registry.liveEnabled === false &&
+      registry.publicButtonSwapArmed === false &&
+      Array.isArray(registry.partners) &&
+      registry.partners.length > 0 &&
+      buttons &&
+      buttons.publicButtonSwapArmed === false
+    ) {
+      const stampedRegistry = {
+        ...registry,
+        at: new Date().toISOString(),
+        lkgPreserved: true,
+        lkgReason: "REGISTRY_LKG_PRESERVED_DRY_STAGING",
+        lkgSourcePath: regPath,
+      };
+      const stampedButtons = {
+        ...buttons,
+        at: stampedRegistry.at,
+        lkgPreserved: true,
+        lkgReason: "REGISTRY_LKG_PRESERVED_DRY_STAGING",
+        lkgSourcePath: btnPath,
+      };
+      return { ok: true, registry: stampedRegistry, buttons: stampedButtons, source: regPath, tried };
+    }
+  }
+  return { ok: false, tried };
+}
+
 function defaultPaths() {
   return {
     staging:
@@ -3306,12 +3399,50 @@ export async function main(argv = process.argv.slice(2)) {
     staging = readJson(art, staging);
   }
   if (!staging?.advertisers?.length) {
+    const classification = classifyRegistryStagingFailure(staging, paths.staging);
+    if (classification.class === "REGISTRY_EXPECTED_DRY_STAGING") {
+      const lkg = restoreRegistryLkgFromEnv(paths);
+      if (lkg.ok) {
+        fs.mkdirSync(path.dirname(paths.outRegistry), { recursive: true });
+        fs.writeFileSync(paths.outRegistry, JSON.stringify(lkg.registry, null, 2) + "\n", "utf8");
+        fs.writeFileSync(paths.outButtons, JSON.stringify(lkg.buttons, null, 2) + "\n", "utf8");
+        console.log(
+          JSON.stringify({
+            ok: true,
+            reason: "REGISTRY_LKG_PRESERVED_DRY_STAGING",
+            classification: classification.class,
+            stagingSource: staging?.source || null,
+            stagingPath: paths.staging,
+            lkgSource: lkg.source,
+            counts: lkg.registry?.counts || null,
+            note: "workflow_dispatch without execute_live_fetch=1: preserve prior non-public registry LKG (not a CJ outage).",
+          })
+        );
+        process.exitCode = 0;
+        return;
+      }
+      console.error(
+        JSON.stringify({
+          ok: false,
+          reason: "REGISTRY_LKG_MISSING_DRY_STAGING",
+          classification: "REGISTRY_ARTIFACT_FAILURE",
+          stagingSource: staging?.source || null,
+          stagingPath: paths.staging,
+          tried: lkg.tried,
+          note: "Dry-run empty staging and no prior registry LKG available to preserve.",
+        })
+      );
+      process.exitCode = 1;
+      return;
+    }
     console.error(
       JSON.stringify({
         ok: false,
         reason: "STAGING_EMPTY",
+        classification: classification.class,
         path: paths.staging,
-        note: "Provide live staging via IU_CJ_PHASE3Z_STAGING_PATH or catalog-sync artifact",
+        stagingSource: staging?.source || null,
+        note: classification.note,
       })
     );
     process.exitCode = 1;

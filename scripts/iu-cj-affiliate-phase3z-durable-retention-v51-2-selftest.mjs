@@ -69,7 +69,12 @@ assert(doc.counts.economicEvents === 2, "econ kept 2");
 assert(doc.counts.formatOnlyEvents === 3, "fmt capped at 3");
 assert(doc.retention.retiredFormatOnlyCount === 2, "2 fmt retired");
 assert(doc.retention.policyVersion === RETENTION_POLICY_VERSION, "policy version");
-assert(doc.retention.archiveStatus === "NOT_ARCHIVED_ACTIVE_WINDOW_ONLY", "not fake-archived");
+assert(
+  doc.retention.archiveStatus === "FORMAT_ONLY_ACTIVE_WINDOW_ONLY" ||
+    doc.retention.archiveStatus === "NOT_ARCHIVED_ACTIVE_WINDOW_ONLY" ||
+    doc.retention.archiveStatus === "NO_RETENTION_THIS_RUN",
+  "format-only window not claimed as durable archive"
+);
 assert(doc.retention.formatOnlyRetentionLedger.count === 2, "ledger rows=2");
 const retiredKeys = doc.retention.formatOnlyRetentionLedger.rows.map((r) => r.eventKey);
 assert(retiredKeys.length === 2, "2 retired keys");

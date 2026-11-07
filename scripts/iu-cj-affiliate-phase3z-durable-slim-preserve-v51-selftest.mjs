@@ -17,6 +17,7 @@ const wf = readFileSync(
 
 const must = [
   "iu-affiliate-cj-durable-price-history-v50.json",
+  "iu-affiliate-cj-durable-price-history-archive-v51.json",
   "iu-affiliate-cj-product-reverify-v50.json",
   "iu-affiliate-cj-product-identity-v50.json",
   "STAGING_SLIM_PRESERVED",
@@ -24,6 +25,7 @@ const must = [
   "DURABLE_PRIOR_RUN_RESTORE",
   "DURABLE_LEDGER_MISSING",
   "DURABLE_RESTORE_BLOCKED",
+  "REGISTRY_LKG_PRIOR_RUN",
 ];
 
 const missing = must.filter((s) => !wf.includes(s));

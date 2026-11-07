@@ -103,6 +103,7 @@ import {
   appendDurablePriceHistory,
   assertDurableHistoryReadable,
   emptyDurablePriceHistory,
+  emptyDurableArchive,
 } from "./iu-cj-affiliate-phase3z-durable-price-history-v50.mjs";
 import {
   buildProductReverifyLedger,
@@ -1404,21 +1405,39 @@ export function writeDurableVerificationLedgers(opts = {}) {
   );
 
   const durablePath = path.join(dataDir, "iu-affiliate-cj-durable-price-history-v50.json");
+  const durableArchivePath = path.join(dataDir, "iu-affiliate-cj-durable-price-history-archive-v51.json");
   const priorDurable = fs.existsSync(durablePath)
     ? readJson(durablePath, null)
     : emptyDurablePriceHistory({ nowIso: nowIsoHist, runId: env.GITHUB_RUN_ID || null });
+  const priorArchive = fs.existsSync(durableArchivePath)
+    ? readJson(durableArchivePath, null)
+    : emptyDurableArchive({ nowIso: nowIsoHist, runId: env.GITHUB_RUN_ID || null });
   const durableDoc = appendDurablePriceHistory(priorDurable, {
     nowIso: nowIsoHist,
     runId: env.GITHUB_RUN_ID || null,
     sha: env.GITHUB_SHA || null,
     evidenceClass,
+    priorArchive,
     priceChanges: collected.priceChanges || [],
     formatOnlyChanges: collected.formatOnlyChanges || [],
     availabilityChanges: collected.availabilityChanges || [],
   });
   durableDoc.readProof = assertDurableHistoryReadable(priorDurable, durableDoc);
   durableDoc.publicationGate = publicationGate;
-  fs.writeFileSync(durablePath, JSON.stringify(durableDoc, null, 2) + "\n", "utf8");
+  // Persist archive companion before/with active doc. Do not drop active rows if archive blocked.
+  if (durableDoc.archive) {
+    fs.writeFileSync(durableArchivePath, JSON.stringify(durableDoc.archive, null, 2) + "\n", "utf8");
+  }
+  // Keep active document lean for Pages: archive payload stays in companion file.
+  const durableForWrite = { ...durableDoc };
+  delete durableForWrite.archive;
+  durableForWrite.archiveRef = {
+    filename: "iu-affiliate-cj-durable-price-history-archive-v51.json",
+    economicEvents: durableDoc.archive?.counts?.economicEvents ?? 0,
+    availabilityEvents: durableDoc.archive?.counts?.availabilityEvents ?? 0,
+    archiveStatus: durableDoc.retention?.archiveStatus || null,
+  };
+  fs.writeFileSync(durablePath, JSON.stringify(durableForWrite, null, 2) + "\n", "utf8");
 
   const prevRevPath = path.join(dataDir, "iu-affiliate-cj-product-reverify-v50.json");
   const prevRevDoc = fs.existsSync(prevRevPath) ? readJson(prevRevPath, null) : null;
