@@ -15,6 +15,7 @@ on:
       - automation/update-chmi-cap-v2
       - automation/update-ndic-datex-v1
       - "fix/**"
+      - "data/cj-offers-public-promote-**"
   workflow_dispatch:
   merge_group:
 
