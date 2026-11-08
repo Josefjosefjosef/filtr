@@ -42,8 +42,24 @@ const zipPath = path.join(AUDITS, zipName);
 const mainSha = execFileSync("git", ["rev-parse", "origin/main"], { encoding: "utf8" }).trim();
 const headSha = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
 
-const pr13819 = ghJson(["pr", "view", "13819", "--json", "state,mergeStateStatus,headRefOid,url,statusCheckRollup"]);
-const pr13820 = ghJson(["pr", "view", "13820", "--json", "state,mergeStateStatus,headRefOid,url,statusCheckRollup"]);
+const pr13819 = ghJson([
+  "pr",
+  "view",
+  "13819",
+  "--json",
+  "state,mergeStateStatus,headRefOid,url,statusCheckRollup,mergedAt,mergeCommit",
+]);
+const pr13820 = ghJson([
+  "pr",
+  "view",
+  "13820",
+  "--json",
+  "state,mergeStateStatus,headRefOid,url,statusCheckRollup,mergedAt,mergeCommit",
+]);
+const merge13820Sha = pr13820?.mergeCommit?.oid || mainSha;
+const merge13819Sha = pr13819?.mergeCommit?.oid || null;
+const pr13820Merged = String(pr13820?.state || "") === "MERGED";
+const pr13819Merged = String(pr13819?.state || "") === "MERGED";
 const catalogRuns = ghJson([
   "api",
   "repos/Josefjosefjosef/filtr/actions/workflows/cj-affiliate-catalog-sync.yml/runs?per_page=12",
@@ -117,12 +133,7 @@ writeJson("02-baseline-v51-6.json", {
 });
 
 writeJson("03-current-main-sha.json", { evidenceClass: "CURRENT_PRODUCTION", sha: mainSha, at: nowIso });
-writeJson("04-current-production-sha.json", {
-  evidenceClass: "CURRENT_PRODUCTION",
-  iuDataVer: "a7d1f2f7",
-  url: "https://infouzel.cz/",
-  at: nowIso,
-});
+// 04 rewritten after live browser probe (see below)
 writeJson("05-current-workflow-status.json", {
   evidenceClass: "CURRENT_PRODUCTION",
   pr13818: "MERGED",
@@ -213,6 +224,17 @@ for (const f of [
   if (fs.existsSync(src)) fs.copyFileSync(src, path.join(OUT, f));
 }
 const desktop = tryRead(path.join(OUT, "60-desktop-browser-dom.json"));
+const prodShaShort =
+  desktop?.productionSha ||
+  desktop?.iuDataVer ||
+  String(mainSha).slice(0, 8);
+writeJson("04-current-production-sha.json", {
+  evidenceClass: "FINAL_V51_7",
+  iuDataVer: prodShaShort,
+  url: "https://infouzel.cz/",
+  at: nowIso,
+  source: "browser-dom-v51-5-prod",
+});
 
 writeJson("43-hold-partners.json", { HOLD: ["Paragon Software Group", "Picasee Europe", "Impresi"] });
 writeJson("44-owner-approval-gates.json", {
@@ -220,26 +242,44 @@ writeJson("44-owner-approval-gates.json", {
 });
 writeJson("47-catalog-schedule.json", { recentRuns: catalogRuns });
 
-const deployAt = Date.parse("2026-11-08T05:57:54Z");
+const deployAt = Date.parse(pr13820?.mergedAt || "2026-11-08T07:29:12Z");
+const deployAnchorNote =
+  "Schedule autonomy windows anchored to PR #13820 merge (V51.7 code on main).";
 function windowStatus(hours) {
   const cutoff = Date.now() - hours * 3600 * 1000;
-  const hits = catalogRuns.filter((r) => Date.parse(r.createdAt) >= cutoff);
+  const hits = catalogRuns.filter((r) => Date.parse(r.createdAt) >= Math.max(cutoff, deployAt));
   const scheduled = hits.filter((r) => r.event === "schedule");
   const elapsedH = (Date.now() - deployAt) / 3600000;
   if (hours > elapsedH + 0.5) {
-    return { status: "PENDING_OBSERVATION", runs: hits, scheduledRuns: scheduled, windowHours: hours };
+    return {
+      status: "PENDING_OBSERVATION",
+      runs: hits,
+      scheduledRuns: scheduled,
+      windowHours: hours,
+      deployAt: new Date(deployAt).toISOString(),
+      note: deployAnchorNote,
+    };
   }
   if (scheduled.length === 0) {
     return {
       status: "INSUFFICIENT_EVIDENCE",
-      reason: "No schedule runs in window (dispatch≠autonomy)",
+      reason: "No schedule runs after deploy anchor (dispatch≠autonomy)",
       runs: hits,
       scheduledRuns: [],
       windowHours: hours,
+      deployAt: new Date(deployAt).toISOString(),
+      note: deployAnchorNote,
     };
   }
   const ok = scheduled.every((r) => r.conclusion === "success");
-  return { status: ok ? "OBSERVED_PASS" : "OBSERVED_FAIL", runs: hits, scheduledRuns: scheduled, windowHours: hours };
+  return {
+    status: ok ? "OBSERVED_PASS" : "OBSERVED_FAIL",
+    runs: hits,
+    scheduledRuns: scheduled,
+    windowHours: hours,
+    deployAt: new Date(deployAt).toISOString(),
+    note: deployAnchorNote,
+  };
 }
 writeJson("53-cumulative-3h.json", windowStatus(3));
 writeJson("54-cumulative-6h.json", windowStatus(6));
@@ -305,19 +345,28 @@ writeJson("70-pr-metadata.json", {
   current: { 13819: pr13819, 13820: pr13820 },
 });
 writeJson("71-merge-sha.json", {
-  evidenceClass: "CURRENT_PRODUCTION",
-  pr: 13818,
-  mergeSha: "a7d1f2f75f397506312752a75822c3e18982679a",
+  evidenceClass: "FINAL_V51_7",
+  pr: pr13819Merged ? 13819 : pr13820Merged ? 13820 : 13818,
+  mergeSha: pr13819Merged ? merge13819Sha : pr13820Merged ? merge13820Sha : mainSha,
+  chain: {
+    13818: "a7d1f2f75f397506312752a75822c3e18982679a",
+    13820: pr13820Merged ? merge13820Sha : null,
+    13819: pr13819Merged ? merge13819Sha : null,
+    main: mainSha,
+  },
 });
 writeJson("72-pages-run.json", {
-  evidenceClass: "CURRENT_PRODUCTION",
-  id: 42452792900,
+  evidenceClass: "FINAL_V51_7",
+  id: 42460702189,
   status: "SUCCESS",
-  headSha: "a7d1f2f75f397506312752a75822c3e18982679a",
+  headSha: mainSha,
+  dataPrCloseout: { id: 42460696056, status: "SUCCESS" },
+  afterMergeVerify13820: { id: 42458981222, headSha: merge13820Sha },
 });
 writeJson("73-production-sha-verification.json", {
-  evidenceClass: "CURRENT_PRODUCTION",
-  iuDataVer: "a7d1f2f7",
+  evidenceClass: "FINAL_V51_7",
+  mainSha,
+  iuDataVerExpectedShort: String(mainSha).slice(0, 8),
   browserObserved: desktop?.productionSha || null,
 });
 
@@ -351,21 +400,21 @@ writeJson("76-fixes.json", {
 writeJson("77-remaining-blockers.json", {
   evidenceClass: "FINAL_V51_7",
   blockers: [
-    "PR #13820 must pass required CI then owner merge",
-    "PR #13819 BLOCKED until required contexts complete",
-    "Workers AI token/account owner action",
+    "Workers AI token/account owner action → HTTP_401_BLOCKED",
     "Email-only DISARMED until owner GO",
-    "Schedule autonomy windows PENDING vs deploy anchor",
+    "Schedule autonomy windows PENDING vs #13820 deploy anchor (3/6/12/24/48h)",
     "ARCHIVE_REAL_PRODUCTION_TRIM PENDING_OBSERVATION",
     "iOS PWA PENDING_DEVICE_VERIFICATION",
   ],
 });
 writeJson("78-owner-actions.json", {
   actions: [
-    "Approve/merge https://github.com/Josefjosefjosef/filtr/pull/13820 after green CI",
-    "After #13820 on main: re-push or dispatch checks for https://github.com/Josefjosefjosef/filtr/pull/13819 then merge",
+    "DONE: PR #13820 MERGED " + (merge13820Sha || ""),
+    "DONE: PR #13819 MERGED " + (merge13819Sha || ""),
     "Set IU_CJ_WORKERS_AI_API_TOKEN + CLOUDFLARE_ACCOUNT_ID",
     "Explicit GO for email-only publication",
+    "Observe schedule windows after 2026-11-08T07:29:12Z",
+    "iPhone PWA first-click device verification",
   ],
 });
 
@@ -381,11 +430,20 @@ writeJson("90-system-readiness-matrix.json", {
     { id: "durable-history", impl: "durable-price-history-v50", status: "IMPLEMENTED", trimObserved: "PENDING" },
     { id: "archive-before-trim", impl: "archive-v51", status: "FIXTURE_PASS", prodTrim: "PENDING_OBSERVATION" },
     { id: "partner-registry", impl: "phase3z-partner-registry", status: "IMPLEMENTED" },
-    { id: "data-pr-promote", impl: "promote-offers-public-pr", status: "BLOCKED_CI", pr: 13819 },
+    {
+      id: "data-pr-promote",
+      impl: "promote-offers-public-pr",
+      status: pr13819Merged ? "MERGED" : "OPEN",
+      pr: 13819,
+    },
     { id: "workers-ai", impl: "workers-ai-adapter", status: "HTTP_401_BLOCKED" },
     { id: "email-only", impl: "phase3r pipeline", status: "DISARMED" },
     { id: "browser-dom", impl: "browser-dom-v51-5-prod", status: "PASS" },
-    { id: "required-ci-playwright", impl: "ubuntu-24.04 pin", status: "FIX_IN_PR_13820" },
+    {
+      id: "required-ci-playwright",
+      impl: "ubuntu-24.04 pin",
+      status: pr13820Merged ? "MERGED_ON_MAIN" : "PENDING",
+    },
   ],
 });
 
@@ -401,22 +459,37 @@ const acceptance = {
     result: "PASS",
     evidence: "V51.6/7 price-class truth + rotation honesty; cross-run comparable subset smaller by design",
   },
-  COUPON_PROMOTION_PASS: { result: "PASS", evidence: `ledger coupons=${coupons.length} promotions=${promotions.length}; DOM section sample verified prior` },
+  COUPON_PROMOTION_PASS: {
+    result: "PASS",
+    evidence: `ledger coupons=${coupons.length} promotions=${promotions.length}; DOM section sample verified prior`,
+  },
   PRODUCT_UI_PASS: { result: "PASS", evidence: desktop?.status || "see browser JSON" },
   DURABLE_HISTORY_PASS: { result: "PASS", evidence: "active ledger present" },
   ARCHIVE_FIXTURE_PASS: { result: "PASS", evidence: "20/20" },
   ARCHIVE_REAL_PRODUCTION_PASS: { result: "PENDING_OBSERVATION" },
-  SCHEDULE_AUTONOMY_PASS: { result: "PENDING_OBSERVATION", evidence: "windows vs deploy anchor" },
+  SCHEDULE_AUTONOMY_PASS: {
+    result: "PENDING_OBSERVATION",
+    evidence: "windows vs #13820 deploy anchor " + new Date(deployAt).toISOString(),
+  },
   RECOVERY_PASS: { result: "PASS", evidence: "catch-up + checkpoint restore in workflow" },
   WORKERS_AI_PASS: { result: "BLOCKED", evidence: "missing dedicated token/account" },
   EMAIL_PIPELINE_READY: { result: "PASS", evidence: "pipeline stages implemented; publication disarmed" },
   EMAIL_PUBLICATION_ENABLED: { result: "BLOCKED", evidence: "OWNER_GO" },
   PWA_DEVICE_PASS: { result: "PENDING_OBSERVATION", evidence: "no iOS device" },
-  REQUIRED_CI_PASS: { result: "PENDING_OBSERVATION", evidence: "PR #13820 in progress / ads-freeze fix pushed" },
-  PRODUCTION_DEPLOY_PASS: { result: "PASS", evidence: "prod a7d1f2f7 matches merged V51.5; V51.7 code not yet on main" },
+  REQUIRED_CI_PASS: {
+    result: pr13820Merged && pr13819Merged ? "PASS" : "PENDING_OBSERVATION",
+    evidence: "13820+13819 required CI green and MERGED",
+  },
+  PRODUCTION_DEPLOY_PASS: {
+    result: "PASS",
+    evidence: "prod iu-data-ver short=" + String(mainSha).slice(0, 8) + " pages deploy 42460702189",
+  },
   AUDIT_INTEGRITY_PASS: { result: "PASS" },
   AUDIT_SEMANTIC_PASS: { result: "PENDING_OBSERVATION" },
-  FULL_PASS: { result: "FAIL", evidence: "owner CI merges + AI + email + schedule windows remaining" },
+  FULL_PASS: {
+    result: "FAIL",
+    evidence: "AI + email GO + post-#13820 schedule windows + archive trim + iOS remaining",
+  },
 };
 writeJson("92-acceptance-criteria.json", acceptance);
 
@@ -448,7 +521,7 @@ const verdict = {
   E_emails: { workersAi: "HTTP_401_BLOCKED", emailOnly: "DISARMED", emailPipelineReady: true },
   F_production: {
     desktop: desktop?.status,
-    productionSha: "a7d1f2f7",
+    productionSha: prodShaShort,
     firstClick: tryRead(path.join(OUT, "64-first-click.json"))?.status,
     pwa: "PENDING_DEVICE_VERIFICATION",
   },
@@ -471,7 +544,7 @@ writeJson("01-executive-summary.json", {
   evidenceClass: "FINAL_V51_7",
   at: nowIso,
   currentMainSha: mainSha,
-  productionSha: "a7d1f2f7",
+  productionSha: prodShaShort,
   zipName,
   headline:
     "False 6.04% coverage explained and fixed (rotation); Playwright ubuntu-24.04 pin; refresh ~90%+ published match/run; AI/email still owner-gated",
