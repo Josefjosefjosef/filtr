@@ -8,6 +8,13 @@ export const TRAVERSAL_STATUS = Object.freeze({
   COMPLETE_NONEMPTY: "COMPLETE_NONEMPTY",
   COMPLETE_VERIFIED_EMPTY: "COMPLETE_VERIFIED_EMPTY",
   NO_FEED_AVAILABLE: "NO_FEED_AVAILABLE",
+  NO_FEED_CONFIRMED: "NO_FEED_CONFIRMED",
+  FEED_DISCOVERY_PENDING: "FEED_DISCOVERY_PENDING",
+  FEED_ACCESS_DENIED: "FEED_ACCESS_DENIED",
+  FEED_TEMPORARILY_UNAVAILABLE: "FEED_TEMPORARILY_UNAVAILABLE",
+  FEED_PAGINATION_PENDING: "FEED_PAGINATION_PENDING",
+  FEED_COMPLETE_EMPTY: "FEED_COMPLETE_EMPTY",
+  FEED_COMPLETE_NONEMPTY: "FEED_COMPLETE_NONEMPTY",
   NO_PERMISSION: "NO_PERMISSION",
   SOURCE_UNAVAILABLE: "SOURCE_UNAVAILABLE",
   INCOMPLETE: "INCOMPLETE",
@@ -15,10 +22,38 @@ export const TRAVERSAL_STATUS = Object.freeze({
   UNKNOWN: "UNKNOWN",
 });
 
+export function nextActionForTraversalStatus(status) {
+  switch (String(status || "")) {
+    case TRAVERSAL_STATUS.NO_FEED_AVAILABLE:
+    case TRAVERSAL_STATUS.NO_FEED_CONFIRMED:
+      return "NONE_NO_FEED";
+    case TRAVERSAL_STATUS.FEED_DISCOVERY_PENDING:
+      return "DISCOVER_FEEDS";
+    case TRAVERSAL_STATUS.FEED_ACCESS_DENIED:
+    case TRAVERSAL_STATUS.NO_PERMISSION:
+      return "OWNER_PERMISSION_REVIEW";
+    case TRAVERSAL_STATUS.FEED_TEMPORARILY_UNAVAILABLE:
+    case TRAVERSAL_STATUS.SOURCE_UNAVAILABLE:
+      return "RETRY_WITH_BACKOFF";
+    case TRAVERSAL_STATUS.INCOMPLETE:
+    case TRAVERSAL_STATUS.STOPPED_EARLY:
+    case TRAVERSAL_STATUS.FEED_PAGINATION_PENDING:
+      return "CONTINUE_PAGINATION";
+    case TRAVERSAL_STATUS.COMPLETE_NONEMPTY:
+    case TRAVERSAL_STATUS.FEED_COMPLETE_NONEMPTY:
+      return "REFRESH_CYCLE";
+    case TRAVERSAL_STATUS.COMPLETE_VERIFIED_EMPTY:
+    case TRAVERSAL_STATUS.FEED_COMPLETE_EMPTY:
+      return "NONE_EMPTY_VERIFIED";
+    default:
+      return "INVESTIGATE";
+  }
+}
+
 /**
  * Classify one partner checkpoint against optional inventory/feed evidence.
  */
-export function classifyPartnerTraversalStatus(cp = {}, opts = {}) {
+function classifyPartnerTraversalStatusRaw(cp = {}, opts = {}) {
   const total = cp.lastTotalCount != null ? Number(cp.lastTotalCount) : null;
   const fetched = cp.lastFetchedCount != null ? Number(cp.lastFetchedCount) : null;
   const complete = cp.lastComplete === true;
@@ -52,11 +87,17 @@ export function classifyPartnerTraversalStatus(cp = {}, opts = {}) {
     };
   }
   if (noFeed && (total === 0 || total == null) && (fetched === 0 || fetched == null)) {
+    const confirmed = opts.inventoryComplete === true;
     return {
-      status: TRAVERSAL_STATUS.NO_FEED_AVAILABLE,
+      status: confirmed ? TRAVERSAL_STATUS.NO_FEED_CONFIRMED : TRAVERSAL_STATUS.NO_FEED_AVAILABLE,
       verifiedEmpty: false,
-      authoritativeSource: opts.inventoryComplete === true,
-      note: "Inventory reports no product feed for partner.",
+      authoritativeSource: confirmed,
+      nextAction: nextActionForTraversalStatus(
+        confirmed ? TRAVERSAL_STATUS.NO_FEED_CONFIRMED : TRAVERSAL_STATUS.NO_FEED_AVAILABLE
+      ),
+      note: confirmed
+        ? "Inventory completed with no product feed — do not paginate."
+        : "Inventory reports no product feed for partner.",
     };
   }
   const everCompleted = Number(cp.completePassCount || 0) > 0 || complete;
@@ -120,8 +161,18 @@ export function classifyPartnerTraversalStatus(cp = {}, opts = {}) {
     status: TRAVERSAL_STATUS.UNKNOWN,
     verifiedEmpty: false,
     authoritativeSource: false,
+    nextAction: nextActionForTraversalStatus(TRAVERSAL_STATUS.UNKNOWN),
     note: "Insufficient evidence to classify traversal.",
   };
+}
+
+function withNextAction(result) {
+  if (!result || result.nextAction) return result;
+  return { ...result, nextAction: nextActionForTraversalStatus(result.status) };
+}
+
+export function classifyPartnerTraversalStatus(cp = {}, opts = {}) {
+  return withNextAction(classifyPartnerTraversalStatusRaw(cp, opts));
 }
 
 /**

@@ -33,7 +33,8 @@ const noFeed = classifyPartnerTraversalStatus(
   { lastComplete: true, lastTotalCount: 0, lastFetchedCount: 0 },
   { hasFeed: false, inventoryComplete: true, feedCount: 0 }
 );
-assert(noFeed.status === TRAVERSAL_STATUS.NO_FEED_AVAILABLE, "no feed");
+assert(noFeed.status === TRAVERSAL_STATUS.NO_FEED_CONFIRMED, "no feed confirmed");
+assert(noFeed.nextAction === "NONE_NO_FEED", "no feed next action");
 
 const incomplete = classifyPartnerTraversalStatus({
   lastComplete: false,
