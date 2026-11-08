@@ -89,10 +89,16 @@ import {
   evaluateLkgGrowthGate,
   buildPublicationDeltaLedger,
   collectUniqueProductMap,
+  collectPublicEligibleProductMap,
   releaseLkgHoldsAgainstSource,
   summarizeLkgHoldProgress,
   compoundProductKey,
 } from "./iu-cj-affiliate-phase3z-publication-lkg-v51-8.mjs";
+import {
+  mergeIntoDurableCatalog,
+  seedDurableCatalogFromOffersPublic,
+  evaluatePublicPopulationGates,
+} from "./iu-cj-affiliate-phase3z-durable-catalog-v51.mjs";
 import {
   buildProductFunnelDocument,
   computeHonestOffersStats,
@@ -2092,6 +2098,11 @@ export async function runOffersLiveSync(opts = {}) {
   let shrinkageGate = null;
   let identityChurnGate = null;
   let lkgGrowthGate = null;
+  let publicPopulationGate = null;
+  let durableCatalogMeta = null;
+  let durableCatalogEnded = new Set();
+  let durableCatalogRevoked = new Set();
+  let durableCatalogIncomplete = new Set();
   if (prevPublic?.liveEnabled === true && prevReady.products > 0) {
     const incompleteAdvertisers = new Set();
     const fetchedAdvertisers = new Set();
@@ -2182,6 +2193,8 @@ export async function runOffersLiveSync(opts = {}) {
     }
     nextReady = readyCounts(doc);
     const lkgMerged = Number(publicationRestore?.carried || 0) > 0;
+    const prevPublicEligibleN = collectPublicEligibleProductMap(prevPublic).size;
+    const nextPublicEligibleN = collectPublicEligibleProductMap(doc).size;
     shrinkageGate = evaluateProductShrinkageGate(prevPublic, doc, {
       lkgMerged,
       maxDropAbs: Number(env.IU_CJ_OFFERS_MAX_UNIQUE_DROP_ABS) || 50,
@@ -2207,11 +2220,25 @@ export async function runOffersLiveSync(opts = {}) {
         publicEligibleAfter:
           publicationRestore?.publicEligibleAfter != null
             ? publicationRestore.publicEligibleAfter
-            : publicationDelta?.nextUnique || collectUniqueProductMap(doc).size,
-        prevPublicEligible: publicationDelta?.prevUnique || 0,
+            : nextPublicEligibleN,
+        prevPublicEligible: prevPublicEligibleN,
       }
     );
-    if (armed && (!shrinkageGate.ok || !identityChurnGate.ok || !lkgGrowthGate.ok)) {
+    publicPopulationGate = evaluatePublicPopulationGates(prevPublic, doc, {
+      incompleteFeeds: incompleteAdvertisers.size > 0,
+      maxDropAbs: Number(env.IU_CJ_OFFERS_MAX_UNIQUE_DROP_ABS) || 50,
+      maxDropRatio: Number(env.IU_CJ_OFFERS_MAX_UNIQUE_DROP_RATIO) || 0.03,
+      maxGrowthAbs: Number(env.IU_CJ_OFFERS_MAX_LKG_GROWTH_ABS) || 500,
+      maxGrowthRatio: Number(env.IU_CJ_OFFERS_MAX_LKG_GROWTH_RATIO) || 0.2,
+    });
+    if (publicationRestore) publicationRestore.publicPopulationGate = publicPopulationGate;
+    durableCatalogEnded = endedAdvertisers;
+    durableCatalogRevoked = revokedAdvertisers;
+    durableCatalogIncomplete = incompleteAdvertisers;
+    if (
+      armed &&
+      (!shrinkageGate.ok || !identityChurnGate.ok || !lkgGrowthGate.ok || !publicPopulationGate.ok)
+    ) {
       return {
         ok: false,
         armed,
@@ -2220,7 +2247,9 @@ export async function runOffersLiveSync(opts = {}) {
           ? shrinkageGate.reason
           : !identityChurnGate.ok
             ? identityChurnGate.reason
-            : lkgGrowthGate.reason,
+            : !lkgGrowthGate.ok
+              ? lkgGrowthGate.reason
+              : publicPopulationGate.reason,
         liveEnabled: false,
         counts: nextReady,
         prevReady,
@@ -2230,7 +2259,8 @@ export async function runOffersLiveSync(opts = {}) {
         shrinkageGate,
         identityChurnGate,
         lkgGrowthGate,
-        note: "Publication safety gate refused promote (shrinkage / identity churn / LKG growth).",
+        publicPopulationGate,
+        note: "Publication safety gate refused promote (shrinkage / identity churn / LKG growth / public population).",
       };
     }
   }
@@ -2267,6 +2297,58 @@ export async function runOffersLiveSync(opts = {}) {
   const publicPath = path.join(dataDir, path.basename(OFFERS_PUBLIC_REL));
   const lkgPath = path.join(dataDir, path.basename(OFFERS_LKG_REL));
   const auditPath = path.join(dataDir, "iu-affiliate-cj-offers-sync-audit-v1.json");
+  const durableCatalogPath = path.join(dataDir, "iu-affiliate-cj-durable-catalog-v51.json");
+
+  // V51.8-final: durable catalog layer (independent of presentation window / offers-public).
+  try {
+    fs.mkdirSync(dataDir, { recursive: true });
+    let priorDurable = fs.existsSync(durableCatalogPath)
+      ? readJson(durableCatalogPath, null)
+      : null;
+    if (!priorDurable?.products && prevPublic?.sections) {
+      priorDurable = seedDurableCatalogFromOffersPublic(prevPublic, {
+        nowIso: new Date().toISOString(),
+      }).doc;
+    }
+    const sourceRowsForCatalog = [];
+    for (const sp of sourceProducts || []) sourceRowsForCatalog.push(sp);
+    for (const p of products || []) sourceRowsForCatalog.push(p);
+    for (const sec of doc.sections || []) {
+      for (const p of sec.products || []) {
+        if (!p || p.publicationReady === false) continue;
+        if (p.freshnessStatus === "SOURCE_VERIFIED" || p.lkgCarried !== true) {
+          sourceRowsForCatalog.push(p);
+        }
+      }
+    }
+    const durableMerge = mergeIntoDurableCatalog(priorDurable, sourceRowsForCatalog, {
+      nowIso: new Date().toISOString(),
+      incompleteAdvertisers: durableCatalogIncomplete,
+      endedAdvertisers: durableCatalogEnded,
+      revokedAdvertisers: durableCatalogRevoked,
+      staleAfterHours: Number(env.IU_CJ_OFFERS_LKG_STALE_HOURS) || 72,
+    });
+    fs.writeFileSync(
+      durableCatalogPath,
+      JSON.stringify(durableMerge.doc, null, 2) + "\n",
+      "utf8"
+    );
+    durableCatalogMeta = {
+      ok: true,
+      path: "projects/data/iu-affiliate-cj-durable-catalog-v51.json",
+      bytes: fs.statSync(durableCatalogPath).size,
+      stats: durableMerge.stats,
+      lastMerge: durableMerge.doc.lastMerge || null,
+    };
+    console.log(JSON.stringify({ IU_CJ_DURABLE_CATALOG_WRITE: "OK", ...durableCatalogMeta.stats }));
+  } catch (e) {
+    durableCatalogMeta = {
+      ok: false,
+      path: "projects/data/iu-affiliate-cj-durable-catalog-v51.json",
+      error: String(e && e.stack ? e.stack : e).slice(0, 500),
+    };
+    console.error(JSON.stringify({ IU_CJ_DURABLE_CATALOG_WRITE: "FAIL", error: durableCatalogMeta.error }));
+  }
 
   // V45: durable feed inventory (full or progressive merge) + slim cumulative + identity-repair.
   // Write errors are recorded in audit (never silent loss of 502-feed runs).
@@ -2677,6 +2759,8 @@ export async function runOffersLiveSync(opts = {}) {
     shrinkageGate,
     identityChurnGate,
     lkgGrowthGate,
+    publicPopulationGate,
+    durableCatalog: durableCatalogMeta,
     sha256: crypto.createHash("sha256").update(JSON.stringify(doc)).digest("hex"),
   };
 
@@ -2722,6 +2806,8 @@ export async function runOffersLiveSync(opts = {}) {
     shrinkageGate,
     identityChurnGate,
     lkgGrowthGate,
+    publicPopulationGate,
+    durableCatalog: durableCatalogMeta,
     doc,
     publicPath,
     lkgPath,
