@@ -2134,7 +2134,10 @@ export async function runOffersLiveSync(opts = {}) {
       publicationRestore = {
         carried: merged.carried,
         blocked: merged.blocked,
+        heldPublic: merged.heldPublic,
+        publicEligibleCarried: merged.publicEligibleCarried,
         uniqueAfter: merged.uniqueAfter,
+        publicEligibleAfter: merged.publicEligibleAfter,
         decisionsSample: (merged.decisions || []).slice(0, 40),
       };
       nextReady = readyCounts(doc);
@@ -2160,7 +2163,13 @@ export async function runOffersLiveSync(opts = {}) {
         maxGrowthAbs: Number(env.IU_CJ_OFFERS_MAX_LKG_GROWTH_ABS) || 500,
         maxGrowthRatio: Number(env.IU_CJ_OFFERS_MAX_LKG_GROWTH_RATIO) || 0.2,
         carried: Number(publicationRestore?.carried) || 0,
+        heldPublic: Number(publicationRestore?.heldPublic) || 0,
         addedCount: Number(publicationDelta?.addedCount) || 0,
+        publicEligibleAfter:
+          publicationRestore?.publicEligibleAfter != null
+            ? publicationRestore.publicEligibleAfter
+            : publicationDelta?.nextUnique || collectUniqueProductMap(doc).size,
+        prevPublicEligible: publicationDelta?.prevUnique || 0,
       }
     );
     if (armed && (!shrinkageGate.ok || !identityChurnGate.ok || !lkgGrowthGate.ok)) {
