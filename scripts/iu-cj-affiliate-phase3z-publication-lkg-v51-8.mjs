@@ -352,17 +352,24 @@ export function mergeLkgPublishedProducts(nextDoc, prevDoc, opts = {}) {
       continue;
     }
     const pubClass = String(row.publicationClass || row.classId || "");
-    // Incomplete-window / stale / unknown LKG must retain identity but NOT publish as current offer.
-    const holdPublic =
-      pubClass === "NOT_YET_SEEN" ||
+    // V51.8-final: incomplete-window NOT_YET_SEEN within freshness keeps PUBLIC_ELIGIBLE
+    // (last-known price, no CURRENT claim). Only stale / unknown / collision → HOLD.
+    // Root cause: treating every presentation miss as HOLD collapsed LIVE public counts.
+    const forceHold =
+      row.hideAsCurrent === true ||
       pubClass === "SOURCE_STALE" ||
       pubClass === "UNKNOWN" ||
       pubClass === "HOLD" ||
-      pubClass === REMOVAL_CLASS.NOT_YET_SEEN ||
       pubClass === REMOVAL_CLASS.UNKNOWN ||
       pubClass === REMOVAL_CLASS.HOLD_COLLISION ||
-      row.hideAsCurrent === true ||
-      /STALE|UNKNOWN|HOLD|NOT_YET_SEEN/i.test(pubClass);
+      pubClass === REMOVAL_CLASS.SOURCE_UNAVAILABLE ||
+      /SOURCE_STALE|STALE_PRICE|HOLD_COLLISION/i.test(pubClass);
+    const pendingReverify =
+      !forceHold &&
+      (pubClass === "NOT_YET_SEEN" ||
+        pubClass === REMOVAL_CLASS.NOT_YET_SEEN ||
+        /NOT_YET_SEEN/i.test(pubClass));
+    const holdPublic = forceHold;
     const product = {
       ...prev.product,
       publicationReady: true,
@@ -376,11 +383,19 @@ export function mergeLkgPublishedProducts(nextDoc, prevDoc, opts = {}) {
         ? PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD
         : PUBLICATION_ELIGIBILITY.PUBLICATION_ELIGIBLE,
       refreshResult: row.classId,
-      refreshReason: "lkg_carry_incomplete_discovery_or_unverified",
-      freshnessStatus: "UNKNOWN",
+      refreshReason: pendingReverify
+        ? "lkg_carry_not_yet_seen_keep_public_pending_reverify"
+        : "lkg_carry_incomplete_discovery_or_unverified",
+      freshnessStatus: holdPublic
+        ? "UNKNOWN"
+        : pendingReverify
+          ? "LAST_KNOWN_PENDING_REVERIFY"
+          : "UNKNOWN",
       freshnessReason: holdPublic
         ? "LKG_CATALOG_RETAINED_PUBLICATION_HOLD"
-        : "LKG_CARRIED_PUBLICATION_ELIGIBLE",
+        : pendingReverify
+          ? "LKG_NOT_YET_SEEN_KEEP_PUBLIC_WITHIN_STALE_POLICY"
+          : "LKG_CARRIED_PUBLICATION_ELIGIBLE",
       publicationClass: pubClass,
       sourceFreshLabelForbidden: true,
     };
@@ -407,7 +422,9 @@ export function mergeLkgPublishedProducts(nextDoc, prevDoc, opts = {}) {
       ? pubClass === "SOURCE_STALE" || /STALE/i.test(pubClass)
         ? LKG_VALIDATION_CLASS.LKG_STALE_PRICE
         : LKG_VALIDATION_CLASS.LKG_PENDING_REVERIFY
-      : LKG_VALIDATION_CLASS.LKG_ELIGIBLE_VERIFIED;
+      : pendingReverify
+        ? LKG_VALIDATION_CLASS.LKG_PENDING_REVERIFY
+        : LKG_VALIDATION_CLASS.LKG_ELIGIBLE_VERIFIED;
     decisions.push(decision);
   }
 
@@ -448,7 +465,7 @@ export function mergeLkgPublishedProducts(nextDoc, prevDoc, opts = {}) {
   };
   doc.note =
     (doc.note ? String(doc.note) + " | " : "") +
-    "V51.8-c4: LKG retains NOT_YET_SEEN identities as CATALOG_RETAINED + PUBLICATION_HOLD; stale prices never labeled CURRENT.";
+    "V51.8-final: NOT_YET_SEEN within freshness → CATALOG_RETAINED + PUBLICATION_ELIGIBLE (pending reverify, no CURRENT label); SOURCE_STALE/collision → PUBLICATION_HOLD.";
 
   return {
     doc,

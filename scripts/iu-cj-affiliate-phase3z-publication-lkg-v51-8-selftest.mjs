@@ -109,12 +109,34 @@ const merged = mergeLkgPublishedProducts(nextShrunk, prev, {
 });
 assert(merged.carried === 1, "carried one");
 assert(merged.uniqueAfter === 3, "unique restored to 3");
-assert(merged.heldPublic === 1, "carried identity on PUBLICATION_HOLD");
-assert(merged.publicEligibleAfter === 2, "public eligible stays at window size");
-const heldProd = merged.doc.sections[0].products.find((p) => p.productId === "keep-missing");
-assert(heldProd.publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD, "hold eligibility");
-assert(isPublicOfferEligible(heldProd) === false, "held product not public-eligible");
-assert(collectPublicEligibleProductMap(merged.doc).size === 2, "public map size 2");
+assert(merged.heldPublic === 0, "fresh NOT_YET_SEEN stays public-eligible (final)");
+assert(merged.publicEligibleAfter === 3, "public eligible includes pending-reverify LKG");
+const keptProd = merged.doc.sections[0].products.find((p) => p.productId === "keep-missing");
+assert(
+  keptProd.publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_ELIGIBLE,
+  "not-yet-seen keep public"
+);
+assert(isPublicOfferEligible(keptProd) === true, "pending-reverify still public-eligible");
+assert(keptProd.freshnessStatus === "LAST_KNOWN_PENDING_REVERIFY", "pending freshness");
+assert(keptProd.sourceFreshLabelForbidden === true, "no CURRENT label");
+assert(collectPublicEligibleProductMap(merged.doc).size === 3, "public map size 3");
+
+// Stale miss → HOLD
+const stalePrev = JSON.parse(JSON.stringify(prev));
+stalePrev.sections[0].products[0].lastSuccessfulRefreshAt = new Date(
+  Date.now() - 100 * 3600 * 1000
+).toISOString();
+const staleMerged = mergeLkgPublishedProducts(nextShrunk, stalePrev, {
+  incompleteAdvertisers: new Set(["1"]),
+  fetchedAdvertisers: new Set(["1"]),
+  staleAfterHours: 72,
+});
+const staleProd = staleMerged.doc.sections[0].products.find((p) => p.productId === "keep-missing");
+assert(
+  staleProd.publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD,
+  "stale not-yet-seen → HOLD"
+);
+assert(isPublicOfferEligible(staleProd) === false, "stale held not public");
 
 const nextOnlyStay = {
   liveEnabled: false,
@@ -258,19 +280,19 @@ for (const ratio of [0.1, 0.2, 0.5, 0.94, 2.0]) {
 const ledger = buildLkgIdentityValidationLedger(delta, merged.decisions);
 assert(ledger.count === 1, "ledger rows");
 assert(
-  ledger.rows[0].lkgValidationClass === LKG_VALIDATION_CLASS.LKG_PENDING_REVERIFY ||
-    ledger.rows[0].lkgValidationClass === LKG_VALIDATION_CLASS.LKG_STALE_PRICE,
-  "pending/stale class"
+  ledger.rows[0].lkgValidationClass === LKG_VALIDATION_CLASS.LKG_ELIGIBLE_VERIFIED ||
+    ledger.rows[0].lkgValidationClass === LKG_VALIDATION_CLASS.LKG_PENDING_REVERIFY,
+  "eligible/pending class for fresh not-yet-seen"
 );
 
 const released = releaseLkgHoldsAgainstSource(
-  merged.doc,
+  staleMerged.doc,
   new Set([compoundProductKey("1", "keep-missing")]),
   {}
 );
 assert(released.progress.LKG_RELEASED_TO_PUBLIC === 1, "hold released on source match");
-assert(released.publicEligibleAfter === 3, "public eligible after release");
-const stillHeld = releaseLkgHoldsAgainstSource(merged.doc, new Set(), {});
+assert(released.publicEligibleAfter >= 3, "public eligible after release");
+const stillHeld = releaseLkgHoldsAgainstSource(staleMerged.doc, new Set(), {});
 assert(stillHeld.progress.LKG_RELEASED_TO_PUBLIC === 0, "no release without source");
 
 console.log(
@@ -281,6 +303,7 @@ console.log(
     heldPublic: merged.heldPublic,
     uniqueAfter: merged.uniqueAfter,
     publicEligibleAfter: merged.publicEligibleAfter,
+    staleHeld: staleProd.publicationEligibility,
     releasedToPublic: released.progress.LKG_RELEASED_TO_PUBLIC,
     churnBad: churnBad.reason,
     growth94: growth94.reason,
