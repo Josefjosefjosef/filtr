@@ -6,7 +6,10 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
   push:
-    branches: [main]
+    branches:
+      - main
+      - "fix/**"
+      - "data/cj-offers-public-promote-**"
   workflow_dispatch:
     inputs:
       pr_number:
@@ -24,7 +27,8 @@ concurrency:
 
 jobs:
   iu-ads-regression-freeze:
-    runs-on: ubuntu-latest
+    # ubuntu-latest migrated to 26.04; Playwright 1.58.x cannot install chromium there.
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:
       - name: Resolve PR SHAs (workflow_dispatch)

@@ -12,6 +12,8 @@ export const PRODUCT_REVERIFY_SCHEMA = "iu-cj-affiliate-phase3z-product-reverify
 
 export const REVERIFY_CLASS = Object.freeze({
   NEW_PRODUCT: "NEW_PRODUCT",
+  /** Source matched this run but no prior published-window baseline (presentation rotation). */
+  SOURCE_VERIFIED_NO_PRIOR_BASELINE: "SOURCE_VERIFIED_NO_PRIOR_BASELINE",
   REVERIFIED_UNCHANGED: "REVERIFIED_UNCHANGED",
   REVERIFIED_PRICE_CHANGED: "REVERIFIED_PRICE_CHANGED",
   REVERIFIED_AVAILABILITY_CHANGED: "REVERIFIED_AVAILABILITY_CHANGED",
@@ -64,7 +66,7 @@ export function buildProductReverifyLedger(opts = {}) {
         prevCard?.verifiedAt ||
         prevCard?.lastSuccessfulRefreshAt ||
         null;
-      const previousPrice = prevCard?.currentPrice ?? prevRev?.currentPrice ?? null;
+      let previousPrice = prevCard?.currentPrice ?? prevRev?.currentPrice ?? null;
       const previousAvailability =
         prevCard?.availability ?? prevRev?.currentAvailability ?? null;
       const previousRunId =
@@ -105,8 +107,16 @@ export function buildProductReverifyLedger(opts = {}) {
       } else if (ref) {
         sourceMatchResult = "SOURCE_MATCHED";
         reverifyAttempted = true;
+        // V51.6: never fall back to currentPrice as baseline (that invented PRICE_CHANGED).
+        // Prefer prior reverify/card price; product.previousPrice only when prior ledger missing.
+        const comparisonBaselinePrice =
+          previousPrice != null
+            ? previousPrice
+            : p.previousPrice != null && p.previousPrice !== p.currentPrice
+              ? p.previousPrice
+              : null;
         const priceClass = classifyPriceTransition(
-          previousPrice != null ? previousPrice : p.previousPrice ?? p.currentPrice,
+          comparisonBaselinePrice,
           p.currentPrice,
           prevCard?.currency || p.currency,
           p.currency
@@ -117,9 +127,20 @@ export function buildProductReverifyLedger(opts = {}) {
         economicChange = priceClass.economicChange === true;
         formatOnlyChange = priceClass.class === PRICE_CHANGE_CLASS.FORMAT_ONLY;
         availabilityChange = availChanged === true;
+        // Overwrite stored previousPrice with the baseline actually compared.
+        const storedPreviousPrice = comparisonBaselinePrice;
 
         if (ref.gone === true || ref.removeFromPublic === true) {
           classification = REVERIFY_CLASS.SOURCE_UNAVAILABLE;
+        } else if (comparisonBaselinePrice == null) {
+          // V51.7: presentation budget rotates published IDs — missing prior window baseline
+          // is NOT "new catalog product" and IS a successful source verify this run.
+          classification =
+            !prevCard && !prevRev
+              ? REVERIFY_CLASS.SOURCE_VERIFIED_NO_PRIOR_BASELINE
+              : REVERIFY_CLASS.REVERIFIED_UNCHANGED;
+          economicChange = false;
+          formatOnlyChange = false;
         } else if (priceClass.economicChange) {
           classification = REVERIFY_CLASS.REVERIFIED_PRICE_CHANGED;
         } else if (availChanged) {
@@ -127,10 +148,12 @@ export function buildProductReverifyLedger(opts = {}) {
         } else if (priceClass.class === PRICE_CHANGE_CLASS.FORMAT_ONLY) {
           classification = REVERIFY_CLASS.REVERIFIED_FORMAT_ONLY;
         } else if (!prevCard && !prevRev) {
-          classification = REVERIFY_CLASS.NEW_PRODUCT;
+          classification = REVERIFY_CLASS.SOURCE_VERIFIED_NO_PRIOR_BASELINE;
         } else {
           classification = REVERIFY_CLASS.REVERIFIED_UNCHANGED;
         }
+        // Ensure row stores the compared baseline (not a null that disagrees with class).
+        previousPrice = storedPreviousPrice;
       } else if (cov) {
         reverifyAttempted = true;
         const rr = String(cov.refreshResult || "");
@@ -152,7 +175,15 @@ export function buildProductReverifyLedger(opts = {}) {
         sourceMatchResult = "PRIOR_KNOWN_NOT_IN_THIS_REFRESH_PASS";
       }
 
+      // V51.7: source-verified this run includes matched refresh even without cross-run price baseline.
       const successfullyReverified = [
+        REVERIFY_CLASS.REVERIFIED_UNCHANGED,
+        REVERIFY_CLASS.REVERIFIED_PRICE_CHANGED,
+        REVERIFY_CLASS.REVERIFIED_AVAILABILITY_CHANGED,
+        REVERIFY_CLASS.REVERIFIED_FORMAT_ONLY,
+        REVERIFY_CLASS.SOURCE_VERIFIED_NO_PRIOR_BASELINE,
+      ].includes(classification);
+      const crossRunPriceComparable = [
         REVERIFY_CLASS.REVERIFIED_UNCHANGED,
         REVERIFY_CLASS.REVERIFIED_PRICE_CHANGED,
         REVERIFY_CLASS.REVERIFIED_AVAILABILITY_CHANGED,
@@ -189,6 +220,7 @@ export function buildProductReverifyLedger(opts = {}) {
         reverifyResult: classification,
         reverifyClassification: classification,
         successfullyReverified,
+        crossRunPriceComparable,
         economicChange,
         formatOnlyChange,
         availabilityChange,
@@ -205,11 +237,14 @@ export function buildProductReverifyLedger(opts = {}) {
   }
 
   const previouslyKnown = [...previousByKey.keys?.() ? previousByKey.keys() : Object.keys(previousByKey || {})].length;
-  const attempted = rows.filter((r) => r.sourceMatchResult !== "NOT_ATTEMPTED" && r.sourceMatchResult !== "NO_PRIOR_NO_REFRESH" && r.sourceMatchResult !== "PRIOR_KNOWN_NOT_IN_THIS_REFRESH_PASS").length;
   // Honest attempted: coverage or refresh presence
   const attemptedReverify = rows.filter((r) => mapGet(coverageByKey, r.compoundIdentity) || mapGet(refreshedByKey, r.compoundIdentity)).length;
   const sourceMatched = rows.filter((r) => r.sourceMatchResult === "SOURCE_MATCHED").length;
   const successfullyReverified = rows.filter((r) => r.successfullyReverified).length;
+  const crossRunPriceComparable = rows.filter((r) => r.crossRunPriceComparable).length;
+  const windowFirstSourceVerify = rows.filter(
+    (r) => r.reverifyClassification === REVERIFY_CLASS.SOURCE_VERIFIED_NO_PRIOR_BASELINE
+  ).length;
   const changed = rows.filter((r) =>
     [
       REVERIFY_CLASS.REVERIFIED_PRICE_CHANGED,
@@ -220,10 +255,14 @@ export function buildProductReverifyLedger(opts = {}) {
   const missing = rows.filter((r) => r.reverifyClassification === REVERIFY_CLASS.SOURCE_NOT_FOUND).length;
   const retryPending = rows.filter((r) => r.reverifyClassification === REVERIFY_CLASS.RETRY_PENDING).length;
 
-  const coveragePct =
-    attemptedReverify > 0
-      ? Math.round((successfullyReverified / attemptedReverify) * 10000) / 100
-      : null;
+  const coveragePctSourceMatched =
+    rows.length > 0 ? Math.round((sourceMatched / rows.length) * 10000) / 100 : null;
+  const coveragePctSuccessfullyReverified =
+    rows.length > 0 ? Math.round((successfullyReverified / rows.length) * 10000) / 100 : null;
+  const coveragePctCrossRunComparable =
+    rows.length > 0 ? Math.round((crossRunPriceComparable / rows.length) * 10000) / 100 : null;
+  // Primary coverage = source-verified this run (includes rotation entries).
+  const coveragePct = coveragePctSuccessfullyReverified;
 
   const classCounts = {};
   for (const r of rows) {
@@ -236,18 +275,23 @@ export function buildProductReverifyLedger(opts = {}) {
     runId,
     sha,
     note:
-      "successfullyReverified requires compound identity compared to freshly fetched source row this run. Timestamp-only churn ≠ reverify.",
+      "V51.7: successfullyReverified includes SOURCE_VERIFIED_NO_PRIOR_BASELINE (source matched; no cross-run price baseline because publishPerPartner rotates the published window). coveragePctCrossRunComparable is the narrower baseline-comparable share. Do not treat presentation rotation as catalog NEW_PRODUCT.",
     counts: {
       totalPublishedUniqueInDoc: rows.length,
       previouslyKnown: Number.isFinite(previouslyKnown) ? previouslyKnown : null,
       attemptedReverify,
       sourceMatched,
       successfullyReverified,
+      crossRunPriceComparable,
+      windowFirstSourceVerify,
       changed,
       unchanged,
       missing,
       retryPending,
       coveragePct,
+      coveragePctSourceMatched,
+      coveragePctSuccessfullyReverified,
+      coveragePctCrossRunComparable,
       classCounts,
     },
     rows,
@@ -469,27 +513,46 @@ export function buildCrossRunIndividualLedger(prevLedger, nextLedger) {
       cur?.availabilityChange === true;
     const classFormatOnly =
       classResult === REVERIFY_CLASS.REVERIFIED_FORMAT_ONLY || cur?.formatOnlyChange === true;
-    const prevPrice = prev?.currentPrice ?? prev?.previousPrice ?? null;
-    const curPrice = cur?.currentPrice ?? null;
+    // Cross-run: previous ledger currentPrice vs current ledger currentPrice
+    const crossPrevPrice = prev?.currentPrice ?? prev?.previousPrice ?? null;
+    const crossCurPrice = cur?.currentPrice ?? null;
+    // Within-run: baseline stored on current row vs current price (authoritative for class truth)
+    const withinPrevPrice = cur?.previousPrice ?? null;
+    const withinCurPrice = cur?.currentPrice ?? null;
     const prevAvail = prev?.currentAvailability ?? prev?.previousAvailability ?? null;
     const curAvail = cur?.currentAvailability ?? null;
-    const crossRunObservedEconomicDelta = pricesDiffer(prevPrice, curPrice);
+    const crossRunObservedEconomicDelta = pricesDiffer(crossPrevPrice, crossCurPrice);
+    const withinRunStoredPricesDiffer = pricesDiffer(withinPrevPrice, withinCurPrice);
     const crossRunObservedAvailabilityDelta =
       prevAvail != null && curAvail != null && String(prevAvail) !== String(curAvail);
-    // economicChange is true only when class claims price change AND stored prices differ,
-    // or when the row already carried an explicit economicChange=true from a fresh build.
-    const economicChange =
-      cur?.economicChange === true || (classEconomic && crossRunObservedEconomicDelta);
-    const availabilityChange =
-      cur?.availabilityChange === true ||
-      classAvailability ||
-      (crossRunObservedAvailabilityDelta && cur?.successfullyReverified === true);
     const formatOnlyChange = classFormatOnly === true;
     const tsProv = resolveReverifyTimestampProvenance({
       ...cur,
       currentFetchTimestamp: cur?.currentFetchTimestamp || cur?.fetchedAt || null,
       currentSourceTimestamp: cur?.currentSourceTimestamp || cur?.sourceUpdatedAt || null,
     });
+    // V51.6 resolved outcome for audit truth
+    let resolvedPriceOutcome = null;
+    let classificationPriceMismatch = null;
+    if (classEconomic) {
+      if (withinPrevPrice == null) {
+        resolvedPriceOutcome = "INSUFFICIENT_COMPARISON_DATA";
+        classificationPriceMismatch = "CLASS_SAYS_PRICE_CHANGED_BUT_BASELINE_MISSING";
+      } else if (withinRunStoredPricesDiffer) {
+        resolvedPriceOutcome = "PRICE_CHANGED_CONFIRMED";
+        classificationPriceMismatch = null;
+      } else {
+        resolvedPriceOutcome = "CLASSIFICATION_MISMATCH";
+        classificationPriceMismatch = "CLASS_SAYS_PRICE_CHANGED_BUT_STORED_PRICES_EQUAL";
+      }
+    } else if (withinPrevPrice == null && cur?.successfullyReverified) {
+      resolvedPriceOutcome = "INSUFFICIENT_COMPARISON_DATA";
+    } else if (withinRunStoredPricesDiffer === false && cur?.successfullyReverified) {
+      resolvedPriceOutcome = "PRICE_UNCHANGED_CONFIRMED";
+    }
+    const economicChangeConfirmed =
+      resolvedPriceOutcome === "PRICE_CHANGED_CONFIRMED" ||
+      (cur?.economicChange === true && withinRunStoredPricesDiffer);
     rows.push({
       advertiserId: cur?.advertiserId || prev?.advertiserId || null,
       productId: cur?.productId || prev?.productId || null,
@@ -505,8 +568,13 @@ export function buildCrossRunIndividualLedger(prevLedger, nextLedger) {
       timestampProvenance: tsProv.provenance,
       sourceTimestampStatus: tsProv.sourceTimestampStatus,
       fetchTimestampStatus: tsProv.fetchTimestampStatus,
-      previousPrice: prevPrice,
-      currentPrice: curPrice,
+      // Prefer within-run baseline for individual audit; also expose cross-run prices
+      previousPrice: withinPrevPrice != null ? withinPrevPrice : crossPrevPrice,
+      currentPrice: withinCurPrice != null ? withinCurPrice : crossCurPrice,
+      crossRunPreviousPrice: crossPrevPrice,
+      crossRunCurrentPrice: crossCurPrice,
+      withinRunPreviousPrice: withinPrevPrice,
+      withinRunCurrentPrice: withinCurPrice,
       previousAvailability: prevAvail,
       currentAvailability: curAvail,
       sourceMatched,
@@ -520,15 +588,13 @@ export function buildCrossRunIndividualLedger(prevLedger, nextLedger) {
       // Cross-run observed deltas (previous run value vs current run value)
       crossRunObservedEconomicDelta,
       crossRunObservedAvailabilityDelta,
-      // Compatibility booleans: economicChange mirrors within-run class when prices also differ,
-      // else false when class/price disagree; never invent.
-      economicChange: classEconomic && crossRunObservedEconomicDelta ? true : cur?.economicChange === true ? true : false,
+      withinRunStoredPricesDiffer,
+      resolvedPriceOutcome,
+      // economicChange true only when within-row prices confirm a real change
+      economicChange: economicChangeConfirmed === true,
       formatOnlyChange,
       availabilityChange: classAvailability || (crossRunObservedAvailabilityDelta && cur?.successfullyReverified === true),
-      classificationPriceMismatch:
-        classEconomic && !crossRunObservedEconomicDelta
-          ? "CLASS_SAYS_PRICE_CHANGED_BUT_STORED_PRICES_EQUAL"
-          : null,
+      classificationPriceMismatch,
       retryPending: cur?.retryPending === true || classResult === REVERIFY_CLASS.RETRY_PENDING,
       identityCollision: cur?.identityCollision === true,
       previouslySuccessfullyReverified: prev?.successfullyReverified === true,
@@ -548,6 +614,12 @@ export function buildCrossRunIndividualLedger(prevLedger, nextLedger) {
     (r) => r.crossRunObservedEconomicDelta || r.crossRunObservedAvailabilityDelta
   ).length;
   const classificationPriceMismatchCount = rows.filter((r) => r.classificationPriceMismatch).length;
+  const priceChangedConfirmed = rows.filter(
+    (r) => r.resolvedPriceOutcome === "PRICE_CHANGED_CONFIRMED"
+  ).length;
+  const insufficientComparison = rows.filter(
+    (r) => r.resolvedPriceOutcome === "INSUFFICIENT_COMPARISON_DATA"
+  ).length;
   const unchanged = rows.filter(
     (r) => r.reverifyResult === REVERIFY_CLASS.REVERIFIED_UNCHANGED
   ).length;
@@ -561,18 +633,22 @@ export function buildCrossRunIndividualLedger(prevLedger, nextLedger) {
   const attempted = rows.filter((r) => r.reverifyAttempted).length;
   const sourceMatchedCount = rows.filter((r) => r.sourceMatched).length;
   return {
-    schema: "iu-cj-affiliate-phase3z-cross-run-individual-ledger-v51.5",
+    schema: "iu-cj-affiliate-phase3z-cross-run-individual-ledger-v51.6",
     previousRunId: prevLedger?.runId || null,
     currentRunId: nextLedger?.runId || null,
     definitions: {
       reverifyAttempted:
         "Source lookup or classification attempt this run (SOURCE_MATCHED / NOT_FOUND / UNAVAILABLE / REVERIFIED_*).",
       withinRunChangedByClassification:
-        "Count of rows whose CURRENT ledger classification is REVERIFIED_PRICE_CHANGED or REVERIFIED_AVAILABILITY_CHANGED.",
+        "Count of rows whose CURRENT ledger classification is REVERIFIED_PRICE_CHANGED or REVERIFIED_AVAILABILITY_CHANGED (may include false positives if baseline missing — see resolvedPriceOutcome).",
+      priceChangedConfirmed:
+        "Within-row previousPrice and currentPrice both present and numerically different; class PRICE_CHANGED trusted.",
+      insufficientComparisonData:
+        "Class claimed PRICE_CHANGED (or first observation) but previousPrice baseline missing — not a confirmed economic event.",
       crossRunObservedChanged:
         "Count of rows where previous-run stored price/availability differs from current-run stored values.",
       changed:
-        "Alias of withinRunChangedByClassification (aligned with reverify coverage.changed).",
+        "Alias of priceChangedConfirmed (V51.6 — only confirmed economic changes).",
       coveragePctOfPublished:
         "successfullyReverified / identities present in current ledger (published unique).",
       coveragePctOfAttempted: "successfullyReverified / reverifyAttempted.",
@@ -587,7 +663,9 @@ export function buildCrossRunIndividualLedger(prevLedger, nextLedger) {
       withinRunChangedByClassification,
       crossRunObservedChanged,
       classificationPriceMismatchCount,
-      changed: withinRunChangedByClassification,
+      priceChangedConfirmed,
+      insufficientComparisonData: insufficientComparison,
+      changed: priceChangedConfirmed,
       unchanged,
       unavailable,
       pending,
@@ -596,7 +674,6 @@ export function buildCrossRunIndividualLedger(prevLedger, nextLedger) {
         currentFound > 0 ? Math.round((reverifySuccess / currentFound) * 10000) / 100 : null,
       coveragePctOfAttempted:
         attempted > 0 ? Math.round((reverifySuccess / attempted) * 10000) / 100 : null,
-      // Deprecated ambiguous alias kept for readers; equals coveragePctOfPublished.
       coveragePct:
         currentFound > 0 ? Math.round((reverifySuccess / currentFound) * 10000) / 100 : null,
     },

@@ -18,6 +18,8 @@ on:
       - automation/update-ndic-datex-v1
       # Silver/release PR heads: pull_request webhooks občas nedorazí; push na fix/* spustí required status na head SHA.
       - "fix/**"
+      # CJ offers data promote PRs: GITHUB_TOKEN commits often skip pull_request synchronize → required checks hang BLOCKED.
+      - "data/cj-offers-public-promote-**"
   workflow_dispatch:
   # Merge Queue: required CI must run on the merge-group SHA (PR head + current main).
   merge_group:
