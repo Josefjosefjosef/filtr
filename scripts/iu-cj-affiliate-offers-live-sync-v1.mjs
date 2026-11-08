@@ -2235,34 +2235,135 @@ export async function runOffersLiveSync(opts = {}) {
     durableCatalogEnded = endedAdvertisers;
     durableCatalogRevoked = revokedAdvertisers;
     durableCatalogIncomplete = incompleteAdvertisers;
-    if (
-      armed &&
-      (!shrinkageGate.ok || !identityChurnGate.ok || !lkgGrowthGate.ok || !publicPopulationGate.ok)
-    ) {
-      return {
-        ok: false,
-        armed,
-        wrote: false,
-        reason: !shrinkageGate.ok
-          ? shrinkageGate.reason
-          : !identityChurnGate.ok
-            ? identityChurnGate.reason
-            : !lkgGrowthGate.ok
-              ? lkgGrowthGate.reason
-              : publicPopulationGate.reason,
-        liveEnabled: false,
-        counts: nextReady,
-        prevReady,
-        productMeta,
-        publicationDelta,
-        publicationRestore,
-        shrinkageGate,
-        identityChurnGate,
-        lkgGrowthGate,
-        publicPopulationGate,
-        note: "Publication safety gate refused promote (shrinkage / identity churn / LKG growth / public population).",
-      };
+  }
+
+  // Persist durable catalog BEFORE publication-gate refusal so schedule KEEP_LIVE
+  // still retains catalog/checkpoints when public promote is refused.
+  const durableCatalogPathEarly = path.join(dataDir, "iu-affiliate-cj-durable-catalog-v51.json");
+  try {
+    fs.mkdirSync(dataDir, { recursive: true });
+    let priorDurable = fs.existsSync(durableCatalogPathEarly)
+      ? readJson(durableCatalogPathEarly, null)
+      : null;
+    if (!priorDurable?.products && prevPublic?.sections) {
+      priorDurable = seedDurableCatalogFromOffersPublic(prevPublic, {
+        nowIso: new Date().toISOString(),
+      }).doc;
     }
+    const sourceRowsForCatalog = [];
+    for (const sp of sourceProducts || []) sourceRowsForCatalog.push(sp);
+    for (const p of products || []) sourceRowsForCatalog.push(p);
+    for (const sec of doc.sections || []) {
+      for (const p of sec.products || []) {
+        if (!p || p.publicationReady === false) continue;
+        if (p.freshnessStatus === "SOURCE_VERIFIED" || p.lkgCarried !== true) {
+          sourceRowsForCatalog.push(p);
+        }
+      }
+    }
+    const durableMerge = mergeIntoDurableCatalog(priorDurable, sourceRowsForCatalog, {
+      nowIso: new Date().toISOString(),
+      incompleteAdvertisers: durableCatalogIncomplete,
+      endedAdvertisers: durableCatalogEnded,
+      revokedAdvertisers: durableCatalogRevoked,
+      staleAfterHours: Number(env.IU_CJ_OFFERS_LKG_STALE_HOURS) || 72,
+    });
+    fs.writeFileSync(
+      durableCatalogPathEarly,
+      JSON.stringify(durableMerge.doc, null, 2) + "\n",
+      "utf8"
+    );
+    durableCatalogMeta = {
+      ok: true,
+      path: "projects/data/iu-affiliate-cj-durable-catalog-v51.json",
+      bytes: fs.statSync(durableCatalogPathEarly).size,
+      stats: durableMerge.stats,
+      lastMerge: durableMerge.doc.lastMerge || null,
+    };
+    console.log(JSON.stringify({ IU_CJ_DURABLE_CATALOG_WRITE: "OK", ...durableCatalogMeta.stats }));
+  } catch (e) {
+    durableCatalogMeta = {
+      ok: false,
+      path: "projects/data/iu-affiliate-cj-durable-catalog-v51.json",
+      error: String(e && e.stack ? e.stack : e).slice(0, 500),
+    };
+    console.error(JSON.stringify({ IU_CJ_DURABLE_CATALOG_WRITE: "FAIL", error: durableCatalogMeta.error }));
+  }
+
+  if (
+    armed &&
+    prevPublic?.liveEnabled === true &&
+    prevReady.products > 0 &&
+    shrinkageGate &&
+    identityChurnGate &&
+    lkgGrowthGate &&
+    publicPopulationGate &&
+    (!shrinkageGate.ok || !identityChurnGate.ok || !lkgGrowthGate.ok || !publicPopulationGate.ok)
+  ) {
+    const gateReason = !shrinkageGate?.ok
+      ? shrinkageGate.reason
+      : !identityChurnGate?.ok
+        ? identityChurnGate.reason
+        : !lkgGrowthGate?.ok
+          ? lkgGrowthGate.reason
+          : publicPopulationGate.reason;
+    const auditPathGate = path.join(dataDir, "iu-affiliate-cj-offers-sync-audit-v1.json");
+    const gateAudit = {
+      at: new Date().toISOString(),
+      armed,
+      liveWanted,
+      liveEnabled: false,
+      reason: gateReason,
+      wrote: false,
+      promoteRefused: true,
+      durableCatalog: durableCatalogMeta,
+      counts: nextReady,
+      prevReady,
+      productMeta,
+      publicationDelta: publicationDelta
+        ? {
+            prevUnique: publicationDelta.prevUnique,
+            nextUnique: publicationDelta.nextUnique,
+            removedCount: publicationDelta.removedCount,
+            addedCount: publicationDelta.addedCount,
+            netUnique: publicationDelta.netUnique,
+            removedByClass: publicationDelta.removedByClass,
+          }
+        : null,
+      publicationRestore,
+      shrinkageGate,
+      identityChurnGate,
+      lkgGrowthGate,
+      publicPopulationGate,
+      note: "Publication safety gate refused promote; durable catalog still written.",
+    };
+    try {
+      fs.mkdirSync(dataDir, { recursive: true });
+      fs.writeFileSync(auditPathGate, JSON.stringify(gateAudit, null, 2) + "\n", "utf8");
+    } catch {
+      // audit best-effort
+    }
+    return {
+      // ok:true so workflow persist/upload steps still run (exit 0 when armed).
+      ok: true,
+      armed,
+      wrote: false,
+      promoteRefused: true,
+      reason: gateReason,
+      liveEnabled: false,
+      counts: nextReady,
+      prevReady,
+      productMeta,
+      publicationDelta,
+      publicationRestore,
+      shrinkageGate,
+      identityChurnGate,
+      lkgGrowthGate,
+      publicPopulationGate,
+      durableCatalog: durableCatalogMeta,
+      auditPath: auditPathGate,
+      note: "Publication safety gate refused promote (shrinkage / identity churn / LKG growth / public population); durable catalog retained.",
+    };
   }
 
   // Refuse arming LIVE with zero ready items (transparent zero, not false success).
@@ -2297,58 +2398,7 @@ export async function runOffersLiveSync(opts = {}) {
   const publicPath = path.join(dataDir, path.basename(OFFERS_PUBLIC_REL));
   const lkgPath = path.join(dataDir, path.basename(OFFERS_LKG_REL));
   const auditPath = path.join(dataDir, "iu-affiliate-cj-offers-sync-audit-v1.json");
-  const durableCatalogPath = path.join(dataDir, "iu-affiliate-cj-durable-catalog-v51.json");
-
-  // V51.8-final: durable catalog layer (independent of presentation window / offers-public).
-  try {
-    fs.mkdirSync(dataDir, { recursive: true });
-    let priorDurable = fs.existsSync(durableCatalogPath)
-      ? readJson(durableCatalogPath, null)
-      : null;
-    if (!priorDurable?.products && prevPublic?.sections) {
-      priorDurable = seedDurableCatalogFromOffersPublic(prevPublic, {
-        nowIso: new Date().toISOString(),
-      }).doc;
-    }
-    const sourceRowsForCatalog = [];
-    for (const sp of sourceProducts || []) sourceRowsForCatalog.push(sp);
-    for (const p of products || []) sourceRowsForCatalog.push(p);
-    for (const sec of doc.sections || []) {
-      for (const p of sec.products || []) {
-        if (!p || p.publicationReady === false) continue;
-        if (p.freshnessStatus === "SOURCE_VERIFIED" || p.lkgCarried !== true) {
-          sourceRowsForCatalog.push(p);
-        }
-      }
-    }
-    const durableMerge = mergeIntoDurableCatalog(priorDurable, sourceRowsForCatalog, {
-      nowIso: new Date().toISOString(),
-      incompleteAdvertisers: durableCatalogIncomplete,
-      endedAdvertisers: durableCatalogEnded,
-      revokedAdvertisers: durableCatalogRevoked,
-      staleAfterHours: Number(env.IU_CJ_OFFERS_LKG_STALE_HOURS) || 72,
-    });
-    fs.writeFileSync(
-      durableCatalogPath,
-      JSON.stringify(durableMerge.doc, null, 2) + "\n",
-      "utf8"
-    );
-    durableCatalogMeta = {
-      ok: true,
-      path: "projects/data/iu-affiliate-cj-durable-catalog-v51.json",
-      bytes: fs.statSync(durableCatalogPath).size,
-      stats: durableMerge.stats,
-      lastMerge: durableMerge.doc.lastMerge || null,
-    };
-    console.log(JSON.stringify({ IU_CJ_DURABLE_CATALOG_WRITE: "OK", ...durableCatalogMeta.stats }));
-  } catch (e) {
-    durableCatalogMeta = {
-      ok: false,
-      path: "projects/data/iu-affiliate-cj-durable-catalog-v51.json",
-      error: String(e && e.stack ? e.stack : e).slice(0, 500),
-    };
-    console.error(JSON.stringify({ IU_CJ_DURABLE_CATALOG_WRITE: "FAIL", error: durableCatalogMeta.error }));
-  }
+  // Durable catalog already written above (before publication-gate refusal).
 
   // V45: durable feed inventory (full or progressive merge) + slim cumulative + identity-repair.
   // Write errors are recorded in audit (never silent loss of 502-feed runs).
