@@ -1175,6 +1175,7 @@ jobs:
             projects/data/iu-affiliate-cj-durable-price-history-archive-v51.json
             projects/data/iu-affiliate-cj-product-reverify-v50.json
             projects/data/iu-affiliate-cj-product-identity-v50.json
+            projects/data/iu-affiliate-cj-durable-catalog-v51.json
           if-no-files-found: warn
       - name: Upload product-feed checkpoints (V31 continuation)
         uses: actions/upload-artifact@v4
@@ -1198,13 +1199,14 @@ jobs:
             projects/data/iu-affiliate-cj-durable-price-history-archive-v51.json
             projects/data/iu-affiliate-cj-product-reverify-v50.json
             projects/data/iu-affiliate-cj-product-identity-v50.json
+            projects/data/iu-affiliate-cj-durable-catalog-v51.json
           if-no-files-found: warn
           retention-days: 90
       # Artifacts are per-run; without promote arm they were lost. Always persist checkpoints on sync branch.
       # V38: continue-on-error + push retry ? commit_refs race must NOT fail the job after successful offers write
       # (schedule 41816980256 wrote coverage then failed on push ? promote skipped).
-      - name: Persist product-feed + refresh checkpoints to sync branch (always)
-        if: hashFiles('projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json') != '' || hashFiles('projects/data/iu-affiliate-cj-refresh-coverage-v35.json') != '' || hashFiles('projects/data/iu-affiliate-cj-miss-products-v38.json') != '' || hashFiles('projects/data/iu-affiliate-cj-feed-inventory-v40.json') != ''
+      - name: Persist product-feed + refresh checkpoints to sync branch (also durable catalog)
+        if: hashFiles('projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json') != '' || hashFiles('projects/data/iu-affiliate-cj-refresh-coverage-v35.json') != '' || hashFiles('projects/data/iu-affiliate-cj-miss-products-v38.json') != '' || hashFiles('projects/data/iu-affiliate-cj-feed-inventory-v40.json') != '' || hashFiles('projects/data/iu-affiliate-cj-durable-catalog-v51.json') != ''
         continue-on-error: true
         shell: bash
         run: |
