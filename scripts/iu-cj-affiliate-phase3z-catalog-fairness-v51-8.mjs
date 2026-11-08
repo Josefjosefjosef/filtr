@@ -59,20 +59,18 @@ export function classifyPartnerTraversalStatus(cp = {}, opts = {}) {
       note: "Inventory reports no product feed for partner.",
     };
   }
-  if (stoppedEarly && !complete) {
-    return {
-      status: TRAVERSAL_STATUS.STOPPED_EARLY,
-      verifiedEmpty: false,
-      authoritativeSource: true,
-      note: "Page/budget stop mid-catalog; continuation required.",
-    };
-  }
+  const everCompleted = Number(cp.completePassCount || 0) > 0 || complete;
+  const everCompletedNonempty = everCompleted && total != null && total > 0;
+  // Current window may restart after a prior complete pass (resume reset) and look STOPPED_EARLY.
+  // Historical completion is tracked via completePassCount / lastCompletePassAt.
   if (complete && total != null && total > 0) {
     return {
       status: TRAVERSAL_STATUS.COMPLETE_NONEMPTY,
       verifiedEmpty: false,
       authoritativeSource: true,
-      note: "Authoritative complete pass with declared totalCount > 0.",
+      everCompleted: true,
+      everCompletedNonempty: true,
+      note: "Authoritative complete pass with declared totalCount > 0 (current window).",
     };
   }
   if (complete && total === 0 && (fetched === 0 || fetched == null) && !err) {
@@ -80,8 +78,22 @@ export function classifyPartnerTraversalStatus(cp = {}, opts = {}) {
       status: TRAVERSAL_STATUS.COMPLETE_VERIFIED_EMPTY,
       verifiedEmpty: true,
       authoritativeSource: true,
+      everCompleted: true,
+      everCompletedNonempty: false,
       note:
         "Authoritative shoppingProducts empty response (totalCount=0, no error). Valid empty catalog — not product progress.",
+    };
+  }
+  if (stoppedEarly && total != null && total > 0) {
+    return {
+      status: TRAVERSAL_STATUS.STOPPED_EARLY,
+      verifiedEmpty: false,
+      authoritativeSource: true,
+      everCompleted,
+      everCompletedNonempty,
+      note: everCompletedNonempty
+        ? "Prior complete pass exists; current window stopped early mid-cycle."
+        : "Page/budget stop mid-catalog; continuation required.",
     };
   }
   if (!complete && total != null && total > 0) {
@@ -89,7 +101,11 @@ export function classifyPartnerTraversalStatus(cp = {}, opts = {}) {
       status: TRAVERSAL_STATUS.INCOMPLETE,
       verifiedEmpty: false,
       authoritativeSource: true,
-      note: "Declared totalCount > 0 without lastComplete.",
+      everCompleted,
+      everCompletedNonempty,
+      note: everCompletedNonempty
+        ? "Prior complete pass exists; current window incomplete."
+        : "Declared totalCount > 0 without completed pass evidence.",
     };
   }
   if (!complete && stoppedEarly) {
@@ -208,15 +224,18 @@ export function selectPartnersForFairDiscovery(partners = [], checkpointPartners
  */
 export function summarizeTraversalClassifications(rows = []) {
   const byStatus = {};
+  let everCompletedNonempty = 0;
   for (const r of rows) {
     const st = String(r.status || TRAVERSAL_STATUS.UNKNOWN);
     byStatus[st] = (byStatus[st] || 0) + 1;
+    if (r.everCompletedNonempty === true) everCompletedNonempty += 1;
   }
   return {
     partnerCount: rows.length,
     byStatus,
     completeNonempty: byStatus[TRAVERSAL_STATUS.COMPLETE_NONEMPTY] || 0,
     completeVerifiedEmpty: byStatus[TRAVERSAL_STATUS.COMPLETE_VERIFIED_EMPTY] || 0,
+    everCompletedNonempty,
     incomplete: byStatus[TRAVERSAL_STATUS.INCOMPLETE] || 0,
     stoppedEarly: byStatus[TRAVERSAL_STATUS.STOPPED_EARLY] || 0,
     noFeed: byStatus[TRAVERSAL_STATUS.NO_FEED_AVAILABLE] || 0,
