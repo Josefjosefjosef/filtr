@@ -7,6 +7,9 @@ import {
   buildPublicationDeltaLedger,
   mergeLkgPublishedProducts,
   evaluateProductShrinkageGate,
+  evaluateIdentityChurnGate,
+  evaluateLkgGrowthGate,
+  classifyMissingPublishedProduct,
 } from "./iu-cj-affiliate-phase3z-publication-lkg-v51-8.mjs";
 
 function assert(cond, msg) {
@@ -124,11 +127,74 @@ const gatePass = evaluateProductShrinkageGate(prev, merged.doc, {
 });
 assert(gatePass.ok === true, "shrink ok after merge flag");
 
+const churnBad = evaluateIdentityChurnGate(
+  {
+    prevUnique: 3174,
+    removedCount: 3050,
+    addedCount: 2979,
+    netUnique: -71,
+    removedByClass: { [REMOVAL_CLASS.NOT_YET_SEEN]: 3050 },
+  },
+  { lkgMerged: false, maxChurnRatio: 0.25 }
+);
+assert(churnBad.ok === false, "massive not-yet-seen churn refused");
+const churnOk = evaluateIdentityChurnGate(
+  {
+    prevUnique: 3174,
+    removedCount: 3050,
+    addedCount: 2979,
+    netUnique: -71,
+    removedByClass: { [REMOVAL_CLASS.NOT_YET_SEEN]: 3050 },
+  },
+  { lkgMerged: true, maxChurnRatio: 0.25 }
+);
+assert(churnOk.ok === true, "churn allowed after LKG merge");
+
+const ended = classifyMissingPublishedProduct(
+  {
+    key: "9|x",
+    advertiserId: "9",
+    product: {
+      affiliateUrl: "https://www.kqzyfj.com/click-101883843-9",
+      lastSuccessfulRefreshAt: new Date().toISOString(),
+    },
+  },
+  { endedAdvertisers: new Set(["9"]) }
+);
+assert(ended.carryForward === false && ended.classId === REMOVAL_CLASS.PARTNER_ENDED, "ended blocked");
+
+const badUrl = classifyMissingPublishedProduct(
+  {
+    key: "1|y",
+    advertiserId: "1",
+    product: { affiliateUrl: "https://evil.example/click" },
+  },
+  { incompleteAdvertisers: new Set(["1"]) }
+);
+assert(badUrl.carryForward === false, "bad affiliate url blocked");
+
+const growthBad = evaluateLkgGrowthGate(100, 900, {
+  maxGrowthAbs: 500,
+  maxGrowthRatio: 0.2,
+  carried: 0,
+  addedCount: 0,
+});
+assert(growthBad.ok === false, "unbounded LKG growth refused");
+const growthRestore = evaluateLkgGrowthGate(3174, 6153, {
+  maxGrowthAbs: 500,
+  maxGrowthRatio: 0.2,
+  carried: 3050,
+  addedCount: 2979,
+});
+assert(growthRestore.ok === true, "LKG restore union growth allowed");
+
 console.log(
   JSON.stringify({
     IU_CJ_PUBLICATION_LKG_V51_8_SELFTEST: "PASS",
     delta: { removed: delta.removedCount, added: delta.addedCount, net: delta.netUnique },
     carried: merged.carried,
     uniqueAfter: merged.uniqueAfter,
+    churnBad: churnBad.reason,
+    growthBad: growthBad.reason,
   })
 );

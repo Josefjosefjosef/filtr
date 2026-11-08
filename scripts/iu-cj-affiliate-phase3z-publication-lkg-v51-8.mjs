@@ -54,8 +54,27 @@ export function collectUniqueProductMap(doc) {
 /**
  * Classify why a previous LIVE product is missing from the rebuilt catalog.
  */
+function isTrustedAffiliateUrl(url) {
+  const s = String(url || "");
+  return /^https:\/\/(www\.)?(kqzyfj|jdoqocy|tkqlhce|dpbolvw|anrdoezrs|pjatr)\.com\//i.test(s);
+}
+
+function productAgeHours(product, nowMs) {
+  const ts =
+    product?.lastSuccessfulRefreshAt ||
+    product?.lastCheckedAt ||
+    product?.fetchedAt ||
+    product?.sourceUpdatedAt ||
+    null;
+  const ms = ts ? Date.parse(ts) : NaN;
+  if (!Number.isFinite(ms)) return null;
+  return (nowMs - ms) / 3600000;
+}
+
 export function classifyMissingPublishedProduct(prevRow, opts = {}) {
   const key = prevRow.key;
+  const nowMs = opts.nowMs != null ? Number(opts.nowMs) : Date.now();
+  const staleAfterHours = Math.max(1, Number(opts.staleAfterHours) || 72);
   const missByKey = opts.missByKey instanceof Map ? opts.missByKey : new Map(opts.missByKey || []);
   const incompleteAdvertisers =
     opts.incompleteAdvertisers instanceof Set
@@ -69,15 +88,39 @@ export function classifyMissingPublishedProduct(prevRow, opts = {}) {
     opts.endedAdvertisers instanceof Set
       ? opts.endedAdvertisers
       : new Set(opts.endedAdvertisers || []);
+  const revokedAdvertisers =
+    opts.revokedAdvertisers instanceof Set
+      ? opts.revokedAdvertisers
+      : new Set(opts.revokedAdvertisers || []);
   const holdKeys = opts.holdKeys instanceof Set ? opts.holdKeys : new Set(opts.holdKeys || []);
   const miss = missByKey.get(key) || null;
+  const product = prevRow.product || {};
 
   if (endedAdvertisers.has(prevRow.advertiserId)) {
     return {
       classId: REMOVAL_CLASS.PARTNER_ENDED,
       carryForward: false,
       rootCauseVerified: true,
+      publicationClass: "ENDED",
       note: "Partner ENDED — do not restore.",
+    };
+  }
+  if (revokedAdvertisers.has(prevRow.advertiserId)) {
+    return {
+      classId: REMOVAL_CLASS.NO_PERMISSION,
+      carryForward: false,
+      rootCauseVerified: true,
+      publicationClass: "PERMISSION_REVOKED",
+      note: "Partner permission revoked — do not restore.",
+    };
+  }
+  if (!isTrustedAffiliateUrl(product.affiliateUrl)) {
+    return {
+      classId: REMOVAL_CLASS.CONFIRMED_REMOVED,
+      carryForward: false,
+      rootCauseVerified: true,
+      publicationClass: "INVALID_AFFILIATE_URL",
+      note: "LKG affiliate URL missing/untrusted — do not restore.",
     };
   }
   if (holdKeys.has(key) || miss?.decision === "HOLD_COLLISION") {
@@ -85,6 +128,7 @@ export function classifyMissingPublishedProduct(prevRow, opts = {}) {
       classId: REMOVAL_CLASS.HOLD_COLLISION,
       carryForward: true,
       rootCauseVerified: true,
+      publicationClass: "HOLD",
       note: "HOLD_COLLISION — keep LKG visible, no remap.",
     };
   }
@@ -93,7 +137,19 @@ export function classifyMissingPublishedProduct(prevRow, opts = {}) {
       classId: REMOVAL_CLASS.CONFIRMED_REMOVED,
       carryForward: false,
       rootCauseVerified: true,
+      publicationClass: "CONFIRMED_REMOVED",
       note: "Explicit REMOVE_CONFIRMED evidence.",
+    };
+  }
+  const ageHours = productAgeHours(product, nowMs);
+  if (ageHours != null && ageHours >= staleAfterHours && !incompleteAdvertisers.has(prevRow.advertiserId)) {
+    return {
+      classId: REMOVAL_CLASS.SOURCE_UNAVAILABLE,
+      carryForward: false,
+      rootCauseVerified: true,
+      publicationClass: "SOURCE_STALE",
+      ageHours,
+      note: "LKG older than stale policy and partner not incomplete — refuse silent price keep.",
     };
   }
   if (
@@ -106,8 +162,11 @@ export function classifyMissingPublishedProduct(prevRow, opts = {}) {
       classId: REMOVAL_CLASS.NOT_YET_SEEN,
       carryForward: true,
       rootCauseVerified: true,
+      publicationClass: ageHours != null && ageHours >= staleAfterHours ? "SOURCE_STALE" : "NOT_YET_SEEN",
+      ageHours,
       note:
-        "Missing from current discovery/presentation window — treat as NOT_YET_SEEN, carry LKG until confirmed.",
+        "Missing from current discovery/presentation window — treat as NOT_YET_SEEN, carry LKG until confirmed. Stale prices must not be labeled CURRENT.",
+      hideAsCurrent: ageHours != null && ageHours >= staleAfterHours,
     };
   }
   if (miss?.decision === "TEMPORARILY_HIDE") {
@@ -115,6 +174,7 @@ export function classifyMissingPublishedProduct(prevRow, opts = {}) {
       classId: REMOVAL_CLASS.SOURCE_UNAVAILABLE,
       carryForward: false,
       rootCauseVerified: true,
+      publicationClass: "SOURCE_TEMPORARILY_UNAVAILABLE",
       note: "Repeated productIds miss / age hide policy.",
     };
   }
@@ -122,7 +182,9 @@ export function classifyMissingPublishedProduct(prevRow, opts = {}) {
     classId: REMOVAL_CLASS.UNKNOWN,
     carryForward: true,
     rootCauseVerified: false,
-    note: "Cause unknown — fail-closed carry LKG until verified.",
+    publicationClass: "UNKNOWN",
+    note: "Cause unknown — fail-closed carry LKG until verified; never mark CURRENT.",
+    hideAsCurrent: true,
   };
 }
 
@@ -148,8 +210,11 @@ export function buildPublicationDeltaLedger(prevDoc, nextDoc, opts = {}) {
       partnerName: row.partnerName,
       sectionKey: row.sectionKey,
       classId: classified.classId,
+      publicationClass: classified.publicationClass || classified.classId,
       carryForward: classified.carryForward,
       rootCauseVerified: classified.rootCauseVerified,
+      hideAsCurrent: classified.hideAsCurrent === true,
+      ageHours: classified.ageHours ?? null,
       note: classified.note,
       lastConfirmedPrice: row.product?.currentPrice ?? null,
       lastConfirmedAvailability: row.product?.availability ?? null,
@@ -236,6 +301,12 @@ export function mergeLkgPublishedProducts(nextDoc, prevDoc, opts = {}) {
       decisions.push(decision);
       continue;
     }
+    const classified = {
+      hideAsCurrent: row.publicationClass === "SOURCE_STALE" || row.publicationClass === "UNKNOWN",
+      publicationClass: row.publicationClass || row.classId,
+    };
+    // Re-read classification flags from decisions note path
+    const hideAsCurrent = /STALE|UNKNOWN|HOLD/i.test(String(row.publicationClass || row.classId));
     const product = {
       ...prev.product,
       publicationReady: true,
@@ -243,8 +314,13 @@ export function mergeLkgPublishedProducts(nextDoc, prevDoc, opts = {}) {
       lkgCarried: true,
       refreshResult: row.classId,
       refreshReason: "lkg_carry_incomplete_discovery_or_unverified",
-      freshnessStatus: "UNKNOWN",
-      freshnessReason: "LKG_CARRIED_NOT_CURRENT_WINDOW",
+      freshnessStatus: hideAsCurrent ? "UNKNOWN" : "UNKNOWN",
+      freshnessReason: hideAsCurrent
+        ? "LKG_CARRIED_NOT_CURRENT_DO_NOT_LABEL_CURRENT"
+        : "LKG_CARRIED_NOT_CURRENT_WINDOW",
+      publicationClass: classified.publicationClass,
+      // Never present LKG-only prices as source-verified CURRENT.
+      sourceFreshLabelForbidden: true,
     };
     const sectionKeys =
       prev.sectionKeys && prev.sectionKeys.size
@@ -333,5 +409,112 @@ export function evaluateProductShrinkageGate(prevDoc, nextDoc, opts = {}) {
       ? "PRODUCT_SHRINKAGE_WITHIN_POLICY"
       : "PRODUCT_UNIQUE_SHRINKAGE_REFUSED",
     note: "Incomplete discovery must merge LKG or stay under drop thresholds before LIVE promote.",
+  };
+}
+
+/**
+ * Identity churn gate: net-stable catalogs can still be unsafe if most identities rotate.
+ * Legitimate confirmed removals are allowed when classified and feed-complete.
+ */
+export function evaluateIdentityChurnGate(delta = {}, opts = {}) {
+  const prevUnique = Math.max(0, Number(delta.prevUnique) || 0);
+  const removed = Math.max(0, Number(delta.removedCount) || 0);
+  const added = Math.max(0, Number(delta.addedCount) || 0);
+  const net = Number(delta.netUnique);
+  const maxChurnRatio =
+    opts.maxChurnRatio != null && Number.isFinite(Number(opts.maxChurnRatio))
+      ? Math.min(1, Math.max(0, Number(opts.maxChurnRatio)))
+      : 0.25;
+  const maxGrowthAbs =
+    opts.maxGrowthAbs != null && Number.isFinite(Number(opts.maxGrowthAbs))
+      ? Math.max(0, Number(opts.maxGrowthAbs))
+      : 500;
+  const churnDenom = Math.max(1, prevUnique);
+  const removedRatio = removed / churnDenom;
+  const addedRatio = added / churnDenom;
+  const churnRatio = Math.max(removedRatio, addedRatio);
+  const removedByClass = delta.removedByClass || {};
+  const confirmedRemoved =
+    Number(removedByClass[REMOVAL_CLASS.CONFIRMED_REMOVED] || 0) +
+    Number(removedByClass[REMOVAL_CLASS.PARTNER_ENDED] || 0);
+  const notYetSeen = Number(removedByClass[REMOVAL_CLASS.NOT_YET_SEEN] || 0);
+  const unknown = Number(removedByClass[REMOVAL_CLASS.UNKNOWN] || 0);
+  const lkgMerged = opts.lkgMerged === true;
+  const feedsComplete = opts.feedsComplete === true;
+
+  // High NOT_YET_SEEN churn without LKG merge is unsafe even if net≈0.
+  const unsafePresentationChurn =
+    !lkgMerged && notYetSeen + unknown >= Math.max(20, Math.floor(prevUnique * maxChurnRatio));
+  const unsafeGrowth = Number.isFinite(net) && net > maxGrowthAbs && lkgMerged;
+  const ok =
+    !unsafePresentationChurn &&
+    !unsafeGrowth &&
+    (churnRatio <= maxChurnRatio ||
+      lkgMerged ||
+      (feedsComplete && confirmedRemoved >= removed * 0.8));
+
+  return {
+    ok,
+    prevUnique,
+    removed,
+    added,
+    netUnique: Number.isFinite(net) ? net : added - removed,
+    removedRatio,
+    addedRatio,
+    churnRatio,
+    maxChurnRatio,
+    maxGrowthAbs,
+    notYetSeen,
+    unknown,
+    confirmedRemoved,
+    lkgMerged,
+    feedsComplete,
+    unsafePresentationChurn,
+    unsafeGrowth,
+    reason: ok
+      ? "IDENTITY_CHURN_WITHIN_POLICY"
+      : unsafeGrowth
+        ? "PRODUCT_LKG_GROWTH_REFUSED"
+        : "PRODUCT_IDENTITY_CHURN_REFUSED",
+    note: "Net-stable promote with massive identity rotation is refused unless LKG-merged or confirmed removals dominate.",
+  };
+}
+
+/**
+ * Growth protection after LKG merge: refuse unbounded accumulation.
+ */
+export function evaluateLkgGrowthGate(prevUnique, afterUnique, opts = {}) {
+  const prev = Math.max(0, Number(prevUnique) || 0);
+  const after = Math.max(0, Number(afterUnique) || 0);
+  const maxGrowthAbs =
+    opts.maxGrowthAbs != null && Number.isFinite(Number(opts.maxGrowthAbs))
+      ? Math.max(0, Number(opts.maxGrowthAbs))
+      : 500;
+  const maxGrowthRatio =
+    opts.maxGrowthRatio != null && Number.isFinite(Number(opts.maxGrowthRatio))
+      ? Math.min(1, Math.max(0, Number(opts.maxGrowthRatio)))
+      : 0.2;
+  const carried = Math.max(0, Number(opts.carried) || 0);
+  const addedCount = Math.max(0, Number(opts.addedCount) || 0);
+  const growth = Math.max(0, after - prev);
+  const ratio = prev > 0 ? growth / prev : growth > 0 ? 1 : 0;
+  // LKG restore of NOT_YET_SEEN may temporarily union prev+new window identities.
+  // Allow growth up to carried + newly added + abs slack; refuse unbounded invent.
+  const restoreBudget = carried + addedCount + maxGrowthAbs;
+  const withinRestoreBudget = carried > 0 && growth <= restoreBudget;
+  const ok = growth <= maxGrowthAbs || ratio <= maxGrowthRatio || withinRestoreBudget;
+  return {
+    ok,
+    prevUnique: prev,
+    afterUnique: after,
+    growth,
+    ratio,
+    carried,
+    addedCount,
+    restoreBudget,
+    withinRestoreBudget,
+    maxGrowthAbs,
+    maxGrowthRatio,
+    reason: ok ? "LKG_GROWTH_WITHIN_POLICY" : "PRODUCT_LKG_GROWTH_REFUSED",
   };
 }

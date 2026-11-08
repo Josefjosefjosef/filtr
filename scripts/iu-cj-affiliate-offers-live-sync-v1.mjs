@@ -85,7 +85,10 @@ import { selectPartnersForFairDiscovery } from "./iu-cj-affiliate-phase3z-catalo
 import {
   mergeLkgPublishedProducts,
   evaluateProductShrinkageGate,
+  evaluateIdentityChurnGate,
+  evaluateLkgGrowthGate,
   buildPublicationDeltaLedger,
+  collectUniqueProductMap,
 } from "./iu-cj-affiliate-phase3z-publication-lkg-v51-8.mjs";
 import {
   buildProductFunnelDocument,
@@ -2078,18 +2081,26 @@ export async function runOffersLiveSync(opts = {}) {
     };
   }
 
-  // V51.8-c2: incomplete discovery/presentation windows must not erase LIVE identities.
+  // V51.8-c2/c3: incomplete discovery/presentation windows must not erase LIVE identities.
   // Merge previous LIVE products classified as NOT_YET_SEEN / HOLD / UNKNOWN before promote.
   let publicationDelta = null;
   let publicationRestore = null;
+  let shrinkageGate = null;
+  let identityChurnGate = null;
+  let lkgGrowthGate = null;
   if (prevPublic?.liveEnabled === true && prevReady.products > 0) {
     const incompleteAdvertisers = new Set();
     const fetchedAdvertisers = new Set();
+    const endedAdvertisers = new Set();
+    const revokedAdvertisers = new Set();
     for (const row of productMeta?.partnerFetch || productMeta?.partnerFetchSample || []) {
       const id = String(row.advertiserId || "");
       if (!id) continue;
       fetchedAdvertisers.add(id);
       if (row.complete !== true || row.stoppedEarlyForBudget === true) incompleteAdvertisers.add(id);
+      const st = String(row.accountStatus || row.status || row.relationshipStatus || "").toUpperCase();
+      if (st === "ENDED" || st === "LEFT" || st === "DECLINED") endedAdvertisers.add(id);
+      if (st === "REVOKED" || st === "NO_PERMISSION") revokedAdvertisers.add(id);
     }
     for (const id of Object.keys(productMeta?.funnelFetchMeta || {})) {
       fetchedAdvertisers.add(String(id));
@@ -2108,19 +2119,17 @@ export async function runOffersLiveSync(opts = {}) {
     } catch {
       // miss ledger optional for merge classification
     }
-    publicationDelta = buildPublicationDeltaLedger(prevPublic, doc, {
+    const classifyOpts = {
       incompleteAdvertisers,
       fetchedAdvertisers,
+      endedAdvertisers,
+      revokedAdvertisers,
       missByKey,
       nowIso: new Date().toISOString(),
-    });
+    };
+    publicationDelta = buildPublicationDeltaLedger(prevPublic, doc, classifyOpts);
     if (publicationDelta.removedCount > 0) {
-      const merged = mergeLkgPublishedProducts(doc, prevPublic, {
-        incompleteAdvertisers,
-        fetchedAdvertisers,
-        missByKey,
-        nowIso: new Date().toISOString(),
-      });
+      const merged = mergeLkgPublishedProducts(doc, prevPublic, classifyOpts);
       doc = merged.doc;
       publicationRestore = {
         carried: merged.carried,
@@ -2130,25 +2139,50 @@ export async function runOffersLiveSync(opts = {}) {
       };
       nextReady = readyCounts(doc);
     }
-    const shrink = evaluateProductShrinkageGate(prevPublic, doc, {
-      lkgMerged: Number(publicationRestore?.carried || 0) > 0,
+    const lkgMerged = Number(publicationRestore?.carried || 0) > 0;
+    shrinkageGate = evaluateProductShrinkageGate(prevPublic, doc, {
+      lkgMerged,
       maxDropAbs: Number(env.IU_CJ_OFFERS_MAX_UNIQUE_DROP_ABS) || 50,
       maxDropRatio: Number(env.IU_CJ_OFFERS_MAX_UNIQUE_DROP_RATIO) || 0.03,
     });
-    if (armed && !shrink.ok) {
+    identityChurnGate = evaluateIdentityChurnGate(publicationDelta || {}, {
+      lkgMerged,
+      feedsComplete: incompleteAdvertisers.size === 0,
+      maxChurnRatio: Number(env.IU_CJ_OFFERS_MAX_IDENTITY_CHURN_RATIO) || 0.25,
+      maxGrowthAbs: Number(env.IU_CJ_OFFERS_MAX_LKG_GROWTH_ABS) || 500,
+    });
+    lkgGrowthGate = evaluateLkgGrowthGate(
+      publicationDelta?.prevUnique || 0,
+      publicationRestore?.uniqueAfter != null
+        ? publicationRestore.uniqueAfter
+        : collectUniqueProductMap(doc).size,
+      {
+        maxGrowthAbs: Number(env.IU_CJ_OFFERS_MAX_LKG_GROWTH_ABS) || 500,
+        maxGrowthRatio: Number(env.IU_CJ_OFFERS_MAX_LKG_GROWTH_RATIO) || 0.2,
+        carried: Number(publicationRestore?.carried) || 0,
+        addedCount: Number(publicationDelta?.addedCount) || 0,
+      }
+    );
+    if (armed && (!shrinkageGate.ok || !identityChurnGate.ok || !lkgGrowthGate.ok)) {
       return {
         ok: false,
         armed,
         wrote: false,
-        reason: shrink.reason,
+        reason: !shrinkageGate.ok
+          ? shrinkageGate.reason
+          : !identityChurnGate.ok
+            ? identityChurnGate.reason
+            : lkgGrowthGate.reason,
         liveEnabled: false,
         counts: nextReady,
         prevReady,
         productMeta,
         publicationDelta,
         publicationRestore,
-        shrinkageGate: shrink,
-        note: "Unique published identities shrank beyond policy without sufficient LKG recovery — refuse promote.",
+        shrinkageGate,
+        identityChurnGate,
+        lkgGrowthGate,
+        note: "Publication safety gate refused promote (shrinkage / identity churn / LKG growth).",
       };
     }
   }
@@ -2581,6 +2615,20 @@ export async function runOffersLiveSync(opts = {}) {
     identityRepairPath: "projects/data/iu-affiliate-cj-identity-repair-v40.json",
     rejectReasons: built.rejectReasons,
     layerLossAudit,
+    publicationDelta: publicationDelta
+      ? {
+          prevUnique: publicationDelta.prevUnique,
+          nextUnique: publicationDelta.nextUnique,
+          removedCount: publicationDelta.removedCount,
+          addedCount: publicationDelta.addedCount,
+          netUnique: publicationDelta.netUnique,
+          removedByClass: publicationDelta.removedByClass,
+        }
+      : null,
+    publicationRestore,
+    shrinkageGate,
+    identityChurnGate,
+    lkgGrowthGate,
     sha256: crypto.createHash("sha256").update(JSON.stringify(doc)).digest("hex"),
   };
 
@@ -2621,6 +2669,11 @@ export async function runOffersLiveSync(opts = {}) {
     productMeta,
     refreshMeta,
     freshness: freshApplied.stats,
+    publicationDelta: audit.publicationDelta,
+    publicationRestore,
+    shrinkageGate,
+    identityChurnGate,
+    lkgGrowthGate,
     doc,
     publicPath,
     lkgPath,
