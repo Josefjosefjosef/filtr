@@ -15,6 +15,8 @@ import {
   buildLkgIdentityValidationLedger,
   isPublicOfferEligible,
   collectPublicEligibleProductMap,
+  releaseLkgHoldsAgainstSource,
+  compoundProductKey,
 } from "./iu-cj-affiliate-phase3z-publication-lkg-v51-8.mjs";
 
 function assert(cond, msg) {
@@ -261,6 +263,16 @@ assert(
   "pending/stale class"
 );
 
+const released = releaseLkgHoldsAgainstSource(
+  merged.doc,
+  new Set([compoundProductKey("1", "keep-missing")]),
+  {}
+);
+assert(released.progress.LKG_RELEASED_TO_PUBLIC === 1, "hold released on source match");
+assert(released.publicEligibleAfter === 3, "public eligible after release");
+const stillHeld = releaseLkgHoldsAgainstSource(merged.doc, new Set(), {});
+assert(stillHeld.progress.LKG_RELEASED_TO_PUBLIC === 0, "no release without source");
+
 console.log(
   JSON.stringify({
     IU_CJ_PUBLICATION_LKG_V51_8_SELFTEST: "PASS",
@@ -269,6 +281,7 @@ console.log(
     heldPublic: merged.heldPublic,
     uniqueAfter: merged.uniqueAfter,
     publicEligibleAfter: merged.publicEligibleAfter,
+    releasedToPublic: released.progress.LKG_RELEASED_TO_PUBLIC,
     churnBad: churnBad.reason,
     growth94: growth94.reason,
     growth94PublicBypass: growth94PublicBypass.reason,

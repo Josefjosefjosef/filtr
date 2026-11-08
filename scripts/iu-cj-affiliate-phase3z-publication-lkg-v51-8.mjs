@@ -692,3 +692,141 @@ export function buildLkgIdentityValidationLedger(delta = {}, decisions = []) {
     rows,
   };
 }
+
+/**
+ * Release PUBLICATION_HOLD when the identity is source-verified in the current fetch window.
+ * Does not invent products — only clears hold flags on already-retained identities.
+ */
+export function releaseLkgHoldsAgainstSource(doc, sourceVerifiedKeys, opts = {}) {
+  const keys =
+    sourceVerifiedKeys instanceof Set
+      ? sourceVerifiedKeys
+      : new Set(sourceVerifiedKeys || []);
+  const endedAdvertisers =
+    opts.endedAdvertisers instanceof Set
+      ? opts.endedAdvertisers
+      : new Set(opts.endedAdvertisers || []);
+  const revokedAdvertisers =
+    opts.revokedAdvertisers instanceof Set
+      ? opts.revokedAdvertisers
+      : new Set(opts.revokedAdvertisers || []);
+  const out = JSON.parse(JSON.stringify(doc || {}));
+  const seen = new Set();
+  let holdTotal = 0;
+  let reverifyAttempted = 0;
+  let reverified = 0;
+  let released = 0;
+  let remainingHold = 0;
+  let confirmedRemoved = 0;
+  let blocked = 0;
+  const releases = [];
+
+  for (const sec of out.sections || []) {
+    for (const p of sec.products || []) {
+      if (!p || p.publicationReady === false) continue;
+      const key = compoundProductKey(p.advertiserId, p.productId);
+      const isHold =
+        p.lkgPublicHold === true ||
+        p.publicOffer === false ||
+        p.hideAsCurrent === true ||
+        p.publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD;
+      if (!isHold && !p.lkgCarried) continue;
+      const firstSeen = !seen.has(key);
+      if (firstSeen) seen.add(key);
+      if (firstSeen && isHold) holdTotal += 1;
+      if (firstSeen) reverifyAttempted += 1;
+      if (endedAdvertisers.has(String(p.advertiserId))) {
+        if (firstSeen) blocked += 1;
+        if (firstSeen && isHold) remainingHold += 1;
+        p.publicationEligibility = PUBLICATION_ELIGIBILITY.PUBLICATION_BLOCKED;
+        p.lkgValidationClass = LKG_VALIDATION_CLASS.LKG_PARTNER_ENDED;
+        continue;
+      }
+      if (revokedAdvertisers.has(String(p.advertiserId))) {
+        if (firstSeen) blocked += 1;
+        if (firstSeen && isHold) remainingHold += 1;
+        p.publicationEligibility = PUBLICATION_ELIGIBILITY.PUBLICATION_BLOCKED;
+        p.lkgValidationClass = LKG_VALIDATION_CLASS.LKG_PERMISSION_REVOKED;
+        continue;
+      }
+      if (!isTrustedAffiliateUrl(p.affiliateUrl)) {
+        if (firstSeen) blocked += 1;
+        if (firstSeen && isHold) remainingHold += 1;
+        p.publicationEligibility = PUBLICATION_ELIGIBILITY.PUBLICATION_BLOCKED;
+        p.lkgValidationClass = LKG_VALIDATION_CLASS.LKG_INVALID_URL;
+        continue;
+      }
+      if (!keys.has(key)) {
+        if (firstSeen && isHold) remainingHold += 1;
+        continue;
+      }
+      if (firstSeen) reverified += 1;
+      if (!isHold) continue;
+      p.lkgPublicHold = false;
+      p.hideAsCurrent = false;
+      p.publicOffer = true;
+      p.publishable = true;
+      p.publicationEligibility = PUBLICATION_ELIGIBILITY.PUBLICATION_ELIGIBLE;
+      p.freshnessStatus = "SOURCE_VERIFIED";
+      p.freshnessReason = "LKG_HOLD_RELEASED_SOURCE_MATCH";
+      p.lkgValidationClass = LKG_VALIDATION_CLASS.LKG_ELIGIBLE_VERIFIED;
+      p.sourceFreshLabelForbidden = false;
+      if (firstSeen) {
+        released += 1;
+        releases.push({ key, action: "RELEASE_HOLD_TO_PUBLIC_ELIGIBLE" });
+      }
+    }
+  }
+
+  const progress = {
+    schema: PUBLICATION_LKG_SCHEMA + "-hold-reverify-progress",
+    LKG_HOLD_TOTAL: holdTotal,
+    LKG_REVERIFY_ATTEMPTED: reverifyAttempted,
+    LKG_REVERIFIED: reverified,
+    LKG_RELEASED_TO_PUBLIC: released,
+    LKG_REMAINING_HOLD: Math.max(0, holdTotal - released),
+    LKG_CONFIRMED_REMOVED: confirmedRemoved,
+    LKG_BLOCKED: blocked,
+    releasesSample: releases.slice(0, 40),
+  };
+  out.lkgHoldReverify = progress;
+  // Refresh public-eligible stats
+  let productsPublicEligible = 0;
+  const uniquePublic = new Set();
+  for (const sec of out.sections || []) {
+    for (const p of sec.products || []) {
+      if (!isPublicOfferEligible(p)) continue;
+      productsPublicEligible += 1;
+      uniquePublic.add(compoundProductKey(p.advertiserId, p.productId));
+    }
+  }
+  out.stats = {
+    ...(out.stats || {}),
+    productsPublicEligible,
+    uniquePublicEligible: uniquePublic.size,
+  };
+  return { doc: out, progress, publicEligibleAfter: uniquePublic.size };
+}
+
+export function summarizeLkgHoldProgress(doc) {
+  let hold = 0;
+  let eligible = 0;
+  let blocked = 0;
+  for (const sec of doc?.sections || []) {
+    for (const p of sec.products || []) {
+      if (!p || p.publicationReady === false) continue;
+      if (p.publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_BLOCKED) blocked += 1;
+      else if (
+        p.lkgPublicHold === true ||
+        p.publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD
+      )
+        hold += 1;
+      else if (isPublicOfferEligible(p)) eligible += 1;
+    }
+  }
+  return {
+    LKG_HOLD_TOTAL: hold,
+    PUBLICATION_ELIGIBLE: eligible,
+    PUBLICATION_BLOCKED: blocked,
+  };
+}
