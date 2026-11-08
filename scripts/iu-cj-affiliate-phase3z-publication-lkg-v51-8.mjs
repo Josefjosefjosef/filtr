@@ -711,6 +711,7 @@ export function releaseLkgHoldsAgainstSource(doc, sourceVerifiedKeys, opts = {})
       ? opts.revokedAdvertisers
       : new Set(opts.revokedAdvertisers || []);
   const out = JSON.parse(JSON.stringify(doc || {}));
+  const seen = new Set();
   let holdTotal = 0;
   let reverifyAttempted = 0;
   let reverified = 0;
@@ -730,34 +731,36 @@ export function releaseLkgHoldsAgainstSource(doc, sourceVerifiedKeys, opts = {})
         p.hideAsCurrent === true ||
         p.publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD;
       if (!isHold && !p.lkgCarried) continue;
-      if (isHold) holdTotal += 1;
-      reverifyAttempted += 1;
+      const firstSeen = !seen.has(key);
+      if (firstSeen) seen.add(key);
+      if (firstSeen && isHold) holdTotal += 1;
+      if (firstSeen) reverifyAttempted += 1;
       if (endedAdvertisers.has(String(p.advertiserId))) {
-        blocked += 1;
-        remainingHold += isHold ? 1 : 0;
+        if (firstSeen) blocked += 1;
+        if (firstSeen && isHold) remainingHold += 1;
         p.publicationEligibility = PUBLICATION_ELIGIBILITY.PUBLICATION_BLOCKED;
         p.lkgValidationClass = LKG_VALIDATION_CLASS.LKG_PARTNER_ENDED;
         continue;
       }
       if (revokedAdvertisers.has(String(p.advertiserId))) {
-        blocked += 1;
-        remainingHold += isHold ? 1 : 0;
+        if (firstSeen) blocked += 1;
+        if (firstSeen && isHold) remainingHold += 1;
         p.publicationEligibility = PUBLICATION_ELIGIBILITY.PUBLICATION_BLOCKED;
         p.lkgValidationClass = LKG_VALIDATION_CLASS.LKG_PERMISSION_REVOKED;
         continue;
       }
       if (!isTrustedAffiliateUrl(p.affiliateUrl)) {
-        blocked += 1;
-        remainingHold += isHold ? 1 : 0;
+        if (firstSeen) blocked += 1;
+        if (firstSeen && isHold) remainingHold += 1;
         p.publicationEligibility = PUBLICATION_ELIGIBILITY.PUBLICATION_BLOCKED;
         p.lkgValidationClass = LKG_VALIDATION_CLASS.LKG_INVALID_URL;
         continue;
       }
       if (!keys.has(key)) {
-        remainingHold += isHold ? 1 : 0;
+        if (firstSeen && isHold) remainingHold += 1;
         continue;
       }
-      reverified += 1;
+      if (firstSeen) reverified += 1;
       if (!isHold) continue;
       p.lkgPublicHold = false;
       p.hideAsCurrent = false;
@@ -768,8 +771,10 @@ export function releaseLkgHoldsAgainstSource(doc, sourceVerifiedKeys, opts = {})
       p.freshnessReason = "LKG_HOLD_RELEASED_SOURCE_MATCH";
       p.lkgValidationClass = LKG_VALIDATION_CLASS.LKG_ELIGIBLE_VERIFIED;
       p.sourceFreshLabelForbidden = false;
-      released += 1;
-      releases.push({ key, action: "RELEASE_HOLD_TO_PUBLIC_ELIGIBLE" });
+      if (firstSeen) {
+        released += 1;
+        releases.push({ key, action: "RELEASE_HOLD_TO_PUBLIC_ELIGIBLE" });
+      }
     }
   }
 
