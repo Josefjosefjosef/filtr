@@ -66,8 +66,9 @@ export function evaluateAuditSemanticConsistencyV516(evidenceDir) {
     const execMain = exec?.currentMainSha || null;
     const fileMain = mainSha?.sha || null;
     const mergeSha = merge?.mergeSha || verdict?.G_deploy?.mergeSha || null;
+    const finalClassOk = /^FINAL_V51_\d+$/.test(String(exec?.evidenceClass || ""));
     const ok =
-      exec?.evidenceClass === "FINAL_V51_6" &&
+      finalClassOk &&
       fileMain &&
       execMain &&
       short(execMain) === short(fileMain) &&
@@ -76,7 +77,7 @@ export function evaluateAuditSemanticConsistencyV516(evidenceDir) {
       rule(
         "SUMMARY_MATCHES_FINAL_PRODUCTION",
         ["01-executive-summary.json", "03-current-main-sha.json", "71-merge-sha.json"],
-        "Executive summary currentMainSha matches final main/merge and is marked FINAL_V51_6",
+        "Executive summary currentMainSha matches final main/merge and is marked FINAL_V51_*",
         { evidenceClass: exec?.evidenceClass, execMain, fileMain, mergeSha },
         !!ok,
         ok ? "Summary aligned with final production" : "Stale executive summary or SHA mismatch",
@@ -102,7 +103,11 @@ export function evaluateAuditSemanticConsistencyV516(evidenceDir) {
       ok = true; // historical pending is allowed when classified
       detail = { historical: true, prState };
     }
-    if (prMeta?.evidenceClass === "FINAL_V51_6" || prMeta?.evidenceClass === "CURRENT_PRODUCTION") {
+    if (
+      prMeta?.evidenceClass === "FINAL_V51_6" ||
+      prMeta?.evidenceClass === "FINAL_V51_7" ||
+      prMeta?.evidenceClass === "CURRENT_PRODUCTION"
+    ) {
       if (merge?.mergeSha && /PENDING_OWNER_APPROVAL/i.test(String(prState)) && merge?.pr === prMeta?.number) {
         ok = false;
       }
@@ -204,18 +209,18 @@ export function evaluateAuditSemanticConsistencyV516(evidenceDir) {
 
   {
     const zipName = parity91?.zipName || exec?.zipName;
-    const expectedPrefix = "phase3z-v51-6-";
+    const expectedPrefixOk = /^phase3z-v51-\d+-/.test(String(zipName || ""));
     const ok =
       !!zipName &&
-      String(zipName).startsWith(expectedPrefix) &&
+      expectedPrefixOk &&
       !String(zipName).includes("055825") &&
       parity91?.expected === true;
     rules.push(
       rule(
         "ZIP_FILENAME_MATCHES_MANIFEST",
         ["91-zip-exact-name-parity.json", "01-executive-summary.json"],
-        "Parity zipName is V51.6 and matches pack",
-        { zipName, expectedPrefix },
+        "Parity zipName is phase3z-v51-* and matches pack",
+        { zipName, expectedPrefixOk },
         ok,
         ok ? "ZIP filename parity ok" : "ZIP filename stale or missing",
         "error",

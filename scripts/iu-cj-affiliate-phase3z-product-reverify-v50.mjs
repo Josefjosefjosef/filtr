@@ -12,6 +12,8 @@ export const PRODUCT_REVERIFY_SCHEMA = "iu-cj-affiliate-phase3z-product-reverify
 
 export const REVERIFY_CLASS = Object.freeze({
   NEW_PRODUCT: "NEW_PRODUCT",
+  /** Source matched this run but no prior published-window baseline (presentation rotation). */
+  SOURCE_VERIFIED_NO_PRIOR_BASELINE: "SOURCE_VERIFIED_NO_PRIOR_BASELINE",
   REVERIFIED_UNCHANGED: "REVERIFIED_UNCHANGED",
   REVERIFIED_PRICE_CHANGED: "REVERIFIED_PRICE_CHANGED",
   REVERIFIED_AVAILABILITY_CHANGED: "REVERIFIED_AVAILABILITY_CHANGED",
@@ -131,9 +133,12 @@ export function buildProductReverifyLedger(opts = {}) {
         if (ref.gone === true || ref.removeFromPublic === true) {
           classification = REVERIFY_CLASS.SOURCE_UNAVAILABLE;
         } else if (comparisonBaselinePrice == null) {
-          // First verifiable observation this identity — not a price change.
+          // V51.7: presentation budget rotates published IDs — missing prior window baseline
+          // is NOT "new catalog product" and IS a successful source verify this run.
           classification =
-            !prevCard && !prevRev ? REVERIFY_CLASS.NEW_PRODUCT : REVERIFY_CLASS.REVERIFIED_UNCHANGED;
+            !prevCard && !prevRev
+              ? REVERIFY_CLASS.SOURCE_VERIFIED_NO_PRIOR_BASELINE
+              : REVERIFY_CLASS.REVERIFIED_UNCHANGED;
           economicChange = false;
           formatOnlyChange = false;
         } else if (priceClass.economicChange) {
@@ -143,7 +148,7 @@ export function buildProductReverifyLedger(opts = {}) {
         } else if (priceClass.class === PRICE_CHANGE_CLASS.FORMAT_ONLY) {
           classification = REVERIFY_CLASS.REVERIFIED_FORMAT_ONLY;
         } else if (!prevCard && !prevRev) {
-          classification = REVERIFY_CLASS.NEW_PRODUCT;
+          classification = REVERIFY_CLASS.SOURCE_VERIFIED_NO_PRIOR_BASELINE;
         } else {
           classification = REVERIFY_CLASS.REVERIFIED_UNCHANGED;
         }
@@ -170,7 +175,15 @@ export function buildProductReverifyLedger(opts = {}) {
         sourceMatchResult = "PRIOR_KNOWN_NOT_IN_THIS_REFRESH_PASS";
       }
 
+      // V51.7: source-verified this run includes matched refresh even without cross-run price baseline.
       const successfullyReverified = [
+        REVERIFY_CLASS.REVERIFIED_UNCHANGED,
+        REVERIFY_CLASS.REVERIFIED_PRICE_CHANGED,
+        REVERIFY_CLASS.REVERIFIED_AVAILABILITY_CHANGED,
+        REVERIFY_CLASS.REVERIFIED_FORMAT_ONLY,
+        REVERIFY_CLASS.SOURCE_VERIFIED_NO_PRIOR_BASELINE,
+      ].includes(classification);
+      const crossRunPriceComparable = [
         REVERIFY_CLASS.REVERIFIED_UNCHANGED,
         REVERIFY_CLASS.REVERIFIED_PRICE_CHANGED,
         REVERIFY_CLASS.REVERIFIED_AVAILABILITY_CHANGED,
@@ -207,6 +220,7 @@ export function buildProductReverifyLedger(opts = {}) {
         reverifyResult: classification,
         reverifyClassification: classification,
         successfullyReverified,
+        crossRunPriceComparable,
         economicChange,
         formatOnlyChange,
         availabilityChange,
@@ -223,11 +237,14 @@ export function buildProductReverifyLedger(opts = {}) {
   }
 
   const previouslyKnown = [...previousByKey.keys?.() ? previousByKey.keys() : Object.keys(previousByKey || {})].length;
-  const attempted = rows.filter((r) => r.sourceMatchResult !== "NOT_ATTEMPTED" && r.sourceMatchResult !== "NO_PRIOR_NO_REFRESH" && r.sourceMatchResult !== "PRIOR_KNOWN_NOT_IN_THIS_REFRESH_PASS").length;
   // Honest attempted: coverage or refresh presence
   const attemptedReverify = rows.filter((r) => mapGet(coverageByKey, r.compoundIdentity) || mapGet(refreshedByKey, r.compoundIdentity)).length;
   const sourceMatched = rows.filter((r) => r.sourceMatchResult === "SOURCE_MATCHED").length;
   const successfullyReverified = rows.filter((r) => r.successfullyReverified).length;
+  const crossRunPriceComparable = rows.filter((r) => r.crossRunPriceComparable).length;
+  const windowFirstSourceVerify = rows.filter(
+    (r) => r.reverifyClassification === REVERIFY_CLASS.SOURCE_VERIFIED_NO_PRIOR_BASELINE
+  ).length;
   const changed = rows.filter((r) =>
     [
       REVERIFY_CLASS.REVERIFIED_PRICE_CHANGED,
@@ -238,10 +255,14 @@ export function buildProductReverifyLedger(opts = {}) {
   const missing = rows.filter((r) => r.reverifyClassification === REVERIFY_CLASS.SOURCE_NOT_FOUND).length;
   const retryPending = rows.filter((r) => r.reverifyClassification === REVERIFY_CLASS.RETRY_PENDING).length;
 
-  const coveragePct =
-    attemptedReverify > 0
-      ? Math.round((successfullyReverified / attemptedReverify) * 10000) / 100
-      : null;
+  const coveragePctSourceMatched =
+    rows.length > 0 ? Math.round((sourceMatched / rows.length) * 10000) / 100 : null;
+  const coveragePctSuccessfullyReverified =
+    rows.length > 0 ? Math.round((successfullyReverified / rows.length) * 10000) / 100 : null;
+  const coveragePctCrossRunComparable =
+    rows.length > 0 ? Math.round((crossRunPriceComparable / rows.length) * 10000) / 100 : null;
+  // Primary coverage = source-verified this run (includes rotation entries).
+  const coveragePct = coveragePctSuccessfullyReverified;
 
   const classCounts = {};
   for (const r of rows) {
@@ -254,18 +275,23 @@ export function buildProductReverifyLedger(opts = {}) {
     runId,
     sha,
     note:
-      "successfullyReverified requires compound identity compared to freshly fetched source row this run. Timestamp-only churn ≠ reverify.",
+      "V51.7: successfullyReverified includes SOURCE_VERIFIED_NO_PRIOR_BASELINE (source matched; no cross-run price baseline because publishPerPartner rotates the published window). coveragePctCrossRunComparable is the narrower baseline-comparable share. Do not treat presentation rotation as catalog NEW_PRODUCT.",
     counts: {
       totalPublishedUniqueInDoc: rows.length,
       previouslyKnown: Number.isFinite(previouslyKnown) ? previouslyKnown : null,
       attemptedReverify,
       sourceMatched,
       successfullyReverified,
+      crossRunPriceComparable,
+      windowFirstSourceVerify,
       changed,
       unchanged,
       missing,
       retryPending,
       coveragePct,
+      coveragePctSourceMatched,
+      coveragePctSuccessfullyReverified,
+      coveragePctCrossRunComparable,
       classCounts,
     },
     rows,

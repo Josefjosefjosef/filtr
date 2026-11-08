@@ -27,7 +27,8 @@ concurrency:
 
 jobs:
   iu-ads-regression-freeze:
-    runs-on: ubuntu-latest
+    # ubuntu-latest migrated to 26.04; Playwright 1.58.x cannot install chromium there.
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:
       - name: Resolve PR SHAs (workflow_dispatch)

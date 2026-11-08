@@ -115,11 +115,13 @@ const fresh = buildProductReverifyLedger({
 const row = fresh.rows.find((r) => r.compoundIdentity === "X|1");
 assert(row, "row present");
 assert(
-  row.reverifyClassification === REVERIFY_CLASS.NEW_PRODUCT ||
-    row.reverifyClassification === REVERIFY_CLASS.REVERIFIED_UNCHANGED,
+  row.reverifyClassification === REVERIFY_CLASS.SOURCE_VERIFIED_NO_PRIOR_BASELINE ||
+    row.reverifyClassification === REVERIFY_CLASS.REVERIFIED_UNCHANGED ||
+    row.reverifyClassification === REVERIFY_CLASS.NEW_PRODUCT,
   "null baseline must not be PRICE_CHANGED, got " + row.reverifyClassification
 );
 assert(row.economicChange !== true, "no economic without baseline");
+assert(row.successfullyReverified === true, "source-matched rotation entry counts as verified");
 
 // Real price change
 const offers2 = {
