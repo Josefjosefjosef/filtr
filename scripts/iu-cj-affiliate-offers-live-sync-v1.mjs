@@ -89,6 +89,9 @@ import {
   evaluateLkgGrowthGate,
   buildPublicationDeltaLedger,
   collectUniqueProductMap,
+  releaseLkgHoldsAgainstSource,
+  summarizeLkgHoldProgress,
+  compoundProductKey,
 } from "./iu-cj-affiliate-phase3z-publication-lkg-v51-8.mjs";
 import {
   buildProductFunnelDocument,
@@ -1293,6 +1296,7 @@ export async function sampleProductsForManagedPartners(opts = {}) {
     meta.partnerFetch.push(partnerMeta);
   }
   meta.sourceProductsUnique = uniqueIdentityKeys.size;
+  meta.sourceVerifiedIdentityKeys = [...uniqueIdentityKeys];
   meta.fetchedIdentityRows = fetchedIdentityRows;
   meta.fetchedIdentityRowsCapped = fetchedIdentityRows.length >= FETCHED_IDENTITY_SAMPLE_CAP;
   // Slim per-partner fetch map retained for V46 funnel (full partnerFetch may be truncated).
@@ -2142,6 +2146,41 @@ export async function runOffersLiveSync(opts = {}) {
       };
       nextReady = readyCounts(doc);
     }
+    // V51.8-c5: attempt HOLD → PUBLICATION_ELIGIBLE when identity is in current source window.
+    const sourceVerifiedKeys = new Set(productMeta?.sourceVerifiedIdentityKeys || []);
+    for (const sp of sourceProducts || []) {
+      const k = compoundProductKey(sp.advertiserId, sp.productId);
+      if (k !== "|") sourceVerifiedKeys.add(k);
+    }
+    for (const p of products || []) {
+      const k = compoundProductKey(p.advertiserId, p.productId);
+      if (k !== "|") sourceVerifiedKeys.add(k);
+    }
+    for (const r of productMeta?.fetchedIdentityRows || []) {
+      const k = compoundProductKey(r.advertiserId, r.productId);
+      if (k !== "|") sourceVerifiedKeys.add(k);
+    }
+    const released = releaseLkgHoldsAgainstSource(doc, sourceVerifiedKeys, {
+      endedAdvertisers,
+      revokedAdvertisers,
+    });
+    doc = released.doc;
+    if (publicationRestore) {
+      publicationRestore.holdReverify = released.progress;
+      publicationRestore.publicEligibleAfter = released.publicEligibleAfter;
+      publicationRestore.heldPublic = released.progress.LKG_REMAINING_HOLD;
+      publicationRestore.holdSummary = summarizeLkgHoldProgress(doc);
+    } else if (released.progress.LKG_RELEASED_TO_PUBLIC > 0 || released.progress.LKG_HOLD_TOTAL > 0) {
+      publicationRestore = {
+        carried: 0,
+        blocked: 0,
+        heldPublic: released.progress.LKG_REMAINING_HOLD,
+        holdReverify: released.progress,
+        publicEligibleAfter: released.publicEligibleAfter,
+        holdSummary: summarizeLkgHoldProgress(doc),
+      };
+    }
+    nextReady = readyCounts(doc);
     const lkgMerged = Number(publicationRestore?.carried || 0) > 0;
     shrinkageGate = evaluateProductShrinkageGate(prevPublic, doc, {
       lkgMerged,
