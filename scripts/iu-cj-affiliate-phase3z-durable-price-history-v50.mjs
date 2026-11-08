@@ -245,7 +245,7 @@ export function appendDurablePriceHistory(priorDoc, opts = {}) {
   const fmtTrim = trimKeepNewest(formatOnlyEvents, MAX_FMT);
   const availTrimPlan = trimKeepNewest(availabilityEvents, MAX_AVAIL);
 
-  // V51.3: economic + availability may leave the ACTIVE window only after archive write+read-back.
+  // V51.3/V51.4: economic + availability may leave the ACTIVE window only after archive write+read-back.
   // Format-only remains a documented diagnostic rolling window (NOT archived by default).
   const priorArchive = opts.priorArchive || emptyDurableArchive({ nowIso, runId });
   const archiveAttempt = appendToDurableArchive(priorArchive, {
@@ -256,6 +256,9 @@ export function appendDurablePriceHistory(priorDoc, opts = {}) {
     sha: opts.sha || base.sha || null,
     priorArtifactSha: base.sha || null,
     activeArtifactSha: opts.sha || base.sha || null,
+    expectedPriorSha: opts.expectedPriorArchiveSha || null,
+    forceWriteFail: opts.forceArchiveWriteFail === true,
+    forceReadbackFail: opts.forceArchiveReadbackFail === true,
   });
 
   const econWouldRetire = econTrimPlan.retired.length > 0;
@@ -354,6 +357,7 @@ export function appendDurablePriceHistory(priorDoc, opts = {}) {
             : "NO_RETENTION_THIS_RUN",
       archiveWriteBlocked: archiveBlocked,
       archiveReadbackOk: archiveAttempt.readbackOk === true,
+      archiveFailureReason: archiveAttempt.reason || null,
       archiveFilename: DURABLE_ARCHIVE_FILENAME,
       formatOnlyRetentionLedger: retentionLedger,
       availabilityRetentionLedger,
@@ -395,13 +399,94 @@ export function emptyDurableArchive(opts = {}) {
 }
 
 /**
+ * Integrity gate for durable archive companion (V51.4).
+ * Corrupted / schema-mismatched archives must fail-closed (no active trim).
+ */
+export function assertDurableArchiveIntegrity(archive, opts = {}) {
+  if (archive == null) {
+    return { ok: true, reason: "MISSING_ARCHIVE_TREATED_AS_EMPTY_BOOTSTRAP", bootstrap: true };
+  }
+  if (typeof archive !== "object" || Array.isArray(archive)) {
+    return { ok: false, reason: "CORRUPTED_ARCHIVE_NOT_OBJECT" };
+  }
+  if (archive.schema && archive.schema !== DURABLE_ARCHIVE_SCHEMA) {
+    return { ok: false, reason: "CORRUPTED_ARCHIVE_SCHEMA_MISMATCH", schema: archive.schema };
+  }
+  if (archive.events != null && !Array.isArray(archive.events)) {
+    return { ok: false, reason: "CORRUPTED_ARCHIVE_EVENTS_NOT_ARRAY" };
+  }
+  if (archive.availabilityEvents != null && !Array.isArray(archive.availabilityEvents)) {
+    return { ok: false, reason: "CORRUPTED_ARCHIVE_AVAILABILITY_NOT_ARRAY" };
+  }
+  if (archive.eventKeys != null && !Array.isArray(archive.eventKeys)) {
+    return { ok: false, reason: "CORRUPTED_ARCHIVE_EVENTKEYS_NOT_ARRAY" };
+  }
+  if (opts.expectedPriorSha && archive.sha && String(archive.sha) !== String(opts.expectedPriorSha)) {
+    return {
+      ok: false,
+      reason: "STALE_OR_UNEXPECTED_ARCHIVE_SHA",
+      archiveSha: archive.sha,
+      expectedPriorSha: opts.expectedPriorSha,
+    };
+  }
+  const events = Array.isArray(archive.events) ? archive.events : [];
+  const availabilityEvents = Array.isArray(archive.availabilityEvents) ? archive.availabilityEvents : [];
+  const keyList = [
+    ...events.map((e) => String(e?.eventKey || "")),
+    ...availabilityEvents.map((e) => String(e?.eventKey || "")),
+  ];
+  if (keyList.some((k) => !k)) {
+    return { ok: false, reason: "CORRUPTED_ARCHIVE_BLANK_EVENT_KEY" };
+  }
+  const seen = new Set();
+  for (const k of keyList) {
+    if (seen.has(k)) return { ok: false, reason: "CORRUPTED_ARCHIVE_DUPLICATE_KEYS", duplicateKey: k };
+    seen.add(k);
+  }
+  return { ok: true, reason: "ARCHIVE_INTEGRITY_OK", keyCount: seen.size };
+}
+
+/**
  * Idempotent append into durable archive. Read-back proof required before active trim.
  */
 export function appendToDurableArchive(priorArchive, opts = {}) {
-  const base = priorArchive && typeof priorArchive === "object" ? priorArchive : emptyDurableArchive(opts);
+  const integrity = assertDurableArchiveIntegrity(priorArchive, {
+    expectedPriorSha: opts.expectedPriorSha || null,
+  });
+  if (!integrity.ok) {
+    return {
+      ok: false,
+      readbackOk: false,
+      missingKeys: [],
+      reason: integrity.reason,
+      integrity,
+      archive: priorArchive && typeof priorArchive === "object" ? priorArchive : emptyDurableArchive(opts),
+    };
+  }
+  if (opts.forceWriteFail === true) {
+    return {
+      ok: false,
+      readbackOk: false,
+      missingKeys: [],
+      reason: "FORCED_ARCHIVE_WRITE_FAIL",
+      integrity,
+      archive: priorArchive && typeof priorArchive === "object" ? priorArchive : emptyDurableArchive(opts),
+    };
+  }
+
+  const base =
+    priorArchive && typeof priorArchive === "object" ? priorArchive : emptyDurableArchive(opts);
   const nowIso = opts.nowIso || new Date().toISOString();
   const runId = opts.runId != null ? String(opts.runId) : null;
   const keySet = new Set((base.eventKeys || []).map(String).filter(Boolean));
+  for (const e of base.events || []) {
+    const k = String(e?.eventKey || "");
+    if (k) keySet.add(k);
+  }
+  for (const e of base.availabilityEvents || []) {
+    const k = String(e?.eventKey || "");
+    if (k) keySet.add(k);
+  }
   const events = Array.isArray(base.events) ? base.events.slice() : [];
   const availabilityEvents = Array.isArray(base.availabilityEvents) ? base.availabilityEvents.slice() : [];
   let appended = 0;
@@ -422,6 +507,7 @@ export function appendToDurableArchive(priorArchive, opts = {}) {
       previousArtifactSha: opts.priorArtifactSha || null,
       activeArtifactSha: opts.activeArtifactSha || opts.sha || null,
       archiveLocation: DURABLE_ARCHIVE_FILENAME,
+      retentionDecision: "ARCHIVED_FROM_ACTIVE",
     });
     appended += 1;
   }
@@ -440,6 +526,7 @@ export function appendToDurableArchive(priorArchive, opts = {}) {
       previousArtifactSha: opts.priorArtifactSha || null,
       activeArtifactSha: opts.activeArtifactSha || opts.sha || null,
       archiveLocation: DURABLE_ARCHIVE_FILENAME,
+      retentionDecision: "ARCHIVED_FROM_ACTIVE",
     });
     appended += 1;
   }
@@ -467,11 +554,89 @@ export function appendToDurableArchive(priorArchive, opts = {}) {
   ];
   const have = new Set(archive.eventKeys.map(String));
   const missing = required.filter((k) => !have.has(k));
+  let readbackOk = missing.length === 0;
+  let reason = missing.length === 0 ? "ARCHIVE_WRITE_READBACK_OK" : "ARCHIVE_READBACK_MISSING_KEYS";
+  if (opts.forceReadbackFail === true) {
+    readbackOk = false;
+    reason = "FORCED_ARCHIVE_READBACK_FAIL";
+  }
   return {
-    ok: missing.length === 0,
-    readbackOk: missing.length === 0,
+    ok: missing.length === 0 && readbackOk,
+    readbackOk,
     missingKeys: missing,
+    reason,
+    integrity,
     archive,
+  };
+}
+
+/**
+ * Reconstruct full required history from active window + durable archive.
+ * Format-only diagnostic rows are intentionally excluded from archive reconstruction.
+ */
+export function reconstructDurableHistory(activeDoc, archiveDoc, opts = {}) {
+  const active = activeDoc && typeof activeDoc === "object" ? activeDoc : emptyDurablePriceHistory(opts);
+  const archive =
+    archiveDoc && typeof archiveDoc === "object"
+      ? archiveDoc
+      : active.archive && typeof active.archive === "object"
+        ? active.archive
+        : emptyDurableArchive(opts);
+  const integrity = assertDurableArchiveIntegrity(archive, {
+    expectedPriorSha: opts.expectedPriorSha || null,
+  });
+  if (!integrity.ok) {
+    return {
+      ok: false,
+      failClosed: true,
+      reason: integrity.reason,
+      integrity,
+      economicKeys: [],
+      availabilityKeys: [],
+      economicEvents: [],
+      availabilityEvents: [],
+    };
+  }
+
+  const byKey = (arr) => {
+    const m = new Map();
+    for (const ev of arr || []) {
+      const k = String(ev?.eventKey || "");
+      if (!k) continue;
+      if (!m.has(k)) m.set(k, ev);
+    }
+    return m;
+  };
+  const econ = byKey([...(archive.events || []), ...(active.events || [])]);
+  const avail = byKey([...(archive.availabilityEvents || []), ...(active.availabilityEvents || [])]);
+  return {
+    ok: true,
+    failClosed: false,
+    reason: "RECONSTRUCTED_FROM_ACTIVE_PLUS_ARCHIVE",
+    integrity,
+    schema: "iu-cj-affiliate-phase3z-durable-history-reconstruct-v51.4",
+    at: opts.nowIso || new Date().toISOString(),
+    runId: opts.runId || active.runId || archive.runId || null,
+    sha: opts.sha || active.sha || archive.sha || null,
+    economicKeys: [...econ.keys()],
+    availabilityKeys: [...avail.keys()],
+    economicEvents: [...econ.values()],
+    availabilityEvents: [...avail.values()],
+    counts: {
+      economicEvents: econ.size,
+      availabilityEvents: avail.size,
+      activeEconomic: (active.events || []).length,
+      archivedEconomic: (archive.events || []).length,
+      activeAvailability: (active.availabilityEvents || []).length,
+      archivedAvailability: (archive.availabilityEvents || []).length,
+    },
+    restoreProvenance: {
+      activeArtifactSha: active.sha || null,
+      archiveSha: archive.sha || null,
+      activeRunId: active.runId || null,
+      archiveRunId: archive.runId || null,
+      archiveFilename: DURABLE_ARCHIVE_FILENAME,
+    },
   };
 }
 

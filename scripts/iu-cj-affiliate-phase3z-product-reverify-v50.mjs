@@ -67,20 +67,44 @@ export function buildProductReverifyLedger(opts = {}) {
       const previousPrice = prevCard?.currentPrice ?? prevRev?.currentPrice ?? null;
       const previousAvailability =
         prevCard?.availability ?? prevRev?.currentAvailability ?? null;
+      const previousRunId =
+        prevRev?.runId != null
+          ? String(prevRev.runId)
+          : prevCard?.runId != null
+            ? String(prevCard.runId)
+            : null;
+      const previousSourceTimestamp =
+        prevRev?.currentSourceTimestamp ||
+        prevCard?.sourceTimestamp ||
+        prevCard?.sourceUpdatedAt ||
+        null;
+      const previousFetchTimestamp =
+        prevRev?.currentFetchTimestamp ||
+        prevCard?.fetchTimestamp ||
+        prevCard?.fetchedAt ||
+        null;
 
       let classification = REVERIFY_CLASS.RETRY_PENDING;
       let sourceMatchResult = "NOT_ATTEMPTED";
+      let reverifyAttempted = false;
       let publicationDecision =
         p.publicationReady === false ? "HOLD_OR_HIDE" : "KEEP_PUBLISHED";
+      let economicChange = false;
+      let formatOnlyChange = false;
+      let availabilityChange = false;
+      let identityCollision = false;
 
       if (p.rejectReason === "HOLD_COLLISION" || p.hysteresisState === "HOLD_COLLISION") {
         classification = REVERIFY_CLASS.HOLD_COLLISION;
         publicationDecision = "HOLD";
+        identityCollision = true;
+        reverifyAttempted = true;
       } else if (p.keepPending === true || p.freshnessReason === "KEEP_PENDING") {
         classification = REVERIFY_CLASS.KEEP_PENDING;
         publicationDecision = "KEEP_PENDING";
       } else if (ref) {
         sourceMatchResult = "SOURCE_MATCHED";
+        reverifyAttempted = true;
         const priceClass = classifyPriceTransition(
           previousPrice != null ? previousPrice : p.previousPrice ?? p.currentPrice,
           p.currentPrice,
@@ -90,6 +114,9 @@ export function buildProductReverifyLedger(opts = {}) {
         const availChanged =
           previousAvailability != null &&
           String(previousAvailability) !== String(p.availability ?? "");
+        economicChange = priceClass.economicChange === true;
+        formatOnlyChange = priceClass.class === PRICE_CHANGE_CLASS.FORMAT_ONLY;
+        availabilityChange = availChanged === true;
 
         if (ref.gone === true || ref.removeFromPublic === true) {
           classification = REVERIFY_CLASS.SOURCE_UNAVAILABLE;
@@ -105,6 +132,7 @@ export function buildProductReverifyLedger(opts = {}) {
           classification = REVERIFY_CLASS.REVERIFIED_UNCHANGED;
         }
       } else if (cov) {
+        reverifyAttempted = true;
         const rr = String(cov.refreshResult || "");
         if (rr === "NOT_IN_SCAN_WINDOW" || rr === "SOURCE_NOT_FOUND") {
           classification = REVERIFY_CLASS.SOURCE_NOT_FOUND;
@@ -131,12 +159,21 @@ export function buildProductReverifyLedger(opts = {}) {
         REVERIFY_CLASS.REVERIFIED_FORMAT_ONLY,
       ].includes(classification);
 
+      const currentSourceTimestamp = p.sourceTimestamp || p.sourceUpdatedAt || null;
+      const currentFetchTimestamp = p.fetchTimestamp || p.fetchedAt || ref?.fetchedAt || null;
+
       rows.push({
         advertiserId: adv,
         productId: pid,
         compoundIdentity: key,
         feedId: p.feedId != null ? p.feedId : null,
         sectionKey: sec.sectionKey || null,
+        previousRunId,
+        currentRunId: runId,
+        previousSourceTimestamp,
+        currentSourceTimestamp,
+        previousFetchTimestamp,
+        currentFetchTimestamp,
         previousVerificationTimestamp,
         currentVerificationTimestamp: successfullyReverified
           ? p.verifiedAt || p.lastSuccessfulRefreshAt || nowIso
@@ -146,14 +183,23 @@ export function buildProductReverifyLedger(opts = {}) {
         previousAvailability,
         currentAvailability: p.availability ?? null,
         currency: p.currency || null,
+        sourceMatched: sourceMatchResult === "SOURCE_MATCHED",
         sourceMatchResult,
+        reverifyAttempted,
+        reverifyResult: classification,
         reverifyClassification: classification,
         successfullyReverified,
+        economicChange,
+        formatOnlyChange,
+        availabilityChange,
+        retryPending: classification === REVERIFY_CLASS.RETRY_PENDING,
+        identityCollision,
         runId,
         checkpoint: cov?.resumeOffset ?? cov?.startedOffset ?? null,
         retryState: classification === REVERIFY_CLASS.RETRY_PENDING ? "RETRY_PENDING" : "NONE",
         publicationDecision,
         evidenceReference: "offers-public + refresh-coverage",
+        timestampInvented: false,
       });
     }
   }
@@ -227,6 +273,166 @@ export function compareReverifyRuns(prevLedger, nextLedger) {
     nextSuccessfullyReverified: nextOk.size,
     intersectionSuccessfullyReverified: intersection,
     note: "Intersection = identities successfully source-compared in both runs.",
+  };
+}
+
+/**
+ * Age buckets from real source/verification timestamps only (never artifact download time).
+ */
+export function buildReverifyAgeBuckets(ledger, opts = {}) {
+  const nowMs = Date.parse(opts.nowIso || ledger?.at || new Date().toISOString());
+  const buckets = {
+    "0_3h": { label: "Do 3 hodin", minH: 0, maxH: 3, count: 0, identities: [] },
+    "3_6h": { label: "3–6 hodin", minH: 3, maxH: 6, count: 0, identities: [] },
+    "6_12h": { label: "6–12 hodin", minH: 6, maxH: 12, count: 0, identities: [] },
+    "12_24h": { label: "12–24 hodin", minH: 12, maxH: 24, count: 0, identities: [] },
+    "24_48h": { label: "24–48 hodin", minH: 24, maxH: 48, count: 0, identities: [] },
+    "over_48h": { label: "Více než 48 hodin", minH: 48, maxH: null, count: 0, identities: [] },
+    never_source_verified: {
+      label: "Nikdy zdrojově neověřeno",
+      minH: null,
+      maxH: null,
+      count: 0,
+      identities: [],
+    },
+  };
+  const missingTimestamps = [];
+  for (const r of ledger?.rows || []) {
+    const ts =
+      r.currentVerificationTimestamp ||
+      r.currentFetchTimestamp ||
+      r.currentSourceTimestamp ||
+      null;
+    const id = r.compoundIdentity;
+    if (!ts) {
+      buckets.never_source_verified.count += 1;
+      if (buckets.never_source_verified.identities.length < 50) {
+        buckets.never_source_verified.identities.push(id);
+      }
+      missingTimestamps.push({
+        compoundIdentity: id,
+        advertiserId: r.advertiserId,
+        productId: r.productId,
+        reason: "NO_SOURCE_OR_VERIFICATION_TIMESTAMP",
+        invented: false,
+      });
+      continue;
+    }
+    const ageH = (nowMs - Date.parse(ts)) / 3600000;
+    if (!Number.isFinite(ageH)) {
+      buckets.never_source_verified.count += 1;
+      missingTimestamps.push({
+        compoundIdentity: id,
+        advertiserId: r.advertiserId,
+        productId: r.productId,
+        reason: "UNPARSEABLE_TIMESTAMP",
+        raw: ts,
+        invented: false,
+      });
+      continue;
+    }
+    let key = "over_48h";
+    if (ageH < 3) key = "0_3h";
+    else if (ageH < 6) key = "3_6h";
+    else if (ageH < 12) key = "6_12h";
+    else if (ageH < 24) key = "12_24h";
+    else if (ageH < 48) key = "24_48h";
+    buckets[key].count += 1;
+    if (buckets[key].identities.length < 50) {
+      buckets[key].identities.push({
+        compoundIdentity: id,
+        lastSourceVerificationTimestamp: ts,
+        source: r.sourceMatchResult || null,
+        reverifyClassification: r.reverifyClassification || null,
+      });
+    }
+  }
+  return {
+    schema: "iu-cj-affiliate-phase3z-reverify-age-buckets-v51.4",
+    at: opts.nowIso || ledger?.at || new Date().toISOString(),
+    runId: ledger?.runId || null,
+    sha: ledger?.sha || null,
+    note: "Buckets use currentVerificationTimestamp/currentFetchTimestamp/currentSourceTimestamp only. Artifact download time is never used.",
+    buckets,
+    missingTimestampsCount: missingTimestamps.length,
+    missingTimestampsSample: missingTimestamps.slice(0, 50),
+  };
+}
+
+/**
+ * Build individual cross-run ledger rows for audit (previous + current).
+ */
+export function buildCrossRunIndividualLedger(prevLedger, nextLedger) {
+  const prevById = new Map((prevLedger?.rows || []).map((r) => [r.compoundIdentity, r]));
+  const nextById = new Map((nextLedger?.rows || []).map((r) => [r.compoundIdentity, r]));
+  const all = new Set([...prevById.keys(), ...nextById.keys()]);
+  const rows = [];
+  for (const id of all) {
+    const prev = prevById.get(id) || null;
+    const cur = nextById.get(id) || null;
+    rows.push({
+      advertiserId: cur?.advertiserId || prev?.advertiserId || null,
+      productId: cur?.productId || prev?.productId || null,
+      compoundIdentity: id,
+      previousRunId: prev?.runId || prevLedger?.runId || null,
+      currentRunId: cur?.runId || nextLedger?.runId || null,
+      previousSourceTimestamp: prev?.currentSourceTimestamp || prev?.previousSourceTimestamp || null,
+      currentSourceTimestamp: cur?.currentSourceTimestamp || null,
+      previousFetchTimestamp: prev?.currentFetchTimestamp || prev?.previousFetchTimestamp || null,
+      currentFetchTimestamp: cur?.currentFetchTimestamp || null,
+      previousVerificationTimestamp: prev?.currentVerificationTimestamp || null,
+      currentVerificationTimestamp: cur?.currentVerificationTimestamp || null,
+      previousPrice: prev?.currentPrice ?? null,
+      currentPrice: cur?.currentPrice ?? null,
+      previousAvailability: prev?.currentAvailability ?? null,
+      currentAvailability: cur?.currentAvailability ?? null,
+      sourceMatched: cur?.sourceMatched === true || cur?.sourceMatchResult === "SOURCE_MATCHED",
+      reverifyAttempted: cur?.reverifyAttempted === true,
+      reverifyResult: cur?.reverifyClassification || null,
+      economicChange: cur?.economicChange === true,
+      formatOnlyChange: cur?.formatOnlyChange === true,
+      availabilityChange: cur?.availabilityChange === true,
+      retryPending: cur?.retryPending === true || cur?.reverifyClassification === REVERIFY_CLASS.RETRY_PENDING,
+      identityCollision: cur?.identityCollision === true,
+      previouslySuccessfullyReverified: prev?.successfullyReverified === true,
+      currentlySuccessfullyReverified: cur?.successfullyReverified === true,
+      inPrevious: !!prev,
+      inCurrent: !!cur,
+    });
+  }
+  const previousKnown = prevById.size;
+  const currentFound = nextById.size;
+  const intersection = rows.filter((r) => r.inPrevious && r.inCurrent).length;
+  const reverifySuccess = rows.filter((r) => r.currentlySuccessfullyReverified).length;
+  const changed = rows.filter((r) => r.economicChange || r.availabilityChange).length;
+  const unchanged = rows.filter(
+    (r) => r.reverifyResult === REVERIFY_CLASS.REVERIFIED_UNCHANGED
+  ).length;
+  const unavailable = rows.filter(
+    (r) =>
+      r.reverifyResult === REVERIFY_CLASS.SOURCE_UNAVAILABLE ||
+      r.reverifyResult === REVERIFY_CLASS.SOURCE_NOT_FOUND
+  ).length;
+  const pending = rows.filter((r) => r.retryPending).length;
+  const collisions = rows.filter((r) => r.identityCollision).length;
+  return {
+    schema: "iu-cj-affiliate-phase3z-cross-run-individual-ledger-v51.4",
+    previousRunId: prevLedger?.runId || null,
+    currentRunId: nextLedger?.runId || null,
+    counts: {
+      previouslyKnownIdentities: previousKnown,
+      identitiesInNewSource: currentFound,
+      intersectionIdentities: intersection,
+      actuallyReverified: reverifySuccess,
+      changed,
+      unchanged,
+      unavailable,
+      pending,
+      collisions,
+      coveragePct:
+        currentFound > 0 ? Math.round((reverifySuccess / currentFound) * 10000) / 100 : null,
+    },
+    rows,
   };
 }
 
