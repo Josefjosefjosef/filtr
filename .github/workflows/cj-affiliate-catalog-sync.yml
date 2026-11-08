@@ -164,6 +164,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-reverify-consistency-v51-6-selftest.mjs
       - name: Reverify rotation vs NEW_PRODUCT honesty selftest (V51.7; offline)
         run: node scripts/iu-cj-affiliate-phase3z-reverify-rotation-honesty-v51-7-selftest.mjs
+      - name: Coverage honesty vs false FULL_CATALOG PASS (V51.8; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-coverage-honesty-v51-8-selftest.mjs
       - name: Registry dry-run LKG preserve selftest (V51.3; offline)
         run: node scripts/iu-cj-affiliate-phase3z-registry-dry-lkg-v51-3-selftest.mjs
       - name: Registry URL gate parity selftest (V41; offline)
