@@ -83,6 +83,11 @@ import {
 } from "./iu-cj-affiliate-phase3z-feed-inventory-v40.mjs";
 import { selectPartnersForFairDiscovery } from "./iu-cj-affiliate-phase3z-catalog-fairness-v51-8.mjs";
 import {
+  mergeLkgPublishedProducts,
+  evaluateProductShrinkageGate,
+  buildPublicationDeltaLedger,
+} from "./iu-cj-affiliate-phase3z-publication-lkg-v51-8.mjs";
+import {
   buildProductFunnelDocument,
   computeHonestOffersStats,
 } from "./iu-cj-affiliate-phase3z-product-funnel-v46.mjs";
@@ -917,6 +922,18 @@ export async function sampleProductsForManagedPartners(opts = {}) {
       ? Number(env.IU_CJ_OFFERS_PRODUCT_MAX_PAGES)
       : 100;
   const maxPagesPerPartner = Math.max(1, Math.min(500, Number.isFinite(rawMaxPages) ? rawMaxPages : 100));
+  // V51.8-c2: deepen incomplete/stoppedEarly partners beyond light refresh page budget when capacity allows.
+  const rawDeepen =
+    opts.deepenIncompleteMaxPages != null
+      ? Number(opts.deepenIncompleteMaxPages)
+      : env.IU_CJ_OFFERS_DEEPEN_INCOMPLETE_MAX_PAGES != null &&
+          String(env.IU_CJ_OFFERS_DEEPEN_INCOMPLETE_MAX_PAGES).trim() !== ""
+        ? Number(env.IU_CJ_OFFERS_DEEPEN_INCOMPLETE_MAX_PAGES)
+        : Math.max(maxPagesPerPartner, Math.min(20, maxPagesPerPartner * 3));
+  const deepenIncompleteMaxPages = Math.max(
+    maxPagesPerPartner,
+    Math.min(500, Number.isFinite(rawDeepen) ? Math.floor(rawDeepen) : maxPagesPerPartner)
+  );
   const rawPublish = opts.publishPerPartner != null
     ? Number(opts.publishPerPartner)
     : env.IU_CJ_OFFERS_PRODUCT_PUBLISH_PER_PARTNER != null &&
@@ -1118,12 +1135,18 @@ export async function sampleProductsForManagedPartners(opts = {}) {
       }
       partnerMeta.resumeOffset = resumeOffset;
       partnerMeta.resumePagePresent = Boolean(resumePage);
-      // V46: discover the full configured page window; presentation slice still caps published rows.
-      // Prior formula capped stopAfter at publishPerPartner*4 (=100) and wasted maxPages>1 continuation depth.
-      const stopAfter = pageSize * maxPagesPerPartner;
+      // V46/V51.8-c2: deepen incomplete partners; presentation slice still caps published rows.
+      const needsDeepen =
+        prevCp.lastStoppedEarlyForBudget === true ||
+        (prevCp.lastComplete !== true && Number(prevCp.lastTotalCount || 0) > 0) ||
+        Number(prevCp.productsRemainingEstimate || 0) > pageSize * maxPagesPerPartner;
+      const partnerMaxPages = needsDeepen ? deepenIncompleteMaxPages : maxPagesPerPartner;
+      const stopAfter = pageSize * partnerMaxPages;
+      partnerMeta.maxPagesBudget = partnerMaxPages;
+      partnerMeta.deepenedIncomplete = needsDeepen && partnerMaxPages > maxPagesPerPartner;
       const fetched = await fetchAllShoppingProductsForPartner(gqlEnv, partnerId, {
         pageSize,
-        maxPages: maxPagesPerPartner,
+        maxPages: partnerMaxPages,
         stopAfterCount: stopAfter,
         resumeOffset: resumePage ? undefined : resumeOffset,
         resumePage: resumePage || undefined,
@@ -1929,7 +1952,7 @@ export async function runOffersLiveSync(opts = {}) {
     if (refreshMeta?.missAudit) doc.refreshCoverage.missAudit = refreshMeta.missAudit;
     if (refreshMeta?.missReverify) doc.refreshCoverage.missReverify = refreshMeta.missReverify;
   }
-  const nextReady = readyCounts(doc);
+  let nextReady = readyCounts(doc);
 
   // V51: staging empty/outage must not block SOURCE_VERIFIED durable ledgers when LIVE LKG exists.
   if (verificationOnly) {
@@ -2053,6 +2076,81 @@ export async function runOffersLiveSync(opts = {}) {
       productMeta,
       note: "Product source fetch failed or empty while prior LIVE had products — keep LKG, do not promote.",
     };
+  }
+
+  // V51.8-c2: incomplete discovery/presentation windows must not erase LIVE identities.
+  // Merge previous LIVE products classified as NOT_YET_SEEN / HOLD / UNKNOWN before promote.
+  let publicationDelta = null;
+  let publicationRestore = null;
+  if (prevPublic?.liveEnabled === true && prevReady.products > 0) {
+    const incompleteAdvertisers = new Set();
+    const fetchedAdvertisers = new Set();
+    for (const row of productMeta?.partnerFetch || productMeta?.partnerFetchSample || []) {
+      const id = String(row.advertiserId || "");
+      if (!id) continue;
+      fetchedAdvertisers.add(id);
+      if (row.complete !== true || row.stoppedEarlyForBudget === true) incompleteAdvertisers.add(id);
+    }
+    for (const id of Object.keys(productMeta?.funnelFetchMeta || {})) {
+      fetchedAdvertisers.add(String(id));
+      const fm = productMeta.funnelFetchMeta[id];
+      if (fm && (fm.error || Number(fm.fetched || 0) < Number(fm.totalCount || 0))) {
+        incompleteAdvertisers.add(String(id));
+      }
+    }
+    const missByKey = new Map();
+    try {
+      const missPath = path.join(dataDir, "iu-affiliate-cj-miss-products-v38.json");
+      const missDoc = fs.existsSync(missPath) ? readJson(missPath, null) : null;
+      for (const r of missDoc?.rows || []) {
+        if (r?.sourceIdentity) missByKey.set(String(r.sourceIdentity), r);
+      }
+    } catch {
+      // miss ledger optional for merge classification
+    }
+    publicationDelta = buildPublicationDeltaLedger(prevPublic, doc, {
+      incompleteAdvertisers,
+      fetchedAdvertisers,
+      missByKey,
+      nowIso: new Date().toISOString(),
+    });
+    if (publicationDelta.removedCount > 0) {
+      const merged = mergeLkgPublishedProducts(doc, prevPublic, {
+        incompleteAdvertisers,
+        fetchedAdvertisers,
+        missByKey,
+        nowIso: new Date().toISOString(),
+      });
+      doc = merged.doc;
+      publicationRestore = {
+        carried: merged.carried,
+        blocked: merged.blocked,
+        uniqueAfter: merged.uniqueAfter,
+        decisionsSample: (merged.decisions || []).slice(0, 40),
+      };
+      nextReady = readyCounts(doc);
+    }
+    const shrink = evaluateProductShrinkageGate(prevPublic, doc, {
+      lkgMerged: Number(publicationRestore?.carried || 0) > 0,
+      maxDropAbs: Number(env.IU_CJ_OFFERS_MAX_UNIQUE_DROP_ABS) || 50,
+      maxDropRatio: Number(env.IU_CJ_OFFERS_MAX_UNIQUE_DROP_RATIO) || 0.03,
+    });
+    if (armed && !shrink.ok) {
+      return {
+        ok: false,
+        armed,
+        wrote: false,
+        reason: shrink.reason,
+        liveEnabled: false,
+        counts: nextReady,
+        prevReady,
+        productMeta,
+        publicationDelta,
+        publicationRestore,
+        shrinkageGate: shrink,
+        note: "Unique published identities shrank beyond policy without sufficient LKG recovery — refuse promote.",
+      };
+    }
   }
 
   // Refuse arming LIVE with zero ready items (transparent zero, not false success).

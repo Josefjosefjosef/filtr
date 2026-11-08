@@ -168,6 +168,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-coverage-honesty-v51-8-selftest.mjs
       - name: Catalog fairness + empty-complete classification selftest (V51.8; offline)
         run: node scripts/iu-cj-affiliate-phase3z-catalog-fairness-v51-8-selftest.mjs
+      - name: Publication LKG merge + shrinkage gate selftest (V51.8-c2; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-publication-lkg-v51-8-selftest.mjs
       - name: Registry dry-run LKG preserve selftest (V51.3; offline)
         run: node scripts/iu-cj-affiliate-phase3z-registry-dry-lkg-v51-3-selftest.mjs
       - name: Registry URL gate parity selftest (V41; offline)
@@ -755,7 +757,11 @@ jobs:
       IU_CJ_OFFERS_PRODUCT_PAGE_SIZE: "100"
       # Continueable paging window (not API 10-cap). Early-stop once presentation budget filled.
       # V34: refresh_priority schedules use light discovery (1 page); daily 03:17 + full dispatch keep 5.
-      IU_CJ_OFFERS_PRODUCT_MAX_PAGES: ${{ (github.event_name == 'schedule' && github.event.schedule != '17 3 * * *') && '1' || (github.event_name == 'workflow_dispatch' && inputs.offers_mode == 'refresh_priority' && '1' || '5') }}
+      # Base pages: light refresh=2, full/daily=8. Incomplete partners deepen via IU_CJ_OFFERS_DEEPEN_INCOMPLETE_MAX_PAGES.
+      IU_CJ_OFFERS_PRODUCT_MAX_PAGES: ${{ (github.event_name == 'schedule' && github.event.schedule != '17 3 * * *') && '2' || (github.event_name == 'workflow_dispatch' && inputs.offers_mode == 'refresh_priority' && '2' || '8') }}
+      IU_CJ_OFFERS_DEEPEN_INCOMPLETE_MAX_PAGES: ${{ (github.event_name == 'schedule' && github.event.schedule != '17 3 * * *') && '6' || (github.event_name == 'workflow_dispatch' && inputs.offers_mode == 'refresh_priority' && '6' || '20') }}
+      IU_CJ_OFFERS_MAX_UNIQUE_DROP_ABS: "50"
+      IU_CJ_OFFERS_MAX_UNIQUE_DROP_RATIO: "0.03"
       # Presentation/runtime budget (prevents RangeError on mega-feeds). Not a CJ API source cap.
       IU_CJ_OFFERS_PRODUCT_PUBLISH_PER_PARTNER: "25"
       IU_CJ_OFFERS_KEEP_SOURCE_ROWS: "0"
