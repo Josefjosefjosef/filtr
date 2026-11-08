@@ -47,12 +47,21 @@ export function decideMissProduct(row = {}, opts = {}) {
   const hideAfterMisses = Math.max(1, Number(opts.hideAfterConsecutiveMisses) || 3);
 
   if (recovered) {
+    // Recovery is verified; original miss root cause usually is not.
+    // Do NOT coerce null cause → CAUSE_NOT_YET_VERIFIED via || fallback.
+    const originalMissCause = row.originalMissCause || MISS_CAUSE.UNVERIFIED;
+    const originalMissCauseVerified = row.originalMissCauseVerified === true;
     return {
       decision: MISS_DECISION.RECOVERED,
-      cause: null,
+      cause: MISS_CAUSE.TEMPORARILY_UNAVAILABLE,
+      originalMissCause,
+      originalMissCauseVerified,
+      classificationVerified: true,
+      rootCauseVerified: originalMissCauseVerified,
       publicationSafe: true,
       hidePrice: false,
-      note: "Re-found via authorized CJ productIds (or identity repair).",
+      note:
+        "Re-found via authorized CJ productIds (or identity repair). Original miss cause stays separate and unverified unless evidence is provided.",
     };
   }
   // V40: V39 collision verdict / collision payload must not become REPAIR_IDENTITY or KEEP_PENDING.
@@ -68,6 +77,10 @@ export function decideMissProduct(row = {}, opts = {}) {
     return {
       decision: MISS_DECISION.HOLD_COLLISION,
       cause: MISS_CAUSE.IDENTITY_MAP_ERROR,
+      originalMissCause: MISS_CAUSE.IDENTITY_MAP_ERROR,
+      originalMissCauseVerified: true,
+      classificationVerified: true,
+      rootCauseVerified: true,
       publicationSafe: true,
       hidePrice: false,
       collision: collision || null,
@@ -80,6 +93,10 @@ export function decideMissProduct(row = {}, opts = {}) {
     return {
       decision: MISS_DECISION.REPAIR_IDENTITY,
       cause: MISS_CAUSE.IDENTITY_CHANGED,
+      originalMissCause: MISS_CAUSE.IDENTITY_CHANGED,
+      originalMissCauseVerified: true,
+      classificationVerified: true,
+      rootCauseVerified: true,
       publicationSafe: true,
       hidePrice: false,
       identityRepair,
@@ -90,6 +107,10 @@ export function decideMissProduct(row = {}, opts = {}) {
     return {
       decision: MISS_DECISION.REMOVE_CONFIRMED,
       cause: MISS_CAUSE.PARTNER_ENDED,
+      originalMissCause: MISS_CAUSE.PARTNER_ENDED,
+      originalMissCauseVerified: true,
+      classificationVerified: true,
+      rootCauseVerified: true,
       publicationSafe: false,
       hidePrice: true,
       note: "Partner ENDED confirmed via registry lifecycle — not inferred from productIds miss alone.",
@@ -99,6 +120,10 @@ export function decideMissProduct(row = {}, opts = {}) {
     return {
       decision: MISS_DECISION.REMOVE_CONFIRMED,
       cause: MISS_CAUSE.REMOVED,
+      originalMissCause: MISS_CAUSE.REMOVED,
+      originalMissCauseVerified: true,
+      classificationVerified: true,
+      rootCauseVerified: true,
       publicationSafe: false,
       hidePrice: true,
       note: "Explicit CJ gone/remove signal — not a bare productIds miss.",
@@ -111,6 +136,11 @@ export function decideMissProduct(row = {}, opts = {}) {
     return {
       decision: MISS_DECISION.TEMPORARILY_HIDE,
       cause: MISS_CAUSE.NOT_IN_CJ_FOR_PUBLISHER,
+      originalMissCause: MISS_CAUSE.NOT_IN_CJ_FOR_PUBLISHER,
+      // Repeated miss proves absence in productIds scan window, not merchant deletion.
+      originalMissCauseVerified: true,
+      classificationVerified: true,
+      rootCauseVerified: true,
       publicationSafe: false,
       hidePrice: true,
       note:
@@ -123,6 +153,10 @@ export function decideMissProduct(row = {}, opts = {}) {
   return {
     decision: MISS_DECISION.KEEP_PENDING,
     cause: MISS_CAUSE.UNVERIFIED,
+    originalMissCause: MISS_CAUSE.UNVERIFIED,
+    originalMissCauseVerified: false,
+    classificationVerified: true,
+    rootCauseVerified: false,
     publicationSafe: true,
     hidePrice: false,
     note: "Single/low-streak productIds miss — keep LKG, do not treat as deleted.",
@@ -152,6 +186,9 @@ export function buildMissProductAudit(opts = {}) {
     RECOVERED: 0,
     REMOVE_CONFIRMED: 0,
     UNVERIFIED: 0,
+    classificationVerified: 0,
+    rootCauseVerified: 0,
+    rootCauseUnverified: 0,
   };
 
   for (const p of products) {
@@ -207,7 +244,12 @@ export function buildMissProductAudit(opts = {}) {
           ? "HOLD_COLLISION"
           : "AS_PUBLISHED",
       consecutiveMisses,
-      cause: decided.cause || MISS_CAUSE.UNVERIFIED,
+      cause: decided.cause != null ? decided.cause : MISS_CAUSE.UNVERIFIED,
+      originalMissCause:
+        decided.originalMissCause != null ? decided.originalMissCause : MISS_CAUSE.UNVERIFIED,
+      originalMissCauseVerified: decided.originalMissCauseVerified === true,
+      classificationVerified: decided.classificationVerified !== false,
+      rootCauseVerified: decided.rootCauseVerified === true,
       decision: decided.decision,
       hidePrice: decided.hidePrice === true,
       publicationSafe: decided.publicationSafe !== false,
@@ -228,6 +270,9 @@ export function buildMissProductAudit(opts = {}) {
     rows.push(row);
     counts.uniqueMisses += 1;
     counts[decided.decision] = (counts[decided.decision] || 0) + 1;
+    if (row.classificationVerified) counts.classificationVerified += 1;
+    if (row.rootCauseVerified) counts.rootCauseVerified += 1;
+    else counts.rootCauseUnverified += 1;
   }
 
   return {

@@ -83,8 +83,16 @@ const audit = buildMissProductAudit({
 });
 assert(audit.counts.uniqueMisses === 1, "only miss rows");
 assert(audit.rows[0].decision === MISS_DECISION.RECOVERED, "probe recovered");
+assert(audit.rows[0].cause === MISS_CAUSE.TEMPORARILY_UNAVAILABLE, "recovered current cause");
+assert(audit.rows[0].originalMissCause === MISS_CAUSE.UNVERIFIED, "original miss cause separate");
+assert(audit.rows[0].rootCauseVerified === false, "original root cause not invented");
+assert(audit.rows[0].classificationVerified === true, "classification verified");
+assert(recovered.cause === MISS_CAUSE.TEMPORARILY_UNAVAILABLE, "decide recovered cause");
+assert(holdCollision.rootCauseVerified === true, "collision root cause verified");
+assert(keep.rootCauseVerified === false, "keep pending root cause unverified");
 const sum = summarizeMissCauses(audit);
 assert(sum.byDecision.RECOVERED === 1, "summary recovered");
+assert(sum.byCause[MISS_CAUSE.TEMPORARILY_UNAVAILABLE] === 1, "summary cause not CAUSE_NOT_YET_VERIFIED for recovered");
 
 const qScoped = buildPublisherProductsQuery("1", "2", "3", 10, { productIds: ["x"] });
 assert(/partnerIds/.test(qScoped), "scoped keeps partnerIds");
