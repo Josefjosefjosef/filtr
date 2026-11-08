@@ -160,6 +160,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-durable-archive-v51-4-selftest.mjs
       - name: Reverify consistency + timestamp provenance selftest (V51.5; offline)
         run: node scripts/iu-cj-affiliate-phase3z-reverify-consistency-v51-5-selftest.mjs
+      - name: Reverify consistency + price-class truth selftest (V51.6; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-reverify-consistency-v51-6-selftest.mjs
       - name: Registry dry-run LKG preserve selftest (V51.3; offline)
         run: node scripts/iu-cj-affiliate-phase3z-registry-dry-lkg-v51-3-selftest.mjs
       - name: Registry URL gate parity selftest (V41; offline)
