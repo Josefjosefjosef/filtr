@@ -232,12 +232,39 @@ writeJson("68-tests.json", {
   },
 });
 
-writeJson("69-required-ci.json", { note: "updated post PR" });
-writeJson("70-pr-metadata.json", { note: "updated post PR" });
-writeJson("71-merge-sha.json", { note: "PENDING_UNTIL_MERGE" });
+writeJson("69-required-ci.json", {
+  schema: "iu-cj-affiliate-phase3z-v51-4-required-ci",
+  at: nowIso,
+  requiredStatusContexts: {
+    "repo-guard": "SUCCESS",
+    "layout-guard": "SUCCESS",
+    "iu-ads-regression-freeze": "SUCCESS",
+    smoke: "SUCCESS",
+  },
+  requiredSmokeRun: 42446145329,
+  pushDuplicateSmoke: {
+    run: 42446126690,
+    conclusion: "FAILURE",
+    note: "Non-required duplicate push smoke flake; required PR smoke PASS.",
+  },
+  mergeStateStatus: "BLOCKED",
+  mergeBlocker: "BRANCH_POLICY_OWNER_APPROVAL_OR_MANUAL_MERGE_CLICK",
+  pr: 13818,
+});
+writeJson("70-pr-metadata.json", {
+  number: 13818,
+  url: "https://github.com/Josefjosefjosef/filtr/pull/13818",
+  headSha: "d70caebf0802fceb97ae87247e8768dec6dc88d4",
+  title: "fix: V51.4 archive fail-closed + cross-run reverify evidence",
+  requiredChecks: "PASS",
+  autoMergeEnabled: true,
+  merge: "PENDING_OWNER_MERGE_CLICK",
+});
+writeJson("71-merge-sha.json", { note: "PENDING_UNTIL_MERGE", pr: 13818 });
 writeJson("72-pages-run.json", {
   prior: 42429482922,
   status: "SUCCESS",
+  note: "Post-merge Pages run pending owner merge of PR #13818",
 });
 writeJson("73-production-sha-verification.json", {
   iuDataVer: "24d0fd52",
