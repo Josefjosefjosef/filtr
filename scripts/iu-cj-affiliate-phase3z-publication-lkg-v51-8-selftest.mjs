@@ -1,15 +1,20 @@
 #!/usr/bin/env node
 /**
- * V51.8-c2 — publication LKG merge + shrinkage gate selftest (offline).
+ * V51.8-c4 — publication LKG merge + public/hold split + growth/restoreBudget selftest.
  */
 import {
   REMOVAL_CLASS,
+  PUBLICATION_ELIGIBILITY,
+  LKG_VALIDATION_CLASS,
   buildPublicationDeltaLedger,
   mergeLkgPublishedProducts,
   evaluateProductShrinkageGate,
   evaluateIdentityChurnGate,
   evaluateLkgGrowthGate,
   classifyMissingPublishedProduct,
+  buildLkgIdentityValidationLedger,
+  isPublicOfferEligible,
+  collectPublicEligibleProductMap,
 } from "./iu-cj-affiliate-phase3z-publication-lkg-v51-8.mjs";
 
 function assert(cond, msg) {
@@ -35,6 +40,7 @@ const prev = {
           currency: "CZK",
           affiliateUrl: "https://www.kqzyfj.com/click-101883843-1",
           publicationReady: true,
+          lastSuccessfulRefreshAt: new Date().toISOString(),
         },
         {
           advertiserId: "1",
@@ -101,6 +107,12 @@ const merged = mergeLkgPublishedProducts(nextShrunk, prev, {
 });
 assert(merged.carried === 1, "carried one");
 assert(merged.uniqueAfter === 3, "unique restored to 3");
+assert(merged.heldPublic === 1, "carried identity on PUBLICATION_HOLD");
+assert(merged.publicEligibleAfter === 2, "public eligible stays at window size");
+const heldProd = merged.doc.sections[0].products.find((p) => p.productId === "keep-missing");
+assert(heldProd.publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD, "hold eligibility");
+assert(isPublicOfferEligible(heldProd) === false, "held product not public-eligible");
+assert(collectPublicEligibleProductMap(merged.doc).size === 2, "public map size 2");
 
 const nextOnlyStay = {
   liveEnabled: false,
@@ -190,23 +202,75 @@ const growthBad = evaluateLkgGrowthGate(100, 900, {
   maxGrowthRatio: 0.2,
   carried: 0,
   addedCount: 0,
+  publicEligibleAfter: 900,
 });
-assert(growthBad.ok === false, "unbounded LKG growth refused");
-const growthRestore = evaluateLkgGrowthGate(3174, 6153, {
+assert(growthBad.ok === false, "unbounded public growth refused");
+
+// 94% catalog union with HOLD must not inflate public-eligible.
+const growth94 = evaluateLkgGrowthGate(3174, 6153, {
   maxGrowthAbs: 500,
   maxGrowthRatio: 0.2,
   carried: 3050,
+  heldPublic: 3050,
   addedCount: 2979,
+  publicEligibleAfter: 3103,
+  prevPublicEligible: 3174,
 });
-assert(growthRestore.ok === true, "LKG restore union growth allowed");
+assert(growth94.ok === true, "catalog retain + public hold OK");
+assert(growth94.restoreBudgetScope === "CATALOG_RETENTION_ONLY", "restoreBudget not public bypass");
+
+const growth94PublicBypass = evaluateLkgGrowthGate(3174, 6153, {
+  maxGrowthAbs: 500,
+  maxGrowthRatio: 0.2,
+  carried: 3050,
+  heldPublic: 0,
+  addedCount: 2979,
+  publicEligibleAfter: 6153,
+  prevPublicEligible: 3174,
+});
+assert(growth94PublicBypass.ok === false, "94% public growth refused");
+
+const forged = evaluateLkgGrowthGate(3174, 6153, {
+  maxGrowthAbs: 500,
+  maxGrowthRatio: 0.2,
+  carried: 3050,
+  heldPublic: 3050,
+  addedCount: 2979,
+  publicEligibleAfter: 3103,
+  allowRestoreBudgetPublicBypass: true,
+});
+assert(forged.ok === false, "forged restoreBudget public bypass refused");
+
+for (const ratio of [0.1, 0.2, 0.5, 0.94, 2.0]) {
+  const after = Math.round(1000 * (1 + ratio));
+  const g = evaluateLkgGrowthGate(1000, after, {
+    maxGrowthAbs: 500,
+    maxGrowthRatio: 0.2,
+    publicEligibleAfter: after,
+    prevPublicEligible: 1000,
+  });
+  const expectOk = after - 1000 <= 500 || (after - 1000) / 1000 <= 0.2;
+  assert(g.ok === expectOk, "growth ratio " + ratio + " expected " + expectOk);
+}
+
+const ledger = buildLkgIdentityValidationLedger(delta, merged.decisions);
+assert(ledger.count === 1, "ledger rows");
+assert(
+  ledger.rows[0].lkgValidationClass === LKG_VALIDATION_CLASS.LKG_PENDING_REVERIFY ||
+    ledger.rows[0].lkgValidationClass === LKG_VALIDATION_CLASS.LKG_STALE_PRICE,
+  "pending/stale class"
+);
 
 console.log(
   JSON.stringify({
     IU_CJ_PUBLICATION_LKG_V51_8_SELFTEST: "PASS",
     delta: { removed: delta.removedCount, added: delta.addedCount, net: delta.netUnique },
     carried: merged.carried,
+    heldPublic: merged.heldPublic,
     uniqueAfter: merged.uniqueAfter,
+    publicEligibleAfter: merged.publicEligibleAfter,
     churnBad: churnBad.reason,
-    growthBad: growthBad.reason,
+    growth94: growth94.reason,
+    growth94PublicBypass: growth94PublicBypass.reason,
   })
 );

@@ -18,8 +18,52 @@ export const REMOVAL_CLASS = Object.freeze({
 
 export const PUBLICATION_LKG_SCHEMA = "iu-cj-affiliate-phase3z-publication-lkg-v51-8";
 
+export const CATALOG_STATUS = Object.freeze({
+  CATALOG_RETAINED: "CATALOG_RETAINED",
+  CONFIRMED_REMOVED: "CONFIRMED_REMOVED",
+});
+
+export const PUBLICATION_ELIGIBILITY = Object.freeze({
+  PUBLICATION_ELIGIBLE: "PUBLICATION_ELIGIBLE",
+  PUBLICATION_HOLD: "PUBLICATION_HOLD",
+  PUBLICATION_BLOCKED: "PUBLICATION_BLOCKED",
+});
+
+export const LKG_VALIDATION_CLASS = Object.freeze({
+  LKG_ELIGIBLE_VERIFIED: "LKG_ELIGIBLE_VERIFIED",
+  LKG_PENDING_REVERIFY: "LKG_PENDING_REVERIFY",
+  LKG_STALE_PRICE: "LKG_STALE_PRICE",
+  LKG_STALE_AVAILABILITY: "LKG_STALE_AVAILABILITY",
+  LKG_PARTNER_ENDED: "LKG_PARTNER_ENDED",
+  LKG_PERMISSION_REVOKED: "LKG_PERMISSION_REVOKED",
+  LKG_INVALID_URL: "LKG_INVALID_URL",
+  LKG_IDENTITY_COLLISION: "LKG_IDENTITY_COLLISION",
+  LKG_CONFIRMED_REMOVED: "LKG_CONFIRMED_REMOVED",
+  LKG_BLOCKED: "LKG_BLOCKED",
+});
+
 export function compoundProductKey(advertiserId, productId) {
   return String(advertiserId || "") + "|" + String(productId || "");
+}
+
+export function isPublicOfferEligible(product) {
+  if (!product || product.publicationReady === false) return false;
+  if (product.publicOffer === false) return false;
+  if (product.hideAsCurrent === true) return false;
+  if (product.lkgPublicHold === true) return false;
+  const elig = String(product.publicationEligibility || "");
+  if (elig === PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD) return false;
+  if (elig === PUBLICATION_ELIGIBILITY.PUBLICATION_BLOCKED) return false;
+  return true;
+}
+
+export function collectPublicEligibleProductMap(doc) {
+  const map = new Map();
+  for (const [key, row] of collectUniqueProductMap(doc)) {
+    if (!isPublicOfferEligible(row.product)) continue;
+    map.set(key, row);
+  }
+  return map;
 }
 
 export function collectUniqueProductMap(doc) {
@@ -283,16 +327,21 @@ export function mergeLkgPublishedProducts(nextDoc, prevDoc, opts = {}) {
   }
 
   const prevMap = collectUniqueProductMap(prevDoc);
+  let heldPublic = 0;
+  let publicEligibleCarried = 0;
   for (const row of delta.removed) {
     const decision = {
       key: row.key,
       classId: row.classId,
+      publicationClass: row.publicationClass || row.classId,
       action: row.carryForward ? "RESTORE_LKG" : "DO_NOT_RESTORE",
       rootCauseVerified: row.rootCauseVerified,
       note: row.note,
     };
     if (!row.carryForward) {
       blocked += 1;
+      decision.catalogStatus = CATALOG_STATUS.CONFIRMED_REMOVED;
+      decision.publicationEligibility = PUBLICATION_ELIGIBILITY.PUBLICATION_BLOCKED;
       decisions.push(decision);
       continue;
     }
@@ -302,25 +351,37 @@ export function mergeLkgPublishedProducts(nextDoc, prevDoc, opts = {}) {
       decisions.push(decision);
       continue;
     }
-    const classified = {
-      hideAsCurrent: row.publicationClass === "SOURCE_STALE" || row.publicationClass === "UNKNOWN",
-      publicationClass: row.publicationClass || row.classId,
-    };
-    // Re-read classification flags from decisions note path
-    const hideAsCurrent = /STALE|UNKNOWN|HOLD/i.test(String(row.publicationClass || row.classId));
+    const pubClass = String(row.publicationClass || row.classId || "");
+    // Incomplete-window / stale / unknown LKG must retain identity but NOT publish as current offer.
+    const holdPublic =
+      pubClass === "NOT_YET_SEEN" ||
+      pubClass === "SOURCE_STALE" ||
+      pubClass === "UNKNOWN" ||
+      pubClass === "HOLD" ||
+      pubClass === REMOVAL_CLASS.NOT_YET_SEEN ||
+      pubClass === REMOVAL_CLASS.UNKNOWN ||
+      pubClass === REMOVAL_CLASS.HOLD_COLLISION ||
+      row.hideAsCurrent === true ||
+      /STALE|UNKNOWN|HOLD|NOT_YET_SEEN/i.test(pubClass);
     const product = {
       ...prev.product,
       publicationReady: true,
-      publishable: true,
+      publishable: !holdPublic,
+      publicOffer: !holdPublic,
       lkgCarried: true,
+      lkgPublicHold: holdPublic,
+      hideAsCurrent: holdPublic,
+      catalogStatus: CATALOG_STATUS.CATALOG_RETAINED,
+      publicationEligibility: holdPublic
+        ? PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD
+        : PUBLICATION_ELIGIBILITY.PUBLICATION_ELIGIBLE,
       refreshResult: row.classId,
       refreshReason: "lkg_carry_incomplete_discovery_or_unverified",
-      freshnessStatus: hideAsCurrent ? "UNKNOWN" : "UNKNOWN",
-      freshnessReason: hideAsCurrent
-        ? "LKG_CARRIED_NOT_CURRENT_DO_NOT_LABEL_CURRENT"
-        : "LKG_CARRIED_NOT_CURRENT_WINDOW",
-      publicationClass: classified.publicationClass,
-      // Never present LKG-only prices as source-verified CURRENT.
+      freshnessStatus: "UNKNOWN",
+      freshnessReason: holdPublic
+        ? "LKG_CATALOG_RETAINED_PUBLICATION_HOLD"
+        : "LKG_CARRIED_PUBLICATION_ELIGIBLE",
+      publicationClass: pubClass,
       sourceFreshLabelForbidden: true,
     };
     const sectionKeys =
@@ -338,36 +399,56 @@ export function mergeLkgPublishedProducts(nextDoc, prevDoc, opts = {}) {
       sec.products.push({ ...product, sectionKey: sk });
     }
     carried += 1;
+    if (holdPublic) heldPublic += 1;
+    else publicEligibleCarried += 1;
+    decision.catalogStatus = CATALOG_STATUS.CATALOG_RETAINED;
+    decision.publicationEligibility = product.publicationEligibility;
+    decision.lkgValidationClass = holdPublic
+      ? pubClass === "SOURCE_STALE" || /STALE/i.test(pubClass)
+        ? LKG_VALIDATION_CLASS.LKG_STALE_PRICE
+        : LKG_VALIDATION_CLASS.LKG_PENDING_REVERIFY
+      : LKG_VALIDATION_CLASS.LKG_ELIGIBLE_VERIFIED;
     decisions.push(decision);
   }
 
-  // Recompute naive product stats if helper unavailable here.
   let products = 0;
+  let productsPublicEligible = 0;
   const unique = new Set();
+  const uniquePublic = new Set();
   for (const sec of doc.sections) {
     for (const p of sec.products || []) {
       if (p.publicationReady === false) continue;
       products += 1;
       unique.add(compoundProductKey(p.advertiserId, p.productId));
+      if (isPublicOfferEligible(p)) {
+        productsPublicEligible += 1;
+        uniquePublic.add(compoundProductKey(p.advertiserId, p.productId));
+      }
     }
   }
   doc.stats = {
     ...(doc.stats || {}),
     products,
     uniqueProducts: unique.size,
+    productsPublicEligible,
+    uniquePublicEligible: uniquePublic.size,
     lkgCarriedProducts: carried,
+    lkgPublicHoldProducts: heldPublic,
   };
   doc.lkgMerge = {
     schema: PUBLICATION_LKG_SCHEMA,
     carried,
     blocked,
+    heldPublic,
+    publicEligibleCarried,
     prevUnique: delta.prevUnique,
     nextUniqueBeforeMerge: delta.nextUnique,
     nextUniqueAfterMerge: unique.size,
+    publicEligibleAfterMerge: uniquePublic.size,
   };
   doc.note =
     (doc.note ? String(doc.note) + " | " : "") +
-    "V51.8-c2: LKG merge carried NOT_YET_SEEN/UNKNOWN/HOLD products across incomplete discovery windows.";
+    "V51.8-c4: LKG retains NOT_YET_SEEN identities as CATALOG_RETAINED + PUBLICATION_HOLD; stale prices never labeled CURRENT.";
 
   return {
     doc,
@@ -375,7 +456,10 @@ export function mergeLkgPublishedProducts(nextDoc, prevDoc, opts = {}) {
     decisions,
     carried,
     blocked,
+    heldPublic,
+    publicEligibleCarried,
     uniqueAfter: unique.size,
+    publicEligibleAfter: uniquePublic.size,
   };
 }
 
@@ -482,11 +566,23 @@ export function evaluateIdentityChurnGate(delta = {}, opts = {}) {
 }
 
 /**
- * Growth protection after LKG merge: refuse unbounded accumulation.
+ * Growth protection after LKG merge.
+ *
+ * Catalog retention may temporarily union prev LIVE + new window identities.
+ * PUBLIC offer growth must NOT be bypassed via restoreBudget — HOLD retains
+ * identity without counting toward public-eligible growth.
  */
 export function evaluateLkgGrowthGate(prevUnique, afterUnique, opts = {}) {
   const prev = Math.max(0, Number(prevUnique) || 0);
-  const after = Math.max(0, Number(afterUnique) || 0);
+  const afterCatalog = Math.max(0, Number(afterUnique) || 0);
+  const afterPublic =
+    opts.publicEligibleAfter != null && Number.isFinite(Number(opts.publicEligibleAfter))
+      ? Math.max(0, Number(opts.publicEligibleAfter))
+      : afterCatalog;
+  const prevPublic =
+    opts.prevPublicEligible != null && Number.isFinite(Number(opts.prevPublicEligible))
+      ? Math.max(0, Number(opts.prevPublicEligible))
+      : prev;
   const maxGrowthAbs =
     opts.maxGrowthAbs != null && Number.isFinite(Number(opts.maxGrowthAbs))
       ? Math.max(0, Number(opts.maxGrowthAbs))
@@ -496,26 +592,103 @@ export function evaluateLkgGrowthGate(prevUnique, afterUnique, opts = {}) {
       ? Math.min(1, Math.max(0, Number(opts.maxGrowthRatio)))
       : 0.2;
   const carried = Math.max(0, Number(opts.carried) || 0);
+  const heldPublic = Math.max(0, Number(opts.heldPublic) || 0);
   const addedCount = Math.max(0, Number(opts.addedCount) || 0);
-  const growth = Math.max(0, after - prev);
-  const ratio = prev > 0 ? growth / prev : growth > 0 ? 1 : 0;
-  // LKG restore of NOT_YET_SEEN may temporarily union prev+new window identities.
-  // Allow growth up to carried + newly added + abs slack; refuse unbounded invent.
-  const restoreBudget = carried + addedCount + maxGrowthAbs;
-  const withinRestoreBudget = carried > 0 && growth <= restoreBudget;
-  const ok = growth <= maxGrowthAbs || ratio <= maxGrowthRatio || withinRestoreBudget;
+  const catalogGrowth = Math.max(0, afterCatalog - prev);
+  const publicGrowth = Math.max(0, afterPublic - prevPublic);
+  const publicRatio = prevPublic > 0 ? publicGrowth / prevPublic : publicGrowth > 0 ? 1 : 0;
+  // restoreBudget is an audit bound for CATALOG retention accounting only — never a public bypass.
+  const restoreBudgetCatalog = carried + addedCount + maxGrowthAbs;
+  const catalogWithinRetention =
+    carried > 0 && catalogGrowth <= restoreBudgetCatalog && heldPublic >= Math.min(carried, catalogGrowth);
+  const publicOk = publicGrowth <= maxGrowthAbs || publicRatio <= maxGrowthRatio;
+  const forgedRestoreBypass = opts.allowRestoreBudgetPublicBypass === true;
+  const ok = publicOk && !forgedRestoreBypass;
   return {
     ok,
     prevUnique: prev,
-    afterUnique: after,
-    growth,
-    ratio,
+    afterUnique: afterCatalog,
+    publicEligibleAfter: afterPublic,
+    prevPublicEligible: prevPublic,
+    growth: catalogGrowth,
+    publicGrowth,
+    publicRatio,
     carried,
+    heldPublic,
     addedCount,
-    restoreBudget,
-    withinRestoreBudget,
+    restoreBudget: restoreBudgetCatalog,
+    restoreBudgetScope: "CATALOG_RETENTION_ONLY",
+    catalogWithinRetention,
+    publicOk,
+    forgedRestoreBypass,
     maxGrowthAbs,
     maxGrowthRatio,
-    reason: ok ? "LKG_GROWTH_WITHIN_POLICY" : "PRODUCT_LKG_GROWTH_REFUSED",
+    reason: ok
+      ? publicOk && catalogWithinRetention
+        ? "LKG_GROWTH_WITHIN_POLICY"
+        : "LKG_PUBLIC_GROWTH_WITHIN_POLICY_CATALOG_RETAINED"
+      : forgedRestoreBypass
+        ? "PRODUCT_LKG_RESTORE_BUDGET_PUBLIC_BYPASS_REFUSED"
+        : "PRODUCT_LKG_PUBLIC_GROWTH_REFUSED",
+    note: "Catalog may retain NOT_YET_SEEN via PUBLICATION_HOLD; public-eligible growth uses maxGrowthAbs/ratio only.",
+  };
+}
+
+/**
+ * Build per-identity LKG validation rows for a removed/carried delta.
+ */
+export function buildLkgIdentityValidationLedger(delta = {}, decisions = []) {
+  const byKey = new Map((decisions || []).map((d) => [d.key, d]));
+  const rows = [];
+  for (const r of delta.removed || []) {
+    const d = byKey.get(r.key) || {};
+    let lkgClass = d.lkgValidationClass || null;
+    if (!lkgClass) {
+      if (!r.carryForward) {
+        if (r.classId === REMOVAL_CLASS.PARTNER_ENDED) lkgClass = LKG_VALIDATION_CLASS.LKG_PARTNER_ENDED;
+        else if (r.classId === REMOVAL_CLASS.NO_PERMISSION)
+          lkgClass = LKG_VALIDATION_CLASS.LKG_PERMISSION_REVOKED;
+        else if (r.publicationClass === "INVALID_AFFILIATE_URL")
+          lkgClass = LKG_VALIDATION_CLASS.LKG_INVALID_URL;
+        else if (r.classId === REMOVAL_CLASS.HOLD_COLLISION)
+          lkgClass = LKG_VALIDATION_CLASS.LKG_IDENTITY_COLLISION;
+        else if (r.classId === REMOVAL_CLASS.CONFIRMED_REMOVED)
+          lkgClass = LKG_VALIDATION_CLASS.LKG_CONFIRMED_REMOVED;
+        else lkgClass = LKG_VALIDATION_CLASS.LKG_BLOCKED;
+      } else if (r.publicationClass === "SOURCE_STALE" || r.hideAsCurrent) {
+        lkgClass = LKG_VALIDATION_CLASS.LKG_STALE_PRICE;
+      } else if (r.classId === REMOVAL_CLASS.NOT_YET_SEEN) {
+        lkgClass = LKG_VALIDATION_CLASS.LKG_PENDING_REVERIFY;
+      } else {
+        lkgClass = LKG_VALIDATION_CLASS.LKG_PENDING_REVERIFY;
+      }
+    }
+    rows.push({
+      compoundIdentity: r.key,
+      advertiserId: r.advertiserId,
+      productId: r.productId,
+      partnerName: r.partnerName || null,
+      classId: r.classId,
+      publicationClass: r.publicationClass || null,
+      carryForward: r.carryForward === true,
+      catalogStatus: d.catalogStatus || null,
+      publicationEligibility: d.publicationEligibility || null,
+      lkgValidationClass: lkgClass,
+      lastConfirmedPrice: r.lastConfirmedPrice ?? null,
+      lastConfirmedAvailability: r.lastConfirmedAvailability ?? null,
+      ageHours: r.ageHours ?? null,
+      note: r.note || d.note || null,
+      decisionAction: d.action || null,
+    });
+  }
+  const byClass = {};
+  for (const row of rows) {
+    byClass[row.lkgValidationClass] = (byClass[row.lkgValidationClass] || 0) + 1;
+  }
+  return {
+    schema: PUBLICATION_LKG_SCHEMA + "-identity-validation",
+    count: rows.length,
+    byClass,
+    rows,
   };
 }

@@ -50,6 +50,16 @@
     if (!item) return false;
     if (preview) return true;
     if (item.publicationReady !== true) return false;
+    // V51.8-c4: LKG catalog retention must not show unverified/stale offers as current.
+    if (item.publicOffer === false || item.lkgPublicHold === true || item.hideAsCurrent === true) {
+      return false;
+    }
+    if (
+      item.publicationEligibility === "PUBLICATION_HOLD" ||
+      item.publicationEligibility === "PUBLICATION_BLOCKED"
+    ) {
+      return false;
+    }
     if (item.freshnessStatus === "HIDDEN_STALE" || item.freshnessStatus === "SOURCE_UNAVAILABLE") {
       return false;
     }
@@ -443,12 +453,7 @@
       return a && a.publicationReady === true && offerInPublicTimeWindow(a);
     });
     var products = (sec.products || []).filter(function (p) {
-      return (
-        p &&
-        p.publicationReady === true &&
-        isPositiveSalePrice(p.currentPrice) &&
-        offerInPublicTimeWindow(p)
-      );
+      return productPubliclyShowable(p, false);
     });
     if (!coupons.length && !actions.length && !products.length) return;
 
