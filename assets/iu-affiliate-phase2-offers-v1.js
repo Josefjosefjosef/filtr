@@ -335,11 +335,24 @@
         var brand = c.brand
           ? '<div class="iuAffiliatePhase2Offers__brand">' + escapeHtml(c.brand) + "</div>"
           : "";
+        var pendingReverify =
+          c.freshnessStatus === "LAST_KNOWN_PENDING_REVERIFY" ||
+          c.sourceFreshLabelForbidden === true;
+        if (pendingReverify) {
+          el.setAttribute("data-iu-freshness", "LAST_KNOWN_PENDING_REVERIFY");
+        } else if (c.freshnessStatus) {
+          el.setAttribute("data-iu-freshness", String(c.freshnessStatus));
+        }
         var price = isPositiveSalePrice(c.currentPrice)
-          ? '<div class="iuAffiliatePhase2Offers__price">' +
+          ? '<div class="iuAffiliatePhase2Offers__price"' +
+            (pendingReverify ? ' data-iu-price-claim="LAST_KNOWN"' : ' data-iu-price-claim="SOURCE_VERIFIED"') +
+            ">" +
             escapeHtml(String(c.currentPrice)) +
             (c.currency ? " " + escapeHtml(String(c.currency)) : "") +
             "</div>"
+          : "";
+        var freshnessMeta = pendingReverify
+          ? '<div class="iuAffiliatePhase2Offers__meta" data-iu-freshness-label="1">Poslední známá cena — čeká ověření (není aktuální zdroj).</div>'
           : "";
         var orig = isPositiveSalePrice(c.originalPrice)
           ? '<div class="iuAffiliatePhase2Offers__meta iuAffiliatePhase2Offers__priceWas">Původně: ' +
@@ -380,6 +393,7 @@
           partner +
           desc +
           price +
+          freshnessMeta +
           orig +
           disc +
           valid +
