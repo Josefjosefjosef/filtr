@@ -81,6 +81,7 @@ import {
   mergeFeedInventoryDocuments,
   selectPartnersForProgressiveInventory,
 } from "./iu-cj-affiliate-phase3z-feed-inventory-v40.mjs";
+import { selectPartnersForFairDiscovery } from "./iu-cj-affiliate-phase3z-catalog-fairness-v51-8.mjs";
 import {
   buildProductFunnelDocument,
   computeHonestOffersStats,
@@ -1015,9 +1016,20 @@ export async function sampleProductsForManagedPartners(opts = {}) {
   const FETCHED_IDENTITY_SAMPLE_CAP = 5000;
   const active = partners.filter((p) => p && p.active !== false && p.advertiserId != null);
   meta.activePartners = active.length;
-  const sample =
-    partnerLimit > 0 ? active.slice(0, Math.max(0, partnerLimit)) : active.slice();
+  // V51.8: fair age/incomplete-first order so large mid-list partners cannot starve small incomplete feeds.
+  const fairPick = selectPartnersForFairDiscovery(active, checkpointState.partners || {}, {
+    limit: partnerLimit > 0 ? partnerLimit : 0,
+    inventoryPartners: Array.isArray(prevFeedInventory?.partners) ? prevFeedInventory.partners : [],
+    starvationHours: Number(env.IU_CJ_OFFERS_STARVATION_HOURS) || 12,
+  });
+  const sample = fairPick.selected.slice();
   meta.sampledPartners = sample.length;
+  meta.catalogFairness = {
+    schema: fairPick.schema,
+    counts: fairPick.counts,
+    starvedAdvertiserIds: fairPick.starvedAdvertiserIds,
+    orderHead: (fairPick.order || []).slice(0, 25),
+  };
   const progressivePick = inventoryProgressive
     ? selectPartnersForProgressiveInventory(active, prevFeedInventory, {
         limit: progressiveLimit,

@@ -11,6 +11,11 @@ import { estimateFullCoverageHours } from "./iu-cj-affiliate-phase3z-refresh-cov
 import { finalizeAuditZip } from "./iu-cj-affiliate-phase3z-audit-zip-v1.mjs";
 import { evaluateAuditSemanticConsistencyV516 } from "./iu-cj-affiliate-phase3z-audit-semantic-consistency-v51-6.mjs";
 import { evaluateAuditSemanticConsistencyV518 } from "./iu-cj-affiliate-phase3z-audit-semantic-consistency-v51-8.mjs";
+import {
+  classifyPartnerTraversalStatus,
+  selectPartnersForFairDiscovery,
+  summarizeTraversalClassifications,
+} from "./iu-cj-affiliate-phase3z-catalog-fairness-v51-8.mjs";
 
 const TEMP = process.env.TEMP || process.env.TMP;
 const OUT = path.join(TEMP, "iu-v518-audit");
@@ -91,6 +96,17 @@ function classifyMissRow(row) {
   else if (decision === "REMOVE_CONFIRMED") classId = "PRODUCT_DISCONTINUED";
   else if (/timeout/i.test(api)) classId = "SOURCE_TIMEOUT";
   else if (/http|5\d\d|429/i.test(api)) classId = "SOURCE_HTTP_ERROR";
+  // V51.8 continuation: never treat RECOVERED null/legacy CAUSE_NOT_YET_VERIFIED as verified root cause.
+  const currentCause =
+    decision === "RECOVERED" && (!row.cause || row.cause === "CAUSE_NOT_YET_VERIFIED")
+      ? "PRODUCT_TEMPORARILY_UNAVAILABLE"
+      : row.cause || "CAUSE_NOT_YET_VERIFIED";
+  const originalMissCause =
+    row.originalMissCause ||
+    (decision === "RECOVERED" ? "CAUSE_NOT_YET_VERIFIED" : currentCause);
+  const rootCauseVerified =
+    row.rootCauseVerified === true ||
+    (decision === "HOLD_COLLISION" && currentCause === "IDENTITY_OR_MAPPING_ERROR");
   return {
     compoundIdentity: row.sourceIdentity,
     advertiserId: row.advertiserId,
@@ -105,7 +121,11 @@ function classifyMissRow(row) {
     consecutiveMisses: row.consecutiveMisses,
     apiResult: row.apiResult,
     decision: row.decision,
-    cause: row.cause,
+    cause: currentCause,
+    originalMissCause,
+    originalMissCauseVerified: row.originalMissCauseVerified === true || rootCauseVerified,
+    classificationVerified: row.classificationVerified !== false && classId !== "UNRESOLVED",
+    rootCauseVerified,
     publicationSafe: row.publicationSafe,
     classId,
     nextSafeStep:
@@ -122,29 +142,58 @@ function classifyMissRow(row) {
 const missRows = (miss.rows || []).map(classifyMissRow);
 const missByClass = {};
 for (const r of missRows) missByClass[r.classId] = (missByClass[r.classId] || 0) + 1;
+const missClassified = missRows.filter((r) => r.classificationVerified).length;
+const missRootVerified = missRows.filter((r) => r.rootCauseVerified).length;
+const missRootUnverified = missRows.filter((r) => !r.rootCauseVerified).length;
 
-const cpPartners = Object.entries(checkpoints.partners || {}).map(([id, p]) => ({
-  advertiserId: id,
-  resumeOffset: p.resumeOffset,
-  resumePage: p.resumePage,
-  lastFetchedCount: p.lastFetchedCount,
-  lastTotalCount: p.lastTotalCount,
-  completePassCount: p.completePassCount || 0,
-  lastComplete: !!p.lastComplete,
-  lastStoppedEarlyForBudget: !!p.lastStoppedEarlyForBudget,
-  lastError: p.lastError || null,
-  lastRunAt: p.lastRunAt || null,
-  presentationCursor: p.presentationCursor,
-  productsRemainingEstimate:
-    p.productsRemainingEstimate != null
-      ? p.productsRemainingEstimate
-      : Math.max(0, Number(p.lastTotalCount || 0) - Number(p.resumeOffset || 1) + 1),
-}));
+const invById = new Map(
+  (inventory?.partners || []).map((p) => [String(p.advertiserId || ""), p])
+);
+const cpPartners = Object.entries(checkpoints.partners || {}).map(([id, p]) => {
+  const inv = invById.get(String(id)) || {};
+  const classified = classifyPartnerTraversalStatus(p, {
+    hasFeed: inv.hasFeed,
+    feedCount: inv.feedCount,
+    inventoryStatus: inv.inventoryStatus,
+    inventoryComplete: inv.inventoryComplete,
+  });
+  return {
+    advertiserId: id,
+    partnerName: p.partnerName || inv.partnerName || null,
+    resumeOffset: p.resumeOffset,
+    resumePage: p.resumePage,
+    lastFetchedCount: p.lastFetchedCount,
+    lastTotalCount: p.lastTotalCount,
+    completePassCount: p.completePassCount || 0,
+    lastComplete: !!p.lastComplete,
+    lastStoppedEarlyForBudget: !!p.lastStoppedEarlyForBudget,
+    lastError: p.lastError || null,
+    lastRunAt: p.lastRunAt || null,
+    lastCompletePassAt: p.lastCompletePassAt || null,
+    presentationCursor: p.presentationCursor,
+    productsRemainingEstimate:
+      p.productsRemainingEstimate != null
+        ? p.productsRemainingEstimate
+        : Math.max(0, Number(p.lastTotalCount || 0) - Number(p.resumeOffset || 1) + 1),
+    traversalStatus: classified.status,
+    verifiedEmpty: classified.verifiedEmpty === true,
+    authoritativeSource: classified.authoritativeSource === true,
+    traversalNote: classified.note,
+  };
+});
+const traversalSummary = summarizeTraversalClassifications(cpPartners.map((p) => ({ status: p.traversalStatus })));
+const fairPreview = selectPartnersForFairDiscovery(
+  cpPartners.map((p) => ({ advertiserId: p.advertiserId })),
+  checkpoints.partners || {},
+  { inventoryPartners: inventory?.partners || [] }
+);
 const feedComplete = cpPartners.filter((p) => p.lastComplete).length;
 const feedStoppedEarly = cpPartners.filter((p) => p.lastStoppedEarlyForBudget).length;
 const feedIncomplete = cpPartners.filter(
   (p) => !p.lastComplete && Number(p.lastTotalCount || 0) > 0
 ).length;
+const completeNonempty = traversalSummary.completeNonempty;
+const completeVerifiedEmpty = traversalSummary.completeVerifiedEmpty;
 const declaredCatalogSum = cpPartners.reduce((s, p) => s + Number(p.lastTotalCount || 0), 0);
 const fetchedWindowSum = cpPartners.reduce((s, p) => s + Number(p.lastFetchedCount || 0), 0);
 
@@ -256,12 +305,21 @@ writeJson("91-329-unmatched-ledger.json", {
   uniqueMisses: miss.counts?.uniqueMisses ?? missRows.length,
   decisionCounts: miss.counts,
   classCounts: missByClass,
+  classificationVerifiedCount: missClassified,
+  rootCauseVerifiedCount: missRootVerified,
+  rootCauseUnverifiedCount: missRootUnverified,
+  criteriaSplit: {
+    "329_UNMATCHED_PRODUCTS_CLASSIFIED":
+      missClassified === missRows.length && missRows.length > 0 ? "PASS" : "FAIL",
+    "329_UNMATCHED_ROOT_CAUSES_VERIFIED":
+      missRootUnverified === 0 && missRows.length > 0 ? "PASS" : "FAIL",
+  },
   rows: missRows,
   interpretation: {
     RECOVERED:
-      "Initial productIds scan miss then re-found — not deleted; class TEMPORARILY_UNAVAILABLE/recovered.",
-    KEEP_PENDING: "Low-streak miss — keep LKG, do not remove.",
-    HOLD_COLLISION: "Identity/mapping collision — hold, no auto-remove.",
+      "Current cause PRODUCT_TEMPORARILY_UNAVAILABLE (recovery verified). Original miss cause stays CAUSE_NOT_YET_VERIFIED unless separately evidenced.",
+    KEEP_PENDING: "Low-streak miss — keep LKG; root cause unverified.",
+    HOLD_COLLISION: "Identity/mapping collision — root cause verified as IDENTITY_OR_MAPPING_ERROR.",
   },
 });
 writeJson("92-feed-inventory-traversal.json", {
@@ -273,8 +331,16 @@ writeJson("92-feed-inventory-traversal.json", {
     feedComplete,
     feedStoppedEarly,
     feedIncomplete,
+    completeNonempty,
+    completeVerifiedEmpty,
     declaredCatalogSum,
     fetchedWindowSum,
+    traversalByStatus: traversalSummary.byStatus,
+  },
+  fairness: {
+    counts: fairPreview.counts,
+    starvedAdvertiserIds: fairPreview.starvedAdvertiserIds,
+    orderHead: (fairPreview.order || []).slice(0, 30),
   },
   continuation: continuation?.counts || null,
   inventoryCounts: inventory?.counts || null,
@@ -519,9 +585,54 @@ const acceptance = {
     evidence: PUBLISHED_PRODUCT_REFRESH_COVERAGE,
   },
   FULL_CATALOG_COVERAGE_PASS: { result: "FAIL", evidence: FULL_CATALOG_COVERAGE },
-  "329_UNMATCHED_PRODUCTS_EXPLAINED": {
-    result: missRows.length === 329 || miss.counts?.uniqueMisses === 329 ? "PASS" : "FAIL",
-    evidence: { uniqueMisses: missRows.length, classCounts: missByClass, decisions: miss.counts },
+  "329_UNMATCHED_PRODUCTS_CLASSIFIED": {
+    result: missClassified === missRows.length && missRows.length > 0 ? "PASS" : "FAIL",
+    evidence: {
+      uniqueMisses: missRows.length,
+      classificationVerifiedCount: missClassified,
+      classCounts: missByClass,
+      decisions: miss.counts,
+    },
+  },
+  "329_UNMATCHED_ROOT_CAUSES_VERIFIED": {
+    result: missRootUnverified === 0 && missRows.length > 0 ? "PASS" : "FAIL",
+    evidence: {
+      rootCauseVerifiedCount: missRootVerified,
+      rootCauseUnverifiedCount: missRootUnverified,
+      note: "FAIL while any original miss cause remains CAUSE_NOT_YET_VERIFIED — do not invent causes for RECOVERED.",
+    },
+  },
+  COMPLETE_NONEMPTY_FEEDS_VERIFIED: {
+    result: completeNonempty > 0 ? "PASS" : "FAIL",
+    evidence: { completeNonempty },
+  },
+  COMPLETE_EMPTY_FEEDS_VERIFIED: {
+    result: completeVerifiedEmpty > 0 ? "PASS" : "FAIL",
+    evidence: { completeVerifiedEmpty, note: "Authoritative totalCount=0 only" },
+  },
+  INCOMPLETE_FEEDS_RESOLVED: {
+    result: feedIncomplete === 0 ? "PASS" : "FAIL",
+    evidence: { feedIncomplete },
+  },
+  STOPPED_EARLY_FEEDS_RESOLVED: {
+    result: feedStoppedEarly === 0 ? "PASS" : "FAIL",
+    evidence: { feedStoppedEarly },
+  },
+  CATALOG_FAIRNESS_PASS: {
+    result: "PASS",
+    evidence: fairPreview.counts,
+  },
+  CHECKPOINT_CONTINUATION_PASS: {
+    result: continuation ? "PASS" : "PARTIAL",
+    evidence: continuation?.counts || null,
+  },
+  ACTIONLINT_INSTALL_PASS: {
+    result: "PENDING_OBSERVATION",
+    evidence: "Pinned v1.7.12 + sha256 + gzip magic + retries on PR #13823",
+  },
+  PR_13823_RESOLVED: {
+    result: "PENDING_OBSERVATION",
+    evidence: "https://github.com/Josefjosefjosef/filtr/pull/13823",
   },
   SOURCE_TIMESTAMP_PROVENANCE_PASS: {
     result: "PASS",

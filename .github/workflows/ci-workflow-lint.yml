@@ -58,13 +58,73 @@ jobs:
             exit 1
           fi
 
-      - name: Install actionlint (stable installer)
+      # Deterministic install: pinned version + SHA-256 + gzip magic + retries.
+      # Root cause of prior FAIL: GitHub release CDN returned HTTP 504 HTML body
+      # (92 bytes, Content-Type: text/html) which tar/gzip treated as archive.
+      - name: Install actionlint (pinned + integrity)
         shell: bash
+        env:
+          ACTIONLINT_VERSION: "1.7.12"
+          ACTIONLINT_SHA256: "8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8"
         run: |
           set -euo pipefail
-          curl -sSL https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash | bash
-          sudo mv ./actionlint /usr/local/bin/actionlint
-          actionlint -version
+          ARCH="$(uname -m)"
+          case "${ARCH}" in
+            x86_64|amd64) ARCH=amd64 ;;
+            aarch64|arm64) ARCH=arm64 ;;
+            *) echo "FAIL: unsupported arch=${ARCH}"; exit 1 ;;
+          esac
+          OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
+          case "${OS}" in
+            linux) EXT=tar.gz ;;
+            darwin) EXT=tar.gz ;;
+            *) echo "FAIL: unsupported os=${OS}"; exit 1 ;;
+          esac
+          NAME="actionlint_${ACTIONLINT_VERSION}_${OS}_${ARCH}.${EXT}"
+          URL="https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/${NAME}"
+          OUT="${RUNNER_TEMP}/actionlint.${EXT}"
+          echo "ACTIONLINT_URL=${URL}"
+          echo "ACTIONLINT_ARCH=${ARCH} ACTIONLINT_OS=${OS}"
+          attempt=1
+          max_attempts=5
+          while true; do
+            echo "ACTIONLINT_DOWNLOAD_ATTEMPT=${attempt}/${max_attempts}"
+            HTTP_CODE="$(curl -L --retry 2 --retry-delay 2 --connect-timeout 20 --max-time 120 \
+              -w '%{http_code}' -o "${OUT}" "${URL}" || true)"
+            SIZE="$(wc -c < "${OUT}" | tr -d ' ')"
+            CT="$(file -b --mime-type "${OUT}" 2>/dev/null || true)"
+            echo "ACTIONLINT_HTTP_STATUS=${HTTP_CODE}"
+            echo "ACTIONLINT_BYTES=${SIZE}"
+            echo "ACTIONLINT_MIME=${CT}"
+            if [[ "${HTTP_CODE}" == "200" && "${SIZE}" -gt 100000 ]]; then
+              HEAD_HEX="$(od -An -N2 -tx1 "${OUT}" | tr -d ' \n')"
+              # gzip magic 1f 8b
+              if [[ "${HEAD_HEX}" == "1f8b" ]]; then
+                break
+              fi
+              echo "FAIL: downloaded file is not gzip (magic=${HEAD_HEX})"
+              head -c 200 "${OUT}" || true
+            else
+              echo "WARN: bad download (status=${HTTP_CODE} bytes=${SIZE} mime=${CT})"
+              head -c 200 "${OUT}" || true
+            fi
+            if [[ "${attempt}" -ge "${max_attempts}" ]]; then
+              echo "FAIL: actionlint download exhausted retries; refusing PASS"
+              exit 1
+            fi
+            attempt=$((attempt + 1))
+            sleep $((attempt * 3))
+          done
+          echo "${ACTIONLINT_SHA256}  ${OUT}" | sha256sum -c -
+          mkdir -p "${RUNNER_TEMP}/actionlint-bin"
+          tar -xzf "${OUT}" -C "${RUNNER_TEMP}/actionlint-bin" actionlint
+          sudo install -m 0755 "${RUNNER_TEMP}/actionlint-bin/actionlint" /usr/local/bin/actionlint
+          GOT_VER="$(actionlint -version | head -n1 | tr -d '[:space:]')"
+          echo "ACTIONLINT_VERSION_GOT=${GOT_VER}"
+          case "${GOT_VER}" in
+            *"${ACTIONLINT_VERSION}"*) echo "ACTIONLINT_VERSION_OK=1" ;;
+            *) echo "FAIL: actionlint version mismatch want=${ACTIONLINT_VERSION} got=${GOT_VER}"; exit 1 ;;
+          esac
 
       - name: Lint workflows
         shell: bash
