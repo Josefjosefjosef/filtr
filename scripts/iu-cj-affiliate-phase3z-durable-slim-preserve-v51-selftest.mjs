@@ -26,6 +26,7 @@ const must = [
   "DURABLE_LEDGER_MISSING",
   "DURABLE_RESTORE_BLOCKED",
   "REGISTRY_LKG_PRIOR_RUN",
+  "DURABLE_ARCHIVE_BOOTSTRAP",
 ];
 
 const missing = must.filter((s) => !wf.includes(s));
