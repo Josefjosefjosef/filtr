@@ -101,9 +101,17 @@ try {
 } catch {
   prodHtml = "";
 }
-const prodCodeShaHit = (prodHtml.match(/0def330e|[a-f0-9]{40}|[a-f0-9]{8}/i) || [])[0] || null;
-const iuDataVerHit = (prodHtml.match(/iu-data-ver[_-]?([a-z0-9]+)/i) || [])[1] || null;
-const swHit = (prodHtml.match(/service.?worker[^"']*["']([^"']+)/i) || [])[1] || null;
+const metaDataVer =
+  (prodHtml.match(/<meta\s+name=["']iu-data-ver["']\s+content=["']([^"']+)["']/i) || [])[1] || null;
+const assetShaHit =
+  (prodHtml.match(/\/assets\/(?:app|iu-info-system-core-v1|iu-prehled-dne-ui-v1)\.([a-f0-9]{7,40})\./i) ||
+    [])[1] || null;
+const prodCodeShaHit = metaDataVer && !/placeholder/i.test(metaDataVer) ? metaDataVer : assetShaHit;
+const iuDataVerHit = prodCodeShaHit;
+const swHit =
+  (prodHtml.match(/navigator\.serviceWorker|sw\.js[^"']*|iu-sw[^"']*/i) || [])[0] || null;
+const assetLegacyStamp =
+  (prodHtml.match(/affiliate-booking-sponsored[^"']*?(20\d{6})/i) || [])[1] || null;
 
 const catalogRuns = ghJson([
   "api",
@@ -362,10 +370,13 @@ writeJson("01-executive-summary.json", {
 writeJson("03-current-main-sha.json", { sha: mainSha, mainSha, at: nowIso });
 writeJson("03-current-head-sha.json", { sha: headSha, at: nowIso });
 writeJson("04-current-production-sha.json", {
+  sha: prodCodeShaHit,
+  productionSha: prodCodeShaHit,
   MAIN_CODE_SHA: mainSha,
   PRODUCTION_CODE_SHA: prodCodeShaHit,
   PRODUCTION_DATA_VERSION: iuDataVerHit,
   SERVICE_WORKER_VERSION: swHit,
+  ASSET_LEGACY_STAMP: assetLegacyStamp,
   productionCodeSha: prodCodeShaHit,
   productionDataVersion: iuDataVerHit,
   verifiedSha: prodCodeShaHit,
@@ -373,7 +384,12 @@ writeJson("04-current-production-sha.json", {
   codeEqualsDataVersion: false,
   explicitlyStale: false,
   AUDIT_OBSERVED_AT: nowIso,
-  note: "Code SHA and data version are distinct identifiers — do not equate.",
+  note:
+    "meta iu-data-ver and hashed assets currently share short SHA " +
+    String(prodCodeShaHit) +
+    "; legacy stamp " +
+    String(assetLegacyStamp) +
+    " in query strings is NOT production data version.",
 });
 writeJson("72-pages-run.json", {
   runId: pagesForMain?.id || null,

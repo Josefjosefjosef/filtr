@@ -56,7 +56,8 @@ export function collectUniqueProductMap(doc) {
  */
 function isTrustedAffiliateUrl(url) {
   const s = String(url || "");
-  return /^https:\/\/(www\.)?(kqzyfj|jdoqocy|tkqlhce|dpbolvw|anrdoezrs|pjatr)\.com\//i.test(s);
+  // CJ click domains use both .com and .net (anrdoezrs.net / dpbolvw.net observed in LIVE).
+  return /^https:\/\/(www\.)?(kqzyfj|jdoqocy|tkqlhce|dpbolvw|anrdoezrs|pjatr)\.(com|net)\//i.test(s);
 }
 
 function productAgeHours(product, nowMs) {

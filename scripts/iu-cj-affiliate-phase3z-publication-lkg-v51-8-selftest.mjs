@@ -172,6 +172,18 @@ const badUrl = classifyMissingPublishedProduct(
   { incompleteAdvertisers: new Set(["1"]) }
 );
 assert(badUrl.carryForward === false, "bad affiliate url blocked");
+const netUrl = classifyMissingPublishedProduct(
+  {
+    key: "1|z",
+    advertiserId: "1",
+    product: {
+      affiliateUrl: "https://www.anrdoezrs.net/click-101883843-1",
+      lastSuccessfulRefreshAt: new Date().toISOString(),
+    },
+  },
+  { incompleteAdvertisers: new Set(["1"]) }
+);
+assert(netUrl.carryForward === true, "CJ .net click domains trusted");
 
 const growthBad = evaluateLkgGrowthGate(100, 900, {
   maxGrowthAbs: 500,
