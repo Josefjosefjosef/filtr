@@ -632,7 +632,10 @@ export function reconstructDurableHistory(activeDoc, archiveDoc, opts = {}) {
     },
     restoreProvenance: {
       activeArtifactSha: active.sha || null,
+      // archiveSha historically stored commit/run SHA of the companion artifact, NOT content hash.
       archiveSha: archive.sha || null,
+      archiveShaMeaning: "ARTIFACT_OR_COMMIT_SHA_NOT_CONTENT_HASH",
+      archiveContentSha256: opts.archiveContentSha256 || archive.contentSha256 || null,
       activeRunId: active.runId || null,
       archiveRunId: archive.runId || null,
       archiveFilename: DURABLE_ARCHIVE_FILENAME,

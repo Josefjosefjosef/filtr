@@ -277,35 +277,94 @@ export function compareReverifyRuns(prevLedger, nextLedger) {
 }
 
 /**
- * Age buckets from real source/verification timestamps only (never artifact download time).
+ * Resolve honest timestamp provenance for age buckets (V51.5).
+ * Never treat artifact generation / publication time as CJ source fetch.
+ */
+export function resolveReverifyTimestampProvenance(row) {
+  const fetchTs =
+    row?.currentFetchTimestamp ||
+    row?.fetchTimestamp ||
+    row?.fetchedAt ||
+    null;
+  const sourceTs =
+    row?.currentSourceTimestamp ||
+    row?.sourceTimestamp ||
+    row?.sourceUpdatedAt ||
+    null;
+  const verificationTs =
+    row?.currentVerificationTimestamp ||
+    row?.verificationTimestamp ||
+    row?.verifiedAt ||
+    null;
+  if (fetchTs) {
+    return {
+      timestamp: fetchTs,
+      provenance: "FETCH_TIMESTAMP_VERIFIED",
+      sourceTimestampStatus: sourceTs ? "PRESENT" : "SOURCE_TIMESTAMP_UNAVAILABLE",
+      fetchTimestampStatus: "PRESENT",
+      verificationTimestampStatus: verificationTs ? "PRESENT" : "ABSENT",
+    };
+  }
+  if (sourceTs) {
+    return {
+      timestamp: sourceTs,
+      provenance: "SOURCE_TIMESTAMP_PRESENT",
+      sourceTimestampStatus: "PRESENT",
+      fetchTimestampStatus: "SOURCE_TIMESTAMP_UNAVAILABLE",
+      verificationTimestampStatus: verificationTs ? "PRESENT" : "ABSENT",
+    };
+  }
+  if (verificationTs) {
+    return {
+      timestamp: verificationTs,
+      provenance: "VERIFICATION_BATCH_OR_LOCAL_ONLY",
+      sourceTimestampStatus: "SOURCE_TIMESTAMP_UNAVAILABLE",
+      fetchTimestampStatus: "SOURCE_TIMESTAMP_UNAVAILABLE",
+      verificationTimestampStatus: "PRESENT",
+      note: "Verification timestamp alone is not claimed as CJ source fetch time.",
+    };
+  }
+  return {
+    timestamp: null,
+    provenance: "NO_VERIFIABLE_TIMESTAMP",
+    sourceTimestampStatus: "SOURCE_TIMESTAMP_UNAVAILABLE",
+    fetchTimestampStatus: "SOURCE_TIMESTAMP_UNAVAILABLE",
+    verificationTimestampStatus: "ABSENT",
+  };
+}
+
+/**
+ * Age buckets from verifiable timestamps (never artifact download time).
  */
 export function buildReverifyAgeBuckets(ledger, opts = {}) {
   const nowMs = Date.parse(opts.nowIso || ledger?.at || new Date().toISOString());
   const buckets = {
-    "0_3h": { label: "Do 3 hodin", minH: 0, maxH: 3, count: 0, identities: [] },
-    "3_6h": { label: "3–6 hodin", minH: 3, maxH: 6, count: 0, identities: [] },
-    "6_12h": { label: "6–12 hodin", minH: 6, maxH: 12, count: 0, identities: [] },
-    "12_24h": { label: "12–24 hodin", minH: 12, maxH: 24, count: 0, identities: [] },
-    "24_48h": { label: "24–48 hodin", minH: 24, maxH: 48, count: 0, identities: [] },
-    "over_48h": { label: "Více než 48 hodin", minH: 48, maxH: null, count: 0, identities: [] },
+    "0_3h": { label: "Do 3 hodin", minH: 0, maxH: 3, count: 0, identities: [], byProvenance: {} },
+    "3_6h": { label: "3–6 hodin", minH: 3, maxH: 6, count: 0, identities: [], byProvenance: {} },
+    "6_12h": { label: "6–12 hodin", minH: 6, maxH: 12, count: 0, identities: [], byProvenance: {} },
+    "12_24h": { label: "12–24 hodin", minH: 12, maxH: 24, count: 0, identities: [], byProvenance: {} },
+    "24_48h": { label: "24–48 hodin", minH: 24, maxH: 48, count: 0, identities: [], byProvenance: {} },
+    "over_48h": { label: "Více než 48 hodin", minH: 48, maxH: null, count: 0, identities: [], byProvenance: {} },
     never_source_verified: {
       label: "Nikdy zdrojově neověřeno",
       minH: null,
       maxH: null,
       count: 0,
       identities: [],
+      byProvenance: {},
     },
   };
   const missingTimestamps = [];
+  const provenanceCounts = {};
   for (const r of ledger?.rows || []) {
-    const ts =
-      r.currentVerificationTimestamp ||
-      r.currentFetchTimestamp ||
-      r.currentSourceTimestamp ||
-      null;
+    const prov = resolveReverifyTimestampProvenance(r);
+    provenanceCounts[prov.provenance] = (provenanceCounts[prov.provenance] || 0) + 1;
     const id = r.compoundIdentity;
+    const ts = prov.timestamp;
     if (!ts) {
       buckets.never_source_verified.count += 1;
+      buckets.never_source_verified.byProvenance[prov.provenance] =
+        (buckets.never_source_verified.byProvenance[prov.provenance] || 0) + 1;
       if (buckets.never_source_verified.identities.length < 50) {
         buckets.never_source_verified.identities.push(id);
       }
@@ -313,7 +372,8 @@ export function buildReverifyAgeBuckets(ledger, opts = {}) {
         compoundIdentity: id,
         advertiserId: r.advertiserId,
         productId: r.productId,
-        reason: "NO_SOURCE_OR_VERIFICATION_TIMESTAMP",
+        reason: "NO_VERIFIABLE_TIMESTAMP",
+        provenance: prov.provenance,
         invented: false,
       });
       continue;
@@ -327,6 +387,7 @@ export function buildReverifyAgeBuckets(ledger, opts = {}) {
         productId: r.productId,
         reason: "UNPARSEABLE_TIMESTAMP",
         raw: ts,
+        provenance: prov.provenance,
         invented: false,
       });
       continue;
@@ -338,29 +399,46 @@ export function buildReverifyAgeBuckets(ledger, opts = {}) {
     else if (ageH < 24) key = "12_24h";
     else if (ageH < 48) key = "24_48h";
     buckets[key].count += 1;
+    buckets[key].byProvenance[prov.provenance] =
+      (buckets[key].byProvenance[prov.provenance] || 0) + 1;
     if (buckets[key].identities.length < 50) {
       buckets[key].identities.push({
         compoundIdentity: id,
-        lastSourceVerificationTimestamp: ts,
+        timestamp: ts,
+        provenance: prov.provenance,
         source: r.sourceMatchResult || null,
         reverifyClassification: r.reverifyClassification || null,
       });
     }
   }
   return {
-    schema: "iu-cj-affiliate-phase3z-reverify-age-buckets-v51.4",
+    schema: "iu-cj-affiliate-phase3z-reverify-age-buckets-v51.5",
     at: opts.nowIso || ledger?.at || new Date().toISOString(),
     runId: ledger?.runId || null,
     sha: ledger?.sha || null,
-    note: "Buckets use currentVerificationTimestamp/currentFetchTimestamp/currentSourceTimestamp only. Artifact download time is never used.",
+    note:
+      "Buckets prefer FETCH_TIMESTAMP_VERIFIED, then SOURCE_TIMESTAMP_PRESENT. " +
+      "VERIFICATION_BATCH_OR_LOCAL_ONLY is disclosed and is NOT claimed as CJ source fetch. " +
+      "Artifact download time is never used.",
+    provenanceCounts,
     buckets,
     missingTimestampsCount: missingTimestamps.length,
     missingTimestampsSample: missingTimestamps.slice(0, 50),
   };
 }
 
+function pricesDiffer(a, b) {
+  if (a == null || b == null) return false;
+  const na = Number(a);
+  const nb = Number(b);
+  if (Number.isFinite(na) && Number.isFinite(nb)) return na !== nb;
+  return String(a) !== String(b);
+}
+
 /**
  * Build individual cross-run ledger rows for audit (previous + current).
+ * V51.5: boolean flags are derived consistently from classification AND observed deltas.
+ * Distinguishes within-run classification changes vs cross-run observed price/availability deltas.
  */
 export function buildCrossRunIndividualLedger(prevLedger, nextLedger) {
   const prevById = new Map((prevLedger?.rows || []).map((r) => [r.compoundIdentity, r]));
@@ -370,6 +448,48 @@ export function buildCrossRunIndividualLedger(prevLedger, nextLedger) {
   for (const id of all) {
     const prev = prevById.get(id) || null;
     const cur = nextById.get(id) || null;
+    const classResult = cur?.reverifyClassification || cur?.reverifyResult || null;
+    const sourceMatched =
+      cur?.sourceMatched === true || cur?.sourceMatchResult === "SOURCE_MATCHED";
+    const reverifyAttempted =
+      cur?.reverifyAttempted === true ||
+      sourceMatched ||
+      [
+        REVERIFY_CLASS.SOURCE_NOT_FOUND,
+        REVERIFY_CLASS.SOURCE_UNAVAILABLE,
+        REVERIFY_CLASS.REVERIFIED_UNCHANGED,
+        REVERIFY_CLASS.REVERIFIED_PRICE_CHANGED,
+        REVERIFY_CLASS.REVERIFIED_AVAILABILITY_CHANGED,
+        REVERIFY_CLASS.REVERIFIED_FORMAT_ONLY,
+      ].includes(classResult);
+    const classEconomic =
+      classResult === REVERIFY_CLASS.REVERIFIED_PRICE_CHANGED || cur?.economicChange === true;
+    const classAvailability =
+      classResult === REVERIFY_CLASS.REVERIFIED_AVAILABILITY_CHANGED ||
+      cur?.availabilityChange === true;
+    const classFormatOnly =
+      classResult === REVERIFY_CLASS.REVERIFIED_FORMAT_ONLY || cur?.formatOnlyChange === true;
+    const prevPrice = prev?.currentPrice ?? prev?.previousPrice ?? null;
+    const curPrice = cur?.currentPrice ?? null;
+    const prevAvail = prev?.currentAvailability ?? prev?.previousAvailability ?? null;
+    const curAvail = cur?.currentAvailability ?? null;
+    const crossRunObservedEconomicDelta = pricesDiffer(prevPrice, curPrice);
+    const crossRunObservedAvailabilityDelta =
+      prevAvail != null && curAvail != null && String(prevAvail) !== String(curAvail);
+    // economicChange is true only when class claims price change AND stored prices differ,
+    // or when the row already carried an explicit economicChange=true from a fresh build.
+    const economicChange =
+      cur?.economicChange === true || (classEconomic && crossRunObservedEconomicDelta);
+    const availabilityChange =
+      cur?.availabilityChange === true ||
+      classAvailability ||
+      (crossRunObservedAvailabilityDelta && cur?.successfullyReverified === true);
+    const formatOnlyChange = classFormatOnly === true;
+    const tsProv = resolveReverifyTimestampProvenance({
+      ...cur,
+      currentFetchTimestamp: cur?.currentFetchTimestamp || cur?.fetchedAt || null,
+      currentSourceTimestamp: cur?.currentSourceTimestamp || cur?.sourceUpdatedAt || null,
+    });
     rows.push({
       advertiserId: cur?.advertiserId || prev?.advertiserId || null,
       productId: cur?.productId || prev?.productId || null,
@@ -382,17 +502,34 @@ export function buildCrossRunIndividualLedger(prevLedger, nextLedger) {
       currentFetchTimestamp: cur?.currentFetchTimestamp || null,
       previousVerificationTimestamp: prev?.currentVerificationTimestamp || null,
       currentVerificationTimestamp: cur?.currentVerificationTimestamp || null,
-      previousPrice: prev?.currentPrice ?? null,
-      currentPrice: cur?.currentPrice ?? null,
-      previousAvailability: prev?.currentAvailability ?? null,
-      currentAvailability: cur?.currentAvailability ?? null,
-      sourceMatched: cur?.sourceMatched === true || cur?.sourceMatchResult === "SOURCE_MATCHED",
-      reverifyAttempted: cur?.reverifyAttempted === true,
-      reverifyResult: cur?.reverifyClassification || null,
-      economicChange: cur?.economicChange === true,
-      formatOnlyChange: cur?.formatOnlyChange === true,
-      availabilityChange: cur?.availabilityChange === true,
-      retryPending: cur?.retryPending === true || cur?.reverifyClassification === REVERIFY_CLASS.RETRY_PENDING,
+      timestampProvenance: tsProv.provenance,
+      sourceTimestampStatus: tsProv.sourceTimestampStatus,
+      fetchTimestampStatus: tsProv.fetchTimestampStatus,
+      previousPrice: prevPrice,
+      currentPrice: curPrice,
+      previousAvailability: prevAvail,
+      currentAvailability: curAvail,
+      sourceMatched,
+      reverifyAttempted,
+      reverifyResult: classResult,
+      // Within-run classification (from current ledger class)
+      withinRunClassification: classResult,
+      withinRunClassEconomicChange: classEconomic,
+      withinRunClassAvailabilityChange: classAvailability,
+      withinRunClassFormatOnlyChange: classFormatOnly,
+      // Cross-run observed deltas (previous run value vs current run value)
+      crossRunObservedEconomicDelta,
+      crossRunObservedAvailabilityDelta,
+      // Compatibility booleans: economicChange mirrors within-run class when prices also differ,
+      // else false when class/price disagree; never invent.
+      economicChange: classEconomic && crossRunObservedEconomicDelta ? true : cur?.economicChange === true ? true : false,
+      formatOnlyChange,
+      availabilityChange: classAvailability || (crossRunObservedAvailabilityDelta && cur?.successfullyReverified === true),
+      classificationPriceMismatch:
+        classEconomic && !crossRunObservedEconomicDelta
+          ? "CLASS_SAYS_PRICE_CHANGED_BUT_STORED_PRICES_EQUAL"
+          : null,
+      retryPending: cur?.retryPending === true || classResult === REVERIFY_CLASS.RETRY_PENDING,
       identityCollision: cur?.identityCollision === true,
       previouslySuccessfullyReverified: prev?.successfullyReverified === true,
       currentlySuccessfullyReverified: cur?.successfullyReverified === true,
@@ -404,7 +541,13 @@ export function buildCrossRunIndividualLedger(prevLedger, nextLedger) {
   const currentFound = nextById.size;
   const intersection = rows.filter((r) => r.inPrevious && r.inCurrent).length;
   const reverifySuccess = rows.filter((r) => r.currentlySuccessfullyReverified).length;
-  const changed = rows.filter((r) => r.economicChange || r.availabilityChange).length;
+  const withinRunChangedByClassification = rows.filter(
+    (r) => r.withinRunClassEconomicChange || r.withinRunClassAvailabilityChange
+  ).length;
+  const crossRunObservedChanged = rows.filter(
+    (r) => r.crossRunObservedEconomicDelta || r.crossRunObservedAvailabilityDelta
+  ).length;
+  const classificationPriceMismatchCount = rows.filter((r) => r.classificationPriceMismatch).length;
   const unchanged = rows.filter(
     (r) => r.reverifyResult === REVERIFY_CLASS.REVERIFIED_UNCHANGED
   ).length;
@@ -415,20 +558,45 @@ export function buildCrossRunIndividualLedger(prevLedger, nextLedger) {
   ).length;
   const pending = rows.filter((r) => r.retryPending).length;
   const collisions = rows.filter((r) => r.identityCollision).length;
+  const attempted = rows.filter((r) => r.reverifyAttempted).length;
+  const sourceMatchedCount = rows.filter((r) => r.sourceMatched).length;
   return {
-    schema: "iu-cj-affiliate-phase3z-cross-run-individual-ledger-v51.4",
+    schema: "iu-cj-affiliate-phase3z-cross-run-individual-ledger-v51.5",
     previousRunId: prevLedger?.runId || null,
     currentRunId: nextLedger?.runId || null,
+    definitions: {
+      reverifyAttempted:
+        "Source lookup or classification attempt this run (SOURCE_MATCHED / NOT_FOUND / UNAVAILABLE / REVERIFIED_*).",
+      withinRunChangedByClassification:
+        "Count of rows whose CURRENT ledger classification is REVERIFIED_PRICE_CHANGED or REVERIFIED_AVAILABILITY_CHANGED.",
+      crossRunObservedChanged:
+        "Count of rows where previous-run stored price/availability differs from current-run stored values.",
+      changed:
+        "Alias of withinRunChangedByClassification (aligned with reverify coverage.changed).",
+      coveragePctOfPublished:
+        "successfullyReverified / identities present in current ledger (published unique).",
+      coveragePctOfAttempted: "successfullyReverified / reverifyAttempted.",
+    },
     counts: {
       previouslyKnownIdentities: previousKnown,
       identitiesInNewSource: currentFound,
       intersectionIdentities: intersection,
+      reverifyAttempted: attempted,
+      sourceMatched: sourceMatchedCount,
       actuallyReverified: reverifySuccess,
-      changed,
+      withinRunChangedByClassification,
+      crossRunObservedChanged,
+      classificationPriceMismatchCount,
+      changed: withinRunChangedByClassification,
       unchanged,
       unavailable,
       pending,
       collisions,
+      coveragePctOfPublished:
+        currentFound > 0 ? Math.round((reverifySuccess / currentFound) * 10000) / 100 : null,
+      coveragePctOfAttempted:
+        attempted > 0 ? Math.round((reverifySuccess / attempted) * 10000) / 100 : null,
+      // Deprecated ambiguous alias kept for readers; equals coveragePctOfPublished.
       coveragePct:
         currentFound > 0 ? Math.round((reverifySuccess / currentFound) * 10000) / 100 : null,
     },
