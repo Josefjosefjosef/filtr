@@ -482,10 +482,14 @@ export function mergeLkgPublishedProducts(nextDoc, prevDoc, opts = {}) {
 
 /**
  * Fail-closed gate: refuse promote when unique identities shrink without LKG merge recovery.
+ * Confirmed out-of-stock / empty / unrecognized availability removals do not consume the
+ * ordinary shrinkage budget (otherwise invalid LIVE cards could never be cleared).
  */
 export function evaluateProductShrinkageGate(prevDoc, nextDoc, opts = {}) {
-  const prev = collectUniqueProductMap(prevDoc).size;
-  const next = collectUniqueProductMap(nextDoc).size;
+  const prevMap = collectUniqueProductMap(prevDoc);
+  const nextMap = collectUniqueProductMap(nextDoc);
+  const prev = prevMap.size;
+  const next = nextMap.size;
   const maxDropAbs =
     opts.maxDropAbs != null && Number.isFinite(Number(opts.maxDropAbs))
       ? Math.max(0, Number(opts.maxDropAbs))
@@ -494,23 +498,53 @@ export function evaluateProductShrinkageGate(prevDoc, nextDoc, opts = {}) {
     opts.maxDropRatio != null && Number.isFinite(Number(opts.maxDropRatio))
       ? Math.min(1, Math.max(0, Number(opts.maxDropRatio)))
       : 0.03;
+  let oosRemediationRemoved = 0;
+  for (const [key, row] of prevMap) {
+    if (nextMap.has(key)) continue;
+    const raw = row?.product?.availability;
+    const n =
+      raw == null
+        ? ""
+        : String(raw)
+            .trim()
+            .toLowerCase()
+            .replace(/[_-]+/g, " ")
+            .replace(/\s+/g, " ");
+    if (!n) {
+      // empty string only — null legacy absences are not auto-remediation
+      if (raw != null && String(raw).trim() === "") oosRemediationRemoved += 1;
+      continue;
+    }
+    if (/(^|\b)(out of stock|outofstock|sold out|nedostupn)/.test(n)) {
+      oosRemediationRemoved += 1;
+      continue;
+    }
+    if (!/(^|\b)(in stock|instock|available|skladem|preorder|pre order|backorder|back order)\b/.test(n)) {
+      oosRemediationRemoved += 1;
+    }
+  }
   const drop = Math.max(0, prev - next);
-  const ratio = prev > 0 ? drop / prev : 0;
+  const effectiveDrop = Math.max(0, drop - oosRemediationRemoved);
+  const ratio = prev > 0 ? effectiveDrop / prev : 0;
   const merged = opts.lkgMerged === true;
-  const ok = drop <= maxDropAbs || ratio <= maxDropRatio || merged;
+  const ok = effectiveDrop <= maxDropAbs || ratio <= maxDropRatio || merged;
   return {
     ok,
     prevUnique: prev,
     nextUnique: next,
     drop,
+    effectiveDrop,
+    oosRemediationRemoved,
     ratio,
     maxDropAbs,
     maxDropRatio,
     lkgMerged: merged,
     reason: ok
-      ? "PRODUCT_SHRINKAGE_WITHIN_POLICY"
+      ? oosRemediationRemoved > 0
+        ? "PRODUCT_SHRINKAGE_WITHIN_POLICY_AVAILABILITY_REMEDIATION"
+        : "PRODUCT_SHRINKAGE_WITHIN_POLICY"
       : "PRODUCT_UNIQUE_SHRINKAGE_REFUSED",
-    note: "Incomplete discovery must merge LKG or stay under drop thresholds before LIVE promote.",
+    note: "Incomplete discovery must merge LKG or stay under drop thresholds before LIVE promote. OOS remediation drops are excluded from the ordinary budget.",
   };
 }
 

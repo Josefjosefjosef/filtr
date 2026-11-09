@@ -1120,7 +1120,7 @@
   var IU_AFF_PUBLIC_SWAP_ARMED = true;
   var IU_AFF_STATIC_MAIN_CATALOG_PATH = "/projects/data/iu-affiliate-cj-main-buttons-static-v13.json";
   var IU_AFF_MANAGED_PUBLIC_PATH = "/projects/data/iu-affiliate-cj-managed-public-v1.json";
-  var IU_AFF_PHASE2_OFFERS_SRC = "/assets/iu-affiliate-phase2-offers-v1.js?v=cj-phase2c-offers-v3";
+  var IU_AFF_PHASE2_OFFERS_SRC = "/assets/iu-affiliate-phase2-offers-v1.js?v=cj-phase3z-avail-hold-v51-8";
   var __iuAffManagedOverlayApplied = false;
   var __iuAffPhase2OffersLoading = false;
   var __iuAffPhase2OffersLoaded = false;

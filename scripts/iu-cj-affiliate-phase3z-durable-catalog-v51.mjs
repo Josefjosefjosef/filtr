@@ -21,6 +21,61 @@ function trustedUrl(url) {
   return /^https:\/\/(www\.)?(kqzyfj|jdoqocy|tkqlhce|dpbolvw|anrdoezrs|pjatr)\.(com|net)\//i.test(s);
 }
 
+/**
+ * Normalize merchant/feed availability for publication decisions.
+ * Never invent in_stock from null/unknown.
+ */
+export function normalizePublicationAvailability(raw) {
+  if (raw == null) return { class: "UNKNOWN_NULL", reason: "AVAILABILITY_NULL" };
+  const s = String(raw).trim();
+  if (!s) return { class: "UNKNOWN_EMPTY", reason: "AVAILABILITY_EMPTY" };
+  const n = s.toLowerCase().replace(/[_-]+/g, " ").replace(/\s+/g, " ").trim();
+  if (/(^|\b)(out of stock|outofstock|sold out|nedostupn[eéaáyý]?)\b/.test(n)) {
+    return { class: "OUT_OF_STOCK", reason: "AVAILABILITY_OUT_OF_STOCK" };
+  }
+  if (/(^|\b)(preorder|pre order|p[rř]edobjedn[aá]vk[ay]?)\b/.test(n)) {
+    return { class: "PREORDER", reason: "AVAILABILITY_PREORDER" };
+  }
+  if (/(^|\b)(backorder|back order)\b/.test(n)) {
+    return { class: "BACKORDER", reason: "AVAILABILITY_BACKORDER" };
+  }
+  if (/(^|\b)(in stock|instock|available|skladem)\b/.test(n)) {
+    return { class: "IN_STOCK", reason: "AVAILABILITY_IN_STOCK" };
+  }
+  return { class: "UNKNOWN_UNRECOGNIZED", reason: "AVAILABILITY_UNRECOGNIZED" };
+}
+
+/**
+ * Publication gate from availability.
+ * - OUT_OF_STOCK / EMPTY / UNRECOGNIZED → HOLD (do not show as buyable).
+ * - PREORDER / BACKORDER → eligible (must be labeled in UI; not treated as in_stock).
+ * - NULL → no automatic hold on LKG; source upserts may still fail-closed via opts.
+ */
+export function publicationEligibilityFromAvailability(raw, currentEligibility, opts = {}) {
+  if (currentEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_BLOCKED) {
+    return {
+      eligibility: PUBLICATION_ELIGIBILITY.PUBLICATION_BLOCKED,
+      availabilityClass: normalizePublicationAvailability(raw).class,
+      availabilityHoldReason: null,
+    };
+  }
+  const avail = normalizePublicationAvailability(raw);
+  const holdClasses = new Set(["OUT_OF_STOCK", "UNKNOWN_EMPTY", "UNKNOWN_UNRECOGNIZED"]);
+  if (opts.failClosedNullAvailability === true) holdClasses.add("UNKNOWN_NULL");
+  if (holdClasses.has(avail.class)) {
+    return {
+      eligibility: PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD,
+      availabilityClass: avail.class,
+      availabilityHoldReason: avail.reason,
+    };
+  }
+  return {
+    eligibility: PUBLICATION_ELIGIBILITY.PUBLICATION_ELIGIBLE,
+    availabilityClass: avail.class,
+    availabilityHoldReason: null,
+  };
+}
+
 export const DURABLE_CATALOG_SCHEMA = "iu-cj-affiliate-phase3z-durable-catalog-v51";
 export const DURABLE_CATALOG_REL = "projects/data/iu-affiliate-cj-durable-catalog-v51.json";
 
@@ -102,7 +157,15 @@ export function mergeIntoDurableCatalog(priorDoc, sourceRows, opts = {}) {
     if (ended.has(adv) || revoked.has(adv) || !urlOk) {
       eligibility = PUBLICATION_ELIGIBILITY.PUBLICATION_BLOCKED;
     }
+    const availability = row.availability != null ? row.availability : prev.availability ?? null;
+    const availGate = publicationEligibilityFromAvailability(availability, eligibility, {
+      // Null availability is legacy-tolerant here; empty/unrecognized/OOS still HOLD.
+      // Fetch-path + applyAvailabilityPublicationHolds enforce the same matrix on offers-public.
+      failClosedNullAvailability: false,
+    });
+    eligibility = availGate.eligibility;
     const price = row.currentPrice ?? prev.currentPrice ?? null;
+    const heldForAvailability = Boolean(availGate.availabilityHoldReason);
     doc.products[key] = {
       ...prev,
       advertiserId: adv,
@@ -114,14 +177,15 @@ export function mergeIntoDurableCatalog(priorDoc, sourceRows, opts = {}) {
       currentPrice: price,
       originalPrice: row.originalPrice ?? prev.originalPrice ?? null,
       currency: row.currency || prev.currency || null,
-      availability: row.availability || prev.availability || null,
+      availability,
+      availabilityClass: availGate.availabilityClass,
       affiliateUrl: url,
       feedId: row.feedId || prev.feedId || null,
       catalogStatus,
       publicationEligibility: eligibility,
       publicOffer: eligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_ELIGIBLE,
-      lkgPublicHold: false,
-      hideAsCurrent: false,
+      lkgPublicHold: heldForAvailability,
+      hideAsCurrent: heldForAvailability,
       lastSourceMatchAt: nowIso,
       priceVerifiedAt: nowIso,
       availabilityVerifiedAt: nowIso,
@@ -129,7 +193,9 @@ export function mergeIntoDurableCatalog(priorDoc, sourceRows, opts = {}) {
       lastSuccessfulRefreshAt: nowIso,
       sourceFreshLabelForbidden: false,
       freshnessStatus: "SOURCE_VERIFIED",
-      freshnessReason: "DURABLE_CATALOG_SOURCE_UPSERT",
+      freshnessReason: heldForAvailability
+        ? availGate.availabilityHoldReason
+        : "DURABLE_CATALOG_SOURCE_UPSERT",
       updatedAt: nowIso,
       publicationReady: true,
     };
@@ -180,17 +246,36 @@ export function mergeIntoDurableCatalog(priorDoc, sourceRows, opts = {}) {
       heldStale += 1;
     } else if (wasLive) {
       // Keep already-LIVE cards pending reverify; do not claim SOURCE_VERIFIED/CURRENT.
-      prev.publicationEligibility = PUBLICATION_ELIGIBILITY.PUBLICATION_ELIGIBLE;
-      prev.publicOffer = true;
-      prev.lkgPublicHold = false;
-      prev.hideAsCurrent = false;
-      prev.catalogStatus = CATALOG_STATUS.CATALOG_RETAINED;
-      prev.freshnessStatus = "LAST_KNOWN_PENDING_REVERIFY";
-      prev.freshnessReason = partnerIncomplete
-        ? "NOT_YET_SEEN_INCOMPLETE_WINDOW_KEEP_PUBLIC"
-        : "NOT_YET_SEEN_KEEP_PUBLIC_WITHIN_STALE_POLICY";
-      prev.sourceFreshLabelForbidden = true;
-      keptPublicPending += 1;
+      // Exception: confirmed OOS / unknown availability must not stay buyable via LKG.
+      const availGate = publicationEligibilityFromAvailability(
+        prev.availability,
+        PUBLICATION_ELIGIBILITY.PUBLICATION_ELIGIBLE
+      );
+      if (availGate.availabilityHoldReason) {
+        prev.publicationEligibility = PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD;
+        prev.publicOffer = false;
+        prev.lkgPublicHold = true;
+        prev.hideAsCurrent = true;
+        prev.catalogStatus = CATALOG_STATUS.CATALOG_RETAINED;
+        prev.availabilityClass = availGate.availabilityClass;
+        prev.freshnessStatus = "LAST_KNOWN_PENDING_REVERIFY";
+        prev.freshnessReason = availGate.availabilityHoldReason + "_LKG_HOLD";
+        prev.sourceFreshLabelForbidden = true;
+        heldStale += 1;
+      } else {
+        prev.publicationEligibility = PUBLICATION_ELIGIBILITY.PUBLICATION_ELIGIBLE;
+        prev.publicOffer = true;
+        prev.lkgPublicHold = false;
+        prev.hideAsCurrent = false;
+        prev.catalogStatus = CATALOG_STATUS.CATALOG_RETAINED;
+        prev.availabilityClass = availGate.availabilityClass;
+        prev.freshnessStatus = "LAST_KNOWN_PENDING_REVERIFY";
+        prev.freshnessReason = partnerIncomplete
+          ? "NOT_YET_SEEN_INCOMPLETE_WINDOW_KEEP_PUBLIC"
+          : "NOT_YET_SEEN_KEEP_PUBLIC_WITHIN_STALE_POLICY";
+        prev.sourceFreshLabelForbidden = true;
+        keptPublicPending += 1;
+      }
     } else {
       // Never-LIVE + unseen in this window: retain in durable catalog, HOLD for publication.
       prev.publicationEligibility = PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD;
@@ -260,6 +345,41 @@ export function summarizeDurableCatalog(doc) {
 }
 
 /**
+ * Apply availability holds onto an offers-public document in place.
+ * OUT_OF_STOCK / EMPTY / UNRECOGNIZED → not publicationReady + HOLD flags.
+ * PREORDER / BACKORDER remain ready (UI must label).
+ */
+export function applyAvailabilityPublicationHolds(doc, opts = {}) {
+  const failClosedNull = opts.failClosedNullAvailability === true;
+  let held = 0;
+  let inspected = 0;
+  for (const sec of doc?.sections || []) {
+    for (const p of sec.products || []) {
+      if (!p) continue;
+      inspected += 1;
+      const gate = publicationEligibilityFromAvailability(
+        p.availability,
+        p.publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_BLOCKED
+          ? PUBLICATION_ELIGIBILITY.PUBLICATION_BLOCKED
+          : PUBLICATION_ELIGIBILITY.PUBLICATION_ELIGIBLE,
+        { failClosedNullAvailability: failClosedNull }
+      );
+      p.availabilityClass = gate.availabilityClass;
+      if (!gate.availabilityHoldReason) continue;
+      if (p.publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_BLOCKED) continue;
+      p.publicationEligibility = PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD;
+      p.publicOffer = false;
+      p.lkgPublicHold = true;
+      p.hideAsCurrent = true;
+      p.publicationReady = false;
+      p.freshnessReason = gate.availabilityHoldReason;
+      held += 1;
+    }
+  }
+  return { inspected, held };
+}
+
+/**
  * Build presentation product list from durable catalog public-eligible entries.
  */
 export function selectPublicProductsFromDurableCatalog(doc, opts = {}) {
@@ -271,6 +391,11 @@ export function selectPublicProductsFromDurableCatalog(doc, opts = {}) {
     if (p.publicOffer === false || p.lkgPublicHold === true) continue;
     if (!trustedUrl(p.affiliateUrl)) continue;
     if (p.currentPrice == null || !(Number(p.currentPrice) > 0)) continue;
+    const availGate = publicationEligibilityFromAvailability(
+      p.availability,
+      PUBLICATION_ELIGIBILITY.PUBLICATION_ELIGIBLE
+    );
+    if (availGate.availabilityHoldReason) continue;
     eligible.push(p);
   }
   eligible.sort((a, b) =>
@@ -293,40 +418,54 @@ export function selectPublicProductsFromDurableCatalog(doc, opts = {}) {
  * Public population gates — previous LIVE public vs next public only.
  */
 export function evaluatePublicPopulationGates(prevPublicDoc, nextPublicDoc, opts = {}) {
-  function publicUnique(doc) {
-    const s = new Set();
+  function publicUniqueMap(doc) {
+    const m = new Map();
     for (const sec of doc?.sections || []) {
       for (const p of sec.products || []) {
         if (!p || p.publicationReady === false) continue;
         if (p.publicOffer === false || p.lkgPublicHold === true) continue;
         if (p.publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD) continue;
         if (p.publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_BLOCKED) continue;
-        s.add(compoundProductKey(p.advertiserId, p.productId));
+        const key = compoundProductKey(p.advertiserId, p.productId);
+        if (!m.has(key)) m.set(key, p);
       }
     }
-    return s;
+    return m;
   }
-  const prev = publicUnique(prevPublicDoc);
-  const next = publicUnique(nextPublicDoc);
+  const prevMap = publicUniqueMap(prevPublicDoc);
+  const nextMap = publicUniqueMap(nextPublicDoc);
   let removed = 0;
   let added = 0;
-  for (const k of prev) if (!next.has(k)) removed += 1;
-  for (const k of next) if (!prev.has(k)) added += 1;
-  const prevN = prev.size;
-  const nextN = next.size;
+  let oosRemediationRemoved = 0;
+  for (const [k, p] of prevMap) {
+    if (nextMap.has(k)) continue;
+    removed += 1;
+    const avail = normalizePublicationAvailability(p.availability);
+    if (avail.class === "OUT_OF_STOCK" || avail.class === "UNKNOWN_EMPTY" || avail.class === "UNKNOWN_UNRECOGNIZED") {
+      oosRemediationRemoved += 1;
+    }
+  }
+  for (const k of nextMap.keys()) if (!prevMap.has(k)) added += 1;
+  const prevN = prevMap.size;
+  const nextN = nextMap.size;
   const drop = Math.max(0, prevN - nextN);
   const growth = Math.max(0, nextN - prevN);
+  // Confirmed availability remediation (OOS/empty/unrecognized) does not consume the
+  // ordinary shrinkage budget — otherwise invalid LIVE cards could never be cleared.
+  const effectiveDrop = Math.max(0, drop - oosRemediationRemoved);
   const maxDropAbs = opts.maxDropAbs != null ? Number(opts.maxDropAbs) : 50;
   const maxDropRatio = opts.maxDropRatio != null ? Number(opts.maxDropRatio) : 0.03;
   const maxGrowthAbs = opts.maxGrowthAbs != null ? Number(opts.maxGrowthAbs) : 500;
   const maxGrowthRatio = opts.maxGrowthRatio != null ? Number(opts.maxGrowthRatio) : 0.2;
   const incompleteFeeds = opts.incompleteFeeds === true;
-  const dropRatio = prevN > 0 ? drop / prevN : 0;
+  const dropRatio = prevN > 0 ? effectiveDrop / prevN : 0;
   const growthRatio = prevN > 0 ? growth / prevN : growth > 0 ? 1 : 0;
   const shrinkOk =
-    drop <= maxDropAbs || dropRatio <= maxDropRatio || (incompleteFeeds && dropRatio <= 0.25);
+    effectiveDrop <= maxDropAbs ||
+    dropRatio <= maxDropRatio ||
+    (incompleteFeeds && dropRatio <= 0.25);
   const growthOk = growth <= maxGrowthAbs || growthRatio <= maxGrowthRatio;
-  const churnRatio = prevN > 0 ? Math.max(removed, added) / prevN : 0;
+  const churnRatio = prevN > 0 ? Math.max(removed - oosRemediationRemoved, added) / prevN : 0;
   const churnOk = churnRatio <= 0.25 || (incompleteFeeds && removed === 0);
   return {
     ok: shrinkOk && growthOk,
@@ -338,6 +477,8 @@ export function evaluatePublicPopulationGates(prevPublicDoc, nextPublicDoc, opts
     removed,
     added,
     drop,
+    effectiveDrop,
+    oosRemediationRemoved,
     growth,
     dropRatio,
     growthRatio,
@@ -347,7 +488,9 @@ export function evaluatePublicPopulationGates(prevPublicDoc, nextPublicDoc, opts
       ? "PUBLIC_SHRINKAGE_REFUSED"
       : !growthOk
         ? "PUBLIC_GROWTH_REFUSED"
-        : "PUBLIC_POPULATION_WITHIN_POLICY",
+        : oosRemediationRemoved > 0
+          ? "PUBLIC_POPULATION_WITHIN_POLICY_AVAILABILITY_REMEDIATION"
+          : "PUBLIC_POPULATION_WITHIN_POLICY",
   };
 }
 
