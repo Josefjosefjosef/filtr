@@ -9,11 +9,29 @@
  * - Only when there is a real SLOT_MISS (not mere PENDING_OBSERVATION).
  * - Catch-up joins the same concurrency group as catalog-sync (caller must
  *   dispatch that workflow; cancel-in-progress remains false).
+ * - Diagnostic / manual workflow_dispatch MUST NOT consume the catch-up budget
+ *   (only runs marked catchup_dispatch / CATCHUP_DISPATCH_NOT_SCHEDULE count).
  *
  * GitHub Actions cron is NOT a guarantee of exact 3h delivery.
  */
 export const CATCHUP_COOLDOWN_HOURS = 3;
 export const MAX_CATCHUPS_PER_UTC_DAY = 1;
+export const CATCHUP_DISPATCH_MARKER = "CATCHUP_DISPATCH_NOT_SCHEDULE";
+
+/** True when a catalog run is an audit-honest catch-up (not diagnostic dispatch). */
+export function isCatchupDispatchRun(run) {
+  if (!run || typeof run !== "object") return false;
+  if (String(run.event || "") !== "workflow_dispatch") return false;
+  if (run.catchup_dispatch === true || run.catchup_dispatch === 1 || run.catchup_dispatch === "1") {
+    return true;
+  }
+  const title = String(run.display_title || run.name || run.displayTitle || "");
+  if (title.includes(CATCHUP_DISPATCH_MARKER) || /\bCATCHUP\b/i.test(title)) return true;
+  if (run.inputs && (run.inputs.catchup_dispatch === "1" || run.inputs.catchup_dispatch === 1)) {
+    return true;
+  }
+  return false;
+}
 
 /**
  * @param {object} opts
@@ -52,29 +70,31 @@ export function decideScheduleCatchup(opts = {}) {
   }
 
   const dayKey = now.toISOString().slice(0, 10);
-  const dispatchesToday = runs.filter((r) => {
-    if (String(r.event || "") !== "workflow_dispatch") return false;
+  // Only true catch-up dispatches consume the daily budget (diagnostic dispatch ignored).
+  const catchupsToday = runs.filter((r) => {
+    if (!isCatchupDispatchRun(r)) return false;
     const t = r.created_at ? new Date(r.created_at) : null;
     if (!t || Number.isNaN(t.getTime())) return false;
     return t.toISOString().slice(0, 10) === dayKey;
   });
-  if (dispatchesToday.length >= maxPerDay) {
+  if (catchupsToday.length >= maxPerDay) {
     return {
       allow: false,
       reason: "MAX_CATCHUPS_PER_UTC_DAY",
       mode: null,
-      dispatchesToday: dispatchesToday.length,
+      dispatchesToday: catchupsToday.length,
+      catchupsToday: catchupsToday.length,
       evidenceClass: "CURRENT_PRODUCTION",
     };
   }
 
-  const latestDispatch = runs
-    .filter((r) => String(r.event || "") === "workflow_dispatch")
+  const latestCatchup = runs
+    .filter((r) => isCatchupDispatchRun(r))
     .map((r) => ({ ...r, t: new Date(r.created_at || 0) }))
     .filter((r) => !Number.isNaN(r.t.getTime()))
     .sort((a, b) => b.t - a.t)[0];
-  if (latestDispatch) {
-    const ageH = (now.getTime() - latestDispatch.t.getTime()) / 3600000;
+  if (latestCatchup) {
+    const ageH = (now.getTime() - latestCatchup.t.getTime()) / 3600000;
     if (ageH < cooldownH) {
       return {
         allow: false,

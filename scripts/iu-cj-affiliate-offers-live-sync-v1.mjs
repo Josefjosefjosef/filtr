@@ -96,6 +96,7 @@ import {
   applyPublicGrowthBudget,
   emptyPublicGrowthBudgetLedger,
   applyCumulativeGrowthLedger,
+  resolvePublicGrowthBudgetLedger,
 } from "./iu-cj-affiliate-phase3z-publication-lkg-v51-8.mjs";
 import {
   mergeIntoDurableCatalog,
@@ -2258,32 +2259,21 @@ export async function runOffersLiveSync(opts = {}) {
 
     // V51.8-safe-pub: cap NEW public identities to per-run ∩ cumulative growth budget.
     // Does not raise limits; prevents exceptional +47% candidates and batching bypass.
+    // V51.8-maint: missing/empty/corrupt/zero-while-LIVE ledger is fail-closed (#13843).
     const growthBudgetPath = path.join(dataDir, "iu-affiliate-cj-public-growth-budget-v51.json");
-    let growthLedger = fs.existsSync(growthBudgetPath)
+    const rawGrowthLedger = fs.existsSync(growthBudgetPath)
       ? readJson(growthBudgetPath, null)
       : null;
-    if (!growthLedger?.schema) {
-      const maxCum = Number(env.IU_CJ_OFFERS_MAX_LKG_GROWTH_ABS) || 500;
-      growthLedger = emptyPublicGrowthBudgetLedger({
-        nowIso: new Date().toISOString(),
-        baselineLiveUnique: collectPublicEligibleProductMap(prevPublic).size,
-        baselineSnapshotAt: prevPublic?.updatedAt || null,
-        baselineSnapshotId: prevPublic?.snapshotId || null,
-        maxCumulativeAbs: maxCum,
-      });
-      // Fail-closed: missing durable ledger must NOT reset cumulative room after first LIVE.
-      // Treat budget as exhausted until the sync-branch ledger is restored.
-      if (prevPublic?.liveEnabled === true) {
-        growthLedger.cumulativeAddedSinceBaseline = maxCum;
-        growthLedger.lastDecision = {
-          note: "FAIL_CLOSED_MISSING_GROWTH_LEDGER_TREAT_AS_EXHAUSTED",
-          maxCumulativeAbs: maxCum,
-          cumulativeAddedSinceBaseline: maxCum,
-          cumulativeRemaining: 0,
-          allowedNew: 0,
-        };
-      }
-    }
+    const maxCum = Number(env.IU_CJ_OFFERS_MAX_LKG_GROWTH_ABS) || 500;
+    const resolvedGrowth = resolvePublicGrowthBudgetLedger(rawGrowthLedger, {
+      nowIso: new Date().toISOString(),
+      liveEnabled: prevPublic?.liveEnabled === true,
+      baselineLiveUnique: collectPublicEligibleProductMap(prevPublic).size,
+      baselineSnapshotAt: prevPublic?.updatedAt || null,
+      baselineSnapshotId: prevPublic?.snapshotId || null,
+      maxCumulativeAbs: maxCum,
+    });
+    let growthLedger = resolvedGrowth.ledger;
     const growthApplied = applyPublicGrowthBudget(doc, prevPublic, {
       maxGrowthAbs: Number(env.IU_CJ_OFFERS_MAX_LKG_GROWTH_ABS) || 500,
       maxGrowthRatio: Number(env.IU_CJ_OFFERS_MAX_LKG_GROWTH_RATIO) || 0.2,
@@ -2313,6 +2303,19 @@ export async function runOffersLiveSync(opts = {}) {
           : growthLedger.exceptionalCandidate || null,
       runId: env.GITHUB_RUN_ID || null,
     });
+    if (resolvedGrowth.failClosed) {
+      growthLedger.failClosed = growthLedger.failClosed || {
+        at: new Date().toISOString(),
+        reason: resolvedGrowth.reason,
+        incidentClass: "GROWTH_LEDGER_FAIL_CLOSED",
+      };
+      // Hard stop: never promote NEW identities under fail-closed ledger.
+      if (growthApplied.keptNew.length > 0) {
+        throw new Error(
+          "GROWTH_LEDGER_FAIL_CLOSED_BLOCKED_NEW_IDENTITIES:" + resolvedGrowth.reason
+        );
+      }
+    }
     // Persist ledger decision snapshot (cumulativeAdded advances only on successful write below).
     try {
       fs.mkdirSync(dataDir, { recursive: true });
@@ -2325,6 +2328,10 @@ export async function runOffersLiveSync(opts = {}) {
     publicationRestore.publicEligibleAfter = growthApplied.publicEligibleAfter;
     publicationRestore.keptNew = growthApplied.keptNew.length;
     publicationRestore.deferredNew = growthApplied.deferredNew.length;
+    publicationRestore.growthLedgerResolve = {
+      failClosed: resolvedGrowth.failClosed === true,
+      reason: resolvedGrowth.reason,
+    };
 
     nextReady = readyCounts(doc);
     const lkgMerged = Number(publicationRestore?.carried || 0) > 0;
@@ -2979,28 +2986,39 @@ export async function runOffersLiveSync(opts = {}) {
   // Advance cumulative growth only after a real public write (blocks batching bypass).
   try {
     const growthBudgetPath = path.join(dataDir, "iu-affiliate-cj-public-growth-budget-v51.json");
-    const priorLedger = fs.existsSync(growthBudgetPath)
+    const keptNewN = Number(publicationRestore?.keptNew) || 0;
+    const rawPrior = fs.existsSync(growthBudgetPath)
       ? readJson(growthBudgetPath, null)
-      : emptyPublicGrowthBudgetLedger({
-          nowIso: new Date().toISOString(),
-          baselineLiveUnique: Number(publicationRestore?.publicGrowthBudget?.prevPublicUnique) || 0,
-          maxCumulativeAbs: Number(env.IU_CJ_OFFERS_MAX_LKG_GROWTH_ABS) || 500,
-        });
-    const advanced = applyCumulativeGrowthLedger(priorLedger, {
+      : null;
+    const resolvedPrior = resolvePublicGrowthBudgetLedger(rawPrior, {
       nowIso: new Date().toISOString(),
-      keptNewCount: Number(publicationRestore?.keptNew) || 0,
+      liveEnabled: doc.liveEnabled === true || prevPublic?.liveEnabled === true,
+      baselineLiveUnique: Number(publicationRestore?.publicGrowthBudget?.prevPublicUnique) || 0,
+      maxCumulativeAbs: Number(env.IU_CJ_OFFERS_MAX_LKG_GROWTH_ABS) || 500,
+    });
+    if (keptNewN > 0 && resolvedPrior.failClosed) {
+      throw new Error(
+        "GROWTH_LEDGER_FAIL_CLOSED_REFUSED_PROMOTE_NEW:" + resolvedPrior.reason
+      );
+    }
+    const advanced = applyCumulativeGrowthLedger(resolvedPrior.ledger, {
+      nowIso: new Date().toISOString(),
+      keptNewCount: keptNewN,
       decision: publicationRestore?.publicGrowthBudget || null,
       runId: env.GITHUB_RUN_ID || null,
-      exceptionalCandidate: priorLedger?.exceptionalCandidate || null,
+      exceptionalCandidate: resolvedPrior.ledger?.exceptionalCandidate || null,
     });
     fs.writeFileSync(growthBudgetPath, JSON.stringify(advanced, null, 2) + "\n", "utf8");
     audit.publicGrowthBudgetLedger = {
       cumulativeAddedSinceBaseline: advanced.cumulativeAddedSinceBaseline,
       lastAdded: advanced.lastAdded,
       maxCumulativeAbs: advanced.maxCumulativeAbs,
+      failClosed: resolvedPrior.failClosed === true,
+      resolveReason: resolvedPrior.reason,
     };
-  } catch {
-    // non-fatal
+  } catch (err) {
+    if (String(err?.message || "").startsWith("GROWTH_LEDGER_FAIL_CLOSED")) throw err;
+    // non-fatal for unrelated IO
   }
   fs.writeFileSync(auditPath, JSON.stringify(audit, null, 2) + "\n", "utf8");
 
