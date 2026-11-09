@@ -892,11 +892,14 @@ jobs:
             echo "MISS_AUDIT_CHECKPOINT_RESTORED=0"
           fi
           # V51: restore durable price/reverify/identity ledgers so append-only survives orphan slim tips.
+          # V51.8-maint: also restore durable catalog + cumulative growth ledger (missing file reset growth!).
           for DUR in \
             iu-affiliate-cj-durable-price-history-v50.json \
             iu-affiliate-cj-durable-price-history-archive-v51.json \
             iu-affiliate-cj-product-reverify-v50.json \
-            iu-affiliate-cj-product-identity-v50.json
+            iu-affiliate-cj-product-identity-v50.json \
+            iu-affiliate-cj-durable-catalog-v51.json \
+            iu-affiliate-cj-public-growth-budget-v51.json
           do
             DP="projects/data/${DUR}"
             if [ -f "$DP" ] && [ ! -s "$DP" ]; then rm -f "$DP"; fi
@@ -908,6 +911,11 @@ jobs:
                 || true
             fi
           done
+          if [ -f "projects/data/iu-affiliate-cj-public-growth-budget-v51.json" ] && [ -s "projects/data/iu-affiliate-cj-public-growth-budget-v51.json" ]; then
+            echo "GROWTH_BUDGET_LEDGER_RESTORED=1"
+          else
+            echo "GROWTH_BUDGET_LEDGER_RESTORED=0"
+          fi
           # V51.1: prior-run artifact restore (survives fetch-staging slim wipe; reverify >1MB so skip gh contents).
           NEED_DUR=0
           for DUR in \

@@ -90,6 +90,10 @@
     if (c === "PREORDER") return "Předobjednávka";
     if (c === "BACKORDER") return "Na objednávku / backorder";
     if (c === "OUT_OF_STOCK") return "Momentálně nedostupné";
+    // Never imply Skladem when source did not provide availability.
+    if (c === "UNKNOWN_NULL" || c === "UNKNOWN_EMPTY" || c === "UNKNOWN_UNRECOGNIZED") {
+      return "Dostupnost neověřena";
+    }
     return "";
   }
 
