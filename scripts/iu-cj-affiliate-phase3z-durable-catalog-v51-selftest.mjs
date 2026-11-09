@@ -9,6 +9,9 @@ import {
   evaluatePublicPopulationGates,
   seedDurableCatalogFromOffersPublic,
   summarizeDurableCatalog,
+  normalizePublicationAvailability,
+  publicationEligibilityFromAvailability,
+  applyAvailabilityPublicationHolds,
 } from "./iu-cj-affiliate-phase3z-durable-catalog-v51.mjs";
 import { PUBLICATION_ELIGIBILITY } from "./iu-cj-affiliate-phase3z-publication-lkg-v51-8.mjs";
 
@@ -135,6 +138,145 @@ assert(gates.ok === true, "public population ok under incomplete");
 const empty = emptyDurableCatalog(now);
 assert(summarizeDurableCatalog(empty).catalogUnique === 0, "empty");
 
+// Availability normalization + publication gate matrix
+const availCases = [
+  ["out of stock", "OUT_OF_STOCK", true],
+  ["out_of_stock", "OUT_OF_STOCK", true],
+  ["in stock", "IN_STOCK", false],
+  ["in_stock", "IN_STOCK", false],
+  ["preorder", "PREORDER", false],
+  ["backorder", "BACKORDER", false],
+  ["unknown-xyz", "UNKNOWN_UNRECOGNIZED", true],
+  ["", "UNKNOWN_EMPTY", true],
+  [null, "UNKNOWN_NULL", false],
+];
+for (const [raw, expectClass, expectHold] of availCases) {
+  const n = normalizePublicationAvailability(raw);
+  assert(n.class === expectClass, "avail class " + String(raw));
+  const g = publicationEligibilityFromAvailability(raw, PUBLICATION_ELIGIBILITY.PUBLICATION_ELIGIBLE);
+  assert(Boolean(g.availabilityHoldReason) === expectHold, "avail hold " + String(raw));
+}
+const nullFailClosed = publicationEligibilityFromAvailability(
+  null,
+  PUBLICATION_ELIGIBILITY.PUBLICATION_ELIGIBLE,
+  { failClosedNullAvailability: true }
+);
+assert(nullFailClosed.availabilityHoldReason === "AVAILABILITY_NULL", "null fail-closed");
+
+const oosMerge = mergeIntoDurableCatalog(emptyDurableCatalog(now), [
+  {
+    advertiserId: "9",
+    productId: "oos1",
+    title: "OOS",
+    currentPrice: 10,
+    currency: "CZK",
+    availability: "out_of_stock",
+    affiliateUrl: "https://www.kqzyfj.com/click-1-1",
+  },
+  {
+    advertiserId: "9",
+    productId: "pre1",
+    title: "PRE",
+    currentPrice: 20,
+    currency: "CZK",
+    availability: "preorder",
+    affiliateUrl: "https://www.kqzyfj.com/click-1-2",
+  },
+  {
+    advertiserId: "9",
+    productId: "ok1",
+    title: "OK",
+    currentPrice: 30,
+    currency: "CZK",
+    availability: "in_stock",
+    affiliateUrl: "https://www.kqzyfj.com/click-1-3",
+  },
+], { nowIso: now });
+assert(
+  oosMerge.doc.products["9|oos1"].publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD,
+  "oos held"
+);
+assert(
+  oosMerge.doc.products["9|pre1"].publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_ELIGIBLE,
+  "preorder eligible"
+);
+assert(
+  oosMerge.doc.products["9|ok1"].publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_ELIGIBLE,
+  "in_stock eligible"
+);
+const oosSelected = selectPublicProductsFromDurableCatalog(oosMerge.doc, { publishPerPartner: 10 });
+assert(oosSelected.every((p) => p.productId !== "oos1"), "oos excluded from public select");
+assert(oosSelected.some((p) => p.productId === "pre1"), "preorder selectable");
+
+const prevWithOos = {
+  sections: [
+    {
+      products: [
+        {
+          advertiserId: "9",
+          productId: "oos1",
+          publicationReady: true,
+          availability: "out of stock",
+          currentPrice: 10,
+          affiliateUrl: "https://www.kqzyfj.com/click-1-1",
+        },
+        {
+          advertiserId: "9",
+          productId: "ok1",
+          publicationReady: true,
+          availability: "in stock",
+          currentPrice: 30,
+          affiliateUrl: "https://www.kqzyfj.com/click-1-3",
+        },
+      ],
+    },
+  ],
+};
+const nextWithoutOos = {
+  sections: [
+    {
+      products: [
+        {
+          advertiserId: "9",
+          productId: "ok1",
+          publicationReady: true,
+          availability: "in stock",
+          currentPrice: 30,
+          affiliateUrl: "https://www.kqzyfj.com/click-1-3",
+        },
+      ],
+    },
+  ],
+};
+const remGate = evaluatePublicPopulationGates(prevWithOos, nextWithoutOos, {
+  maxDropAbs: 0,
+  maxDropRatio: 0,
+});
+assert(remGate.ok === true, "oos remediation does not trip shrinkage");
+assert(remGate.oosRemediationRemoved === 1, "oos remediation counted");
+
+const holdDoc = JSON.parse(JSON.stringify(prevWithOos));
+const held = applyAvailabilityPublicationHolds(holdDoc);
+assert(held.held === 1, "apply holds oos");
+assert(holdDoc.sections[0].products[0].publicationReady === false, "oos not ready after hold");
+
+// Availability change across runs: in_stock → out_of_stock must HOLD
+const becameOos = mergeIntoDurableCatalog(oosMerge.doc, [
+  {
+    advertiserId: "9",
+    productId: "ok1",
+    title: "OK",
+    currentPrice: 30,
+    currency: "CZK",
+    availability: "out_of_stock",
+    affiliateUrl: "https://www.kqzyfj.com/click-1-3",
+  },
+], { nowIso: now, livePublicKeys: new Set(["9|ok1", "9|pre1"]) });
+assert(
+  becameOos.doc.products["9|ok1"].publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD,
+  "availability change to oos holds"
+);
+
 console.log(
   JSON.stringify({
     IU_CJ_DURABLE_CATALOG_V51_SELFTEST: "PASS",
@@ -144,5 +286,7 @@ console.log(
     bFreshness: merged.doc.products["1|b"].freshnessStatus,
     aPrice: merged.doc.products["1|a"].currentPrice,
     gates: gates.reason,
+    availabilityRemediation: remGate.reason,
+    availabilityHoldApplied: held.held,
   })
 );

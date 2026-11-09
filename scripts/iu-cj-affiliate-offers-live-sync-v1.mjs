@@ -101,6 +101,8 @@ import {
   mergeIntoDurableCatalog,
   seedDurableCatalogFromOffersPublic,
   evaluatePublicPopulationGates,
+  applyAvailabilityPublicationHolds,
+  publicationEligibilityFromAvailability,
 } from "./iu-cj-affiliate-phase3z-durable-catalog-v51.mjs";
 import {
   buildProductFunnelDocument,
@@ -1217,9 +1219,15 @@ export async function sampleProductsForManagedPartners(opts = {}) {
         const click = mapped.affiliateClickUrl;
         const trusted = isCjTrackingUrl(click);
         const nowIso = new Date().toISOString();
-        const publicationReady = Boolean(
+        const availGate = publicationEligibilityFromAvailability(
+          mapped.availability,
+          "PUBLICATION_ELIGIBLE",
+          { failClosedNullAvailability: false }
+        );
+        const baseReady = Boolean(
           trusted && amount != null && currency && typeof img === "string" && /^https:\/\//i.test(img)
         );
+        const publicationReady = Boolean(baseReady && !availGate.availabilityHoldReason);
         const row = stampProductFetchClocks(
           {
             advertiserId: partnerId,
@@ -1236,10 +1244,17 @@ export async function sampleProductsForManagedPartners(opts = {}) {
             currency,
             affiliateUrl: trusted ? click : null,
             availability: mapped.availability,
+            availabilityClass: availGate.availabilityClass,
             sourceTotalCount: fetched.totalCount,
             sourceFetchComplete: fetched.complete === true,
             sourceResumeOffset: resumeOffset,
             publicationReady,
+            publicationEligibility: availGate.availabilityHoldReason
+              ? "PUBLICATION_HOLD"
+              : "PUBLICATION_ELIGIBLE",
+            publicOffer: publicationReady,
+            lkgPublicHold: Boolean(availGate.availabilityHoldReason),
+            hideAsCurrent: Boolean(availGate.availabilityHoldReason),
             rejectReason: null,
           },
           nowIso,
@@ -1268,7 +1283,9 @@ export async function sampleProductsForManagedPartners(opts = {}) {
               ? "invalid_price_or_currency"
               : !(typeof img === "string" && /^https:\/\//i.test(img))
                 ? "missing_https_image"
-                : "not_publication_ready";
+                : availGate.availabilityHoldReason
+                  ? String(availGate.availabilityHoldReason).toLowerCase()
+                  : "not_publication_ready";
           meta.rejectReasonCounts[reason] = (meta.rejectReasonCounts[reason] || 0) + 1;
           if (keepFullSourceRows) sourceProducts[sourceProducts.length - 1].rejectReason = reason;
           continue;
@@ -2194,6 +2211,13 @@ export async function runOffersLiveSync(opts = {}) {
         holdSummary: summarizeLkgHoldProgress(doc),
       };
     }
+
+    // V51.8-post-pub: HOLD confirmed OOS / empty / unrecognized availability before growth.
+    const availabilityHolds = applyAvailabilityPublicationHolds(doc, {
+      failClosedNullAvailability: false,
+    });
+    if (!publicationRestore) publicationRestore = {};
+    publicationRestore.availabilityHolds = availabilityHolds;
 
     // V51.8-safe-pub: cap NEW public identities to per-run ∩ cumulative growth budget.
     // Does not raise limits; prevents exceptional +47% candidates and batching bypass.

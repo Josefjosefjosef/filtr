@@ -167,6 +167,54 @@ const gatePass = evaluateProductShrinkageGate(prev, merged.doc, {
 });
 assert(gatePass.ok === true, "shrink ok after merge flag");
 
+const prevOos = {
+  sections: [
+    {
+      products: [
+        {
+          advertiserId: "1",
+          productId: "a",
+          publicationReady: true,
+          availability: "in stock",
+          currentPrice: 10,
+          affiliateUrl: "https://www.kqzyfj.com/click-1-1",
+        },
+        {
+          advertiserId: "1",
+          productId: "oos",
+          publicationReady: true,
+          availability: "out_of_stock",
+          currentPrice: 20,
+          affiliateUrl: "https://www.kqzyfj.com/click-1-2",
+        },
+      ],
+    },
+  ],
+};
+const nextNoOos = {
+  sections: [
+    {
+      products: [
+        {
+          advertiserId: "1",
+          productId: "a",
+          publicationReady: true,
+          availability: "in stock",
+          currentPrice: 10,
+          affiliateUrl: "https://www.kqzyfj.com/click-1-1",
+        },
+      ],
+    },
+  ],
+};
+const gateOosRemediation = evaluateProductShrinkageGate(prevOos, nextNoOos, {
+  maxDropAbs: 0,
+  maxDropRatio: 0,
+  lkgMerged: false,
+});
+assert(gateOosRemediation.ok === true, "oos remediation shrink ok");
+assert(gateOosRemediation.oosRemediationRemoved === 1, "oos remediation counted");
+
 const churnBad = evaluateIdentityChurnGate(
   {
     prevUnique: 3174,

@@ -65,7 +65,32 @@
     }
     if (item.priceHiddenReason) return false;
     if (!isPositiveSalePrice(item.currentPrice)) return false;
+    // Defense-in-depth: never paint confirmed out-of-stock / empty availability as buyable.
+    var availClass = classifyAvailability(item.availability);
+    if (availClass === "OUT_OF_STOCK" || availClass === "UNKNOWN_EMPTY" || availClass === "UNKNOWN_UNRECOGNIZED") {
+      return false;
+    }
     return offerInPublicTimeWindow(item);
+  }
+
+  function classifyAvailability(raw) {
+    if (raw == null) return "UNKNOWN_NULL";
+    var s = String(raw).trim();
+    if (!s) return "UNKNOWN_EMPTY";
+    var n = s.toLowerCase().replace(/[_-]+/g, " ").replace(/\s+/g, " ").trim();
+    if (/(^|\b)(out of stock|outofstock|sold out|nedostupn)/.test(n)) return "OUT_OF_STOCK";
+    if (/(^|\b)(preorder|pre order|p[rř]edobjedn)/.test(n)) return "PREORDER";
+    if (/(^|\b)(backorder|back order)\b/.test(n)) return "BACKORDER";
+    if (/(^|\b)(in stock|instock|available|skladem)\b/.test(n)) return "IN_STOCK";
+    return "UNKNOWN_UNRECOGNIZED";
+  }
+
+  function availabilityLabel(raw) {
+    var c = classifyAvailability(raw);
+    if (c === "PREORDER") return "Předobjednávka";
+    if (c === "BACKORDER") return "Na objednávku / backorder";
+    if (c === "OUT_OF_STOCK") return "Momentálně nedostupné";
+    return "";
   }
 
   function isPositiveSalePrice(raw) {
@@ -375,6 +400,14 @@
         var partner = c.partnerName
           ? '<div class="iuAffiliatePhase2Offers__meta">' + escapeHtml(c.partnerName) + "</div>"
           : "";
+        var availText = availabilityLabel(c.availability);
+        var availMeta = availText
+          ? '<div class="iuAffiliatePhase2Offers__meta" data-iu-availability="' +
+            escapeHtml(classifyAvailability(c.availability)) +
+            '">' +
+            escapeHtml(availText) +
+            "</div>"
+          : "";
         var ctaLabel = c.ctaLabel || "Zobrazit nabídku";
         var link =
           c.affiliateUrl && c.publicationReady
@@ -393,6 +426,7 @@
           partner +
           desc +
           price +
+          availMeta +
           freshnessMeta +
           orig +
           disc +
