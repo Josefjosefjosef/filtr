@@ -1047,18 +1047,9 @@ jobs:
           fi
           # V51.8-maint: growth ledger missing while LIVE must hard-fail (belt+suspenders for #13843).
           # JS resolvePublicGrowthBudgetLedger is also fail-closed; workflow refuses empty-ledger continue.
+          LIVE_FLAG=0
           if [ -f "projects/data/iu-affiliate-cj-offers-public-v1.json" ] && [ -s "projects/data/iu-affiliate-cj-offers-public-v1.json" ]; then
-            LIVE_FLAG=$(python - <<'PY'
-import json
-try:
-  d=json.load(open("projects/data/iu-affiliate-cj-offers-public-v1.json",encoding="utf-8"))
-  print("1" if d.get("liveEnabled") is True else "0")
-except Exception:
-  print("0")
-PY
-)
-          else
-            LIVE_FLAG=0
+            LIVE_FLAG=$(node -e "try{const d=require('./projects/data/iu-affiliate-cj-offers-public-v1.json');process.stdout.write(d&&d.liveEnabled===true?'1':'0')}catch(e){process.stdout.write('0')}")
           fi
           if [ -f "projects/data/iu-affiliate-cj-public-growth-budget-v51.json" ] && [ -s "projects/data/iu-affiliate-cj-public-growth-budget-v51.json" ]; then
             echo "GROWTH_BUDGET_LEDGER_RESTORED=1"
