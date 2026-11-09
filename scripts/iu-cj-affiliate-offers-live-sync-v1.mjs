@@ -674,8 +674,10 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
 /**
  * When a fresh source row omits availability, retain the last known non-empty value
  * from previous LIVE (do not invent in_stock; do not wipe a known value to null).
+ * Optional durableCatalog: carry recognized availability only when lastSourceMatchAt
+ * is within maxAgeHours (mapping-loss repair; never invent stock from stale LKG).
  */
-export function backfillAvailabilityFromPrevious(doc, prevPublic) {
+export function backfillAvailabilityFromPrevious(doc, prevPublic, opts = {}) {
   const prev = new Map();
   for (const sec of prevPublic?.sections || []) {
     for (const p of sec.products || []) {
@@ -683,10 +685,41 @@ export function backfillAvailabilityFromPrevious(doc, prevPublic) {
       if (!key || key === "|") continue;
       const a = p.availability;
       if (a == null || String(a).trim() === "") continue;
-      if (!prev.has(key)) prev.set(key, a);
+      if (!prev.has(key)) prev.set(key, { availability: a, source: "PREV_PUBLIC_NON_NULL" });
+    }
+  }
+  const durable = opts.durableCatalog || null;
+  const durableProducts =
+    durable && typeof durable.products === "object" && durable.products
+      ? durable.products
+      : null;
+  const maxAgeHours =
+    opts.maxAgeHours != null && Number.isFinite(Number(opts.maxAgeHours))
+      ? Math.max(0, Number(opts.maxAgeHours))
+      : 24;
+  const nowMs = Number(opts.nowMs) || Date.now();
+  let durableCandidates = 0;
+  if (durableProducts) {
+    for (const [key, entry] of Object.entries(durableProducts)) {
+      if (!entry || prev.has(key)) continue;
+      const a = entry.availability;
+      if (a == null || String(a).trim() === "") continue;
+      const n = String(a).toLowerCase().replace(/[_-]+/g, " ");
+      const recognized =
+        /(^|\b)(in stock|instock|available|skladem|preorder|pre order|backorder|back order)\b/.test(
+          n
+        );
+      if (!recognized) continue;
+      const ts = Date.parse(String(entry.lastSourceMatchAt || entry.lastSuccessfulRefreshAt || ""));
+      if (!Number.isFinite(ts)) continue;
+      const ageH = (nowMs - ts) / 3600000;
+      if (ageH < 0 || ageH > maxAgeHours) continue;
+      durableCandidates += 1;
+      prev.set(key, { availability: a, source: "DURABLE_FRESH_RECOGNIZED" });
     }
   }
   let backfilled = 0;
+  let backfilledFromDurable = 0;
   let inspected = 0;
   for (const sec of doc?.sections || []) {
     for (const p of sec.products || []) {
@@ -695,13 +728,21 @@ export function backfillAvailabilityFromPrevious(doc, prevPublic) {
       if (p.availability != null && String(p.availability).trim() !== "") continue;
       const key = String(p.advertiserId || "") + "|" + String(p.productId || "");
       const carry = prev.get(key);
-      if (carry == null) continue;
-      p.availability = carry;
-      p.availabilityBackfillSource = "PREV_PUBLIC_NON_NULL";
+      if (!carry) continue;
+      p.availability = carry.availability;
+      p.availabilityBackfillSource = carry.source;
       backfilled += 1;
+      if (carry.source === "DURABLE_FRESH_RECOGNIZED") backfilledFromDurable += 1;
     }
   }
-  return { inspected, backfilled, prevWithAvailability: prev.size };
+  return {
+    inspected,
+    backfilled,
+    backfilledFromDurable,
+    prevWithAvailability: prev.size,
+    durableCandidates,
+    maxAgeHours,
+  };
 }
 
 /**
@@ -2247,9 +2288,21 @@ export async function runOffersLiveSync(opts = {}) {
     }
 
     // V51.8-maint: preserve last-known availability when current source omits the field.
-    const availabilityBackfill = backfillAvailabilityFromPrevious(doc, prevPublic);
+    // Prefer previous LIVE; else durable recognized availability within freshness TTL.
+    const durableCatalogPathForAvail = path.join(
+      dataDir,
+      "iu-affiliate-cj-durable-catalog-v51.json"
+    );
+    const priorDurableForAvail = fs.existsSync(durableCatalogPathForAvail)
+      ? readJson(durableCatalogPathForAvail, null)
+      : null;
+    const availabilityBackfill = backfillAvailabilityFromPrevious(doc, prevPublic, {
+      durableCatalog: priorDurableForAvail,
+      maxAgeHours: Number(env.IU_CJ_AVAIL_BACKFILL_MAX_AGE_HOURS) || 24,
+      nowMs: Date.now(),
+    });
     if (!publicationRestore) publicationRestore = {};
-    publicationRestore.availabilityBackfill = availabilityBackfill;
+    publicationRestore.availabilityBackfill = availabilityBackfill
 
     // V51.8-post-pub: HOLD confirmed OOS / empty / unrecognized availability before growth.
     const availabilityHolds = applyAvailabilityPublicationHolds(doc, {
