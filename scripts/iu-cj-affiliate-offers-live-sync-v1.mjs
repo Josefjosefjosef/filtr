@@ -671,6 +671,39 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
 }
 
 /**
+ * When a fresh source row omits availability, retain the last known non-empty value
+ * from previous LIVE (do not invent in_stock; do not wipe a known value to null).
+ */
+export function backfillAvailabilityFromPrevious(doc, prevPublic) {
+  const prev = new Map();
+  for (const sec of prevPublic?.sections || []) {
+    for (const p of sec.products || []) {
+      const key = String(p.advertiserId || "") + "|" + String(p.productId || "");
+      if (!key || key === "|") continue;
+      const a = p.availability;
+      if (a == null || String(a).trim() === "") continue;
+      if (!prev.has(key)) prev.set(key, a);
+    }
+  }
+  let backfilled = 0;
+  let inspected = 0;
+  for (const sec of doc?.sections || []) {
+    for (const p of sec.products || []) {
+      if (!p) continue;
+      inspected += 1;
+      if (p.availability != null && String(p.availability).trim() !== "") continue;
+      const key = String(p.advertiserId || "") + "|" + String(p.productId || "");
+      const carry = prev.get(key);
+      if (carry == null) continue;
+      p.availability = carry;
+      p.availabilityBackfillSource = "PREV_PUBLIC_NON_NULL";
+      backfilled += 1;
+    }
+  }
+  return { inspected, backfilled, prevWithAvailability: prev.size };
+}
+
+/**
  * Apply refreshed fields onto built public document products.
  * coverageByKey (optional): honest per-product refreshResult from V35 ledger.
  */
@@ -2212,11 +2245,15 @@ export async function runOffersLiveSync(opts = {}) {
       };
     }
 
+    // V51.8-maint: preserve last-known availability when current source omits the field.
+    const availabilityBackfill = backfillAvailabilityFromPrevious(doc, prevPublic);
+    if (!publicationRestore) publicationRestore = {};
+    publicationRestore.availabilityBackfill = availabilityBackfill;
+
     // V51.8-post-pub: HOLD confirmed OOS / empty / unrecognized availability before growth.
     const availabilityHolds = applyAvailabilityPublicationHolds(doc, {
       failClosedNullAvailability: false,
     });
-    if (!publicationRestore) publicationRestore = {};
     publicationRestore.availabilityHolds = availabilityHolds;
 
     // V51.8-safe-pub: cap NEW public identities to per-run ∩ cumulative growth budget.
