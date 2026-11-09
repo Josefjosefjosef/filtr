@@ -78,13 +78,28 @@ const merged = mergeIntoDurableCatalog(seed.doc, windowOnlyA, {
   nowIso: now,
   incompleteAdvertisers: new Set(["1"]),
   staleAfterHours: 72,
+  livePublicKeys: new Set(["1|a", "1|b"]),
 });
 assert(merged.stats.catalogUnique === 3, "catalog retains b + adds c");
 assert(merged.doc.products["1|b"].publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_ELIGIBLE, "b kept public");
 assert(merged.doc.products["1|b"].freshnessStatus === "LAST_KNOWN_PENDING_REVERIFY", "b pending");
 assert(merged.doc.products["1|a"].freshnessStatus === "SOURCE_VERIFIED", "a verified");
 assert(merged.doc.products["1|a"].currentPrice === 11, "price updated");
-assert(merged.stats.publicEligible === 3, "all three public eligible");
+assert(merged.stats.publicEligible === 3, "a+b keep-live + c verified eligible");
+
+// Never-LIVE unseen must HOLD (catalog retain ≠ public eligible).
+const neverLive = mergeIntoDurableCatalog(seed.doc, windowOnlyA, {
+  nowIso: now,
+  incompleteAdvertisers: new Set(["1"]),
+  staleAfterHours: 72,
+  livePublicKeys: new Set(["1|a"]), // b was in catalog seed but NOT in current LIVE keys
+});
+assert(
+  neverLive.doc.products["1|b"].publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD,
+  "never-live unseen held"
+);
+assert(neverLive.doc.products["1|b"].publicOffer === false, "never-live not publicOffer");
+assert(neverLive.doc.products["1|c"].freshnessStatus === "SOURCE_VERIFIED", "c still verified");
 
 const selected = selectPublicProductsFromDurableCatalog(merged.doc, { publishPerPartner: 2 });
 assert(selected.length === 2, "presentation budget 2");

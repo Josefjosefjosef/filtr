@@ -847,3 +847,164 @@ export function summarizeLkgHoldProgress(doc) {
     PUBLICATION_BLOCKED: blocked,
   };
 }
+
+export const PUBLIC_GROWTH_BUDGET_SCHEMA = "iu-cj-affiliate-phase3z-public-growth-budget-v51";
+
+/**
+ * Per-run + cumulative public growth budget.
+ * Prevents splitting one exceptional +47% candidate into repeated +500 batches.
+ */
+export function computePublicGrowthBudget(prevPublicUnique, opts = {}) {
+  const prev = Math.max(0, Number(prevPublicUnique) || 0);
+  const maxGrowthAbs =
+    opts.maxGrowthAbs != null && Number.isFinite(Number(opts.maxGrowthAbs))
+      ? Math.max(0, Number(opts.maxGrowthAbs))
+      : 500;
+  const maxGrowthRatio =
+    opts.maxGrowthRatio != null && Number.isFinite(Number(opts.maxGrowthRatio))
+      ? Math.min(1, Math.max(0, Number(opts.maxGrowthRatio)))
+      : 0.2;
+  const perRun = Math.min(maxGrowthAbs, Math.floor(prev * maxGrowthRatio + 1e-9));
+  const cumulativeAdded = Math.max(0, Number(opts.cumulativeAddedSinceBaseline) || 0);
+  const maxCumulativeAbs =
+    opts.maxCumulativeAbs != null && Number.isFinite(Number(opts.maxCumulativeAbs))
+      ? Math.max(0, Number(opts.maxCumulativeAbs))
+      : maxGrowthAbs;
+  const cumulativeRemaining = Math.max(0, maxCumulativeAbs - cumulativeAdded);
+  const allowedNew = Math.min(perRun, cumulativeRemaining);
+  return {
+    prevPublicUnique: prev,
+    maxGrowthAbs,
+    maxGrowthRatio,
+    perRunBudget: perRun,
+    maxCumulativeAbs,
+    cumulativeAddedSinceBaseline: cumulativeAdded,
+    cumulativeRemaining,
+    allowedNew,
+    exceptionalGrowthRequiresOwner: cumulativeRemaining <= 0 && cumulativeAdded >= maxCumulativeAbs,
+  };
+}
+
+/**
+ * Trim NEXT public doc so newly added identities respect growth budget.
+ * Always keeps previously-LIVE public identities. Prefers preferredCurrency for new slots.
+ */
+export function applyPublicGrowthBudget(nextDoc, prevDoc, opts = {}) {
+  const doc = JSON.parse(JSON.stringify(nextDoc || {}));
+  const prevMap = collectPublicEligibleProductMap(prevDoc);
+  const budget = computePublicGrowthBudget(prevMap.size, opts);
+  const preferredCurrency = String(opts.preferredCurrency || "CZK").toUpperCase();
+  const requirePrice = opts.requirePrice !== false;
+
+  const newCandidates = [];
+  const seenNew = new Set();
+  for (const sec of doc.sections || []) {
+    for (const p of sec.products || []) {
+      if (!isPublicOfferEligible(p)) continue;
+      const key = compoundProductKey(p.advertiserId, p.productId);
+      if (!key || key === "|" || prevMap.has(key) || seenNew.has(key)) continue;
+      if (requirePrice && !(Number(p.currentPrice) > 0)) continue;
+      seenNew.add(key);
+      const cur = String(p.currency || "").toUpperCase();
+      newCandidates.push({
+        key,
+        product: p,
+        prefer: cur === preferredCurrency ? 1 : 0,
+        ts: String(p.lastSourceMatchAt || p.priceVerifiedAt || p.updatedAt || ""),
+      });
+    }
+  }
+  newCandidates.sort((a, b) => {
+    if (b.prefer !== a.prefer) return b.prefer - a.prefer;
+    return String(b.ts).localeCompare(String(a.ts));
+  });
+
+  const keepNew = new Set(newCandidates.slice(0, budget.allowedNew).map((r) => r.key));
+  const deferredNew = newCandidates.slice(budget.allowedNew).map((r) => r.key);
+  const deferredSet = new Set(deferredNew);
+
+  for (const sec of doc.sections || []) {
+    if (!Array.isArray(sec.products)) continue;
+    sec.products = sec.products.filter((p) => {
+      if (!p || p.publicationReady === false) return true;
+      const key = compoundProductKey(p.advertiserId, p.productId);
+      if (prevMap.has(key)) return true;
+      // Non-eligible rows (HOLD/BLOCKED) may remain for audit; they are not public growth.
+      if (!isPublicOfferEligible(p)) return true;
+      // Any NEW public-eligible identity must be explicitly inside the budgeted keep set.
+      return keepNew.has(key);
+    });
+  }
+
+  let uniquePublic = 0;
+  const u = new Set();
+  for (const sec of doc.sections || []) {
+    for (const p of sec.products || []) {
+      if (!isPublicOfferEligible(p)) continue;
+      u.add(compoundProductKey(p.advertiserId, p.productId));
+    }
+  }
+  uniquePublic = u.size;
+
+  doc.publicGrowthBudget = {
+    schema: PUBLIC_GROWTH_BUDGET_SCHEMA,
+    ...budget,
+    preferredCurrency,
+    newCandidates: newCandidates.length,
+    keptNew: keepNew.size,
+    deferredNew: deferredNew.length,
+    publicEligibleAfter: uniquePublic,
+    note:
+      deferredNew.length > 0
+        ? "ROUTINE_SAFE_NEW_PRODUCT capped; remainder is EXCEPTIONAL_GROWTH (owner approval / cumulative budget)."
+        : "Within routine public growth budget",
+  };
+
+  return {
+    doc,
+    budget,
+    keptNew: [...keepNew],
+    deferredNew,
+    publicEligibleAfter: uniquePublic,
+    prevPublicEligible: prevMap.size,
+    publicGrowth: Math.max(0, uniquePublic - prevMap.size),
+  };
+}
+
+export function emptyPublicGrowthBudgetLedger(opts = {}) {
+  return {
+    schema: PUBLIC_GROWTH_BUDGET_SCHEMA,
+    updatedAt: opts.nowIso || new Date().toISOString(),
+    baselineLiveUnique: Number(opts.baselineLiveUnique) || 0,
+    baselineSnapshotAt: opts.baselineSnapshotAt || null,
+    baselineSnapshotId: opts.baselineSnapshotId || null,
+    maxCumulativeAbs: opts.maxCumulativeAbs != null ? Number(opts.maxCumulativeAbs) : 500,
+    cumulativeAddedSinceBaseline: 0,
+    lastAdded: 0,
+    lastRunId: null,
+    lastDecision: null,
+    exceptionalCandidate: null,
+    ownerUnlock: null,
+  };
+}
+
+export function applyCumulativeGrowthLedger(ledger, applied) {
+  const out = {
+    ...(ledger && typeof ledger === "object" ? ledger : emptyPublicGrowthBudgetLedger()),
+  };
+  out.schema = PUBLIC_GROWTH_BUDGET_SCHEMA;
+  out.updatedAt = applied?.nowIso || new Date().toISOString();
+  if (!out.baselineSnapshotAt && applied?.baselineSnapshotAt) {
+    out.baselineSnapshotAt = applied.baselineSnapshotAt;
+    out.baselineLiveUnique = Number(applied.baselineLiveUnique) || out.baselineLiveUnique || 0;
+    out.baselineSnapshotId = applied.baselineSnapshotId || null;
+  }
+  const added = Math.max(0, Number(applied?.keptNewCount) || 0);
+  out.cumulativeAddedSinceBaseline = Math.max(0, Number(out.cumulativeAddedSinceBaseline) || 0) + added;
+  out.lastAdded = added;
+  out.lastRunId = applied?.runId || null;
+  out.lastDecision = applied?.decision || null;
+  if (applied?.exceptionalCandidate) out.exceptionalCandidate = applied.exceptionalCandidate;
+  if (applied?.ownerUnlock) out.ownerUnlock = applied.ownerUnlock;
+  return out;
+}
