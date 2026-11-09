@@ -70,6 +70,14 @@ export function mergeIntoDurableCatalog(priorDoc, sourceRows, opts = {}) {
     opts.incompleteAdvertisers instanceof Set
       ? opts.incompleteAdvertisers
       : new Set(opts.incompleteAdvertisers || []);
+  // When provided, ONLY previously-LIVE identities may stay public as LAST_KNOWN_PENDING_REVERIFY.
+  // Catalog retention of never-LIVE unseen identities must not imply PUBLICATION_ELIGIBLE.
+  const livePublicKeys =
+    opts.livePublicKeys == null
+      ? null
+      : opts.livePublicKeys instanceof Set
+        ? opts.livePublicKeys
+        : new Set(opts.livePublicKeys || []);
 
   const doc = priorDoc?.products
     ? JSON.parse(JSON.stringify(priorDoc))
@@ -155,6 +163,11 @@ export function mergeIntoDurableCatalog(priorDoc, sourceRows, opts = {}) {
     }
     const age = productAgeHours(prev, nowMs);
     const partnerIncomplete = incomplete.has(adv) || incomplete.size > 0;
+    const wasLive =
+      livePublicKeys != null
+        ? livePublicKeys.has(key)
+        : prev.publicOffer === true ||
+          prev.publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_ELIGIBLE;
     if (age != null && age >= staleAfterHours) {
       prev.publicationEligibility = PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD;
       prev.publicOffer = false;
@@ -165,7 +178,8 @@ export function mergeIntoDurableCatalog(priorDoc, sourceRows, opts = {}) {
       prev.freshnessReason = "DURABLE_CATALOG_STALE_HOLD";
       prev.sourceFreshLabelForbidden = true;
       heldStale += 1;
-    } else {
+    } else if (wasLive) {
+      // Keep already-LIVE cards pending reverify; do not claim SOURCE_VERIFIED/CURRENT.
       prev.publicationEligibility = PUBLICATION_ELIGIBILITY.PUBLICATION_ELIGIBLE;
       prev.publicOffer = true;
       prev.lkgPublicHold = false;
@@ -177,6 +191,17 @@ export function mergeIntoDurableCatalog(priorDoc, sourceRows, opts = {}) {
         : "NOT_YET_SEEN_KEEP_PUBLIC_WITHIN_STALE_POLICY";
       prev.sourceFreshLabelForbidden = true;
       keptPublicPending += 1;
+    } else {
+      // Never-LIVE + unseen in this window: retain in durable catalog, HOLD for publication.
+      prev.publicationEligibility = PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD;
+      prev.publicOffer = false;
+      prev.lkgPublicHold = true;
+      prev.hideAsCurrent = true;
+      prev.catalogStatus = CATALOG_STATUS.CATALOG_RETAINED;
+      prev.freshnessStatus = "LAST_KNOWN_PENDING_REVERIFY";
+      prev.freshnessReason = "NOT_YET_SEEN_NEVER_LIVE_PUBLICATION_HOLD";
+      prev.sourceFreshLabelForbidden = true;
+      heldStale += 1;
     }
     prev.updatedAt = nowIso;
     retainedUnseen += 1;
@@ -201,12 +226,16 @@ export function summarizeDurableCatalog(doc) {
   let hold = 0;
   let blocked = 0;
   let confirmedRemoved = 0;
+  let sourceVerified = 0;
+  let pendingReverify = 0;
   for (const p of Object.values(doc?.products || {})) {
     catalogUnique += 1;
     if (p.catalogStatus === CATALOG_STATUS.CONFIRMED_REMOVED) {
       confirmedRemoved += 1;
       continue;
     }
+    if (p.freshnessStatus === "SOURCE_VERIFIED") sourceVerified += 1;
+    if (p.freshnessStatus === "LAST_KNOWN_PENDING_REVERIFY") pendingReverify += 1;
     if (p.publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_BLOCKED) blocked += 1;
     else if (
       p.publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD ||
@@ -219,7 +248,15 @@ export function summarizeDurableCatalog(doc) {
     )
       publicEligible += 1;
   }
-  return { catalogUnique, publicEligible, hold, blocked, confirmedRemoved };
+  return {
+    catalogUnique,
+    publicEligible,
+    hold,
+    blocked,
+    confirmedRemoved,
+    sourceVerified,
+    pendingReverify,
+  };
 }
 
 /**

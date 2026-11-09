@@ -11,6 +11,10 @@ import {
   evaluateProductShrinkageGate,
   evaluateIdentityChurnGate,
   evaluateLkgGrowthGate,
+  applyPublicGrowthBudget,
+  computePublicGrowthBudget,
+  applyCumulativeGrowthLedger,
+  emptyPublicGrowthBudgetLedger,
   classifyMissingPublishedProduct,
   buildLkgIdentityValidationLedger,
   isPublicOfferEligible,
@@ -294,6 +298,82 @@ assert(released.progress.LKG_RELEASED_TO_PUBLIC === 1, "hold released on source 
 assert(released.publicEligibleAfter >= 3, "public eligible after release");
 const stillHeld = releaseLkgHoldsAgainstSource(staleMerged.doc, new Set(), {});
 assert(stillHeld.progress.LKG_RELEASED_TO_PUBLIC === 0, "no release without source");
+
+const budgetMeta = computePublicGrowthBudget(3174, {
+  maxGrowthAbs: 500,
+  maxGrowthRatio: 0.2,
+  cumulativeAddedSinceBaseline: 0,
+  maxCumulativeAbs: 500,
+});
+assert(budgetMeta.allowedNew === 500, "auto budget 500");
+const budgetExhausted = computePublicGrowthBudget(3174, {
+  maxGrowthAbs: 500,
+  maxGrowthRatio: 0.2,
+  cumulativeAddedSinceBaseline: 500,
+  maxCumulativeAbs: 500,
+});
+assert(budgetExhausted.allowedNew === 0, "cumulative blocks batching");
+assert(budgetExhausted.exceptionalGrowthRequiresOwner === true, "owner required after cumulative cap");
+
+const fatPrev = {
+  sections: [
+    {
+      products: Array.from({ length: 10 }, (_, i) => ({
+        advertiserId: "1",
+        productId: "p" + i,
+        publicationReady: true,
+        currentPrice: 10 + i,
+        currency: "CZK",
+        affiliateUrl: "https://www.kqzyfj.com/click-1-" + i,
+      })),
+    },
+  ],
+};
+const fatNext = {
+  sections: [
+    {
+      products: [
+        ...fatPrev.sections[0].products,
+        ...Array.from({ length: 20 }, (_, i) => ({
+          advertiserId: "2",
+          productId: "n" + i,
+          publicationReady: true,
+          currentPrice: 100 + i,
+          currency: i < 5 ? "CZK" : "EUR",
+          affiliateUrl: "https://www.kqzyfj.com/click-2-" + i,
+          lastSourceMatchAt: "2026-11-09T01:00:00.000Z",
+        })),
+      ],
+    },
+  ],
+};
+const capped = applyPublicGrowthBudget(fatNext, fatPrev, {
+  maxGrowthAbs: 3,
+  maxGrowthRatio: 1,
+  preferredCurrency: "CZK",
+  cumulativeAddedSinceBaseline: 0,
+  maxCumulativeAbs: 3,
+});
+assert(capped.keptNew.length === 3, "kept 3 new");
+assert(capped.deferredNew.length === 17, "deferred remainder");
+assert(capped.publicGrowth === 3, "public growth capped");
+assert(
+  capped.keptNew.every((k) => k.startsWith("2|n") && Number(k.split("|")[1].slice(1)) < 5),
+  "prefer CZK new slots"
+);
+const ledger1 = applyCumulativeGrowthLedger(emptyPublicGrowthBudgetLedger({ maxCumulativeAbs: 3 }), {
+  keptNewCount: 3,
+  nowIso: "2026-11-09T02:00:00.000Z",
+});
+assert(ledger1.cumulativeAddedSinceBaseline === 3, "ledger advanced");
+const afterCum = applyPublicGrowthBudget(fatNext, fatPrev, {
+  maxGrowthAbs: 3,
+  maxGrowthRatio: 1,
+  preferredCurrency: "CZK",
+  cumulativeAddedSinceBaseline: ledger1.cumulativeAddedSinceBaseline,
+  maxCumulativeAbs: 3,
+});
+assert(afterCum.keptNew.length === 0, "second batch blocked by cumulative");
 
 console.log(
   JSON.stringify({

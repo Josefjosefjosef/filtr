@@ -93,6 +93,9 @@ import {
   releaseLkgHoldsAgainstSource,
   summarizeLkgHoldProgress,
   compoundProductKey,
+  applyPublicGrowthBudget,
+  emptyPublicGrowthBudgetLedger,
+  applyCumulativeGrowthLedger,
 } from "./iu-cj-affiliate-phase3z-publication-lkg-v51-8.mjs";
 import {
   mergeIntoDurableCatalog,
@@ -2191,6 +2194,64 @@ export async function runOffersLiveSync(opts = {}) {
         holdSummary: summarizeLkgHoldProgress(doc),
       };
     }
+
+    // V51.8-safe-pub: cap NEW public identities to per-run ∩ cumulative growth budget.
+    // Does not raise limits; prevents exceptional +47% candidates and batching bypass.
+    const growthBudgetPath = path.join(dataDir, "iu-affiliate-cj-public-growth-budget-v51.json");
+    let growthLedger = fs.existsSync(growthBudgetPath)
+      ? readJson(growthBudgetPath, null)
+      : null;
+    if (!growthLedger?.schema) {
+      growthLedger = emptyPublicGrowthBudgetLedger({
+        nowIso: new Date().toISOString(),
+        baselineLiveUnique: collectPublicEligibleProductMap(prevPublic).size,
+        baselineSnapshotAt: prevPublic?.updatedAt || null,
+        baselineSnapshotId: prevPublic?.snapshotId || null,
+        maxCumulativeAbs: Number(env.IU_CJ_OFFERS_MAX_LKG_GROWTH_ABS) || 500,
+      });
+    }
+    const growthApplied = applyPublicGrowthBudget(doc, prevPublic, {
+      maxGrowthAbs: Number(env.IU_CJ_OFFERS_MAX_LKG_GROWTH_ABS) || 500,
+      maxGrowthRatio: Number(env.IU_CJ_OFFERS_MAX_LKG_GROWTH_RATIO) || 0.2,
+      preferredCurrency: String(env.IU_CJ_OFFERS_PUBLIC_PREFERRED_CURRENCY || "CZK"),
+      cumulativeAddedSinceBaseline: Number(growthLedger.cumulativeAddedSinceBaseline) || 0,
+      maxCumulativeAbs:
+        Number(growthLedger.maxCumulativeAbs) ||
+        Number(env.IU_CJ_OFFERS_MAX_LKG_GROWTH_ABS) ||
+        500,
+    });
+    doc = growthApplied.doc;
+    growthLedger = applyCumulativeGrowthLedger(growthLedger, {
+      nowIso: new Date().toISOString(),
+      keptNewCount: 0, // commit cumulative only after successful promote write
+      baselineLiveUnique: growthApplied.prevPublicEligible,
+      baselineSnapshotAt: prevPublic?.updatedAt || null,
+      baselineSnapshotId: prevPublic?.snapshotId || null,
+      decision: growthApplied.doc.publicGrowthBudget || null,
+      exceptionalCandidate:
+        growthApplied.deferredNew.length > 0
+          ? {
+              at: new Date().toISOString(),
+              deferredNew: growthApplied.deferredNew.length,
+              keptNew: growthApplied.keptNew.length,
+              reason: "EXCEPTIONAL_GROWTH_REQUIRES_OWNER_OR_CUMULATIVE_UNLOCK",
+            }
+          : growthLedger.exceptionalCandidate || null,
+      runId: env.GITHUB_RUN_ID || null,
+    });
+    // Persist ledger decision snapshot (cumulativeAdded advances only on successful write below).
+    try {
+      fs.mkdirSync(dataDir, { recursive: true });
+      fs.writeFileSync(growthBudgetPath, JSON.stringify(growthLedger, null, 2) + "\n", "utf8");
+    } catch {
+      // best-effort
+    }
+    if (!publicationRestore) publicationRestore = {};
+    publicationRestore.publicGrowthBudget = growthApplied.doc.publicGrowthBudget || null;
+    publicationRestore.publicEligibleAfter = growthApplied.publicEligibleAfter;
+    publicationRestore.keptNew = growthApplied.keptNew.length;
+    publicationRestore.deferredNew = growthApplied.deferredNew.length;
+
     nextReady = readyCounts(doc);
     const lkgMerged = Number(publicationRestore?.carried || 0) > 0;
     const prevPublicEligibleN = collectPublicEligibleProductMap(prevPublic).size;
@@ -2261,12 +2322,14 @@ export async function runOffersLiveSync(opts = {}) {
         }
       }
     }
+    const livePublicKeys = new Set(collectPublicEligibleProductMap(prevPublic || {}).keys());
     const durableMerge = mergeIntoDurableCatalog(priorDurable, sourceRowsForCatalog, {
       nowIso: new Date().toISOString(),
       incompleteAdvertisers: durableCatalogIncomplete,
       endedAdvertisers: durableCatalogEnded,
       revokedAdvertisers: durableCatalogRevoked,
       staleAfterHours: Number(env.IU_CJ_OFFERS_LKG_STALE_HOURS) || 72,
+      livePublicKeys,
     });
     fs.writeFileSync(
       durableCatalogPathEarly,
@@ -2839,6 +2902,32 @@ export async function runOffersLiveSync(opts = {}) {
   fs.renameSync(tmp, publicPath);
   audit.reason = "PROMOTED_ATOMIC";
   audit.wrote = true;
+  // Advance cumulative growth only after a real public write (blocks batching bypass).
+  try {
+    const growthBudgetPath = path.join(dataDir, "iu-affiliate-cj-public-growth-budget-v51.json");
+    const priorLedger = fs.existsSync(growthBudgetPath)
+      ? readJson(growthBudgetPath, null)
+      : emptyPublicGrowthBudgetLedger({
+          nowIso: new Date().toISOString(),
+          baselineLiveUnique: Number(publicationRestore?.publicGrowthBudget?.prevPublicUnique) || 0,
+          maxCumulativeAbs: Number(env.IU_CJ_OFFERS_MAX_LKG_GROWTH_ABS) || 500,
+        });
+    const advanced = applyCumulativeGrowthLedger(priorLedger, {
+      nowIso: new Date().toISOString(),
+      keptNewCount: Number(publicationRestore?.keptNew) || 0,
+      decision: publicationRestore?.publicGrowthBudget || null,
+      runId: env.GITHUB_RUN_ID || null,
+      exceptionalCandidate: priorLedger?.exceptionalCandidate || null,
+    });
+    fs.writeFileSync(growthBudgetPath, JSON.stringify(advanced, null, 2) + "\n", "utf8");
+    audit.publicGrowthBudgetLedger = {
+      cumulativeAddedSinceBaseline: advanced.cumulativeAddedSinceBaseline,
+      lastAdded: advanced.lastAdded,
+      maxCumulativeAbs: advanced.maxCumulativeAbs,
+    };
+  } catch {
+    // non-fatal
+  }
   fs.writeFileSync(auditPath, JSON.stringify(audit, null, 2) + "\n", "utf8");
 
   return {
