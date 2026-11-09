@@ -921,7 +921,6 @@ export function applyPublicGrowthBudget(nextDoc, prevDoc, opts = {}) {
 
   const keepNew = new Set(newCandidates.slice(0, budget.allowedNew).map((r) => r.key));
   const deferredNew = newCandidates.slice(budget.allowedNew).map((r) => r.key);
-  const deferredSet = new Set(deferredNew);
 
   for (const sec of doc.sections || []) {
     if (!Array.isArray(sec.products)) continue;
