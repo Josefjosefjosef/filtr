@@ -2263,13 +2263,26 @@ export async function runOffersLiveSync(opts = {}) {
       ? readJson(growthBudgetPath, null)
       : null;
     if (!growthLedger?.schema) {
+      const maxCum = Number(env.IU_CJ_OFFERS_MAX_LKG_GROWTH_ABS) || 500;
       growthLedger = emptyPublicGrowthBudgetLedger({
         nowIso: new Date().toISOString(),
         baselineLiveUnique: collectPublicEligibleProductMap(prevPublic).size,
         baselineSnapshotAt: prevPublic?.updatedAt || null,
         baselineSnapshotId: prevPublic?.snapshotId || null,
-        maxCumulativeAbs: Number(env.IU_CJ_OFFERS_MAX_LKG_GROWTH_ABS) || 500,
+        maxCumulativeAbs: maxCum,
       });
+      // Fail-closed: missing durable ledger must NOT reset cumulative room after first LIVE.
+      // Treat budget as exhausted until the sync-branch ledger is restored.
+      if (prevPublic?.liveEnabled === true) {
+        growthLedger.cumulativeAddedSinceBaseline = maxCum;
+        growthLedger.lastDecision = {
+          note: "FAIL_CLOSED_MISSING_GROWTH_LEDGER_TREAT_AS_EXHAUSTED",
+          maxCumulativeAbs: maxCum,
+          cumulativeAddedSinceBaseline: maxCum,
+          cumulativeRemaining: 0,
+          allowedNew: 0,
+        };
+      }
     }
     const growthApplied = applyPublicGrowthBudget(doc, prevPublic, {
       maxGrowthAbs: Number(env.IU_CJ_OFFERS_MAX_LKG_GROWTH_ABS) || 500,
