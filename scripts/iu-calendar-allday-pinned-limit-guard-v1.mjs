@@ -741,6 +741,28 @@ async function runNegativeSelftests(browser) {
           };
         });
         const toggle = page.locator("[data-iu-cal-inline-all-day]");
+        // Parallel CI: prepareLimitScenario can finish before the inline all-day
+        // control is attached. Wait + retry without relaxing limit_enforced.
+        try {
+          await toggle.first().waitFor({ state: "attached", timeout: 15000 });
+        } catch (err) {
+          const msg = err && err.message ? err.message : String(err);
+          throw failError("toggle_not_found", "selftest_fourth wait — " + msg, {
+            prepared,
+            error: msg,
+          });
+        }
+        let before = await readToggleState(page);
+        if (!before.found || !before.visible) {
+          await page.waitForTimeout(500);
+          before = await readToggleState(page);
+        }
+        if (!before.found) {
+          throw failError("toggle_not_found", "selftest_fourth missing after prepare", {
+            prepared,
+            before,
+          });
+        }
         const t0 = Date.now();
         await clickReal(toggle, "selftest_fourth");
         await waitForLimitNotice(page, t0);
