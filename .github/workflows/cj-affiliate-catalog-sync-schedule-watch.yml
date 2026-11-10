@@ -1,16 +1,18 @@
 # Phase 3K / V42: watch real catalog-sync *schedule* runs (never treat workflow_dispatch as schedule).
 # Does NOT arm CJ LIVE / publicButtonSwapArmed. Does NOT open a second publisher.
 # V42: run after each expected 3h slot (+30m buffer) so SLOT_MISS is visible the same day.
-# V44: bounded catch-up dispatch (max 1/UTC day) via same catalog-sync concurrency group.
+# V44/V51.8: bounded catch-up dispatch (max 2/UTC day, 3h cooldown) via same catalog-sync concurrency group.
 # GitHub Actions cron is best-effort — NOT a guarantee of exact 3h delivery.
-# schedule-reregister: 2026-11-05T07:00Z — V44 cadence rebind after multi-slot SLOT_MISS window
-# (comment-only rebind; do NOT disable/enable workflow). Prior: V42 multi-slot cron.
+# schedule-reregister: 2026-11-10T10:00Z — secondary :57 watch after proven :47 watch SLOT_MISS
+# (plus daycap 2). Comment+cron rebind; do NOT disable/enable workflow. Prior: V44 :47-only.
 name: CJ Affiliate catalog-sync schedule watch
 
 on:
   schedule:
     # After each catalog-sync cron :17 (+30m GitHub delay buffer) at hours 0/3/6/9/12/15/18/21 UTC
     - cron: "47 0,3,6,9,12,15,18,21 * * *"
+    # Late observer: if GitHub drops the :47 watch slot, still detect SLOT_MISS same hour (+10m)
+    - cron: "57 0,3,6,9,12,15,18,21 * * *"
   workflow_dispatch:
 
 concurrency:
