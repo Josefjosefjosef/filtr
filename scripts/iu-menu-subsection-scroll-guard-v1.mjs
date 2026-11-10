@@ -114,7 +114,30 @@ async function dismissTerms(page) {
 }
 
 async function snap(page) {
+  // After history.back() / hard-nav the document can briefly have no <body>
+  // (parallel CI race). Wait for body before reading attributes — do not weaken
+  // scroll/gate assertions once the document is settled.
+  await page.waitForFunction(() => !!(document && document.body), null, {
+    timeout: 8000,
+  }).catch(() => {});
   return page.evaluate(() => {
+    const body = document.body;
+    if (!body) {
+      return {
+        href: location.href,
+        hash: location.hash,
+        section: null,
+        gate: false,
+        main: false,
+        htmlOv: null,
+        bodyOv: null,
+        lcOv: null,
+        effMax: 0,
+        windowMax: 0,
+        lcMax: 0,
+        bodyMissing: true,
+      };
+    }
     const se = document.scrollingElement || document.documentElement;
     const windowMax = Math.max(0, (se ? se.scrollHeight : 0) - (window.innerHeight || 0));
     const lc = document.getElementById("leftContent");
@@ -130,15 +153,16 @@ async function snap(page) {
     return {
       href: location.href,
       hash: location.hash,
-      section: document.body.getAttribute("data-section"),
-      gate: document.body.classList.contains("iu-mobileGateOverlayOpen"),
-      main: document.body.classList.contains("iu-mobileMainVisible"),
+      section: body.getAttribute("data-section"),
+      gate: body.classList.contains("iu-mobileGateOverlayOpen"),
+      main: body.classList.contains("iu-mobileMainVisible"),
       htmlOv: getComputedStyle(document.documentElement).overflowY,
-      bodyOv: getComputedStyle(document.body).overflowY,
+      bodyOv: getComputedStyle(body).overflowY,
       lcOv: lcCs ? lcCs.overflowY : null,
       effMax: Math.max(windowMax, lcScrollable ? lcMax : 0),
       windowMax,
       lcMax: lcScrollable ? lcMax : 0,
+      bodyMissing: false,
     };
   });
 }
@@ -264,13 +288,18 @@ async function goBackToMenu(page) {
     history.back();
   });
   await page.waitForTimeout(1200);
+  await page.waitForFunction(() => !!(document && document.body), null, {
+    timeout: 8000,
+  }).catch(() => {});
   await dismissTerms(page);
   let s = await snap(page);
+  if (s.bodyMissing) fail("lifecycle:goBack: document.body missing after back");
   if (s.gate) return;
   /* if Back landed on hub, reopen Menu */
   await openMenu(page);
   await page.waitForTimeout(500);
   s = await snap(page);
+  if (s.bodyMissing) fail("lifecycle:goBack: document.body missing after reopen menu");
   if (!s.gate) {
     await page.evaluate(() => {
       const w = document.getElementById("iuMobileGateWrap");
@@ -281,6 +310,7 @@ async function goBackToMenu(page) {
 }
 
 function assertSectionOk(label, s, scroll) {
+  if (s && s.bodyMissing) fail(label + ": document.body missing");
   if (s.hash === "#iu-nav" || s.hash === "#nav") fail(label + ": leftover overlay hash " + s.hash);
   if (s.gate) fail(label + ": gate still open");
   if (!s.main) fail(label + ": iu-mobileMainVisible missing");

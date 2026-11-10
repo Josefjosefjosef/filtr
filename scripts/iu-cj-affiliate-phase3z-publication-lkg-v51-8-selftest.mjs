@@ -15,6 +15,7 @@ import {
   computePublicGrowthBudget,
   applyCumulativeGrowthLedger,
   emptyPublicGrowthBudgetLedger,
+  resolvePublicGrowthBudgetLedger,
   classifyMissingPublishedProduct,
   buildLkgIdentityValidationLedger,
   isPublicOfferEligible,
@@ -423,6 +424,111 @@ const afterCum = applyPublicGrowthBudget(fatNext, fatPrev, {
 });
 assert(afterCum.keptNew.length === 0, "second batch blocked by cumulative");
 
+// #13843 regression: missing / zero / corrupt ledger while LIVE must exhaust budget.
+const miss = resolvePublicGrowthBudgetLedger(null, {
+  liveEnabled: true,
+  maxCumulativeAbs: 500,
+  baselineLiveUnique: 3425,
+});
+assert(miss.failClosed === true, "missing ledger fail-closed");
+assert(miss.ledger.cumulativeAddedSinceBaseline === 500, "missing → exhausted");
+const zeroLive = resolvePublicGrowthBudgetLedger(
+  emptyPublicGrowthBudgetLedger({ maxCumulativeAbs: 500, baselineLiveUnique: 3425 }),
+  { liveEnabled: true, maxCumulativeAbs: 500 }
+);
+assert(zeroLive.failClosed === true, "zero cumulative while LIVE fail-closed");
+assert(zeroLive.reason === "FAIL_CLOSED_ZERO_CUMULATIVE_WHILE_LIVE", "zero reason");
+const badSchema = resolvePublicGrowthBudgetLedger(
+  { schema: "nope", cumulativeAddedSinceBaseline: 0 },
+  { liveEnabled: true, maxCumulativeAbs: 500 }
+);
+assert(badSchema.failClosed === true, "bad schema fail-closed");
+const corrupt = resolvePublicGrowthBudgetLedger(
+  {
+    schema: "iu-cj-affiliate-phase3z-public-growth-budget-v51",
+    cumulativeAddedSinceBaseline: "NaN",
+    maxCumulativeAbs: 500,
+  },
+  { liveEnabled: true, maxCumulativeAbs: 500 }
+);
+assert(corrupt.failClosed === true, "corrupt cumulative fail-closed");
+const okLedger = resolvePublicGrowthBudgetLedger(
+  {
+    schema: "iu-cj-affiliate-phase3z-public-growth-budget-v51",
+    cumulativeAddedSinceBaseline: 500,
+    maxCumulativeAbs: 500,
+    baselineLiveUnique: 3174,
+  },
+  { liveEnabled: true, maxCumulativeAbs: 500 }
+);
+assert(okLedger.failClosed === false && okLedger.reason === "LEDGER_OK", "valid 500/500 ok");
+
+// Routine update of already-LIVE identity must survive exhausted cumulative budget.
+const livePrev = {
+  liveEnabled: true,
+  sections: [
+    {
+      products: [
+        {
+          advertiserId: "9",
+          productId: "p1",
+          publicationReady: true,
+          currentPrice: 100,
+          currency: "CZK",
+          availability: "in stock",
+          affiliateUrl: "https://www.kqzyfj.com/click-9-p1",
+        },
+      ],
+    },
+  ],
+};
+const liveNext = {
+  liveEnabled: true,
+  sections: [
+    {
+      products: [
+        {
+          advertiserId: "9",
+          productId: "p1",
+          publicationReady: true,
+          currentPrice: 120,
+          currency: "CZK",
+          availability: "preorder",
+          affiliateUrl: "https://www.kqzyfj.com/click-9-p1",
+        },
+        {
+          advertiserId: "9",
+          productId: "NEW",
+          publicationReady: true,
+          currentPrice: 50,
+          currency: "CZK",
+          availability: "in stock",
+          affiliateUrl: "https://www.kqzyfj.com/click-9-NEW",
+        },
+      ],
+    },
+  ],
+};
+const routine = applyPublicGrowthBudget(liveNext, livePrev, {
+  maxGrowthAbs: 500,
+  maxGrowthRatio: 0.2,
+  preferredCurrency: "CZK",
+  cumulativeAddedSinceBaseline: 500,
+  maxCumulativeAbs: 500,
+});
+assert(routine.keptNew.length === 0, "no new identity under exhausted budget");
+assert(routine.deferredNew.includes("9|NEW"), "new identity deferred");
+assert(
+  routine.doc.sections[0].products.some(
+    (p) => p.productId === "p1" && p.currentPrice === 120 && p.availability === "preorder"
+  ),
+  "routine price/availability update kept"
+);
+assert(
+  !routine.doc.sections[0].products.some((p) => p.productId === "NEW"),
+  "new identity not smuggled as routine update"
+);
+
 console.log(
   JSON.stringify({
     IU_CJ_PUBLICATION_LKG_V51_8_SELFTEST: "PASS",
@@ -436,5 +542,11 @@ console.log(
     churnBad: churnBad.reason,
     growth94: growth94.reason,
     growth94PublicBypass: growth94PublicBypass.reason,
+    growth13843: {
+      missing: miss.reason,
+      zeroLive: zeroLive.reason,
+      ok: okLedger.reason,
+      routineKept: routine.doc.sections[0].products.length,
+    },
   })
 );

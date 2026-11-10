@@ -1021,6 +1021,131 @@ export function emptyPublicGrowthBudgetLedger(opts = {}) {
   };
 }
 
+/**
+ * Normalize + fail-closed resolve for the cumulative public growth ledger.
+ * Missing / empty / corrupt / zero-while-LIVE must NEVER reopen +500 after first LIVE
+ * (incident #13843). Owner unlock is the only intentional reopen path.
+ */
+export function resolvePublicGrowthBudgetLedger(rawLedger, opts = {}) {
+  const nowIso = opts.nowIso || new Date().toISOString();
+  const maxCum =
+    opts.maxCumulativeAbs != null && Number.isFinite(Number(opts.maxCumulativeAbs))
+      ? Math.max(0, Number(opts.maxCumulativeAbs))
+      : 500;
+  const liveEnabled = opts.liveEnabled === true;
+  const baselineLiveUnique = Number(opts.baselineLiveUnique) || 0;
+  const baselineSnapshotAt = opts.baselineSnapshotAt || null;
+  const baselineSnapshotId = opts.baselineSnapshotId || null;
+
+  const exhaust = (reason, base = null) => {
+    const ledger = emptyPublicGrowthBudgetLedger({
+      nowIso,
+      baselineLiveUnique:
+        Number(base?.baselineLiveUnique) || baselineLiveUnique || 0,
+      baselineSnapshotAt: base?.baselineSnapshotAt || baselineSnapshotAt,
+      baselineSnapshotId: base?.baselineSnapshotId || baselineSnapshotId,
+      maxCumulativeAbs: Number(base?.maxCumulativeAbs) || maxCum,
+    });
+    ledger.cumulativeAddedSinceBaseline = Number(ledger.maxCumulativeAbs) || maxCum;
+    ledger.lastDecision = {
+      note: reason,
+      maxCumulativeAbs: ledger.maxCumulativeAbs,
+      cumulativeAddedSinceBaseline: ledger.cumulativeAddedSinceBaseline,
+      cumulativeRemaining: 0,
+      allowedNew: 0,
+    };
+    ledger.failClosed = {
+      at: nowIso,
+      reason,
+      incidentClass: "GROWTH_LEDGER_FAIL_CLOSED",
+    };
+    if (base?.exceptionalCandidate) ledger.exceptionalCandidate = base.exceptionalCandidate;
+    if (base?.ownerUnlock) ledger.ownerUnlock = base.ownerUnlock;
+    if (base?.restoration) ledger.restoration = base.restoration;
+    return { ledger, failClosed: true, reason };
+  };
+
+  if (rawLedger == null || typeof rawLedger !== "object" || Array.isArray(rawLedger)) {
+    if (liveEnabled) return exhaust("FAIL_CLOSED_MISSING_OR_NULL_GROWTH_LEDGER");
+    return {
+      ledger: emptyPublicGrowthBudgetLedger({
+        nowIso,
+        baselineLiveUnique,
+        baselineSnapshotAt,
+        baselineSnapshotId,
+        maxCumulativeAbs: maxCum,
+      }),
+      failClosed: false,
+      reason: "BOOTSTRAP_EMPTY_LEDGER_PRE_LIVE",
+    };
+  }
+
+  if (String(rawLedger.schema || "") !== PUBLIC_GROWTH_BUDGET_SCHEMA) {
+    if (liveEnabled) return exhaust("FAIL_CLOSED_INVALID_GROWTH_LEDGER_SCHEMA", rawLedger);
+    return {
+      ledger: emptyPublicGrowthBudgetLedger({
+        nowIso,
+        baselineLiveUnique,
+        baselineSnapshotAt,
+        baselineSnapshotId,
+        maxCumulativeAbs: maxCum,
+      }),
+      failClosed: false,
+      reason: "BOOTSTRAP_INVALID_SCHEMA_PRE_LIVE",
+    };
+  }
+
+  const ledger = {
+    ...emptyPublicGrowthBudgetLedger({
+      nowIso,
+      baselineLiveUnique: Number(rawLedger.baselineLiveUnique) || baselineLiveUnique,
+      baselineSnapshotAt: rawLedger.baselineSnapshotAt || baselineSnapshotAt,
+      baselineSnapshotId: rawLedger.baselineSnapshotId || baselineSnapshotId,
+      maxCumulativeAbs:
+        Number.isFinite(Number(rawLedger.maxCumulativeAbs)) && Number(rawLedger.maxCumulativeAbs) >= 0
+          ? Number(rawLedger.maxCumulativeAbs)
+          : maxCum,
+    }),
+    lastAdded: Number(rawLedger.lastAdded) || 0,
+    lastRunId: rawLedger.lastRunId || null,
+    lastDecision: rawLedger.lastDecision || null,
+    exceptionalCandidate: rawLedger.exceptionalCandidate || null,
+    ownerUnlock: rawLedger.ownerUnlock || null,
+    restoration: rawLedger.restoration || null,
+  };
+
+  const cumRaw = rawLedger.cumulativeAddedSinceBaseline;
+  const cum = Number(cumRaw);
+  const ownerAllows =
+    ledger.ownerUnlock &&
+    (ledger.ownerUnlock.allowNewGrowth === true ||
+      ledger.ownerUnlock.allowGrowth === true ||
+      Number(ledger.ownerUnlock.additionalAbs) > 0);
+
+  if (!Number.isFinite(cum) || cum < 0) {
+    if (liveEnabled) return exhaust("FAIL_CLOSED_CORRUPT_CUMULATIVE", ledger);
+    ledger.cumulativeAddedSinceBaseline = 0;
+    return { ledger, failClosed: false, reason: "CORRUPT_CUMULATIVE_RESET_PRE_LIVE" };
+  }
+  if (cum > ledger.maxCumulativeAbs) {
+    ledger.cumulativeAddedSinceBaseline = ledger.maxCumulativeAbs;
+    ledger.failClosed = {
+      at: nowIso,
+      reason: "FAIL_CLOSED_CUMULATIVE_CLAMP",
+      incidentClass: "GROWTH_LEDGER_FAIL_CLOSED",
+    };
+    return { ledger, failClosed: true, reason: "FAIL_CLOSED_CUMULATIVE_CLAMP" };
+  }
+
+  // #13843: empty/zero cumulative while LIVE must not reopen a fresh +500 batch.
+  if (liveEnabled && cum === 0 && !ownerAllows) {
+    return exhaust("FAIL_CLOSED_ZERO_CUMULATIVE_WHILE_LIVE", ledger);
+  }
+
+  ledger.cumulativeAddedSinceBaseline = cum;
+  return { ledger, failClosed: false, reason: "LEDGER_OK" };
+}
+
 export function applyCumulativeGrowthLedger(ledger, applied) {
   const out = {
     ...(ledger && typeof ledger === "object" ? ledger : emptyPublicGrowthBudgetLedger()),
@@ -1033,6 +1158,24 @@ export function applyCumulativeGrowthLedger(ledger, applied) {
     out.baselineSnapshotId = applied.baselineSnapshotId || null;
   }
   const added = Math.max(0, Number(applied?.keptNewCount) || 0);
+  // Never advance cumulative from a fail-closed exhausted placeholder using keptNew>0
+  // without an explicit owner unlock (blocks #13843-class writes).
+  const ownerAllows =
+    out.ownerUnlock &&
+    (out.ownerUnlock.allowNewGrowth === true ||
+      out.ownerUnlock.allowGrowth === true ||
+      Number(out.ownerUnlock.additionalAbs) > 0);
+  if (added > 0 && out.failClosed && !ownerAllows) {
+    out.lastAdded = 0;
+    out.lastRunId = applied?.runId || null;
+    out.lastDecision = {
+      note: "FAIL_CLOSED_REFUSED_CUMULATIVE_ADVANCE_WITH_NEW_GROWTH",
+      refusedKeptNew: added,
+      cumulativeAddedSinceBaseline: out.cumulativeAddedSinceBaseline,
+    };
+    if (applied?.exceptionalCandidate) out.exceptionalCandidate = applied.exceptionalCandidate;
+    return out;
+  }
   out.cumulativeAddedSinceBaseline = Math.max(0, Number(out.cumulativeAddedSinceBaseline) || 0) + added;
   out.lastAdded = added;
   out.lastRunId = applied?.runId || null;

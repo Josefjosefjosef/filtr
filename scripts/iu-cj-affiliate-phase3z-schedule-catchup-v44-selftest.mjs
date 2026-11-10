@@ -29,17 +29,47 @@ const denyDayCap = decideScheduleCatchup({
   now,
   catalogInProgressCount: 0,
   slotReport: { counts: { miss: 2 }, slots: [{ classification: "SLOT_MISS", hour: 0, expectedUtc: "2026-11-05T00:17:00Z" }] },
-  recentCatalogRuns: [{ event: "workflow_dispatch", created_at: "2026-11-05T01:00:00Z" }],
+  recentCatalogRuns: [
+    {
+      event: "workflow_dispatch",
+      created_at: "2026-11-05T01:00:00Z",
+      display_title: "CATCHUP_DISPATCH_NOT_SCHEDULE refresh",
+      catchup_dispatch: "1",
+    },
+  ],
   maxCatchupsPerUtcDay: 1,
 });
 assert(denyDayCap.allow === false && denyDayCap.reason === "MAX_CATCHUPS_PER_UTC_DAY", "day cap");
+
+// Diagnostic / maintenance dispatch must NOT consume catch-up budget (#13843 aftermath).
+const allowAfterDiagnostic = decideScheduleCatchup({
+  now,
+  catalogInProgressCount: 0,
+  slotReport: { counts: { miss: 2 }, slots: [{ classification: "SLOT_MISS", hour: 0, expectedUtc: "2026-11-05T00:17:00Z" }] },
+  recentCatalogRuns: [
+    {
+      event: "workflow_dispatch",
+      created_at: "2026-11-05T01:00:00Z",
+      display_title: "CJ Affiliate catalog sync (fetch ? publish)",
+    },
+  ],
+  maxCatchupsPerUtcDay: 1,
+});
+assert(allowAfterDiagnostic.allow === true, "diagnostic dispatch ignored for catch-up cap");
 
 const denyCooldown = decideScheduleCatchup({
   now,
   catalogInProgressCount: 0,
   slotReport: { counts: { miss: 1 }, slots: [{ classification: "SLOT_MISS", hour: 3 }] },
   // Same UTC day but under day-cap=2; age 2h < cooldown 3h → CATCHUP_COOLDOWN.
-  recentCatalogRuns: [{ event: "workflow_dispatch", created_at: "2026-11-05T05:00:00Z" }],
+  recentCatalogRuns: [
+    {
+      event: "workflow_dispatch",
+      created_at: "2026-11-05T05:00:00Z",
+      display_title: "CATCHUP_DISPATCH_NOT_SCHEDULE",
+      catchup_dispatch: "1",
+    },
+  ],
   cooldownHours: CATCHUP_COOLDOWN_HOURS,
   maxCatchupsPerUtcDay: 2,
 });
