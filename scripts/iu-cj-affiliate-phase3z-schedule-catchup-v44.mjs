@@ -4,8 +4,9 @@
  * Rules (single owner, no parallel publisher):
  * - Never invent a "schedule" event — catch-up is workflow_dispatch only.
  * - Never fire when a catalog-sync run is already in_progress/queued.
- * - At most one catch-up per UTC day (default).
- * - At most one catch-up within CATCHUP_COOLDOWN_HOURS.
+ * - At most two catch-ups per UTC day (default) — GitHub cron can miss multiple
+ *   slots in one day; a single catch-up left later misses unrecovered.
+ * - At most one catch-up within CATCHUP_COOLDOWN_HOURS (still blocks storms).
  * - Only when there is a real SLOT_MISS (not mere PENDING_OBSERVATION).
  * - Catch-up joins the same concurrency group as catalog-sync (caller must
  *   dispatch that workflow; cancel-in-progress remains false).
@@ -15,7 +16,7 @@
  * GitHub Actions cron is NOT a guarantee of exact 3h delivery.
  */
 export const CATCHUP_COOLDOWN_HOURS = 3;
-export const MAX_CATCHUPS_PER_UTC_DAY = 1;
+export const MAX_CATCHUPS_PER_UTC_DAY = 2;
 export const CATCHUP_DISPATCH_MARKER = "CATCHUP_DISPATCH_NOT_SCHEDULE";
 
 /** True when a catalog run is an audit-honest catch-up (not diagnostic dispatch). */

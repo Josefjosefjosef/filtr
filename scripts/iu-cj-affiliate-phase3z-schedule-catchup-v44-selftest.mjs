@@ -94,7 +94,45 @@ assert(allow.allow === true, "allow catchup");
 assert(allow.mode === "refresh_priority", "mode");
 assert(allow.eventLabel === "CATCHUP_DISPATCH_NOT_SCHEDULE", "label");
 assert(allow.missedSlots.length === 2, "missed slots");
-assert(MAX_CATCHUPS_PER_UTC_DAY === 1, "default day cap");
+assert(MAX_CATCHUPS_PER_UTC_DAY === 2, "default day cap");
+
+// Second catch-up same UTC day allowed after cooldown when day-cap is 2
+// (covers multi-slot GitHub scheduler misses without unlimited runs).
+const allowSecond = decideScheduleCatchup({
+  now: new Date("2026-11-05T10:00:00Z"),
+  catalogInProgressCount: 0,
+  slotReport: { counts: { miss: 1 }, slots: [{ classification: "SLOT_MISS", hour: 9, expectedUtc: "2026-11-05T09:17:00Z" }] },
+  recentCatalogRuns: [
+    {
+      event: "workflow_dispatch",
+      created_at: "2026-11-05T03:51:00Z",
+      display_title: "CATCHUP_DISPATCH_NOT_SCHEDULE",
+      catchup_dispatch: "1",
+    },
+  ],
+});
+assert(allowSecond.allow === true && allowSecond.reason === "SLOT_MISS_BOUNDED_CATCHUP", "second catchup after cooldown");
+
+const denySecondCap = decideScheduleCatchup({
+  now: new Date("2026-11-05T14:00:00Z"),
+  catalogInProgressCount: 0,
+  slotReport: { counts: { miss: 1 }, slots: [{ classification: "SLOT_MISS", hour: 12, expectedUtc: "2026-11-05T12:17:00Z" }] },
+  recentCatalogRuns: [
+    {
+      event: "workflow_dispatch",
+      created_at: "2026-11-05T03:51:00Z",
+      display_title: "CATCHUP_DISPATCH_NOT_SCHEDULE",
+      catchup_dispatch: "1",
+    },
+    {
+      event: "workflow_dispatch",
+      created_at: "2026-11-05T10:05:00Z",
+      display_title: "CATCHUP_DISPATCH_NOT_SCHEDULE",
+      catchup_dispatch: "1",
+    },
+  ],
+});
+assert(denySecondCap.allow === false && denySecondCap.reason === "MAX_CATCHUPS_PER_UTC_DAY", "day cap at 2");
 
 const gapNo = decideGapDeepen({
   eventName: "schedule",
