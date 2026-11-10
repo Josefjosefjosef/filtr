@@ -756,7 +756,8 @@ jobs:
     needs: fetch-staging
     runs-on: ubuntu-latest
     # V30.2: full feed inventory + deep pagination exceeded 45m (run cancelled). Continueable paging stays; raise budget.
-    timeout-minutes: 90
+    # V51.8: post-miss gap-deepen schedule 42839779394 hit 90m job timeout during Build/promote; raise to 150m (no gate weaken).
+    timeout-minutes: 150
     env:
       IU_CJ_PAT: ${{ secrets.IU_CJ_PAT }}
       IU_CJ_PUBLISHER_CID: ${{ secrets.IU_CJ_PUBLISHER_CID }}
