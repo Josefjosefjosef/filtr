@@ -111,6 +111,7 @@ jobs:
               -f publish_managed_public_r2=0 \
               -f arm_offers_live=0 \
               -f promote_offers_public=1 \
+              -f catchup_dispatch=1 \
               || echo "CATCHUP_DISPATCH_FAILED"
           else
             echo "CATCHUP_DISPATCH=0 reason=$(jq -r '.reason' /tmp/iu-cj-catchup-decision.json)"

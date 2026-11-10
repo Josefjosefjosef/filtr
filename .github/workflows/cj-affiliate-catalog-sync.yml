@@ -7,6 +7,13 @@ name: CJ Affiliate catalog sync (fetch ? publish)
 # GitHub Actions cron is best-effort ? NOT a guarantee of exact 3h delivery.
 # schedule-reregister: 2026-11-05T07:00Z ? V44 cadence rebind after post-#13768 SLOT_MISS window
 # (comment-only rebind; do NOT disable/enable workflow).
+# schedule-catchup-marker: 2026-11-09T10:00Z ? catchup_dispatch input so diagnostic dispatch
+# does not consume MAX_CATCHUPS_PER_UTC_DAY (V51.8-maint).
+
+run-name: >-
+  ${{ github.event_name == 'workflow_dispatch' && inputs.catchup_dispatch == '1'
+      && format('CATCHUP_DISPATCH_NOT_SCHEDULE {0}', github.run_id)
+      || format('CJ catalog sync ({0})', github.event_name) }}
 
 on:
   schedule:
@@ -67,6 +74,14 @@ on:
           - "1"
       promote_offers_public:
         description: "Open data-only PR to main with offers-public JSON (Pages path)"
+        required: true
+        default: "0"
+        type: choice
+        options:
+          - "0"
+          - "1"
+      catchup_dispatch:
+        description: "Mark as schedule watch catch-up (NOT a schedule event; consumes daily catch-up budget)"
         required: true
         default: "0"
         type: choice
@@ -921,7 +936,9 @@ jobs:
           for DUR in \
             iu-affiliate-cj-durable-price-history-v50.json \
             iu-affiliate-cj-product-reverify-v50.json \
-            iu-affiliate-cj-product-identity-v50.json
+            iu-affiliate-cj-product-identity-v50.json \
+            iu-affiliate-cj-durable-catalog-v51.json \
+            iu-affiliate-cj-public-growth-budget-v51.json
           do
             if [ ! -f "projects/data/${DUR}" ] || [ ! -s "projects/data/${DUR}" ]; then NEED_DUR=1; fi
           done
@@ -948,7 +965,9 @@ jobs:
                   iu-affiliate-cj-durable-price-history-v50.json \
                   iu-affiliate-cj-durable-price-history-archive-v51.json \
                   iu-affiliate-cj-product-reverify-v50.json \
-                  iu-affiliate-cj-product-identity-v50.json
+                  iu-affiliate-cj-product-identity-v50.json \
+                  iu-affiliate-cj-durable-catalog-v51.json \
+                  iu-affiliate-cj-public-growth-budget-v51.json
                 do
                   SRC="${RUNNER_TEMP}/iu-cj-dur-prior/${DUR}"
                   DP="projects/data/${DUR}"
@@ -1025,6 +1044,23 @@ jobs:
             echo "DURABLE_RESTORE_NOTE=no_prior_durable_artifact_detected"
           else
             echo "DURABLE_RESTORE_BLOCKED=0"
+          fi
+          # V51.8-maint: growth ledger missing while LIVE must hard-fail (belt+suspenders for #13843).
+          # JS resolvePublicGrowthBudgetLedger is also fail-closed; workflow refuses empty-ledger continue.
+          LIVE_FLAG=0
+          if [ -f "projects/data/iu-affiliate-cj-offers-public-v1.json" ] && [ -s "projects/data/iu-affiliate-cj-offers-public-v1.json" ]; then
+            LIVE_FLAG=$(node -e "try{const d=require('./projects/data/iu-affiliate-cj-offers-public-v1.json');process.stdout.write(d&&d.liveEnabled===true?'1':'0')}catch(e){process.stdout.write('0')}")
+          fi
+          if [ -f "projects/data/iu-affiliate-cj-public-growth-budget-v51.json" ] && [ -s "projects/data/iu-affiliate-cj-public-growth-budget-v51.json" ]; then
+            echo "GROWTH_BUDGET_LEDGER_RESTORED=1"
+          else
+            echo "GROWTH_BUDGET_LEDGER_RESTORED=0"
+            if [ "$LIVE_FLAG" = "1" ]; then
+              echo "GROWTH_LEDGER_RESTORE_BLOCKED=1"
+              echo "BLOCKER=GROWTH_LEDGER_RESTORE_BLOCKED"
+              echo "::error::GROWTH_LEDGER_RESTORE_BLOCKED - LIVE catalog requires cumulative growth ledger; refusing empty-ledger continue (#13843)"
+              exit 1
+            fi
           fi
           # API fallback via gh (same path that successfully restores offers-public).
           if [ ! -f "$CP" ] || [ ! -s "$CP" ]; then
