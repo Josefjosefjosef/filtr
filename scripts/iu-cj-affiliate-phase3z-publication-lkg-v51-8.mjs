@@ -298,8 +298,89 @@ export function buildPublicationDeltaLedger(prevDoc, nextDoc, opts = {}) {
     removedByClass: byClass,
     removed,
     added,
+    semantics: {
+      stage: "PRE_LKG_WINDOW_ONLY",
+      proposedRemovalsAreNotLiveUnpublish: true,
+      proposedAddsAreNotLivePublish: true,
+      identityKey: "advertiserId|productId",
+      note:
+        "removed/added compare prev LIVE unique vs this-run presentation window BEFORE LKG merge + growth budget.",
+    },
     note:
       "Net unique change ≠ removedCount. Presentation rotation can churn many identities with small net.",
+  };
+}
+
+/**
+ * Explain proposed publicationDelta vs post-LKG / post-growth published LIVE.
+ * Large NOT_YET_SEEN remove/add with stable LIVE is EXPECTED when LKG carries.
+ */
+export function reconcilePublicationProposedVsPublished(opts = {}) {
+  const delta = opts.publicationDelta || {};
+  const restore = opts.publicationRestore || {};
+  const growth = opts.publicGrowthBudget || restore.publicGrowthBudget || {};
+  const removedByClass = delta.removedByClass || {};
+  const notYetSeen = Number(removedByClass.NOT_YET_SEEN || 0);
+  const carried = Number(restore.carried || restore.lkgCarriedProducts || 0);
+  const proposedRemovals = Number(delta.removedCount || 0);
+  const proposedAdds = Number(delta.addedCount || 0);
+  const prevUnique = Number(delta.prevUnique || 0);
+  const nextUniqueWindow = Number(delta.nextUnique || 0);
+  const uniqueAfterMerge = Number(
+    restore.uniqueAfter ?? restore.nextUniqueAfterMerge ?? nextUniqueWindow + carried,
+  );
+  const publishedLive = Number(
+    growth.publicEligibleAfter ?? restore.publicEligibleAfter ?? null,
+  );
+  const deferredNew = Number(growth.deferredNew ?? restore.deferredNew ?? 0);
+  const keptNew = Number(growth.keptNew ?? restore.keptNew ?? 0);
+  const liveStable =
+    publishedLive != null &&
+    prevUnique > 0 &&
+    Math.abs(publishedLive - prevUnique) <= Math.max(50, Math.floor(prevUnique * 0.05));
+  const expectedWindowChurnAbsorbed =
+    proposedRemovals >= 100 &&
+    notYetSeen >= Math.floor(proposedRemovals * 0.8) &&
+    carried >= Math.floor(notYetSeen * 0.8) &&
+    liveStable;
+  return {
+    schema: PUBLICATION_LKG_SCHEMA + "-reconcile-v51-8",
+    at: opts.nowIso || new Date().toISOString(),
+    identityKey: "advertiserId|productId",
+    proposed: {
+      stage: "PRE_LKG_WINDOW_ONLY",
+      prevUnique,
+      nextUniqueWindow,
+      removedCount: proposedRemovals,
+      addedCount: proposedAdds,
+      removedByClass,
+      notYetSeen,
+    },
+    afterLkg: {
+      carried,
+      uniqueAfterMerge,
+    },
+    published: {
+      LIVE: publishedLive,
+      keptNew,
+      deferredNew,
+      ownerGate: growth.exceptionalGrowthRequiresOwner === true,
+      growthCum: growth.cumulativeAddedSinceBaseline ?? null,
+      growthRem: growth.cumulativeRemaining ?? null,
+    },
+    classification: expectedWindowChurnAbsorbed
+      ? "EXPECTED_INCOMPLETE_WINDOW_CHURN_ABSORBED_BY_LKG"
+      : liveStable
+        ? "LIVE_STABLE_REVIEW_DELTA_SEMANTICS"
+        : "LIVE_MOVED_OR_INCOMPLETE_EVIDENCE",
+    unauthorizedMassRemoval: expectedWindowChurnAbsorbed
+      ? false
+      : publishedLive != null &&
+        prevUnique > 0 &&
+        publishedLive < prevUnique * 0.7,
+    falseNewIdentitiesSuspected: false,
+    note:
+      "Proposed remove/add is window ledger, not LIVE unpublish/publish. LKG carries NOT_YET_SEEN; growth budget caps NEW public identities.",
   };
 }
 
@@ -911,6 +992,7 @@ export const PUBLIC_GROWTH_BUDGET_SCHEMA = "iu-cj-affiliate-phase3z-public-growt
  */
 export function computePublicGrowthBudget(prevPublicUnique, opts = {}) {
   const prev = Math.max(0, Number(prevPublicUnique) || 0);
+  const uncappedMode = opts.uncappedMode === true;
   const maxGrowthAbs =
     opts.maxGrowthAbs != null && Number.isFinite(Number(opts.maxGrowthAbs))
       ? Math.max(0, Number(opts.maxGrowthAbs))
@@ -919,24 +1001,47 @@ export function computePublicGrowthBudget(prevPublicUnique, opts = {}) {
     opts.maxGrowthRatio != null && Number.isFinite(Number(opts.maxGrowthRatio))
       ? Math.min(1, Math.max(0, Number(opts.maxGrowthRatio)))
       : 0.2;
-  const perRun = Math.min(maxGrowthAbs, Math.floor(prev * maxGrowthRatio + 1e-9));
+  const surgeRatio =
+    opts.surgeRatio != null && Number.isFinite(Number(opts.surgeRatio))
+      ? Math.min(1, Math.max(0, Number(opts.surgeRatio)))
+      : 0.5;
+  const newCandidates = Math.max(0, Number(opts.newCandidatesCount) || 0);
+  const surgePause =
+    uncappedMode && prev > 0 && newCandidates / prev > surgeRatio;
+  // Default (capped): min(abs, ratio*prev). Uncapped (opt-in only): ratio-only per run; no fixed 500 cumulative.
+  const perRun = uncappedMode
+    ? Math.floor(prev * maxGrowthRatio + 1e-9)
+    : Math.min(maxGrowthAbs, Math.floor(prev * maxGrowthRatio + 1e-9));
   const cumulativeAdded = Math.max(0, Number(opts.cumulativeAddedSinceBaseline) || 0);
-  const maxCumulativeAbs =
-    opts.maxCumulativeAbs != null && Number.isFinite(Number(opts.maxCumulativeAbs))
+  const maxCumulativeAbs = uncappedMode
+    ? Number.MAX_SAFE_INTEGER
+    : opts.maxCumulativeAbs != null && Number.isFinite(Number(opts.maxCumulativeAbs))
       ? Math.max(0, Number(opts.maxCumulativeAbs))
       : maxGrowthAbs;
-  const cumulativeRemaining = Math.max(0, maxCumulativeAbs - cumulativeAdded);
-  const allowedNew = Math.min(perRun, cumulativeRemaining);
+  const cumulativeRemaining = uncappedMode
+    ? perRun
+    : Math.max(0, maxCumulativeAbs - cumulativeAdded);
+  const allowedNew = surgePause ? 0 : Math.min(perRun, cumulativeRemaining);
   return {
     prevPublicUnique: prev,
-    maxGrowthAbs,
+    maxGrowthAbs: uncappedMode ? null : maxGrowthAbs,
     maxGrowthRatio,
     perRunBudget: perRun,
-    maxCumulativeAbs,
+    maxCumulativeAbs: uncappedMode ? null : maxCumulativeAbs,
     cumulativeAddedSinceBaseline: cumulativeAdded,
-    cumulativeRemaining,
+    cumulativeRemaining: uncappedMode ? null : cumulativeRemaining,
     allowedNew,
-    exceptionalGrowthRequiresOwner: cumulativeRemaining <= 0 && cumulativeAdded >= maxCumulativeAbs,
+    uncappedMode,
+    surgeRatio,
+    surgePause,
+    exceptionalGrowthRequiresOwner: uncappedMode
+      ? surgePause === true
+      : cumulativeRemaining <= 0 && cumulativeAdded >= maxCumulativeAbs,
+    note: uncappedMode
+      ? surgePause
+        ? "UNCAPPED_SURGE_PAUSE — candidate surge exceeds surgeRatio; owner review required."
+        : "UNCAPPED_RATIO_BOUNDED — no fixed absolute cumulative; per-run still ratio-capped."
+      : undefined,
   };
 }
 
@@ -947,7 +1052,6 @@ export function computePublicGrowthBudget(prevPublicUnique, opts = {}) {
 export function applyPublicGrowthBudget(nextDoc, prevDoc, opts = {}) {
   const doc = JSON.parse(JSON.stringify(nextDoc || {}));
   const prevMap = collectPublicEligibleProductMap(prevDoc);
-  const budget = computePublicGrowthBudget(prevMap.size, opts);
   const preferredCurrency = String(opts.preferredCurrency || "CZK").toUpperCase();
   const requirePrice = opts.requirePrice !== false;
 
@@ -972,6 +1076,12 @@ export function applyPublicGrowthBudget(nextDoc, prevDoc, opts = {}) {
   newCandidates.sort((a, b) => {
     if (b.prefer !== a.prefer) return b.prefer - a.prefer;
     return String(b.ts).localeCompare(String(a.ts));
+  });
+
+  // Budget after candidate enumeration so uncapped surgePause can see the batch size.
+  const budget = computePublicGrowthBudget(prevMap.size, {
+    ...opts,
+    newCandidatesCount: newCandidates.length,
   });
 
   const keepNew = new Set(newCandidates.slice(0, budget.allowedNew).map((r) => r.key));

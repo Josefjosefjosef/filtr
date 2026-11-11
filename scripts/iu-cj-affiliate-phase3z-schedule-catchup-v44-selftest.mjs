@@ -61,17 +61,17 @@ const denyCooldown = decideScheduleCatchup({
   now,
   catalogInProgressCount: 0,
   slotReport: { counts: { miss: 1 }, slots: [{ classification: "SLOT_MISS", hour: 3 }] },
-  // Same UTC day but under day-cap=2; age 2h < cooldown 3h → CATCHUP_COOLDOWN.
+  // Age 1h < cooldown 2h → CATCHUP_COOLDOWN.
   recentCatalogRuns: [
     {
       event: "workflow_dispatch",
-      created_at: "2026-11-05T05:00:00Z",
+      created_at: "2026-11-05T06:00:00Z",
       display_title: "CATCHUP_DISPATCH_NOT_SCHEDULE",
       catchup_dispatch: "1",
     },
   ],
   cooldownHours: CATCHUP_COOLDOWN_HOURS,
-  maxCatchupsPerUtcDay: 2,
+  maxCatchupsPerUtcDay: 4,
 });
 assert(denyCooldown.allow === false && denyCooldown.reason === "CATCHUP_COOLDOWN", "cooldown");
 
@@ -94,10 +94,10 @@ assert(allow.allow === true, "allow catchup");
 assert(allow.mode === "refresh_priority", "mode");
 assert(allow.eventLabel === "CATCHUP_DISPATCH_NOT_SCHEDULE", "label");
 assert(allow.missedSlots.length === 2, "missed slots");
-assert(MAX_CATCHUPS_PER_UTC_DAY === 2, "default day cap");
+assert(MAX_CATCHUPS_PER_UTC_DAY === 4, "default day cap");
+assert(CATCHUP_COOLDOWN_HOURS === 2, "default cooldown");
 
-// Second catch-up same UTC day allowed after cooldown when day-cap is 2
-// (covers multi-slot GitHub scheduler misses without unlimited runs).
+// Second catch-up same UTC day allowed after cooldown when day-cap is 4
 const allowSecond = decideScheduleCatchup({
   now: new Date("2026-11-05T10:00:00Z"),
   catalogInProgressCount: 0,
@@ -113,26 +113,39 @@ const allowSecond = decideScheduleCatchup({
 });
 assert(allowSecond.allow === true && allowSecond.reason === "SLOT_MISS_BOUNDED_CATCHUP", "second catchup after cooldown");
 
-const denySecondCap = decideScheduleCatchup({
-  now: new Date("2026-11-05T14:00:00Z"),
+// Day cap at 4: four prior catch-ups same UTC day → refuse
+const denyFourthCap = decideScheduleCatchup({
+  now: new Date("2026-11-05T20:00:00Z"),
   catalogInProgressCount: 0,
-  slotReport: { counts: { miss: 1 }, slots: [{ classification: "SLOT_MISS", hour: 12, expectedUtc: "2026-11-05T12:17:00Z" }] },
+  slotReport: { counts: { miss: 1 }, slots: [{ classification: "SLOT_MISS", hour: 18, expectedUtc: "2026-11-05T18:17:00Z" }] },
   recentCatalogRuns: [
     {
       event: "workflow_dispatch",
-      created_at: "2026-11-05T03:51:00Z",
+      created_at: "2026-11-05T01:00:00Z",
       display_title: "CATCHUP_DISPATCH_NOT_SCHEDULE",
       catchup_dispatch: "1",
     },
     {
       event: "workflow_dispatch",
-      created_at: "2026-11-05T10:05:00Z",
+      created_at: "2026-11-05T04:00:00Z",
+      display_title: "CATCHUP_DISPATCH_NOT_SCHEDULE",
+      catchup_dispatch: "1",
+    },
+    {
+      event: "workflow_dispatch",
+      created_at: "2026-11-05T08:00:00Z",
+      display_title: "CATCHUP_DISPATCH_NOT_SCHEDULE",
+      catchup_dispatch: "1",
+    },
+    {
+      event: "workflow_dispatch",
+      created_at: "2026-11-05T12:00:00Z",
       display_title: "CATCHUP_DISPATCH_NOT_SCHEDULE",
       catchup_dispatch: "1",
     },
   ],
 });
-assert(denySecondCap.allow === false && denySecondCap.reason === "MAX_CATCHUPS_PER_UTC_DAY", "day cap at 2");
+assert(denyFourthCap.allow === false && denyFourthCap.reason === "MAX_CATCHUPS_PER_UTC_DAY", "day cap at 4");
 
 const gapNo = decideGapDeepen({
   eventName: "schedule",
@@ -154,5 +167,19 @@ const gapDaily = decideGapDeepen({
   latestScheduleAgeHours: 30,
 });
 assert(gapDaily.deepen === false && gapDaily.reason === "DAILY_FULL_ALREADY", "daily full");
+
+const gapCatchup = decideGapDeepen({
+  eventName: "workflow_dispatch",
+  catchupDispatch: "1",
+  latestScheduleAgeHours: 8,
+});
+assert(gapCatchup.deepen === true && gapCatchup.reason === "CATCHUP_GAP_GT_THRESHOLD", "catchup deepen");
+
+const gapDispatchNo = decideGapDeepen({
+  eventName: "workflow_dispatch",
+  catchupDispatch: "0",
+  latestScheduleAgeHours: 8,
+});
+assert(gapDispatchNo.deepen === false && gapDispatchNo.reason === "NOT_SCHEDULE_OR_CATCHUP_REFRESH", "diagnostic no deepen");
 
 console.log("PASS iu-cj-affiliate-phase3z-schedule-catchup-v44-selftest");

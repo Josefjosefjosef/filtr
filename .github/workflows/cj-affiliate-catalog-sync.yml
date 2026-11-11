@@ -185,6 +185,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-catalog-fairness-v51-8-selftest.mjs
       - name: Publication LKG merge + shrinkage gate selftest (V51.8-c2; offline)
         run: node scripts/iu-cj-affiliate-phase3z-publication-lkg-v51-8-selftest.mjs
+      - name: Uncapped growth readiness + identity reconcile selftest (V51.8; offline; does NOT arm uncapped)
+        run: node scripts/iu-cj-affiliate-phase3z-uncapped-growth-readiness-v51-8-selftest.mjs
       - name: Audit ZIP CRC32/SHA256 integrity selftest (V51.8; offline)
         run: node scripts/iu-cj-affiliate-phase3z-audit-zip-integrity-v51-8-selftest.mjs
       - name: Registry dry-run LKG preserve selftest (V51.3; offline)
@@ -1153,13 +1155,15 @@ jobs:
           off=json.load(open("projects/data/iu-affiliate-cj-offers-public-v1.json"))
           print("PREV_OFFERS_LIVE", off.get("liveEnabled") is True)
           PY
-      - name: V44 gap-deepen when schedule fires after long miss window
-        if: ${{ github.event_name == 'schedule' }}
+      - name: V44 gap-deepen when schedule/catch-up fires after long miss window
+        if: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.catchup_dispatch == '1') }}
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
           THIS_SCHEDULE: ${{ github.event.schedule }}
+          THIS_EVENT: ${{ github.event_name }}
+          CATCHUP_DISPATCH: ${{ inputs.catchup_dispatch || '0' }}
         run: |
           set -euo pipefail
           WF_ID="$(gh api "repos/${REPO}/actions/workflows" --jq \
@@ -1177,8 +1181,9 @@ jobs:
             ageH = (Date.now() - new Date(prior.created_at).getTime()) / 3600000;
           }
           const d = decideGapDeepen({
-            eventName: "schedule",
+            eventName: process.env.THIS_EVENT || "schedule",
             scheduleExpr: process.env.THIS_SCHEDULE || "",
+            catchupDispatch: process.env.CATCHUP_DISPATCH || "0",
             latestScheduleAgeHours: ageH,
           });
           fs.writeFileSync("/tmp/iu-cj-gap-deepen.json", JSON.stringify({ ...d, priorRunId: prior?.id || null }, null, 2));
