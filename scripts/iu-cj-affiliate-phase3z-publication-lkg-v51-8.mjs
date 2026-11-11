@@ -204,19 +204,33 @@ export function classifyMissingPublishedProduct(prevRow, opts = {}) {
     miss?.decision === "RECOVERED"
   ) {
     // Incomplete / not-in-window: keep PUBLICATION_ELIGIBLE (pending reverify).
-    // Age past staleAfterHours must forbid CURRENT labels, but must NOT force HOLD —
+    // Age past staleAfterHours must forbid CURRENT labels, but must NOT force HOLD at 72h —
     // otherwise presentation rotation permanently collapses LIVE via PUBLIC_SHRINKAGE_REFUSED.
+    // Chronic incomplete (incompleteHoldAfterHours, default 30d) may request HOLD; merge
+    // applies it gradually (maxAgeHoldPerRun) so shrinkage stays within policy.
     const ageExceeded = ageHours != null && ageHours >= staleAfterHours;
+    const incompleteHoldAfterHours = Math.max(
+      staleAfterHours,
+      Number(opts.incompleteHoldAfterHours) || 720,
+    );
+    const chronicIncomplete =
+      ageHours != null && ageHours >= incompleteHoldAfterHours;
     return {
       classId: REMOVAL_CLASS.NOT_YET_SEEN,
       carryForward: true,
       rootCauseVerified: true,
-      publicationClass: "NOT_YET_SEEN",
+      publicationClass: chronicIncomplete
+        ? "NOT_YET_SEEN_MAX_AGE_HOLD"
+        : "NOT_YET_SEEN",
       ageHours,
       ageExceeded,
-      note: ageExceeded
-        ? "Missing from incomplete discovery window; LKG older than stale policy — keep public as pending reverify, forbid CURRENT price label."
-        : "Missing from current discovery/presentation window — treat as NOT_YET_SEEN, carry LKG until confirmed. Stale prices must not be labeled CURRENT.",
+      incompleteHoldRequested: chronicIncomplete,
+      incompleteHoldAfterHours,
+      note: chronicIncomplete
+        ? "Missing from incomplete window beyond incompleteHoldAfterHours — request gradual PUBLICATION_HOLD (no mass delete)."
+        : ageExceeded
+          ? "Missing from incomplete discovery window; LKG older than stale policy — keep public as pending reverify, forbid CURRENT price label."
+          : "Missing from current discovery/presentation window — treat as NOT_YET_SEEN, carry LKG until confirmed. Stale prices must not be labeled CURRENT.",
       hideAsCurrent: false,
       sourceFreshLabelForbidden: true,
     };
@@ -446,23 +460,34 @@ export function mergeLkgPublishedProducts(nextDoc, prevDoc, opts = {}) {
     // V51.8-final: incomplete-window NOT_YET_SEEN keeps PUBLIC_ELIGIBLE (last-known,
     // no CURRENT claim) even when age exceeds staleAfterHours. HOLD only for true
     // hold/collision/unknown/unavailable classes — not for presentation-window misses.
+    // V51.8-stab: chronic incomplete (NOT_YET_SEEN_MAX_AGE_HOLD) may HOLD gradually.
+    const maxAgeHoldPerRun = Math.max(0, Number(opts.maxAgeHoldPerRun) || 25);
+    if (opts._ageHoldApplied == null) opts._ageHoldApplied = 0;
     const isNotYetSeen =
       classId === REMOVAL_CLASS.NOT_YET_SEEN ||
       pubClass === "NOT_YET_SEEN" ||
+      pubClass === "NOT_YET_SEEN_MAX_AGE_HOLD" ||
       /NOT_YET_SEEN/i.test(pubClass);
+    const chronicAgeHoldRequested =
+      row.incompleteHoldRequested === true ||
+      pubClass === "NOT_YET_SEEN_MAX_AGE_HOLD";
+    const applyChronicAgeHold =
+      chronicAgeHoldRequested && opts._ageHoldApplied < maxAgeHoldPerRun;
+    if (applyChronicAgeHold) opts._ageHoldApplied += 1;
     const forceHold =
-      !isNotYetSeen &&
-      (row.hideAsCurrent === true ||
-        pubClass === "SOURCE_STALE" ||
-        pubClass === "UNKNOWN" ||
-        pubClass === "HOLD" ||
-        pubClass === REMOVAL_CLASS.UNKNOWN ||
-        pubClass === REMOVAL_CLASS.HOLD_COLLISION ||
-        pubClass === REMOVAL_CLASS.SOURCE_UNAVAILABLE ||
-        classId === REMOVAL_CLASS.SOURCE_UNAVAILABLE ||
-        classId === REMOVAL_CLASS.HOLD_COLLISION ||
-        classId === REMOVAL_CLASS.UNKNOWN ||
-        /SOURCE_STALE|STALE_PRICE|HOLD_COLLISION/i.test(pubClass));
+      applyChronicAgeHold ||
+      (!isNotYetSeen &&
+        (row.hideAsCurrent === true ||
+          pubClass === "SOURCE_STALE" ||
+          pubClass === "UNKNOWN" ||
+          pubClass === "HOLD" ||
+          pubClass === REMOVAL_CLASS.UNKNOWN ||
+          pubClass === REMOVAL_CLASS.HOLD_COLLISION ||
+          pubClass === REMOVAL_CLASS.SOURCE_UNAVAILABLE ||
+          classId === REMOVAL_CLASS.SOURCE_UNAVAILABLE ||
+          classId === REMOVAL_CLASS.HOLD_COLLISION ||
+          classId === REMOVAL_CLASS.UNKNOWN ||
+          /SOURCE_STALE|STALE_PRICE|HOLD_COLLISION/i.test(pubClass)));
     const pendingReverify = !forceHold && isNotYetSeen;
     const holdPublic = forceHold;
     const ageExceeded = row.ageExceeded === true || (Number(row.ageHours) >= 72);
@@ -479,11 +504,13 @@ export function mergeLkgPublishedProducts(nextDoc, prevDoc, opts = {}) {
         ? PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD
         : PUBLICATION_ELIGIBILITY.PUBLICATION_ELIGIBLE,
       refreshResult: row.classId,
-      refreshReason: pendingReverify
-        ? ageExceeded
-          ? "lkg_carry_not_yet_seen_age_exceeded_keep_public_forbid_current"
-          : "lkg_carry_not_yet_seen_keep_public_pending_reverify"
-        : "lkg_carry_incomplete_discovery_or_unverified",
+      refreshReason: applyChronicAgeHold
+        ? "lkg_incomplete_max_age_gradual_hold"
+        : pendingReverify
+          ? ageExceeded
+            ? "lkg_carry_not_yet_seen_age_exceeded_keep_public_forbid_current"
+            : "lkg_carry_not_yet_seen_keep_public_pending_reverify"
+          : "lkg_carry_incomplete_discovery_or_unverified",
       freshnessStatus: holdPublic
         ? "UNKNOWN"
         : pendingReverify
@@ -491,13 +518,15 @@ export function mergeLkgPublishedProducts(nextDoc, prevDoc, opts = {}) {
             ? "LAST_KNOWN_STALE_PENDING_REVERIFY"
             : "LAST_KNOWN_PENDING_REVERIFY"
           : "UNKNOWN",
-      freshnessReason: holdPublic
-        ? "LKG_CATALOG_RETAINED_PUBLICATION_HOLD"
-        : pendingReverify
-          ? ageExceeded
-            ? "LKG_NOT_YET_SEEN_AGE_EXCEEDED_KEEP_PUBLIC_NO_CURRENT"
-            : "LKG_NOT_YET_SEEN_KEEP_PUBLIC_WITHIN_STALE_POLICY"
-          : "LKG_CARRIED_PUBLICATION_ELIGIBLE",
+      freshnessReason: applyChronicAgeHold
+        ? "LKG_NOT_YET_SEEN_MAX_AGE_GRADUAL_HOLD"
+        : holdPublic
+          ? "LKG_CATALOG_RETAINED_PUBLICATION_HOLD"
+          : pendingReverify
+            ? ageExceeded
+              ? "LKG_NOT_YET_SEEN_AGE_EXCEEDED_KEEP_PUBLIC_NO_CURRENT"
+              : "LKG_NOT_YET_SEEN_KEEP_PUBLIC_WITHIN_STALE_POLICY"
+            : "LKG_CARRIED_PUBLICATION_ELIGIBLE",
       publicationClass: pubClass,
       sourceFreshLabelForbidden: true,
     };
@@ -560,6 +589,8 @@ export function mergeLkgPublishedProducts(nextDoc, prevDoc, opts = {}) {
     blocked,
     heldPublic,
     publicEligibleCarried,
+    ageHoldApplied: Number(opts._ageHoldApplied) || 0,
+    maxAgeHoldPerRun: Math.max(0, Number(opts.maxAgeHoldPerRun) || 25),
     prevUnique: delta.prevUnique,
     nextUniqueBeforeMerge: delta.nextUnique,
     nextUniqueAfterMerge: unique.size,
@@ -567,7 +598,7 @@ export function mergeLkgPublishedProducts(nextDoc, prevDoc, opts = {}) {
   };
   doc.note =
     (doc.note ? String(doc.note) + " | " : "") +
-    "V51.8-final: NOT_YET_SEEN within freshness → CATALOG_RETAINED + PUBLICATION_ELIGIBLE (pending reverify, no CURRENT label); SOURCE_STALE/collision → PUBLICATION_HOLD.";
+    "V51.8-final: NOT_YET_SEEN within freshness → CATALOG_RETAINED + PUBLICATION_ELIGIBLE (pending reverify, no CURRENT label); SOURCE_STALE/collision → PUBLICATION_HOLD; chronic incomplete → gradual HOLD.";
 
   return {
     doc,

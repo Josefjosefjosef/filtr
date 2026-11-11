@@ -196,9 +196,9 @@ export function buildUncappedGrowthActivationRunbook() {
       "Confirm identityReconcile class EXPECTED_INCOMPLETE_WINDOW_CHURN_ABSORBED_BY_LKG on recent promotes.",
       "Confirm partner INVALID_FEED errors are external-only and LKG retained.",
       "Owner approval recorded (ticket/PR) to raise/remove absolute cumulative 500.",
-      "Set IU_CJ_PUBLIC_GROWTH_UNCAPPED=1 only on catalog-sync job env (never commit true).",
-      "Pass uncappedMode into applyPublicGrowthBudget via live-sync env gate (separate small PR after approval).",
-      "Keep maxGrowthRatio (default 0.2) + surgeRatio pause (default 0.5).",
+      "Confirm live-sync already reads IU_CJ_PUBLIC_GROWTH_UNCAPPED (wired; default unset/0 = DISARMED).",
+      "Set IU_CJ_PUBLIC_GROWTH_UNCAPPED=1 only as Actions variable/secret on catalog-sync job (never commit true).",
+      "Keep maxGrowthRatio (default 0.2) + surgeRatio pause (default 0.5); deferred remainder continues via checkpoints.",
       "Keep shrinkage / identity churn / durable LKG / fail-closed ledger.",
       "Burn-in one catch-up + one schedule with deferredNew→keptNew observation.",
       "Rollback: unset env; restore growth ledger maxCumulativeAbs=500; ownerGate stays true until ledger rebuilt deliberately.",
@@ -218,6 +218,20 @@ export function buildUncappedGrowthActivationRunbook() {
  * @param {boolean} [opts.observation48hComplete=false]
  * @param {boolean} [opts.liveSyncEnvWired=false] true only after live-sync honors IU_CJ_PUBLIC_GROWTH_UNCAPPED
  */
+export function detectLiveSyncUncappedEnvWired(repoRoot = process.cwd()) {
+  try {
+    const p = path.join(repoRoot, "scripts", "iu-cj-affiliate-offers-live-sync-v1.mjs");
+    const t = fs.readFileSync(p, "utf8");
+    return (
+      /IU_CJ_PUBLIC_GROWTH_UNCAPPED/.test(t) &&
+      /uncappedMode\s*=/.test(t) &&
+      /applyPublicGrowthBudget\([\s\S]*uncappedMode/.test(t)
+    );
+  } catch {
+    return false;
+  }
+}
+
 export function evaluateUncappedGrowthReadiness(opts = {}) {
   const volume = runUncappedGrowthVolumeScenarios();
   const codePath = {
@@ -236,7 +250,12 @@ export function evaluateUncappedGrowthReadiness(opts = {}) {
   const productionCapped = opts.productionCapped !== false;
   const ownerGateActive = opts.ownerGateActive !== false;
   const observation48hComplete = opts.observation48hComplete === true;
-  const liveSyncEnvWired = opts.liveSyncEnvWired === true;
+  const liveSyncEnvWired =
+    opts.liveSyncEnvWired === true
+      ? true
+      : opts.liveSyncEnvWired === false
+        ? false
+        : detectLiveSyncUncappedEnvWired(opts.repoRoot || process.cwd());
   const blockers = [];
   if (!volume.ok) blockers.push("VOLUME_SCENARIOS_FAILED:" + volume.failed.join(","));
   if (!codePath.computeSupportsUncappedMode) blockers.push("CODE_PATH_MISSING_UNCAPPED");
