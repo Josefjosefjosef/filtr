@@ -139,6 +139,26 @@ import { buildProductIdentityLedger } from "./iu-cj-affiliate-phase3z-product-id
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const WEBSITE_PID = "101883843";
 
+/**
+ * Classify partner product-feed fetch failures for honest ops ledgers.
+ * http_400 with zero rows is usually CJ GraphQL rejection / no product API for that advertiser,
+ * not a silent robot skip — still counts in partnersError for coverage honesty.
+ */
+export function classifyPartnerFetchError(error) {
+  const s = String(error || "").toLowerCase();
+  if (!s) return "OTHER";
+  if (/rate.?limit|429|too many requests/.test(s)) return "RATE_LIMITED";
+  if (/permission|forbidden|401|403|unauthorized|revoked/.test(s)) return "PERMISSION_DENIED";
+  if (/http_400|bad request|argument|variable/.test(s)) return "INVALID_FEED";
+  if (/timeout|econnreset|enotfound|socket|503|502|504|temporary/.test(s)) return "TEMPORARY_API_FAILURE";
+  if (/pagination|pageinfo|cursor|offset/.test(s)) return "PAGINATION_FAILURE";
+  if (/checkpoint/.test(s)) return "CHECKPOINT_FAILURE";
+  if (/no[_ ]?feed|empty feed|not available/.test(s)) return "NO_FEED_AVAILABLE";
+  if (/ended|left program/.test(s)) return "PARTNER_ENDED";
+  if (/repeated_or_stale_cursor/.test(s)) return "PAGINATION_FAILURE";
+  return "OTHER";
+}
+
 function readJson(p, fallback) {
   if (!fs.existsSync(p)) return fallback;
   try {
@@ -1092,6 +1112,7 @@ export async function sampleProductsForManagedPartners(opts = {}) {
     partnersWithFeed: 0,
     partnersEmptyFeed: 0,
     partnersError: 0,
+    partnerErrorClasses: {},
     partnersIncompletePagination: 0,
     partnersTruncatedByApiLimit: 0,
     partnersResumedFromCheckpoint: 0,
@@ -1272,6 +1293,9 @@ export async function sampleProductsForManagedPartners(opts = {}) {
       });
       if (fetched.error && fetched.fetchedCount === 0) {
         meta.partnersError += 1;
+        const errClass = classifyPartnerFetchError(fetched.error);
+        partnerMeta.errorClass = errClass;
+        meta.partnerErrorClasses[errClass] = (meta.partnerErrorClasses[errClass] || 0) + 1;
         meta.partnerFetch.push(partnerMeta);
         continue;
       }
@@ -1393,6 +1417,9 @@ export async function sampleProductsForManagedPartners(opts = {}) {
     } catch (e) {
       meta.partnersError += 1;
       partnerMeta.error = String(e?.message || e).slice(0, 120);
+      const errClass = classifyPartnerFetchError(partnerMeta.error);
+      partnerMeta.errorClass = errClass;
+      meta.partnerErrorClasses[errClass] = (meta.partnerErrorClasses[errClass] || 0) + 1;
     }
     meta.partnerFetch.push(partnerMeta);
   }

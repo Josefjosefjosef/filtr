@@ -203,15 +203,22 @@ export function classifyMissingPublishedProduct(prevRow, opts = {}) {
     miss?.decision === "KEEP_PENDING" ||
     miss?.decision === "RECOVERED"
   ) {
+    // Incomplete / not-in-window: keep PUBLICATION_ELIGIBLE (pending reverify).
+    // Age past staleAfterHours must forbid CURRENT labels, but must NOT force HOLD —
+    // otherwise presentation rotation permanently collapses LIVE via PUBLIC_SHRINKAGE_REFUSED.
+    const ageExceeded = ageHours != null && ageHours >= staleAfterHours;
     return {
       classId: REMOVAL_CLASS.NOT_YET_SEEN,
       carryForward: true,
       rootCauseVerified: true,
-      publicationClass: ageHours != null && ageHours >= staleAfterHours ? "SOURCE_STALE" : "NOT_YET_SEEN",
+      publicationClass: "NOT_YET_SEEN",
       ageHours,
-      note:
-        "Missing from current discovery/presentation window — treat as NOT_YET_SEEN, carry LKG until confirmed. Stale prices must not be labeled CURRENT.",
-      hideAsCurrent: ageHours != null && ageHours >= staleAfterHours,
+      ageExceeded,
+      note: ageExceeded
+        ? "Missing from incomplete discovery window; LKG older than stale policy — keep public as pending reverify, forbid CURRENT price label."
+        : "Missing from current discovery/presentation window — treat as NOT_YET_SEEN, carry LKG until confirmed. Stale prices must not be labeled CURRENT.",
+      hideAsCurrent: false,
+      sourceFreshLabelForbidden: true,
     };
   }
   if (miss?.decision === "TEMPORARILY_HIDE") {
@@ -260,6 +267,8 @@ export function buildPublicationDeltaLedger(prevDoc, nextDoc, opts = {}) {
       rootCauseVerified: classified.rootCauseVerified,
       hideAsCurrent: classified.hideAsCurrent === true,
       ageHours: classified.ageHours ?? null,
+      ageExceeded: classified.ageExceeded === true,
+      sourceFreshLabelForbidden: classified.sourceFreshLabelForbidden === true,
       note: classified.note,
       lastConfirmedPrice: row.product?.currentPrice ?? null,
       lastConfirmedAvailability: row.product?.availability ?? null,
@@ -352,24 +361,30 @@ export function mergeLkgPublishedProducts(nextDoc, prevDoc, opts = {}) {
       continue;
     }
     const pubClass = String(row.publicationClass || row.classId || "");
-    // V51.8-final: incomplete-window NOT_YET_SEEN within freshness keeps PUBLIC_ELIGIBLE
-    // (last-known price, no CURRENT claim). Only stale / unknown / collision → HOLD.
-    // Root cause: treating every presentation miss as HOLD collapsed LIVE public counts.
+    const classId = String(row.classId || "");
+    // V51.8-final: incomplete-window NOT_YET_SEEN keeps PUBLIC_ELIGIBLE (last-known,
+    // no CURRENT claim) even when age exceeds staleAfterHours. HOLD only for true
+    // hold/collision/unknown/unavailable classes — not for presentation-window misses.
+    const isNotYetSeen =
+      classId === REMOVAL_CLASS.NOT_YET_SEEN ||
+      pubClass === "NOT_YET_SEEN" ||
+      /NOT_YET_SEEN/i.test(pubClass);
     const forceHold =
-      row.hideAsCurrent === true ||
-      pubClass === "SOURCE_STALE" ||
-      pubClass === "UNKNOWN" ||
-      pubClass === "HOLD" ||
-      pubClass === REMOVAL_CLASS.UNKNOWN ||
-      pubClass === REMOVAL_CLASS.HOLD_COLLISION ||
-      pubClass === REMOVAL_CLASS.SOURCE_UNAVAILABLE ||
-      /SOURCE_STALE|STALE_PRICE|HOLD_COLLISION/i.test(pubClass);
-    const pendingReverify =
-      !forceHold &&
-      (pubClass === "NOT_YET_SEEN" ||
-        pubClass === REMOVAL_CLASS.NOT_YET_SEEN ||
-        /NOT_YET_SEEN/i.test(pubClass));
+      !isNotYetSeen &&
+      (row.hideAsCurrent === true ||
+        pubClass === "SOURCE_STALE" ||
+        pubClass === "UNKNOWN" ||
+        pubClass === "HOLD" ||
+        pubClass === REMOVAL_CLASS.UNKNOWN ||
+        pubClass === REMOVAL_CLASS.HOLD_COLLISION ||
+        pubClass === REMOVAL_CLASS.SOURCE_UNAVAILABLE ||
+        classId === REMOVAL_CLASS.SOURCE_UNAVAILABLE ||
+        classId === REMOVAL_CLASS.HOLD_COLLISION ||
+        classId === REMOVAL_CLASS.UNKNOWN ||
+        /SOURCE_STALE|STALE_PRICE|HOLD_COLLISION/i.test(pubClass));
+    const pendingReverify = !forceHold && isNotYetSeen;
     const holdPublic = forceHold;
+    const ageExceeded = row.ageExceeded === true || (Number(row.ageHours) >= 72);
     const product = {
       ...prev.product,
       publicationReady: true,
@@ -384,17 +399,23 @@ export function mergeLkgPublishedProducts(nextDoc, prevDoc, opts = {}) {
         : PUBLICATION_ELIGIBILITY.PUBLICATION_ELIGIBLE,
       refreshResult: row.classId,
       refreshReason: pendingReverify
-        ? "lkg_carry_not_yet_seen_keep_public_pending_reverify"
+        ? ageExceeded
+          ? "lkg_carry_not_yet_seen_age_exceeded_keep_public_forbid_current"
+          : "lkg_carry_not_yet_seen_keep_public_pending_reverify"
         : "lkg_carry_incomplete_discovery_or_unverified",
       freshnessStatus: holdPublic
         ? "UNKNOWN"
         : pendingReverify
-          ? "LAST_KNOWN_PENDING_REVERIFY"
+          ? ageExceeded
+            ? "LAST_KNOWN_STALE_PENDING_REVERIFY"
+            : "LAST_KNOWN_PENDING_REVERIFY"
           : "UNKNOWN",
       freshnessReason: holdPublic
         ? "LKG_CATALOG_RETAINED_PUBLICATION_HOLD"
         : pendingReverify
-          ? "LKG_NOT_YET_SEEN_KEEP_PUBLIC_WITHIN_STALE_POLICY"
+          ? ageExceeded
+            ? "LKG_NOT_YET_SEEN_AGE_EXCEEDED_KEEP_PUBLIC_NO_CURRENT"
+            : "LKG_NOT_YET_SEEN_KEEP_PUBLIC_WITHIN_STALE_POLICY"
           : "LKG_CARRIED_PUBLICATION_ELIGIBLE",
       publicationClass: pubClass,
       sourceFreshLabelForbidden: true,
