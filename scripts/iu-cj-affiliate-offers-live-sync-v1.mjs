@@ -1440,6 +1440,7 @@ export async function sampleProductsForManagedPartners(opts = {}) {
       publishedSelected: row.publishedSelected,
       deferredPresentation: row.deferredPresentation,
       error: row.error || row.inventoryError || null,
+      errorClass: row.errorClass || null,
     };
   }
   // Cap partnerFetch audit size in meta for huge partner sets
@@ -2264,6 +2265,9 @@ export async function runOffersLiveSync(opts = {}) {
       revokedAdvertisers,
       missByKey,
       nowIso: new Date().toISOString(),
+      staleAfterHours: Number(env.IU_CJ_OFFERS_LKG_STALE_HOURS) || 72,
+      incompleteHoldAfterHours: Number(env.IU_CJ_OFFERS_LKG_INCOMPLETE_HOLD_HOURS) || 720,
+      maxAgeHoldPerRun: Number(env.IU_CJ_OFFERS_LKG_MAX_AGE_HOLD_PER_RUN) || 25,
     };
     publicationDelta = buildPublicationDeltaLedger(prevPublic, doc, classifyOpts);
     if (publicationDelta.removedCount > 0) {
@@ -2355,9 +2359,13 @@ export async function runOffersLiveSync(opts = {}) {
       maxCumulativeAbs: maxCum,
     });
     let growthLedger = resolvedGrowth.ledger;
+    // Uncapped mode is DISARMED unless IU_CJ_PUBLIC_GROWTH_UNCAPPED=1 (owner-only; never commit true).
+    const uncappedMode = String(env.IU_CJ_PUBLIC_GROWTH_UNCAPPED || "").trim() === "1";
     const growthApplied = applyPublicGrowthBudget(doc, prevPublic, {
+      uncappedMode,
       maxGrowthAbs: Number(env.IU_CJ_OFFERS_MAX_LKG_GROWTH_ABS) || 500,
       maxGrowthRatio: Number(env.IU_CJ_OFFERS_MAX_LKG_GROWTH_RATIO) || 0.2,
+      surgeRatio: Number(env.IU_CJ_OFFERS_UNCAPPED_SURGE_RATIO) || 0.5,
       preferredCurrency: String(env.IU_CJ_OFFERS_PUBLIC_PREFERRED_CURRENCY || "CZK"),
       cumulativeAddedSinceBaseline: Number(growthLedger.cumulativeAddedSinceBaseline) || 0,
       maxCumulativeAbs:

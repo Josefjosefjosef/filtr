@@ -17,18 +17,23 @@ const notReady = evaluateUncappedGrowthReadiness({
   productionCapped: true,
   ownerGateActive: true,
   observation48hComplete: false,
-  liveSyncEnvWired: false,
 });
 assert(notReady.verdict === "NOT_READY_FOR_UNCAPPED_GROWTH", "default not ready");
 assert(notReady.blockers.includes("PENDING_48H_OBSERVATION"), "obs blocker");
-assert(notReady.blockers.includes("LIVE_SYNC_ENV_GATE_NOT_WIRED"), "env blocker");
+assert(notReady.liveSyncEnvWired === true, "live-sync env gate auto-detected as wired");
+assert(!notReady.blockers.includes("LIVE_SYNC_ENV_GATE_NOT_WIRED"), "env blocker cleared when wired");
 assert(notReady.codePath.cappedDefaultIntact === true, "capped default");
+
+const forcedUnwired = evaluateUncappedGrowthReadiness({
+  observation48hComplete: true,
+  liveSyncEnvWired: false,
+});
+assert(forcedUnwired.blockers.includes("LIVE_SYNC_ENV_GATE_NOT_WIRED"), "explicit unwired");
 
 const ready = evaluateUncappedGrowthReadiness({
   productionCapped: true,
   ownerGateActive: true,
   observation48hComplete: true,
-  liveSyncEnvWired: true,
 });
 assert(ready.verdict === "READY_FOR_UNCAPPED_GROWTH", "ready when gates met");
 assert(Array.isArray(ready.activationRunbook.steps) && ready.activationRunbook.steps.length >= 8, "runbook");

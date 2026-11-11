@@ -150,6 +150,26 @@ assert(
 );
 assert(staleMerged.heldPublic === 0, "incomplete stale must not inflate heldPublic");
 
+// Chronic incomplete (default 720h) → gradual HOLD (cap per run), no mass delete.
+const chronicPrev = JSON.parse(JSON.stringify(prev));
+chronicPrev.sections[0].products[0].lastSuccessfulRefreshAt = new Date(
+  Date.now() - 800 * 3600 * 1000
+).toISOString();
+const chronicMerged = mergeLkgPublishedProducts(nextShrunk, chronicPrev, {
+  incompleteAdvertisers: new Set(["1"]),
+  fetchedAdvertisers: new Set(["1"]),
+  staleAfterHours: 72,
+  incompleteHoldAfterHours: 720,
+  maxAgeHoldPerRun: 25,
+});
+const chronicProd = chronicMerged.doc.sections[0].products.find((p) => p.productId === "keep-missing");
+assert(
+  chronicProd.publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD,
+  "chronic incomplete → gradual HOLD"
+);
+assert(chronicMerged.heldPublic === 1, "chronic hold counted");
+assert(chronicProd.freshnessReason === "LKG_NOT_YET_SEEN_MAX_AGE_GRADUAL_HOLD", "chronic hold reason");
+
 // Complete feed (not incomplete) + age exceeded → do not silent-carry as public LKG
 const staleCompleteDelta = buildPublicationDeltaLedger(stalePrev, nextShrunk, {
   incompleteAdvertisers: new Set(),

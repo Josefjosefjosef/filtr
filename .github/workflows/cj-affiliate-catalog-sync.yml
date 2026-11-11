@@ -782,6 +782,14 @@ jobs:
       IU_CJ_OFFERS_DEEPEN_INCOMPLETE_MAX_PAGES: ${{ (github.event_name == 'schedule' && github.event.schedule != '17 3 * * *') && '6' || (github.event_name == 'workflow_dispatch' && inputs.offers_mode == 'refresh_priority' && '6' || '20') }}
       IU_CJ_OFFERS_MAX_UNIQUE_DROP_ABS: "50"
       IU_CJ_OFFERS_MAX_UNIQUE_DROP_RATIO: "0.03"
+      # Public growth: absolute 500 + ratio 0.2 remain armed. Uncapped stays DISARMED (never commit "1").
+      IU_CJ_OFFERS_MAX_LKG_GROWTH_ABS: "500"
+      IU_CJ_OFFERS_MAX_LKG_GROWTH_RATIO: "0.2"
+      IU_CJ_PUBLIC_GROWTH_UNCAPPED: "0"
+      # Chronic incomplete LKG: gradual HOLD after 720h (30d), max 25/run — no mass delete.
+      IU_CJ_OFFERS_LKG_STALE_HOURS: "72"
+      IU_CJ_OFFERS_LKG_INCOMPLETE_HOLD_HOURS: "720"
+      IU_CJ_OFFERS_LKG_MAX_AGE_HOLD_PER_RUN: "25"
       # Presentation/runtime budget (prevents RangeError on mega-feeds). Not a CJ API source cap.
       IU_CJ_OFFERS_PRODUCT_PUBLISH_PER_PARTNER: "25"
       IU_CJ_OFFERS_KEEP_SOURCE_ROWS: "0"
