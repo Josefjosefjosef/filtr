@@ -88,6 +88,7 @@ import {
   evaluateIdentityChurnGate,
   evaluateLkgGrowthGate,
   buildPublicationDeltaLedger,
+  reconcilePublicationProposedVsPublished,
   collectUniqueProductMap,
   collectPublicEligibleProductMap,
   releaseLkgHoldsAgainstSource,
@@ -2412,6 +2413,12 @@ export async function runOffersLiveSync(opts = {}) {
       failClosed: resolvedGrowth.failClosed === true,
       reason: resolvedGrowth.reason,
     };
+    publicationRestore.identityReconcile = reconcilePublicationProposedVsPublished({
+      publicationDelta,
+      publicationRestore,
+      publicGrowthBudget: growthApplied.doc.publicGrowthBudget || null,
+      nowIso: new Date().toISOString(),
+    });
 
     nextReady = readyCounts(doc);
     const lkgMerged = Number(publicationRestore?.carried || 0) > 0;
@@ -2552,8 +2559,10 @@ export async function runOffersLiveSync(opts = {}) {
             addedCount: publicationDelta.addedCount,
             netUnique: publicationDelta.netUnique,
             removedByClass: publicationDelta.removedByClass,
+            semantics: publicationDelta.semantics || null,
           }
         : null,
+      identityReconcile: publicationRestore?.identityReconcile || null,
       publicationRestore,
       shrinkageGate,
       identityChurnGate,
@@ -3027,8 +3036,10 @@ export async function runOffersLiveSync(opts = {}) {
           addedCount: publicationDelta.addedCount,
           netUnique: publicationDelta.netUnique,
           removedByClass: publicationDelta.removedByClass,
+          semantics: publicationDelta.semantics || null,
         }
       : null,
+    identityReconcile: publicationRestore?.identityReconcile || null,
     publicationRestore,
     shrinkageGate,
     identityChurnGate,

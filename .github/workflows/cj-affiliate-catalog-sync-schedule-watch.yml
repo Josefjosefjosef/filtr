@@ -1,7 +1,7 @@
 # Phase 3K / V42: watch real catalog-sync *schedule* runs (never treat workflow_dispatch as schedule).
 # Does NOT arm CJ LIVE / publicButtonSwapArmed. Does NOT open a second publisher.
 # V42: run after each expected 3h slot (+30m buffer) so SLOT_MISS is visible the same day.
-# V44/V51.8: bounded catch-up dispatch (max 2/UTC day, 3h cooldown) via same catalog-sync concurrency group.
+# V44/V51.8: bounded catch-up dispatch (max 4/UTC day, 2h cooldown) via same catalog-sync concurrency group.
 # GitHub Actions cron is best-effort — NOT a guarantee of exact 3h delivery.
 # schedule-reregister: 2026-11-10T10:00Z — secondary :57 watch after proven :47 watch SLOT_MISS
 # (plus daycap 2). Comment+cron rebind; do NOT disable/enable workflow. Prior: V44 :47-only.
@@ -105,6 +105,7 @@ jobs:
           ALLOW="$(jq -r '.allow' /tmp/iu-cj-catchup-decision.json)"
           if [ "${ALLOW}" = "true" ]; then
             echo "CATCHUP_DISPATCH=1 (NOT schedule; refresh_priority; same concurrency group)"
+            set +e
             gh workflow run "${WORKFLOW_PATH}" \
               -f execute_live_fetch=1 \
               -f offers_mode=refresh_priority \
@@ -113,8 +114,30 @@ jobs:
               -f publish_managed_public_r2=0 \
               -f arm_offers_live=0 \
               -f promote_offers_public=1 \
-              -f catchup_dispatch=1 \
-              || echo "CATCHUP_DISPATCH_FAILED"
+              -f catchup_dispatch=1
+            DISP_RC=$?
+            if [ "${DISP_RC}" -ne 0 ]; then
+              echo "CATCHUP_DISPATCH_RETRY=1"
+              sleep 5
+              gh workflow run "${WORKFLOW_PATH}" \
+                -f execute_live_fetch=1 \
+                -f offers_mode=refresh_priority \
+                -f arm_publish=0 \
+                -f promote_managed_public=0 \
+                -f publish_managed_public_r2=0 \
+                -f arm_offers_live=0 \
+                -f promote_offers_public=1 \
+                -f catchup_dispatch=1
+              DISP_RC=$?
+            fi
+            set -e
+            if [ "${DISP_RC}" -ne 0 ]; then
+              echo "CATCHUP_DISPATCH_FAILED"
+              echo "WATCH_RESULT=FAIL"
+              echo "BURNIN_STATUS=CATCHUP_DISPATCH_FAILED"
+              exit 1
+            fi
+            echo "CATCHUP_DISPATCH_OK=1"
           else
             echo "CATCHUP_DISPATCH=0 reason=$(jq -r '.reason' /tmp/iu-cj-catchup-decision.json)"
           fi

@@ -4,19 +4,21 @@
  * Rules (single owner, no parallel publisher):
  * - Never invent a "schedule" event — catch-up is workflow_dispatch only.
  * - Never fire when a catalog-sync run is already in_progress/queued.
- * - At most two catch-ups per UTC day (default) — GitHub cron can miss multiple
- *   slots in one day; a single catch-up left later misses unrecovered.
+ * - At most four catch-ups per UTC day (default) — eight :17 slots exist; daycap 2
+ *   left multi-miss days permanently unrecovered. Cap 4 still bounds storms.
  * - At most one catch-up within CATCHUP_COOLDOWN_HOURS (still blocks storms).
  * - Only when there is a real SLOT_MISS (not mere PENDING_OBSERVATION).
  * - Catch-up joins the same concurrency group as catalog-sync (caller must
  *   dispatch that workflow; cancel-in-progress remains false).
  * - Diagnostic / manual workflow_dispatch MUST NOT consume the catch-up budget
  *   (only runs marked catchup_dispatch / CATCHUP_DISPATCH_NOT_SCHEDULE count).
+ * - Gap-deepen may also apply to catch-up dispatches after a long miss window
+ *   (still one owner / one concurrency group; never invents a schedule event).
  *
  * GitHub Actions cron is NOT a guarantee of exact 3h delivery.
  */
-export const CATCHUP_COOLDOWN_HOURS = 3;
-export const MAX_CATCHUPS_PER_UTC_DAY = 2;
+export const CATCHUP_COOLDOWN_HOURS = 2;
+export const MAX_CATCHUPS_PER_UTC_DAY = 4;
 export const CATCHUP_DISPATCH_MARKER = "CATCHUP_DISPATCH_NOT_SCHEDULE";
 
 /** True when a catalog run is an audit-honest catch-up (not diagnostic dispatch). */
@@ -126,7 +128,7 @@ export function decideScheduleCatchup(opts = {}) {
 }
 
 /**
- * Escalate refresh depth when a schedule finally fires after a long gap.
+ * Escalate refresh depth when a schedule (or bounded catch-up) runs after a long gap.
  * Still one owner / one run — not a parallel cron.
  */
 export function decideGapDeepen(opts = {}) {
@@ -134,11 +136,24 @@ export function decideGapDeepen(opts = {}) {
   const thresholdH = opts.gapThresholdHours ?? 4;
   const eventName = String(opts.eventName || "");
   const scheduleExpr = String(opts.scheduleExpr || "");
+  const catchupDispatch =
+    opts.catchupDispatch === true ||
+    opts.catchupDispatch === 1 ||
+    opts.catchupDispatch === "1";
   const isDailyFull = eventName === "schedule" && scheduleExpr === "17 3 * * *";
-  if (eventName !== "schedule" || isDailyFull) {
+  const isScheduleRefresh = eventName === "schedule" && !isDailyFull;
+  const isCatchupRefresh = catchupDispatch === true && eventName === "workflow_dispatch";
+  if (isDailyFull) {
     return {
       deepen: false,
-      reason: isDailyFull ? "DAILY_FULL_ALREADY" : "NOT_SCHEDULE_REFRESH",
+      reason: "DAILY_FULL_ALREADY",
+      productMaxPages: null,
+    };
+  }
+  if (!isScheduleRefresh && !isCatchupRefresh) {
+    return {
+      deepen: false,
+      reason: "NOT_SCHEDULE_OR_CATCHUP_REFRESH",
       productMaxPages: null,
     };
   }
@@ -155,10 +170,13 @@ export function decideGapDeepen(opts = {}) {
   }
   return {
     deepen: true,
-    reason: "SCHEDULE_GAP_GT_THRESHOLD",
+    reason: isCatchupRefresh
+      ? "CATCHUP_GAP_GT_THRESHOLD"
+      : "SCHEDULE_GAP_GT_THRESHOLD",
     productMaxPages: 3,
     latestScheduleAgeHours: Number(latestAgeHours),
     gapThresholdHours: thresholdH,
-    note: "Deepen discovery pages for this single schedule run only; concurrency unchanged.",
+    catchupDispatch: isCatchupRefresh,
+    note: "Deepen discovery pages for this single run only; concurrency unchanged; catch-up never counted as schedule.",
   };
 }
