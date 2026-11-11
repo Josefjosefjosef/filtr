@@ -126,7 +126,8 @@ assert(keptProd.freshnessStatus === "LAST_KNOWN_PENDING_REVERIFY", "pending fres
 assert(keptProd.sourceFreshLabelForbidden === true, "no CURRENT label");
 assert(collectPublicEligibleProductMap(merged.doc).size === 3, "public map size 3");
 
-// Stale miss → HOLD
+// Incomplete-window + age exceeded → keep PUBLIC_ELIGIBLE (forbid CURRENT), do not HOLD.
+// Holding here permanently collapses LIVE under presentation rotation → PUBLIC_SHRINKAGE_REFUSED.
 const stalePrev = JSON.parse(JSON.stringify(prev));
 stalePrev.sections[0].products[0].lastSuccessfulRefreshAt = new Date(
   Date.now() - 100 * 3600 * 1000
@@ -138,10 +139,25 @@ const staleMerged = mergeLkgPublishedProducts(nextShrunk, stalePrev, {
 });
 const staleProd = staleMerged.doc.sections[0].products.find((p) => p.productId === "keep-missing");
 assert(
-  staleProd.publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD,
-  "stale not-yet-seen → HOLD"
+  staleProd.publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_ELIGIBLE,
+  "incomplete+age-exceeded NOT_YET_SEEN stays public-eligible"
 );
-assert(isPublicOfferEligible(staleProd) === false, "stale held not public");
+assert(isPublicOfferEligible(staleProd) === true, "incomplete stale pending-reverify still public");
+assert(staleProd.sourceFreshLabelForbidden === true, "age-exceeded forbids CURRENT label");
+assert(
+  staleProd.freshnessStatus === "LAST_KNOWN_STALE_PENDING_REVERIFY",
+  "age-exceeded freshness class"
+);
+assert(staleMerged.heldPublic === 0, "incomplete stale must not inflate heldPublic");
+
+// Complete feed (not incomplete) + age exceeded → do not silent-carry as public LKG
+const staleCompleteDelta = buildPublicationDeltaLedger(stalePrev, nextShrunk, {
+  incompleteAdvertisers: new Set(),
+  fetchedAdvertisers: new Set(["1"]),
+  staleAfterHours: 72,
+});
+assert(staleCompleteDelta.removed[0].classId === REMOVAL_CLASS.SOURCE_UNAVAILABLE, "complete+stale → unavailable");
+assert(staleCompleteDelta.removed[0].carryForward === false, "complete+stale no carry");
 
 const nextOnlyStay = {
   liveEnabled: false,
@@ -338,15 +354,27 @@ assert(
   "eligible/pending class for fresh not-yet-seen"
 );
 
+// releaseLkgHoldsAgainstSource only clears true HOLD rows — build one via HOLD_COLLISION.
+const holdCollisionPrev = JSON.parse(JSON.stringify(prev));
+const holdNext = JSON.parse(JSON.stringify(nextShrunk));
+const holdMerged = mergeLkgPublishedProducts(holdNext, holdCollisionPrev, {
+  incompleteAdvertisers: new Set(["1"]),
+  fetchedAdvertisers: new Set(["1"]),
+  holdKeys: new Set([compoundProductKey("1", "keep-missing")]),
+});
+const holdProd = holdMerged.doc.sections[0].products.find((p) => p.productId === "keep-missing");
+assert(holdProd.publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD, "collision → HOLD");
 const released = releaseLkgHoldsAgainstSource(
-  staleMerged.doc,
+  holdMerged.doc,
   new Set([compoundProductKey("1", "keep-missing")]),
   {}
 );
 assert(released.progress.LKG_RELEASED_TO_PUBLIC === 1, "hold released on source match");
 assert(released.publicEligibleAfter >= 3, "public eligible after release");
-const stillHeld = releaseLkgHoldsAgainstSource(staleMerged.doc, new Set(), {});
+const stillHeld = releaseLkgHoldsAgainstSource(holdMerged.doc, new Set(), {});
 assert(stillHeld.progress.LKG_RELEASED_TO_PUBLIC === 0, "no release without source");
+// incomplete+age-exceeded product remains eligible without needing hold-release
+assert(isPublicOfferEligible(staleProd) === true, "stale incomplete already public before release path");
 
 const budgetMeta = computePublicGrowthBudget(3174, {
   maxGrowthAbs: 500,

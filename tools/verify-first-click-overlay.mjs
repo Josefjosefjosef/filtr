@@ -10,8 +10,15 @@ const NOISE_ERRORS = [
   /preflightDataEndpoints/i,
   /TypeError:\s*Failed to fetch/i,
   /loadAiAssistants|AI assistants load failed/i,
+  // Non-app analytics: Cloudflare Insights beacon blocked by intentional CSP
+  // (parity with iu-root-routing-prod-guard). Must not fail functional first-click.
+  /cloudflareinsights\.com\/beacon/i,
 ];
-const isNoise = (s) => NOISE_ERRORS.some((re) => re.test(String(s)));
+const isNoise = (s) => {
+  const t = String(s);
+  if (/cloudflareinsights/i.test(t) && /Content Security Policy|beacon/i.test(t)) return true;
+  return NOISE_ERRORS.some((re) => re.test(t));
+};
 
 const OVERLAY_SELECTORS = [
   ".iuOverlay",

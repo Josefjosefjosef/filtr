@@ -185,6 +185,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-catalog-fairness-v51-8-selftest.mjs
       - name: Publication LKG merge + shrinkage gate selftest (V51.8-c2; offline)
         run: node scripts/iu-cj-affiliate-phase3z-publication-lkg-v51-8-selftest.mjs
+      - name: Audit ZIP CRC32/SHA256 integrity selftest (V51.8; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-audit-zip-integrity-v51-8-selftest.mjs
       - name: Registry dry-run LKG preserve selftest (V51.3; offline)
         run: node scripts/iu-cj-affiliate-phase3z-registry-dry-lkg-v51-3-selftest.mjs
       - name: Registry URL gate parity selftest (V41; offline)
