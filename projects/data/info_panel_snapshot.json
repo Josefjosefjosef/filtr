@@ -1,6 +1,6 @@
 {
   "version": 4,
-  "generatedAt": "2026-11-10T23:18:03.120Z",
+  "generatedAt": "2026-11-11T06:11:28.232Z",
   "catalogCount": 31,
   "items": {
     "eur_czk": {
@@ -24,22 +24,22 @@
       "legalStatus": "verified_requires_attribution"
     },
     "bitcoin": {
-      "value": 1605660,
+      "value": 1610634,
       "unit": "Kč",
       "primaryLabel": "",
-      "secondaryValue": "▼ 1,51 %",
+      "secondaryValue": "▼ 0,45 %",
       "trendDirection": "down",
-      "updatedAt": "2026-11-10T23:18:03.120Z",
+      "updatedAt": "2026-11-11T06:11:28.232Z",
       "isLive": true,
       "legalStatus": "verified_requires_attribution"
     },
     "gold": {
-      "value": 87740,
+      "value": 88290,
       "unit": "Kč",
       "primaryLabel": "PAX Gold",
-      "secondaryValue": "▼ 1,98 %",
+      "secondaryValue": "▼ 0,85 %",
       "trendDirection": "down",
-      "updatedAt": "2026-11-10T23:18:03.120Z",
+      "updatedAt": "2026-11-11T06:11:28.232Z",
       "isLive": true,
       "legalStatus": "verified_requires_attribution"
     },
@@ -66,26 +66,26 @@
       "referencePeriod": "45. týden 2026"
     },
     "electricity": {
-      "value": 102.1,
+      "value": 102.4,
       "unit": "index",
       "primaryLabel": "Energie a paliva",
-      "secondaryValue": "▲ 0,20",
+      "secondaryValue": "▲ 0,30",
       "trendDirection": "up",
-      "updatedAt": "září 2026",
+      "updatedAt": "říjen 2026",
       "isLive": true,
       "legalStatus": "verified_requires_attribution",
-      "referencePeriod": "září 2026"
+      "referencePeriod": "říjen 2026"
     },
     "inflation": {
-      "value": 2.5,
+      "value": 2.4,
       "unit": "%",
       "primaryLabel": "Meziročně",
-      "secondaryValue": "▲ 0,60 p. b.",
-      "trendDirection": "up",
-      "updatedAt": "září 2026",
+      "secondaryValue": "▼ 0,10 p. b.",
+      "trendDirection": "down",
+      "updatedAt": "říjen 2026",
       "isLive": true,
       "legalStatus": "verified_requires_attribution",
-      "referencePeriod": "září 2026"
+      "referencePeriod": "říjen 2026"
     },
     "unemployment": {
       "value": 4.99,
@@ -350,19 +350,65 @@
   "errors": [],
   "scheduler": {
     "checkedBuckets": [
+      "csu_fuel",
       "cnb",
-      "coingecko"
+      "csu_coicop",
+      "coingecko",
+      "csu_inflation",
+      "mpsv_labor",
+      "csu_wage_q",
+      "csu_wage_y",
+      "csu_gdp",
+      "csu_industry",
+      "csu_construction",
+      "csu_retail",
+      "csu_agriculture",
+      "csu_employment",
+      "csu_population",
+      "csu_births",
+      "csu_deaths",
+      "csu_marriages",
+      "csu_divorces",
+      "csu_foreigners",
+      "csu_seniors",
+      "csu_migration",
+      "csu_education",
+      "csu_health",
+      "csu_crime",
+      "csu_elections"
     ],
     "skippedBuckets": [
-      "cnb"
+      "csu_fuel",
+      "cnb",
+      "mpsv_labor",
+      "csu_wage_q",
+      "csu_wage_y",
+      "csu_gdp",
+      "csu_industry",
+      "csu_construction",
+      "csu_retail",
+      "csu_agriculture",
+      "csu_employment",
+      "csu_population",
+      "csu_births",
+      "csu_deaths",
+      "csu_marriages",
+      "csu_divorces",
+      "csu_foreigners",
+      "csu_seniors",
+      "csu_migration",
+      "csu_education",
+      "csu_health",
+      "csu_crime",
+      "csu_elections"
     ]
   },
   "bucketFetchedAt": {
     "csu_fuel": "2026-11-07T05:55:37.313Z",
     "cnb": "2026-11-10T17:48:06.779Z",
-    "csu_coicop": "2026-10-14T16:47:43.916Z",
-    "coingecko": "2026-11-10T23:18:03.120Z",
-    "csu_inflation": "2026-10-14T16:47:43.916Z",
+    "csu_coicop": "2026-11-11T06:11:28.232Z",
+    "coingecko": "2026-11-11T06:11:28.232Z",
+    "csu_inflation": "2026-11-11T06:11:28.232Z",
     "mpsv_labor": "2026-11-10T02:05:33.290Z",
     "csu_wage_q": "2026-09-03T21:41:16.538Z",
     "csu_wage_y": "2026-07-16T00:27:30.151Z",
