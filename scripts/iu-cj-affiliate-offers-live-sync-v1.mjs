@@ -150,6 +150,8 @@ export function classifyPartnerFetchError(error) {
   if (!s) return "OTHER";
   if (/rate.?limit|429|too many requests/.test(s)) return "RATE_LIMITED";
   if (/permission|forbidden|401|403|unauthorized|revoked/.test(s)) return "PERMISSION_DENIED";
+  // CJ GraphQL often returns http_400 for advertisers without a usable product feed /
+  // rejected query shape. Treat as INVALID_FEED (external) unless a clearer class matches.
   if (/http_400|bad request|argument|variable/.test(s)) return "INVALID_FEED";
   if (/timeout|econnreset|enotfound|socket|503|502|504|temporary/.test(s)) return "TEMPORARY_API_FAILURE";
   if (/pagination|pageinfo|cursor|offset/.test(s)) return "PAGINATION_FAILURE";
@@ -158,6 +160,30 @@ export function classifyPartnerFetchError(error) {
   if (/ended|left program/.test(s)) return "PARTNER_ENDED";
   if (/repeated_or_stale_cursor/.test(s)) return "PAGINATION_FAILURE";
   return "OTHER";
+}
+
+/** Safe ops fields for INVALID_FEED / partner fetch failures (never secrets). */
+export function buildPartnerFetchErrorAudit(error, opts = {}) {
+  const raw = String(error || "");
+  const errorClass = classifyPartnerFetchError(raw);
+  const httpMatch = raw.match(/\bhttp[_\s-]?(\d{3})\b/i) || raw.match(/\b(\d{3})\b/);
+  const httpStatus = httpMatch ? Number(httpMatch[1]) : null;
+  return {
+    errorClass,
+    httpStatus: Number.isFinite(httpStatus) ? httpStatus : null,
+    endpoint: opts.endpoint || "shoppingProducts",
+    redactedError: raw.slice(0, 160).replace(/Bearer\s+[A-Za-z0-9._\-]+/gi, "Bearer [REDACTED]"),
+    likelyExternal:
+      errorClass === "INVALID_FEED" ||
+      errorClass === "TEMPORARY_API_FAILURE" ||
+      errorClass === "PERMISSION_DENIED" ||
+      errorClass === "NO_FEED_AVAILABLE",
+    continueOtherPartners: true,
+    note:
+      errorClass === "INVALID_FEED"
+        ? "CJ GraphQL http_400 classified INVALID_FEED; retain LKG for prior products; do not stop other partners."
+        : null,
+  };
 }
 
 function readJson(p, fallback) {
@@ -1294,9 +1320,16 @@ export async function sampleProductsForManagedPartners(opts = {}) {
       });
       if (fetched.error && fetched.fetchedCount === 0) {
         meta.partnersError += 1;
-        const errClass = classifyPartnerFetchError(fetched.error);
-        partnerMeta.errorClass = errClass;
-        meta.partnerErrorClasses[errClass] = (meta.partnerErrorClasses[errClass] || 0) + 1;
+        const errAudit = buildPartnerFetchErrorAudit(fetched.error, {
+          endpoint: "shoppingProducts",
+        });
+        partnerMeta.errorClass = errAudit.errorClass;
+        partnerMeta.httpStatus = errAudit.httpStatus;
+        partnerMeta.redactedError = errAudit.redactedError;
+        partnerMeta.likelyExternal = errAudit.likelyExternal;
+        partnerMeta.continueOtherPartners = true;
+        meta.partnerErrorClasses[errAudit.errorClass] =
+          (meta.partnerErrorClasses[errAudit.errorClass] || 0) + 1;
         meta.partnerFetch.push(partnerMeta);
         continue;
       }
@@ -1418,9 +1451,16 @@ export async function sampleProductsForManagedPartners(opts = {}) {
     } catch (e) {
       meta.partnersError += 1;
       partnerMeta.error = String(e?.message || e).slice(0, 120);
-      const errClass = classifyPartnerFetchError(partnerMeta.error);
-      partnerMeta.errorClass = errClass;
-      meta.partnerErrorClasses[errClass] = (meta.partnerErrorClasses[errClass] || 0) + 1;
+      const errAudit = buildPartnerFetchErrorAudit(partnerMeta.error, {
+        endpoint: "shoppingProducts",
+      });
+      partnerMeta.errorClass = errAudit.errorClass;
+      partnerMeta.httpStatus = errAudit.httpStatus;
+      partnerMeta.redactedError = errAudit.redactedError;
+      partnerMeta.likelyExternal = errAudit.likelyExternal;
+      partnerMeta.continueOtherPartners = true;
+      meta.partnerErrorClasses[errAudit.errorClass] =
+        (meta.partnerErrorClasses[errAudit.errorClass] || 0) + 1;
     }
     meta.partnerFetch.push(partnerMeta);
   }
@@ -1441,6 +1481,10 @@ export async function sampleProductsForManagedPartners(opts = {}) {
       deferredPresentation: row.deferredPresentation,
       error: row.error || row.inventoryError || null,
       errorClass: row.errorClass || null,
+      httpStatus: row.httpStatus ?? null,
+      redactedError: row.redactedError || null,
+      likelyExternal: row.likelyExternal ?? null,
+      continueOtherPartners: row.continueOtherPartners !== false,
     };
   }
   // Cap partnerFetch audit size in meta for huge partner sets

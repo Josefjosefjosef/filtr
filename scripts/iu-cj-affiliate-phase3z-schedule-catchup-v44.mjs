@@ -7,6 +7,9 @@
  * - At most four catch-ups per UTC day (default) — eight :17 slots exist; daycap 2
  *   left multi-miss days permanently unrecovered. Cap 4 still bounds storms.
  * - At most one catch-up within CATCHUP_COOLDOWN_HOURS (still blocks storms).
+ * - When miss>=2 (cascading undelivery), cooldown softens to
+ *   CATCHUP_COOLDOWN_HOURS_MULTI_MISS so recovery is not frozen behind a 2h wait
+ *   while later slots keep vanishing — daycap still bounds storms.
  * - Only when there is a real SLOT_MISS (not mere PENDING_OBSERVATION).
  * - Catch-up joins the same concurrency group as catalog-sync (caller must
  *   dispatch that workflow; cancel-in-progress remains false).
@@ -16,8 +19,11 @@
  *   (still one owner / one concurrency group; never invents a schedule event).
  *
  * GitHub Actions cron is NOT a guarantee of exact 3h delivery.
+ * Watch crons (:47/:57) can also vanish — hourly watch heartbeat is required.
  */
 export const CATCHUP_COOLDOWN_HOURS = 2;
+/** Softened cooldown when ≥2 SLOT_MISS are open (cascading GHA undelivery). */
+export const CATCHUP_COOLDOWN_HOURS_MULTI_MISS = 1;
 export const MAX_CATCHUPS_PER_UTC_DAY = 4;
 export const CATCHUP_DISPATCH_MARKER = "CATCHUP_DISPATCH_NOT_SCHEDULE";
 
@@ -51,7 +57,9 @@ export function decideScheduleCatchup(opts = {}) {
   const miss = Number(slotReport.counts?.miss || 0);
   const inProg = Number(opts.catalogInProgressCount || 0);
   const maxPerDay = opts.maxCatchupsPerUtcDay ?? MAX_CATCHUPS_PER_UTC_DAY;
-  const cooldownH = opts.cooldownHours ?? CATCHUP_COOLDOWN_HOURS;
+  const baseCooldownH = opts.cooldownHours ?? CATCHUP_COOLDOWN_HOURS;
+  const multiMissCooldownH =
+    opts.cooldownHoursMultiMiss ?? CATCHUP_COOLDOWN_HOURS_MULTI_MISS;
   const runs = Array.isArray(opts.recentCatalogRuns) ? opts.recentCatalogRuns : [];
 
   if (inProg > 0) {
@@ -71,6 +79,12 @@ export function decideScheduleCatchup(opts = {}) {
       note: "PENDING_OBSERVATION alone must not trigger catch-up",
     };
   }
+
+  // Cascading undelivery: do not freeze recovery behind the full 2h cooldown when
+  // multiple SLOT_MISS are already open. Daycap still bounds storms.
+  const cooldownH =
+    miss >= 2 ? Math.min(baseCooldownH, Number(multiMissCooldownH) || 1) : baseCooldownH;
+  const cooldownSoftened = miss >= 2 && cooldownH < baseCooldownH;
 
   const dayKey = now.toISOString().slice(0, 10);
   // Only true catch-up dispatches consume the daily budget (diagnostic dispatch ignored).
@@ -104,6 +118,8 @@ export function decideScheduleCatchup(opts = {}) {
         reason: "CATCHUP_COOLDOWN",
         mode: null,
         cooldownHours: cooldownH,
+        cooldownSoftened,
+        missCount: miss,
         latestDispatchAgeHours: Math.round(ageH * 100) / 100,
         evidenceClass: "CURRENT_PRODUCTION",
       };
@@ -121,6 +137,9 @@ export function decideScheduleCatchup(opts = {}) {
       expectedUtc: s.expectedUtc,
     })),
     maxCatchupsPerUtcDay: maxPerDay,
+    cooldownHoursApplied: cooldownH,
+    cooldownSoftened,
+    missCount: miss,
     evidenceClass: "CURRENT_PRODUCTION",
     note:
       "workflow_dispatch catch-up is audit-honest: never counted as schedule. Same concurrency group as catalog-sync; no second publisher.",

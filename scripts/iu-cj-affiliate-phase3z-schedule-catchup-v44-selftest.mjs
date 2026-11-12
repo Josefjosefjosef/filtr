@@ -2,6 +2,7 @@ import {
   decideScheduleCatchup,
   decideGapDeepen,
   CATCHUP_COOLDOWN_HOURS,
+  CATCHUP_COOLDOWN_HOURS_MULTI_MISS,
   MAX_CATCHUPS_PER_UTC_DAY,
 } from "./iu-cj-affiliate-phase3z-schedule-catchup-v44.mjs";
 
@@ -74,6 +75,61 @@ const denyCooldown = decideScheduleCatchup({
   maxCatchupsPerUtcDay: 4,
 });
 assert(denyCooldown.allow === false && denyCooldown.reason === "CATCHUP_COOLDOWN", "cooldown");
+
+// Multi-miss softens cooldown to 1h so cascading undelivery is recoverable.
+const denyMultiStillCool = decideScheduleCatchup({
+  now: new Date("2026-11-05T07:00:00Z"),
+  catalogInProgressCount: 0,
+  slotReport: {
+    counts: { miss: 2 },
+    slots: [
+      { classification: "SLOT_MISS", hour: 0, expectedUtc: "2026-11-05T00:17:00Z" },
+      { classification: "SLOT_MISS", hour: 3, expectedUtc: "2026-11-05T03:17:00Z" },
+    ],
+  },
+  recentCatalogRuns: [
+    {
+      event: "workflow_dispatch",
+      created_at: "2026-11-05T06:30:00Z",
+      display_title: "CATCHUP_DISPATCH_NOT_SCHEDULE",
+      catchup_dispatch: "1",
+    },
+  ],
+});
+assert(
+  denyMultiStillCool.allow === false &&
+    denyMultiStillCool.reason === "CATCHUP_COOLDOWN" &&
+    denyMultiStillCool.cooldownSoftened === true &&
+    denyMultiStillCool.cooldownHours === CATCHUP_COOLDOWN_HOURS_MULTI_MISS,
+  "multi-miss still in softened cooldown"
+);
+
+const allowMultiAfterSoftCooldown = decideScheduleCatchup({
+  now: new Date("2026-11-05T07:45:00Z"),
+  catalogInProgressCount: 0,
+  slotReport: {
+    counts: { miss: 2 },
+    slots: [
+      { classification: "SLOT_MISS", hour: 0, expectedUtc: "2026-11-05T00:17:00Z" },
+      { classification: "SLOT_MISS", hour: 3, expectedUtc: "2026-11-05T03:17:00Z" },
+    ],
+  },
+  recentCatalogRuns: [
+    {
+      event: "workflow_dispatch",
+      created_at: "2026-11-05T06:30:00Z",
+      display_title: "CATCHUP_DISPATCH_NOT_SCHEDULE",
+      catchup_dispatch: "1",
+    },
+  ],
+});
+assert(
+  allowMultiAfterSoftCooldown.allow === true &&
+    allowMultiAfterSoftCooldown.cooldownSoftened === true &&
+    allowMultiAfterSoftCooldown.cooldownHoursApplied === CATCHUP_COOLDOWN_HOURS_MULTI_MISS,
+  "multi-miss allow after softened 1h cooldown"
+);
+assert(CATCHUP_COOLDOWN_HOURS_MULTI_MISS === 1, "multi-miss cooldown default");
 
 const allow = decideScheduleCatchup({
   now,
