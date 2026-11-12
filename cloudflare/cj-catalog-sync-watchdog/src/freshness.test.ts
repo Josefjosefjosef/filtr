@@ -10,6 +10,13 @@ describe("freshness", () => {
     assert.equal(iso, "2026-11-12T11:42:08.039Z");
   });
 
+  it("falls back to updatedAt when generatedAt missing", () => {
+    const iso = extractGeneratedAtFromPrefix(
+      '{"ok":true,"updatedAt":"2026-11-12T12:17:11.932Z","liveEnabled":true',
+    );
+    assert.equal(iso, "2026-11-12T12:17:11.932Z");
+  });
+
   it("rejects invalid timestamps", () => {
     assert.equal(normalizeGeneratedAtIso("not-a-date"), null);
     assert.equal(normalizeGeneratedAtIso(""), null);

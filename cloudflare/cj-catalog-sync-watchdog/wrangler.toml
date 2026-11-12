@@ -11,6 +11,7 @@ account_id = "577868e9aac9c289e9323100f68fad16"
 
 [triggers]
 # Every 15 minutes — enough to recover a missed 3h slot without storming Actions.
+# schedule-reregister: 2026-11-12T14:00Z — V51.8 technical-completion (updatedAt freshness fallback).
 crons = ["*/15 * * * *"]
 
 [observability]

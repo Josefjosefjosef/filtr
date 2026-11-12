@@ -1,10 +1,14 @@
-/** Extract offers.generatedAt without parsing the full multi-MB public JSON. */
+/** Extract offers.generatedAt / updatedAt without parsing the full multi-MB public JSON. */
 const GENERATED_AT_RE = /"generatedAt"\s*:\s*"([^"]+)"/;
+const UPDATED_AT_RE = /"updatedAt"\s*:\s*"([^"]+)"/;
 
 export function extractGeneratedAtFromPrefix(text: string): string | null {
   const m = text.match(GENERATED_AT_RE);
-  if (!m || !m[1]) return null;
-  return normalizeGeneratedAtIso(m[1]);
+  if (m && m[1]) return normalizeGeneratedAtIso(m[1]);
+  // Production offers docs often expose updatedAt near the head when generatedAt is absent.
+  const u = text.match(UPDATED_AT_RE);
+  if (u && u[1]) return normalizeGeneratedAtIso(u[1]);
+  return null;
 }
 
 export function normalizeGeneratedAtIso(raw: string | null | undefined): string | null {

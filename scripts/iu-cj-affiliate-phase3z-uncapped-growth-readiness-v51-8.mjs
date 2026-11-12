@@ -126,6 +126,39 @@ export function runUncappedGrowthVolumeScenarios() {
         a.deferredNew.length === 9960,
     },
   );
+  // 50k backlog: capacity-honest multi-round drip via computePublicGrowthBudget
+  // (avoids allocating 50k product objects × N rounds in CI memory).
+  {
+    let live = prevN;
+    let totalKept = 0;
+    let rounds = 0;
+    let stalled = false;
+    while (totalKept < 50000 && rounds < 30) {
+      const remaining = 50000 - totalKept;
+      const b = computePublicGrowthBudget(live, {
+        uncappedMode: true,
+        newCandidatesCount: remaining,
+      });
+      if (b.allowedNew < 1) {
+        stalled = true;
+        break;
+      }
+      totalKept += b.allowedNew;
+      live += b.allowedNew;
+      rounds += 1;
+    }
+    results.push({
+      name: "uncapped_50000_multi_round_drip",
+      uncappedMode: true,
+      newCandidates: 50000,
+      keptNew: totalKept,
+      deferredNew: Math.max(0, 50000 - totalKept),
+      allowedNew: null,
+      surgePause: true,
+      publicEligibleAfter: live,
+      ok: !stalled && totalKept >= 500 && rounds >= 5,
+    });
+  }
   // Second run after first drip: remaining backlog continues (checkpoint continuity).
   {
     const afterFirst = applyPublicGrowthBudget(
