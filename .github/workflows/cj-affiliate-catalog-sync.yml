@@ -204,6 +204,10 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-workers-ai-catalog-role-v51-8-selftest.mjs
       - name: Technical completion matrix selftest (V51.8; offline)
         run: node scripts/iu-cj-affiliate-phase3z-technical-completion-matrix-v51-8-selftest.mjs
+      - name: Deferred drain + 50k remainder selftest (V51.8; offline; DISARMED)
+        run: node scripts/iu-cj-affiliate-phase3z-deferred-drain-v51-8-selftest.mjs
+      - name: Robot 28-capability matrix selftest (V51.8; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-robot-28-capability-matrix-v51-8-selftest.mjs
       - name: Audit ZIP CRC32/SHA256 integrity selftest (V51.8; offline)
         run: node scripts/iu-cj-affiliate-phase3z-audit-zip-integrity-v51-8-selftest.mjs
       - name: Registry dry-run LKG preserve selftest (V51.3; offline)
