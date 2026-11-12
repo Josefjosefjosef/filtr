@@ -208,6 +208,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-deferred-drain-v51-8-selftest.mjs
       - name: Robot 28-capability matrix selftest (V51.8; offline)
         run: node scripts/iu-cj-affiliate-phase3z-robot-28-capability-matrix-v51-8-selftest.mjs
+      - name: Complete CJ partner reconciliation selftest (V51.8; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-complete-partner-reconciliation-v51-8-selftest.mjs
       - name: Audit ZIP CRC32/SHA256 integrity selftest (V51.8; offline)
         run: node scripts/iu-cj-affiliate-phase3z-audit-zip-integrity-v51-8-selftest.mjs
       - name: Registry dry-run LKG preserve selftest (V51.3; offline)
@@ -299,6 +301,8 @@ jobs:
       IU_CJ_SYNC_REQ_SPACING_MS: "2400"
       # Targeted all-types Link Search for known missing-URL joined partners (read-only).
       IU_CJ_SYNC_PROBE_ADVERTISER_IDS: "6466592,5578976,7804601,5725783"
+      # Confirm suspected ENDED leftovers (managed/policy CID absent from joined) via explicit Lookup.
+      IU_CJ_SYNC_CONFIRM_ADVERTISER_IDS: "5614135,6253448"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
