@@ -33,6 +33,21 @@ function collectErrorRows(root) {
     }
     if (out.length) return out;
   }
+  // funnelFetchMeta is the complete per-advertiser map (not capped at 40).
+  const funnel = root?.productMeta?.funnelFetchMeta;
+  if (funnel && typeof funnel === "object") {
+    for (const [advertiserId, row] of Object.entries(funnel)) {
+      if (!row || typeof row !== "object") continue;
+      push({ advertiserId, ...row });
+    }
+    const invalidOnly = out.filter((row) => {
+      const errText = String(row.error || row.redactedError || "");
+      const cls = row.errorClass || (errText ? classifyPartnerFetchError(errText) : null);
+      return cls === "INVALID_FEED" || /http_400/i.test(errText);
+    });
+    if (invalidOnly.length) return invalidOnly;
+    out.length = 0;
+  }
   function walk(node, depth = 0) {
     if (!node || typeof node !== "object" || depth > 8) return;
     if (Array.isArray(node)) {
