@@ -79,6 +79,19 @@ export function loadRefreshCheckpoint(raw) {
 /**
  * Order advertisers: oldest successful refresh first, then never-refreshed, then by key.
  */
+function isUnknownFreshness(prev) {
+  if (!prev || typeof prev !== "object") return false;
+  const avail = String(prev.availability || prev.availabilityStatus || "").toUpperCase();
+  const fresh = String(prev.freshnessStatus || prev.displayClass || "").toUpperCase();
+  // Only explicit UNKNOWN markers — missing sourceUpdatedAt alone is common and must not
+  // starve partners that already have known stock signals.
+  return avail === "UNKNOWN" || fresh === "UNKNOWN" || prev.availabilityUnknown === true;
+}
+
+/**
+ * Order advertisers: UNKNOWN / never-refreshed first, then oldest successful refresh.
+ * Fairness: no permanent starve — secondary key remains oldestMs / advertiserId.
+ */
 export function orderAdvertisersForRefresh(keys, prevByKey = new Map()) {
   const byAdv = new Map();
   for (const k of keys) {
@@ -89,8 +102,10 @@ export function orderAdvertisersForRefresh(keys, prevByKey = new Map()) {
   for (const [advertiserId, list] of byAdv.entries()) {
     let oldestMs = null;
     let anyRefresh = false;
+    let unknownCount = 0;
     for (const k of list) {
       const prev = prevByKey.get(advertiserId + "|" + k.productId);
+      if (isUnknownFreshness(prev)) unknownCount += 1;
       const ts = prev?.lastSuccessfulRefreshAt || prev?.fetchedAt || null;
       if (ts) {
         anyRefresh = true;
@@ -103,9 +118,14 @@ export function orderAdvertisersForRefresh(keys, prevByKey = new Map()) {
       keys: list,
       oldestMs: oldestMs == null ? 0 : oldestMs,
       anyRefresh,
+      unknownCount,
+      unknownRatio: list.length > 0 ? unknownCount / list.length : 0,
     });
   }
   scored.sort((a, b) => {
+    // Prefer advertisers with any UNKNOWN products (risk of stale presentation).
+    if ((a.unknownCount > 0) !== (b.unknownCount > 0)) return a.unknownCount > 0 ? -1 : 1;
+    if (a.unknownRatio !== b.unknownRatio) return b.unknownRatio - a.unknownRatio;
     if (a.anyRefresh !== b.anyRefresh) return a.anyRefresh ? 1 : -1;
     if (a.oldestMs !== b.oldestMs) return a.oldestMs - b.oldestMs;
     return String(a.advertiserId).localeCompare(String(b.advertiserId));
