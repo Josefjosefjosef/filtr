@@ -1428,22 +1428,29 @@
   window.iuAffiliateIsSection = isAffiliateSectionKey;
   window.iuAffiliateGetCategory = getCategoryBySection;
 
+  function __iuAffRerenderCurrentAffiliateSection() {
+    try {
+      var secNow =
+        (document.body && document.body.dataset && document.body.dataset.section) || "";
+      if (isAffiliateSectionKey(secNow)) renderAffiliateSection(secNow);
+    } catch (_) {}
+  }
+
   initAffiliateCatalog();
+  /**
+   * V51.8: static V13 swap (when armed) is the baseline button set, but R2 managed-public
+   * remains the lifecycle authority (new JOINED adds, ENDED hides). Always layer overlay
+   * after static so enrollments published only to R2 are visible without a static rebuild.
+   */
   if (IU_AFF_PUBLIC_SWAP_ARMED) {
     loadStaticMainCatalogV13(function () {
-      try {
-        var secNow =
-          (document.body && document.body.dataset && document.body.dataset.section) || "";
-        if (isAffiliateSectionKey(secNow)) renderAffiliateSection(secNow);
-      } catch (_) {}
+      loadManagedPublicOverlay(function () {
+        __iuAffRerenderCurrentAffiliateSection();
+      });
     });
   } else {
     loadManagedPublicOverlay(function () {
-      try {
-        var secNow =
-          (document.body && document.body.dataset && document.body.dataset.section) || "";
-        if (isAffiliateSectionKey(secNow)) renderAffiliateSection(secNow);
-      } catch (_) {}
+      __iuAffRerenderCurrentAffiliateSection();
     });
   }
   try {
