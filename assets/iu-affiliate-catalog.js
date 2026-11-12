@@ -1183,6 +1183,28 @@
     return false;
   }
 
+  /** Same CJ deep-link id across CDN hosts (anrdoezrs/dpbolvw/…) — keep baked/static URL to protect slot1 freezes. */
+  function __iuAffSameCjClickId(a, b) {
+    try {
+      var ra = String(a || "").match(/click-(\d+-\d+)/i);
+      var rb = String(b || "").match(/click-(\d+-\d+)/i);
+      return !!(ra && rb && ra[1] === rb[1]);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function __iuAffIsSlot1FrozenPartner(catId, it) {
+    try {
+      var title = __iuAffNormTitle(it && it.title);
+      if (String(catId) === "aff-ubytovani-hotely" && title === "bookingcom") return true;
+      if (String(catId) === "aff-letenky" && title === "leoexpress") return true;
+      return false;
+    } catch (_) {
+      return false;
+    }
+  }
+
   /* Phase 3M: title key so baked-without-CID cannot duplicate managed / re-show ENDED. */
   function __iuAffNormTitle(t) {
     try {
@@ -1218,20 +1240,23 @@
         var it = cat.items[j];
         var adv = it.advertiserId != null ? String(it.advertiserId) : null;
         var itTitleKey = __iuAffNormTitle(it.title);
+        if (__iuAffIsProtectedItem(it) || __iuAffIsSlot1FrozenPartner(cat.id, it)) {
+          /* Paid/manual + slot1 freezes are immutable under managed overlay. */
+          kept.push(it);
+          if (adv) seenAdv[adv] = true;
+          if (itTitleKey) seenTitle[itTitleKey] = true;
+          continue;
+        }
         if (adv && byAdv[adv]) {
           var ov = byAdv[adv];
           if (ov.active === false) {
-            /* Never hide MANUAL_PROTECTED / PAID_RESERVED — only CJ_MANAGED */
-            if (__iuAffIsProtectedItem(it)) {
-              kept.push(it);
-              seenAdv[adv] = true;
-              if (itTitleKey) seenTitle[itTitleKey] = true;
-            }
             continue;
           }
+          var nextUrl = ov.url || it.url;
+          if (__iuAffSameCjClickId(it.url, ov.url)) nextUrl = it.url;
           kept.push({
             title: ov.title || it.title,
-            url: ov.url || it.url,
+            url: nextUrl,
             affiliateUrlReady: true,
             advertiserId: adv,
             management: "CJ_MANAGED",
@@ -1240,16 +1265,18 @@
           if (itTitleKey) seenTitle[itTitleKey] = true;
         } else if (!adv || !byAdv[adv]) {
           var titleHit = itTitleKey ? byTitle[itTitleKey] : null;
-          if (titleHit && !__iuAffIsProtectedItem(it)) {
+          if (titleHit && !__iuAffIsProtectedItem(it) && !__iuAffIsSlot1FrozenPartner(cat.id, it)) {
             /* Unified lifecycle: managed authority wins over baked-without-CID */
             if (titleHit.active === false) {
               continue;
             }
             var tid = String(titleHit.advertiserId);
             if (seenAdv[tid]) continue;
+            var titleUrl = titleHit.url || it.url;
+            if (__iuAffSameCjClickId(it.url, titleHit.url)) titleUrl = it.url;
             kept.push({
               title: titleHit.title || it.title,
-              url: titleHit.url || it.url,
+              url: titleUrl,
               affiliateUrlReady: true,
               advertiserId: tid,
               management: "CJ_MANAGED",
