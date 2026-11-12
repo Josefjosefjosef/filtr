@@ -1487,7 +1487,27 @@ export async function sampleProductsForManagedPartners(opts = {}) {
       continueOtherPartners: row.continueOtherPartners !== false,
     };
   }
-  // Cap partnerFetch audit size in meta for huge partner sets
+  // Always retain full error-case list (INVALID_FEED audit needs every advertiser).
+  // Cap only the general partnerFetch sample for huge partner sets.
+  meta.partnerFetchErrorCases = (meta.partnerFetch || [])
+    .filter((row) => row && (row.error || row.errorClass))
+    .map((row) => ({
+      advertiserId: row.advertiserId ?? null,
+      partnerName: row.partnerName ?? null,
+      feedId: row.feedId ?? row.productFeedId ?? null,
+      feeds: row.feeds ?? null,
+      fetched: row.fetched ?? null,
+      complete: row.complete ?? null,
+      error: row.error ?? null,
+      errorClass: row.errorClass ?? null,
+      httpStatus: row.httpStatus ?? null,
+      redactedError: row.redactedError ?? null,
+      likelyExternal: row.likelyExternal ?? null,
+      continueOtherPartners: row.continueOtherPartners !== false,
+      lastSuccessAt: row.lastSuccessAt ?? row.lastOkAt ?? null,
+      resumeOffset: row.resumeOffset ?? null,
+      endpoint: row.endpoint || "shoppingProducts",
+    }));
   if (meta.partnerFetch.length > 40) {
     meta.partnerFetchSample = meta.partnerFetch.slice(0, 40);
     meta.partnerFetchCount = meta.partnerFetch.length;
@@ -2276,7 +2296,10 @@ export async function runOffersLiveSync(opts = {}) {
     const fetchedAdvertisers = new Set();
     const endedAdvertisers = new Set();
     const revokedAdvertisers = new Set();
-    for (const row of productMeta?.partnerFetch || productMeta?.partnerFetchSample || []) {
+    for (const row of productMeta?.partnerFetch ||
+      productMeta?.partnerFetchErrorCases ||
+      productMeta?.partnerFetchSample ||
+      []) {
       const id = String(row.advertiserId || "");
       if (!id) continue;
       fetchedAdvertisers.add(id);

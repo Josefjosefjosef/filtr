@@ -10,6 +10,8 @@ name: CJ Affiliate catalog sync (fetch ? publish)
 # schedule-catchup-marker: 2026-11-09T10:00Z ? catchup_dispatch input so diagnostic dispatch
 # does not consume MAX_CATCHUPS_PER_UTC_DAY (V51.8-maint).
 # schedule-reregister: 2026-11-12T08:45Z — rebind after GHA undelivered 03:17+06:17 (V51.8-closure).
+# Independent recovery: cloudflare/cj-catalog-sync-watchdog (CF cron → catch-up dispatch)
+# complements GHA schedule-watch when both catalog and watch crons vanish.
 
 run-name: >-
   ${{ github.event_name == 'workflow_dispatch' && inputs.catchup_dispatch == '1'
@@ -188,6 +190,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-publication-lkg-v51-8-selftest.mjs
       - name: Uncapped growth readiness + identity reconcile selftest (V51.8; offline; does NOT arm uncapped)
         run: node scripts/iu-cj-affiliate-phase3z-uncapped-growth-readiness-v51-8-selftest.mjs
+      - name: INVALID_FEED case audit selftest (V51.8; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-invalid-feed-case-audit-v51-8-selftest.mjs
       - name: Audit ZIP CRC32/SHA256 integrity selftest (V51.8; offline)
         run: node scripts/iu-cj-affiliate-phase3z-audit-zip-integrity-v51-8-selftest.mjs
       - name: Registry dry-run LKG preserve selftest (V51.3; offline)

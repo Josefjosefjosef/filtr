@@ -1,0 +1,27 @@
+# CJ Affiliate catalog-sync freshness watchdog: Cloudflare Cron → GitHub catch-up dispatch.
+# Independent of GitHub Actions schedule undelivery (catalog + watch crons can both vanish).
+# GitHub workflow remains the sync engine; this worker only dispatches catch-up when stale.
+# Deploy: cd cloudflare/cj-catalog-sync-watchdog && npm ci && npx wrangler deploy
+# Secrets: npx wrangler secret put GITHUB_TOKEN
+#          npx wrangler secret put MANUAL_TRIGGER_SECRET  (# /probe?dispatch=1 + POST /run)
+name = "infouzel-cj-catalog-sync-watchdog"
+main = "src/index.ts"
+compatibility_date = "2024-11-01"
+account_id = "577868e9aac9c289e9323100f68fad16"
+
+[triggers]
+# Every 15 minutes — enough to recover a missed 3h slot without storming Actions.
+crons = ["*/15 * * * *"]
+
+[observability]
+enabled = true
+
+[vars]
+GITHUB_REPOSITORY = "Josefjosefjosef/filtr"
+WORKFLOW_FILE = "cj-affiliate-catalog-sync.yml"
+FRESHNESS_URL = "https://infouzel.cz/projects/data/iu-affiliate-cj-offers-public-v1.json"
+# Catalog cadence is ~3h; 4h means at least one missed slot before CF catch-up.
+STALE_AFTER_MINUTES = "240"
+# Bound storms if CF + GHA watch both fire (mirrors schedule-catchup daycap/cooldown).
+MAX_CATCHUPS_PER_UTC_DAY = "4"
+CATCHUP_COOLDOWN_MINUTES = "60"
