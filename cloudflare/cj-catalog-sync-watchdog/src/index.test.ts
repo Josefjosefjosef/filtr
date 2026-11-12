@@ -94,8 +94,14 @@ describe("cj catalog watchdog probe security", () => {
   it("GET /health ok", async () => {
     const res = await worker.fetch(new Request("https://example/health"), env);
     assert.equal(res.status, 200);
-    const j = (await res.json()) as { ok: boolean };
+    const j = (await res.json()) as {
+      ok: boolean;
+      anonymousProbeObserveOnly?: boolean;
+      scheduledMutationsEnabled?: boolean;
+    };
     assert.equal(j.ok, true);
+    assert.equal(j.anonymousProbeObserveOnly, true);
+    assert.equal(j.scheduledMutationsEnabled, true);
   });
 
   it("anonymous /probe is observe-only (no dispatch)", async () => {

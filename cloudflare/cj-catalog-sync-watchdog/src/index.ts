@@ -227,6 +227,10 @@ export default {
         ok: true,
         service: "infouzel-cj-catalog-sync-watchdog",
         github_token_present: !!(env.GITHUB_TOKEN && env.GITHUB_TOKEN.trim()),
+        // Anonymous GET /probe is observe-only by design (SEC). Scheduled cron mutates.
+        anonymousProbeObserveOnly: true,
+        scheduledMutationsEnabled: true,
+        staleAfterMinutes: Math.max(1, Number(env.STALE_AFTER_MINUTES) || 240),
       });
     }
     if (url.pathname === "/probe") {

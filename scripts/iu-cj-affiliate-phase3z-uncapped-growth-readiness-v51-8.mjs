@@ -133,7 +133,8 @@ export function runUncappedGrowthVolumeScenarios() {
     let totalKept = 0;
     let rounds = 0;
     let stalled = false;
-    while (totalKept < 50000 && rounds < 30) {
+    const remAtRound30 = { remaining: null, kept: null };
+    while (totalKept < 50000 && rounds < 80) {
       const remaining = 50000 - totalKept;
       const b = computePublicGrowthBudget(live, {
         uncappedMode: true,
@@ -143,9 +144,14 @@ export function runUncappedGrowthVolumeScenarios() {
         stalled = true;
         break;
       }
-      totalKept += b.allowedNew;
-      live += b.allowedNew;
+      const take = Math.min(b.allowedNew, remaining);
+      totalKept += take;
+      live += take;
       rounds += 1;
+      if (rounds === 30) {
+        remAtRound30.remaining = 50000 - totalKept;
+        remAtRound30.kept = totalKept;
+      }
     }
     results.push({
       name: "uncapped_50000_multi_round_drip",
@@ -156,7 +162,30 @@ export function runUncappedGrowthVolumeScenarios() {
       allowedNew: null,
       surgePause: true,
       publicEligibleAfter: live,
+      remAtRound30,
+      rounds,
       ok: !stalled && totalKept >= 500 && rounds >= 5,
+    });
+    // Remainder after early rounds is ONLY batching — must drain to 0 without owner approval per batch.
+    results.push({
+      name: "uncapped_50000_full_eligible_drain",
+      uncappedMode: true,
+      newCandidates: 50000,
+      keptNew: totalKept,
+      deferredNew: Math.max(0, 50000 - totalKept),
+      allowedNew: null,
+      surgePause: true,
+      publicEligibleAfter: live,
+      remAtRound30,
+      rounds,
+      ok:
+        !stalled &&
+        totalKept === 50000 &&
+        rounds > 30 &&
+        remAtRound30.remaining != null &&
+        remAtRound30.remaining > 0,
+      note:
+        "Round-30 remainder is ratio drip batching (not invalid). Later rounds drain all eligible identities to 0 deferred.",
     });
   }
   // Second run after first drip: remaining backlog continues (checkpoint continuity).
