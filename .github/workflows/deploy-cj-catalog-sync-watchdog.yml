@@ -1,0 +1,124 @@
+# Deploy Cloudflare CJ catalog-sync watchdog + sync GITHUB_TOKEN secret.
+# Required repo secrets:
+#   CLOUDFLARE_API_TOKEN
+#   ARTICLES_WATCHDOG_GITHUB_TOKEN (or CHMI_CAP_WATCHDOG_GITHUB_TOKEN) — Actions:read/write
+#   CHMI_CAP_WATCHDOG_MANUAL_TRIGGER_SECRET — Bearer for /probe?dispatch=1 and POST /run
+#     (reused intentionally to avoid new owner secret; same auth model as CHMI watchdog)
+name: Deploy CJ catalog-sync watchdog
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - "cloudflare/cj-catalog-sync-watchdog/**"
+      - ".github/workflows/deploy-cj-catalog-sync-watchdog.yml"
+
+concurrency:
+  group: deploy-cj-catalog-sync-watchdog
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: cloudflare/cj-catalog-sync-watchdog
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: cloudflare/cj-catalog-sync-watchdog/package-lock.json
+
+      - name: Install
+        run: npm install
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Put GITHUB_TOKEN secret on worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: 577868e9aac9c289e9323100f68fad16
+          TOKEN_A: ${{ secrets.CHMI_CAP_WATCHDOG_GITHUB_TOKEN }}
+          TOKEN_B: ${{ secrets.ARTICLES_WATCHDOG_GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${CLOUDFLARE_API_TOKEN:-}" ]; then
+            echo "ERROR: CLOUDFLARE_API_TOKEN repo secret missing"
+            exit 1
+          fi
+          TOKEN="${TOKEN_A:-}"
+          if [ -z "$TOKEN" ]; then TOKEN="${TOKEN_B:-}"; fi
+          if [ -z "$TOKEN" ]; then
+            echo "ERROR: CHMI_CAP_WATCHDOG_GITHUB_TOKEN or ARTICLES_WATCHDOG_GITHUB_TOKEN missing"
+            exit 1
+          fi
+          printf '%s' "$TOKEN" | npx wrangler secret put GITHUB_TOKEN
+
+      - name: Put MANUAL_TRIGGER_SECRET on worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: 577868e9aac9c289e9323100f68fad16
+          MANUAL_TRIGGER_SECRET: ${{ secrets.CHMI_CAP_WATCHDOG_MANUAL_TRIGGER_SECRET }}
+        run: |
+          set -euo pipefail
+          if [ -z "${CLOUDFLARE_API_TOKEN:-}" ]; then
+            echo "ERROR: CLOUDFLARE_API_TOKEN repo secret missing"
+            exit 1
+          fi
+          if [ -z "${MANUAL_TRIGGER_SECRET:-}" ]; then
+            echo "ERROR: CHMI_CAP_WATCHDOG_MANUAL_TRIGGER_SECRET repo secret missing"
+            exit 1
+          fi
+          printf '%s' "$MANUAL_TRIGGER_SECRET" | npx wrangler secret put MANUAL_TRIGGER_SECRET
+
+      - name: Deploy worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: 577868e9aac9c289e9323100f68fad16
+        run: npx wrangler deploy
+
+      - name: Probe worker health
+        run: |
+          set -euo pipefail
+          HEALTH_URL="https://infouzel-cj-catalog-sync-watchdog.josef-zmrhal.workers.dev/health"
+          PROBE_URL="https://infouzel-cj-catalog-sync-watchdog.josef-zmrhal.workers.dev/probe"
+          MAX_ATTEMPTS=8
+          DELAY_MS=500
+          attempt=1
+          while [ "$attempt" -le "$MAX_ATTEMPTS" ]; do
+            echo "health_attempt=${attempt}/${MAX_ATTEMPTS}"
+            set +e
+            body="$(curl -sS -w "\n%{http_code}" --max-time 15 "$HEALTH_URL" 2>/tmp/cj_health_err.txt)"
+            curl_ec=$?
+            set -e
+            http_code="$(printf '%s' "$body" | tail -n1)"
+            payload="$(printf '%s' "$body" | sed '$d')"
+            if [ "$curl_ec" -eq 0 ] && [ "$http_code" = "200" ] && printf '%s' "$payload" | grep -q '"ok"[[:space:]]*:[[:space:]]*true'; then
+              echo "health_ok attempt=${attempt}"
+              printf '%s\n' "$payload"
+              break
+            fi
+            if [ "$attempt" -eq "$MAX_ATTEMPTS" ]; then
+              echo "ERROR: /health failed after ${MAX_ATTEMPTS} attempts (last_http=${http_code} curl_ec=${curl_ec})"
+              printf '%s\n' "$payload" | head -c 500
+              if [ -f /tmp/cj_health_err.txt ]; then
+                head -c 300 /tmp/cj_health_err.txt
+                echo ""
+              fi
+              exit 1
+            fi
+            sleep_secs="$(awk -v d="$DELAY_MS" -v a="$attempt" 'BEGIN{s=d*(2^(a-1))/1000; if(s>8)s=8; printf "%.3f", s}')"
+            echo "health_retry sleep_s=${sleep_secs} http=${http_code} curl_ec=${curl_ec}"
+            sleep "$sleep_secs"
+            attempt=$((attempt + 1))
+          done
+          curl -fsS --max-time 30 "$PROBE_URL" | head -c 4000
+          echo ""

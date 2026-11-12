@@ -105,24 +105,62 @@ export function runUncappedGrowthVolumeScenarios() {
     },
   );
   scenario(
-    "uncapped_1000_ratio_bounded",
+    "uncapped_1000_surge_drip",
     Array.from({ length: 1000 }, (_, i) => makeProduct(2, `u1k-${i}`)),
     {
       uncappedMode: true,
       expectOk: (a) =>
         a.budget.surgePause === true &&
-        a.keptNew.length === 0 &&
-        a.deferredNew.length === 1000,
+        a.keptNew.length === 40 &&
+        a.deferredNew.length === 960,
     },
   );
   scenario(
-    "uncapped_10000_surge_pause",
+    "uncapped_10000_surge_drip",
     Array.from({ length: 10000 }, (_, i) => makeProduct(2, `u10k-${i}`)),
     {
       uncappedMode: true,
-      expectOk: (a) => a.budget.surgePause === true && a.keptNew.length === 0,
+      expectOk: (a) =>
+        a.budget.surgePause === true &&
+        a.keptNew.length === 40 &&
+        a.deferredNew.length === 9960,
     },
   );
+  // Second run after first drip: remaining backlog continues (checkpoint continuity).
+  {
+    const afterFirst = applyPublicGrowthBudget(
+      makeDoc([
+        ...Array.from({ length: prevN }, (_, i) => makeProduct(1, `live-${i}`)),
+        ...Array.from({ length: 1000 }, (_, i) => makeProduct(2, `ckpt-${i}`)),
+      ]),
+      prev,
+      { uncappedMode: true },
+    );
+    const afterSecond = applyPublicGrowthBudget(
+      makeDoc([
+        ...Array.from({ length: prevN }, (_, i) => makeProduct(1, `live-${i}`)),
+        ...Array.from({ length: 1000 }, (_, i) => makeProduct(2, `ckpt-${i}`)),
+      ]),
+      afterFirst.doc,
+      { uncappedMode: true },
+    );
+    const expectedSecond = Math.floor((prevN + afterFirst.keptNew.length) * 0.2 + 1e-9);
+    results.push({
+      name: "uncapped_checkpoint_continuation_drip",
+      uncappedMode: true,
+      newCandidates: 1000,
+      keptNew: afterSecond.keptNew.length,
+      deferredNew: afterSecond.deferredNew.length,
+      allowedNew: afterSecond.budget.allowedNew,
+      surgePause: afterSecond.budget.surgePause === true,
+      publicEligibleAfter: afterSecond.publicEligibleAfter,
+      ok:
+        afterFirst.keptNew.length === 40 &&
+        afterSecond.keptNew.length === expectedSecond &&
+        afterSecond.publicEligibleAfter === prevN + 40 + expectedSecond &&
+        afterSecond.deferredNew.length === 1000 - 40 - expectedSecond,
+    });
+  }
   scenario(
     "duplicates_collapsed",
     [
@@ -198,7 +236,7 @@ export function buildUncappedGrowthActivationRunbook() {
       "Owner approval recorded (ticket/PR) to raise/remove absolute cumulative 500.",
       "Confirm live-sync already reads IU_CJ_PUBLIC_GROWTH_UNCAPPED (wired; default unset/0 = DISARMED).",
       "Set IU_CJ_PUBLIC_GROWTH_UNCAPPED=1 only as Actions variable/secret on catalog-sync job (never commit true).",
-      "Keep maxGrowthRatio (default 0.2) + surgeRatio pause (default 0.5); deferred remainder continues via checkpoints.",
+      "Keep maxGrowthRatio (default 0.2) + surgeRatio drip flag (default 0.5): surge flags owner review but does NOT zero per-run drip; deferred remainder continues via checkpoints.",
       "Keep shrinkage / identity churn / durable LKG / fail-closed ledger.",
       "Burn-in one catch-up + one schedule with deferredNew→keptNew observation.",
       "Rollback: unset env; restore growth ledger maxCumulativeAbs=500; ownerGate stays true until ledger rebuilt deliberately.",

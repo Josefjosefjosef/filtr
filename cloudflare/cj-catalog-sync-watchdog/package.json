@@ -1,0 +1,14 @@
+{
+  "name": "infouzel-cj-catalog-sync-watchdog",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-strip-types --test src/decision.test.ts src/freshness.test.ts src/index.test.ts",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250320.0",
+    "typescript": "^5.7.0",
+    "wrangler": "^3.99.0"
+  }
+}

@@ -1052,7 +1052,10 @@ export function computePublicGrowthBudget(prevPublicUnique, opts = {}) {
   const cumulativeRemaining = uncappedMode
     ? perRun
     : Math.max(0, maxCumulativeAbs - cumulativeAdded);
-  const allowedNew = surgePause ? 0 : Math.min(perRun, cumulativeRemaining);
+  // Surge must NOT zero the per-run drip. Legitimate large backlogs (1k/10k) continue
+  // gradually via ratio budget + checkpoints; surge only flags owner review / anomaly.
+  // True dump protection remains the per-run ratio bound (never admit the whole surge).
+  const allowedNew = Math.min(perRun, cumulativeRemaining);
   return {
     prevPublicUnique: prev,
     maxGrowthAbs: uncappedMode ? null : maxGrowthAbs,
@@ -1070,7 +1073,7 @@ export function computePublicGrowthBudget(prevPublicUnique, opts = {}) {
       : cumulativeRemaining <= 0 && cumulativeAdded >= maxCumulativeAbs,
     note: uncappedMode
       ? surgePause
-        ? "UNCAPPED_SURGE_PAUSE — candidate surge exceeds surgeRatio; owner review required."
+        ? "UNCAPPED_SURGE_DRIP — candidate surge exceeds surgeRatio; per-run ratio drip continues; remainder deferred for checkpoints; owner review for anomaly vs backlog."
         : "UNCAPPED_RATIO_BOUNDED — no fixed absolute cumulative; per-run still ratio-capped."
       : undefined,
   };

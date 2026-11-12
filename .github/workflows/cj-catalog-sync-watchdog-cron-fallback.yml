@@ -1,0 +1,104 @@
+# GitHub-side complement when Cloudflare cron is intermittent.
+# Observe-only /probe on schedule; authorized force dispatch only via workflow_dispatch.
+# Does NOT replace the GHA schedule-watch; CF worker remains the independent recovery path.
+# schedule-reregister: 2026-11-12T13:30Z — V51.8 autonomous readiness CF complement.
+name: CJ catalog-sync watchdog cron fallback
+
+on:
+  workflow_dispatch:
+    inputs:
+      force_probe_dispatch:
+        description: "Ops only — authorized worker /probe?dispatch=1 (ignores freshness)"
+        required: false
+        default: false
+        type: boolean
+  schedule:
+    # Offset from :17/:27/:47 catalog/watch slots; covers CF cron dead windows.
+    - cron: "7,37 * * * *"
+
+concurrency:
+  group: cj-catalog-sync-watchdog-cron-fallback
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: write
+
+env:
+  WATCHDOG_PROBE_URL: "https://infouzel-cj-catalog-sync-watchdog.josef-zmrhal.workers.dev/probe"
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Force probe dispatch (manual ops)
+        if: github.event_name == 'workflow_dispatch' && inputs.force_probe_dispatch == true
+        env:
+          MANUAL_TRIGGER_SECRET: ${{ secrets.CHMI_CAP_WATCHDOG_MANUAL_TRIGGER_SECRET }}
+        run: |
+          set -euo pipefail
+          if [ -z "${MANUAL_TRIGGER_SECRET:-}" ]; then
+            echo "ERROR: CHMI_CAP_WATCHDOG_MANUAL_TRIGGER_SECRET repo secret missing"
+            exit 1
+          fi
+          OUT="${RUNNER_TEMP}/cj_catalog_watchdog_probe.json"
+          code=$(curl -sS -m 40 -o "$OUT" -w "%{http_code}" \
+            -H "Authorization: Bearer ${MANUAL_TRIGGER_SECRET}" \
+            "${WATCHDOG_PROBE_URL}?dispatch=1" || true)
+          echo "probe_http=$code"
+          head -c 4000 "$OUT" || true
+          echo ""
+          if [ "$code" = "401" ] || [ "$code" = "403" ]; then
+            echo "WATCHDOG_PROBE_AUTH_FAILED=$code"
+            exit 1
+          fi
+          if [ "$code" != "200" ] && [ "$code" != "503" ]; then
+            echo "WATCHDOG_PROBE_UNEXPECTED_HTTP=$code"
+            exit 1
+          fi
+          if grep -q '"ok":false' "$OUT" && grep -q 'dispatch_failed\|workflow_disabled' "$OUT"; then
+            echo "WATCHDOG_DISPATCH_FAILED"
+            exit 1
+          fi
+          echo "WATCHDOG_PROBE_OK"
+
+      - name: Stale-gated observe + authorized recovery
+        if: github.event_name != 'workflow_dispatch' || inputs.force_probe_dispatch != true
+        env:
+          MANUAL_TRIGGER_SECRET: ${{ secrets.CHMI_CAP_WATCHDOG_MANUAL_TRIGGER_SECRET }}
+        run: |
+          set -euo pipefail
+          OUT="${RUNNER_TEMP}/cj_catalog_watchdog_observe.json"
+          code=$(curl -sS -m 40 -o "$OUT" -w "%{http_code}" \
+            "${WATCHDOG_PROBE_URL}" || true)
+          echo "observe_http=$code"
+          head -c 4000 "$OUT" || true
+          echo ""
+          if [ "$code" != "200" ] && [ "$code" != "503" ]; then
+            echo "WATCHDOG_OBSERVE_UNEXPECTED_HTTP=$code"
+            echo "NOTE=Worker may not be deployed yet; deploy-cj-catalog-sync-watchdog required."
+            exit 1
+          fi
+          # If CF cron missed a stale window, recover via authorized ?act=1 (decision-gated;
+          # respects daycap/cooldown — not force dispatch).
+          if grep -q '"action":"dispatch"' "$OUT" && grep -q '"reason":"stale"' "$OUT"; then
+            if [ -z "${MANUAL_TRIGGER_SECRET:-}" ]; then
+              echo "STALE_DETECTED_BUT_MANUAL_SECRET_MISSING"
+              exit 1
+            fi
+            DISP="${RUNNER_TEMP}/cj_catalog_watchdog_act.json"
+            dcode=$(curl -sS -m 40 -o "$DISP" -w "%{http_code}" \
+              -H "Authorization: Bearer ${MANUAL_TRIGGER_SECRET}" \
+              "${WATCHDOG_PROBE_URL}?act=1" || true)
+            echo "act_http=$dcode"
+            head -c 4000 "$DISP" || true
+            echo ""
+            if [ "$dcode" != "200" ] && [ "$dcode" != "503" ]; then
+              echo "WATCHDOG_STALE_ACT_FAILED=$dcode"
+              exit 1
+            fi
+            echo "WATCHDOG_STALE_ACT_ATTEMPTED=1"
+          else
+            echo "WATCHDOG_OBSERVE_OK_NO_STALE_DISPATCH"
+          fi
