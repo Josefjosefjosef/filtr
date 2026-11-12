@@ -281,6 +281,20 @@ export const PHASE3Z_CATEGORY_RULES_V2 = Object.freeze({
       sectionId: "aff-sport-outdoor",
       reason: "cj_recreation_outdoors",
     },
+    "recreation & leisure|camping and hiking": {
+      sectionId: "aff-sport-outdoor",
+      reason: "cj_recreation_camping_hiking",
+    },
+    "entertainment|mobile entertainment": {
+      sectionId: "aff-mobily",
+      reason: "cj_mobile_entertainment_phone_accessories",
+      confidence: "medium",
+    },
+    "art/photo/music|photo": {
+      sectionId: "aff-kvetiny-darky",
+      reason: "cj_photo_prints_gifts_affinity",
+      confidence: "medium",
+    },
     "insurance|personal insurance": { sectionId: "aff-pojisteni", reason: "cj_insurance_personal" },
     "insurance|travel insurance": {
       sectionId: "aff-cestovni-pojisteni",
@@ -337,6 +351,7 @@ export const PHASE3Z_CATEGORY_RULES_V2 = Object.freeze({
     "health and wellness": { sectionId: "aff-zdravi-doplnky", reason: "cj_parent_health" },
     "games & toys": { sectionId: "aff-deti-hracky", reason: "cj_parent_toys" },
     "sports & fitness": { sectionId: "aff-sport-outdoor", reason: "cj_parent_sports" },
+    "recreation & leisure": { sectionId: "aff-sport-outdoor", reason: "cj_parent_recreation_leisure" },
     insurance: { sectionId: "aff-pojisteni", reason: "cj_parent_insurance" },
     automotive: { sectionId: "aff-auto-moto", reason: "cj_parent_automotive" },
     "home & garden": { sectionId: "aff-dum-zahrada", reason: "cj_parent_home_garden" },
@@ -381,7 +396,9 @@ const KEYWORD_SECTION_HINTS = Object.freeze([
   { re: /\b(bestdrive|best\s*drive|pneu|tire|tyre|pneuservis)\b/i, sectionId: "aff-pneu-pneuservis" },
   { re: /\b(auto|moto|car\b)/i, sectionId: "aff-auto-moto" },
   { re: /\b(hra[cč]k|toy|d[eě]ti|kids|baby)\b/i, sectionId: "aff-deti-hracky" },
-  { re: /\b(sport|outdoor|fitness)\b/i, sectionId: "aff-sport-outdoor" },
+  { re: /\b(sport|outdoor|fitness|camping|hiking|4camping)\b/i, sectionId: "aff-sport-outdoor" },
+  { re: /\b(picasee|phone\s*case|ochrann[aá]\s*skla|mobiln[ií]\s*p[rř][ií]slu)\b/i, sectionId: "aff-mobily" },
+  { re: /\b(impresi|fotoobraz|photo\s*print|canvas\s*print)\b/i, sectionId: "aff-kvetiny-darky" },
   { re: /\b(potravin|jidlo|food|gourmet)\b/i, sectionId: "aff-jidlo" },
   { re: /\b(drogeri|drugstore)\b/i, sectionId: "aff-drogerie" },
   { re: /\b(pes|pesí|kočka|pet\b|zoo)\b/i, sectionId: "aff-zvirata" },
@@ -1076,6 +1093,11 @@ export const PHASE3Z_CID_SECTION_OVERRIDES_V6 = Object.freeze({
   "5894154": { sectionId: "aff-kosmetika", rule: "nefertitis_beauty", confidence: "medium" },
   "5477885": { sectionId: "aff-tv-streamovani", rule: "supraphonline_digital_music", confidence: "medium" },
   "6203294": { sectionId: "aff-mobily", rule: "momanio_mobile_accessories", confidence: "high" },
+  // V51.8 final closure — investigated SECTION_UNRESOLVED JOINED partners with CZ destinations.
+  "4786110": { sectionId: "aff-sport-outdoor", rule: "4camping_camping_hiking_cz", confidence: "high" },
+  "6298382": { sectionId: "aff-mobily", rule: "picasee_mobile_accessories_cz", confidence: "high" },
+  "6748811": { sectionId: "aff-kvetiny-darky", rule: "impresi_photo_canvas_gifts_cz", confidence: "high" },
+  // 7417963 OnBuy EU intentionally NOT overridden: no onbuy.com/cz destination among approved links.
 });
 
 /** Infer section from CJ category + name/domain only (ignores section_map). */

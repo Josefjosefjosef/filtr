@@ -8,6 +8,8 @@ import {
   buildEvidenceManifest,
   validateEvidenceManifest,
   assertIntegrityOk,
+  writeSealedEvidenceManifest,
+  validateManifestSeal,
 } from "./iu-cj-affiliate-phase3z-audit-zip-integrity-v51-8.mjs";
 
 function assert(cond, msg) {
@@ -101,6 +103,37 @@ assertIntegrityOk(ok);
   fs.unlinkSync(path.join(tmp, "extra.bin"));
 }
 
+// 7) Self-reference forbidden inside files[]
+{
+  let threw = false;
+  try {
+    buildEvidenceManifest([
+      { path: "a.txt", abs: a },
+      { path: "MANIFEST.json", abs: a },
+    ]);
+  } catch (e) {
+    threw = /MANIFEST_SELF_REF_FORBIDDEN/.test(String(e.message || e));
+  }
+  assert(threw, "manifest must reject listing itself");
+}
+
+// 8) Sealed manifest meta (non-circular)
+{
+  const sealedDir = fs.mkdtempSync(path.join(os.tmpdir(), "iu-audit-seal-"));
+  fs.writeFileSync(path.join(sealedDir, "a.txt"), "hello-audit\n", "utf8");
+  fs.writeFileSync(path.join(sealedDir, "b.json"), JSON.stringify({ ok: true }) + "\n", "utf8");
+  const { meta } = writeSealedEvidenceManifest(sealedDir, [
+    { path: "a.txt", abs: path.join(sealedDir, "a.txt") },
+    { path: "b.json", abs: path.join(sealedDir, "b.json") },
+  ]);
+  const seal = validateManifestSeal(sealedDir);
+  assert(seal.ok === true, "seal validates");
+  const man = JSON.parse(fs.readFileSync(path.join(sealedDir, "MANIFEST.json"), "utf8"));
+  const pack = validateEvidenceManifest(man, sealedDir);
+  assert(pack.ok === true, "sealed pack validates without self-hash");
+  assert(meta.seals === "MANIFEST.json", "meta seals MANIFEST.json");
+}
+
 console.log(
   JSON.stringify({
     IU_CJ_AUDIT_ZIP_INTEGRITY_V51_8_SELFTEST: "PASS",
@@ -115,6 +148,8 @@ console.log(
       "CONTENT_TAMPER",
       "DUPLICATE_PATH",
       "EXTRA_FILE",
+      "MANIFEST_SELF_REF_FORBIDDEN",
+      "MANIFEST_SEAL_OK",
     ],
   })
 );
