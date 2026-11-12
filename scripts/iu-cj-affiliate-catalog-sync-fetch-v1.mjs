@@ -147,6 +147,46 @@ export async function runCatalogSyncFetch(opts = {}) {
         advertisers = adv.records;
         if (adv.emptySuccess) emptyVerified = true;
         audit.advertiserTotalMatched = adv.totalMatched;
+        audit.advertiserUniqueIds = new Set(
+          (adv.records || []).map((r) => String(r.advertiserId || "")).filter(Boolean),
+        ).size;
+        audit.advertiserPaginationComplete =
+          Number(adv.totalMatched) === Number(adv.records?.length || 0) &&
+          audit.advertiserUniqueIds === Number(adv.records?.length || 0);
+        audit.cjRelationshipStatusNote =
+          "Advertiser Lookup returns relationship-status joined|notjoined only; ENDED is inferred when a prior managed/policy CID is absent from joined.";
+      }
+
+      // Confirm suspected ENDED CIDs (managed/policy leftover) via explicit ID lookup — never invent statuses.
+      const confirmIds = String(env.IU_CJ_SYNC_CONFIRM_ADVERTISER_IDS || "")
+        .split(",")
+        .map((s) => s.trim())
+        .filter((s) => /^\d+$/.test(s));
+      if (confirmIds.length > 0 && !apiOutage) {
+        const conf = await fetchPagedXml({
+          baseUrl: CJ_ADVERTISER_LOOKUP_BASE,
+          queryBase:
+            "requestor-cid=" +
+            encodeURIComponent(publisherCid) +
+            "&advertiser-ids=" +
+            encodeURIComponent(confirmIds.join(",")),
+          pat,
+          parseBlocks: parseAdvertiserBlocks,
+          parseRecord: parseAdvertiserRecord,
+          kind: "advertiser_lookup_confirm_ids",
+          maxPages: Math.min(5, maxAdvPages),
+          audit,
+        });
+        audit.confirmAdvertiserIds = confirmIds;
+        if (conf.ok) {
+          audit.confirmAdvertisers = conf.records.map((r) => ({
+            advertiserId: r.advertiserId,
+            relationshipStatus: r.relationshipStatus,
+            accountStatus: r.accountStatus,
+          }));
+        } else {
+          audit.errors.push("advertiser_lookup_confirm:" + conf.reason);
+        }
       }
 
       // Coupons (offers) + Text Links (partner button click URLs). Never invent click URLs.
