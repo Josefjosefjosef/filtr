@@ -210,10 +210,41 @@ async function openAff(page, baseUrl, section) {
     null,
     { timeout: 90000 }
   );
-  const expectChips = (catalogSnap.itemCounts && catalogSnap.itemCounts[section] > 0) || false;
-  if (expectChips) {
-    await page.waitForSelector("#iuAffiliateGrid .iuAffiliateChip", { state: "attached", timeout: 90000 });
-  }
+  /* Static V13 + managed-public overlay settle (fetch timeout ~2.5s each). */
+  await page
+    .waitForFunction(
+      () => {
+        const swap = window.IU_AFF_PUBLIC_SWAP_ARMED === true;
+        const staticOk = window.__iuAffStaticCatalogApplied === true;
+        const overlayOk = window.__iuAffManagedOverlaySettled === true;
+        return swap ? staticOk && overlayOk : overlayOk;
+      },
+      null,
+      { timeout: 8000 }
+    )
+    .catch(() => null);
+  await page.evaluate((sec) => {
+    try {
+      if (typeof window.iuAffiliateApplySection === "function") window.iuAffiliateApplySection(sec);
+    } catch (_) {}
+  }, section);
+  await page
+    .waitForFunction(
+      (sec) => {
+        const cat = (window.IU_AFFILIATE_CATALOG || []).find((c) => c && c.id === sec);
+        if (!cat || !Array.isArray(cat.items)) return true;
+        let expected = 0;
+        for (let i = 0; i < cat.items.length; i++) {
+          const it = cat.items[i];
+          if (it && it.affiliateUrlReady === true && /^https:\/\//i.test(String(it.url || ""))) expected += 1;
+        }
+        const chips = document.querySelectorAll("#iuAffiliateGrid .iuAffiliateChip").length;
+        return chips === expected;
+      },
+      section,
+      { timeout: 90000 }
+    )
+    .catch(() => null);
 }
 
 const catIds = readCatalogCategoryIds();
@@ -367,15 +398,39 @@ try {
       ok(tag + ":disclosure_text", snap.disclosureOk, snap.disclosure);
       ok(tag + ":no_h_overflow", !snap.overflow);
       ok(tag + ":accent_set", !!snap.accent, snap.accent);
-      ok(tag + ":grid", snap.gridPresent && (catalogSnap.itemCounts[section] === 0 ? snap.chipCount === 0 : snap.chipCount >= 1), "chips=" + snap.chipCount);
+      /* Runtime catalog after static V13 + managed-public overlay is the source of truth.
+         DOM chips render only ready https items (see renderAffiliateSection). */
+      const runtimeExpected = await page.evaluate((sec) => {
+        const cat = (window.IU_AFFILIATE_CATALOG || []).find((c) => c && c.id === sec);
+        if (!cat || !Array.isArray(cat.items)) return null;
+        let n = 0;
+        for (let i = 0; i < cat.items.length; i++) {
+          const it = cat.items[i];
+          if (it && it.affiliateUrlReady === true && /^https:\/\//i.test(String(it.url || ""))) n += 1;
+        }
+        return n;
+      }, section);
+      const bakedCount =
+        typeof catalogSnap.itemCounts[section] === "number" ? catalogSnap.itemCounts[section] : 0;
+      const expectedCount =
+        typeof runtimeExpected === "number" ? runtimeExpected : bakedCount;
+
+      ok(
+        tag + ":grid",
+        snap.gridPresent && (expectedCount === 0 ? snap.chipCount === 0 : snap.chipCount >= 1),
+        "chips=" + snap.chipCount
+      );
 
       const expectedTitle = catalogSnap.titles[section];
       const expectedDesc = catalogSnap.descs[section];
-      const expectedCount = catalogSnap.itemCounts[section];
       if (expectedTitle) ok(tag + ":title_text", snap.title === expectedTitle, snap.title);
       if (expectedDesc) ok(tag + ":desc_text", snap.subtitle === expectedDesc, snap.subtitle);
       if (typeof expectedCount === "number") {
-        ok(tag + ":chip_count", snap.chipCount === expectedCount, "got=" + snap.chipCount + " exp=" + expectedCount);
+        ok(
+          tag + ":chip_count",
+          snap.chipCount === expectedCount,
+          "got=" + snap.chipCount + " exp=" + expectedCount + " bakedParsed=" + bakedCount
+        );
       }
       const hrefsPlaceholder =
         snap.chipHrefs.length === 0 ||
