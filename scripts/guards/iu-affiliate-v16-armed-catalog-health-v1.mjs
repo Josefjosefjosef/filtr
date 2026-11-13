@@ -58,19 +58,30 @@ export function evaluateArmedCatalogHealth(ROOT, opts = {}) {
   let staticOk = false;
   let paragonBlocked = false;
   let staticButtons = null;
+  let staticButtonRows = null;
   let joined = null;
   if (fs.existsSync(staticPath)) {
     const staticCat = JSON.parse(fs.readFileSync(staticPath, "utf8"));
     staticOk = staticCat.publicButtonSwapArmed === true && staticCat.liveEnabled === true;
     staticButtons = staticCat.counts && staticCat.counts.buttons;
+    staticButtonRows = Array.isArray(staticCat.buttons) ? staticCat.buttons.length : null;
     joined = staticCat.counts && staticCat.counts.joined;
     paragonBlocked = (staticCat.remainingBlockers || []).some(
       (b) => String(b.advertiserId) === "4686326"
     );
     if (!staticOk) fails.push("static_json_not_armed");
-    if (staticButtons != null && staticButtons !== partners.length) {
+    /* Armed swap: authoritative count is static V13 buttons[] (+ counts.buttons).
+       Baked affPartner() LKG in catalog.js may lag after enrollments (e.g. 175 vs 178). */
+    if (staticButtons != null && staticButtonRows != null && staticButtons !== staticButtonRows) {
+      fails.push("static_counts_buttons_mismatch:" + staticButtons + "!=" + staticButtonRows);
+    } else if (
+      staticButtons != null &&
+      staticButtonRows == null &&
+      staticButtons !== partners.length
+    ) {
       fails.push("static_buttons_mismatch:" + staticButtons + "!=" + partners.length);
     }
+    if (staticButtonRows != null && staticButtonRows < 1) fails.push("static_buttons_empty");
     if (!paragonBlocked) fails.push("paragon_not_in_remainingBlockers");
   } else {
     fails.push("static_json_missing");
@@ -90,6 +101,7 @@ export function evaluateArmedCatalogHealth(ROOT, opts = {}) {
     hosts,
     netHostCount: netHosts.length,
     staticButtons,
+    staticButtonRows,
     joined,
     paragonBlocked,
     fails,
