@@ -197,13 +197,16 @@ export function buildPartnerFetchErrorAudit(error, opts = {}) {
       errorClass === "PERMISSION_DENIED" ||
       errorClass === "NO_FEED_AVAILABLE",
     continueOtherPartners: true,
-    robotContinuationRequired: errorClass === "OFFSET_CEILING",
+    robotContinuationRequired:
+      errorClass === "OFFSET_CEILING" || errorClass === "PAGINATION_FAILURE",
     note:
       errorClass === "INVALID_FEED"
         ? "CJ GraphQL http_400 classified INVALID_FEED; retain LKG for prior products; do not stop other partners."
         : errorClass === "OFFSET_CEILING"
           ? "Offset past CJ ≤10k shoppingProducts window; continue via feed-scoped adIds and/or page tokens — do not leave checkpoint stuck."
-          : null,
+          : errorClass === "PAGINATION_FAILURE"
+            ? "Repeated/stale cursor: advance past stale page and/or switch to feed-scoped adIds — do not replay the same offset."
+            : null,
   };
 }
 
@@ -237,6 +240,14 @@ export function isPartnerOffsetCeilingStuck(cp, pageSize = CJ_PRODUCT_SEARCH_PAG
     return true;
   }
   return false;
+}
+
+/** Prior run hit repeated/stale cursor without completing — needs advance or feed-scoped recovery. */
+export function isPartnerStaleCursorStuck(cp) {
+  if (!cp || typeof cp !== "object") return false;
+  if (cp.lastComplete === true) return false;
+  const err = String(cp.lastError || "").toLowerCase();
+  return /repeated_or_stale_cursor|repeated_page_token/.test(err);
 }
 
 function readJson(p, fallback) {
@@ -1194,6 +1205,7 @@ export async function sampleProductsForManagedPartners(opts = {}) {
     partnersError: 0,
     partnersOffsetCeiling: 0,
     partnersFeedScopedRecovery: 0,
+    partnersStaleCursorContinue: 0,
     partnerErrorClasses: {},
     partnersIncompletePagination: 0,
     partnersTruncatedByApiLimit: 0,
@@ -1340,12 +1352,15 @@ export async function sampleProductsForManagedPartners(opts = {}) {
         ? Math.max(0, Math.floor(Number(prevCp.feedAdIdIndex)))
         : 0;
       let fetchAdIds = undefined;
-      // V51.8: recover checkpoints stuck at offset 9901 (misclassified INVALID_FEED).
+      // V51.8: recover checkpoints stuck at offset 9901 (misclassified INVALID_FEED)
+      // or repeated_or_stale_cursor (multi-feed mix / offset drift).
       const ceilingStuck = isPartnerOffsetCeilingStuck(prevCp, pageSize);
-      if (ceilingStuck && feedAdIds.length > 0) {
+      const staleStuck = isPartnerStaleCursorStuck(prevCp);
+      if ((ceilingStuck || staleStuck) && feedAdIds.length > 0 && prevCp.mode !== "feed") {
         feedScoped = true;
         meta.partnersFeedScopedRecovery += 1;
         partnerMeta.feedScopedRecovery = true;
+        partnerMeta.staleCursorRecovery = staleStuck === true;
         if (feedAdIdIndex >= feedAdIds.length) feedAdIdIndex = 0;
         resumeOffset =
           prevCp.mode === "feed" &&
@@ -1361,6 +1376,10 @@ export async function sampleProductsForManagedPartners(opts = {}) {
         resumePage = null;
         partnerMeta.offsetCeilingResetToFirstWindow = true;
         meta.partnersOffsetCeiling += 1;
+      } else if (staleStuck && feedAdIds.length === 0) {
+        // No adIds: keep advanced resumeOffset from prior stale skip; mark for deepen.
+        partnerMeta.staleCursorContinue = true;
+        meta.partnersStaleCursorContinue = (meta.partnersStaleCursorContinue || 0) + 1;
       }
       if (feedScoped && feedAdIds.length > 0) {
         if (feedAdIdIndex >= feedAdIds.length) feedAdIdIndex = 0;
@@ -1390,7 +1409,8 @@ export async function sampleProductsForManagedPartners(opts = {}) {
         (prevCp.lastComplete !== true && Number(prevCp.lastTotalCount || 0) > 0) ||
         Number(prevCp.productsRemainingEstimate || 0) > pageSize * maxPagesPerPartner ||
         feedScoped === true ||
-        ceilingStuck === true;
+        ceilingStuck === true ||
+        staleStuck === true;
       const partnerMaxPages = needsDeepen ? deepenIncompleteMaxPages : maxPagesPerPartner;
       const stopAfter = pageSize * partnerMaxPages;
       partnerMeta.maxPagesBudget = partnerMaxPages;
@@ -1409,6 +1429,8 @@ export async function sampleProductsForManagedPartners(opts = {}) {
       partnerMeta.stoppedEarlyForBudget = fetched.stoppedEarlyForBudget === true;
       partnerMeta.error = fetched.error || null;
       partnerMeta.offsetCeiling = fetched.offsetCeiling === true;
+      partnerMeta.stalePageSkipped = fetched.stalePageSkipped === true;
+      partnerMeta.staleTailCompleted = fetched.staleTailCompleted === true;
       partnerMeta.nextOffset = fetched.checkpoint?.nextOffset ?? null;
       partnerMeta.nextPagePresent = Boolean(fetched.checkpoint?.nextPage);
       const advanced = advancePartnerCheckpoint(
@@ -1419,18 +1441,30 @@ export async function sampleProductsForManagedPartners(opts = {}) {
         },
         { pageSize, publishPerPartner }
       );
+      const staleErr =
+        fetched.error === "repeated_or_stale_cursor" ||
+        fetched.error === "repeated_page_token" ||
+        fetched.stalePageSkipped === true;
       if (feedScoped && feedAdIds.length > 0) {
         advanced.mode = "feed";
         advanced.feedAdIdIndex = feedAdIdIndex;
         advanced.feedAdId = fetchAdIds?.[0] || null;
         advanced.feedAdIdCount = feedAdIds.length;
         advanced.offsetCeilingReached = false;
+        // Stale page on a single feed: advance to next feed (do not loop same adId forever).
         const feedDone =
           fetched.complete === true ||
+          fetched.staleTailCompleted === true ||
           fetched.offsetCeiling === true ||
           fetched.error === "offset_ceiling_exceeded" ||
-          fetched.error === "needs_page_token_or_subscription_above_10k";
-        if (feedDone) {
+          fetched.error === "needs_page_token_or_subscription_above_10k" ||
+          (staleErr && fetched.complete !== true && Number(fetched.fetchedCount || 0) === 0);
+        const feedStaleAdvance =
+          staleErr &&
+          fetched.complete !== true &&
+          Number(fetched.fetchedCount || 0) > 0 &&
+          fetched.staleTailCompleted !== true;
+        if (feedDone || feedStaleAdvance) {
           const nextIdx = feedAdIdIndex + 1;
           if (nextIdx >= feedAdIds.length) {
             advanced.feedAdIdIndex = 0;
@@ -1449,9 +1483,13 @@ export async function sampleProductsForManagedPartners(opts = {}) {
             advanced.resumePage = null;
             advanced.lastComplete = false;
             advanced.lastError =
-              fetched.offsetCeiling || fetched.error === "offset_ceiling_exceeded"
+              fetched.offsetCeiling ||
+              fetched.error === "offset_ceiling_exceeded" ||
+              fetched.staleTailCompleted
                 ? null
-                : fetched.error || null;
+                : feedStaleAdvance
+                  ? null
+                  : fetched.error || null;
           }
         } else {
           advanced.feedResumeOffset =
@@ -1462,18 +1500,33 @@ export async function sampleProductsForManagedPartners(opts = {}) {
       } else if (
         fetched.offsetCeiling === true ||
         fetched.error === "offset_ceiling_exceeded" ||
-        fetched.error === "needs_page_token_or_subscription_above_10k"
+        fetched.error === "needs_page_token_or_subscription_above_10k" ||
+        (staleErr && feedAdIds.length > 0)
       ) {
-        advanced.offsetCeilingReached = true;
-        // Avoid perpetual illegal offset; next run refreshes first window or uses feeds.
-        advanced.resumeOffset = CJ_PRODUCT_SEARCH_OFFSET_FIRST;
-        advanced.resumePage = null;
+        if (
+          fetched.offsetCeiling === true ||
+          fetched.error === "offset_ceiling_exceeded" ||
+          fetched.error === "needs_page_token_or_subscription_above_10k"
+        ) {
+          advanced.offsetCeilingReached = true;
+          // Avoid perpetual illegal offset; next run refreshes first window or uses feeds.
+          advanced.resumeOffset = CJ_PRODUCT_SEARCH_OFFSET_FIRST;
+          advanced.resumePage = null;
+        }
         if (feedAdIds.length > 0) {
           advanced.mode = "feed";
           advanced.feedAdIdIndex = 0;
           advanced.feedResumeOffset = CJ_PRODUCT_SEARCH_OFFSET_FIRST;
           advanced.feedAdId = feedAdIds[0];
           advanced.feedAdIdCount = feedAdIds.length;
+          if (staleErr && !fetched.offsetCeiling) {
+            // Keep advanced nextOffset from stale-page skip when still in advertiser window;
+            // next run starts feed-scoped from first feed at offset 1.
+            advanced.resumeOffset = CJ_PRODUCT_SEARCH_OFFSET_FIRST;
+            advanced.resumePage = null;
+            partnerMeta.staleCursorSwitchedToFeed = true;
+            meta.partnersFeedScopedRecovery += 1;
+          }
         }
       }
       checkpointState.partners[partnerId] = advanced;

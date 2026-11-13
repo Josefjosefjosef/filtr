@@ -602,6 +602,8 @@ export async function fetchAllShoppingProductsForPartner(env, partnerId, opts = 
   let repeatedCursor = false;
   let incompleteResponse = false;
   let stoppedEarlyForBudget = false;
+  let stalePageSkipped = false;
+  let staleTailCompleted = false;
   let error = null;
   let mode = "offset";
   let offset = startOffset;
@@ -689,9 +691,51 @@ export async function fetchAllShoppingProductsForPartner(env, partnerId, opts = 
       newInPage += 1;
     }
     if (batch.length > 0 && newInPage === 0) {
+      // V51.8: CJ sometimes returns a full page of already-seen IDs (offset drift /
+      // multi-feed advertiser mix). Never replay the same offset forever — advance
+      // past the stale page, keep prior rows, and complete only when past totalCount.
       repeatedCursor = true;
-      incompleteResponse = true;
-      error = "repeated_or_stale_cursor";
+      stalePageSkipped = true;
+      if (mode === "offset") {
+        const pageOffset = req.offset != null && Number.isFinite(Number(req.offset))
+          ? Number(req.offset)
+          : offset;
+        offset = pageOffset + pageSize;
+        if (
+          Number.isFinite(totalCount) &&
+          totalCount >= 0 &&
+          offset > totalCount
+        ) {
+          // Tail overlap past declared total — safe complete, do not skip unverified pages.
+          complete = true;
+          staleTailCompleted = true;
+          truncated = false;
+          incompleteResponse = false;
+          error = null;
+        } else {
+          incompleteResponse = true;
+          error = "repeated_or_stale_cursor";
+        }
+      } else if (mode === "page") {
+        if (parsed.page && parsed.page !== prevPageToken) {
+          prevPageToken = parsed.page;
+          pageToken = parsed.page;
+          incompleteResponse = true;
+          error = "repeated_or_stale_cursor";
+        } else if (Number.isFinite(totalCount) && rows.length >= totalCount) {
+          complete = true;
+          staleTailCompleted = true;
+          truncated = false;
+          incompleteResponse = false;
+          error = null;
+        } else {
+          incompleteResponse = true;
+          error = "repeated_or_stale_cursor";
+        }
+      } else {
+        incompleteResponse = true;
+        error = "repeated_or_stale_cursor";
+      }
       break;
     }
     if (stopAfterCount != null && rows.length >= stopAfterCount) {
@@ -776,10 +820,13 @@ export async function fetchAllShoppingProductsForPartner(env, partnerId, opts = 
     repeatedCursor,
     incompleteResponse,
     stoppedEarlyForBudget,
+    stalePageSkipped,
+    staleTailCompleted,
     error,
     pageLog,
     checkpoint: {
       // V31: budget early-stop must NOT null nextOffset (that caused perpetual first-page replay).
+      // V51.8: stale-page skip also advances nextOffset so resume cannot loop on the same page.
       nextOffset: complete
         ? CJ_PRODUCT_SEARCH_OFFSET_FIRST
         : mode === "page"
@@ -789,6 +836,8 @@ export async function fetchAllShoppingProductsForPartner(env, partnerId, opts = 
       mode: complete ? "offset" : mode,
       startedOffset: startOffset,
       stoppedEarlyForBudget,
+      stalePageSkipped,
+      staleTailCompleted,
       complete,
       fetchedCount: rows.length,
       totalCount,

@@ -101,8 +101,17 @@ export function advancePartnerCheckpoint(prev, fetchResult = {}, opts = {}) {
   let lastCompletePassAt = base.lastCompletePassAt || null;
 
   const cp = fetchResult.checkpoint || {};
-  const complete = fetchResult.complete === true;
+  let complete =
+    fetchResult.complete === true || fetchResult.staleTailCompleted === true;
   const stoppedEarly = fetchResult.stoppedEarlyForBudget === true;
+
+  if (!complete && cp.nextOffset != null && Number.isFinite(Number(cp.nextOffset))) {
+    const nextOff = Math.max(CJ_PRODUCT_SEARCH_OFFSET_FIRST, Math.floor(Number(cp.nextOffset)));
+    // V51.8: after stale-page skip past declared totalCount, seal the pass.
+    if (totalCount != null && Number.isFinite(totalCount) && nextOff > totalCount) {
+      complete = true;
+    }
+  }
 
   if (complete) {
     resumeOffset = CJ_PRODUCT_SEARCH_OFFSET_FIRST;

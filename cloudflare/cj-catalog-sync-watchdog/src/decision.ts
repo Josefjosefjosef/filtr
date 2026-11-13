@@ -104,7 +104,7 @@ export function decideCjCatalogWatchdog(input: {
   const staleAfterMinutes = Math.max(1, Number(input.staleAfterMinutes) || 240);
   const maxCatchupsPerUtcDay = Math.max(
     1,
-    Number(input.maxCatchupsPerUtcDay) || 4,
+    Number(input.maxCatchupsPerUtcDay) || 6,
   );
   const cooldownMinutes = Math.max(1, Number(input.catchupCooldownMinutes) || 60);
   const runs = input.runs || [];
