@@ -26,9 +26,19 @@ function runNode(rel) {
 const staticCatalog = JSON.parse(
   fs.readFileSync(path.join(ROOT, "projects", "data", "iu-affiliate-cj-main-buttons-static-v13.json"), "utf8")
 );
+const buttonCount = Number(staticCatalog.counts?.buttons || 0);
+const joinedCount = Number(staticCatalog.counts?.joined || 0);
+const buttonsLen = Array.isArray(staticCatalog.buttons) ? staticCatalog.buttons.length : 0;
 ok("armed", staticCatalog.publicButtonSwapArmed === true && staticCatalog.liveEnabled === true);
-ok("buttons_175", Number(staticCatalog.counts?.buttons) === 175, JSON.stringify(staticCatalog.counts));
-ok("joined_176", Number(staticCatalog.counts?.joined) === 176, JSON.stringify(staticCatalog.counts));
+/* V51.8: after 4camping/Picasee/Impresi enrollment — keep in lockstep with static V13 + v14-selftest. */
+ok("buttons_match_array", buttonCount === buttonsLen, JSON.stringify(staticCatalog.counts));
+ok("buttons_178_after_three_partner_enroll", buttonCount === 178, JSON.stringify(staticCatalog.counts));
+ok("joined_179_after_three_partner_enroll", joinedCount === 179, JSON.stringify(staticCatalog.counts));
+ok(
+  "joined_matches_buttons_plus_blockers",
+  joinedCount === buttonCount + Number(staticCatalog.counts?.missingMainButtons || 0),
+  JSON.stringify(staticCatalog.counts)
+);
 ok(
   "svelt_elektro",
   (staticCatalog.buttons || []).some((b) => String(b.advertiserId) === "7995512" && b.sectionId === "aff-elektro")
