@@ -24,5 +24,5 @@ FRESHNESS_URL = "https://infouzel.cz/projects/data/iu-affiliate-cj-offers-public
 # Catalog cadence is ~3h; 4h means at least one missed slot before CF catch-up.
 STALE_AFTER_MINUTES = "240"
 # Bound storms if CF + GHA watch both fire (mirrors schedule-catchup daycap/cooldown).
-MAX_CATCHUPS_PER_UTC_DAY = "4"
+MAX_CATCHUPS_PER_UTC_DAY = "6"
 CATCHUP_COOLDOWN_MINUTES = "60"

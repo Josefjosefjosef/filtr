@@ -148,7 +148,7 @@ export async function runCycle(
 ): Promise<Record<string, unknown>> {
   const allowMutations = opts.allowMutations !== false;
   const staleAfter = Math.max(1, Number(env.STALE_AFTER_MINUTES) || 240);
-  const maxCatchups = Math.max(1, Number(env.MAX_CATCHUPS_PER_UTC_DAY) || 4);
+  const maxCatchups = Math.max(1, Number(env.MAX_CATCHUPS_PER_UTC_DAY) || 6);
   const cooldownMin = Math.max(1, Number(env.CATCHUP_COOLDOWN_MINUTES) || 60);
   const generatedAt = await fetchGeneratedAt(env);
   const runs = await listRuns(env);

@@ -4,8 +4,9 @@
  * Rules (single owner, no parallel publisher):
  * - Never invent a "schedule" event — catch-up is workflow_dispatch only.
  * - Never fire when a catalog-sync run is already in_progress/queued.
- * - At most four catch-ups per UTC day (default) — eight :17 slots exist; daycap 2
- *   left multi-miss days permanently unrecovered. Cap 4 still bounds storms.
+ * - At most six catch-ups per UTC day (default) — eight :17 slots exist; daycap 4
+ *   left multi-miss days unrecovered after catch-up budget exhaust. Cap 6 still
+ *   bounds storms while covering cascading GHA undelivery.
  * - At most one catch-up within CATCHUP_COOLDOWN_HOURS (still blocks storms).
  * - When miss>=2 (cascading undelivery), cooldown softens to
  *   CATCHUP_COOLDOWN_HOURS_MULTI_MISS so recovery is not frozen behind a 2h wait
@@ -24,7 +25,7 @@
 export const CATCHUP_COOLDOWN_HOURS = 2;
 /** Softened cooldown when ≥2 SLOT_MISS are open (cascading GHA undelivery). */
 export const CATCHUP_COOLDOWN_HOURS_MULTI_MISS = 1;
-export const MAX_CATCHUPS_PER_UTC_DAY = 4;
+export const MAX_CATCHUPS_PER_UTC_DAY = 6;
 export const CATCHUP_DISPATCH_MARKER = "CATCHUP_DISPATCH_NOT_SCHEDULE";
 
 /** True when a catalog run is an audit-honest catch-up (not diagnostic dispatch). */

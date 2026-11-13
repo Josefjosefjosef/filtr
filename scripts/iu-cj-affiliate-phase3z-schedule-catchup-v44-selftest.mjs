@@ -150,10 +150,10 @@ assert(allow.allow === true, "allow catchup");
 assert(allow.mode === "refresh_priority", "mode");
 assert(allow.eventLabel === "CATCHUP_DISPATCH_NOT_SCHEDULE", "label");
 assert(allow.missedSlots.length === 2, "missed slots");
-assert(MAX_CATCHUPS_PER_UTC_DAY === 4, "default day cap");
+assert(MAX_CATCHUPS_PER_UTC_DAY === 6, "default day cap");
 assert(CATCHUP_COOLDOWN_HOURS === 2, "default cooldown");
 
-// Second catch-up same UTC day allowed after cooldown when day-cap is 4
+// Second catch-up same UTC day allowed after cooldown when day-cap is 6
 const allowSecond = decideScheduleCatchup({
   now: new Date("2026-11-05T10:00:00Z"),
   catalogInProgressCount: 0,
@@ -169,11 +169,11 @@ const allowSecond = decideScheduleCatchup({
 });
 assert(allowSecond.allow === true && allowSecond.reason === "SLOT_MISS_BOUNDED_CATCHUP", "second catchup after cooldown");
 
-// Day cap at 4: four prior catch-ups same UTC day → refuse
-const denyFourthCap = decideScheduleCatchup({
-  now: new Date("2026-11-05T20:00:00Z"),
+// Day cap at 6: six prior catch-ups same UTC day → refuse (4 prior still allowed)
+const allowFourthOfSix = decideScheduleCatchup({
+  now: new Date("2026-11-05T14:00:00Z"),
   catalogInProgressCount: 0,
-  slotReport: { counts: { miss: 1 }, slots: [{ classification: "SLOT_MISS", hour: 18, expectedUtc: "2026-11-05T18:17:00Z" }] },
+  slotReport: { counts: { miss: 2 }, slots: [{ classification: "SLOT_MISS", hour: 12, expectedUtc: "2026-11-05T12:17:00Z" }] },
   recentCatalogRuns: [
     {
       event: "workflow_dispatch",
@@ -201,7 +201,55 @@ const denyFourthCap = decideScheduleCatchup({
     },
   ],
 });
-assert(denyFourthCap.allow === false && denyFourthCap.reason === "MAX_CATCHUPS_PER_UTC_DAY", "day cap at 4");
+assert(
+  allowFourthOfSix.allow === true && allowFourthOfSix.reason === "SLOT_MISS_BOUNDED_CATCHUP",
+  "5th catchup still under daycap 6"
+);
+
+const denySixthCap = decideScheduleCatchup({
+  now: new Date("2026-11-05T22:00:00Z"),
+  catalogInProgressCount: 0,
+  slotReport: { counts: { miss: 1 }, slots: [{ classification: "SLOT_MISS", hour: 21, expectedUtc: "2026-11-05T21:17:00Z" }] },
+  recentCatalogRuns: [
+    {
+      event: "workflow_dispatch",
+      created_at: "2026-11-05T01:00:00Z",
+      display_title: "CATCHUP_DISPATCH_NOT_SCHEDULE",
+      catchup_dispatch: "1",
+    },
+    {
+      event: "workflow_dispatch",
+      created_at: "2026-11-05T04:00:00Z",
+      display_title: "CATCHUP_DISPATCH_NOT_SCHEDULE",
+      catchup_dispatch: "1",
+    },
+    {
+      event: "workflow_dispatch",
+      created_at: "2026-11-05T08:00:00Z",
+      display_title: "CATCHUP_DISPATCH_NOT_SCHEDULE",
+      catchup_dispatch: "1",
+    },
+    {
+      event: "workflow_dispatch",
+      created_at: "2026-11-05T12:00:00Z",
+      display_title: "CATCHUP_DISPATCH_NOT_SCHEDULE",
+      catchup_dispatch: "1",
+    },
+    {
+      event: "workflow_dispatch",
+      created_at: "2026-11-05T16:00:00Z",
+      display_title: "CATCHUP_DISPATCH_NOT_SCHEDULE",
+      catchup_dispatch: "1",
+    },
+    {
+      event: "workflow_dispatch",
+      created_at: "2026-11-05T19:00:00Z",
+      display_title: "CATCHUP_DISPATCH_NOT_SCHEDULE",
+      catchup_dispatch: "1",
+    },
+  ],
+});
+assert(denySixthCap.allow === false && denySixthCap.reason === "MAX_CATCHUPS_PER_UTC_DAY", "day cap at 6");
 
 const gapNo = decideGapDeepen({
   eventName: "schedule",
