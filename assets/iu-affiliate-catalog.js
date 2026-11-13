@@ -1222,6 +1222,9 @@
 
   function applyManagedPublicOverlay(overlay) {
     if (!overlay || !Array.isArray(overlay.partners)) return false;
+    try {
+      window.__iuAffManagedOverlayApplied = true;
+    } catch (_) {}
     var byAdv = {};
     var byTitle = {};
     for (var i = 0; i < overlay.partners.length; i++) {
@@ -1345,11 +1348,17 @@
       .then(function (data) {
         clearTimeout(to);
         applyManagedPublicOverlay(data);
+        try {
+          window.__iuAffManagedOverlaySettled = true;
+        } catch (_) {}
         if (typeof done === "function") done(true);
       })
       .catch(function () {
         clearTimeout(to);
         /* local-first: keep baked catalog (last-known-good) */
+        try {
+          window.__iuAffManagedOverlaySettled = true;
+        } catch (_) {}
         if (typeof done === "function") done(false);
       });
   }
