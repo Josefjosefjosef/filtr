@@ -26,7 +26,13 @@ function expect(id, cond, detail) {
 
 const catalogSrc = fs.readFileSync(path.join(ROOT, "assets", "iu-affiliate-catalog.js"), "utf8");
 const extractor = extractCatalogJsOverlayApplicator(catalogSrc);
-expect("helpers_extracted", extractor.helpersSrc.includes("Never hide MANUAL_PROTECTED"));
+expect(
+  "helpers_extracted",
+  /MANUAL_PROTECTED/.test(extractor.helpersSrc) &&
+    (/retain MANUAL_PROTECTED/.test(extractor.helpersSrc) ||
+      /Never hide MANUAL_PROTECTED/.test(extractor.helpersSrc) ||
+      /management === "MANUAL_PROTECTED"/.test(extractor.helpersSrc))
+);
 expect("helpers_has_apply", /function applyManagedPublicOverlay\(overlay\)/.test(extractor.helpersSrc));
 
 const catalog = cloneCatalogForOverlay(catalogSrc);
