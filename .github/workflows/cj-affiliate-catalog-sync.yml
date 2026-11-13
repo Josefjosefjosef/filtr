@@ -192,6 +192,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-uncapped-growth-readiness-v51-8-selftest.mjs
       - name: INVALID_FEED case audit selftest (V51.8; offline)
         run: node scripts/iu-cj-affiliate-phase3z-invalid-feed-case-audit-v51-8-selftest.mjs
+      - name: Offset-ceiling recovery selftest (V51.8; offline; unsticks 9901 mislabel)
+        run: node scripts/iu-cj-affiliate-phase3z-offset-ceiling-recovery-v51-8-selftest.mjs
       - name: CF watchdog recovery proof selftest (V51.8; offline)
         run: node scripts/iu-cj-affiliate-phase3z-cf-watchdog-recovery-proof-v51-8-selftest.mjs
       - name: Reverify freshness policy + UNKNOWN priority selftest (V51.8; offline)

@@ -33,6 +33,7 @@ import {
   fetchAllShoppingProductsForPartner,
   fetchShoppingProductsByProductIds,
   inventoryShoppingProductFeedsForPartner,
+  isProductSearchOffsetCeiling,
   mapGraphqlProductRow,
 } from "./iu-cj-affiliate-phase2-product-api.mjs";
 import {
@@ -145,11 +146,26 @@ const WEBSITE_PID = "101883843";
  * http_400 with zero rows is usually CJ GraphQL rejection / no product API for that advertiser,
  * not a silent robot skip — still counts in partnersError for coverage honesty.
  */
-export function classifyPartnerFetchError(error) {
+export function classifyPartnerFetchError(error, opts = {}) {
   const s = String(error || "").toLowerCase();
   if (!s) return "OTHER";
   if (/rate.?limit|429|too many requests/.test(s)) return "RATE_LIMITED";
   if (/permission|forbidden|401|403|unauthorized|revoked/.test(s)) return "PERMISSION_DENIED";
+  // V51.8: offset past CJ ≤10k window (often stuck resumeOffset=9901) is NOT INVALID_FEED.
+  if (
+    /offset_ceiling|needs_page_token_or_subscription_above_10k/.test(s) ||
+    (opts && opts.offsetCeiling === true)
+  ) {
+    return "OFFSET_CEILING";
+  }
+  const resumeOffset = Number(opts?.resumeOffset);
+  if (
+    Number.isFinite(resumeOffset) &&
+    isProductSearchOffsetCeiling(resumeOffset, opts?.pageSize) &&
+    /http_400|bad request/.test(s)
+  ) {
+    return "OFFSET_CEILING";
+  }
   // CJ GraphQL often returns http_400 for advertisers without a usable product feed /
   // rejected query shape. Treat as INVALID_FEED (external) unless a clearer class matches.
   if (/http_400|bad request|argument|variable/.test(s)) return "INVALID_FEED";
@@ -165,25 +181,62 @@ export function classifyPartnerFetchError(error) {
 /** Safe ops fields for INVALID_FEED / partner fetch failures (never secrets). */
 export function buildPartnerFetchErrorAudit(error, opts = {}) {
   const raw = String(error || "");
-  const errorClass = classifyPartnerFetchError(raw);
+  const errorClass = classifyPartnerFetchError(raw, opts);
   const httpMatch = raw.match(/\bhttp[_\s-]?(\d{3})\b/i) || raw.match(/\b(\d{3})\b/);
   const httpStatus = httpMatch ? Number(httpMatch[1]) : null;
   return {
     errorClass,
     httpStatus: Number.isFinite(httpStatus) ? httpStatus : null,
     endpoint: opts.endpoint || "shoppingProducts",
+    resumeOffset: opts.resumeOffset != null ? Number(opts.resumeOffset) : null,
     redactedError: raw.slice(0, 160).replace(/Bearer\s+[A-Za-z0-9._\-]+/gi, "Bearer [REDACTED]"),
     likelyExternal:
       errorClass === "INVALID_FEED" ||
+      errorClass === "OFFSET_CEILING" ||
       errorClass === "TEMPORARY_API_FAILURE" ||
       errorClass === "PERMISSION_DENIED" ||
       errorClass === "NO_FEED_AVAILABLE",
     continueOtherPartners: true,
+    robotContinuationRequired: errorClass === "OFFSET_CEILING",
     note:
       errorClass === "INVALID_FEED"
         ? "CJ GraphQL http_400 classified INVALID_FEED; retain LKG for prior products; do not stop other partners."
-        : null,
+        : errorClass === "OFFSET_CEILING"
+          ? "Offset past CJ ≤10k shoppingProducts window; continue via feed-scoped adIds and/or page tokens — do not leave checkpoint stuck."
+          : null,
   };
+}
+
+/** Inventory adIds for one advertiser (shoppingProductFeeds.adId). */
+export function listInventoryAdIdsForPartner(prevFeedInventory, partnerId) {
+  const id = String(partnerId || "");
+  const out = [];
+  const seen = new Set();
+  for (const f of prevFeedInventory?.feeds || []) {
+    if (!f || String(f.advertiserId) !== id) continue;
+    const ad = f.adId != null ? String(f.adId).trim() : "";
+    if (!ad || seen.has(ad)) continue;
+    seen.add(ad);
+    out.push(ad);
+  }
+  return out;
+}
+
+/** Checkpoint stuck at illegal offset (classic INVALID_FEED mislabel at 9901). */
+export function isPartnerOffsetCeilingStuck(cp, pageSize = CJ_PRODUCT_SEARCH_PAGE_SIZE_DEFAULT) {
+  if (!cp || typeof cp !== "object") return false;
+  if (cp.offsetCeilingReached === true) return true;
+  const off = Number(cp.resumeOffset);
+  if (Number.isFinite(off) && isProductSearchOffsetCeiling(off, pageSize)) return true;
+  const err = String(cp.lastError || "").toLowerCase();
+  if (
+    Number.isFinite(off) &&
+    isProductSearchOffsetCeiling(off, pageSize) &&
+    (/http_400|offset_ceiling|needs_page_token/.test(err) || Number(cp.lastFetchedCount) === 0)
+  ) {
+    return true;
+  }
+  return false;
 }
 
 function readJson(p, fallback) {
@@ -1139,6 +1192,8 @@ export async function sampleProductsForManagedPartners(opts = {}) {
     partnersWithFeed: 0,
     partnersEmptyFeed: 0,
     partnersError: 0,
+    partnersOffsetCeiling: 0,
+    partnersFeedScopedRecovery: 0,
     partnerErrorClasses: {},
     partnersIncompletePagination: 0,
     partnersTruncatedByApiLimit: 0,
@@ -1265,12 +1320,66 @@ export async function sampleProductsForManagedPartners(opts = {}) {
       }
       // V31: resume from durable checkpoint so successive syncs continue past prior window.
       const prevCp = getPartnerCheckpoint(checkpointState, partnerId);
-      const resumeOffset =
+      const inventoryAdIds = listInventoryAdIdsForPartner(prevFeedInventory, partnerId);
+      // Prefer live inventory from this run when present.
+      const liveAdIds = [
+        ...new Set(
+          feedInventory
+            .filter((f) => String(f.advertiserId) === partnerId && f.adId)
+            .map((f) => String(f.adId))
+        ),
+      ];
+      const feedAdIds = liveAdIds.length ? liveAdIds : inventoryAdIds;
+      let resumeOffset =
         prevCp.resumeOffset != null && Number.isFinite(Number(prevCp.resumeOffset))
           ? Number(prevCp.resumeOffset)
           : CJ_PRODUCT_SEARCH_OFFSET_FIRST;
-      const resumePage = prevCp.resumePage || null;
-      if (resumeOffset > CJ_PRODUCT_SEARCH_OFFSET_FIRST || resumePage) {
+      let resumePage = prevCp.resumePage || null;
+      let feedScoped = prevCp.mode === "feed" && feedAdIds.length > 0;
+      let feedAdIdIndex = Number.isFinite(Number(prevCp.feedAdIdIndex))
+        ? Math.max(0, Math.floor(Number(prevCp.feedAdIdIndex)))
+        : 0;
+      let fetchAdIds = undefined;
+      // V51.8: recover checkpoints stuck at offset 9901 (misclassified INVALID_FEED).
+      const ceilingStuck = isPartnerOffsetCeilingStuck(prevCp, pageSize);
+      if (ceilingStuck && feedAdIds.length > 0) {
+        feedScoped = true;
+        meta.partnersFeedScopedRecovery += 1;
+        partnerMeta.feedScopedRecovery = true;
+        if (feedAdIdIndex >= feedAdIds.length) feedAdIdIndex = 0;
+        resumeOffset =
+          prevCp.mode === "feed" &&
+          prevCp.feedResumeOffset != null &&
+          Number.isFinite(Number(prevCp.feedResumeOffset)) &&
+          !isProductSearchOffsetCeiling(Number(prevCp.feedResumeOffset), pageSize)
+            ? Number(prevCp.feedResumeOffset)
+            : CJ_PRODUCT_SEARCH_OFFSET_FIRST;
+        resumePage = null;
+      } else if (ceilingStuck && feedAdIds.length === 0) {
+        // No adIds: refresh first ≤10k window honestly; do not re-hit illegal offset.
+        resumeOffset = CJ_PRODUCT_SEARCH_OFFSET_FIRST;
+        resumePage = null;
+        partnerMeta.offsetCeilingResetToFirstWindow = true;
+        meta.partnersOffsetCeiling += 1;
+      }
+      if (feedScoped && feedAdIds.length > 0) {
+        if (feedAdIdIndex >= feedAdIds.length) feedAdIdIndex = 0;
+        // If current feed window itself is at ceiling, advance to next feed.
+        if (isProductSearchOffsetCeiling(resumeOffset, pageSize)) {
+          feedAdIdIndex += 1;
+          resumeOffset = CJ_PRODUCT_SEARCH_OFFSET_FIRST;
+          if (feedAdIdIndex >= feedAdIds.length) {
+            feedAdIdIndex = 0;
+            partnerMeta.feedScopedCycleWrap = true;
+          }
+        }
+        fetchAdIds = [feedAdIds[feedAdIdIndex]];
+        partnerMeta.feedScoped = true;
+        partnerMeta.feedAdId = fetchAdIds[0];
+        partnerMeta.feedAdIdIndex = feedAdIdIndex;
+        partnerMeta.feedAdIdCount = feedAdIds.length;
+      }
+      if (resumeOffset > CJ_PRODUCT_SEARCH_OFFSET_FIRST || resumePage || feedScoped) {
         meta.partnersResumedFromCheckpoint += 1;
       }
       partnerMeta.resumeOffset = resumeOffset;
@@ -1279,7 +1388,9 @@ export async function sampleProductsForManagedPartners(opts = {}) {
       const needsDeepen =
         prevCp.lastStoppedEarlyForBudget === true ||
         (prevCp.lastComplete !== true && Number(prevCp.lastTotalCount || 0) > 0) ||
-        Number(prevCp.productsRemainingEstimate || 0) > pageSize * maxPagesPerPartner;
+        Number(prevCp.productsRemainingEstimate || 0) > pageSize * maxPagesPerPartner ||
+        feedScoped === true ||
+        ceilingStuck === true;
       const partnerMaxPages = needsDeepen ? deepenIncompleteMaxPages : maxPagesPerPartner;
       const stopAfter = pageSize * partnerMaxPages;
       partnerMeta.maxPagesBudget = partnerMaxPages;
@@ -1290,12 +1401,14 @@ export async function sampleProductsForManagedPartners(opts = {}) {
         stopAfterCount: stopAfter,
         resumeOffset: resumePage ? undefined : resumeOffset,
         resumePage: resumePage || undefined,
+        adIds: fetchAdIds,
       });
       partnerMeta.fetched = fetched.fetchedCount;
       partnerMeta.totalCount = fetched.totalCount;
       partnerMeta.complete = fetched.complete === true;
       partnerMeta.stoppedEarlyForBudget = fetched.stoppedEarlyForBudget === true;
       partnerMeta.error = fetched.error || null;
+      partnerMeta.offsetCeiling = fetched.offsetCeiling === true;
       partnerMeta.nextOffset = fetched.checkpoint?.nextOffset ?? null;
       partnerMeta.nextPagePresent = Boolean(fetched.checkpoint?.nextPage);
       const advanced = advancePartnerCheckpoint(
@@ -1306,6 +1419,63 @@ export async function sampleProductsForManagedPartners(opts = {}) {
         },
         { pageSize, publishPerPartner }
       );
+      if (feedScoped && feedAdIds.length > 0) {
+        advanced.mode = "feed";
+        advanced.feedAdIdIndex = feedAdIdIndex;
+        advanced.feedAdId = fetchAdIds?.[0] || null;
+        advanced.feedAdIdCount = feedAdIds.length;
+        advanced.offsetCeilingReached = false;
+        const feedDone =
+          fetched.complete === true ||
+          fetched.offsetCeiling === true ||
+          fetched.error === "offset_ceiling_exceeded" ||
+          fetched.error === "needs_page_token_or_subscription_above_10k";
+        if (feedDone) {
+          const nextIdx = feedAdIdIndex + 1;
+          if (nextIdx >= feedAdIds.length) {
+            advanced.feedAdIdIndex = 0;
+            advanced.feedResumeOffset = CJ_PRODUCT_SEARCH_OFFSET_FIRST;
+            advanced.resumeOffset = CJ_PRODUCT_SEARCH_OFFSET_FIRST;
+            advanced.resumePage = null;
+            advanced.completePassCount = (Number(advanced.completePassCount) || 0) + 1;
+            advanced.lastCompletePassAt = new Date().toISOString();
+            advanced.lastComplete = true;
+            advanced.lastError = null;
+          } else {
+            advanced.feedAdIdIndex = nextIdx;
+            advanced.feedAdId = feedAdIds[nextIdx];
+            advanced.feedResumeOffset = CJ_PRODUCT_SEARCH_OFFSET_FIRST;
+            advanced.resumeOffset = CJ_PRODUCT_SEARCH_OFFSET_FIRST;
+            advanced.resumePage = null;
+            advanced.lastComplete = false;
+            advanced.lastError =
+              fetched.offsetCeiling || fetched.error === "offset_ceiling_exceeded"
+                ? null
+                : fetched.error || null;
+          }
+        } else {
+          advanced.feedResumeOffset =
+            advanced.resumeOffset != null
+              ? advanced.resumeOffset
+              : CJ_PRODUCT_SEARCH_OFFSET_FIRST;
+        }
+      } else if (
+        fetched.offsetCeiling === true ||
+        fetched.error === "offset_ceiling_exceeded" ||
+        fetched.error === "needs_page_token_or_subscription_above_10k"
+      ) {
+        advanced.offsetCeilingReached = true;
+        // Avoid perpetual illegal offset; next run refreshes first window or uses feeds.
+        advanced.resumeOffset = CJ_PRODUCT_SEARCH_OFFSET_FIRST;
+        advanced.resumePage = null;
+        if (feedAdIds.length > 0) {
+          advanced.mode = "feed";
+          advanced.feedAdIdIndex = 0;
+          advanced.feedResumeOffset = CJ_PRODUCT_SEARCH_OFFSET_FIRST;
+          advanced.feedAdId = feedAdIds[0];
+          advanced.feedAdIdCount = feedAdIds.length;
+        }
+      }
       checkpointState.partners[partnerId] = advanced;
       meta.continuationEvents.push({
         advertiserId: partnerId,
@@ -1313,23 +1483,33 @@ export async function sampleProductsForManagedPartners(opts = {}) {
         nextOffset: advanced.resumeOffset,
         fetched: fetched.fetchedCount,
         totalCount: fetched.totalCount,
-        resumed: resumeOffset > CJ_PRODUCT_SEARCH_OFFSET_FIRST || Boolean(resumePage),
+        resumed: resumeOffset > CJ_PRODUCT_SEARCH_OFFSET_FIRST || Boolean(resumePage) || feedScoped,
+        feedScoped,
+        feedAdId: fetchAdIds?.[0] || null,
         completePass: advanced.lastComplete === true,
         previousLoaded: prevCp.lastFetchedCount ?? null,
         currentLoaded: fetched.fetchedCount,
       });
       if (fetched.error && fetched.fetchedCount === 0) {
-        meta.partnersError += 1;
         const errAudit = buildPartnerFetchErrorAudit(fetched.error, {
           endpoint: "shoppingProducts",
+          resumeOffset,
+          pageSize,
+          offsetCeiling: fetched.offsetCeiling === true,
         });
         partnerMeta.errorClass = errAudit.errorClass;
         partnerMeta.httpStatus = errAudit.httpStatus;
         partnerMeta.redactedError = errAudit.redactedError;
         partnerMeta.likelyExternal = errAudit.likelyExternal;
         partnerMeta.continueOtherPartners = true;
+        partnerMeta.robotContinuationRequired = errAudit.robotContinuationRequired === true;
         meta.partnerErrorClasses[errAudit.errorClass] =
           (meta.partnerErrorClasses[errAudit.errorClass] || 0) + 1;
+        if (errAudit.errorClass === "OFFSET_CEILING") {
+          meta.partnersOffsetCeiling += 1;
+        } else {
+          meta.partnersError += 1;
+        }
         meta.partnerFetch.push(partnerMeta);
         continue;
       }
@@ -1449,10 +1629,11 @@ export async function sampleProductsForManagedPartners(opts = {}) {
         );
       }
     } catch (e) {
-      meta.partnersError += 1;
       partnerMeta.error = String(e?.message || e).slice(0, 120);
       const errAudit = buildPartnerFetchErrorAudit(partnerMeta.error, {
         endpoint: "shoppingProducts",
+        resumeOffset: partnerMeta.resumeOffset,
+        pageSize,
       });
       partnerMeta.errorClass = errAudit.errorClass;
       partnerMeta.httpStatus = errAudit.httpStatus;
@@ -1461,6 +1642,8 @@ export async function sampleProductsForManagedPartners(opts = {}) {
       partnerMeta.continueOtherPartners = true;
       meta.partnerErrorClasses[errAudit.errorClass] =
         (meta.partnerErrorClasses[errAudit.errorClass] || 0) + 1;
+      if (errAudit.errorClass === "OFFSET_CEILING") meta.partnersOffsetCeiling += 1;
+      else meta.partnersError += 1;
     }
     meta.partnerFetch.push(partnerMeta);
   }
@@ -1494,7 +1677,7 @@ export async function sampleProductsForManagedPartners(opts = {}) {
     .map((row) => ({
       advertiserId: row.advertiserId ?? null,
       partnerName: row.partnerName ?? null,
-      feedId: row.feedId ?? row.productFeedId ?? null,
+      feedId: row.feedId ?? row.productFeedId ?? row.feedAdId ?? null,
       feeds: row.feeds ?? null,
       fetched: row.fetched ?? null,
       complete: row.complete ?? null,
@@ -1504,8 +1687,13 @@ export async function sampleProductsForManagedPartners(opts = {}) {
       redactedError: row.redactedError ?? null,
       likelyExternal: row.likelyExternal ?? null,
       continueOtherPartners: row.continueOtherPartners !== false,
+      robotContinuationRequired: row.robotContinuationRequired === true,
       lastSuccessAt: row.lastSuccessAt ?? row.lastOkAt ?? null,
       resumeOffset: row.resumeOffset ?? null,
+      feedScoped: row.feedScoped === true,
+      feedAdId: row.feedAdId ?? null,
+      feedAdIdIndex: row.feedAdIdIndex ?? null,
+      offsetCeiling: row.offsetCeiling === true,
       endpoint: row.endpoint || "shoppingProducts",
     }));
   if (meta.partnerFetch.length > 40) {

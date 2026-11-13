@@ -98,6 +98,15 @@ export const CJ_PRODUCT_SEARCH_PAGE_SIZE_DEFAULT = 100;
 /** CJ docs show 1-based offset for the first page. */
 export const CJ_PRODUCT_SEARCH_OFFSET_FIRST = 1;
 
+/** True when offset cannot start another full page inside the documented ≤10k window (would http_400). */
+export function isProductSearchOffsetCeiling(offset, pageSize = CJ_PRODUCT_SEARCH_PAGE_SIZE_DEFAULT) {
+  const off = Number(offset);
+  const ps = Math.max(1, Number(pageSize) || CJ_PRODUCT_SEARCH_PAGE_SIZE_DEFAULT);
+  if (!Number.isFinite(off)) return false;
+  // Example: pageSize=100 → offset 9901+ is past the last legal page start (9801..9900).
+  return off > CJ_PRODUCT_SEARCH_MAX_LIMIT - ps;
+}
+
 export function clampProductSearchLimit(limit, fallback = CJ_PRODUCT_SEARCH_PAGE_SIZE_DEFAULT) {
   const n = Number(limit);
   const base = Number.isFinite(n) && n > 0 ? n : fallback;
@@ -598,6 +607,50 @@ export async function fetchAllShoppingProductsForPartner(env, partnerId, opts = 
   let offset = startOffset;
   let pageToken = opts.resumePage || null;
   let prevPageToken = null;
+
+  // V51.8: never call shoppingProducts with offset past the documented 10k window —
+  // CJ returns http_400 which was historically mislabeled INVALID_FEED and stuck checkpoints at 9901.
+  if (!pageToken && isProductSearchOffsetCeiling(startOffset, pageSize)) {
+    return {
+      ok: false,
+      partnerId: String(partnerId),
+      resultList: [],
+      fetchedCount: 0,
+      totalCount: null,
+      complete: false,
+      truncated: true,
+      repeatedCursor: false,
+      incompleteResponse: true,
+      stoppedEarlyForBudget: false,
+      offsetCeiling: true,
+      error: "offset_ceiling_exceeded",
+      pageLog: [
+        {
+          pageIdx: 0,
+          mode: "offset",
+          offset: startOffset,
+          pageTokenPresent: false,
+          ok: false,
+          kind: "offset_ceiling_exceeded",
+          got: 0,
+          totalCount: null,
+          count: null,
+          nextPage: null,
+        },
+      ],
+      checkpoint: {
+        nextOffset: startOffset,
+        nextPage: null,
+        mode: "offset",
+        startedOffset: startOffset,
+        stoppedEarlyForBudget: false,
+        complete: false,
+        fetchedCount: 0,
+        totalCount: null,
+        offsetCeiling: true,
+      },
+    };
+  }
 
   for (let pageIdx = 0; pageIdx < maxPages; pageIdx++) {
     const req =

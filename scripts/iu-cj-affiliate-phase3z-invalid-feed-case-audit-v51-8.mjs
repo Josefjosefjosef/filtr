@@ -28,8 +28,17 @@ function collectErrorRows(root) {
   if (Array.isArray(preferred) && preferred.length) {
     for (const row of preferred) {
       const errText = String(row?.error || row?.redactedError || "");
-      const cls = row?.errorClass || (errText ? classifyPartnerFetchError(errText) : null);
-      if (cls === "INVALID_FEED" || /http_400/i.test(errText)) push(row);
+      const cls =
+        row?.errorClass ||
+        (errText
+          ? classifyPartnerFetchError(errText, {
+              resumeOffset: row.resumeOffset,
+              offsetCeiling: row.offsetCeiling,
+            })
+          : null);
+      // V51.8: OFFSET_CEILING (stuck 9901) is continuation — not INVALID_FEED.
+      if (cls === "OFFSET_CEILING") continue;
+      if (cls === "INVALID_FEED" || (/http_400/i.test(errText) && cls !== "OFFSET_CEILING")) push(row);
     }
     if (out.length) return out;
   }
@@ -42,8 +51,15 @@ function collectErrorRows(root) {
     }
     const invalidOnly = out.filter((row) => {
       const errText = String(row.error || row.redactedError || "");
-      const cls = row.errorClass || (errText ? classifyPartnerFetchError(errText) : null);
-      return cls === "INVALID_FEED" || /http_400/i.test(errText);
+      const cls =
+        row.errorClass ||
+        (errText
+          ? classifyPartnerFetchError(errText, {
+              resumeOffset: row.resumeOffset,
+              offsetCeiling: row.offsetCeiling,
+            })
+          : null);
+      return cls === "INVALID_FEED";
     });
     if (invalidOnly.length) return invalidOnly;
     out.length = 0;
@@ -55,8 +71,15 @@ function collectErrorRows(root) {
       return;
     }
     const errText = String(node.error || node.redactedError || node.message || "");
-    const cls = node.errorClass || (errText ? classifyPartnerFetchError(errText) : null);
-    if (cls === "INVALID_FEED" || /http_400/i.test(errText)) push(node);
+    const cls =
+      node.errorClass ||
+      (errText
+        ? classifyPartnerFetchError(errText, {
+            resumeOffset: node.resumeOffset,
+            offsetCeiling: node.offsetCeiling,
+          })
+        : null);
+    if (cls === "INVALID_FEED") push(node);
     for (const [k, v] of Object.entries(node)) {
       if (k === "products" || k === "sections" || k === "items") continue;
       if (v && typeof v === "object") walk(v, depth + 1);
