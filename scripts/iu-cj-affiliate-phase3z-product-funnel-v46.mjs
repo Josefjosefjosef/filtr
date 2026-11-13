@@ -51,7 +51,10 @@ export function computeHonestOffersStats(sections = [], opts = {}) {
   ).length;
   return {
     // V46: unique advertisers with ≥1 coupon/action/product (was wrongly sections.length).
+    // Alias advertisersWithOffers avoids confusing stats.partners with CJ JOINED count.
     partners: any.size,
+    advertisersWithOffers: any.size,
+    joinedPartnersNotImplied: true,
     sections: list.length,
     sectionsWithOffers,
     productAdvertisers: productAdv.size,
@@ -63,7 +66,7 @@ export function computeHonestOffersStats(sections = [], opts = {}) {
     publicationReady,
     crossCategoryOfferPlacements,
     statsSemantics:
-      "partners=unique advertisers with offers; sections=section bucket count; productAdvertisers=unique product advertisers",
+      "partners(=advertisersWithOffers)=unique advertisers with ≥1 coupon/action/product in published offers — NOT CJ JOINED count; productAdvertisers=unique product advertisers; sections=section bucket count",
   };
 }
 

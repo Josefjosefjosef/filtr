@@ -574,14 +574,53 @@ export function mergeLkgPublishedProducts(nextDoc, prevDoc, opts = {}) {
       }
     }
   }
+  // Recompute unique-advertiser offer stats from final sections (do not freeze historical 93).
+  let partners = 0;
+  let productAdvertisers = 0;
+  let couponAdvertisers = 0;
+  let actionAdvertisers = 0;
+  let coupons = 0;
+  let actions = 0;
+  {
+    const productAdv = new Set();
+    const couponAdv = new Set();
+    const actionAdv = new Set();
+    for (const sec of doc.sections || []) {
+      for (const c of sec.coupons || []) {
+        coupons += 1;
+        if (c.advertiserId != null) couponAdv.add(String(c.advertiserId));
+      }
+      for (const a of sec.actions || []) {
+        actions += 1;
+        if (a.advertiserId != null) actionAdv.add(String(a.advertiserId));
+      }
+      for (const p of sec.products || []) {
+        if (p.advertiserId != null) productAdv.add(String(p.advertiserId));
+      }
+    }
+    productAdvertisers = productAdv.size;
+    couponAdvertisers = couponAdv.size;
+    actionAdvertisers = actionAdv.size;
+    partners = new Set([...productAdv, ...couponAdv, ...actionAdv]).size;
+  }
   doc.stats = {
     ...(doc.stats || {}),
+    partners,
+    advertisersWithOffers: partners,
+    joinedPartnersNotImplied: true,
+    productAdvertisers,
+    couponAdvertisers,
+    actionAdvertisers,
+    coupons,
+    actions,
     products,
     uniqueProducts: unique.size,
     productsPublicEligible,
     uniquePublicEligible: uniquePublic.size,
     lkgCarriedProducts: carried,
     lkgPublicHoldProducts: heldPublic,
+    statsSemantics:
+      "partners(=advertisersWithOffers)=unique advertisers with ≥1 coupon/action/product in published offers — NOT CJ JOINED count; productAdvertisers=unique product advertisers",
   };
   doc.lkgMerge = {
     schema: PUBLICATION_LKG_SCHEMA,

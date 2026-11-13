@@ -10,6 +10,7 @@ import {
   classifyPriceTransition,
   PRICE_CHANGE_CLASS,
 } from "./iu-cj-affiliate-phase3z-price-normalize-v49.mjs";
+import { computeHonestOffersStats } from "./iu-cj-affiliate-phase3z-product-funnel-v46.mjs";
 
 export const OFFERS_FRESHNESS_SCHEMA = "iu-cj-affiliate-phase3z-offers-freshness-v33";
 
@@ -385,25 +386,15 @@ export function applyFreshnessToOffersDocument(doc, opts = {}) {
     }
     out.sections.push(next);
   }
-  let coupons = 0;
-  let actions = 0;
-  let products = 0;
-  for (const s of out.sections) {
-    coupons += (s.coupons || []).length;
-    actions += (s.actions || []).length;
-    products += (s.products || []).length;
-  }
-  // V46: do not overwrite honest unique-advertiser partners with section count.
+  // V51.8: always recompute advertiser stats from final sections.
+  // Never preserve stale partners/productAdvertisers (was mistaken for JOINED=93 cap).
   const prevStats = doc?.stats && typeof doc.stats === "object" ? doc.stats : {};
+  const honest = computeHonestOffersStats(out.sections, {
+    crossCategoryOfferPlacements: prevStats.crossCategoryOfferPlacements,
+  });
   out.stats = {
     ...prevStats,
-    partners: prevStats.partners != null ? prevStats.partners : out.sections.length,
-    sections: prevStats.sections != null ? prevStats.sections : out.sections.length,
-    productAdvertisers: prevStats.productAdvertisers,
-    coupons,
-    actions,
-    products,
-    publicationReady: coupons + actions + products,
+    ...honest,
     freshness: {
       ...stats,
       displayClass: {
