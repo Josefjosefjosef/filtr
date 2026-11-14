@@ -57,6 +57,7 @@ jobs:
           MAIN_BOOT_AT=$(jq -r '.generatedAt // empty' projects/data/articles/bootstrap.json)
           MAIN_IDX_AT=$(jq -r '.generatedAt // empty' projects/data/articles/index.json)
           MAIN_INFO_AT=$(jq -r '.generatedAt // empty' projects/data/info_events/feed.json)
+          MAIN_OFFERS_AT=$(jq -r '.updatedAt // empty' projects/data/iu-affiliate-cj-offers-public-v1.json 2>/dev/null || true)
           if [ -z "$MAIN_AT" ]; then
             echo "ERROR: main articles.json missing generatedAt"
             exit 1
@@ -69,8 +70,10 @@ jobs:
           PROD_IDX_AT=$(echo "$PROD_IDX_JSON" | jq -r '.generatedAt // empty' 2>/dev/null || true)
           PROD_INFO_JSON=$(curl -sS -m 20 -H 'Cache-Control: no-cache' "https://infouzel.cz/projects/data/info_events/feed.json" || true)
           PROD_INFO_AT=$(echo "$PROD_INFO_JSON" | jq -r '.generatedAt // empty' 2>/dev/null || true)
-          echo "[MAIN] generatedAt=$MAIN_AT bootstrap=$MAIN_BOOT_AT index=$MAIN_IDX_AT info_events=$MAIN_INFO_AT"
-          echo "[PROD] generatedAt=$PROD_AT bootstrap=$PROD_BOOT_AT index=$PROD_IDX_AT info_events=$PROD_INFO_AT"
+          PROD_OFFERS_JSON=$(curl -sS -m 40 -H 'Cache-Control: no-cache' "https://infouzel.cz/projects/data/iu-affiliate-cj-offers-public-v1.json" || true)
+          PROD_OFFERS_AT=$(echo "$PROD_OFFERS_JSON" | jq -r '.updatedAt // empty' 2>/dev/null || true)
+          echo "[MAIN] generatedAt=$MAIN_AT bootstrap=$MAIN_BOOT_AT index=$MAIN_IDX_AT info_events=$MAIN_INFO_AT offers=$MAIN_OFFERS_AT"
+          echo "[PROD] generatedAt=$PROD_AT bootstrap=$PROD_BOOT_AT index=$PROD_IDX_AT info_events=$PROD_INFO_AT offers=$PROD_OFFERS_AT"
           ARTICLES_OK=false
           if [ -n "$PROD_AT" ] && [ "$PROD_AT" = "$MAIN_AT" ] \
             && { [ -z "$MAIN_BOOT_AT" ] || { [ -n "$PROD_BOOT_AT" ] && [ "$PROD_BOOT_AT" = "$MAIN_BOOT_AT" ]; }; } \
@@ -81,12 +84,17 @@ jobs:
           if [ -z "$MAIN_INFO_AT" ] || { [ -n "$PROD_INFO_AT" ] && [ "$PROD_INFO_AT" = "$MAIN_INFO_AT" ]; }; then
             INFO_OK=true
           fi
-          if [ "$ARTICLES_OK" = "true" ] && [ "$INFO_OK" = "true" ]; then
+          # V51.8-final: bot GITHUB_TOKEN merge suppresses pull_request_target Pages closeout for offers promote.
+          OFFERS_OK=false
+          if [ -z "$MAIN_OFFERS_AT" ] || { [ -n "$PROD_OFFERS_AT" ] && [ "$PROD_OFFERS_AT" = "$MAIN_OFFERS_AT" ]; }; then
+            OFFERS_OK=true
+          fi
+          if [ "$ARTICLES_OK" = "true" ] && [ "$INFO_OK" = "true" ] && [ "$OFFERS_OK" = "true" ]; then
             NEEDS_PUBLISH=false
-            echo "[PUBLISH] Up-to-date (articles stubs + info_events), no dispatch"
+            echo "[PUBLISH] Up-to-date (articles stubs + info_events + offers), no dispatch"
           else
             NEEDS_PUBLISH=true
-            echo "[PUBLISH] Stale prod (articles stubs and/or info_events), will dispatch pages.yml"
+            echo "[PUBLISH] Stale prod (articles/info_events/offers), will dispatch pages.yml"
           fi
           {
             echo "main_generatedAt=$MAIN_AT"
@@ -97,6 +105,8 @@ jobs:
             echo "prod_index_generatedAt=$PROD_IDX_AT"
             echo "main_info_events_generatedAt=$MAIN_INFO_AT"
             echo "prod_info_events_generatedAt=$PROD_INFO_AT"
+            echo "main_offers_updatedAt=$MAIN_OFFERS_AT"
+            echo "prod_offers_updatedAt=$PROD_OFFERS_AT"
             echo "needs_publish=$NEEDS_PUBLISH"
           } >> "$GITHUB_OUTPUT"
 
@@ -138,7 +148,9 @@ jobs:
             echo "| prod_bootstrap_generatedAt | ${{ steps.cmp.outputs.prod_bootstrap_generatedAt }} |"
             echo "| main_index_generatedAt | ${{ steps.cmp.outputs.main_index_generatedAt }} |"
             echo "| prod_index_generatedAt | ${{ steps.cmp.outputs.prod_index_generatedAt }} |"
+            echo "| main_offers_updatedAt | ${{ steps.cmp.outputs.main_offers_updatedAt }} |"
+            echo "| prod_offers_updatedAt | ${{ steps.cmp.outputs.prod_offers_updatedAt }} |"
             echo "| needs_publish | ${{ steps.cmp.outputs.needs_publish }} |"
             echo ""
-            echo "ROOT_CAUSE_NOTE: scheduled + workflow_run re-check closes gap when push-triggered Pages is suppressed after bot merge."
+            echo "ROOT_CAUSE_NOTE: scheduled + workflow_run re-check closes gap when push-triggered Pages is suppressed after bot merge (incl. CJ offers promote via GITHUB_TOKEN)."
           } >> "$GITHUB_STEP_SUMMARY"
