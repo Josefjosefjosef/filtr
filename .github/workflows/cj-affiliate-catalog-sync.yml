@@ -1701,3 +1701,37 @@ jobs:
           NUM="${{ steps.offers_pr.outputs.pr_number }}"
           gh pr merge "$NUM" --auto --squash
           echo "[AUTO-MERGE] Enabled for offers promote PR #$NUM"
+      # V51.8-final: GITHUB_TOKEN merge does NOT fire pull_request_target → pages-on-data-pr-merge.
+      # Wait for MERGED then dispatch pages.yml from this job (same pattern as articles closeout).
+      - name: Wait for offers promote merge then dispatch Pages
+        if: steps.offers_pr.outputs.opened == 'true' && steps.offers_scope.outputs.data_only == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          NUM: ${{ steps.offers_pr.outputs.pr_number }}
+        run: |
+          set -euo pipefail
+          echo "[CLOSEOUT] Waiting for offers promote PR #${NUM} to MERGED"
+          MERGED=0
+          for i in $(seq 1 60); do
+            STATE=$(gh pr view "$NUM" --json state -q .state 2>/dev/null || echo "UNKNOWN")
+            echo "[CLOSEOUT] poll=${i} state=${STATE}"
+            if [ "$STATE" = "MERGED" ]; then
+              MERGED=1
+              break
+            fi
+            if [ "$STATE" = "CLOSED" ]; then
+              echo "[CLOSEOUT] PR closed without merge — skip pages dispatch"
+              exit 0
+            fi
+            sleep 15
+          done
+          if [ "$MERGED" != "1" ]; then
+            echo "[CLOSEOUT] soft-timeout waiting for merge — pages cron/fallback may still publish"
+            exit 0
+          fi
+          MERGE_SHA=$(gh pr view "$NUM" --json mergeCommit -q .mergeCommit.oid)
+          echo "[CLOSEOUT] merged_sha=${MERGE_SHA}"
+          gh workflow run pages.yml --ref main --repo "$REPO"
+          echo "[CLOSEOUT] Dispatched pages.yml after offers promote #${NUM}"
