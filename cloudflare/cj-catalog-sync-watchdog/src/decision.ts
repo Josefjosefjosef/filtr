@@ -38,7 +38,22 @@ export type CjWatchdogDecision =
       reason: "stale";
       ageMinutes: number | null;
       staleAfterMinutes: number;
+    }
+  | {
+      action: "dispatch";
+      reason: "slot_miss_uncovered";
+      ageMinutes: number | null;
+      staleAfterMinutes: number;
+      expectedSlotUtc: string;
+      slotAgeMinutes: number;
+      slotDelayBudgetMinutes: number;
     };
+
+/** Catalog cadence hours (UTC :17). Kept in sync with GHA cron. */
+export const EXPECTED_SLOT_HOURS_UTC = Object.freeze([0, 3, 6, 9, 12, 15, 18, 21]);
+
+/** Aligns with GHA schedule-watch delay budget — not a relaxation of gates. */
+export const DEFAULT_SLOT_DELAY_BUDGET_MINUTES = 180;
 
 export type GhRunLike = {
   status?: string;
@@ -93,6 +108,70 @@ export function resolveFreshnessAgeMinutes(input: {
   };
 }
 
+/**
+ * Effective coverage for recovery: any successful catalog run (schedule or catch-up)
+ * at/after the slot start (with 5m early tolerance). This is NOT a GitHub schedule HIT —
+ * schedule HIT still requires created_at within delayBudget (audit scripts).
+ */
+export function runCoversSlot(
+  run: GhRunLike,
+  slotMs: number,
+  _delayBudgetMin?: number,
+): boolean {
+  if (String(run.conclusion || "").toLowerCase() !== "success") return false;
+  const t = parseIsoToMs(run.created_at);
+  if (t == null) return false;
+  return t >= slotMs - 5 * 60_000;
+}
+
+/**
+ * Latest expected :17 slot whose delay budget has elapsed. If that slot has no
+ * covering successful sync (schedule OR catch-up), return it for recovery.
+ * Older historical misses do not keep firing once a newer due slot is covered.
+ * Independent of GHA cron delivery / schedule HIT classification.
+ */
+export function findUncoveredMissedSlot(input: {
+  nowMs: number;
+  runs: GhRunLike[];
+  slotDelayBudgetMinutes?: number;
+  windowHours?: number;
+}): { expectedSlotUtc: string; slotAgeMinutes: number; slotDelayBudgetMinutes: number } | null {
+  const delayBudgetMin = Math.max(
+    1,
+    Number(input.slotDelayBudgetMinutes) || DEFAULT_SLOT_DELAY_BUDGET_MINUTES,
+  );
+  const windowHours = Math.max(3, Number(input.windowHours) || 24);
+  const now = new Date(input.nowMs);
+  const runs = input.runs || [];
+
+  let latestDue: { slotMs: number; ageMin: number } | null = null;
+
+  for (const h of EXPECTED_SLOT_HOURS_UTC) {
+    let slot = new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), h, 17, 0, 0),
+    );
+    if (slot.getTime() > input.nowMs) {
+      slot = new Date(slot.getTime() - 24 * 3600 * 1000);
+    }
+    const ageMin = (input.nowMs - slot.getTime()) / 60_000;
+    if (ageMin > windowHours * 60) continue;
+    // Still inside observation window — do not treat as miss yet.
+    if (ageMin <= delayBudgetMin) continue;
+    if (!latestDue || slot.getTime() > latestDue.slotMs) {
+      latestDue = { slotMs: slot.getTime(), ageMin };
+    }
+  }
+
+  if (!latestDue) return null;
+  const covered = runs.some((r) => runCoversSlot(r, latestDue!.slotMs, delayBudgetMin));
+  if (covered) return null;
+  return {
+    expectedSlotUtc: new Date(latestDue.slotMs).toISOString(),
+    slotAgeMinutes: Math.round(latestDue.ageMin * 10) / 10,
+    slotDelayBudgetMinutes: delayBudgetMin,
+  };
+}
+
 export function decideCjCatalogWatchdog(input: {
   generatedAt: string | null;
   nowMs: number;
@@ -100,6 +179,7 @@ export function decideCjCatalogWatchdog(input: {
   runs: GhRunLike[];
   maxCatchupsPerUtcDay?: number;
   catchupCooldownMinutes?: number;
+  slotDelayBudgetMinutes?: number;
 }): CjWatchdogDecision {
   const staleAfterMinutes = Math.max(1, Number(input.staleAfterMinutes) || 240);
   const maxCatchupsPerUtcDay = Math.max(
@@ -169,5 +249,23 @@ export function decideCjCatalogWatchdog(input: {
   if (ageMinutes >= staleAfterMinutes) {
     return { action: "dispatch", reason: "stale", ageMinutes, staleAfterMinutes };
   }
+
+  // Slot-aware path: GHA cron may under-deliver while freshness still looks OK
+  // (e.g. last success ~3h ago). Independent of schedule HIT classification.
+  const uncovered = findUncoveredMissedSlot({
+    nowMs: input.nowMs,
+    runs,
+    slotDelayBudgetMinutes: input.slotDelayBudgetMinutes,
+  });
+  if (uncovered) {
+    return {
+      action: "dispatch",
+      reason: "slot_miss_uncovered",
+      ageMinutes,
+      staleAfterMinutes,
+      ...uncovered,
+    };
+  }
+
   return { action: "skip", reason: "not_stale", ageMinutes, staleAfterMinutes };
 }

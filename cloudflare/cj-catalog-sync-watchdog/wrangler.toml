@@ -26,3 +26,6 @@ STALE_AFTER_MINUTES = "240"
 # Bound storms if CF + GHA watch both fire (mirrors schedule-catchup daycap/cooldown).
 MAX_CATCHUPS_PER_UTC_DAY = "6"
 CATCHUP_COOLDOWN_MINUTES = "60"
+# Slot-aware recovery (decision.ts): latest due :17 past this budget with no covering sync → dispatch.
+# Mirrors GHA schedule-watch DELAY_BUDGET_MIN; does not relax freshness gates.
+SLOT_DELAY_BUDGET_MINUTES = "180"

@@ -92,6 +92,43 @@ export function decideCjCatalogWatchdogJs(input = {}) {
   if (ageMinutes >= staleAfterMinutes) {
     return { action: "dispatch", reason: "stale", ageMinutes, staleAfterMinutes };
   }
+
+  // Slot-aware: latest due :17 past delay budget with no success at/after slot start.
+  const delayBudgetMin = Math.max(1, Number(input.slotDelayBudgetMinutes) || 180);
+  const hours = [0, 3, 6, 9, 12, 15, 18, 21];
+  const now = new Date(input.nowMs);
+  let latestDue = null;
+  for (const h of hours) {
+    let slot = new Date(
+      Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), h, 17, 0, 0),
+    );
+    if (slot.getTime() > input.nowMs) slot = new Date(slot.getTime() - 24 * 3600 * 1000);
+    const ageMin = (input.nowMs - slot.getTime()) / 60000;
+    if (ageMin > 24 * 60) continue;
+    if (ageMin <= delayBudgetMin) continue;
+    if (!latestDue || slot.getTime() > latestDue.slotMs) {
+      latestDue = { slotMs: slot.getTime(), ageMin };
+    }
+  }
+  if (latestDue) {
+    const covered = runs.some((r) => {
+      if (String(r.conclusion || "").toLowerCase() !== "success") return false;
+      const t = Date.parse(r.created_at || "");
+      return Number.isFinite(t) && t >= latestDue.slotMs - 5 * 60000;
+    });
+    if (!covered) {
+      return {
+        action: "dispatch",
+        reason: "slot_miss_uncovered",
+        ageMinutes,
+        staleAfterMinutes,
+        expectedSlotUtc: new Date(latestDue.slotMs).toISOString(),
+        slotAgeMinutes: Math.round(latestDue.ageMin * 10) / 10,
+        slotDelayBudgetMinutes: delayBudgetMin,
+      };
+    }
+  }
+
   return { action: "skip", reason: "not_stale", ageMinutes, staleAfterMinutes };
 }
 
@@ -167,6 +204,25 @@ export function proveCfWatchdogRecoveryMatrix() {
     },
     "skip",
     "catchup_cooldown",
+  );
+  run(
+    "slot_miss_uncovered_independent_of_freshness",
+    {
+      generatedAt: "2026-11-12T06:00:00.000Z",
+      nowMs,
+      staleAfterMinutes: 481,
+      slotDelayBudgetMinutes: 180,
+      runs: [
+        {
+          status: "completed",
+          conclusion: "success",
+          created_at: "2026-11-12T06:00:00.000Z",
+          event: "schedule",
+        },
+      ],
+    },
+    "dispatch",
+    "slot_miss_uncovered",
   );
 
   const inputsOk =
