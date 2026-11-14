@@ -1,0 +1,7527 @@
+{
+  "schema": "iu-cj-affiliate-phase3z-product-identity-v50",
+  "at": "2026-11-14T17:35:59.548Z",
+  "runId": "43612472316",
+  "sha": "d60ba65559865c508a691e3fe07cc15e628d9e1b",
+  "note": "UNIQUE = distinct compoundIdentity(advertiserId|productId) in this fetch window. Same productId across partners is NOT a collision. UNIQUE ≠ fetchedRows unless zero duplicates.",
+  "accounting": {
+    "fetchedRowsWithIdentity": 357754,
+    "uniqueIdentitiesInRun": 357754,
+    "duplicateApiRows": 0,
+    "uniqueEqualsFetchedRows": true,
+    "publishedUnique": 3092,
+    "publishedOccurrences": 3367,
+    "duplicateSameFeedSignals": 0,
+    "duplicateCrossFeedSamePartner": 0,
+    "crossPartnerSameProductIdCount": 0
+  },
+  "presentationBudgetNote": "READY→PUBLISHED gap is driven by per-partner presentation budget (selectPresentationSlice), not by wiping UNIQUE identities.",
+  "rows": [
+    {
+      "advertiserId": "5402439",
+      "productId": "1003228-6156082",
+      "compoundIdentity": "5402439|1003228-6156082",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1003237-6156126",
+      "compoundIdentity": "5402439|1003237-6156126",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1003237-6156127",
+      "compoundIdentity": "5402439|1003237-6156127",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1003238-6156130",
+      "compoundIdentity": "5402439|1003238-6156130",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1003278-6156282",
+      "compoundIdentity": "5402439|1003278-6156282",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1022188-6225085",
+      "compoundIdentity": "5402439|1022188-6225085",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1022188-6225086",
+      "compoundIdentity": "5402439|1022188-6225086",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1022220-6225230",
+      "compoundIdentity": "5402439|1022220-6225230",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1027651-6248360",
+      "compoundIdentity": "5402439|1027651-6248360",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1028442-6250933",
+      "compoundIdentity": "5402439|1028442-6250933",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1028817-6252291",
+      "compoundIdentity": "5402439|1028817-6252291",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1031450-6263767",
+      "compoundIdentity": "5402439|1031450-6263767",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1032621-6268220",
+      "compoundIdentity": "5402439|1032621-6268220",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1032663-6268413",
+      "compoundIdentity": "5402439|1032663-6268413",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1032811-6269059",
+      "compoundIdentity": "5402439|1032811-6269059",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1032972-6269744",
+      "compoundIdentity": "5402439|1032972-6269744",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1053323-6347301",
+      "compoundIdentity": "5402439|1053323-6347301",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1053660-6348939",
+      "compoundIdentity": "5402439|1053660-6348939",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1069919-6411884",
+      "compoundIdentity": "5402439|1069919-6411884",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1074630-6433198",
+      "compoundIdentity": "5402439|1074630-6433198",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1077114-6444336",
+      "compoundIdentity": "5402439|1077114-6444336",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1094620-6566381",
+      "compoundIdentity": "5402439|1094620-6566381",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1132550-6751670",
+      "compoundIdentity": "5402439|1132550-6751670",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1204918-6767313",
+      "compoundIdentity": "5402439|1204918-6767313",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1205823-6770419",
+      "compoundIdentity": "5402439|1205823-6770419",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1205836-6770484",
+      "compoundIdentity": "5402439|1205836-6770484",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1205863-6770621",
+      "compoundIdentity": "5402439|1205863-6770621",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1209099-6784841",
+      "compoundIdentity": "5402439|1209099-6784841",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1210348-6790594",
+      "compoundIdentity": "5402439|1210348-6790594",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1210380-6790743",
+      "compoundIdentity": "5402439|1210380-6790743",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1212787-6801637",
+      "compoundIdentity": "5402439|1212787-6801637",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1213302-6804001",
+      "compoundIdentity": "5402439|1213302-6804001",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1213466-6804730",
+      "compoundIdentity": "5402439|1213466-6804730",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1216289-9020606",
+      "compoundIdentity": "5402439|1216289-9020606",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1232087-6890131",
+      "compoundIdentity": "5402439|1232087-6890131",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1232094-6890163",
+      "compoundIdentity": "5402439|1232094-6890163",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1232106-6890226",
+      "compoundIdentity": "5402439|1232106-6890226",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1232164-6890515",
+      "compoundIdentity": "5402439|1232164-6890515",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1232183-6981786",
+      "compoundIdentity": "5402439|1232183-6981786",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1235515-6907689",
+      "compoundIdentity": "5402439|1235515-6907689",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1235636-6908249",
+      "compoundIdentity": "5402439|1235636-6908249",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1242580-7138964",
+      "compoundIdentity": "5402439|1242580-7138964",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1243402-6944618",
+      "compoundIdentity": "5402439|1243402-6944618",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1243415-6944683",
+      "compoundIdentity": "5402439|1243415-6944683",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1243423-6944722",
+      "compoundIdentity": "5402439|1243423-6944722",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1243500-6945111",
+      "compoundIdentity": "5402439|1243500-6945111",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1244551-6950769",
+      "compoundIdentity": "5402439|1244551-6950769",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1245153-6953783",
+      "compoundIdentity": "5402439|1245153-6953783",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1249600-6977405",
+      "compoundIdentity": "5402439|1249600-6977405",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1250032-6979877",
+      "compoundIdentity": "5402439|1250032-6979877",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1252785-8335302",
+      "compoundIdentity": "5402439|1252785-8335302",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1252885-6993947",
+      "compoundIdentity": "5402439|1252885-6993947",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1252888-6993962",
+      "compoundIdentity": "5402439|1252888-6993962",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1253361-9420158",
+      "compoundIdentity": "5402439|1253361-9420158",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1253391-6996354",
+      "compoundIdentity": "5402439|1253391-6996354",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1258036-7018918",
+      "compoundIdentity": "5402439|1258036-7018918",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1259176-7023850",
+      "compoundIdentity": "5402439|1259176-7023850",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1260652-7505340",
+      "compoundIdentity": "5402439|1260652-7505340",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1260828-7505434",
+      "compoundIdentity": "5402439|1260828-7505434",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1260926-7029581",
+      "compoundIdentity": "5402439|1260926-7029581",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1261195-7029850",
+      "compoundIdentity": "5402439|1261195-7029850",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1261867-7030531",
+      "compoundIdentity": "5402439|1261867-7030531",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1261947-7030611",
+      "compoundIdentity": "5402439|1261947-7030611",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1262012-7030682",
+      "compoundIdentity": "5402439|1262012-7030682",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1263638-7040094",
+      "compoundIdentity": "5402439|1263638-7040094",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1263642-7038555",
+      "compoundIdentity": "5402439|1263642-7038555",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1263746-7038897",
+      "compoundIdentity": "5402439|1263746-7038897",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1265006-7044998",
+      "compoundIdentity": "5402439|1265006-7044998",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1272676-7080190",
+      "compoundIdentity": "5402439|1272676-7080190",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1272679-7080205",
+      "compoundIdentity": "5402439|1272679-7080205",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1272701-7080316",
+      "compoundIdentity": "5402439|1272701-7080316",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1272710-7080360",
+      "compoundIdentity": "5402439|1272710-7080360",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1272711-7080365",
+      "compoundIdentity": "5402439|1272711-7080365",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1272733-7080474",
+      "compoundIdentity": "5402439|1272733-7080474",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1272735-7080486",
+      "compoundIdentity": "5402439|1272735-7080486",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1273022-7082363",
+      "compoundIdentity": "5402439|1273022-7082363",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1273032-7082413",
+      "compoundIdentity": "5402439|1273032-7082413",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1273043-7082466",
+      "compoundIdentity": "5402439|1273043-7082466",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1273098-7082742",
+      "compoundIdentity": "5402439|1273098-7082742",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1274752-7091574",
+      "compoundIdentity": "5402439|1274752-7091574",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1274758-7091607",
+      "compoundIdentity": "5402439|1274758-7091607",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1275851-7098222",
+      "compoundIdentity": "5402439|1275851-7098222",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1276209-7100083",
+      "compoundIdentity": "5402439|1276209-7100083",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1276228-7100179",
+      "compoundIdentity": "5402439|1276228-7100179",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1289856-7177498",
+      "compoundIdentity": "5402439|1289856-7177498",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1297539-7202601",
+      "compoundIdentity": "5402439|1297539-7202601",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1297553-7202671",
+      "compoundIdentity": "5402439|1297553-7202671",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1297561-7202714",
+      "compoundIdentity": "5402439|1297561-7202714",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1297561-7202715",
+      "compoundIdentity": "5402439|1297561-7202715",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1297737-7203506",
+      "compoundIdentity": "5402439|1297737-7203506",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1297773-7203723",
+      "compoundIdentity": "5402439|1297773-7203723",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1297812-7204040",
+      "compoundIdentity": "5402439|1297812-7204040",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1297838-7204241",
+      "compoundIdentity": "5402439|1297838-7204241",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1297885-7204465",
+      "compoundIdentity": "5402439|1297885-7204465",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1297886-7204471",
+      "compoundIdentity": "5402439|1297886-7204471",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1298059-7205294",
+      "compoundIdentity": "5402439|1298059-7205294",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1298081-7205381",
+      "compoundIdentity": "5402439|1298081-7205381",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1298092-7205428",
+      "compoundIdentity": "5402439|1298092-7205428",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1298094-7205433",
+      "compoundIdentity": "5402439|1298094-7205433",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1298108-7205492",
+      "compoundIdentity": "5402439|1298108-7205492",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1298115-7205520",
+      "compoundIdentity": "5402439|1298115-7205520",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1298121-7205543",
+      "compoundIdentity": "5402439|1298121-7205543",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1298141-7205621",
+      "compoundIdentity": "5402439|1298141-7205621",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1298163-7205711",
+      "compoundIdentity": "5402439|1298163-7205711",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1298179-7205774",
+      "compoundIdentity": "5402439|1298179-7205774",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1298242-7206026",
+      "compoundIdentity": "5402439|1298242-7206026",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1298260-7206099",
+      "compoundIdentity": "5402439|1298260-7206099",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1302515-7225029",
+      "compoundIdentity": "5402439|1302515-7225029",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1302519-7225033",
+      "compoundIdentity": "5402439|1302519-7225033",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1302527-7225041",
+      "compoundIdentity": "5402439|1302527-7225041",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1302749-8798532",
+      "compoundIdentity": "5402439|1302749-8798532",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1303457-7228945",
+      "compoundIdentity": "5402439|1303457-7228945",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1325636-7308832",
+      "compoundIdentity": "5402439|1325636-7308832",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1326639-7313435",
+      "compoundIdentity": "5402439|1326639-7313435",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1327618-7317329",
+      "compoundIdentity": "5402439|1327618-7317329",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1330159-7327643",
+      "compoundIdentity": "5402439|1330159-7327643",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1330644-7366533",
+      "compoundIdentity": "5402439|1330644-7366533",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1330805-7329536",
+      "compoundIdentity": "5402439|1330805-7329536",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1330860-7329771",
+      "compoundIdentity": "5402439|1330860-7329771",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1332140-7334925",
+      "compoundIdentity": "5402439|1332140-7334925",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1333853-7341897",
+      "compoundIdentity": "5402439|1333853-7341897",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1334247-7344069",
+      "compoundIdentity": "5402439|1334247-7344069",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1335674-7350387",
+      "compoundIdentity": "5402439|1335674-7350387",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1339683-7367857",
+      "compoundIdentity": "5402439|1339683-7367857",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1339992-7369014",
+      "compoundIdentity": "5402439|1339992-7369014",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1339998-7369034",
+      "compoundIdentity": "5402439|1339998-7369034",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1340126-7369373",
+      "compoundIdentity": "5402439|1340126-7369373",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1340420-7370038",
+      "compoundIdentity": "5402439|1340420-7370038",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1340576-7370378",
+      "compoundIdentity": "5402439|1340576-7370378",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1340586-7370421",
+      "compoundIdentity": "5402439|1340586-7370421",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1340602-7370484",
+      "compoundIdentity": "5402439|1340602-7370484",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1340707-7370825",
+      "compoundIdentity": "5402439|1340707-7370825",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1340707-7370828",
+      "compoundIdentity": "5402439|1340707-7370828",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1340730-7370959",
+      "compoundIdentity": "5402439|1340730-7370959",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1340731-7370966",
+      "compoundIdentity": "5402439|1340731-7370966",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1340738-7371008",
+      "compoundIdentity": "5402439|1340738-7371008",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1340752-7371091",
+      "compoundIdentity": "5402439|1340752-7371091",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1340782-7709038",
+      "compoundIdentity": "5402439|1340782-7709038",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1344413-7388302",
+      "compoundIdentity": "5402439|1344413-7388302",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1345226-7392037",
+      "compoundIdentity": "5402439|1345226-7392037",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1345316-7392416",
+      "compoundIdentity": "5402439|1345316-7392416",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1349144-7409166",
+      "compoundIdentity": "5402439|1349144-7409166",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1349359-7409997",
+      "compoundIdentity": "5402439|1349359-7409997",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1350577-7415188",
+      "compoundIdentity": "5402439|1350577-7415188",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1351280-7418207",
+      "compoundIdentity": "5402439|1351280-7418207",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1351280-9680411",
+      "compoundIdentity": "5402439|1351280-9680411",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1351678-7420018",
+      "compoundIdentity": "5402439|1351678-7420018",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1351715-7420239",
+      "compoundIdentity": "5402439|1351715-7420239",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1351736-7420360",
+      "compoundIdentity": "5402439|1351736-7420360",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1351749-7420439",
+      "compoundIdentity": "5402439|1351749-7420439",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1351754-7420472",
+      "compoundIdentity": "5402439|1351754-7420472",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1351770-7420568",
+      "compoundIdentity": "5402439|1351770-7420568",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1351771-7420572",
+      "compoundIdentity": "5402439|1351771-7420572",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1351794-7420754",
+      "compoundIdentity": "5402439|1351794-7420754",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1351826-7421015",
+      "compoundIdentity": "5402439|1351826-7421015",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1351850-7421206",
+      "compoundIdentity": "5402439|1351850-7421206",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1351858-7421266",
+      "compoundIdentity": "5402439|1351858-7421266",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1351892-7421538",
+      "compoundIdentity": "5402439|1351892-7421538",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1351900-7421606",
+      "compoundIdentity": "5402439|1351900-7421606",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1351924-7421797",
+      "compoundIdentity": "5402439|1351924-7421797",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1351949-7421997",
+      "compoundIdentity": "5402439|1351949-7421997",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1351952-7422022",
+      "compoundIdentity": "5402439|1351952-7422022",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1351956-7422053",
+      "compoundIdentity": "5402439|1351956-7422053",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1351960-7422085",
+      "compoundIdentity": "5402439|1351960-7422085",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1351980-7422243",
+      "compoundIdentity": "5402439|1351980-7422243",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1351983-7422265",
+      "compoundIdentity": "5402439|1351983-7422265",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1351983-7422266",
+      "compoundIdentity": "5402439|1351983-7422266",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1352011-7422484",
+      "compoundIdentity": "5402439|1352011-7422484",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1352012-7422492",
+      "compoundIdentity": "5402439|1352012-7422492",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1352676-7424187",
+      "compoundIdentity": "5402439|1352676-7424187",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1355862-7434998",
+      "compoundIdentity": "5402439|1355862-7434998",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1359135-7443994",
+      "compoundIdentity": "5402439|1359135-7443994",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1359595-8056440",
+      "compoundIdentity": "5402439|1359595-8056440",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1360695-7447857",
+      "compoundIdentity": "5402439|1360695-7447857",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1361282-7449355",
+      "compoundIdentity": "5402439|1361282-7449355",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1362538-8856100",
+      "compoundIdentity": "5402439|1362538-8856100",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1364245-7457549",
+      "compoundIdentity": "5402439|1364245-7457549",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1368518-10485044",
+      "compoundIdentity": "5402439|1368518-10485044",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1369187-7471951",
+      "compoundIdentity": "5402439|1369187-7471951",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1370250-7476973",
+      "compoundIdentity": "5402439|1370250-7476973",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1371940-7483495",
+      "compoundIdentity": "5402439|1371940-7483495",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1372003-7483708",
+      "compoundIdentity": "5402439|1372003-7483708",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1372521-7487904",
+      "compoundIdentity": "5402439|1372521-7487904",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1372552-7488259",
+      "compoundIdentity": "5402439|1372552-7488259",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1372556-7488281",
+      "compoundIdentity": "5402439|1372556-7488281",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1372568-7488342",
+      "compoundIdentity": "5402439|1372568-7488342",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1372584-7488420",
+      "compoundIdentity": "5402439|1372584-7488420",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1372880-7489331",
+      "compoundIdentity": "5402439|1372880-7489331",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1373303-7491827",
+      "compoundIdentity": "5402439|1373303-7491827",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1376808-7505668",
+      "compoundIdentity": "5402439|1376808-7505668",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1377315-7508800",
+      "compoundIdentity": "5402439|1377315-7508800",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1377322-7508860",
+      "compoundIdentity": "5402439|1377322-7508860",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1377332-7508940",
+      "compoundIdentity": "5402439|1377332-7508940",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1377343-7509024",
+      "compoundIdentity": "5402439|1377343-7509024",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1377351-7509094",
+      "compoundIdentity": "5402439|1377351-7509094",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1377363-7509183",
+      "compoundIdentity": "5402439|1377363-7509183",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1377393-7509424",
+      "compoundIdentity": "5402439|1377393-7509424",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1377395-7509443",
+      "compoundIdentity": "5402439|1377395-7509443",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1377410-7509560",
+      "compoundIdentity": "5402439|1377410-7509560",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1377415-7509602",
+      "compoundIdentity": "5402439|1377415-7509602",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1377444-7509832",
+      "compoundIdentity": "5402439|1377444-7509832",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1377521-7510441",
+      "compoundIdentity": "5402439|1377521-7510441",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1377537-7510537",
+      "compoundIdentity": "5402439|1377537-7510537",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1377568-7510720",
+      "compoundIdentity": "5402439|1377568-7510720",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1377595-7510884",
+      "compoundIdentity": "5402439|1377595-7510884",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1378154-7513931",
+      "compoundIdentity": "5402439|1378154-7513931",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1378686-7516131",
+      "compoundIdentity": "5402439|1378686-7516131",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1383333-7542184",
+      "compoundIdentity": "5402439|1383333-7542184",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1385911-7552246",
+      "compoundIdentity": "5402439|1385911-7552246",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1387143-7558887",
+      "compoundIdentity": "5402439|1387143-7558887",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1387545-7559056",
+      "compoundIdentity": "5402439|1387545-7559056",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1387554-7559080",
+      "compoundIdentity": "5402439|1387554-7559080",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1389588-7565705",
+      "compoundIdentity": "5402439|1389588-7565705",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1389771-7566203",
+      "compoundIdentity": "5402439|1389771-7566203",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1389870-7566434",
+      "compoundIdentity": "5402439|1389870-7566434",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1390303-7567403",
+      "compoundIdentity": "5402439|1390303-7567403",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1392516-7572567",
+      "compoundIdentity": "5402439|1392516-7572567",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1393228-8357099",
+      "compoundIdentity": "5402439|1393228-8357099",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1394140-7576422",
+      "compoundIdentity": "5402439|1394140-7576422",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1397142-7585342",
+      "compoundIdentity": "5402439|1397142-7585342",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1397751-8633742",
+      "compoundIdentity": "5402439|1397751-8633742",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1402486-7607867",
+      "compoundIdentity": "5402439|1402486-7607867",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1402510-7607993",
+      "compoundIdentity": "5402439|1402510-7607993",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1403958-7612894",
+      "compoundIdentity": "5402439|1403958-7612894",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1411680-8637301",
+      "compoundIdentity": "5402439|1411680-8637301",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1413297-7653293",
+      "compoundIdentity": "5402439|1413297-7653293",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1413507-7765939",
+      "compoundIdentity": "5402439|1413507-7765939",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1413512-7654206",
+      "compoundIdentity": "5402439|1413512-7654206",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1414304-7658611",
+      "compoundIdentity": "5402439|1414304-7658611",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1414328-7658705",
+      "compoundIdentity": "5402439|1414328-7658705",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1414334-7658729",
+      "compoundIdentity": "5402439|1414334-7658729",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1414496-7659202",
+      "compoundIdentity": "5402439|1414496-7659202",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1415972-7663193",
+      "compoundIdentity": "5402439|1415972-7663193",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1418449-7672506",
+      "compoundIdentity": "5402439|1418449-7672506",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1418479-7672536",
+      "compoundIdentity": "5402439|1418479-7672536",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1418630-7672688",
+      "compoundIdentity": "5402439|1418630-7672688",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1419461-7675191",
+      "compoundIdentity": "5402439|1419461-7675191",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1425959-7702958",
+      "compoundIdentity": "5402439|1425959-7702958",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1425975-7702974",
+      "compoundIdentity": "5402439|1425975-7702974",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1426304-7703303",
+      "compoundIdentity": "5402439|1426304-7703303",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1426346-7703345",
+      "compoundIdentity": "5402439|1426346-7703345",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1426417-7703416",
+      "compoundIdentity": "5402439|1426417-7703416",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1426904-7703903",
+      "compoundIdentity": "5402439|1426904-7703903",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1427225-7704224",
+      "compoundIdentity": "5402439|1427225-7704224",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1427817-9416529",
+      "compoundIdentity": "5402439|1427817-9416529",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1427848-7704847",
+      "compoundIdentity": "5402439|1427848-7704847",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1428195-7705194",
+      "compoundIdentity": "5402439|1428195-7705194",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1428695-7705694",
+      "compoundIdentity": "5402439|1428695-7705694",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1428870-7705869",
+      "compoundIdentity": "5402439|1428870-7705869",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1428957-7788772",
+      "compoundIdentity": "5402439|1428957-7788772",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1429027-7706026",
+      "compoundIdentity": "5402439|1429027-7706026",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1429404-7787347",
+      "compoundIdentity": "5402439|1429404-7787347",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1429460-7787283",
+      "compoundIdentity": "5402439|1429460-7787283",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1429500-7785676",
+      "compoundIdentity": "5402439|1429500-7785676",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1429564-7707035",
+      "compoundIdentity": "5402439|1429564-7707035",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1429771-7707243",
+      "compoundIdentity": "5402439|1429771-7707243",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1429986-7708254",
+      "compoundIdentity": "5402439|1429986-7708254",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1434101-7725641",
+      "compoundIdentity": "5402439|1434101-7725641",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1435069-7728704",
+      "compoundIdentity": "5402439|1435069-7728704",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1437653-7740126",
+      "compoundIdentity": "5402439|1437653-7740126",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1437745-7791494",
+      "compoundIdentity": "5402439|1437745-7791494",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1437767-7790227",
+      "compoundIdentity": "5402439|1437767-7790227",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1439163-7745221",
+      "compoundIdentity": "5402439|1439163-7745221",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1440113-7749927",
+      "compoundIdentity": "5402439|1440113-7749927",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1440630-7791210",
+      "compoundIdentity": "5402439|1440630-7791210",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1440782-7788428",
+      "compoundIdentity": "5402439|1440782-7788428",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1440834-8990777",
+      "compoundIdentity": "5402439|1440834-8990777",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1441476-8050433",
+      "compoundIdentity": "5402439|1441476-8050433",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1441781-7788589",
+      "compoundIdentity": "5402439|1441781-7788589",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1442714-7756158",
+      "compoundIdentity": "5402439|1442714-7756158",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1443841-7792110",
+      "compoundIdentity": "5402439|1443841-7792110",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1443936-7761742",
+      "compoundIdentity": "5402439|1443936-7761742",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1443937-7858740",
+      "compoundIdentity": "5402439|1443937-7858740",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1444177-7762823",
+      "compoundIdentity": "5402439|1444177-7762823",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1444842-7765551",
+      "compoundIdentity": "5402439|1444842-7765551",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1444897-7765729",
+      "compoundIdentity": "5402439|1444897-7765729",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1447472-7782063",
+      "compoundIdentity": "5402439|1447472-7782063",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1448148-7791797",
+      "compoundIdentity": "5402439|1448148-7791797",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1449428-7797717",
+      "compoundIdentity": "5402439|1449428-7797717",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1449561-7797992",
+      "compoundIdentity": "5402439|1449561-7797992",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1450096-7799071",
+      "compoundIdentity": "5402439|1450096-7799071",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1450223-7799337",
+      "compoundIdentity": "5402439|1450223-7799337",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1450537-7799954",
+      "compoundIdentity": "5402439|1450537-7799954",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1451331-10588065",
+      "compoundIdentity": "5402439|1451331-10588065",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1452507-7803942",
+      "compoundIdentity": "5402439|1452507-7803942",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1452763-7804455",
+      "compoundIdentity": "5402439|1452763-7804455",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1453083-8627014",
+      "compoundIdentity": "5402439|1453083-8627014",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1453132-7805205",
+      "compoundIdentity": "5402439|1453132-7805205",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1453182-7805316",
+      "compoundIdentity": "5402439|1453182-7805316",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1454233-7807388",
+      "compoundIdentity": "5402439|1454233-7807388",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1454296-7807525",
+      "compoundIdentity": "5402439|1454296-7807525",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1454355-7807644",
+      "compoundIdentity": "5402439|1454355-7807644",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1454842-7808633",
+      "compoundIdentity": "5402439|1454842-7808633",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1455310-7809727",
+      "compoundIdentity": "5402439|1455310-7809727",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1456150-7813168",
+      "compoundIdentity": "5402439|1456150-7813168",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1456881-7815051",
+      "compoundIdentity": "5402439|1456881-7815051",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1457891-7816965",
+      "compoundIdentity": "5402439|1457891-7816965",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1457925-7817027",
+      "compoundIdentity": "5402439|1457925-7817027",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1457979-7817136",
+      "compoundIdentity": "5402439|1457979-7817136",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1458328-7817743",
+      "compoundIdentity": "5402439|1458328-7817743",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1458750-7818468",
+      "compoundIdentity": "5402439|1458750-7818468",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1460580-10210654",
+      "compoundIdentity": "5402439|1460580-10210654",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1461318-7823119",
+      "compoundIdentity": "5402439|1461318-7823119",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1461319-7823122",
+      "compoundIdentity": "5402439|1461319-7823122",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1461962-7824322",
+      "compoundIdentity": "5402439|1461962-7824322",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1462250-7824848",
+      "compoundIdentity": "5402439|1462250-7824848",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1462357-7825070",
+      "compoundIdentity": "5402439|1462357-7825070",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1462585-7825485",
+      "compoundIdentity": "5402439|1462585-7825485",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1462954-7826139",
+      "compoundIdentity": "5402439|1462954-7826139",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1463963-7827930",
+      "compoundIdentity": "5402439|1463963-7827930",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1464499-8014753",
+      "compoundIdentity": "5402439|1464499-8014753",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1465211-7830277",
+      "compoundIdentity": "5402439|1465211-7830277",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1467012-8313536",
+      "compoundIdentity": "5402439|1467012-8313536",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1467422-7838755",
+      "compoundIdentity": "5402439|1467422-7838755",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1469740-8816929",
+      "compoundIdentity": "5402439|1469740-8816929",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1472787-7855459",
+      "compoundIdentity": "5402439|1472787-7855459",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1472855-7855779",
+      "compoundIdentity": "5402439|1472855-7855779",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1472891-7855937",
+      "compoundIdentity": "5402439|1472891-7855937",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1474101-7861402",
+      "compoundIdentity": "5402439|1474101-7861402",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1475950-7868962",
+      "compoundIdentity": "5402439|1475950-7868962",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1477512-7875243",
+      "compoundIdentity": "5402439|1477512-7875243",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1477932-9555052",
+      "compoundIdentity": "5402439|1477932-9555052",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1478555-7878879",
+      "compoundIdentity": "5402439|1478555-7878879",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1478619-7879056",
+      "compoundIdentity": "5402439|1478619-7879056",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1478856-7879893",
+      "compoundIdentity": "5402439|1478856-7879893",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1481379-7888856",
+      "compoundIdentity": "5402439|1481379-7888856",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1485738-7898047",
+      "compoundIdentity": "5402439|1485738-7898047",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1490088-7908883",
+      "compoundIdentity": "5402439|1490088-7908883",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1490212-7909227",
+      "compoundIdentity": "5402439|1490212-7909227",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1490262-7909334",
+      "compoundIdentity": "5402439|1490262-7909334",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1490425-7909820",
+      "compoundIdentity": "5402439|1490425-7909820",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1491051-7912516",
+      "compoundIdentity": "5402439|1491051-7912516",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1491333-7913229",
+      "compoundIdentity": "5402439|1491333-7913229",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1491594-7914225",
+      "compoundIdentity": "5402439|1491594-7914225",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1492291-7917354",
+      "compoundIdentity": "5402439|1492291-7917354",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1495501-7930539",
+      "compoundIdentity": "5402439|1495501-7930539",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1497387-7939082",
+      "compoundIdentity": "5402439|1497387-7939082",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1499141-7944866",
+      "compoundIdentity": "5402439|1499141-7944866",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1508236-7974791",
+      "compoundIdentity": "5402439|1508236-7974791",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1508382-7975492",
+      "compoundIdentity": "5402439|1508382-7975492",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1508469-7975869",
+      "compoundIdentity": "5402439|1508469-7975869",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1508735-7977735",
+      "compoundIdentity": "5402439|1508735-7977735",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1508901-7977391",
+      "compoundIdentity": "5402439|1508901-7977391",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1509935-7982296",
+      "compoundIdentity": "5402439|1509935-7982296",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1510284-7983552",
+      "compoundIdentity": "5402439|1510284-7983552",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1511439-7986922",
+      "compoundIdentity": "5402439|1511439-7986922",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1514011-7996806",
+      "compoundIdentity": "5402439|1514011-7996806",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1514842-7998315",
+      "compoundIdentity": "5402439|1514842-7998315",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1515687-7999628",
+      "compoundIdentity": "5402439|1515687-7999628",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1515852-7999908",
+      "compoundIdentity": "5402439|1515852-7999908",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1515999-8000160",
+      "compoundIdentity": "5402439|1515999-8000160",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1516676-8002035",
+      "compoundIdentity": "5402439|1516676-8002035",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1516806-8002626",
+      "compoundIdentity": "5402439|1516806-8002626",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1518665-9023150",
+      "compoundIdentity": "5402439|1518665-9023150",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1519499-8014032",
+      "compoundIdentity": "5402439|1519499-8014032",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1524293-8027493",
+      "compoundIdentity": "5402439|1524293-8027493",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1524301-8027535",
+      "compoundIdentity": "5402439|1524301-8027535",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1525885-8033857",
+      "compoundIdentity": "5402439|1525885-8033857",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1526100-8034501",
+      "compoundIdentity": "5402439|1526100-8034501",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1528872-8042179",
+      "compoundIdentity": "5402439|1528872-8042179",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1529639-8045537",
+      "compoundIdentity": "5402439|1529639-8045537",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1531234-8052060",
+      "compoundIdentity": "5402439|1531234-8052060",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1531429-8052708",
+      "compoundIdentity": "5402439|1531429-8052708",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1532252-8055805",
+      "compoundIdentity": "5402439|1532252-8055805",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1532827-8057965",
+      "compoundIdentity": "5402439|1532827-8057965",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1532842-8058074",
+      "compoundIdentity": "5402439|1532842-8058074",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1533100-8060441",
+      "compoundIdentity": "5402439|1533100-8060441",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1533130-8151886",
+      "compoundIdentity": "5402439|1533130-8151886",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1533178-8060806",
+      "compoundIdentity": "5402439|1533178-8060806",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1533205-8060925",
+      "compoundIdentity": "5402439|1533205-8060925",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1533283-8061225",
+      "compoundIdentity": "5402439|1533283-8061225",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1533374-8061578",
+      "compoundIdentity": "5402439|1533374-8061578",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1533520-8062042",
+      "compoundIdentity": "5402439|1533520-8062042",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1533522-8062048",
+      "compoundIdentity": "5402439|1533522-8062048",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1533603-8062272",
+      "compoundIdentity": "5402439|1533603-8062272",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1533737-8062472",
+      "compoundIdentity": "5402439|1533737-8062472",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1542721-8163108",
+      "compoundIdentity": "5402439|1542721-8163108",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1553242-7779204",
+      "compoundIdentity": "5402439|1553242-7779204",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1554480-8140050",
+      "compoundIdentity": "5402439|1554480-8140050",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1556816-8150514",
+      "compoundIdentity": "5402439|1556816-8150514",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1562982-8162818",
+      "compoundIdentity": "5402439|1562982-8162818",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1562985-8162833",
+      "compoundIdentity": "5402439|1562985-8162833",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1562993-8162872",
+      "compoundIdentity": "5402439|1562993-8162872",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1563154-8163577",
+      "compoundIdentity": "5402439|1563154-8163577",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1568549-8181421",
+      "compoundIdentity": "5402439|1568549-8181421",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1568798-8181670",
+      "compoundIdentity": "5402439|1568798-8181670",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1574924-8197609",
+      "compoundIdentity": "5402439|1574924-8197609",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1582354-8223633",
+      "compoundIdentity": "5402439|1582354-8223633",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1582425-8421543",
+      "compoundIdentity": "5402439|1582425-8421543",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1582574-10205690",
+      "compoundIdentity": "5402439|1582574-10205690",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1585158-8234442",
+      "compoundIdentity": "5402439|1585158-8234442",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1585778-8237639",
+      "compoundIdentity": "5402439|1585778-8237639",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1586337-8522244",
+      "compoundIdentity": "5402439|1586337-8522244",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1586975-8611430",
+      "compoundIdentity": "5402439|1586975-8611430",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1587160-8244349",
+      "compoundIdentity": "5402439|1587160-8244349",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1587887-8247956",
+      "compoundIdentity": "5402439|1587887-8247956",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1588773-10153583",
+      "compoundIdentity": "5402439|1588773-10153583",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1588804-10153587",
+      "compoundIdentity": "5402439|1588804-10153587",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1602624-8308493",
+      "compoundIdentity": "5402439|1602624-8308493",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1602625-8308495",
+      "compoundIdentity": "5402439|1602625-8308495",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1602678-8308871",
+      "compoundIdentity": "5402439|1602678-8308871",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1602733-8309258",
+      "compoundIdentity": "5402439|1602733-8309258",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1602773-8309581",
+      "compoundIdentity": "5402439|1602773-8309581",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1602774-8309582",
+      "compoundIdentity": "5402439|1602774-8309582",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1602797-8309767",
+      "compoundIdentity": "5402439|1602797-8309767",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1602797-8309773",
+      "compoundIdentity": "5402439|1602797-8309773",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1602822-8309967",
+      "compoundIdentity": "5402439|1602822-8309967",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1602849-8310185",
+      "compoundIdentity": "5402439|1602849-8310185",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1602862-8310286",
+      "compoundIdentity": "5402439|1602862-8310286",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1602873-8310379",
+      "compoundIdentity": "5402439|1602873-8310379",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1603557-8313572",
+      "compoundIdentity": "5402439|1603557-8313572",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1603690-8314089",
+      "compoundIdentity": "5402439|1603690-8314089",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1605069-8319307",
+      "compoundIdentity": "5402439|1605069-8319307",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1605168-8319425",
+      "compoundIdentity": "5402439|1605168-8319425",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1611853-8336254",
+      "compoundIdentity": "5402439|1611853-8336254",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1616837-8346272",
+      "compoundIdentity": "5402439|1616837-8346272",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1618161-8355125",
+      "compoundIdentity": "5402439|1618161-8355125",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1618387-8357736",
+      "compoundIdentity": "5402439|1618387-8357736",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1618500-8358995",
+      "compoundIdentity": "5402439|1618500-8358995",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1618819-8360238",
+      "compoundIdentity": "5402439|1618819-8360238",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1618840-8360318",
+      "compoundIdentity": "5402439|1618840-8360318",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1618870-8360445",
+      "compoundIdentity": "5402439|1618870-8360445",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1619387-8363830",
+      "compoundIdentity": "5402439|1619387-8363830",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1619392-8363872",
+      "compoundIdentity": "5402439|1619392-8363872",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1619513-8364588",
+      "compoundIdentity": "5402439|1619513-8364588",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1619589-8365045",
+      "compoundIdentity": "5402439|1619589-8365045",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1619591-8365060",
+      "compoundIdentity": "5402439|1619591-8365060",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1620550-8369299",
+      "compoundIdentity": "5402439|1620550-8369299",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1621588-8375001",
+      "compoundIdentity": "5402439|1621588-8375001",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1621675-8375531",
+      "compoundIdentity": "5402439|1621675-8375531",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1623614-8383810",
+      "compoundIdentity": "5402439|1623614-8383810",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1624308-8386035",
+      "compoundIdentity": "5402439|1624308-8386035",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1624315-8386060",
+      "compoundIdentity": "5402439|1624315-8386060",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1624352-8386171",
+      "compoundIdentity": "5402439|1624352-8386171",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1627883-8396920",
+      "compoundIdentity": "5402439|1627883-8396920",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1627907-8397061",
+      "compoundIdentity": "5402439|1627907-8397061",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1627990-8397563",
+      "compoundIdentity": "5402439|1627990-8397563",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1627999-8397616",
+      "compoundIdentity": "5402439|1627999-8397616",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1628294-8399074",
+      "compoundIdentity": "5402439|1628294-8399074",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1628330-8399298",
+      "compoundIdentity": "5402439|1628330-8399298",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1628410-8399774",
+      "compoundIdentity": "5402439|1628410-8399774",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1628480-8400191",
+      "compoundIdentity": "5402439|1628480-8400191",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1628581-8400799",
+      "compoundIdentity": "5402439|1628581-8400799",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1628614-8400998",
+      "compoundIdentity": "5402439|1628614-8400998",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1628638-8401139",
+      "compoundIdentity": "5402439|1628638-8401139",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1628642-8401165",
+      "compoundIdentity": "5402439|1628642-8401165",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1629955-8406589",
+      "compoundIdentity": "5402439|1629955-8406589",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1634888-9676469",
+      "compoundIdentity": "5402439|1634888-9676469",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1635582-9411222",
+      "compoundIdentity": "5402439|1635582-9411222",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1636068-9415746",
+      "compoundIdentity": "5402439|1636068-9415746",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1637867-8435086",
+      "compoundIdentity": "5402439|1637867-8435086",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1640027-8443252",
+      "compoundIdentity": "5402439|1640027-8443252",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1640581-8444980",
+      "compoundIdentity": "5402439|1640581-8444980",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1640670-8445252",
+      "compoundIdentity": "5402439|1640670-8445252",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1640673-8445263",
+      "compoundIdentity": "5402439|1640673-8445263",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1640734-8445453",
+      "compoundIdentity": "5402439|1640734-8445453",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1640840-8445784",
+      "compoundIdentity": "5402439|1640840-8445784",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1641005-8446298",
+      "compoundIdentity": "5402439|1641005-8446298",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1641024-8446359",
+      "compoundIdentity": "5402439|1641024-8446359",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1641652-8448789",
+      "compoundIdentity": "5402439|1641652-8448789",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1641967-8449411",
+      "compoundIdentity": "5402439|1641967-8449411",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1642026-8449521",
+      "compoundIdentity": "5402439|1642026-8449521",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1642130-8449717",
+      "compoundIdentity": "5402439|1642130-8449717",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1642617-8450649",
+      "compoundIdentity": "5402439|1642617-8450649",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1642743-8450911",
+      "compoundIdentity": "5402439|1642743-8450911",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1642760-8450941",
+      "compoundIdentity": "5402439|1642760-8450941",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1642831-8451075",
+      "compoundIdentity": "5402439|1642831-8451075",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1642868-8451144",
+      "compoundIdentity": "5402439|1642868-8451144",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1643012-8451416",
+      "compoundIdentity": "5402439|1643012-8451416",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1643392-8452095",
+      "compoundIdentity": "5402439|1643392-8452095",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1644148-8452864",
+      "compoundIdentity": "5402439|1644148-8452864",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1644206-8452925",
+      "compoundIdentity": "5402439|1644206-8452925",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1644956-8455513",
+      "compoundIdentity": "5402439|1644956-8455513",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1645027-8455876",
+      "compoundIdentity": "5402439|1645027-8455876",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1646001-8460751",
+      "compoundIdentity": "5402439|1646001-8460751",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1646041-8460995",
+      "compoundIdentity": "5402439|1646041-8460995",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1646047-8461029",
+      "compoundIdentity": "5402439|1646047-8461029",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1646067-8461151",
+      "compoundIdentity": "5402439|1646067-8461151",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1646077-8461211",
+      "compoundIdentity": "5402439|1646077-8461211",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1646125-8461497",
+      "compoundIdentity": "5402439|1646125-8461497",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1646133-8461545",
+      "compoundIdentity": "5402439|1646133-8461545",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1646138-8461577",
+      "compoundIdentity": "5402439|1646138-8461577",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1646147-8461631",
+      "compoundIdentity": "5402439|1646147-8461631",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1646148-8461638",
+      "compoundIdentity": "5402439|1646148-8461638",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1646149-8461640",
+      "compoundIdentity": "5402439|1646149-8461640",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1646179-8461822",
+      "compoundIdentity": "5402439|1646179-8461822",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1646182-8461842",
+      "compoundIdentity": "5402439|1646182-8461842",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1646250-8462250",
+      "compoundIdentity": "5402439|1646250-8462250",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1646261-8462312",
+      "compoundIdentity": "5402439|1646261-8462312",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1646283-8462446",
+      "compoundIdentity": "5402439|1646283-8462446",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1646285-8462455",
+      "compoundIdentity": "5402439|1646285-8462455",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1646386-8462802",
+      "compoundIdentity": "5402439|1646386-8462802",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1646552-8463297",
+      "compoundIdentity": "5402439|1646552-8463297",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1646591-8463406",
+      "compoundIdentity": "5402439|1646591-8463406",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1647258-8906796",
+      "compoundIdentity": "5402439|1647258-8906796",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1647430-8465878",
+      "compoundIdentity": "5402439|1647430-8465878",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1648181-8468009",
+      "compoundIdentity": "5402439|1648181-8468009",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1649255-8471785",
+      "compoundIdentity": "5402439|1649255-8471785",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1649427-8472071",
+      "compoundIdentity": "5402439|1649427-8472071",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5402439",
+      "productId": "1649484-8472156",
+      "compoundIdentity": "5402439|1649484-8472156",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-moda"
+      ],
+      "published": false
+    }
+  ],
+  "sampleRows": 5000,
+  "sampleCapped": true,
+  "presentationBudgetDeferred": 4716910,
+  "publishPerPartner": 25,
+  "evidenceClass": "COMPOUND_IDENTITY_SET_PLUS_SAMPLES",
+  "publicationGate": "PUBLICATION_PIPELINE"
+}
