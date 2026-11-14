@@ -20,6 +20,7 @@ export interface Env {
   STALE_AFTER_MINUTES: string;
   MAX_CATCHUPS_PER_UTC_DAY?: string;
   CATCHUP_COOLDOWN_MINUTES?: string;
+  SLOT_DELAY_BUDGET_MINUTES?: string;
   MANUAL_TRIGGER_SECRET?: string;
 }
 
@@ -150,6 +151,7 @@ export async function runCycle(
   const staleAfter = Math.max(1, Number(env.STALE_AFTER_MINUTES) || 240);
   const maxCatchups = Math.max(1, Number(env.MAX_CATCHUPS_PER_UTC_DAY) || 6);
   const cooldownMin = Math.max(1, Number(env.CATCHUP_COOLDOWN_MINUTES) || 60);
+  const slotDelayBudget = Math.max(1, Number(env.SLOT_DELAY_BUDGET_MINUTES) || 180);
   const generatedAt = await fetchGeneratedAt(env);
   const runs = await listRuns(env);
 
@@ -169,6 +171,7 @@ export async function runCycle(
         runs,
         maxCatchupsPerUtcDay: maxCatchups,
         catchupCooldownMinutes: cooldownMin,
+        slotDelayBudgetMinutes: slotDelayBudget,
       });
 
   let dispatch: {
