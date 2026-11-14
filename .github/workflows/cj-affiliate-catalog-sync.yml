@@ -203,6 +203,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-cf-watchdog-recovery-proof-v51-8-selftest.mjs
       - name: Refresh mapPool concurrency selftest (V51.8-complete; offline)
         run: node scripts/iu-cj-affiliate-phase3z-map-pool-v51-8-selftest.mjs
+      - name: Page-size perf + throttle + inventory-reuse selftest (V51.8-perf; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-page-size-perf-v51-8-selftest.mjs
       - name: Reverify freshness policy + UNKNOWN priority selftest (V51.8; offline)
         run: node scripts/iu-cj-affiliate-phase3z-reverify-freshness-policy-v51-8-selftest.mjs
       - name: Partner lifecycle JOINED/ENDED/REJOINED selftest (V51.8; offline)
@@ -810,7 +812,8 @@ jobs:
       # Page size uses documented CJ Product Details Search pagination (default 1000, max 10000).
       # Artificial Math.min(10) source cap removed. Presentation budget optional/separate.
       IU_CJ_OFFERS_PRODUCT_PARTNER_LIMIT: "0"
-      IU_CJ_OFFERS_PRODUCT_PAGE_SIZE: "100"
+      # V51.8-perf: CJ documented default 1000 (was 100 → ~10× GraphQL pages / ~69 min throttle floor).
+      IU_CJ_OFFERS_PRODUCT_PAGE_SIZE: "1000"
       # Continueable paging window (not API 10-cap). Early-stop once presentation budget filled.
       # V34: refresh_priority schedules use light discovery (1 page); daily 03:17 + full dispatch keep 5.
       # Base pages: light refresh=2, full/daily=8. Incomplete partners deepen via IU_CJ_OFFERS_DEEPEN_INCOMPLETE_MAX_PAGES.
@@ -834,18 +837,22 @@ jobs:
       IU_CJ_OFFERS_INVENTORY_FEEDS: ${{ (github.event_name == 'schedule' && github.event.schedule == '17 3 * * *') && '1' || (github.event_name == 'workflow_dispatch' && inputs.offers_mode == 'full' && '1' || '0') }}
       IU_CJ_OFFERS_INVENTORY_FEEDS_PROGRESSIVE: ${{ (github.event_name == 'schedule' && github.event.schedule != '17 3 * * *') && '1' || (github.event_name == 'workflow_dispatch' && inputs.offers_mode == 'refresh_priority' && '1' || '0') }}
       IU_CJ_OFFERS_INVENTORY_PROGRESSIVE_LIMIT: "30"
+      # V51.8-perf: skip full inventory re-scan when durable inventory already complete (retry errors via progressive).
+      IU_CJ_OFFERS_INVENTORY_REUSE_FRESH: "1"
       IU_CJ_OFFERS_REFRESH_PUBLISHED: "1"
       # V51.8-complete: bounded parallel CJ refresh advertisers (not unlimited).
       IU_CJ_OFFERS_REFRESH_CONCURRENCY: "3"
       # V37: documented shoppingProducts(productIds) targeted refresh (fallback scan window if query fails).
       IU_CJ_OFFERS_REFRESH_PRODUCT_IDS: "1"
       # Deeper published-key scan on refresh-priority runs (still not an API source invent).
-      IU_CJ_OFFERS_REFRESH_PAGE_SIZE: "100"
+      IU_CJ_OFFERS_REFRESH_PAGE_SIZE: "1000"
       IU_CJ_OFFERS_REFRESH_MAX_PAGES: ${{ (github.event_name == 'schedule' && github.event.schedule != '17 3 * * *') && '5' || (github.event_name == 'workflow_dispatch' && inputs.offers_mode == 'refresh_priority' && '5' || '5') }}
       IU_CJ_OFFERS_MODE: ${{ (github.event_name == 'schedule' && github.event.schedule == '17 3 * * *') && 'full' || (github.event_name == 'schedule' && 'refresh_priority' || (github.event_name == 'workflow_dispatch' && inputs.offers_mode || 'full')) }}
       IU_CJ_REFRESH_CHECKPOINT_PATH: projects/data/iu-affiliate-cj-refresh-coverage-v35.json
       # Legacy alias: treated as page size when PAGE_SIZE unset (no longer capped at 10).
-      IU_CJ_OFFERS_PRODUCT_LIMIT: "100"
+      IU_CJ_OFFERS_PRODUCT_LIMIT: "1000"
+      # V51.8-perf: cautious GraphQL spacing (default lib 2600ms); floor 800 enforced in throttleCj.
+      IU_CJ_GRAPHQL_MIN_INTERVAL_MS: "1500"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

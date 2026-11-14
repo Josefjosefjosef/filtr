@@ -184,9 +184,22 @@ export function assertCjEnvPartial(env, needs) {
   }
 }
 
-export async function throttleCj() {
+/**
+ * Global CJ GraphQL spacing. Override via IU_CJ_GRAPHQL_MIN_INTERVAL_MS (ms).
+ * Floor 800 / ceiling 10000 — never remove spacing entirely.
+ */
+export function resolveCjCallMinIntervalMs(env = process.env) {
+  const raw = env?.IU_CJ_GRAPHQL_MIN_INTERVAL_MS;
+  if (raw == null || String(raw).trim() === "") return CJ_CALL_MIN_INTERVAL_MS;
+  const n = Number(raw);
+  if (!Number.isFinite(n)) return CJ_CALL_MIN_INTERVAL_MS;
+  return Math.max(800, Math.min(10000, Math.floor(n)));
+}
+
+export async function throttleCj(env = process.env) {
+  const interval = resolveCjCallMinIntervalMs(env);
   const now = Date.now();
-  const wait = lastCjCallAt + CJ_CALL_MIN_INTERVAL_MS - now;
+  const wait = lastCjCallAt + interval - now;
   if (wait > 0) await new Promise((r) => setTimeout(r, wait));
   lastCjCallAt = Date.now();
 }
