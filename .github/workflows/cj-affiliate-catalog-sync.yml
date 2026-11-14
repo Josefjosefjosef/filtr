@@ -95,6 +95,9 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  actions: write
+  statuses: write
+  checks: write
 
 concurrency:
   group: cj-affiliate-catalog-sync
@@ -198,6 +201,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-stale-cursor-recovery-v51-8-selftest.mjs
       - name: CF watchdog recovery proof selftest (V51.8; offline)
         run: node scripts/iu-cj-affiliate-phase3z-cf-watchdog-recovery-proof-v51-8-selftest.mjs
+      - name: Refresh mapPool concurrency selftest (V51.8-complete; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-map-pool-v51-8-selftest.mjs
       - name: Reverify freshness policy + UNKNOWN priority selftest (V51.8; offline)
         run: node scripts/iu-cj-affiliate-phase3z-reverify-freshness-policy-v51-8-selftest.mjs
       - name: Partner lifecycle JOINED/ENDED/REJOINED selftest (V51.8; offline)
@@ -830,6 +835,8 @@ jobs:
       IU_CJ_OFFERS_INVENTORY_FEEDS_PROGRESSIVE: ${{ (github.event_name == 'schedule' && github.event.schedule != '17 3 * * *') && '1' || (github.event_name == 'workflow_dispatch' && inputs.offers_mode == 'refresh_priority' && '1' || '0') }}
       IU_CJ_OFFERS_INVENTORY_PROGRESSIVE_LIMIT: "30"
       IU_CJ_OFFERS_REFRESH_PUBLISHED: "1"
+      # V51.8-complete: bounded parallel CJ refresh advertisers (not unlimited).
+      IU_CJ_OFFERS_REFRESH_CONCURRENCY: "3"
       # V37: documented shoppingProducts(productIds) targeted refresh (fallback scan window if query fails).
       IU_CJ_OFFERS_REFRESH_PRODUCT_IDS: "1"
       # Deeper published-key scan on refresh-priority runs (still not an API source invent).
@@ -1194,6 +1201,37 @@ jobs:
           off=json.load(open("projects/data/iu-affiliate-cj-offers-public-v1.json"))
           print("PREV_OFFERS_LIVE", off.get("liveEnabled") is True)
           PY
+      # V51.8-complete: delayed daily-full (cron 17 3) must not consume mid-day SLA as FULL.
+      # Evidence: run 43584675067 fired as scheduleExpr=17 3 * * * at 10:18Z (MODE=full, ~118m).
+      - name: Demote late daily-full schedule to refresh_priority
+        if: ${{ github.event_name == 'schedule' && github.event.schedule == '17 3 * * *' }}
+        shell: bash
+        env:
+          THIS_SCHEDULE: ${{ github.event.schedule }}
+        run: |
+          set -euo pipefail
+          # Expected slot 03:17 UTC; if we start >4h late, demote to light refresh.
+          NOW_H=$(date -u +%H)
+          NOW_M=$(date -u +%M)
+          NOW_MIN=$((10#$NOW_H * 60 + 10#$NOW_M))
+          SLOT_MIN=$((3 * 60 + 17))
+          DELAY_MIN=$((NOW_MIN - SLOT_MIN))
+          if [ "$DELAY_MIN" -lt 0 ]; then DELAY_MIN=$((DELAY_MIN + 1440)); fi
+          echo "DAILY_FULL_SCHEDULE=${THIS_SCHEDULE}"
+          echo "DAILY_FULL_DELAY_MIN=${DELAY_MIN}"
+          if [ "$DELAY_MIN" -gt 240 ]; then
+            {
+              echo "IU_CJ_OFFERS_MODE=refresh_priority"
+              echo "IU_CJ_OFFERS_PRODUCT_MAX_PAGES=2"
+              echo "IU_CJ_OFFERS_DEEPEN_INCOMPLETE_MAX_PAGES=6"
+              echo "IU_CJ_OFFERS_INVENTORY_FEEDS=0"
+              echo "IU_CJ_OFFERS_INVENTORY_FEEDS_PROGRESSIVE=1"
+              echo "IU_CJ_OFFERS_LATE_DAILY_DEMOTED=1"
+            } >> "$GITHUB_ENV"
+            echo "LATE_DAILY_FULL_DEMOTED=1 delay_min=${DELAY_MIN}"
+          else
+            echo "LATE_DAILY_FULL_DEMOTED=0 delay_min=${DELAY_MIN}"
+          fi
       - name: V44 gap-deepen when schedule/catch-up fires after long miss window
         if: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.catchup_dispatch == '1') }}
         shell: bash
@@ -1205,6 +1243,10 @@ jobs:
           CATCHUP_DISPATCH: ${{ inputs.catchup_dispatch || '0' }}
         run: |
           set -euo pipefail
+          echo "SCHEDULE_EXPR=${THIS_SCHEDULE}"
+          echo "EVENT_NAME=${THIS_EVENT}"
+          echo "OFFERS_MODE_EFFECTIVE=${IU_CJ_OFFERS_MODE}"
+          echo "PRODUCT_MAX_PAGES_EFFECTIVE=${IU_CJ_OFFERS_PRODUCT_MAX_PAGES}"
           WF_ID="$(gh api "repos/${REPO}/actions/workflows" --jq \
             '.workflows[] | select(.path==".github/workflows/cj-affiliate-catalog-sync.yml") | .id')"
           RAW="$(gh api "repos/${REPO}/actions/workflows/${WF_ID}/runs?event=schedule&per_page=10")"
@@ -1227,6 +1269,11 @@ jobs:
           });
           fs.writeFileSync("/tmp/iu-cj-gap-deepen.json", JSON.stringify({ ...d, priorRunId: prior?.id || null }, null, 2));
           console.log(JSON.stringify({ ...d, priorRunId: prior?.id || null, priorAgeHours: ageH }));
+          // Do not deepen when late daily-full was demoted to refresh_priority.
+          if (process.env.IU_CJ_OFFERS_LATE_DAILY_DEMOTED === "1") {
+            console.log("GAP_DEEPEN_APPLIED=0 reason=LATE_DAILY_DEMOTED");
+            process.exit(0);
+          }
           if (d.deepen && d.productMaxPages) {
             fs.appendFileSync(
               process.env.GITHUB_ENV,
@@ -1544,9 +1591,11 @@ jobs:
             print("NOTE=INCOMING_NOT_LIVE_YET")
           PY
       - name: Open data-only offers PR to main
+        id: offers_pr
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
           BR="data/cj-offers-public-promote-${GITHUB_RUN_ID}"
@@ -1558,6 +1607,7 @@ jobs:
           git add projects/data/iu-affiliate-cj-offers-public-v1.json
           if git diff --cached --quiet; then
             echo "NO_OFFERS_PUBLIC_CHANGES"
+            echo "opened=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           if git diff --cached --name-only | grep -Ev '^projects/data/iu-affiliate-cj-offers-public-v1\.json$'; then
@@ -1567,6 +1617,76 @@ jobs:
           fi
           git commit --trailer "Co-authored-by: Cursor <cursoragent@cursor.com>" -m "chore(data): promote CJ offers-public (coupons/actions/products)"
           git push origin "HEAD:${BR}"
-          BODY=$(printf '%s\n' "## Summary" "- Data-only promote of projects/data/iu-affiliate-cj-offers-public-v1.json" "- Coupons/actions/products publicationReady only" "- Required checks must pass; no admin merge" "" "## What does NOT change" "- Catalog JS, slot policy, MANUAL_PROTECTED, managed-public, secrets")
-          gh pr create --base main --head "${BR}" --title "chore(data): promote CJ offers-public (coupons/actions/products)" --body "${BODY}"
-          echo "OFFERS_PROMOTE_PR_OPENED=true"
+          BODY=$(printf '%s\n' "## Summary" "- Data-only promote of projects/data/iu-affiliate-cj-offers-public-v1.json" "- Coupons/actions/products publicationReady only" "- Required checks + auto-merge (data-only; no admin merge)" "- Supersedes older open offers promote PRs" "" "## What does NOT change" "- Catalog JS, slot policy, MANUAL_PROTECTED, managed-public, secrets")
+          # Close older open promote PRs (stale candidates must not overwrite newer).
+          while IFS= read -r OLD; do
+            [ -z "$OLD" ] && continue
+            echo "[SUPERSEDE] closing older offers promote PR #$OLD"
+            gh pr close "$OLD" --comment "Superseded by newer offers-public candidate from run ${GITHUB_RUN_ID}." || true
+          done < <(gh pr list --state open --base main --limit 50 --json number,headRefName,title \
+            --jq '.[] | select(.title|test("promote CJ offers-public")) | select(.headRefName|test("^data/cj-offers-public-promote-")) | select(.headRefName != "'"${BR}"'") | .number')
+          PR_URL=$(gh pr create --base main --head "${BR}" --title "chore(data): promote CJ offers-public (coupons/actions/products)" --body "${BODY}")
+          NUM=$(printf '%s' "$PR_URL" | grep -oE '[0-9]+$' || true)
+          if [ -z "${NUM}" ]; then
+            NUM=$(gh pr list --head "${BR}" --state open --json number -q '.[0].number')
+          fi
+          if [ -z "${NUM}" ]; then
+            echo "BLOCKER=OFFERS_PROMOTE_PR_NUMBER_MISSING"
+            exit 1
+          fi
+          echo "opened=true" >> "$GITHUB_OUTPUT"
+          echo "pr_number=${NUM}" >> "$GITHUB_OUTPUT"
+          echo "branch=${BR}" >> "$GITHUB_OUTPUT"
+          echo "OFFERS_PROMOTE_PR_OPENED=true pr=#${NUM}"
+      - name: Diff scope check (data-only → allow auto-merge)
+        if: steps.offers_pr.outputs.opened == 'true'
+        id: offers_scope
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          NUM="${{ steps.offers_pr.outputs.pr_number }}"
+          CHANGED=$(gh pr diff "$NUM" --name-only)
+          echo "[SCOPE] PR changed files:"
+          echo "$CHANGED"
+          DATA_ONLY=true
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            case "$f" in
+              projects/data/iu-affiliate-cj-offers-public-v1.json) ;;
+              *) DATA_ONLY=false; break ;;
+            esac
+          done <<< "$CHANGED"
+          if [ "$DATA_ONLY" != "true" ]; then
+            echo "[SCOPE] non-data change — auto-merge disabled"
+            echo "data_only=false" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+          echo "data_only=true" >> "$GITHUB_OUTPUT"
+          echo "[SCOPE] data-only — auto-merge allowed"
+      - name: Dispatch required checks (workflow_dispatch; avoid bot PR action_required hang)
+        if: steps.offers_pr.outputs.opened == 'true' && steps.offers_scope.outputs.data_only == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          REF: ${{ steps.offers_pr.outputs.branch }}
+          NUM: ${{ steps.offers_pr.outputs.pr_number }}
+        run: |
+          set -euo pipefail
+          gh workflow run smoke.yml --ref "$REF" --repo "$REPO"
+          gh workflow run layout-guard.yml --ref "$REF" --repo "$REPO"
+          gh workflow run repo-guard.yml --ref "$REF" --repo "$REPO"
+          gh workflow run iu-ads-regression-freeze.yml --ref "$REF" --repo "$REPO" -f "pr_number=${NUM}"
+          echo "[CHECKS] Dispatched smoke/layout-guard/repo-guard/iu-ads-regression-freeze on $REF"
+      - name: Enable auto-merge (squash) when data-only
+        if: steps.offers_pr.outputs.opened == 'true' && steps.offers_scope.outputs.data_only == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          NUM="${{ steps.offers_pr.outputs.pr_number }}"
+          gh pr merge "$NUM" --auto --squash
+          echo "[AUTO-MERGE] Enabled for offers promote PR #$NUM"

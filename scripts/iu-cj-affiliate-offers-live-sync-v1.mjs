@@ -141,6 +141,26 @@ import { buildProductIdentityLedger } from "./iu-cj-affiliate-phase3z-product-id
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const WEBSITE_PID = "101883843";
 
+/** Bounded concurrency pool for CJ refresh advertisers (hard cap 8). */
+export async function mapPool(items, concurrency, worker) {
+  const list = Array.isArray(items) ? items : [];
+  const limit = Math.max(1, Math.min(8, Number(concurrency) || 1));
+  const out = new Array(list.length);
+  let next = 0;
+  async function run() {
+    for (;;) {
+      const i = next;
+      next += 1;
+      if (i >= list.length) return;
+      out[i] = await worker(list[i], i);
+    }
+  }
+  if (list.length === 0) return out;
+  const n = Math.min(limit, list.length);
+  await Promise.all(Array.from({ length: n }, () => run()));
+  return out;
+}
+
 /**
  * Classify partner product-feed fetch failures for honest ops ledgers.
  * http_400 with zero rows is usually CJ GraphQL rejection / no product API for that advertiser,
@@ -570,8 +590,24 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
   const scanSamples = [];
   let usedProductIdsMode = preferProductIds;
   let productIdsFallbackCount = 0;
+  const refreshConcurrency = Math.max(
+    1,
+    Math.min(
+      6,
+      Number(
+        opts.refreshConcurrency != null
+          ? opts.refreshConcurrency
+          : env.IU_CJ_OFFERS_REFRESH_CONCURRENCY != null &&
+              String(env.IU_CJ_OFFERS_REFRESH_CONCURRENCY).trim() !== ""
+            ? env.IU_CJ_OFFERS_REFRESH_CONCURRENCY
+            : 3
+      ) || 3
+    )
+  );
+  meta.refreshConcurrency = refreshConcurrency;
 
-  for (const group of ordered) {
+  // Phase 1: bounded-parallel CJ fetches (no shared mutation).
+  const fetchRows = await mapPool(ordered, refreshConcurrency, async (group) => {
     const advertiserId = group.advertiserId;
     const want = new Map(group.keys.map((k) => [k.productId, k]));
     const wantIds = [...want.keys()];
@@ -580,28 +616,38 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
       prevCp?.resumeOffset != null && Number.isFinite(Number(prevCp.resumeOffset))
         ? Math.max(CJ_PRODUCT_SEARCH_OFFSET_FIRST, Number(prevCp.resumeOffset))
         : CJ_PRODUCT_SEARCH_OFFSET_FIRST;
+    const row = {
+      advertiserId,
+      want,
+      wantIds,
+      prevCp,
+      resumeOffset,
+      fetched: null,
+      modeUsed: REFRESH_MODE.SCAN_WINDOW,
+      productIdsFallback: false,
+      apiRequests: 0,
+      throwError: null,
+    };
     try {
-      scannedAdvertisers.add(advertiserId);
       let fetched = null;
       let modeUsed = REFRESH_MODE.SCAN_WINDOW;
       if (preferProductIds) {
         fetched = await fetchShoppingProductsByProductIds(gqlEnv, advertiserId, wantIds, {
           batchSize: Math.min(100, Math.max(wantIds.length, 1)),
         });
-        meta.apiRequests += (fetched.pageLog || []).length || 1;
+        row.apiRequests += (fetched.pageLog || []).length || 1;
         if (fetched.ok) {
           modeUsed = REFRESH_MODE.PRODUCT_IDS;
         } else {
-          productIdsFallbackCount += 1;
+          row.productIdsFallback = true;
           fetched = await fetchAllShoppingProductsForPartner(gqlEnv, advertiserId, {
             pageSize,
             maxPages,
             stopAfterCount: pageSize * maxPages,
             resumeOffset,
           });
-          meta.apiRequests += Math.max(1, Number(fetched.pages) || 1);
+          row.apiRequests += Math.max(1, Number(fetched.pages) || 1);
           modeUsed = REFRESH_MODE.SCAN_WINDOW;
-          usedProductIdsMode = false;
         }
       } else {
         fetched = await fetchAllShoppingProductsForPartner(gqlEnv, advertiserId, {
@@ -610,9 +656,42 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
           stopAfterCount: pageSize * maxPages,
           resumeOffset,
         });
-        meta.apiRequests += Math.max(1, Number(fetched.pages) || 1);
+        row.apiRequests += Math.max(1, Number(fetched.pages) || 1);
       }
+      row.fetched = fetched;
+      row.modeUsed = modeUsed;
+    } catch (e) {
+      row.throwError = e;
+    }
+    return row;
+  });
 
+  // Phase 2: sequential merge into maps/checkpoints (deterministic, race-free).
+  for (const row of fetchRows) {
+    const {
+      advertiserId,
+      want,
+      wantIds,
+      prevCp,
+      resumeOffset,
+      fetched,
+      modeUsed,
+      productIdsFallback,
+      apiRequests,
+      throwError,
+    } = row;
+    scannedAdvertisers.add(advertiserId);
+    meta.apiRequests += apiRequests || 0;
+    if (productIdsFallback) {
+      productIdsFallbackCount += 1;
+      usedProductIdsMode = false;
+    }
+    if (throwError) {
+      meta.errors += 1;
+      errorAdvertisers.add(advertiserId);
+      continue;
+    }
+    try {
       if (!fetched.ok && !(fetched.resultList || []).length) {
         meta.errors += 1;
         errorAdvertisers.add(advertiserId);
