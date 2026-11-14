@@ -30,6 +30,7 @@ import {
   CJ_PRODUCT_SEARCH_MAX_LIMIT,
   CJ_PRODUCT_SEARCH_OFFSET_FIRST,
   CJ_PRODUCT_SEARCH_PAGE_SIZE_DEFAULT,
+  clampProductSearchLimit,
   fetchAllShoppingProductsForPartner,
   fetchShoppingProductsByProductIds,
   inventoryShoppingProductFeedsForPartner,
@@ -561,8 +562,11 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
   const matchedKeys = new Set();
   const scannedAdvertisers = new Set();
   const errorAdvertisers = new Set();
-  const pageSize = Math.min(100, Number(opts.pageSize) || 100);
+  // V51.8-perf: honor CJ documented page size (default 1000, max 10000). Do not hard-cap at 100.
+  const pageSize = clampProductSearchLimit(opts.pageSize != null ? opts.pageSize : 1000, 1000);
   const maxPages = Math.min(20, Number(opts.maxPages) || 5);
+  meta.pageSize = pageSize;
+  meta.maxPages = maxPages;
   if (!pat || !publisherCid || keys.length === 0) {
     meta.skippedNoCredentials = !pat || !publisherCid;
     const ledger = buildRefreshCoverageLedger({
@@ -1225,8 +1229,8 @@ export async function sampleProductsForManagedPartners(opts = {}) {
   // Presentation/runtime budget (not API source cap). 0 = unlimited (unsafe for huge feeds in one JSON).
   const publishPerPartner = Number.isFinite(rawPublish) && rawPublish > 0 ? Math.floor(rawPublish) : 0;
   const keepFullSourceRows = opts.keepFullSourceRows === true || env.IU_CJ_OFFERS_KEEP_SOURCE_ROWS === "1";
-  const inventoryFeeds = opts.inventoryFeeds === true || env.IU_CJ_OFFERS_INVENTORY_FEEDS === "1";
-  const inventoryProgressive =
+  let inventoryFeeds = opts.inventoryFeeds === true || env.IU_CJ_OFFERS_INVENTORY_FEEDS === "1";
+  let inventoryProgressive =
     !inventoryFeeds &&
     (opts.inventoryFeedsProgressive === true || env.IU_CJ_OFFERS_INVENTORY_FEEDS_PROGRESSIVE === "1");
   const progressiveLimitRaw =
@@ -1245,6 +1249,25 @@ export async function sampleProductsForManagedPartners(opts = {}) {
   const prevFeedInventory =
     opts.prevFeedInventory ||
     (fs.existsSync(feedInventoryPath) ? readJson(feedInventoryPath, null) : null);
+  // V51.8-perf: when durable inventory already covers all active partners, do not re-scan all 195 on daily-full.
+  // Still retries ERROR/INCOMPLETE via progressive selection (no partner drop).
+  const inventoryReuseFresh =
+    opts.inventoryReuseFresh === true || env.IU_CJ_OFFERS_INVENTORY_REUSE_FRESH === "1";
+  let inventoryReusedFresh = false;
+  if (inventoryFeeds && inventoryReuseFresh) {
+    const reuseProbe = selectPartnersForProgressiveInventory(partners, prevFeedInventory, {
+      limit: progressiveLimit,
+      retryErrors: true,
+    });
+    if (
+      Number(reuseProbe.needingInventory || 0) === 0 &&
+      Number(reuseProbe.alreadyInventoried || 0) > 0
+    ) {
+      inventoryFeeds = false;
+      inventoryProgressive = true;
+      inventoryReusedFresh = true;
+    }
+  }
   const checkpointPath =
     opts.checkpointPath ||
     (env.IU_CJ_PRODUCT_FEED_CHECKPOINT_PATH
@@ -1298,6 +1321,7 @@ export async function sampleProductsForManagedPartners(opts = {}) {
     feedDeclaredProductCount: 0,
     inventoryMode: inventoryFeeds ? "full" : inventoryProgressive ? "progressive" : "disabled",
     inventoryProgressiveLimit: inventoryProgressive ? progressiveLimit : null,
+    inventoryReusedFresh,
     inventoryPartnersSelected: 0,
     inventoryPartnersRemaining: null,
     continuationSamples: [],
@@ -2227,7 +2251,7 @@ export async function runOffersLiveSync(opts = {}) {
       env,
       prevPublic: refreshTargetDoc,
       websitePid: WEBSITE_PID,
-      pageSize: Number.isFinite(refreshPageSize) ? refreshPageSize : 100,
+      pageSize: Number.isFinite(refreshPageSize) ? refreshPageSize : 1000,
       maxPages: Number.isFinite(refreshMaxPages) ? refreshMaxPages : 5,
       refreshCheckpointPath: opts.refreshCheckpointPath,
     });
@@ -2239,7 +2263,7 @@ export async function runOffersLiveSync(opts = {}) {
     refreshMeta = {
       ...(refreshed.meta || {}),
       mode: env.IU_CJ_OFFERS_MODE || null,
-      refreshPageSize: Number.isFinite(refreshPageSize) ? refreshPageSize : 100,
+      refreshPageSize: Number.isFinite(refreshPageSize) ? refreshPageSize : 1000,
       refreshMaxPages: Number.isFinite(refreshMaxPages) ? refreshMaxPages : 5,
       coverageSummary: refreshed.meta?.coverage || null,
       refreshTarget: "final_published_catalog",
