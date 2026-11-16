@@ -16,6 +16,9 @@ on:
       - Pages deploy after data PR merge
       - After-merge articles freshness (prod)
       - Update CHMI CAP v2
+      # V51.8: after CJ catalog sync finishes (incl. promote job), re-check offers freshness on main vs prod.
+      # Name must match workflow `name:` exactly (repo uses "?" glyph in title).
+      - CJ Affiliate catalog sync (fetch ? publish)
     types:
       - completed
 
