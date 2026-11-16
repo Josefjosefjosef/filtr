@@ -1434,6 +1434,17 @@ jobs:
           done
           # Refuse to stage zero-byte JSON (would brick schedule promote).
           find projects/data -name 'iu-affiliate-cj-*.json' -size 0 -delete || true
+          # V51.8: GitHub rejects blobs >100MB (GH001). Fail closed before push.
+          # Compact minify is done in offers-live-sync; this gate blocks accidental oversize.
+          for f in projects/data/iu-affiliate-cj-*.json; do
+            [ -f "$f" ] || continue
+            sz=$(wc -c < "$f" | tr -d ' ')
+            echo "PRESTAGE_BLOB ${f} bytes=${sz}"
+            if [ "${sz}" -gt 99000000 ]; then
+              echo "BLOCKER=GIT_BLOB_OVER_GITHUB_LIMIT file=${f} bytes=${sz}"
+              exit 1
+            fi
+          done
           git add projects/data/iu-affiliate-cj-*.json
           if git diff --cached --quiet; then
             echo "NO_CHECKPOINT_CHANGES"
@@ -1508,6 +1519,17 @@ jobs:
             elif [ -s "${STASH}/prev/${f}" ]; then cp "${STASH}/prev/${f}" "projects/data/${f}"; fi
           done
           find projects/data -name 'iu-affiliate-cj-*.json' -size 0 -delete || true
+          # V51.8: GitHub rejects blobs >100MB (GH001). Fail closed before push.
+          # offers-live-sync writes minified+compact durable catalog (~86MB for 74k ids).
+          for f in projects/data/iu-affiliate-cj-*.json; do
+            [ -f "$f" ] || continue
+            sz=$(wc -c < "$f" | tr -d ' ')
+            echo "PRESTAGE_BLOB ${f} bytes=${sz}"
+            if [ "${sz}" -gt 99000000 ]; then
+              echo "BLOCKER=GIT_BLOB_OVER_GITHUB_LIMIT file=${f} bytes=${sz}"
+              exit 1
+            fi
+          done
           git add projects/data/iu-affiliate-cj-*.json
           if git diff --cached --quiet; then
             echo "NO_OFFERS_CHANGES"

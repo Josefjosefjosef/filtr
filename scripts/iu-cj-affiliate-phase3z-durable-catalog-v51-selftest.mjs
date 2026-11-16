@@ -12,6 +12,9 @@ import {
   normalizePublicationAvailability,
   publicationEligibilityFromAvailability,
   applyAvailabilityPublicationHolds,
+  compactDurableCatalogForGitTip,
+  normalizeDurableCatalogEntry,
+  DURABLE_CATALOG_GIT_HARD_MAX_BYTES,
 } from "./iu-cj-affiliate-phase3z-durable-catalog-v51.mjs";
 import { PUBLICATION_ELIGIBILITY } from "./iu-cj-affiliate-phase3z-publication-lkg-v51-8.mjs";
 
@@ -277,6 +280,25 @@ assert(
   "availability change to oos holds"
 );
 
+// V51.8 git tip compact: identities preserved; bloated keys stripped; under hard max.
+{
+  const bloated = JSON.parse(JSON.stringify(merged.doc));
+  bloated.products["1|b"].accidentalHuge = "x".repeat(5000);
+  bloated.products["1|b"].publicationEligibility = PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD;
+  bloated.products["1|b"].lkgPublicHold = true;
+  bloated.products["1|b"].publicOffer = false;
+  bloated.products["1|b"].imageUrl = "https://example.com/" + "img/".repeat(200);
+  const compacted = compactDurableCatalogForGitTip(bloated, {
+    softMaxBytes: 2500,
+    hardMaxBytes: DURABLE_CATALOG_GIT_HARD_MAX_BYTES,
+  });
+  assert(compacted.ok === true, "compact under hard max");
+  assert(Object.keys(compacted.doc.products).length === Object.keys(bloated.products).length, "no identity loss");
+  assert(compacted.doc.products["1|b"].accidentalHuge == null, "bloated key stripped");
+  assert(normalizeDurableCatalogEntry({ a: 1, advertiserId: "1" }).a == null, "whitelist drops unknown");
+  assert(compacted.bytes <= DURABLE_CATALOG_GIT_HARD_MAX_BYTES, "bytes hard gate");
+}
+
 console.log(
   JSON.stringify({
     IU_CJ_DURABLE_CATALOG_V51_SELFTEST: "PASS",
@@ -288,5 +310,6 @@ console.log(
     gates: gates.reason,
     availabilityRemediation: remGate.reason,
     availabilityHoldApplied: held.held,
+    compactGitTip: "PASS",
   })
 );
