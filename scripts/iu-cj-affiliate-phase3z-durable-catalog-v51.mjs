@@ -79,6 +79,42 @@ export function publicationEligibilityFromAvailability(raw, currentEligibility, 
 export const DURABLE_CATALOG_SCHEMA = "iu-cj-affiliate-phase3z-durable-catalog-v51";
 export const DURABLE_CATALOG_REL = "projects/data/iu-affiliate-cj-durable-catalog-v51.json";
 
+/** GitHub hard blob limit is 100 MiB; keep soft headroom for growth. */
+export const DURABLE_CATALOG_GIT_SOFT_MAX_BYTES = 95 * 1024 * 1024;
+export const DURABLE_CATALOG_GIT_HARD_MAX_BYTES = 99 * 1024 * 1024;
+
+/** Whitelist — never persist unknown keys via ...prev accumulation. */
+export const DURABLE_CATALOG_ENTRY_KEYS = [
+  "advertiserId",
+  "productId",
+  "partnerName",
+  "sectionKey",
+  "title",
+  "imageUrl",
+  "currentPrice",
+  "originalPrice",
+  "currency",
+  "availability",
+  "availabilityClass",
+  "affiliateUrl",
+  "feedId",
+  "catalogStatus",
+  "publicationEligibility",
+  "publicOffer",
+  "lkgPublicHold",
+  "hideAsCurrent",
+  "lastSourceMatchAt",
+  "priceVerifiedAt",
+  "availabilityVerifiedAt",
+  "affiliateUrlVerifiedAt",
+  "lastSuccessfulRefreshAt",
+  "sourceFreshLabelForbidden",
+  "freshnessStatus",
+  "freshnessReason",
+  "updatedAt",
+  "publicationReady",
+];
+
 export function emptyDurableCatalog(nowIso = new Date().toISOString()) {
   return {
     schema: DURABLE_CATALOG_SCHEMA,
@@ -91,6 +127,139 @@ export function emptyDurableCatalog(nowIso = new Date().toISOString()) {
       blocked: 0,
       confirmedRemoved: 0,
     },
+  };
+}
+
+/**
+ * Normalize one durable entry to the whitelist (drop accidental bloated keys).
+ */
+export function normalizeDurableCatalogEntry(entry) {
+  if (!entry || typeof entry !== "object") return null;
+  const out = {};
+  for (const k of DURABLE_CATALOG_ENTRY_KEYS) {
+    if (Object.prototype.hasOwnProperty.call(entry, k) && entry[k] !== undefined) {
+      out[k] = entry[k];
+    }
+  }
+  return out;
+}
+
+function isPublicationHoldOrBlocked(entry) {
+  const elig = entry?.publicationEligibility;
+  return (
+    elig === PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD ||
+    elig === PUBLICATION_ELIGIBILITY.PUBLICATION_BLOCKED ||
+    entry?.lkgPublicHold === true ||
+    entry?.publicOffer === false
+  );
+}
+
+/**
+ * Minified JSON for git tip (pretty-print alone pushed a 74k catalog over 100MB).
+ */
+export function serializeDurableCatalog(doc) {
+  return JSON.stringify(doc) + "\n";
+}
+
+/**
+ * Compact durable catalog for git tip under GitHub 100MB limit.
+ * Never drops product identities. Progressive strip of presentation-only fields
+ * on HOLD/BLOCKED rows when soft budget is exceeded.
+ */
+export function compactDurableCatalogForGitTip(doc, opts = {}) {
+  const softMax = Math.max(
+    1,
+    Number(opts.softMaxBytes) || DURABLE_CATALOG_GIT_SOFT_MAX_BYTES
+  );
+  const hardMax = Math.max(
+    softMax,
+    Number(opts.hardMaxBytes) || DURABLE_CATALOG_GIT_HARD_MAX_BYTES
+  );
+  const actions = [];
+  const next = {
+    schema: DURABLE_CATALOG_SCHEMA,
+    updatedAt: doc?.updatedAt || new Date().toISOString(),
+    products: {},
+    stats: doc?.stats || null,
+    lastMerge: doc?.lastMerge || null,
+  };
+  if (doc?.compactMeta) next.compactMeta = doc.compactMeta;
+  for (const [key, raw] of Object.entries(doc?.products || {})) {
+    const n = normalizeDurableCatalogEntry(raw);
+    if (n) next.products[key] = n;
+  }
+  if (!next.stats) next.stats = summarizeDurableCatalog(next);
+
+  let payload = serializeDurableCatalog(next);
+  let bytes = Buffer.byteLength(payload, "utf8");
+  actions.push({ step: "minify_whitelist", bytes });
+
+  if (bytes > softMax) {
+    let strippedImages = 0;
+    for (const p of Object.values(next.products)) {
+      if (!isPublicationHoldOrBlocked(p)) continue;
+      if (p.imageUrl != null) {
+        delete p.imageUrl;
+        strippedImages += 1;
+      }
+    }
+    payload = serializeDurableCatalog(next);
+    bytes = Buffer.byteLength(payload, "utf8");
+    actions.push({ step: "strip_hold_imageUrl", strippedImages, bytes });
+  }
+
+  if (bytes > softMax) {
+    let collapsedTs = 0;
+    for (const p of Object.values(next.products)) {
+      if (!isPublicationHoldOrBlocked(p)) continue;
+      if (p.priceVerifiedAt != null || p.availabilityVerifiedAt != null || p.affiliateUrlVerifiedAt != null) {
+        delete p.priceVerifiedAt;
+        delete p.availabilityVerifiedAt;
+        delete p.affiliateUrlVerifiedAt;
+        collapsedTs += 1;
+      }
+    }
+    payload = serializeDurableCatalog(next);
+    bytes = Buffer.byteLength(payload, "utf8");
+    actions.push({ step: "collapse_hold_extra_timestamps", collapsedTs, bytes });
+  }
+
+  if (bytes > softMax) {
+    let strippedTitles = 0;
+    for (const p of Object.values(next.products)) {
+      if (!isPublicationHoldOrBlocked(p)) continue;
+      if (p.title != null) {
+        delete p.title;
+        strippedTitles += 1;
+      }
+    }
+    payload = serializeDurableCatalog(next);
+    bytes = Buffer.byteLength(payload, "utf8");
+    actions.push({ step: "strip_hold_title", strippedTitles, bytes });
+  }
+
+  next.compactMeta = {
+    at: next.updatedAt,
+    softMaxBytes: softMax,
+    hardMaxBytes: hardMax,
+    bytes,
+    underSoft: bytes <= softMax,
+    underHard: bytes <= hardMax,
+    actions,
+  };
+  payload = serializeDurableCatalog(next);
+  bytes = Buffer.byteLength(payload, "utf8");
+  next.compactMeta.bytes = bytes;
+  next.compactMeta.underSoft = bytes <= softMax;
+  next.compactMeta.underHard = bytes <= hardMax;
+
+  return {
+    doc: next,
+    payload,
+    bytes,
+    ok: bytes <= hardMax,
+    softOk: bytes <= softMax,
+    actions,
   };
 }
 
@@ -134,9 +303,15 @@ export function mergeIntoDurableCatalog(priorDoc, sourceRows, opts = {}) {
         ? opts.livePublicKeys
         : new Set(opts.livePublicKeys || []);
 
-  const doc = priorDoc?.products
-    ? JSON.parse(JSON.stringify(priorDoc))
-    : emptyDurableCatalog(nowIso);
+  const doc = emptyDurableCatalog(nowIso);
+  if (priorDoc?.products) {
+    for (const [k, raw] of Object.entries(priorDoc.products)) {
+      const n = normalizeDurableCatalogEntry(raw);
+      if (n) doc.products[k] = n;
+    }
+    if (priorDoc.stats) doc.stats = priorDoc.stats;
+    if (priorDoc.lastMerge) doc.lastMerge = priorDoc.lastMerge;
+  }
   doc.schema = DURABLE_CATALOG_SCHEMA;
   doc.updatedAt = nowIso;
   if (!doc.products) doc.products = {};
@@ -166,8 +341,8 @@ export function mergeIntoDurableCatalog(priorDoc, sourceRows, opts = {}) {
     eligibility = availGate.eligibility;
     const price = row.currentPrice ?? prev.currentPrice ?? null;
     const heldForAvailability = Boolean(availGate.availabilityHoldReason);
-    doc.products[key] = {
-      ...prev,
+    // Whitelist-only write — never ...prev (prevents accidental key bloat → git 100MB).
+    doc.products[key] = normalizeDurableCatalogEntry({
       advertiserId: adv,
       productId: pid,
       partnerName: row.partnerName || prev.partnerName || null,
@@ -198,7 +373,7 @@ export function mergeIntoDurableCatalog(priorDoc, sourceRows, opts = {}) {
         : "DURABLE_CATALOG_SOURCE_UPSERT",
       updatedAt: nowIso,
       publicationReady: true,
-    };
+    });
     upserted += 1;
   }
 

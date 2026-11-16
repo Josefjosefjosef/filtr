@@ -107,6 +107,8 @@ import {
   evaluatePublicPopulationGates,
   applyAvailabilityPublicationHolds,
   publicationEligibilityFromAvailability,
+  compactDurableCatalogForGitTip,
+  DURABLE_CATALOG_GIT_HARD_MAX_BYTES,
 } from "./iu-cj-affiliate-phase3z-durable-catalog-v51.mjs";
 import {
   buildProductFunnelDocument,
@@ -2918,19 +2920,33 @@ export async function runOffersLiveSync(opts = {}) {
       staleAfterHours: Number(env.IU_CJ_OFFERS_LKG_STALE_HOURS) || 72,
       livePublicKeys,
     });
-    fs.writeFileSync(
-      durableCatalogPathEarly,
-      JSON.stringify(durableMerge.doc, null, 2) + "\n",
-      "utf8"
-    );
+    // V51.8: pretty JSON + 74k identities exceeded GitHub 100MB → OFFERS_PUSH_FAILED.
+    // Minify + progressive HOLD presentation strip keeps identities; never drop keys.
+    const compacted = compactDurableCatalogForGitTip(durableMerge.doc);
+    if (!compacted.ok) {
+      throw new Error(
+        `DURABLE_CATALOG_OVER_GITHUB_LIMIT bytes=${compacted.bytes} hardMax=${DURABLE_CATALOG_GIT_HARD_MAX_BYTES}`
+      );
+    }
+    fs.writeFileSync(durableCatalogPathEarly, compacted.payload, "utf8");
     durableCatalogMeta = {
       ok: true,
       path: "projects/data/iu-affiliate-cj-durable-catalog-v51.json",
-      bytes: fs.statSync(durableCatalogPathEarly).size,
+      bytes: compacted.bytes,
+      softOk: compacted.softOk,
+      compactActions: compacted.actions,
       stats: durableMerge.stats,
       lastMerge: durableMerge.doc.lastMerge || null,
     };
-    console.log(JSON.stringify({ IU_CJ_DURABLE_CATALOG_WRITE: "OK", ...durableCatalogMeta.stats }));
+    console.log(
+      JSON.stringify({
+        IU_CJ_DURABLE_CATALOG_WRITE: "OK",
+        bytes: compacted.bytes,
+        softOk: compacted.softOk,
+        compactActions: compacted.actions,
+        ...durableCatalogMeta.stats,
+      })
+    );
   } catch (e) {
     durableCatalogMeta = {
       ok: false,
