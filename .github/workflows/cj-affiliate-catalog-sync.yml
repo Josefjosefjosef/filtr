@@ -205,6 +205,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-map-pool-v51-8-selftest.mjs
       - name: Page-size perf + throttle + inventory-reuse selftest (V51.8-perf; offline)
         run: node scripts/iu-cj-affiliate-phase3z-page-size-perf-v51-8-selftest.mjs
+      - name: Pages closeout wait budget + deferred fallback selftest (V51.8; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-pages-closeout-v51-8-selftest.mjs
       - name: Reverify freshness policy + UNKNOWN priority selftest (V51.8; offline)
         run: node scripts/iu-cj-affiliate-phase3z-reverify-freshness-policy-v51-8-selftest.mjs
       - name: Partner lifecycle JOINED/ENDED/REJOINED selftest (V51.8; offline)
@@ -1560,7 +1562,8 @@ jobs:
       (github.event_name == 'workflow_dispatch' &&
        (inputs.arm_offers_live == '1' || inputs.promote_offers_public == '1'))
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # V51.8 closeout: required smoke often exceeds 20m; wait+dispatch must outlive auto-merge CI.
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
         with:
@@ -1725,6 +1728,7 @@ jobs:
           echo "[AUTO-MERGE] Enabled for offers promote PR #$NUM"
       # V51.8-final: GITHUB_TOKEN merge does NOT fire pull_request_target → pages-on-data-pr-merge.
       # Wait for MERGED then dispatch pages.yml from this job (same pattern as articles closeout).
+      # Budget: 180×20s ≈ 60m — must exceed typical required smoke (~25–40m), within job timeout 90m.
       - name: Wait for offers promote merge then dispatch Pages
         if: steps.offers_pr.outputs.opened == 'true' && steps.offers_scope.outputs.data_only == 'true'
         shell: bash
@@ -1735,8 +1739,10 @@ jobs:
         run: |
           set -euo pipefail
           echo "[CLOSEOUT] Waiting for offers promote PR #${NUM} to MERGED"
+          echo "CLOSEOUT_POLL_MAX=180"
+          echo "CLOSEOUT_POLL_SLEEP_SEC=20"
           MERGED=0
-          for i in $(seq 1 60); do
+          for i in $(seq 1 180); do
             STATE=$(gh pr view "$NUM" --json state -q .state 2>/dev/null || echo "UNKNOWN")
             echo "[CLOSEOUT] poll=${i} state=${STATE}"
             if [ "$STATE" = "MERGED" ]; then
@@ -1747,13 +1753,17 @@ jobs:
               echo "[CLOSEOUT] PR closed without merge — skip pages dispatch"
               exit 0
             fi
-            sleep 15
+            sleep 20
           done
           if [ "$MERGED" != "1" ]; then
-            echo "[CLOSEOUT] soft-timeout waiting for merge — pages cron/fallback may still publish"
+            echo "CLOSEOUT_DEFERRED=true"
+            echo "[CLOSEOUT] soft-timeout waiting for merge — dispatching pages-publish-from-main-data fallback"
+            gh workflow run pages-publish-from-main-data.yml --ref main --repo "$REPO" || true
+            echo "[CLOSEOUT] Fallback dispatched; cron */5 will retry if still stale after merge"
             exit 0
           fi
           MERGE_SHA=$(gh pr view "$NUM" --json mergeCommit -q .mergeCommit.oid)
           echo "[CLOSEOUT] merged_sha=${MERGE_SHA}"
           gh workflow run pages.yml --ref main --repo "$REPO"
+          echo "CLOSEOUT_PAGES_DISPATCHED=true"
           echo "[CLOSEOUT] Dispatched pages.yml after offers promote #${NUM}"
