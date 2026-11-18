@@ -1222,6 +1222,19 @@ export async function sampleProductsForManagedPartners(opts = {}) {
     maxPagesPerPartner,
     Math.min(500, Number.isFinite(rawDeepen) ? Math.floor(rawDeepen) : maxPagesPerPartner)
   );
+  // Cap how many partners receive deepen pages per run; remainder continues via checkpoint next slot.
+  const rawDeepenBudget =
+    opts.deepenPartnerBudget != null
+      ? Number(opts.deepenPartnerBudget)
+      : env.IU_CJ_OFFERS_DEEPEN_PARTNER_BUDGET != null &&
+          String(env.IU_CJ_OFFERS_DEEPEN_PARTNER_BUDGET).trim() !== ""
+        ? Number(env.IU_CJ_OFFERS_DEEPEN_PARTNER_BUDGET)
+        : 32;
+  const deepenPartnerBudget = Math.max(
+    0,
+    Math.min(500, Number.isFinite(rawDeepenBudget) ? Math.floor(rawDeepenBudget) : 32)
+  );
+  let deepenPartnersUsed = 0;
   const rawPublish = opts.publishPerPartner != null
     ? Number(opts.publishPerPartner)
     : env.IU_CJ_OFFERS_PRODUCT_PUBLISH_PER_PARTNER != null &&
@@ -1295,6 +1308,10 @@ export async function sampleProductsForManagedPartners(opts = {}) {
     partnerLimit: partnerLimit > 0 ? partnerLimit : null,
     pageSize,
     maxPagesPerPartner,
+    deepenIncompleteMaxPages,
+    deepenPartnerBudget,
+    deepenPartnersUsed: 0,
+    deepenPartnersDeferred: 0,
     publishPerPartner: publishPerPartner || null,
     keepFullSourceRows,
     perPartner: pageSize,
@@ -1509,17 +1526,30 @@ export async function sampleProductsForManagedPartners(opts = {}) {
       partnerMeta.resumeOffset = resumeOffset;
       partnerMeta.resumePagePresent = Boolean(resumePage);
       // V46/V51.8-c2: deepen incomplete partners; presentation slice still caps published rows.
-      const needsDeepen =
+      // V51.8 (18.11): deepenPartnerBudget prevents unbounded GAP_DEEPEN × pageSize=1000 load.
+      let needsDeepen =
         prevCp.lastStoppedEarlyForBudget === true ||
         (prevCp.lastComplete !== true && Number(prevCp.lastTotalCount || 0) > 0) ||
         Number(prevCp.productsRemainingEstimate || 0) > pageSize * maxPagesPerPartner ||
         feedScoped === true ||
         ceilingStuck === true ||
         staleStuck === true;
+      if (
+        needsDeepen &&
+        deepenIncompleteMaxPages > maxPagesPerPartner &&
+        deepenPartnerBudget > 0 &&
+        deepenPartnersUsed >= deepenPartnerBudget
+      ) {
+        needsDeepen = false;
+        partnerMeta.deepenDeferredBudget = true;
+      }
       const partnerMaxPages = needsDeepen ? deepenIncompleteMaxPages : maxPagesPerPartner;
       const stopAfter = pageSize * partnerMaxPages;
       partnerMeta.maxPagesBudget = partnerMaxPages;
       partnerMeta.deepenedIncomplete = needsDeepen && partnerMaxPages > maxPagesPerPartner;
+      if (partnerMeta.deepenedIncomplete) deepenPartnersUsed += 1;
+      if (partnerMeta.deepenDeferredBudget) meta.deepenPartnersDeferred += 1;
+      meta.deepenPartnersUsed = deepenPartnersUsed;
       const fetched = await fetchAllShoppingProductsForPartner(gqlEnv, partnerId, {
         pageSize,
         maxPages: partnerMaxPages,
@@ -2855,6 +2885,9 @@ export async function runOffersLiveSync(opts = {}) {
       feedsComplete: incompleteAdvertisers.size === 0,
       maxChurnRatio: Number(env.IU_CJ_OFFERS_MAX_IDENTITY_CHURN_RATIO) || 0.25,
       maxGrowthAbs: Number(env.IU_CJ_OFFERS_MAX_LKG_GROWTH_ABS) || 500,
+      // After applyPublicGrowthBudget — window net must not block DEFERRED_NEW-absorbed runs.
+      growthBudgetApplied: true,
+      publicEligibleNetGrowth: nextPublicEligibleN - prevPublicEligibleN,
     });
     lkgGrowthGate = evaluateLkgGrowthGate(
       publicationDelta?.prevUnique || 0,

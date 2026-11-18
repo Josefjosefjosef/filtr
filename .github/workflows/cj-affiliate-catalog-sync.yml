@@ -191,6 +191,10 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-catalog-fairness-v51-8-selftest.mjs
       - name: Publication LKG merge + shrinkage gate selftest (V51.8-c2; offline)
         run: node scripts/iu-cj-affiliate-phase3z-publication-lkg-v51-8-selftest.mjs
+      - name: Fetch-staging retry + partial outage selftest (V51.8; offline)
+        run: node scripts/iu-cj-affiliate-catalog-sync-fetch-retry-v51-8-selftest.mjs
+      - name: Durable R2 migration plan validator (V51.8; offline; PLAN_ONLY)
+        run: node scripts/iu-cj-affiliate-phase3z-durable-r2-migration-plan-v51-8.mjs
       - name: Uncapped growth readiness + identity reconcile selftest (V51.8; offline; does NOT arm uncapped)
         run: node scripts/iu-cj-affiliate-phase3z-uncapped-growth-readiness-v51-8-selftest.mjs
       - name: INVALID_FEED case audit selftest (V51.8; offline)
@@ -821,6 +825,8 @@ jobs:
       # Base pages: light refresh=2, full/daily=8. Incomplete partners deepen via IU_CJ_OFFERS_DEEPEN_INCOMPLETE_MAX_PAGES.
       IU_CJ_OFFERS_PRODUCT_MAX_PAGES: ${{ (github.event_name == 'schedule' && github.event.schedule != '17 3 * * *') && '2' || (github.event_name == 'workflow_dispatch' && inputs.offers_mode == 'refresh_priority' && '2' || '8') }}
       IU_CJ_OFFERS_DEEPEN_INCOMPLETE_MAX_PAGES: ${{ (github.event_name == 'schedule' && github.event.schedule != '17 3 * * *') && '6' || (github.event_name == 'workflow_dispatch' && inputs.offers_mode == 'refresh_priority' && '6' || '20') }}
+      # Fair deepen budget: remainder continues via durable checkpoints next slot (no coverage loss).
+      IU_CJ_OFFERS_DEEPEN_PARTNER_BUDGET: ${{ (github.event_name == 'schedule' && github.event.schedule != '17 3 * * *') && '24' || (github.event_name == 'workflow_dispatch' && inputs.offers_mode == 'refresh_priority' && '24' || '48') }}
       IU_CJ_OFFERS_MAX_UNIQUE_DROP_ABS: "50"
       IU_CJ_OFFERS_MAX_UNIQUE_DROP_RATIO: "0.03"
       # Public growth: absolute 500 + ratio 0.2 remain armed. Uncapped stays DISARMED (never commit "1").

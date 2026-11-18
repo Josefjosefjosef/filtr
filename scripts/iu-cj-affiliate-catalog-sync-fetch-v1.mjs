@@ -32,11 +32,67 @@ function redact(s) {
   return String(s || "").split(pat).join("[REDACTED_PAT]");
 }
 
-async function fetchPagedXml({ baseUrl, queryBase, pat, parseBlocks, parseRecord, kind, maxPages, audit }) {
+function sleepMs(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function retryBackoffMs(attempt, env = process.env) {
+  const base = Math.max(250, Number(env.IU_CJ_SYNC_FETCH_RETRY_BASE_MS) || 1000);
+  const cap = Math.max(base, Number(env.IU_CJ_SYNC_FETCH_RETRY_CAP_MS) || 15000);
+  const exp = Math.min(cap, base * Math.pow(2, Math.max(0, attempt)));
+  const jitter = Math.floor(Math.random() * Math.min(750, Math.floor(exp * 0.25) + 1));
+  return Math.min(cap, exp + jitter);
+}
+
+function isRetryableFetchFailure(res) {
+  if (!res) return true;
+  if (res.networkError) return true;
+  const status = Number(res.status) || 0;
+  if (status === 429) return true;
+  if (status >= 500 && status <= 599) return true;
+  if (status === 0) return true;
+  return false;
+}
+
+async function cjGetWithRetry(url, pat, { kind, page, audit, env = process.env } = {}) {
+  const maxAttempts = Math.max(1, Math.min(6, Number(env.IU_CJ_SYNC_FETCH_RETRY_MAX) || 4));
+  let last = null;
+  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+    const res = await cjGet(url, pat);
+    last = res;
+    audit.http.push({
+      kind,
+      page,
+      attempt: attempt + 1,
+      status: res.status,
+      ok: res.ok,
+      networkError: Boolean(res.networkError),
+      authReason: res.auth?.reason || null,
+      retryable: isRetryableFetchFailure(res),
+    });
+    if (res.ok && !res.networkError) return res;
+    if (res.status === 401 || res.status === 403) return res;
+    if (!isRetryableFetchFailure(res)) return res;
+    if (attempt + 1 >= maxAttempts) break;
+    const wait = retryBackoffMs(attempt, env);
+    audit.http.push({
+      kind,
+      page,
+      attempt: attempt + 1,
+      event: "retry_backoff",
+      waitMs: wait,
+    });
+    await sleepMs(wait);
+  }
+  return last;
+}
+
+async function fetchPagedXml({ baseUrl, queryBase, pat, parseBlocks, parseRecord, kind, maxPages, audit, env }) {
   const records = [];
   let page = 1;
   let totalMatched = null;
   const limit = Math.max(1, Math.min(60, Number(maxPages) || 40));
+  const runEnv = env || process.env;
 
   while (page <= limit) {
     const url =
@@ -47,15 +103,7 @@ async function fetchPagedXml({ baseUrl, queryBase, pat, parseBlocks, parseRecord
       page +
       "&records-per-page=" +
       CJ_DEFAULT_RECORDS_PER_PAGE;
-    const res = await cjGet(url, pat);
-    audit.http.push({
-      kind,
-      page,
-      status: res.status,
-      ok: res.ok,
-      networkError: Boolean(res.networkError),
-      authReason: res.auth?.reason || null,
-    });
+    const res = await cjGetWithRetry(url, pat, { kind, page, audit, env: runEnv });
     if (res.networkError) {
       return { ok: false, reason: "network_error", records, totalMatched, incomplete: true };
     }
@@ -139,6 +187,7 @@ export async function runCatalogSyncFetch(opts = {}) {
         kind: "advertiser_lookup_joined",
         maxPages: maxAdvPages,
         audit,
+        env,
       });
       if (!adv.ok) {
         apiOutage = true;
@@ -176,6 +225,7 @@ export async function runCatalogSyncFetch(opts = {}) {
           kind: "advertiser_lookup_confirm_ids",
           maxPages: Math.min(5, maxAdvPages),
           audit,
+          env,
         });
         audit.confirmAdvertiserIds = confirmIds;
         if (conf.ok) {
@@ -202,6 +252,7 @@ export async function runCatalogSyncFetch(opts = {}) {
         kind: "link_search_coupon_joined",
         maxPages: maxLinkPages,
         audit,
+        env,
       });
       const lsText = await fetchPagedXml({
         baseUrl: CJ_LINK_SEARCH_BASE,
@@ -216,14 +267,22 @@ export async function runCatalogSyncFetch(opts = {}) {
         kind: "link_search_text_joined",
         maxPages: maxLinkPages,
         audit,
+        env,
       });
+      // V51.8: one link stream can fail transiently while the other succeeds with valid rows
+      // (run 43855141956: 195 advertisers + 715 links still marked apiOutage). Fail-closed only
+      // when BOTH streams fail or advertiser lookup failed; otherwise mark incompleteStreams.
+      const incompleteStreams = [];
       if (!lsCoupon.ok) {
-        apiOutage = true;
+        incompleteStreams.push("link_search_coupon:" + lsCoupon.reason);
         audit.errors.push("link_search_coupon:" + lsCoupon.reason);
       }
       if (!lsText.ok) {
-        apiOutage = true;
+        incompleteStreams.push("link_search_text:" + lsText.reason);
         audit.errors.push("link_search_text:" + lsText.reason);
+      }
+      if (!lsCoupon.ok && !lsText.ok) {
+        apiOutage = true;
       }
       if (lsCoupon.ok || lsText.ok) {
         const byId = new Map();
@@ -235,6 +294,8 @@ export async function runCatalogSyncFetch(opts = {}) {
         audit.linkTotalMatchedCoupon = lsCoupon.ok ? lsCoupon.totalMatched : null;
         audit.linkTotalMatchedText = lsText.ok ? lsText.totalMatched : null;
         audit.linkTotalMatched = links.length;
+        audit.incompleteStreams = incompleteStreams;
+        audit.fetchComplete = incompleteStreams.length === 0 && !apiOutage;
         if (
           lsCoupon.ok &&
           lsCoupon.emptySuccess &&
@@ -272,6 +333,7 @@ export async function runCatalogSyncFetch(opts = {}) {
           kind: "link_search_probe_advertisers",
           maxPages: Math.min(10, maxLinkPages),
           audit,
+          env,
         });
         audit.probeAdvertiserIds = probeIds;
         if (!lsProbe.ok) {
@@ -301,6 +363,8 @@ export async function runCatalogSyncFetch(opts = {}) {
     generatedAt: new Date().toISOString(),
     websitePid: String(env.IU_CJ_WEBSITE_PID || WEBSITE_PID),
     apiOutage,
+    fetchComplete: audit.fetchComplete !== false && !apiOutage,
+    incompleteStreams: Array.isArray(audit.incompleteStreams) ? audit.incompleteStreams : [],
     advertisers,
     links,
     source: execute ? "cj_api_xml" : "dry_run",

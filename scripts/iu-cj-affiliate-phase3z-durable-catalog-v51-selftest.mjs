@@ -15,6 +15,8 @@ import {
   compactDurableCatalogForGitTip,
   normalizeDurableCatalogEntry,
   DURABLE_CATALOG_GIT_HARD_MAX_BYTES,
+  DURABLE_CATALOG_GIT_SOFT_MAX_BYTES,
+  DURABLE_CATALOG_GIT_WORKFLOW_GATE_BYTES,
 } from "./iu-cj-affiliate-phase3z-durable-catalog-v51.mjs";
 import { PUBLICATION_ELIGIBILITY } from "./iu-cj-affiliate-phase3z-publication-lkg-v51-8.mjs";
 
@@ -297,6 +299,18 @@ assert(
   assert(compacted.doc.products["1|b"].accidentalHuge == null, "bloated key stripped");
   assert(normalizeDurableCatalogEntry({ a: 1, advertiserId: "1" }).a == null, "whitelist drops unknown");
   assert(compacted.bytes <= DURABLE_CATALOG_GIT_HARD_MAX_BYTES, "bytes hard gate");
+  assert(
+    DURABLE_CATALOG_GIT_SOFT_MAX_BYTES < DURABLE_CATALOG_GIT_WORKFLOW_GATE_BYTES,
+    "soft below workflow 99e6 gate"
+  );
+  assert(
+    DURABLE_CATALOG_GIT_HARD_MAX_BYTES < DURABLE_CATALOG_GIT_WORKFLOW_GATE_BYTES,
+    "hard below workflow 99e6 gate"
+  );
+  assert(
+    DURABLE_CATALOG_GIT_SOFT_MAX_BYTES < DURABLE_CATALOG_GIT_HARD_MAX_BYTES,
+    "soft below hard"
+  );
 }
 
 console.log(
