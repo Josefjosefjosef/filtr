@@ -100,6 +100,7 @@ import {
   emptyPublicGrowthBudgetLedger,
   applyCumulativeGrowthLedger,
   resolvePublicGrowthBudgetLedger,
+  isPublicOfferEligible,
 } from "./iu-cj-affiliate-phase3z-publication-lkg-v51-8.mjs";
 import {
   mergeIntoDurableCatalog,
@@ -2701,12 +2702,28 @@ export async function runOffersLiveSync(opts = {}) {
     } catch {
       // miss ledger optional for merge classification
     }
+    // Source-seen keys must be available BEFORE LKG classify so presentation-deferred
+    // identities are NOT_YET_SEEN (carry) instead of SOURCE_STALE (drop).
+    const sourceVerifiedKeys = new Set(productMeta?.sourceVerifiedIdentityKeys || []);
+    for (const sp of sourceProducts || []) {
+      const k = compoundProductKey(sp.advertiserId, sp.productId);
+      if (k !== "|") sourceVerifiedKeys.add(k);
+    }
+    for (const p of products || []) {
+      const k = compoundProductKey(p.advertiserId, p.productId);
+      if (k !== "|") sourceVerifiedKeys.add(k);
+    }
+    for (const r of productMeta?.fetchedIdentityRows || []) {
+      const k = compoundProductKey(r.advertiserId, r.productId);
+      if (k !== "|") sourceVerifiedKeys.add(k);
+    }
     const classifyOpts = {
       incompleteAdvertisers,
       fetchedAdvertisers,
       endedAdvertisers,
       revokedAdvertisers,
       missByKey,
+      sourceSeenKeys: sourceVerifiedKeys,
       nowIso: new Date().toISOString(),
       staleAfterHours: Number(env.IU_CJ_OFFERS_LKG_STALE_HOURS) || 72,
       incompleteHoldAfterHours: Number(env.IU_CJ_OFFERS_LKG_INCOMPLETE_HOLD_HOURS) || 720,
@@ -2728,19 +2745,6 @@ export async function runOffersLiveSync(opts = {}) {
       nextReady = readyCounts(doc);
     }
     // V51.8-c5: attempt HOLD → PUBLICATION_ELIGIBLE when identity is in current source window.
-    const sourceVerifiedKeys = new Set(productMeta?.sourceVerifiedIdentityKeys || []);
-    for (const sp of sourceProducts || []) {
-      const k = compoundProductKey(sp.advertiserId, sp.productId);
-      if (k !== "|") sourceVerifiedKeys.add(k);
-    }
-    for (const p of products || []) {
-      const k = compoundProductKey(p.advertiserId, p.productId);
-      if (k !== "|") sourceVerifiedKeys.add(k);
-    }
-    for (const r of productMeta?.fetchedIdentityRows || []) {
-      const k = compoundProductKey(r.advertiserId, r.productId);
-      if (k !== "|") sourceVerifiedKeys.add(k);
-    }
     const released = releaseLkgHoldsAgainstSource(doc, sourceVerifiedKeys, {
       endedAdvertisers,
       revokedAdvertisers,
@@ -3078,6 +3082,46 @@ export async function runOffersLiveSync(opts = {}) {
       counts: nextReady,
       productMeta,
       rejectReasons: built.rejectReasons,
+    };
+  }
+
+  // V51.8: recompute stats from final sections after LKG/growth/hold mutations.
+  // Without this, stats.products/uniqueProducts stayed inflated vs actual rows
+  // (prod showed 6709 stats vs 2824 section placements after #13933).
+  {
+    const honest = computeHonestOffersStats(doc.sections || [], {
+      crossCategoryOfferPlacements: doc.stats?.crossCategoryOfferPlacements,
+    });
+    const unique = new Set();
+    const uniquePublic = new Set();
+    const lkgUnique = new Set();
+    const lkgHoldUnique = new Set();
+    let productsPublicEligible = 0;
+    for (const sec of doc.sections || []) {
+      for (const p of sec.products || []) {
+        const k = compoundProductKey(p.advertiserId, p.productId);
+        if (k === "|") continue;
+        if (p.lkgCarried === true) lkgUnique.add(k);
+        if (p.lkgPublicHold === true || p.hideAsCurrent === true) lkgHoldUnique.add(k);
+        if (p?.publicationReady === false) continue;
+        unique.add(k);
+        if (isPublicOfferEligible(p)) {
+          productsPublicEligible += 1;
+          uniquePublic.add(k);
+        }
+      }
+    }
+    doc.stats = {
+      ...(doc.stats || {}),
+      ...honest,
+      uniqueProducts: unique.size,
+      productsPublicEligible,
+      uniquePublicEligible: uniquePublic.size,
+      lkgCarriedProducts: lkgUnique.size,
+      lkgPublicHoldProducts: lkgHoldUnique.size,
+      statsSemantics:
+        (honest.statsSemantics || "") +
+        "; uniqueProducts/lkg*=compound advertiserId|productId from final sections after LKG/growth/hold",
     };
   }
 

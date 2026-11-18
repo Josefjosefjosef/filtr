@@ -187,23 +187,25 @@ export function classifyMissingPublishedProduct(prevRow, opts = {}) {
     };
   }
   const ageHours = productAgeHours(product, nowMs);
-  if (ageHours != null && ageHours >= staleAfterHours && !incompleteAdvertisers.has(prevRow.advertiserId)) {
-    return {
-      classId: REMOVAL_CLASS.SOURCE_UNAVAILABLE,
-      carryForward: false,
-      rootCauseVerified: true,
-      publicationClass: "SOURCE_STALE",
-      ageHours,
-      note: "LKG older than stale policy and partner not incomplete — refuse silent price keep.",
-    };
-  }
+  const sourceSeenKeys =
+    opts.sourceSeenKeys instanceof Set
+      ? opts.sourceSeenKeys
+      : new Set(opts.sourceSeenKeys || []);
+  // V51.8 (18.11.2026): publishPerPartner presentation budget defers valid source-fetched
+  // identities. Those must NOT hit SOURCE_STALE just because age≥72h and the partner's
+  // page budget completed — that deleted LIVE in-stock products still present in the feed
+  // (recon: 62/64 unexplained drops were in sourceVerifiedIdentityKeys).
+  const sourceSeenThisRun = sourceSeenKeys.has(key);
+  const partnerIncomplete = incompleteAdvertisers.has(prevRow.advertiserId);
+  const partnerFetched = fetchedAdvertisers.has(prevRow.advertiserId);
   if (
-    incompleteAdvertisers.has(prevRow.advertiserId) ||
-    !fetchedAdvertisers.has(prevRow.advertiserId) ||
+    sourceSeenThisRun ||
+    partnerIncomplete ||
+    !partnerFetched ||
     miss?.decision === "KEEP_PENDING" ||
     miss?.decision === "RECOVERED"
   ) {
-    // Incomplete / not-in-window: keep PUBLICATION_ELIGIBLE (pending reverify).
+    // Incomplete / not-in-window / presentation-deferred: keep PUBLICATION_ELIGIBLE (pending reverify).
     // Age past staleAfterHours must forbid CURRENT labels, but must NOT force HOLD at 72h —
     // otherwise presentation rotation permanently collapses LIVE via PUBLIC_SHRINKAGE_REFUSED.
     // Chronic incomplete (incompleteHoldAfterHours, default 30d) may request HOLD; merge
@@ -214,25 +216,41 @@ export function classifyMissingPublishedProduct(prevRow, opts = {}) {
       Number(opts.incompleteHoldAfterHours) || 720,
     );
     const chronicIncomplete =
-      ageHours != null && ageHours >= incompleteHoldAfterHours;
+      !sourceSeenThisRun && ageHours != null && ageHours >= incompleteHoldAfterHours;
     return {
       classId: REMOVAL_CLASS.NOT_YET_SEEN,
       carryForward: true,
       rootCauseVerified: true,
-      publicationClass: chronicIncomplete
-        ? "NOT_YET_SEEN_MAX_AGE_HOLD"
-        : "NOT_YET_SEEN",
+      publicationClass: sourceSeenThisRun
+        ? "NOT_YET_SEEN_PRESENTATION_DEFERRED"
+        : chronicIncomplete
+          ? "NOT_YET_SEEN_MAX_AGE_HOLD"
+          : "NOT_YET_SEEN",
       ageHours,
       ageExceeded,
       incompleteHoldRequested: chronicIncomplete,
       incompleteHoldAfterHours,
-      note: chronicIncomplete
-        ? "Missing from incomplete window beyond incompleteHoldAfterHours — request gradual PUBLICATION_HOLD (no mass delete)."
-        : ageExceeded
-          ? "Missing from incomplete discovery window; LKG older than stale policy — keep public as pending reverify, forbid CURRENT price label."
-          : "Missing from current discovery/presentation window — treat as NOT_YET_SEEN, carry LKG until confirmed. Stale prices must not be labeled CURRENT.",
+      sourceSeenThisRun,
+      note: sourceSeenThisRun
+        ? "Identity fetched this run but outside presentation budget — carry LKG until rotation selects it; never SOURCE_STALE."
+        : chronicIncomplete
+          ? "Missing from incomplete window beyond incompleteHoldAfterHours — request gradual PUBLICATION_HOLD (no mass delete)."
+          : ageExceeded
+            ? "Missing from incomplete discovery window; LKG older than stale policy — keep public as pending reverify, forbid CURRENT price label."
+            : "Missing from current discovery/presentation window — treat as NOT_YET_SEEN, carry LKG until confirmed. Stale prices must not be labeled CURRENT.",
       hideAsCurrent: false,
       sourceFreshLabelForbidden: true,
+    };
+  }
+  // True source absence after a complete partner fetch + stale LKG → refuse silent price keep.
+  if (ageHours != null && ageHours >= staleAfterHours) {
+    return {
+      classId: REMOVAL_CLASS.SOURCE_UNAVAILABLE,
+      carryForward: false,
+      rootCauseVerified: true,
+      publicationClass: "SOURCE_STALE",
+      ageHours,
+      note: "LKG older than stale policy; partner fetch complete and identity not in source this run — refuse silent price keep.",
     };
   }
   if (miss?.decision === "TEMPORARILY_HIDE") {

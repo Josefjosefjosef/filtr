@@ -275,6 +275,56 @@ const churnOk = evaluateIdentityChurnGate(
 );
 assert(churnOk.ok === true, "churn allowed after LKG merge");
 
+// V51.8: presentation-deferred source-seen identity must carry, not SOURCE_STALE.
+{
+  const aged = new Date(Date.now() - 100 * 3600 * 1000).toISOString();
+  const deferred = classifyMissingPublishedProduct(
+    {
+      key: "5929753|2152N",
+      advertiserId: "5929753",
+      product: {
+        advertiserId: "5929753",
+        productId: "2152N",
+        affiliateUrl: "https://www.kqzyfj.com/click-101883843-5929753",
+        lastSuccessfulRefreshAt: aged,
+        currentPrice: 10,
+      },
+    },
+    {
+      fetchedAdvertisers: new Set(["5929753"]),
+      incompleteAdvertisers: new Set(),
+      sourceSeenKeys: new Set(["5929753|2152N"]),
+      staleAfterHours: 72,
+    }
+  );
+  assert(deferred.carryForward === true, "presentation deferred must carry");
+  assert(
+    deferred.publicationClass === "NOT_YET_SEEN_PRESENTATION_DEFERRED",
+    "presentation deferred class"
+  );
+  const trulyAbsentStale = classifyMissingPublishedProduct(
+    {
+      key: "5929753|GONE",
+      advertiserId: "5929753",
+      product: {
+        advertiserId: "5929753",
+        productId: "GONE",
+        affiliateUrl: "https://www.kqzyfj.com/click-101883843-5929753",
+        lastSuccessfulRefreshAt: aged,
+        currentPrice: 10,
+      },
+    },
+    {
+      fetchedAdvertisers: new Set(["5929753"]),
+      incompleteAdvertisers: new Set(),
+      sourceSeenKeys: new Set(["5929753|OTHER"]),
+      staleAfterHours: 72,
+    }
+  );
+  assert(trulyAbsentStale.carryForward === false, "true stale absence refuses carry");
+  assert(trulyAbsentStale.publicationClass === "SOURCE_STALE", "true stale class");
+}
+
 // V51.8: run 44212353872 — PRE_LKG window net>500 with LKG merge must NOT refuse when
 // public growth budget already deferred NEW (publicEligibleNetGrowth <= 0).
 const churnGrowthBudgetAbsorbed = evaluateIdentityChurnGate(
