@@ -11,8 +11,10 @@ permissions:
   id-token: write
 
 concurrency:
+  # V51.8 closeout: cancel-in-progress caused mid-flight races when push + promote
+  # dispatch overlapped; prefer queue so upload/deploy pairs stay intact.
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   deploy:
@@ -20,7 +22,7 @@ jobs:
     timeout-minutes: 10
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment_retry.outputs.page_url || steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout
@@ -139,9 +141,59 @@ jobs:
         with:
           path: dist-pages
 
+      # V51.8: deploy-pages can report "Found 0 artifact(s)" immediately after a successful
+      # upload (run 44303360664: upload OK at T, deploy fail at T+1s; retry 44303529121 OK).
+      # Bounded settle + one redeploy avoids manual Pages dispatch.
+      - name: Wait for github-pages artifact visibility
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          echo "PAGES_ARTIFACT_SETTLE_SEC=20"
+          sleep 20
+          for i in 1 2 3 4 5 6; do
+            COUNT=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts" \
+              --jq '[.artifacts[] | select(.name=="github-pages")] | length' 2>/dev/null || echo 0)
+            echo "PAGES_ARTIFACT_POLL=${i} count=${COUNT}"
+            if [ "${COUNT}" != "0" ]; then
+              echo "PAGES_ARTIFACT_VISIBLE=1"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "PAGES_ARTIFACT_VISIBLE=0"
+          echo "::warning::github-pages artifact not yet visible via API; proceeding to deploy with retry"
+
       - name: Deploy to GitHub Pages
         id: deployment
+        continue-on-error: true
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+
+      - name: Retry Deploy to GitHub Pages after artifact race
+        id: deployment_retry
+        if: steps.deployment.outcome == 'failure'
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+
+      - name: Require Pages deploy success
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          FIRST="${{ steps.deployment.outcome }}"
+          RETRY="${{ steps.deployment_retry.outcome }}"
+          echo "PAGES_DEPLOY_FIRST=${FIRST}"
+          echo "PAGES_DEPLOY_RETRY=${RETRY}"
+          if [ "${FIRST}" = "success" ]; then
+            echo "PAGES_DEPLOY_OK=first"
+            exit 0
+          fi
+          if [ "${RETRY}" = "success" ]; then
+            echo "PAGES_DEPLOY_OK=retry"
+            exit 0
+          fi
+          echo "BLOCKER=PAGES_DEPLOY_FAILED first=${FIRST} retry=${RETRY}"
+          exit 1
 
       - name: Post-deploy proof (root hub + legacy /projects/ redirect)
         # Fail the job if root leaves / or /projects/ still serves the SPA hub.
