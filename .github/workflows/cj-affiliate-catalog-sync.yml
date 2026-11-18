@@ -1879,6 +1879,80 @@ jobs:
           fi
           MERGE_SHA=$(gh pr view "$NUM" --json mergeCommit -q .mergeCommit.oid)
           echo "[CLOSEOUT] merged_sha=${MERGE_SHA}"
-          gh workflow run pages.yml --ref main --repo "$REPO"
-          echo "CLOSEOUT_PAGES_DISPATCHED=true"
-          echo "[CLOSEOUT] Dispatched pages.yml after offers promote #${NUM}"
+          # If push-triggered pages already succeeded for this SHA, skip duplicate dispatch.
+          EXISTING_OK=$(gh run list --workflow pages.yml --repo "$REPO" --limit 12 \
+            --json databaseId,headSha,conclusion \
+            --jq "[.[] | select(.headSha==\"${MERGE_SHA}\" and .conclusion==\"success\")][0].databaseId // empty" \
+            2>/dev/null || true)
+          if [ -n "${EXISTING_OK}" ] && [ "${EXISTING_OK}" != "null" ]; then
+            echo "CLOSEOUT_PAGES_DISPATCHED=false"
+            echo "CLOSEOUT_PAGES_VERIFIED=true"
+            echo "CLOSEOUT_PAGES_RUN_ID=${EXISTING_OK}"
+            echo "CLOSEOUT_PAGES_REUSED_PUSH=true"
+            echo "[CLOSEOUT] Reused successful pages run ${EXISTING_OK} for ${MERGE_SHA}"
+            exit 0
+          fi
+          dispatch_and_wait_pages() {
+            local attempt="$1"
+            echo "[CLOSEOUT] pages_dispatch_attempt=${attempt}"
+            gh workflow run pages.yml --ref main --repo "$REPO"
+            # Identify the new run (same SHA preferred) and wait for completion.
+            local run_id=""
+            for _ in $(seq 1 30); do
+              run_id=$(gh run list --workflow pages.yml --repo "$REPO" --limit 8 \
+                --json databaseId,headSha,status,event,createdAt \
+                --jq "[.[] | select(.event==\"workflow_dispatch\" and .headSha==\"${MERGE_SHA}\" and .status!=\"completed\")][0].databaseId // empty" \
+                2>/dev/null || true)
+              if [ -z "${run_id}" ] || [ "${run_id}" = "null" ]; then
+                run_id=$(gh run list --workflow pages.yml --repo "$REPO" --limit 5 \
+                  --json databaseId,status,event \
+                  --jq '[.[] | select(.event=="workflow_dispatch" and .status!="completed")][0].databaseId // empty' \
+                  2>/dev/null || true)
+              fi
+              if [ -n "${run_id}" ] && [ "${run_id}" != "null" ]; then
+                break
+              fi
+              sleep 4
+            done
+            if [ -z "${run_id}" ] || [ "${run_id}" = "null" ]; then
+              # May have completed very fast — accept latest completed dispatch for SHA.
+              local conc
+              conc=$(gh run list --workflow pages.yml --repo "$REPO" --limit 8 \
+                --json databaseId,headSha,conclusion,event \
+                --jq "[.[] | select(.event==\"workflow_dispatch\" and .headSha==\"${MERGE_SHA}\" and .conclusion==\"success\")][0].databaseId // empty" \
+                2>/dev/null || true)
+              if [ -n "${conc}" ] && [ "${conc}" != "null" ]; then
+                echo "CLOSEOUT_PAGES_RUN_ID=${conc}"
+                echo "CLOSEOUT_PAGES_CONCLUSION=success"
+                return 0
+              fi
+              echo "CLOSEOUT_PAGES_RUN_ID=UNKNOWN"
+              return 1
+            fi
+            echo "CLOSEOUT_PAGES_RUN_ID=${run_id}"
+            if gh run watch "${run_id}" --repo "$REPO" --exit-status; then
+              echo "CLOSEOUT_PAGES_CONCLUSION=success"
+              return 0
+            fi
+            echo "CLOSEOUT_PAGES_CONCLUSION=failure"
+            return 1
+          }
+          if dispatch_and_wait_pages 1; then
+            echo "CLOSEOUT_PAGES_DISPATCHED=true"
+            echo "CLOSEOUT_PAGES_VERIFIED=true"
+            echo "[CLOSEOUT] Dispatched+verified pages.yml after offers promote #${NUM}"
+          else
+            echo "[CLOSEOUT] First pages attempt failed — bounded retry after settle"
+            sleep 25
+            if dispatch_and_wait_pages 2; then
+              echo "CLOSEOUT_PAGES_DISPATCHED=true"
+              echo "CLOSEOUT_PAGES_VERIFIED=true"
+              echo "CLOSEOUT_PAGES_RETRY=true"
+              echo "[CLOSEOUT] Pages retry verified after offers promote #${NUM}"
+            else
+              echo "CLOSEOUT_PAGES_DISPATCHED=true"
+              echo "CLOSEOUT_PAGES_VERIFIED=false"
+              echo "BLOCKER=PAGES_CLOSEOUT_UNVERIFIED after offers promote #${NUM}"
+              exit 1
+            fi
+          fi

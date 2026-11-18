@@ -26,12 +26,21 @@ assert(
   "soft-timeout must dispatch pages-publish-from-main-data"
 );
 assert(wf.includes("gh workflow run pages.yml"), "merged path dispatches pages.yml");
+assert(wf.includes("CLOSEOUT_PAGES_VERIFIED=true"), "closeout must verify pages success");
+assert(wf.includes("dispatch_and_wait_pages"), "bounded pages watch+retry helper");
+assert(wf.includes("CLOSEOUT_PAGES_RETRY=true"), "retry marker");
 assert(
   pub.includes("CJ Affiliate catalog sync"),
   "pages-publish workflow_run must include CJ catalog sync"
 );
 assert(pub.includes("main_offers_updatedAt"), "offers freshness compare");
 assert(pub.includes("prod_offers_updatedAt"), "prod offers compare");
+
+const pagesWf = readFileSync(join(root, ".github/workflows/pages.yml"), "utf8");
+assert(/cancel-in-progress:\s*false/.test(pagesWf), "pages concurrency must not cancel in-progress");
+assert(pagesWf.includes("Wait for github-pages artifact visibility"), "artifact settle wait");
+assert(pagesWf.includes("Retry Deploy to GitHub Pages after artifact race"), "deploy retry step");
+assert(pagesWf.includes("Require Pages deploy success"), "deploy success gate");
 
 // Budget math: 180 * 20s = 3600s = 60m < job timeout 90m
 const budgetSec = 180 * 20;
@@ -47,5 +56,8 @@ console.log(
     waitBudgetMinutes: budgetSec / 60,
     deferredFallback: "pages-publish-from-main-data.yml",
     mergedDispatch: "pages.yml",
+    pagesCancelInProgress: false,
+    pagesArtifactSettleRetry: true,
+    closeoutVerifiedWatch: true,
   })
 );
