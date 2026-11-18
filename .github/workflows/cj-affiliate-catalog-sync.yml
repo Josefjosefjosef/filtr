@@ -91,6 +91,11 @@ on:
         options:
           - "0"
           - "1"
+      lkg_recovery_git_ref:
+        description: "Optional git SHA/ref of trusted older offers-public for unauthorized-loss LKG recovery (empty=off)"
+        required: false
+        default: ""
+        type: string
 
 permissions:
   contents: write
@@ -861,6 +866,7 @@ jobs:
       IU_CJ_OFFERS_PRODUCT_LIMIT: "1000"
       # V51.8-perf: cautious GraphQL spacing (default lib 2600ms); floor 800 enforced in throttleCj.
       IU_CJ_GRAPHQL_MIN_INTERVAL_MS: "1500"
+      IU_CJ_OFFERS_LKG_RECOVERY_GIT_REF: ${{ github.event_name == 'workflow_dispatch' && inputs.lkg_recovery_git_ref || '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -883,6 +889,27 @@ jobs:
         with:
           name: iu-affiliate-cj-email-only-offers-bridge
           path: projects/data
+      - name: Materialize LKG recovery public from git ref (optional)
+        if: github.event_name == 'workflow_dispatch' && inputs.lkg_recovery_git_ref != ''
+        shell: bash
+        env:
+          IU_CJ_OFFERS_LKG_RECOVERY_GIT_REF: ${{ inputs.lkg_recovery_git_ref }}
+        run: |
+          set -euo pipefail
+          REF="${IU_CJ_OFFERS_LKG_RECOVERY_GIT_REF}"
+          OUT="${RUNNER_TEMP}/iu-cj-lkg-recovery-public-v1.json"
+          echo "LKG_RECOVERY_REF=${REF}"
+          git fetch --depth 1 origin "${REF}"
+          git show "${REF}:projects/data/iu-affiliate-cj-offers-public-v1.json" > "${OUT}"
+          python3 - <<'PY'
+          import json, os
+          p = os.environ["RUNNER_TEMP"] + "/iu-cj-lkg-recovery-public-v1.json"
+          doc = json.load(open(p, encoding="utf-8"))
+          assert doc.get("liveEnabled") is True, "recovery public must be liveEnabled"
+          n = sum(len(s.get("products") or []) for s in (doc.get("sections") or []))
+          print(f"LKG_RECOVERY_MATERIALIZED products_rows={n} updatedAt={doc.get('updatedAt')}")
+          PY
+          echo "IU_CJ_OFFERS_LKG_RECOVERY_PUBLIC_PATH=${OUT}" >> "$GITHUB_ENV"
       - name: Restore policy/section-map/offers LKG + prefer LIVE managed-public
         shell: bash
         env:
