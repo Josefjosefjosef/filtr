@@ -674,6 +674,85 @@ assert(
   "new identity not smuggled as routine update"
 );
 
+// V51.8: unauthorized-loss recovery from trusted older public is LKG restore, not DEFERRED_NEW.
+{
+  const cur = {
+    liveEnabled: true,
+    sections: [
+      {
+        sectionKey: "aff-a",
+        products: [
+          {
+            advertiserId: "1",
+            productId: "keep",
+            publicationReady: true,
+            currentPrice: 10,
+            currency: "CZK",
+            availability: "in stock",
+            affiliateUrl: "https://www.kqzyfj.com/click-1-keep",
+          },
+        ],
+      },
+    ],
+  };
+  const recovery = {
+    liveEnabled: true,
+    sections: [
+      {
+        sectionKey: "aff-a",
+        products: [
+          {
+            advertiserId: "1",
+            productId: "keep",
+            publicationReady: true,
+            currentPrice: 10,
+            currency: "CZK",
+            availability: "in stock",
+            affiliateUrl: "https://www.kqzyfj.com/click-1-keep",
+          },
+          {
+            advertiserId: "1",
+            productId: "lost",
+            publicationReady: true,
+            currentPrice: 20,
+            currency: "CZK",
+            availability: "in stock",
+            affiliateUrl: "https://www.kqzyfj.com/click-1-lost",
+            lastSuccessfulRefreshAt: new Date(Date.now() - 100 * 3600 * 1000).toISOString(),
+          },
+        ],
+      },
+    ],
+  };
+  const recovered = mergeLkgPublishedProducts(cur, recovery, {
+    fetchedAdvertisers: new Set(["1"]),
+    incompleteAdvertisers: new Set(),
+    sourceSeenKeys: new Set(["1|lost"]),
+    staleAfterHours: 72,
+    recoveryMode: true,
+  });
+  assert(recovered.carried >= 1, "recovery must carry sourceSeen lost identity");
+  assert(
+    recovered.doc.sections.some((s) =>
+      (s.products || []).some((p) => p.productId === "lost" && p.lkgRecovered === true)
+    ),
+    "recovered product marked lkgRecovered"
+  );
+  const afterGrowth = applyPublicGrowthBudget(recovered.doc, cur, {
+    maxGrowthAbs: 0,
+    maxGrowthRatio: 0,
+    preferredCurrency: "CZK",
+    cumulativeAddedSinceBaseline: 500,
+    maxCumulativeAbs: 500,
+  });
+  assert(
+    afterGrowth.doc.sections.some((s) =>
+      (s.products || []).some((p) => p.productId === "lost" && isPublicOfferEligible(p))
+    ),
+    "lkgRecovered must not be stripped by exhausted growth budget"
+  );
+}
+
 console.log(
   JSON.stringify({
     IU_CJ_PUBLICATION_LKG_V51_8_SELFTEST: "PASS",

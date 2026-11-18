@@ -2744,6 +2744,31 @@ export async function runOffersLiveSync(opts = {}) {
       };
       nextReady = readyCounts(doc);
     }
+    // V51.8: one-shot unauthorized-loss recovery from trusted older LIVE public (git ref / path).
+    // Restores identities already dropped from current prevPublic that still classify as carry
+    // (e.g. presentation-deferred sourceSeen). Does NOT invent unverified products.
+    const recoveryPath = String(env.IU_CJ_OFFERS_LKG_RECOVERY_PUBLIC_PATH || "").trim();
+    if (recoveryPath && fs.existsSync(recoveryPath)) {
+      const recoveryPrev = readJson(recoveryPath, null);
+      if (recoveryPrev?.liveEnabled === true) {
+        const recovered = mergeLkgPublishedProducts(doc, recoveryPrev, {
+          ...classifyOpts,
+          recoveryMode: true,
+        });
+        doc = recovered.doc;
+        if (!publicationRestore) publicationRestore = {};
+        publicationRestore.unauthorizedLossRecovery = {
+          path: recoveryPath,
+          carried: recovered.carried,
+          blocked: recovered.blocked,
+          heldPublic: recovered.heldPublic,
+          publicEligibleCarried: recovered.publicEligibleCarried,
+          uniqueAfter: recovered.uniqueAfter,
+          publicEligibleAfter: recovered.publicEligibleAfter,
+        };
+        nextReady = readyCounts(doc);
+      }
+    }
     // V51.8-c5: attempt HOLD → PUBLICATION_ELIGIBLE when identity is in current source window.
     const released = releaseLkgHoldsAgainstSource(doc, sourceVerifiedKeys, {
       endedAdvertisers,

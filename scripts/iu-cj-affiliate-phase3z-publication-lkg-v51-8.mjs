@@ -509,12 +509,14 @@ export function mergeLkgPublishedProducts(nextDoc, prevDoc, opts = {}) {
     const pendingReverify = !forceHold && isNotYetSeen;
     const holdPublic = forceHold;
     const ageExceeded = row.ageExceeded === true || (Number(row.ageHours) >= 72);
+    const recoveryMode = opts.recoveryMode === true;
     const product = {
       ...prev.product,
       publicationReady: true,
       publishable: !holdPublic,
       publicOffer: !holdPublic,
       lkgCarried: true,
+      lkgRecovered: recoveryMode ? true : prev.product?.lkgRecovered === true,
       lkgPublicHold: holdPublic,
       hideAsCurrent: holdPublic,
       catalogStatus: CATALOG_STATUS.CATALOG_RETAINED,
@@ -1197,6 +1199,8 @@ export function applyPublicGrowthBudget(nextDoc, prevDoc, opts = {}) {
       if (!p || p.publicationReady === false) return true;
       const key = compoundProductKey(p.advertiserId, p.productId);
       if (prevMap.has(key)) return true;
+      // LKG carry / unauthorized-loss recovery restores prior public identities — not DEFERRED_NEW growth.
+      if (p.lkgCarried === true || p.lkgRecovered === true) return true;
       // Non-eligible rows (HOLD/BLOCKED) may remain for audit; they are not public growth.
       if (!isPublicOfferEligible(p)) return true;
       // Any NEW public-eligible identity must be explicitly inside the budgeted keep set.
