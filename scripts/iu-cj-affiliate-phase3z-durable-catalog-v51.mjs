@@ -79,9 +79,14 @@ export function publicationEligibilityFromAvailability(raw, currentEligibility, 
 export const DURABLE_CATALOG_SCHEMA = "iu-cj-affiliate-phase3z-durable-catalog-v51";
 export const DURABLE_CATALOG_REL = "projects/data/iu-affiliate-cj-durable-catalog-v51.json";
 
-/** GitHub hard blob limit is 100 MiB; keep soft headroom for growth. */
-export const DURABLE_CATALOG_GIT_SOFT_MAX_BYTES = 95 * 1024 * 1024;
-export const DURABLE_CATALOG_GIT_HARD_MAX_BYTES = 99 * 1024 * 1024;
+/**
+ * GitHub hard blob limit is 100 MiB / workflow prestage gate is 99_000_000 bytes.
+ * Soft must be BELOW the workflow gate so progressive HOLD strip runs before push fails.
+ * Prior bug: soft=95MiB (99.6MB) > workflow 99e6 → softOk at 96–99MB with no strip → GIT_BLOB_OVER_GITHUB_LIMIT.
+ */
+export const DURABLE_CATALOG_GIT_SOFT_MAX_BYTES = 88_000_000;
+export const DURABLE_CATALOG_GIT_HARD_MAX_BYTES = 98_000_000;
+export const DURABLE_CATALOG_GIT_WORKFLOW_GATE_BYTES = 99_000_000;
 
 /** Whitelist — never persist unknown keys via ...prev accumulation. */
 export const DURABLE_CATALOG_ENTRY_KEYS = [
@@ -236,6 +241,37 @@ export function compactDurableCatalogForGitTip(doc, opts = {}) {
     payload = serializeDurableCatalog(next);
     bytes = Buffer.byteLength(payload, "utf8");
     actions.push({ step: "strip_hold_title", strippedTitles, bytes });
+  }
+
+  if (bytes > softMax) {
+    let strippedAffiliate = 0;
+    let strippedFreshness = 0;
+    let strippedPartner = 0;
+    for (const p of Object.values(next.products)) {
+      if (!isPublicationHoldOrBlocked(p)) continue;
+      // Never-live HOLD: affiliate URL is re-fetched on next source match; keep identity keys.
+      if (p.publicOffer !== true && p.affiliateUrl != null) {
+        delete p.affiliateUrl;
+        strippedAffiliate += 1;
+      }
+      if (p.freshnessReason != null) {
+        delete p.freshnessReason;
+        strippedFreshness += 1;
+      }
+      if (p.partnerName != null) {
+        delete p.partnerName;
+        strippedPartner += 1;
+      }
+    }
+    payload = serializeDurableCatalog(next);
+    bytes = Buffer.byteLength(payload, "utf8");
+    actions.push({
+      step: "strip_hold_affiliate_freshness_partner",
+      strippedAffiliate,
+      strippedFreshness,
+      strippedPartner,
+      bytes,
+    });
   }
 
   next.compactMeta = {

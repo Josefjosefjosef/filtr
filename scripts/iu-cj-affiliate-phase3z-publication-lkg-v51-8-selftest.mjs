@@ -275,6 +275,53 @@ const churnOk = evaluateIdentityChurnGate(
 );
 assert(churnOk.ok === true, "churn allowed after LKG merge");
 
+// V51.8: run 44212353872 — PRE_LKG window net>500 with LKG merge must NOT refuse when
+// public growth budget already deferred NEW (publicEligibleNetGrowth <= 0).
+const churnGrowthBudgetAbsorbed = evaluateIdentityChurnGate(
+  {
+    prevUnique: 3071,
+    removedCount: 2956,
+    addedCount: 3586,
+    netUnique: 630,
+    removedByClass: {
+      [REMOVAL_CLASS.NOT_YET_SEEN]: 2500,
+      [REMOVAL_CLASS.SOURCE_UNAVAILABLE]: 456,
+    },
+  },
+  {
+    lkgMerged: true,
+    feedsComplete: false,
+    maxChurnRatio: 0.25,
+    maxGrowthAbs: 500,
+    growthBudgetApplied: true,
+    publicEligibleNetGrowth: -433,
+  }
+);
+assert(
+  churnGrowthBudgetAbsorbed.ok === true && churnGrowthBudgetAbsorbed.unsafeGrowth === false,
+  "deferred-new absorbed window net must not PRODUCT_LKG_GROWTH_REFUSED"
+);
+const churnPublicBypassStillRefused = evaluateIdentityChurnGate(
+  {
+    prevUnique: 3071,
+    removedCount: 100,
+    addedCount: 900,
+    netUnique: 800,
+    removedByClass: { [REMOVAL_CLASS.NOT_YET_SEEN]: 100 },
+  },
+  {
+    lkgMerged: true,
+    maxGrowthAbs: 500,
+    growthBudgetApplied: true,
+    publicEligibleNetGrowth: 800,
+  }
+);
+assert(
+  churnPublicBypassStillRefused.ok === false &&
+    churnPublicBypassStillRefused.reason === "PRODUCT_LKG_GROWTH_REFUSED",
+  "publicEligible net above abs still refused"
+);
+
 const ended = classifyMissingPublishedProduct(
   {
     key: "9|x",

@@ -753,7 +753,18 @@ export function evaluateIdentityChurnGate(delta = {}, opts = {}) {
   // High NOT_YET_SEEN churn without LKG merge is unsafe even if net≈0.
   const unsafePresentationChurn =
     !lkgMerged && notYetSeen + unknown >= Math.max(20, Math.floor(prevUnique * maxChurnRatio));
-  const unsafeGrowth = Number.isFinite(net) && net > maxGrowthAbs && lkgMerged;
+  // V51.8 (18.11.2026): publicationDelta.netUnique is PRE_LKG_WINDOW_ONLY and can exceed
+  // maxGrowthAbs even when applyPublicGrowthBudget deferred all NEW identities (keptNew=0).
+  // Public growth is enforced by evaluateLkgGrowthGate + cumulative ledger; do not refuse
+  // coupon/price/availability updates of already-approved identities on catalog-window net.
+  const publicNetRaw = opts.publicEligibleNetGrowth;
+  const publicNet =
+    publicNetRaw != null && Number.isFinite(Number(publicNetRaw)) ? Number(publicNetRaw) : null;
+  const growthBudgetApplied = opts.growthBudgetApplied === true;
+  const unsafeGrowth =
+    publicNet != null
+      ? publicNet > maxGrowthAbs
+      : !growthBudgetApplied && Number.isFinite(net) && net > maxGrowthAbs && lkgMerged;
   const ok =
     !unsafePresentationChurn &&
     !unsafeGrowth &&
@@ -767,6 +778,8 @@ export function evaluateIdentityChurnGate(delta = {}, opts = {}) {
     removed,
     added,
     netUnique: Number.isFinite(net) ? net : added - removed,
+    publicEligibleNetGrowth: publicNet,
+    growthBudgetApplied,
     removedRatio,
     addedRatio,
     churnRatio,
@@ -784,7 +797,7 @@ export function evaluateIdentityChurnGate(delta = {}, opts = {}) {
       : unsafeGrowth
         ? "PRODUCT_LKG_GROWTH_REFUSED"
         : "PRODUCT_IDENTITY_CHURN_REFUSED",
-    note: "Net-stable promote with massive identity rotation is refused unless LKG-merged or confirmed removals dominate.",
+    note: "Net-stable promote with massive identity rotation is refused unless LKG-merged or confirmed removals dominate. Public growth uses publicEligibleNetGrowth after growth budget when provided.",
   };
 }
 
@@ -1183,6 +1196,21 @@ export function applyPublicGrowthBudget(nextDoc, prevDoc, opts = {}) {
   }
   uniquePublic = u.size;
 
+  const deferredLedgerSample = deferredNew.slice(0, 200).map((key) => {
+    const [advertiserId, productId] = String(key).split("|");
+    return {
+      PRODUCT_ID: productId || null,
+      ADVERTISER_ID: advertiserId || null,
+      PREVIOUS_STATE: "NOT_IN_PUBLIC",
+      CANDIDATE_STATE: "PUBLICATION_ELIGIBLE_NEW",
+      GROWTH_CLASS: "EXCEPTIONAL_NEW",
+      DECISION: "DEFERRED_NEW",
+      REASON:
+        budget.cumulativeRemaining <= 0
+          ? "CUMULATIVE_BUDGET_EXHAUSTED"
+          : "PER_RUN_GROWTH_BUDGET",
+    };
+  });
   doc.publicGrowthBudget = {
     schema: PUBLIC_GROWTH_BUDGET_SCHEMA,
     ...budget,
@@ -1191,6 +1219,7 @@ export function applyPublicGrowthBudget(nextDoc, prevDoc, opts = {}) {
     keptNew: keepNew.size,
     deferredNew: deferredNew.length,
     publicEligibleAfter: uniquePublic,
+    deferredDecisionLedgerSample: deferredLedgerSample,
     note:
       deferredNew.length > 0
         ? "ROUTINE_SAFE_NEW_PRODUCT capped; remainder is EXCEPTIONAL_GROWTH (owner approval / cumulative budget)."
