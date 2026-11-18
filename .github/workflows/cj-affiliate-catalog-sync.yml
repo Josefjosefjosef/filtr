@@ -1236,12 +1236,61 @@ jobs:
           else
             echo "MAIN_BUTTONS_SOURCE=checkout_fallback"
           fi
+          # V51.8: workflow runs are pinned to the triggering SHA. A schedule queued behind an
+          # armed promote would otherwise LKG against the stale checkout tip and overwrite a
+          # newer main/LIVE catalog (evidence: 44296058202 overwrote recovery #13937).
+          # Always adopt the newest offers-public among checkout / origin/main / production LIVE.
+          OFFERS_LKG="projects/data/iu-affiliate-cj-offers-public-v1.json"
+          mkdir -p "${RUNNER_TEMP}/iu-cj-offers-lkg-cands"
+          cp -f "$OFFERS_LKG" "${RUNNER_TEMP}/iu-cj-offers-lkg-cands/checkout.json" 2>/dev/null || true
+          git fetch origin main --depth=1 || true
+          restore_git_file "origin/main:projects/data/iu-affiliate-cj-offers-public-v1.json" \
+            "${RUNNER_TEMP}/iu-cj-offers-lkg-cands/origin-main.json" || true
+          if curl -fsSL "https://infouzel.cz/projects/data/iu-affiliate-cj-offers-public-v1.json" \
+            -o "${RUNNER_TEMP}/iu-cj-offers-lkg-cands/live.json"; then
+            echo "OFFERS_PUBLIC_LIVE_FETCH=1"
+          else
+            echo "OFFERS_PUBLIC_LIVE_FETCH=0"
+          fi
           python3 - <<'PY'
-          import json
-          mp=json.load(open("projects/data/iu-affiliate-cj-managed-public-v1.json"))
-          print("MANAGED_PUBLIC_PARTNERS", len(mp.get("partners") or []))
-          off=json.load(open("projects/data/iu-affiliate-cj-offers-public-v1.json"))
+          import json, os, shutil
+          cand_dir = os.environ["RUNNER_TEMP"] + "/iu-cj-offers-lkg-cands"
+          dest = "projects/data/iu-affiliate-cj-offers-public-v1.json"
+          best = None
+          best_ts = ""
+          best_src = "checkout_fallback"
+          for name, src in (
+              ("checkout.json", "workflow_sha"),
+              ("origin-main.json", "origin_main"),
+              ("live.json", "production_live"),
+          ):
+              path = os.path.join(cand_dir, name)
+              if not os.path.isfile(path) or os.path.getsize(path) <= 0:
+                  continue
+              try:
+                  doc = json.load(open(path, encoding="utf-8"))
+              except Exception as e:
+                  print(f"OFFERS_LKG_CAND_INVALID src={src} err={e}")
+                  continue
+              if doc.get("liveEnabled") is not True:
+                  print(f"OFFERS_LKG_CAND_SKIP src={src} liveEnabled={doc.get('liveEnabled')}")
+                  continue
+              ts = str(doc.get("updatedAt") or "")
+              print(f"OFFERS_LKG_CAND src={src} updatedAt={ts}")
+              if ts >= best_ts:
+                  best = path
+                  best_ts = ts
+                  best_src = src
+          if best:
+              shutil.copyfile(best, dest)
+              print(f"OFFERS_PUBLIC_LKG_SOURCE={best_src}")
+              print(f"OFFERS_PUBLIC_LKG_UPDATED_AT={best_ts}")
+          else:
+              print("OFFERS_PUBLIC_LKG_SOURCE=checkout_unchanged")
+          off = json.load(open(dest, encoding="utf-8"))
           print("PREV_OFFERS_LIVE", off.get("liveEnabled") is True)
+          mp = json.load(open("projects/data/iu-affiliate-cj-managed-public-v1.json", encoding="utf-8"))
+          print("MANAGED_PUBLIC_PARTNERS", len(mp.get("partners") or []))
           PY
       # V51.8-complete: delayed daily-full (cron 17 3) must not consume mid-day SLA as FULL.
       # Evidence: run 43584675067 fired as scheduleExpr=17 3 * * * at 10:18Z (MODE=full, ~118m).
@@ -1640,7 +1689,7 @@ jobs:
             fi
           fi
           python3 - <<'PY'
-          import json, os
+          import json, os, urllib.request
           path="/tmp/iu-offers-public-incoming.json"
           if not os.path.getsize(path):
             raise SystemExit("BLOCKER=OFFERS_INCOMING_EMPTY")
@@ -1654,6 +1703,39 @@ jobs:
             raise SystemExit("BLOCKER=OFFERS_DOC_NOT_OK")
           if d.get("liveEnabled") is not True:
             print("NOTE=INCOMING_NOT_LIVE_YET")
+          def section_unique(doc):
+              s=set()
+              for sec in doc.get("sections") or []:
+                  for p in sec.get("products") or []:
+                      adv=str(p.get("advertiserId") or "")
+                      pid=str(p.get("productId") or "")
+                      if adv and pid:
+                          s.add(adv+"|"+pid)
+              return len(s)
+          def load_url(url):
+              try:
+                  with urllib.request.urlopen(url, timeout=60) as r:
+                      return json.loads(r.read().decode("utf-8"))
+              except Exception as e:
+                  print("LIVE_OFFERS_FETCH_FAIL", e)
+                  return None
+          live=load_url("https://infouzel.cz/projects/data/iu-affiliate-cj-offers-public-v1.json")
+          if live and live.get("liveEnabled") is True and d.get("liveEnabled") is True:
+              live_ts=str(live.get("updatedAt") or "")
+              in_ts=str(d.get("updatedAt") or "")
+              live_u=section_unique(live)
+              in_u=section_unique(d)
+              print(f"PROMOTE_MONOTONIC live_ts={live_ts} incoming_ts={in_ts} live_u={live_u} incoming_u={in_u}")
+              # Refuse stale SHA race: older payload must not overwrite newer LIVE public.
+              if live_ts and in_ts and in_ts < live_ts:
+                  raise SystemExit(
+                      f"BLOCKER=OFFERS_PROMOTE_STALE_UPDATED_AT incoming={in_ts} live={live_ts}"
+                  )
+              # Refuse large unexplained unique drop vs current LIVE (queued stale LKG race).
+              if live_u > 0 and in_u < live_u * 0.9 and (live_u - in_u) > 50:
+                  raise SystemExit(
+                      f"BLOCKER=OFFERS_PROMOTE_LIVE_UNIQUE_REGRESSION incoming_u={in_u} live_u={live_u}"
+                  )
           PY
       - name: Open data-only offers PR to main
         id: offers_pr
