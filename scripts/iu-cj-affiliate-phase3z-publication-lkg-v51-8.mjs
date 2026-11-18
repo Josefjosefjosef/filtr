@@ -1196,6 +1196,21 @@ export function applyPublicGrowthBudget(nextDoc, prevDoc, opts = {}) {
   }
   uniquePublic = u.size;
 
+  const deferredLedgerSample = deferredNew.slice(0, 200).map((key) => {
+    const [advertiserId, productId] = String(key).split("|");
+    return {
+      PRODUCT_ID: productId || null,
+      ADVERTISER_ID: advertiserId || null,
+      PREVIOUS_STATE: "NOT_IN_PUBLIC",
+      CANDIDATE_STATE: "PUBLICATION_ELIGIBLE_NEW",
+      GROWTH_CLASS: "EXCEPTIONAL_NEW",
+      DECISION: "DEFERRED_NEW",
+      REASON:
+        budget.cumulativeRemaining <= 0
+          ? "CUMULATIVE_BUDGET_EXHAUSTED"
+          : "PER_RUN_GROWTH_BUDGET",
+    };
+  });
   doc.publicGrowthBudget = {
     schema: PUBLIC_GROWTH_BUDGET_SCHEMA,
     ...budget,
@@ -1204,6 +1219,7 @@ export function applyPublicGrowthBudget(nextDoc, prevDoc, opts = {}) {
     keptNew: keepNew.size,
     deferredNew: deferredNew.length,
     publicEligibleAfter: uniquePublic,
+    deferredDecisionLedgerSample: deferredLedgerSample,
     note:
       deferredNew.length > 0
         ? "ROUTINE_SAFE_NEW_PRODUCT capped; remainder is EXCEPTIONAL_GROWTH (owner approval / cumulative budget)."
