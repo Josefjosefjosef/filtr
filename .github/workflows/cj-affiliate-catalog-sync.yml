@@ -216,6 +216,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-page-size-perf-v51-8-selftest.mjs
       - name: Pages closeout wait budget + deferred fallback selftest (V51.8; offline)
         run: node scripts/iu-cj-affiliate-phase3z-pages-closeout-v51-8-selftest.mjs
+      - name: Promote monotonicity fail-closed selftest (V51.8; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-promote-monotonic-v51-8-selftest.mjs
       - name: Reverify freshness policy + UNKNOWN priority selftest (V51.8; offline)
         run: node scripts/iu-cj-affiliate-phase3z-reverify-freshness-policy-v51-8-selftest.mjs
       - name: Partner lifecycle JOINED/ENDED/REJOINED selftest (V51.8; offline)
@@ -1713,19 +1715,60 @@ jobs:
                           s.add(adv+"|"+pid)
               return len(s)
           def load_url(url):
+              # Prefer curl + browser UA: bare urllib often gets CF/GitHub Pages 403 from Actions
+              # (evidence run 44300425257 LIVE_OFFERS_FETCH_FAIL HTTP 403 → gates skipped).
+              import subprocess
               try:
-                  with urllib.request.urlopen(url, timeout=60) as r:
+                  out = subprocess.check_output(
+                      [
+                          "curl", "-fsSL",
+                          "-A", "Mozilla/5.0 iu-cj-offers-promote-monotonic/1",
+                          "--max-time", "60",
+                          url,
+                      ],
+                      stderr=subprocess.STDOUT,
+                  )
+                  return json.loads(out.decode("utf-8"))
+              except Exception as e:
+                  print("LIVE_OFFERS_FETCH_FAIL_CURL", e)
+              try:
+                  req = urllib.request.Request(
+                      url,
+                      headers={"User-Agent": "Mozilla/5.0 iu-cj-offers-promote-monotonic/1"},
+                  )
+                  with urllib.request.urlopen(req, timeout=60) as r:
                       return json.loads(r.read().decode("utf-8"))
               except Exception as e:
                   print("LIVE_OFFERS_FETCH_FAIL", e)
                   return None
+          def load_checkout_main_offers():
+              # promote job checks out ref=main; on-disk offers is the main tip comparator.
+              path = "projects/data/iu-affiliate-cj-offers-public-v1.json"
+              try:
+                  if os.path.isfile(path) and os.path.getsize(path) > 0:
+                      return json.load(open(path, encoding="utf-8"))
+              except Exception as e:
+                  print("CHECKOUT_MAIN_OFFERS_FETCH_FAIL", e)
+              return None
           live=load_url("https://infouzel.cz/projects/data/iu-affiliate-cj-offers-public-v1.json")
-          if live and live.get("liveEnabled") is True and d.get("liveEnabled") is True:
+          live_src="production_live"
+          if live is None:
+              live=load_checkout_main_offers()
+              live_src="checkout_main"
+          if d.get("liveEnabled") is True:
+              if not (live and live.get("liveEnabled") is True):
+                  raise SystemExit(
+                      "BLOCKER=OFFERS_PROMOTE_LIVE_COMPARATOR_UNAVAILABLE "
+                      "cannot evaluate monotonicity gates (LIVE+origin/main unread)"
+                  )
               live_ts=str(live.get("updatedAt") or "")
               in_ts=str(d.get("updatedAt") or "")
               live_u=section_unique(live)
               in_u=section_unique(d)
-              print(f"PROMOTE_MONOTONIC live_ts={live_ts} incoming_ts={in_ts} live_u={live_u} incoming_u={in_u}")
+              print(
+                  f"PROMOTE_MONOTONIC src={live_src} live_ts={live_ts} incoming_ts={in_ts} "
+                  f"live_u={live_u} incoming_u={in_u}"
+              )
               # Refuse stale SHA race: older payload must not overwrite newer LIVE public.
               if live_ts and in_ts and in_ts < live_ts:
                   raise SystemExit(
