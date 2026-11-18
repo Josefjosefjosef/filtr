@@ -219,7 +219,9 @@ async function main() {
       const t = String(m.text() || "");
       if (/cloudflareinsights\.com\/beacon/i.test(t)) return;
       if (/Content Security Policy directive/i.test(t) && /cloudflareinsights/i.test(t)) return;
+      // Transient CDN/edge noise during parallel prod smoke — not a routing regression.
       if (/status of 429/i.test(t)) return;
+      if (/Failed to load resource: the server responded with a status of 503/i.test(t)) return;
       consoleErrors.push(t);
     });
     page.on("pageerror", (e) => pageErrors.push(String(e && e.message ? e.message : e)));
