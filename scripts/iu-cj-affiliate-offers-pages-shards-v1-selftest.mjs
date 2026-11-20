@@ -13,6 +13,9 @@ import {
   buildSectionShardDoc,
   estimateLoadPath,
   writePagesShards,
+  verifyPagedCatalogTree,
+  verifyDocContentSha256,
+  sealDocIntegrity,
   PAGES_LEAN_SCHEMA,
   SECTION_SHARD_SCHEMA,
   PAGES_LEAN_FILENAME,
@@ -26,6 +29,7 @@ const fixture = {
   schema: "iu-affiliate-cj-offers-public-v1",
   version: 1,
   updatedAt: "2026-11-20T00:00:00.000Z",
+  snapshotId: "2026-11-20T00:00:00.000Z",
   liveEnabled: true,
   ok: true,
   refreshCoverage: { huge: "x".repeat(5000), note: "must_not_appear_in_lean" },
@@ -67,6 +71,9 @@ assert.equal(lean.liveEnabled, true);
 assert.equal(lean.refreshCoverage, undefined);
 assert.equal(lean.publicGrowthBudget, undefined);
 assert.equal(lean.sections.length, 2);
+assert.equal(lean.generationId, fixture.snapshotId);
+assert.ok(/^[a-f0-9]{64}$/.test(lean.contentSha256));
+assert.equal(verifyDocContentSha256(lean).ok, true);
 assert.ok(!JSON.stringify(lean).includes("must_not_appear_in_lean"));
 
 const shard = buildSectionShardDoc(fixture, fixture.sections[0]);
@@ -74,6 +81,8 @@ assert.equal(shard.schema, SECTION_SHARD_SCHEMA);
 assert.equal(shard.sections.length, 1);
 assert.equal(shard.sections[0].sectionKey, "aff-auto-moto");
 assert.equal(shard.liveEnabled, true);
+assert.equal(shard.generationId, fixture.snapshotId);
+assert.equal(verifyDocContentSha256(shard).ok, true);
 
 const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), "iu-cj-pages-shards-"));
 const written = writePagesShards(fixture, tmpRoot, { pretty: false });
@@ -82,6 +91,33 @@ assert.equal(written.shardCount, 2);
 assert.ok(fs.existsSync(path.join(tmpRoot, PAGES_LEAN_FILENAME)));
 assert.ok(fs.existsSync(path.join(tmpRoot, SECTIONS_DIRNAME, "aff-auto-moto.json")));
 assert.ok(fs.existsSync(path.join(tmpRoot, SECTIONS_DIRNAME, "aff-elektro.json")));
+
+const treeOk = verifyPagedCatalogTree(tmpRoot, { requireContentSha: true });
+assert.equal(treeOk.ok, true, JSON.stringify(treeOk.fails || treeOk));
+
+/* Corrupt section → fail-closed */
+const corruptPath = path.join(tmpRoot, SECTIONS_DIRNAME, "aff-auto-moto.json");
+const corruptDoc = JSON.parse(fs.readFileSync(corruptPath, "utf8"));
+corruptDoc.contentSha256 = "0".repeat(64);
+fs.writeFileSync(corruptPath, JSON.stringify(corruptDoc));
+const treeBad = verifyPagedCatalogTree(tmpRoot, { requireContentSha: true });
+assert.equal(treeBad.ok, false);
+assert.ok((treeBad.fails || []).some((f) => f.reason === "CONTENT_SHA_MISMATCH"));
+/* Restore for later asserts */
+writePagesShards(fixture, tmpRoot, { pretty: false });
+
+/* Mixed generation → fail-closed */
+const mixPath = path.join(tmpRoot, SECTIONS_DIRNAME, "aff-elektro.json");
+const mixDoc = JSON.parse(fs.readFileSync(mixPath, "utf8"));
+mixDoc.generationId = "OTHER-GENERATION";
+mixDoc.snapshotId = "OTHER-GENERATION";
+delete mixDoc.contentSha256;
+const resealed = sealDocIntegrity(mixDoc, { generationId: "OTHER-GENERATION" });
+fs.writeFileSync(mixPath, JSON.stringify(resealed));
+const treeMix = verifyPagedCatalogTree(tmpRoot, { requireContentSha: true });
+assert.equal(treeMix.ok, false);
+assert.ok((treeMix.fails || []).some((f) => f.reason === "GENERATION_MISMATCH"));
+writePagesShards(fixture, tmpRoot, { pretty: false });
 
 const est = estimateLoadPath(fixture, { abortMs: 2500 });
 assert.ok(est.leanBytes < est.fullBytes);
@@ -116,6 +152,8 @@ assert.ok(offersJs.includes("OFFERS_PAGES_LEAN_PATH"));
 assert.ok(offersJs.includes("fetchOffersSectionShard"));
 assert.ok(offersJs.includes("fetchJsonWithTimeout"));
 assert.ok(offersJs.includes("mergeSectionPageDocs"));
+assert.ok(offersJs.includes("assertSameCatalogGeneration"));
+assert.ok(offersJs.includes("offers_generation_mismatch"));
 assert.ok(offersJs.includes("__p"));
 assert.ok(offersJs.includes('rel="sponsored noopener"'));
 assert.ok(offersJs.includes('target="_blank"'));

@@ -3,6 +3,7 @@
  * Full offers-public keeps audit sidecars; clients prefer shards.
  * Growth gate / paid button inventory are intentionally untouched.
  */
+import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -13,6 +14,46 @@ export const SECTIONS_DIRNAME = "iu-affiliate-cj-offers-sections-v1";
 /** Keep each section shard under mobile-friendly raw budget (~gzip ≪ 1MB). */
 export const SECTION_SHARD_SOFT_MAX_BYTES = 1_500_000;
 export const LEAN_INTRO_PRODUCTS = 3;
+
+/** Stable generation id for lean ↔ section consistency (client fail-closed on mismatch). */
+export function resolveCatalogGenerationId(src = {}) {
+  return String(src.snapshotId || src.updatedAt || src.generationId || "").trim() || null;
+}
+
+/** SHA-256 hex of canonical JSON with contentSha256 stripped (self-describing). */
+export function computeDocContentSha256(doc) {
+  const clone =
+    doc && typeof doc === "object" ? JSON.parse(JSON.stringify(doc)) : {};
+  delete clone.contentSha256;
+  const body = JSON.stringify(clone);
+  return crypto.createHash("sha256").update(body, "utf8").digest("hex");
+}
+
+export function sealDocIntegrity(doc, opts = {}) {
+  const out = doc && typeof doc === "object" ? { ...doc } : {};
+  const generationId =
+    opts.generationId != null
+      ? String(opts.generationId)
+      : resolveCatalogGenerationId(out);
+  if (generationId) out.generationId = generationId;
+  out.contentSha256 = computeDocContentSha256(out);
+  return out;
+}
+
+export function verifyDocContentSha256(doc) {
+  if (!doc || typeof doc !== "object") {
+    return { ok: false, reason: "DOC_MISSING" };
+  }
+  const expected = String(doc.contentSha256 || "").trim().toLowerCase();
+  if (!/^[a-f0-9]{64}$/.test(expected)) {
+    return { ok: false, reason: "CONTENT_SHA_MISSING" };
+  }
+  const actual = computeDocContentSha256(doc);
+  if (actual !== expected) {
+    return { ok: false, reason: "CONTENT_SHA_MISMATCH", expected, actual };
+  }
+  return { ok: true, contentSha256: actual, generationId: doc.generationId || null };
+}
 
 const CLIENT_TOP_KEYS = [
   "schema",
@@ -47,7 +88,8 @@ export function buildPagesLeanDoc(offersDoc, opts = {}) {
   const sections = Array.isArray(src.sections)
     ? src.sections.map((sec) => cloneSectionIntro(sec, introN))
     : [];
-  return {
+  const generationId = resolveCatalogGenerationId(src);
+  const lean = {
     schema: PAGES_LEAN_SCHEMA,
     version: src.version ?? 1,
     updatedAt: src.updatedAt || null,
@@ -56,6 +98,7 @@ export function buildPagesLeanDoc(offersDoc, opts = {}) {
     websitePid: src.websitePid || null,
     ok: src.ok !== false,
     snapshotId: src.snapshotId || null,
+    generationId,
     freshnessAppliedAt: src.freshnessAppliedAt || null,
     freshnessPolicy: src.freshnessPolicy || null,
     sections,
@@ -64,19 +107,22 @@ export function buildPagesLeanDoc(offersDoc, opts = {}) {
     sourceSchema: src.schema || null,
     leanIntroProducts: introN,
   };
+  return sealDocIntegrity(lean, { generationId });
 }
 
 export function buildSectionShardDoc(offersDoc, section, opts = {}) {
   const src = offersDoc && typeof offersDoc === "object" ? offersDoc : {};
   const pageIndex = opts.pageIndex != null ? Number(opts.pageIndex) : 0;
   const pageCount = opts.pageCount != null ? Number(opts.pageCount) : 1;
-  return {
+  const generationId = resolveCatalogGenerationId(src);
+  const doc = {
     schema: SECTION_SHARD_SCHEMA,
     version: src.version ?? 1,
     updatedAt: src.updatedAt || null,
     liveEnabled: src.liveEnabled === true,
     ok: src.ok !== false,
     snapshotId: src.snapshotId || null,
+    generationId,
     sectionKey: section?.sectionKey || null,
     pageIndex,
     pageCount,
@@ -84,6 +130,7 @@ export function buildSectionShardDoc(offersDoc, section, opts = {}) {
     sections: section ? [section] : [],
     note: "Per-section shard for lazy first-paint; paid partner buttons remain in managed/static catalog.",
   };
+  return sealDocIntegrity(doc, { generationId });
 }
 
 /**
@@ -207,6 +254,93 @@ export function writePagesShards(offersDoc, dataDir, opts = {}) {
     shardBytes,
     clientTopKeys: CLIENT_TOP_KEYS,
     softMaxBytes: Number(opts.softMaxBytes) || SECTION_SHARD_SOFT_MAX_BYTES,
+  };
+}
+
+/**
+ * Verify lean + all referenced section shards share one generation and valid hashes.
+ * Fail-closed: missing/corrupt/mismatched generation ⇒ ok:false.
+ */
+export function verifyPagedCatalogTree(dataDir, opts = {}) {
+  const dir = String(dataDir || "");
+  const leanPath = path.join(dir, PAGES_LEAN_FILENAME);
+  if (!fs.existsSync(leanPath)) {
+    return { ok: false, reason: "LEAN_MISSING", leanPath };
+  }
+  let lean;
+  try {
+    lean = JSON.parse(fs.readFileSync(leanPath, "utf8"));
+  } catch (err) {
+    return { ok: false, reason: "LEAN_PARSE_FAIL", error: String(err?.message || err) };
+  }
+  const leanSeal = verifyDocContentSha256(lean);
+  if (!leanSeal.ok && opts.requireContentSha !== false) {
+    // Prod may still lack hashes until next sync — allow soft mode via opts.
+    if (opts.requireContentSha === true) {
+      return { ok: false, reason: leanSeal.reason, leanSeal };
+    }
+  }
+  const generationId = resolveCatalogGenerationId(lean);
+  const sectionsDir = path.join(dir, SECTIONS_DIRNAME);
+  const sectionRows = [];
+  const fails = [];
+  for (const sec of lean.sections || []) {
+    const key = String(sec?.sectionKey || "").trim();
+    if (!key) continue;
+    const page0 = path.join(sectionsDir, key + ".json");
+    if (!fs.existsSync(page0)) {
+      fails.push({ sectionKey: key, reason: "SECTION_MISSING", file: key + ".json" });
+      continue;
+    }
+    let first;
+    try {
+      first = JSON.parse(fs.readFileSync(page0, "utf8"));
+    } catch (err) {
+      fails.push({ sectionKey: key, reason: "SECTION_PARSE_FAIL", error: String(err?.message || err) });
+      continue;
+    }
+    const gen = resolveCatalogGenerationId(first);
+    if (generationId && gen && gen !== generationId) {
+      fails.push({ sectionKey: key, reason: "GENERATION_MISMATCH", lean: generationId, section: gen });
+    }
+    if (opts.requireContentSha === true) {
+      const seal = verifyDocContentSha256(first);
+      if (!seal.ok) fails.push({ sectionKey: key, reason: seal.reason, file: key + ".json" });
+    }
+    const pageCount = Math.max(1, Number(first.pageCount) || 1);
+    for (let p = 2; p <= pageCount; p++) {
+      const name = key + "__p" + String(p) + ".json";
+      const fp = path.join(sectionsDir, name);
+      if (!fs.existsSync(fp)) {
+        fails.push({ sectionKey: key, reason: "PAGE_MISSING", file: name });
+        continue;
+      }
+      let pageDoc;
+      try {
+        pageDoc = JSON.parse(fs.readFileSync(fp, "utf8"));
+      } catch (err) {
+        fails.push({ sectionKey: key, reason: "PAGE_PARSE_FAIL", file: name, error: String(err?.message || err) });
+        continue;
+      }
+      const pgen = resolveCatalogGenerationId(pageDoc);
+      if (generationId && pgen && pgen !== generationId) {
+        fails.push({ sectionKey: key, reason: "GENERATION_MISMATCH", file: name, lean: generationId, section: pgen });
+      }
+      if (opts.requireContentSha === true) {
+        const seal = verifyDocContentSha256(pageDoc);
+        if (!seal.ok) fails.push({ sectionKey: key, reason: seal.reason, file: name });
+      }
+    }
+    sectionRows.push({ sectionKey: key, pageCount, ok: true });
+  }
+  return {
+    ok: fails.length === 0,
+    reason: fails.length ? "PAGED_CATALOG_INTEGRITY_FAIL" : null,
+    generationId,
+    leanSeal,
+    sectionCount: sectionRows.length,
+    sectionRows,
+    fails,
   };
 }
 
