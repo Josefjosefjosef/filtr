@@ -599,15 +599,59 @@
     return fetchJsonWithTimeout(src, 3500);
   }
 
+  function mergeSectionPageDocs(pages) {
+    if (!pages || !pages.length) return null;
+    var base = pages[0];
+    var sec0 = base && base.sections && base.sections[0] ? base.sections[0] : null;
+    if (!sec0) return base;
+    var products = [];
+    for (var i = 0; i < pages.length; i++) {
+      var sec = pages[i] && pages[i].sections && pages[i].sections[0];
+      var list = sec && sec.products ? sec.products : [];
+      for (var j = 0; j < list.length; j++) products.push(list[j]);
+    }
+    var out = {};
+    for (var k in base) {
+      if (Object.prototype.hasOwnProperty.call(base, k)) out[k] = base[k];
+    }
+    var mergedSec = {};
+    for (var sk in sec0) {
+      if (Object.prototype.hasOwnProperty.call(sec0, sk)) mergedSec[sk] = sec0[sk];
+    }
+    mergedSec.products = products;
+    out.sections = [mergedSec];
+    return out;
+  }
+
   function fetchOffersSectionShard(sectionKey) {
     if (!isSafeSectionKey(sectionKey)) return Promise.reject(new Error("bad_section_key"));
     if (sectionFailed[sectionKey]) return Promise.reject(new Error("section_failed"));
     if (sectionCached[sectionKey]) return Promise.resolve(sectionCached[sectionKey]);
-    var src = OFFERS_SECTION_BASE + encodeURIComponent(sectionKey) + ".json?v=" + String(Date.now());
+    var bust = String(Date.now());
+    var src = OFFERS_SECTION_BASE + encodeURIComponent(sectionKey) + ".json?v=" + bust;
     return fetchJsonWithTimeout(src, 2500)
-      .then(function (j) {
-        sectionCached[sectionKey] = j;
-        return j;
+      .then(function (first) {
+        var pageCount = first && first.pageCount ? Number(first.pageCount) : 1;
+        if (!(pageCount > 1)) {
+          sectionCached[sectionKey] = first;
+          return first;
+        }
+        var jobs = [];
+        for (var p = 2; p <= pageCount; p++) {
+          var pageUrl =
+            OFFERS_SECTION_BASE +
+            encodeURIComponent(sectionKey) +
+            "__p" +
+            String(p) +
+            ".json?v=" +
+            bust;
+          jobs.push(fetchJsonWithTimeout(pageUrl, 2500));
+        }
+        return Promise.all(jobs).then(function (rest) {
+          var merged = mergeSectionPageDocs([first].concat(rest));
+          sectionCached[sectionKey] = merged;
+          return merged;
+        });
       })
       .catch(function (err) {
         sectionFailed[sectionKey] = true;

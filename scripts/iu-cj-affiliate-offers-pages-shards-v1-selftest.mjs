@@ -85,13 +85,38 @@ assert.ok(fs.existsSync(path.join(tmpRoot, SECTIONS_DIRNAME, "aff-elektro.json")
 
 const est = estimateLoadPath(fixture, { abortMs: 2500 });
 assert.ok(est.leanBytes < est.fullBytes);
-assert.ok(est.maxShardBytes < est.leanBytes);
+assert.ok(est.maxShardBytes <= 1_500_000);
 assert.equal(est.architectureSafeFor5k, true);
+
+/* Oversized single-section must page under soft max. */
+const fatProducts = [];
+for (let i = 0; i < 400; i++) {
+  fatProducts.push({
+    title: "Fat-" + i + "-" + "y".repeat(2000),
+    publicationReady: true,
+    currentPrice: i,
+    affiliateUrl: "https://www.kqzyfj.com/click-fat-" + i,
+    advertiserId: "fat",
+    productId: "f" + i,
+    imageUrl: "https://example.com/" + "i".repeat(200),
+  });
+}
+const fatDoc = {
+  ...fixture,
+  sections: [{ sectionKey: "aff-fat", coupons: [], actions: [], products: fatProducts }],
+  stats: { uniqueProducts: 400 },
+};
+const fatEst = estimateLoadPath(fatDoc, { softMaxBytes: 200_000 });
+assert.ok(fatEst.maxShardBytes <= 200_000, "paged shards must stay under soft max");
+assert.ok(fatEst.shardCount >= 2, "fat section must split into pages");
+assert.equal(fatEst.architectureSafeFor5k, true);
 
 assert.ok(offersJs.includes("OFFERS_SECTION_BASE"));
 assert.ok(offersJs.includes("OFFERS_PAGES_LEAN_PATH"));
 assert.ok(offersJs.includes("fetchOffersSectionShard"));
-assert.ok(offersJs.includes("fetchJsonWithTimeout(src, 20000)"));
+assert.ok(offersJs.includes("fetchJsonWithTimeout"));
+assert.ok(offersJs.includes("mergeSectionPageDocs"));
+assert.ok(offersJs.includes("__p"));
 assert.ok(offersJs.includes('rel="sponsored noopener"'));
 assert.ok(offersJs.includes('target="_blank"'));
 assert.ok(offersJs.includes("defaultVisibleProducts: 3"));
