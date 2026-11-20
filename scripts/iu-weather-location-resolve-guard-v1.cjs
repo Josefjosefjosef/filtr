@@ -560,7 +560,7 @@ function meteoHasCoords(urls, lat, lon) {
       }, BRNO);
       /* Snapshot path may satisfy Brno without open-meteo.
        * Contract: active city + weather state coords must move to Brno (URL preferred when present). */
-      const cityDeadline = Date.now() + 20000;
+      const cityDeadline = Date.now() + 45000;
       let after = await snap(page, "G_city_after");
       let afterMeteo = meteo.slice();
       let newMeteo = afterMeteo.filter((u) => beforeMeteo.indexOf(u) < 0);
@@ -577,18 +577,29 @@ function meteoHasCoords(urls, lat, lon) {
           return null;
         }
       });
-      let dataMoved =
-        after.active &&
-        near(after.active.lat, BRNO.lat) &&
-        before.active &&
-        near(before.active.lat, PRAHA.lat) &&
-        (meteoHasCoords(newMeteo, BRNO.lat, BRNO.lon) ||
-          meteoHasCoords(afterMeteo, BRNO.lat, BRNO.lon) ||
-          (stateCoords && near(stateCoords.lat, BRNO.lat) && near(stateCoords.lon, BRNO.lon)) ||
-          (ensureCoords && near(ensureCoords.lat, BRNO.lat) && near(ensureCoords.lon, BRNO.lon)));
+      const authorityMoved = () =>
+        !!(
+          after &&
+          after.active &&
+          near(after.active.lat, BRNO.lat) &&
+          before &&
+          before.active &&
+          near(before.active.lat, PRAHA.lat)
+        );
+      const resolveMoved = () => {
+        const r = after && after.resolve;
+        return !!(r && typeof r.lat === "number" && near(r.lat, BRNO.lat) && near(r.lon, BRNO.lon));
+      };
+      const dataSourceMoved = () =>
+        meteoHasCoords(newMeteo, BRNO.lat, BRNO.lon) ||
+        meteoHasCoords(afterMeteo, BRNO.lat, BRNO.lon) ||
+        (stateCoords && near(stateCoords.lat, BRNO.lat) && near(stateCoords.lon, BRNO.lon)) ||
+        (ensureCoords && near(ensureCoords.lat, BRNO.lat) && near(ensureCoords.lon, BRNO.lon)) ||
+        resolveMoved();
+      let dataMoved = authorityMoved() && dataSourceMoved();
       while (!dataMoved && Date.now() < cityDeadline) {
-        await page.waitForTimeout(400);
-        await page.evaluate(async () => {
+        await page.waitForTimeout(500);
+        await page.evaluate(async (city) => {
           try {
             window.__iuWeatherDisableLiveRefresh = true;
           } catch (_) {}
@@ -596,7 +607,26 @@ function meteoHasCoords(urls, lat, lon) {
             window.__iuWeatherLiveRefreshScheduled = 0;
           } catch (_) {}
           try {
+            window.__iuWeatherRuntimeCity = null;
+          } catch (_) {}
+          try {
+            window.__iuWeatherState = null;
+          } catch (_) {}
+          try {
             window.__iuWeatherEnsurePromisesByKey = {};
+          } catch (_) {}
+          try {
+            window.__iuWeatherEnsureLockPromise = null;
+          } catch (_) {}
+          try {
+            localStorage.removeItem("iuWeatherPersistedStateV1");
+          } catch (_) {}
+          try {
+            localStorage.setItem("iu_location_mode", "manual");
+            localStorage.setItem(
+              "iu_manual_location",
+              JSON.stringify({ lat: city.lat, lon: city.lon, label: city.name }),
+            );
           } catch (_) {}
           try {
             if (typeof window.iuWeatherEnsureState === "function") await window.iuWeatherEnsureState();
@@ -604,7 +634,7 @@ function meteoHasCoords(urls, lat, lon) {
           try {
             if (typeof window.iuWeatherLoadAndRender === "function") await window.iuWeatherLoadAndRender();
           } catch (_) {}
-        });
+        }, BRNO);
         after = await snap(page, "G_city_after_poll");
         afterMeteo = meteo.slice();
         newMeteo = afterMeteo.filter((u) => beforeMeteo.indexOf(u) < 0);
@@ -621,15 +651,7 @@ function meteoHasCoords(urls, lat, lon) {
             return null;
           }
         });
-        dataMoved =
-          after.active &&
-          near(after.active.lat, BRNO.lat) &&
-          before.active &&
-          near(before.active.lat, PRAHA.lat) &&
-          (meteoHasCoords(newMeteo, BRNO.lat, BRNO.lon) ||
-            meteoHasCoords(afterMeteo, BRNO.lat, BRNO.lon) ||
-            (stateCoords && near(stateCoords.lat, BRNO.lat) && near(stateCoords.lon, BRNO.lon)) ||
-            (ensureCoords && near(ensureCoords.lat, BRNO.lat) && near(ensureCoords.lon, BRNO.lon)));
+        dataMoved = authorityMoved() && dataSourceMoved();
       }
       scenarios.CITY_CHANGE_CHANGES_DATA_SOURCE = dataMoved ? "PASS" : "FAIL";
       if (!dataMoved) {

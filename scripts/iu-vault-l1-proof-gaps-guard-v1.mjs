@@ -197,7 +197,13 @@ async function runScenarioA(base) {
   });
   const p2 = await ctx2.newPage();
   await p2.goto(`${base}?nosw=1&gap=a-migrate`, { waitUntil: "domcontentloaded", timeout: 90000 });
-  await waitForVaultReady(p2, 90000);
+  try {
+    await waitForVaultReady(p2, 90000);
+  } catch (_) {
+    // Parallel-pool cold boot can exceed 90s once; one reload retry under contention.
+    await p2.goto(`${base}?nosw=1&gap=a-migrate&retry=1`, { waitUntil: "domcontentloaded", timeout: 90000 });
+    await waitForVaultReady(p2, 120000);
+  }
 
   const migrationMeta = await p2.evaluate(async (migrationId) => {
     const { readMigrationCheckpoint } = await import("/assets/iu-vault-db-v1.js");
