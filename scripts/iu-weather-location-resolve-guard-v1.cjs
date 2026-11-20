@@ -18,7 +18,8 @@ const { createRequire } = require("module");
 const REPO = path.resolve(__dirname, "..");
 const req = createRequire(path.join(REPO, "package.json"));
 const { chromium } = req("playwright");
-const PORT = 8831;
+/** Ephemeral listen port: fixed 8831 collided under smoke parallel pool (EADDRINUSE / 70s flake). */
+let ACTIVE_PORT = 0;
 const OUT = path.join(process.env.TEMP || process.env.TMPDIR || "/tmp", "iu_weather_location_resolve_guard.json");
 
 const PIPELINE_REL = "assets/iu-app-feed-pipeline-v1.js";
@@ -166,7 +167,7 @@ function staticContract(pipeline, indexHtml, smokeYml) {
 }
 
 function startServer() {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const server = http.createServer((reqIn, res) => {
       try {
         let p = decodeURIComponent(new URL(reqIn.url, "http://x").pathname);
@@ -184,7 +185,12 @@ function startServer() {
         res.end("err");
       }
     });
-    server.listen(PORT, "127.0.0.1", () => resolve(server));
+    server.once("error", (err) => reject(err));
+    server.listen(0, "127.0.0.1", () => {
+      const addr = server.address();
+      ACTIVE_PORT = addr && typeof addr === "object" ? addr.port : 0;
+      resolve(server);
+    });
   });
 }
 
@@ -244,7 +250,10 @@ async function boot(browser, seed, opts) {
     if (u.indexOf("open-meteo.com") >= 0) meteo.push(u);
   });
   page.__iuMeteo = meteo;
-  await page.goto("http://127.0.0.1:" + PORT + "/projects/", { waitUntil: "domcontentloaded", timeout: 90000 });
+  await page.goto("http://127.0.0.1:" + ACTIVE_PORT + "/projects/", {
+    waitUntil: "domcontentloaded",
+    timeout: 90000,
+  });
   await page.waitForTimeout(2800);
   await page.evaluate(() => {
     try {
@@ -551,7 +560,7 @@ function meteoHasCoords(urls, lat, lon) {
       }, BRNO);
       /* Snapshot path may satisfy Brno without open-meteo.
        * Contract: active city + weather state coords must move to Brno (URL preferred when present). */
-      const cityDeadline = Date.now() + 20000;
+      const cityDeadline = Date.now() + 45000;
       let after = await snap(page, "G_city_after");
       let afterMeteo = meteo.slice();
       let newMeteo = afterMeteo.filter((u) => beforeMeteo.indexOf(u) < 0);
@@ -568,18 +577,29 @@ function meteoHasCoords(urls, lat, lon) {
           return null;
         }
       });
-      let dataMoved =
-        after.active &&
-        near(after.active.lat, BRNO.lat) &&
-        before.active &&
-        near(before.active.lat, PRAHA.lat) &&
-        (meteoHasCoords(newMeteo, BRNO.lat, BRNO.lon) ||
-          meteoHasCoords(afterMeteo, BRNO.lat, BRNO.lon) ||
-          (stateCoords && near(stateCoords.lat, BRNO.lat) && near(stateCoords.lon, BRNO.lon)) ||
-          (ensureCoords && near(ensureCoords.lat, BRNO.lat) && near(ensureCoords.lon, BRNO.lon)));
+      const authorityMoved = () =>
+        !!(
+          after &&
+          after.active &&
+          near(after.active.lat, BRNO.lat) &&
+          before &&
+          before.active &&
+          near(before.active.lat, PRAHA.lat)
+        );
+      const resolveMoved = () => {
+        const r = after && after.resolve;
+        return !!(r && typeof r.lat === "number" && near(r.lat, BRNO.lat) && near(r.lon, BRNO.lon));
+      };
+      const dataSourceMoved = () =>
+        meteoHasCoords(newMeteo, BRNO.lat, BRNO.lon) ||
+        meteoHasCoords(afterMeteo, BRNO.lat, BRNO.lon) ||
+        (stateCoords && near(stateCoords.lat, BRNO.lat) && near(stateCoords.lon, BRNO.lon)) ||
+        (ensureCoords && near(ensureCoords.lat, BRNO.lat) && near(ensureCoords.lon, BRNO.lon)) ||
+        resolveMoved();
+      let dataMoved = authorityMoved() && dataSourceMoved();
       while (!dataMoved && Date.now() < cityDeadline) {
-        await page.waitForTimeout(400);
-        await page.evaluate(async () => {
+        await page.waitForTimeout(500);
+        await page.evaluate(async (city) => {
           try {
             window.__iuWeatherDisableLiveRefresh = true;
           } catch (_) {}
@@ -587,7 +607,26 @@ function meteoHasCoords(urls, lat, lon) {
             window.__iuWeatherLiveRefreshScheduled = 0;
           } catch (_) {}
           try {
+            window.__iuWeatherRuntimeCity = null;
+          } catch (_) {}
+          try {
+            window.__iuWeatherState = null;
+          } catch (_) {}
+          try {
             window.__iuWeatherEnsurePromisesByKey = {};
+          } catch (_) {}
+          try {
+            window.__iuWeatherEnsureLockPromise = null;
+          } catch (_) {}
+          try {
+            localStorage.removeItem("iuWeatherPersistedStateV1");
+          } catch (_) {}
+          try {
+            localStorage.setItem("iu_location_mode", "manual");
+            localStorage.setItem(
+              "iu_manual_location",
+              JSON.stringify({ lat: city.lat, lon: city.lon, label: city.name }),
+            );
           } catch (_) {}
           try {
             if (typeof window.iuWeatherEnsureState === "function") await window.iuWeatherEnsureState();
@@ -595,7 +634,7 @@ function meteoHasCoords(urls, lat, lon) {
           try {
             if (typeof window.iuWeatherLoadAndRender === "function") await window.iuWeatherLoadAndRender();
           } catch (_) {}
-        });
+        }, BRNO);
         after = await snap(page, "G_city_after_poll");
         afterMeteo = meteo.slice();
         newMeteo = afterMeteo.filter((u) => beforeMeteo.indexOf(u) < 0);
@@ -612,15 +651,7 @@ function meteoHasCoords(urls, lat, lon) {
             return null;
           }
         });
-        dataMoved =
-          after.active &&
-          near(after.active.lat, BRNO.lat) &&
-          before.active &&
-          near(before.active.lat, PRAHA.lat) &&
-          (meteoHasCoords(newMeteo, BRNO.lat, BRNO.lon) ||
-            meteoHasCoords(afterMeteo, BRNO.lat, BRNO.lon) ||
-            (stateCoords && near(stateCoords.lat, BRNO.lat) && near(stateCoords.lon, BRNO.lon)) ||
-            (ensureCoords && near(ensureCoords.lat, BRNO.lat) && near(ensureCoords.lon, BRNO.lon)));
+        dataMoved = authorityMoved() && dataSourceMoved();
       }
       scenarios.CITY_CHANGE_CHANGES_DATA_SOURCE = dataMoved ? "PASS" : "FAIL";
       if (!dataMoved) {

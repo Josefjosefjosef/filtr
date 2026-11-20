@@ -37,7 +37,8 @@ export function assertNoUndefinedStrings(obj, path = "$") {
       bad.push(p);
       return;
     }
-    if (typeof v === "string" && /\bundefined\b/i.test(v)) bad.push(p + "=" + v);
+    // Flag only the literal token "undefined" (bad interpolation), not prose mentioning the word.
+    if (typeof v === "string" && /^undefined$/i.test(v.trim())) bad.push(p + "=" + v);
     if (v && typeof v === "object") {
       if (Array.isArray(v)) {
         v.forEach((x, i) => walk(x, p + "[" + i + "]"));
