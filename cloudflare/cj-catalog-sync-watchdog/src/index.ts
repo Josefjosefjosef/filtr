@@ -11,6 +11,13 @@ import {
   type GhRunLike,
 } from "./decision.ts";
 import { readGeneratedAtFromResponse } from "./freshness.ts";
+import {
+  buildProvenance,
+  createDecisionId,
+  dispatchStatusForCycle,
+  resolveGithubRunIdFromRuns,
+  type WatchdogDecisionProvenance,
+} from "./provenance.ts";
 
 export interface Env {
   GITHUB_TOKEN: string;
@@ -22,6 +29,8 @@ export interface Env {
   CATCHUP_COOLDOWN_MINUTES?: string;
   SLOT_DELAY_BUDGET_MINUTES?: string;
   MANUAL_TRIGGER_SECRET?: string;
+  /** Optional deploy-time git SHA for provenance.sha (set via wrangler vars if desired). */
+  SOURCE_SHA?: string;
 }
 
 function ghHeaders(token: string): HeadersInit {
@@ -106,8 +115,17 @@ export const CATCHUP_DISPATCH_INPUTS = {
   catchup_dispatch: "1",
 } as const;
 
+export function buildCatchupDispatchInputs(decisionId: string): Record<string, string> {
+  return {
+    ...CATCHUP_DISPATCH_INPUTS,
+    // Links CF decision → GHA run (durable via workflow input + run-name wd=).
+    watchdog_decision_id: String(decisionId || "").slice(0, 128),
+  };
+}
+
 async function dispatchCatchup(
   env: Env,
+  decisionId: string,
 ): Promise<{ status: number; ok: boolean; workflowState?: string | null; reason?: string }> {
   assertGithubToken(env);
   const [owner, repo] = env.GITHUB_REPOSITORY.split("/");
@@ -121,11 +139,13 @@ async function dispatchCatchup(
     },
     body: JSON.stringify({
       ref: "main",
-      inputs: CATCHUP_DISPATCH_INPUTS,
+      inputs: buildCatchupDispatchInputs(decisionId),
     }),
   });
   const bodyText = res.status === 204 ? "" : await res.text();
-  console.log(`[cj-catalog-sync-watchdog] dispatch status=${res.status} body=${bodyText.slice(0, 200)}`);
+  console.log(
+    `[cj-catalog-sync-watchdog] dispatch status=${res.status} decisionId=${decisionId} body=${bodyText.slice(0, 200)}`,
+  );
   if (res.status === 204) return { status: res.status, ok: true };
   let workflowState: string | null = null;
   let reason = `dispatch_failed status=${res.status}`;
@@ -152,6 +172,9 @@ export async function runCycle(
   const maxCatchups = Math.max(1, Number(env.MAX_CATCHUPS_PER_UTC_DAY) || 6);
   const cooldownMin = Math.max(1, Number(env.CATCHUP_COOLDOWN_MINUTES) || 60);
   const slotDelayBudget = Math.max(1, Number(env.SLOT_DELAY_BUDGET_MINUTES) || 180);
+  const nowMs = Date.now();
+  const timeIso = new Date(nowMs).toISOString();
+  const decisionId = createDecisionId(nowMs);
   const generatedAt = await fetchGeneratedAt(env);
   const runs = await listRuns(env);
 
@@ -160,13 +183,13 @@ export async function runCycle(
         action: "dispatch" as const,
         reason: "stale" as const,
         ageMinutes: generatedAt
-          ? (Date.now() - (parseIsoToMs(generatedAt) || Date.now())) / 60_000
+          ? (nowMs - (parseIsoToMs(generatedAt) || nowMs)) / 60_000
           : null,
         staleAfterMinutes: staleAfter,
       })
     : decideCjCatalogWatchdog({
         generatedAt,
-        nowMs: Date.now(),
+        nowMs,
         staleAfterMinutes: staleAfter,
         runs,
         maxCatchupsPerUtcDay: maxCatchups,
@@ -180,30 +203,93 @@ export async function runCycle(
     workflowState?: string | null;
     reason?: string;
   } | null = null;
+  let githubRunId: number | null = null;
+  const dispatchStartedMs = Date.now();
   if (decision.action === "dispatch" && allowMutations) {
-    dispatch = await dispatchCatchup(env);
+    dispatch = await dispatchCatchup(env, decisionId);
+    // Best-effort linkage: GitHub dispatch returns 204 without run id.
+    // Only accept a run when display_title embeds our decisionId (fail-closed).
+    if (dispatch.ok) {
+      try {
+        const afterRuns = await listRuns(env);
+        githubRunId = resolveGithubRunIdFromRuns({
+          runs: afterRuns,
+          decisionId,
+          dispatchStartedMs,
+        });
+      } catch (err) {
+        console.log(
+          `[cj-catalog-sync-watchdog] run_id_resolve_failed decisionId=${decisionId} err=${String(
+            err && (err as Error).message ? (err as Error).message : err,
+          )}`,
+        );
+      }
+    }
   }
 
   const catchupsToday = runs.filter((r) => {
     if (!isCatchupDispatchRun(r)) return false;
     const t = parseIsoToMs(r.created_at);
     if (t == null) return false;
-    return new Date(t).toISOString().slice(0, 10) === new Date().toISOString().slice(0, 10);
+    return new Date(t).toISOString().slice(0, 10) === new Date(nowMs).toISOString().slice(0, 10);
   }).length;
+
+  const ageMinutes =
+    "ageMinutes" in decision && decision.ageMinutes != null
+      ? Number(decision.ageMinutes)
+      : generatedAt
+        ? (nowMs - (parseIsoToMs(generatedAt) || nowMs)) / 60_000
+        : null;
+
+  const dispatchStatus = dispatchStatusForCycle({
+    action: decision.action,
+    allowMutations,
+    dispatch,
+  });
+
+  const provenance: WatchdogDecisionProvenance = buildProvenance({
+    decisionId,
+    timeIso,
+    decision,
+    dispatchStatus,
+    githubRunId,
+    sha: (env.SOURCE_SHA || "").trim() || null,
+    result:
+      decision.action !== "dispatch"
+        ? `skip:${decision.reason}`
+        : !allowMutations
+          ? "observe_only"
+          : dispatch && dispatch.ok
+            ? githubRunId != null
+              ? `dispatched_ok:run=${githubRunId}`
+              : "dispatched_ok:run_id_pending"
+            : `dispatch_failed:${dispatch?.reason || dispatch?.status || "unknown"}`,
+    // Never invent promotion / historical recovery confirmation from this cycle alone.
+    promotionDecision: null,
+    productionReadback: {
+      generatedAt,
+      ageMinutes: ageMinutes != null && Number.isFinite(ageMinutes) ? ageMinutes : null,
+      observedAt: timeIso,
+    },
+    slaBudgetMinutes: slotDelayBudget,
+  });
 
   const report = {
     service: "infouzel-cj-catalog-sync-watchdog",
     ok: decision.action !== "dispatch" || !allowMutations || !!(dispatch && dispatch.ok),
     observeOnly: !allowMutations,
-    triggerAt: new Date().toISOString(),
+    triggerAt: timeIso,
     generatedAt,
     catchupsToday,
     decision,
     dispatch,
+    provenance,
+    decisionId,
     workflowFile: env.WORKFLOW_FILE,
     freshnessUrl: env.FRESHNESS_URL,
     github_token_present: !!(env.GITHUB_TOKEN && env.GITHUB_TOKEN.trim()),
-    note: "Catch-up is workflow_dispatch only (CATCHUP_DISPATCH_NOT_SCHEDULE); never counted as schedule.",
+    note: "Catch-up is workflow_dispatch only (CATCHUP_DISPATCH_NOT_SCHEDULE); never counted as schedule. Provenance durable via decisionId→GHA input/run-name; historical WATCHDOG_RECOVERY_CONFIRMED requires evidence.",
+    anyWatchdogConfirmedHistorical: false,
   };
   console.log(`[cj-catalog-sync-watchdog] REPORT=${JSON.stringify(report)}`);
   if (allowMutations && decision.action === "dispatch" && dispatch && !dispatch.ok) {

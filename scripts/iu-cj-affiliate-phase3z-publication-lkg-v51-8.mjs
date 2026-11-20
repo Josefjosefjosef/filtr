@@ -1089,6 +1089,97 @@ export function summarizeLkgHoldProgress(doc) {
 
 export const PUBLIC_GROWTH_BUDGET_SCHEMA = "iu-cj-affiliate-phase3z-public-growth-budget-v51";
 
+/** Sidecar artifact — full deferred-new keys (offers JSON keeps sample ≤200). */
+export const DEFERRED_NEW_LEDGER_SCHEMA = "iu-affiliate-cj-deferred-new-ledger-v51";
+export const DEFERRED_NEW_LEDGER_FILENAME = "iu-affiliate-cj-deferred-new-ledger-v51.json";
+
+/**
+ * Build durable deferred-new ledger document (keys + reasons).
+ * Prefer writing this sidecar over embedding full keys into offers-public JSON.
+ */
+export function buildDeferredNewLedgerDocument(deferredNewKeys, opts = {}) {
+  const keys = Array.isArray(deferredNewKeys) ? deferredNewKeys.map(String) : [];
+  const reason = String(opts.reason || "PER_RUN_GROWTH_BUDGET");
+  const budget = opts.budget || null;
+  const productsByKey =
+    opts.productsByKey instanceof Map
+      ? opts.productsByKey
+      : opts.productsByKey && typeof opts.productsByKey === "object"
+        ? new Map(Object.entries(opts.productsByKey))
+        : null;
+  const catalogGeneration =
+    opts.catalogGeneration != null && Number.isFinite(Number(opts.catalogGeneration))
+      ? Number(opts.catalogGeneration)
+      : opts.catalogGeneration === null
+        ? null
+        : "UNKNOWN";
+  return {
+    schema: DEFERRED_NEW_LEDGER_SCHEMA,
+    updatedAt: opts.nowIso || new Date().toISOString(),
+    runId: opts.runId != null && String(opts.runId).trim() ? String(opts.runId) : "UNKNOWN",
+    catalogGeneration,
+    deferredNewCount: keys.length,
+    reason,
+    preferredCurrency: String(opts.preferredCurrency || "CZK").toUpperCase(),
+    budget: budget
+      ? {
+          allowedNew: budget.allowedNew,
+          cumulativeAddedSinceBaseline: budget.cumulativeAddedSinceBaseline,
+          cumulativeRemaining: budget.cumulativeRemaining,
+          uncappedMode: budget.uncappedMode === true,
+          maxCumulativeAbs: budget.maxCumulativeAbs,
+          maxGrowthAbs: budget.maxGrowthAbs,
+          maxGrowthRatio: budget.maxGrowthRatio,
+        }
+      : null,
+    keys,
+    entries: keys.map((key) => {
+      const [advertiserId, productId] = String(key).split("|");
+      const src = productsByKey ? productsByKey.get(key) : null;
+      const affiliateUrl = src?.affiliateUrl || null;
+      const affiliateUrlOk =
+        typeof affiliateUrl === "string" &&
+        /^https:\/\/(www\.)?(kqzyfj|jdoqocy|tkqlhce|dpbolvw|anrdoezrs|pjatr)\.(com|net)\//i.test(
+          affiliateUrl
+        );
+      return {
+        key,
+        advertiserId: advertiserId || null,
+        productId: productId || null,
+        stableProductKey: key,
+        partnership: src?.partnerName || src?.partnership || null,
+        sourceFeedId: src?.feedId || null,
+        category: src?.sectionKey || src?.category || null,
+        currency: src?.currency || null,
+        currentPrice: src?.currentPrice ?? null,
+        availability: src?.availability ?? null,
+        czEligibility:
+          src?.czEligibility != null
+            ? src.czEligibility
+            : src?.currency
+              ? String(src.currency).toUpperCase() === "CZK"
+                ? "CURRENCY_CZK"
+                : "CURRENCY_NON_CZK"
+              : "UNKNOWN",
+        affiliateUrlPresent: Boolean(affiliateUrl),
+        affiliateUrlValidated: affiliateUrlOk,
+        lkgHold: src?.lkgPublicHold === true,
+        publicationEligibility: src?.publicationEligibility || "UNKNOWN",
+        publicationDecision: "DEFERRED_NEW",
+        decision: "DEFERRED_NEW",
+        reason,
+        deferredAt: opts.nowIso || new Date().toISOString(),
+      };
+    }),
+    sampleOnlyInOffers: true,
+    uncappedMode: budget?.uncappedMode === true,
+    growthGateLocked: budget?.uncappedMode !== true,
+    evidenceCompleteness: "FULL_KEYS",
+    note:
+      "Full deferred-new identity ledger. Offers publicGrowthBudget keeps sample≤200 for size. When ledger is missing historically, reconstruct via durable PUBLICATION_ELIGIBLE not-in-public (expect small gap vs deferredNew count). Never invent SOURCE_CURRENT. Missing enrichment fields are UNKNOWN — never undefined.",
+  };
+}
+
 /**
  * Per-run + cumulative public growth budget.
  * Prevents splitting one exceptional +47% candidate into repeated +500 batches.
@@ -1218,6 +1309,10 @@ export function applyPublicGrowthBudget(nextDoc, prevDoc, opts = {}) {
   }
   uniquePublic = u.size;
 
+  const deferReason =
+    budget.cumulativeRemaining <= 0
+      ? "CUMULATIVE_BUDGET_EXHAUSTED"
+      : "PER_RUN_GROWTH_BUDGET";
   const deferredLedgerSample = deferredNew.slice(0, 200).map((key) => {
     const [advertiserId, productId] = String(key).split("|");
     return {
@@ -1227,11 +1322,28 @@ export function applyPublicGrowthBudget(nextDoc, prevDoc, opts = {}) {
       CANDIDATE_STATE: "PUBLICATION_ELIGIBLE_NEW",
       GROWTH_CLASS: "EXCEPTIONAL_NEW",
       DECISION: "DEFERRED_NEW",
-      REASON:
-        budget.cumulativeRemaining <= 0
-          ? "CUMULATIVE_BUDGET_EXHAUSTED"
-          : "PER_RUN_GROWTH_BUDGET",
+      REASON: deferReason,
     };
+  });
+  const productsByKey = new Map();
+  for (const sec of doc.sections || []) {
+    for (const p of sec.products || []) {
+      if (!p) continue;
+      const k = compoundProductKey(p.advertiserId, p.productId);
+      if (k && k !== "|") productsByKey.set(k, p);
+    }
+  }
+  if (opts.productsByKey instanceof Map) {
+    for (const [k, v] of opts.productsByKey) productsByKey.set(k, v);
+  }
+  const deferredLedger = buildDeferredNewLedgerDocument(deferredNew, {
+    reason: deferReason,
+    budget,
+    preferredCurrency,
+    nowIso: opts.nowIso,
+    runId: opts.runId || null,
+    catalogGeneration: opts.catalogGeneration != null ? opts.catalogGeneration : "UNKNOWN",
+    productsByKey,
   });
   doc.publicGrowthBudget = {
     schema: PUBLIC_GROWTH_BUDGET_SCHEMA,
@@ -1242,21 +1354,35 @@ export function applyPublicGrowthBudget(nextDoc, prevDoc, opts = {}) {
     deferredNew: deferredNew.length,
     publicEligibleAfter: uniquePublic,
     deferredDecisionLedgerSample: deferredLedgerSample,
+    deferredNewLedgerSchema: DEFERRED_NEW_LEDGER_SCHEMA,
+    deferredNewLedgerFile: DEFERRED_NEW_LEDGER_FILENAME,
+    deferredNewKeysPersistedInOffers: opts.attachDeferredNewKeys === true,
     note:
       deferredNew.length > 0
         ? "ROUTINE_SAFE_NEW_PRODUCT capped; remainder is EXCEPTIONAL_GROWTH (owner approval / cumulative budget)."
         : "Within routine public growth budget",
   };
+  if (opts.attachDeferredNewKeys === true) {
+    doc.publicGrowthBudget.deferredNewKeys = deferredNew;
+  }
 
   return {
     doc,
     budget,
     keptNew: [...keepNew],
     deferredNew,
+    deferredNewKeys: deferredNew.slice(),
+    deferReason,
+    deferredLedger,
     publicEligibleAfter: uniquePublic,
     prevPublicEligible: prevMap.size,
     publicGrowth: Math.max(0, uniquePublic - prevMap.size),
   };
+}
+
+/** @deprecated alias — prefer buildDeferredNewLedgerDocument */
+export function buildDeferredNewLedgerArtifact(opts = {}) {
+  return buildDeferredNewLedgerDocument(opts.deferredNewKeys || opts.keys || [], opts);
 }
 
 export function emptyPublicGrowthBudgetLedger(opts = {}) {

@@ -61,6 +61,11 @@ jobs:
             echo "WATCHDOG_DISPATCH_FAILED"
             exit 1
           fi
+          DECISION_ID="$(node -e "try{const j=JSON.parse(require('fs').readFileSync(process.argv[1],'utf8'));process.stdout.write(String((j.decisionId||j.provenance&&j.provenance.decisionId)||''))}catch(e){process.stdout.write('')}" "$OUT")"
+          echo "WATCHDOG_DECISION_ID=${DECISION_ID}"
+          if [ -n "$DECISION_ID" ]; then
+            echo "::notice title=CJ Watchdog Provenance::decisionId=${DECISION_ID} source=force_probe"
+          fi
           echo "WATCHDOG_PROBE_OK"
 
       - name: Stale-gated observe + authorized recovery
@@ -98,7 +103,14 @@ jobs:
               echo "WATCHDOG_STALE_ACT_FAILED=$dcode"
               exit 1
             fi
+            DECISION_ID="$(node -e "try{const j=JSON.parse(require('fs').readFileSync(process.argv[1],'utf8'));process.stdout.write(String((j.decisionId||j.provenance&&j.provenance.decisionId)||''))}catch(e){process.stdout.write('')}" "$DISP")"
+            echo "WATCHDOG_DECISION_ID=${DECISION_ID}"
+            if [ -n "$DECISION_ID" ]; then
+              echo "::notice title=CJ Watchdog Provenance::decisionId=${DECISION_ID} source=stale_act"
+            fi
             echo "WATCHDOG_STALE_ACT_ATTEMPTED=1"
           else
+            OBS_DECISION_ID="$(node -e "try{const j=JSON.parse(require('fs').readFileSync(process.argv[1],'utf8'));process.stdout.write(String((j.decisionId||j.provenance&&j.provenance.decisionId)||''))}catch(e){process.stdout.write('')}" "$OUT")"
+            echo "WATCHDOG_DECISION_ID=${OBS_DECISION_ID}"
             echo "WATCHDOG_OBSERVE_OK_NO_STALE_DISPATCH"
           fi

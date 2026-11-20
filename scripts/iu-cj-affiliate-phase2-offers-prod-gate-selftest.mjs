@@ -122,7 +122,15 @@ await new Promise((resolve) => {
   setTimeout(resolve, 30);
 });
 
-expect("fetched_public_json", fetchCalls.some((u) => u.includes("iu-affiliate-cj-offers-public-v1.json")));
+expect(
+  "fetched_public_json",
+  fetchCalls.some(
+    (u) =>
+      u.includes("iu-affiliate-cj-offers-sections-v1/") ||
+      u.includes("iu-affiliate-cj-offers-pages-v1.json") ||
+      u.includes("iu-affiliate-cj-offers-public-v1.json")
+  )
+);
 expect("mount_stays_empty_when_disarmed", mountState.html === "" || mountState.hidden === true);
 expect("no_cta_painted", !/Zobrazit nabídku/.test(mountState.html));
 

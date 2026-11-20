@@ -8,7 +8,8 @@
  *   - refuse empty LIVE overwrite of non-empty LKG
  *   - incomplete staging / apiOutage → keep LKG, do not arm
  *
- * Writes only projects/data/iu-affiliate-cj-offers-public(-lkg)-v1.json
+ * Writes projects/data/iu-affiliate-cj-offers-public(-lkg)-v1.json
+ * plus pages lean + per-section shards for client scale (growth gate unchanged).
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -25,6 +26,7 @@ import {
   validateOffersPublicPayload,
   emptyOffersDocument,
 } from "./iu-cj-affiliate-offers-public-build-v1.mjs";
+import { writePagesShards } from "./iu-cj-affiliate-offers-pages-shards-v1.mjs";
 import { isCjTrackingUrl } from "./iu-cj-affiliate-catalog-sync-publish-gate-v1.mjs";
 import {
   CJ_PRODUCT_SEARCH_MAX_LIMIT,
@@ -101,6 +103,8 @@ import {
   applyCumulativeGrowthLedger,
   resolvePublicGrowthBudgetLedger,
   isPublicOfferEligible,
+  buildDeferredNewLedgerDocument,
+  DEFERRED_NEW_LEDGER_FILENAME,
 } from "./iu-cj-affiliate-phase3z-publication-lkg-v51-8.mjs";
 import {
   mergeIntoDurableCatalog,
@@ -108,9 +112,12 @@ import {
   evaluatePublicPopulationGates,
   applyAvailabilityPublicationHolds,
   publicationEligibilityFromAvailability,
-  compactDurableCatalogForGitTip,
   DURABLE_CATALOG_GIT_HARD_MAX_BYTES,
 } from "./iu-cj-affiliate-phase3z-durable-catalog-v51.mjs";
+import {
+  loadDurableCatalogFromDir,
+  publishDurableCatalogAtomic,
+} from "./iu-cj-affiliate-phase3z-durable-catalog-shards-v51.mjs";
 import {
   buildProductFunnelDocument,
   computeHonestOffersStats,
@@ -2884,6 +2891,29 @@ export async function runOffersLiveSync(opts = {}) {
     } catch {
       // best-effort
     }
+    // Hook: full deferred-new keys → sidecar iu-affiliate-cj-deferred-new-ledger-v51.json
+    // (offers JSON keeps sample≤200). Does NOT unlock growth / never arms uncapped.
+    try {
+      const deferredLedgerPath = path.join(dataDir, DEFERRED_NEW_LEDGER_FILENAME);
+      const ledgerDoc =
+        growthApplied.deferredLedger ||
+        buildDeferredNewLedgerDocument(growthApplied.deferredNew, {
+          reason:
+            growthApplied.budget?.cumulativeRemaining <= 0
+              ? "CUMULATIVE_BUDGET_EXHAUSTED"
+              : "PER_RUN_GROWTH_BUDGET",
+          budget: growthApplied.budget,
+          preferredCurrency: String(env.IU_CJ_OFFERS_PUBLIC_PREFERRED_CURRENCY || "CZK"),
+          runId: env.GITHUB_RUN_ID || null,
+        });
+      fs.mkdirSync(dataDir, { recursive: true });
+      fs.writeFileSync(deferredLedgerPath, JSON.stringify(ledgerDoc, null, 2) + "\n", "utf8");
+      if (!publicationRestore) publicationRestore = {};
+      publicationRestore.deferredNewLedgerPath = deferredLedgerPath;
+      publicationRestore.deferredNewLedgerCount = ledgerDoc.deferredNewCount;
+    } catch {
+      // best-effort; never block promote on sidecar IO
+    }
     if (!publicationRestore) publicationRestore = {};
     publicationRestore.publicGrowthBudget = growthApplied.doc.publicGrowthBudget || null;
     publicationRestore.publicEligibleAfter = growthApplied.publicEligibleAfter;
@@ -2954,9 +2984,15 @@ export async function runOffersLiveSync(opts = {}) {
   const durableCatalogPathEarly = path.join(dataDir, "iu-affiliate-cj-durable-catalog-v51.json");
   try {
     fs.mkdirSync(dataDir, { recursive: true });
-    let priorDurable = fs.existsSync(durableCatalogPathEarly)
-      ? readJson(durableCatalogPathEarly, null)
-      : null;
+    // V51.8 scale: tip + HOLD/cold shards. Load full identity set (tip∪shards) before merge.
+    let priorDurable = null;
+    const priorLoaded = loadDurableCatalogFromDir(dataDir);
+    if (priorLoaded.ok && priorLoaded.doc?.products) {
+      priorDurable = priorLoaded.doc;
+    } else if (fs.existsSync(durableCatalogPathEarly)) {
+      // Legacy tip-only fallback when load fails without shards listed.
+      priorDurable = readJson(durableCatalogPathEarly, null);
+    }
     if (!priorDurable?.products && prevPublic?.sections) {
       priorDurable = seedDurableCatalogFromOffersPublic(prevPublic, {
         nowIso: new Date().toISOString(),
@@ -2982,30 +3018,41 @@ export async function runOffersLiveSync(opts = {}) {
       staleAfterHours: Number(env.IU_CJ_OFFERS_LKG_STALE_HOURS) || 72,
       livePublicKeys,
     });
-    // V51.8: pretty JSON + 74k identities exceeded GitHub 100MB → OFFERS_PUSH_FAILED.
-    // Minify + progressive HOLD presentation strip keeps identities; never drop keys.
-    const compacted = compactDurableCatalogForGitTip(durableMerge.doc);
-    if (!compacted.ok) {
+    // V51.8: minify + HOLD strip; if tip still over hard max → spill cold/HOLD to shards.
+    // Never throw OVER_GITHUB_LIMIT for size alone when spill keeps tip under hard max.
+    const published = publishDurableCatalogAtomic(dataDir, durableMerge.doc, {
+      nowIso: new Date().toISOString(),
+      hardMaxBytes: DURABLE_CATALOG_GIT_HARD_MAX_BYTES,
+    });
+    if (!published.ok) {
       throw new Error(
-        `DURABLE_CATALOG_OVER_GITHUB_LIMIT bytes=${compacted.bytes} hardMax=${DURABLE_CATALOG_GIT_HARD_MAX_BYTES}`
+        published.error ||
+          `DURABLE_CATALOG_PUBLISH_FAILED reason=${published.reason} tipBytes=${published.tipBytes || "n/a"}`
       );
     }
-    fs.writeFileSync(durableCatalogPathEarly, compacted.payload, "utf8");
     durableCatalogMeta = {
       ok: true,
       path: "projects/data/iu-affiliate-cj-durable-catalog-v51.json",
-      bytes: compacted.bytes,
-      softOk: compacted.softOk,
-      compactActions: compacted.actions,
+      bytes: published.tipBytes,
+      softOk: published.softOk,
+      compactActions: published.compactActions || [],
+      generation: published.generation,
+      shardCount: published.shardCount,
+      spilled: published.spilled === true,
+      tipSha256: published.tipSha256 || null,
+      identityCount: published.identityCount,
       stats: durableMerge.stats,
       lastMerge: durableMerge.doc.lastMerge || null,
     };
     console.log(
       JSON.stringify({
         IU_CJ_DURABLE_CATALOG_WRITE: "OK",
-        bytes: compacted.bytes,
-        softOk: compacted.softOk,
-        compactActions: compacted.actions,
+        bytes: published.tipBytes,
+        softOk: published.softOk,
+        generation: published.generation,
+        shardCount: published.shardCount,
+        spilled: published.spilled === true,
+        compactActions: published.compactActions || [],
         ...durableCatalogMeta.stats,
       })
     );
@@ -3609,6 +3656,24 @@ export async function runOffersLiveSync(opts = {}) {
   const tmp = publicPath + ".tmp." + process.pid;
   fs.writeFileSync(tmp, JSON.stringify(doc, null, 2) + "\n", "utf8");
   fs.renameSync(tmp, publicPath);
+  // Pages/PWA scale: lean client payload + per-section shards (does not unlock growth gate).
+  try {
+    const shardsMeta = writePagesShards(doc, dataDir, { pretty: true });
+    audit.pagesShards = {
+      ok: shardsMeta.ok === true,
+      leanPath: "projects/data/iu-affiliate-cj-offers-pages-v1.json",
+      sectionsDir: "projects/data/iu-affiliate-cj-offers-sections-v1",
+      shardCount: shardsMeta.shardCount,
+      leanBytes: shardsMeta.leanBytes,
+      maxShardBytes: shardsMeta.maxShardBytes,
+    };
+  } catch (shardErr) {
+    audit.pagesShards = {
+      ok: false,
+      error: String(shardErr && shardErr.message ? shardErr.message : shardErr),
+      note: "Non-fatal: full offers-public still promoted; client falls back to monolith.",
+    };
+  }
   audit.reason = "PROMOTED_ATOMIC";
   audit.wrote = true;
   // Advance cumulative growth only after a real public write (blocks batching bypass).
