@@ -1689,6 +1689,12 @@ jobs:
             fi
           done
           git add projects/data/iu-affiliate-cj-*.json
+          if [ -f projects/data/iu-affiliate-cj-offers-pages-v1.json ]; then
+            git add projects/data/iu-affiliate-cj-offers-pages-v1.json
+          fi
+          if [ -d projects/data/iu-affiliate-cj-offers-sections-v1 ]; then
+            git add projects/data/iu-affiliate-cj-offers-sections-v1
+          fi
           if git diff --cached --quiet; then
             echo "NO_OFFERS_CHANGES"
             exit 0
@@ -1925,6 +1931,8 @@ jobs:
             [ -z "$f" ] && continue
             case "$f" in
               projects/data/iu-affiliate-cj-offers-public-v1.json) ;;
+              projects/data/iu-affiliate-cj-offers-pages-v1.json) ;;
+              projects/data/iu-affiliate-cj-offers-sections-v1/*.json) ;;
               *) DATA_ONLY=false; break ;;
             esac
           done <<< "$CHANGED"
