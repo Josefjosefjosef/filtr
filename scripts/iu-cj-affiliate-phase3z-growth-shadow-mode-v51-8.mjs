@@ -135,21 +135,24 @@ export function reconstructDeferredCandidatesFromDurable(opts = {}) {
   const gap =
     reportedDeferred != null && Number.isFinite(reportedDeferred)
       ? reportedDeferred - keys.length
-      : null;
+      : "HISTORICAL_EVIDENCE_UNAVAILABLE";
   return {
     keys,
     productsByKey,
     durablePeTotal,
     publicEligibleInOffers: publicMap.size,
     reconstructedNotInPublic: keys.length,
-    reportedDeferredNew: reportedDeferred,
+    reportedDeferredNew:
+      reportedDeferred != null && Number.isFinite(reportedDeferred)
+        ? reportedDeferred
+        : "UNKNOWN",
     gap,
     gapNote:
-      gap == null
-        ? "No reported deferredNew to compare."
+      gap === "HISTORICAL_EVIDENCE_UNAVAILABLE"
+        ? "No reported deferredNew to compare (UNKNOWN / HISTORICAL_EVIDENCE_UNAVAILABLE)."
         : gap === 0
           ? "Reconstructed keys match reported deferredNew."
-          : "GAP: live deferredNew count includes identities not present as durable PUBLICATION_ELIGIBLE not-in-public (or eligibility/publicOffer drift). Full keys were never persisted (sample≤200 only).",
+          : "GAP: live deferredNew count includes identities not present as durable PUBLICATION_ELIGIBLE not-in-public (or eligibility/publicOffer drift). Full keys were never persisted historically (sample≤200 only).",
   };
 }
 

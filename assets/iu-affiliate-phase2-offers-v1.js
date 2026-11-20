@@ -11,6 +11,9 @@
   var PREVIEW_JSON_LOCAL = "/assets/cj-phase2-preview-autohotarek.local-dev.json";
   var PREVIEW_JSON_STUB = "/assets/cj-phase2-preview-autohotarek.json";
   var OFFERS_PUBLIC_PATH = "/projects/data/iu-affiliate-cj-offers-public-v1.json";
+  /* Pages scale: prefer per-section shard (then lean pages) over full audit JSON (~28MB). */
+  var OFFERS_PAGES_LEAN_PATH = "/projects/data/iu-affiliate-cj-offers-pages-v1.json";
+  var OFFERS_SECTION_BASE = "/projects/data/iu-affiliate-cj-offers-sections-v1/";
   var CSS_HREF = "/assets/iu-affiliate-phase2-offers-v1.css?v=cj-phase3z-offers-v33";
 
   function escapeHtml(s) {
@@ -546,32 +549,98 @@
 
   var publicCached = null;
   var publicFailed = false;
-  function fetchOffersPublic() {
-    if (publicFailed) return Promise.resolve(null);
-    if (publicCached) return Promise.resolve(publicCached);
-    var src = OFFERS_PUBLIC_PATH + "?v=" + String(Date.now());
+  var sectionCached = Object.create(null);
+  var sectionFailed = Object.create(null);
+
+  function fetchJsonWithTimeout(url, timeoutMs) {
     var ctrl = typeof AbortController !== "undefined" ? new AbortController() : null;
     var to = setTimeout(function () {
       try {
         if (ctrl) ctrl.abort();
       } catch (_) {}
-    }, 2500);
+    }, timeoutMs);
     var opts = { credentials: "same-origin", cache: "no-store" };
     if (ctrl) opts.signal = ctrl.signal;
-    return fetch(src, opts)
+    return fetch(url, opts)
       .then(function (r) {
         clearTimeout(to);
         if (!r.ok) throw new Error("offers_http_" + r.status);
         return r.json();
       })
+      .catch(function (err) {
+        clearTimeout(to);
+        throw err;
+      });
+  }
+
+  function isSafeSectionKey(sectionKey) {
+    return typeof sectionKey === "string" && /^[a-z0-9][a-z0-9._-]{0,80}$/i.test(sectionKey);
+  }
+
+  /** Legacy monolith — last resort (audit payload may include refreshCoverage ≈12MB+). */
+  function fetchOffersPublicFull() {
+    if (publicFailed) return Promise.resolve(null);
+    if (publicCached) return Promise.resolve(publicCached);
+    var src = OFFERS_PUBLIC_PATH + "?v=" + String(Date.now());
+    /* Last-resort monolith (~4MB gzip / ~28MB raw) — short abort permanently failed mobile. */
+    return fetchJsonWithTimeout(src, 20000)
       .then(function (j) {
         publicCached = j;
         return j;
       })
       .catch(function () {
-        clearTimeout(to);
         publicFailed = true;
         return null;
+      });
+  }
+
+  function fetchOffersPagesLean() {
+    var src = OFFERS_PAGES_LEAN_PATH + "?v=" + String(Date.now());
+    return fetchJsonWithTimeout(src, 3500);
+  }
+
+  function fetchOffersSectionShard(sectionKey) {
+    if (!isSafeSectionKey(sectionKey)) return Promise.reject(new Error("bad_section_key"));
+    if (sectionFailed[sectionKey]) return Promise.reject(new Error("section_failed"));
+    if (sectionCached[sectionKey]) return Promise.resolve(sectionCached[sectionKey]);
+    var src = OFFERS_SECTION_BASE + encodeURIComponent(sectionKey) + ".json?v=" + String(Date.now());
+    return fetchJsonWithTimeout(src, 2500)
+      .then(function (j) {
+        sectionCached[sectionKey] = j;
+        return j;
+      })
+      .catch(function (err) {
+        sectionFailed[sectionKey] = true;
+        throw err;
+      });
+  }
+
+  /**
+   * Scale path: section shard → lean pages → full public.
+   * Paid partner buttons stay in catalog JS/managed JSON (untouched here).
+   */
+  function fetchOffersPublic(sectionKey) {
+    if (sectionKey && isSafeSectionKey(sectionKey)) {
+      return fetchOffersSectionShard(sectionKey).catch(function () {
+        if (publicCached) return publicCached;
+        return fetchOffersPagesLean()
+          .then(function (j) {
+            publicCached = j;
+            return j;
+          })
+          .catch(function () {
+            return fetchOffersPublicFull();
+          });
+      });
+    }
+    if (publicCached) return Promise.resolve(publicCached);
+    return fetchOffersPagesLean()
+      .then(function (j) {
+        publicCached = j;
+        return j;
+      })
+      .catch(function () {
+        return fetchOffersPublicFull();
       });
   }
 
@@ -585,7 +654,7 @@
         .catch(function () {});
       return;
     }
-    fetchOffersPublic().then(function (doc) {
+    fetchOffersPublic(sectionKey).then(function (doc) {
       renderPublicSection(doc, sectionKey);
     });
   };

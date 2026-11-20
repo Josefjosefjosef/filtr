@@ -1030,6 +1030,7 @@ jobs:
             iu-affiliate-cj-product-reverify-v50.json \
             iu-affiliate-cj-product-identity-v50.json \
             iu-affiliate-cj-durable-catalog-v51.json \
+            iu-affiliate-cj-durable-catalog-lkg-v51.json \
             iu-affiliate-cj-public-growth-budget-v51.json
           do
             DP="projects/data/${DUR}"
@@ -1042,6 +1043,24 @@ jobs:
                 || true
             fi
           done
+          # V51.8 durable cold shards (flat tip-adjacent files; each under GitHub blob gate).
+          while IFS= read -r SHARD_REL; do
+            [ -z "$SHARD_REL" ] && continue
+            DP="projects/data/${SHARD_REL}"
+            if [ -f "$DP" ] && [ ! -s "$DP" ]; then rm -f "$DP"; fi
+            if [ ! -s "$DP" ]; then
+              restore_git_file \
+                "origin/data/cj-affiliate-catalog-sync:projects/data/${SHARD_REL}" \
+                "$DP" \
+                || restore_git_file "FETCH_HEAD:projects/data/${SHARD_REL}" "$DP" \
+                || true
+            fi
+          done < <(
+            {
+              git ls-tree --name-only "origin/data/cj-affiliate-catalog-sync" projects/data 2>/dev/null || true
+              git ls-tree --name-only FETCH_HEAD projects/data 2>/dev/null || true
+            } | awk -F/ '/iu-affiliate-cj-durable-catalog-(lkg-)?shard-v51-.*\.json$/ { print $NF }' | sort -u
+          )
           if [ -f "projects/data/iu-affiliate-cj-public-growth-budget-v51.json" ] && [ -s "projects/data/iu-affiliate-cj-public-growth-budget-v51.json" ]; then
             echo "GROWTH_BUDGET_LEDGER_RESTORED=1"
           else
@@ -1428,6 +1447,9 @@ jobs:
             projects/data/iu-affiliate-cj-product-reverify-v50.json
             projects/data/iu-affiliate-cj-product-identity-v50.json
             projects/data/iu-affiliate-cj-durable-catalog-v51.json
+            projects/data/iu-affiliate-cj-durable-catalog-lkg-v51.json
+            projects/data/iu-affiliate-cj-durable-catalog-shard-v51-*.json
+            projects/data/iu-affiliate-cj-durable-catalog-lkg-shard-v51-*.json
             projects/data/iu-affiliate-cj-public-growth-budget-v51.json
             projects/data/iu-affiliate-cj-deferred-new-ledger-v51.json
           if-no-files-found: warn
@@ -1454,6 +1476,9 @@ jobs:
             projects/data/iu-affiliate-cj-product-reverify-v50.json
             projects/data/iu-affiliate-cj-product-identity-v50.json
             projects/data/iu-affiliate-cj-durable-catalog-v51.json
+            projects/data/iu-affiliate-cj-durable-catalog-lkg-v51.json
+            projects/data/iu-affiliate-cj-durable-catalog-shard-v51-*.json
+            projects/data/iu-affiliate-cj-durable-catalog-lkg-shard-v51-*.json
             projects/data/iu-affiliate-cj-public-growth-budget-v51.json
           if-no-files-found: warn
           retention-days: 90
@@ -1484,8 +1509,15 @@ jobs:
           if [ -s "$IDR" ]; then cp "$IDR" "${STASH}/$(basename "$IDR")"; fi
           if [ -s "$FUN" ]; then cp "$FUN" "${STASH}/$(basename "$FUN")"; fi
           # V50: stash THIS RUN's continuation/progress/history/durable ledgers before orphan wipe.
-          for f in iu-affiliate-cj-feed-continuation-v47.json iu-affiliate-cj-declared-product-decomposition-v47.json iu-affiliate-cj-missing-feed-partners-v47.json iu-affiliate-cj-product-progress-v48.json iu-affiliate-cj-fetched-published-funnel-v48.json iu-affiliate-cj-price-availability-history-v48.json iu-affiliate-cj-durable-price-history-v50.json iu-affiliate-cj-durable-price-history-archive-v51.json iu-affiliate-cj-product-reverify-v50.json iu-affiliate-cj-product-identity-v50.json iu-affiliate-cj-durable-catalog-v51.json iu-affiliate-cj-public-growth-budget-v51.json; do
+          for f in iu-affiliate-cj-feed-continuation-v47.json iu-affiliate-cj-declared-product-decomposition-v47.json iu-affiliate-cj-missing-feed-partners-v47.json iu-affiliate-cj-product-progress-v48.json iu-affiliate-cj-fetched-published-funnel-v48.json iu-affiliate-cj-price-availability-history-v48.json iu-affiliate-cj-durable-price-history-v50.json iu-affiliate-cj-durable-price-history-archive-v51.json iu-affiliate-cj-product-reverify-v50.json iu-affiliate-cj-product-identity-v50.json iu-affiliate-cj-durable-catalog-v51.json iu-affiliate-cj-durable-catalog-lkg-v51.json iu-affiliate-cj-public-growth-budget-v51.json; do
             if [ -s "projects/data/${f}" ]; then cp "projects/data/${f}" "${STASH}/${f}"; fi
+          done
+          # V51.8: stash durable cold shards + LKG shards (orphan wipe would otherwise drop them).
+          mkdir -p "${STASH}/durable-shards"
+          for f in projects/data/iu-affiliate-cj-durable-catalog-shard-v51-*.json \
+                   projects/data/iu-affiliate-cj-durable-catalog-lkg-shard-v51-*.json; do
+            [ -s "$f" ] || continue
+            cp "$f" "${STASH}/durable-shards/$(basename "$f")"
           done
           # V38: stash THIS RUN's offers before orphan+clean so Commit offers is not fed prev-only LKG.
           for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json; do
@@ -1534,12 +1566,18 @@ jobs:
           if [ -s "${STASH}/$(basename "$IDR")" ]; then cp "${STASH}/$(basename "$IDR")" "projects/data/$(basename "$IDR")"; fi
           if [ -s "${STASH}/$(basename "$FUN")" ]; then cp "${STASH}/$(basename "$FUN")" "projects/data/$(basename "$FUN")"; fi
           # Restore live offers into workspace for the following Commit offers step (orphan wiped them).
-          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json iu-affiliate-cj-miss-products-v38.json iu-affiliate-cj-feed-inventory-v40.json iu-affiliate-cj-cumulative-coverage-v40.json iu-affiliate-cj-identity-repair-v40.json iu-affiliate-cj-product-funnel-v46.json iu-affiliate-cj-feed-continuation-v47.json iu-affiliate-cj-declared-product-decomposition-v47.json iu-affiliate-cj-missing-feed-partners-v47.json iu-affiliate-cj-product-progress-v48.json iu-affiliate-cj-fetched-published-funnel-v48.json iu-affiliate-cj-price-availability-history-v48.json iu-affiliate-cj-durable-price-history-v50.json iu-affiliate-cj-durable-price-history-archive-v51.json iu-affiliate-cj-product-reverify-v50.json iu-affiliate-cj-product-identity-v50.json iu-affiliate-cj-durable-catalog-v51.json iu-affiliate-cj-public-growth-budget-v51.json; do
+          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json iu-affiliate-cj-miss-products-v38.json iu-affiliate-cj-feed-inventory-v40.json iu-affiliate-cj-cumulative-coverage-v40.json iu-affiliate-cj-identity-repair-v40.json iu-affiliate-cj-product-funnel-v46.json iu-affiliate-cj-feed-continuation-v47.json iu-affiliate-cj-declared-product-decomposition-v47.json iu-affiliate-cj-missing-feed-partners-v47.json iu-affiliate-cj-product-progress-v48.json iu-affiliate-cj-fetched-published-funnel-v48.json iu-affiliate-cj-price-availability-history-v48.json iu-affiliate-cj-durable-price-history-v50.json iu-affiliate-cj-durable-price-history-archive-v51.json iu-affiliate-cj-product-reverify-v50.json iu-affiliate-cj-product-identity-v50.json iu-affiliate-cj-durable-catalog-v51.json iu-affiliate-cj-durable-catalog-lkg-v51.json iu-affiliate-cj-public-growth-budget-v51.json; do
             if [ -s "${STASH}/live/${f}" ]; then cp "${STASH}/live/${f}" "projects/data/${f}"; fi
             if [ -s "${STASH}/$(basename "${f}")" ] && [ ! -s "projects/data/${f}" ]; then
               cp "${STASH}/$(basename "${f}")" "projects/data/${f}"
             fi
           done
+          if [ -d "${STASH}/durable-shards" ]; then
+            for f in "${STASH}/durable-shards"/*.json; do
+              [ -s "$f" ] || continue
+              cp "$f" "projects/data/$(basename "$f")"
+            done
+          fi
           # Refuse to stage zero-byte JSON (would brick schedule promote).
           find projects/data -name 'iu-affiliate-cj-*.json' -size 0 -delete || true
           # V51.8: GitHub rejects blobs >100MB (GH001). Fail closed before push.
@@ -1589,8 +1627,14 @@ jobs:
             if [ -f "$f" ]; then cp "$f" "${STASH}/iu-affiliate-cj-${name}-v1.json"; fi
           done
           # V45: offers slim tip must preserve feed-inventory/cumulative/identity (was wiping Persist step).
-          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json iu-affiliate-cj-miss-products-v38.json iu-affiliate-cj-feed-inventory-v40.json iu-affiliate-cj-cumulative-coverage-v40.json iu-affiliate-cj-identity-repair-v40.json iu-affiliate-cj-product-funnel-v46.json iu-affiliate-cj-feed-continuation-v47.json iu-affiliate-cj-declared-product-decomposition-v47.json iu-affiliate-cj-missing-feed-partners-v47.json iu-affiliate-cj-product-progress-v48.json iu-affiliate-cj-fetched-published-funnel-v48.json iu-affiliate-cj-price-availability-history-v48.json iu-affiliate-cj-durable-price-history-v50.json iu-affiliate-cj-durable-price-history-archive-v51.json iu-affiliate-cj-product-reverify-v50.json iu-affiliate-cj-product-identity-v50.json iu-affiliate-cj-durable-catalog-v51.json iu-affiliate-cj-public-growth-budget-v51.json; do
+          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json iu-affiliate-cj-miss-products-v38.json iu-affiliate-cj-feed-inventory-v40.json iu-affiliate-cj-cumulative-coverage-v40.json iu-affiliate-cj-identity-repair-v40.json iu-affiliate-cj-product-funnel-v46.json iu-affiliate-cj-feed-continuation-v47.json iu-affiliate-cj-declared-product-decomposition-v47.json iu-affiliate-cj-missing-feed-partners-v47.json iu-affiliate-cj-product-progress-v48.json iu-affiliate-cj-fetched-published-funnel-v48.json iu-affiliate-cj-price-availability-history-v48.json iu-affiliate-cj-durable-price-history-v50.json iu-affiliate-cj-durable-price-history-archive-v51.json iu-affiliate-cj-product-reverify-v50.json iu-affiliate-cj-product-identity-v50.json iu-affiliate-cj-durable-catalog-v51.json iu-affiliate-cj-durable-catalog-lkg-v51.json iu-affiliate-cj-public-growth-budget-v51.json; do
             if [ -f "projects/data/${f}" ]; then cp "projects/data/${f}" "${STASH}/${f}"; fi
+          done
+          mkdir -p "${STASH}/durable-shards"
+          for f in projects/data/iu-affiliate-cj-durable-catalog-shard-v51-*.json \
+                   projects/data/iu-affiliate-cj-durable-catalog-lkg-shard-v51-*.json; do
+            [ -s "$f" ] || continue
+            cp "$f" "${STASH}/durable-shards/$(basename "$f")"
           done
           git config user.name "iu-cj-catalog-sync-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -1599,7 +1643,7 @@ jobs:
             git show "origin/${SYNC_BRANCH}:projects/data/iu-affiliate-cj-${name}-v1.json" \
               > "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" 2>/dev/null || true
           done
-          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json iu-affiliate-cj-miss-products-v38.json iu-affiliate-cj-feed-inventory-v40.json iu-affiliate-cj-cumulative-coverage-v40.json iu-affiliate-cj-identity-repair-v40.json iu-affiliate-cj-product-funnel-v46.json iu-affiliate-cj-feed-continuation-v47.json iu-affiliate-cj-declared-product-decomposition-v47.json iu-affiliate-cj-missing-feed-partners-v47.json iu-affiliate-cj-product-progress-v48.json iu-affiliate-cj-fetched-published-funnel-v48.json iu-affiliate-cj-price-availability-history-v48.json iu-affiliate-cj-durable-price-history-v50.json iu-affiliate-cj-durable-price-history-archive-v51.json iu-affiliate-cj-product-reverify-v50.json iu-affiliate-cj-product-identity-v50.json iu-affiliate-cj-durable-catalog-v51.json iu-affiliate-cj-public-growth-budget-v51.json; do
+          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json iu-affiliate-cj-miss-products-v38.json iu-affiliate-cj-feed-inventory-v40.json iu-affiliate-cj-cumulative-coverage-v40.json iu-affiliate-cj-identity-repair-v40.json iu-affiliate-cj-product-funnel-v46.json iu-affiliate-cj-feed-continuation-v47.json iu-affiliate-cj-declared-product-decomposition-v47.json iu-affiliate-cj-missing-feed-partners-v47.json iu-affiliate-cj-product-progress-v48.json iu-affiliate-cj-fetched-published-funnel-v48.json iu-affiliate-cj-price-availability-history-v48.json iu-affiliate-cj-durable-price-history-v50.json iu-affiliate-cj-durable-price-history-archive-v51.json iu-affiliate-cj-product-reverify-v50.json iu-affiliate-cj-product-identity-v50.json iu-affiliate-cj-durable-catalog-v51.json iu-affiliate-cj-durable-catalog-lkg-v51.json iu-affiliate-cj-public-growth-budget-v51.json; do
             tmp="${STASH}/prev/${f}.tmp"
             if git show "origin/${SYNC_BRANCH}:projects/data/${f}" > "${tmp}" 2>/dev/null; then
               if [ -s "${tmp}" ]; then mv "${tmp}" "${STASH}/prev/${f}"; else rm -f "${tmp}"; fi
@@ -1622,13 +1666,19 @@ jobs:
               cp "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" "projects/data/iu-affiliate-cj-${name}-v1.json"
             fi
           done
-          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json iu-affiliate-cj-miss-products-v38.json iu-affiliate-cj-feed-inventory-v40.json iu-affiliate-cj-cumulative-coverage-v40.json iu-affiliate-cj-identity-repair-v40.json iu-affiliate-cj-product-funnel-v46.json iu-affiliate-cj-feed-continuation-v47.json iu-affiliate-cj-declared-product-decomposition-v47.json iu-affiliate-cj-missing-feed-partners-v47.json iu-affiliate-cj-product-progress-v48.json iu-affiliate-cj-fetched-published-funnel-v48.json iu-affiliate-cj-price-availability-history-v48.json iu-affiliate-cj-durable-price-history-v50.json iu-affiliate-cj-durable-price-history-archive-v51.json iu-affiliate-cj-product-reverify-v50.json iu-affiliate-cj-product-identity-v50.json iu-affiliate-cj-durable-catalog-v51.json iu-affiliate-cj-public-growth-budget-v51.json; do
+          for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json iu-affiliate-cj-miss-products-v38.json iu-affiliate-cj-feed-inventory-v40.json iu-affiliate-cj-cumulative-coverage-v40.json iu-affiliate-cj-identity-repair-v40.json iu-affiliate-cj-product-funnel-v46.json iu-affiliate-cj-feed-continuation-v47.json iu-affiliate-cj-declared-product-decomposition-v47.json iu-affiliate-cj-missing-feed-partners-v47.json iu-affiliate-cj-product-progress-v48.json iu-affiliate-cj-fetched-published-funnel-v48.json iu-affiliate-cj-price-availability-history-v48.json iu-affiliate-cj-durable-price-history-v50.json iu-affiliate-cj-durable-price-history-archive-v51.json iu-affiliate-cj-product-reverify-v50.json iu-affiliate-cj-product-identity-v50.json iu-affiliate-cj-durable-catalog-v51.json iu-affiliate-cj-durable-catalog-lkg-v51.json iu-affiliate-cj-public-growth-budget-v51.json; do
             if [ -s "${STASH}/${f}" ]; then cp "${STASH}/${f}" "projects/data/${f}"
             elif [ -s "${STASH}/prev/${f}" ]; then cp "${STASH}/prev/${f}" "projects/data/${f}"; fi
           done
+          if [ -d "${STASH}/durable-shards" ]; then
+            for f in "${STASH}/durable-shards"/*.json; do
+              [ -s "$f" ] || continue
+              cp "$f" "projects/data/$(basename "$f")"
+            done
+          fi
           find projects/data -name 'iu-affiliate-cj-*.json' -size 0 -delete || true
           # V51.8: GitHub rejects blobs >100MB (GH001). Fail closed before push.
-          # offers-live-sync writes minified+compact durable catalog (~86MB for 74k ids).
+          # offers-live-sync writes tip (+ cold shards); each blob must stay under workflow 99e6.
           for f in projects/data/iu-affiliate-cj-*.json; do
             [ -f "$f" ] || continue
             sz=$(wc -c < "$f" | tr -d ' ')
@@ -1816,7 +1866,11 @@ jobs:
           git checkout -B "${BR}"
           mkdir -p projects/data
           cp /tmp/iu-offers-public-incoming.json projects/data/iu-affiliate-cj-offers-public-v1.json
+          # Pages/PWA scale shards (lean + per-section) — growth gate untouched.
+          node --input-type=module -e "import fs from 'node:fs'; import { writePagesShards } from './scripts/iu-cj-affiliate-offers-pages-shards-v1.mjs'; const doc=JSON.parse(fs.readFileSync('projects/data/iu-affiliate-cj-offers-public-v1.json','utf8')); const m=writePagesShards(doc,'projects/data',{pretty:false}); console.log(JSON.stringify({IU_CJ_PAGES_SHARDS_PROMOTE:m.ok?'OK':'FAIL',shardCount:m.shardCount,leanBytes:m.leanBytes,maxShardBytes:m.maxShardBytes}));"
           git add projects/data/iu-affiliate-cj-offers-public-v1.json
+          git add projects/data/iu-affiliate-cj-offers-pages-v1.json
+          git add projects/data/iu-affiliate-cj-offers-sections-v1
           if git diff --cached --quiet; then
             echo "NO_OFFERS_PUBLIC_CHANGES"
             {
@@ -1824,14 +1878,14 @@ jobs:
             } >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          if git diff --cached --name-only | grep -Ev '^projects/data/iu-affiliate-cj-offers-public-v1\.json$'; then
+          if git diff --cached --name-only | grep -Ev '^projects/data/iu-affiliate-cj-offers-(public-v1\.json|pages-v1\.json|sections-v1/.+\.json)$'; then
             echo "BLOCKER=UNEXPECTED_OFFERS_PROMOTE_PATHS"
             git diff --cached --name-only
             exit 1
           fi
           git commit --trailer "Co-authored-by: Cursor <cursoragent@cursor.com>" -m "chore(data): promote CJ offers-public (coupons/actions/products)"
           git push origin "HEAD:${BR}"
-          BODY=$(printf '%s\n' "## Summary" "- Data-only promote of projects/data/iu-affiliate-cj-offers-public-v1.json" "- Coupons/actions/products publicationReady only" "- Required checks + auto-merge (data-only; no admin merge)" "- Supersedes older open offers promote PRs" "" "## What does NOT change" "- Catalog JS, slot policy, MANUAL_PROTECTED, managed-public, secrets")
+          BODY=$(printf '%s\n' "## Summary" "- Data-only promote of projects/data/iu-affiliate-cj-offers-public-v1.json" "- Also emits pages lean + per-section shards for client scale" "- Coupons/actions/products publicationReady only" "- Required checks + auto-merge (data-only; no admin merge)" "- Supersedes older open offers promote PRs" "" "## What does NOT change" "- Catalog JS, slot policy, MANUAL_PROTECTED, managed-public, secrets, growth gate")
           # Close older open promote PRs (stale candidates must not overwrite newer).
           while IFS= read -r OLD; do
             [ -z "$OLD" ] && continue
