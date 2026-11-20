@@ -15,7 +15,9 @@ name: CJ Affiliate catalog sync (fetch ? publish)
 
 run-name: >-
   ${{ github.event_name == 'workflow_dispatch' && inputs.catchup_dispatch == '1'
-      && format('CATCHUP_DISPATCH_NOT_SCHEDULE {0}', github.run_id)
+      && (inputs.watchdog_decision_id != ''
+          && format('CATCHUP_DISPATCH_NOT_SCHEDULE {0} wd={1}', github.run_id, inputs.watchdog_decision_id)
+          || format('CATCHUP_DISPATCH_NOT_SCHEDULE {0}', github.run_id))
       || format('CJ catalog sync ({0})', github.event_name) }}
 
 on:
@@ -91,6 +93,11 @@ on:
         options:
           - "0"
           - "1"
+      watchdog_decision_id:
+        description: "Optional CF watchdog decisionId for durable catch-up provenance (wd= in run-name); empty=unlinked"
+        required: false
+        default: ""
+        type: string
       lkg_recovery_git_ref:
         description: "Optional git SHA/ref of trusted older offers-public for unauthorized-loss LKG recovery (empty=off)"
         required: false
@@ -113,6 +120,20 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      - name: Echo CF watchdog decision provenance (catch-up linkage)
+        if: github.event_name == 'workflow_dispatch' && inputs.catchup_dispatch == '1'
+        env:
+          WATCHDOG_DECISION_ID: ${{ inputs.watchdog_decision_id }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          echo "WATCHDOG_DECISION_ID=${WATCHDOG_DECISION_ID:-}"
+          echo "GITHUB_RUN_ID=${RUN_ID}"
+          if [ -n "${WATCHDOG_DECISION_ID:-}" ]; then
+            echo "::notice title=CJ Watchdog Provenance::decisionId=${WATCHDOG_DECISION_ID} githubRunId=${RUN_ID}"
+          else
+            echo "NOTE=catch-up without watchdog_decision_id (schedule-watch or manual); not WATCHDOG_RECOVERY_CONFIRMED"
+          fi
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
