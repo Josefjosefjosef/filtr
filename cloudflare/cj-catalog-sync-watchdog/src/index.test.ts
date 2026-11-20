@@ -3,7 +3,7 @@
  */
 import assert from "node:assert/strict";
 import { afterEach, beforeEach, describe, it } from "node:test";
-import worker, { CATCHUP_DISPATCH_INPUTS, type Env } from "./index.ts";
+import worker, { CATCHUP_DISPATCH_INPUTS, buildCatchupDispatchInputs, type Env } from "./index.ts";
 
 const SECRET = "test-manual-trigger-secret";
 const FRESHNESS_URL = "https://infouzel.cz/projects/data/iu-affiliate-cj-offers-public-v1.json";
@@ -127,6 +127,39 @@ describe("cj catalog watchdog probe security", () => {
     assert.equal(parsed.inputs.catchup_dispatch, CATCHUP_DISPATCH_INPUTS.catchup_dispatch);
     assert.equal(parsed.inputs.promote_offers_public, "1");
     assert.equal(parsed.inputs.execute_live_fetch, "1");
+    assert.match(String(parsed.inputs.watchdog_decision_id || ""), /^cjwd_/);
+    const j = (await res.json()) as {
+      decisionId: string;
+      provenance: { decisionId: string; githubRunId: number | null; promotionDecision: null };
+      anyWatchdogConfirmedHistorical: boolean;
+    };
+    assert.match(j.decisionId, /^cjwd_/);
+    assert.equal(j.provenance.decisionId, j.decisionId);
+    assert.equal(j.provenance.promotionDecision, null);
+    assert.equal(j.anyWatchdogConfirmedHistorical, false);
+    // Fail-closed: mock runs lack wd= marker → githubRunId stays null
+    assert.equal(j.provenance.githubRunId, null);
+  });
+
+  it("buildCatchupDispatchInputs embeds decisionId", () => {
+    const inputs = buildCatchupDispatchInputs("cjwd_test_deadbeef");
+    assert.equal(inputs.watchdog_decision_id, "cjwd_test_deadbeef");
+    assert.equal(inputs.catchup_dispatch, "1");
+  });
+
+  it("anonymous /probe includes provenance without claiming historical recovery", async () => {
+    const res = await worker.fetch(new Request("https://example/probe"), env);
+    assert.equal(res.status, 200);
+    const j = (await res.json()) as {
+      observeOnly: boolean;
+      decisionId: string;
+      provenance: { dispatchStatus: string; githubRunId: number | null };
+      anyWatchdogConfirmedHistorical: boolean;
+    };
+    assert.equal(j.observeOnly, true);
+    assert.match(j.decisionId, /^cjwd_/);
+    assert.equal(j.provenance.dispatchStatus, "observe_only");
+    assert.equal(j.anyWatchdogConfirmedHistorical, false);
   });
 
   it("unauthorized /probe?dispatch=1 is 401", async () => {
