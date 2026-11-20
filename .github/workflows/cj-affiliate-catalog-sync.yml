@@ -1408,6 +1408,7 @@ jobs:
             projects/data/iu-affiliate-cj-product-identity-v50.json
             projects/data/iu-affiliate-cj-durable-catalog-v51.json
             projects/data/iu-affiliate-cj-public-growth-budget-v51.json
+            projects/data/iu-affiliate-cj-deferred-new-ledger-v51.json
           if-no-files-found: warn
       - name: Upload product-feed checkpoints (V31 continuation)
         uses: actions/upload-artifact@v4
