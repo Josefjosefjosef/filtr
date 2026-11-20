@@ -260,11 +260,58 @@ export function spillDurableCatalogToShards(fullDoc, opts = {}) {
   let tipBytes = tipBytesForProducts(compacted.doc, tipProducts);
   const target = tipBytes > tipHardBudget ? tipHardBudget : tipSoftBudget;
 
-  for (const key of ranked) {
-    if (tipBytes <= target) break;
-    coldPool[key] = tipProducts[key];
-    delete tipProducts[key];
-    tipBytes = tipBytesForProducts(compacted.doc, tipProducts);
+  // Spill cold keys via binary search on count (≈log2 N tip serializations, not N).
+  if (tipBytes > target && ranked.length) {
+    // Move all cold aside first, then put hottest cold back onto tip while under target.
+    for (const key of ranked) {
+      coldPool[key] = tipProducts[key];
+      delete tipProducts[key];
+    }
+    const coldOnlyBytes = tipBytesForProducts(compacted.doc, tipProducts);
+    if (coldOnlyBytes > tipHardBudget) {
+      // restore for error path accounting
+      for (const key of ranked) {
+        tipProducts[key] = coldPool[key];
+        delete coldPool[key];
+      }
+      tipBytes = tipBytesForProducts(compacted.doc, tipProducts);
+    } else {
+      // ranked[0]=coldest. Put back from the end (least-cold / newest HOLD) first.
+      let lo = 0; // number of coldest keys that remain spilled
+      let hi = ranked.length;
+      while (lo < hi) {
+        const mid = Math.floor((lo + hi) / 2);
+        for (let i = mid; i < ranked.length; i++) {
+          tipProducts[ranked[i]] = coldPool[ranked[i]];
+        }
+        const probeBytes = tipBytesForProducts(compacted.doc, tipProducts);
+        for (let i = mid; i < ranked.length; i++) {
+          delete tipProducts[ranked[i]];
+        }
+        if (probeBytes <= target) hi = mid;
+        else lo = mid + 1;
+      }
+      const keepSpilled = lo;
+      for (let i = 0; i < ranked.length; i++) {
+        if (i < keepSpilled) continue;
+        tipProducts[ranked[i]] = coldPool[ranked[i]];
+        delete coldPool[ranked[i]];
+      }
+      tipBytes = tipBytesForProducts(compacted.doc, tipProducts);
+      // If still slightly over (headroom), spill one more batch from tip cold.
+      if (tipBytes > target) {
+        for (let i = keepSpilled; i < ranked.length && tipBytes > target; i++) {
+          const key = ranked[i];
+          if (!tipProducts[key]) continue;
+          coldPool[key] = tipProducts[key];
+          delete tipProducts[key];
+          if ((i - keepSpilled) % 64 === 63 || i === ranked.length - 1) {
+            tipBytes = tipBytesForProducts(compacted.doc, tipProducts);
+          }
+        }
+        tipBytes = tipBytesForProducts(compacted.doc, tipProducts);
+      }
+    }
   }
 
   // If still over tip budget after all cold spilled, fail closed (eligible-only tip too large).

@@ -13,10 +13,12 @@ export const DURABLE_R2_MIGRATION_PLAN = Object.freeze({
   status: "PLAN_ONLY_NO_CUTOVER",
   keepActive: {
     gitTipCompact: true,
+    gitTipShardedColdArchive: true,
     softMaxBytes: 88_000_000,
     hardMaxBytes: 98_000_000,
     workflowGateBytes: 99_000_000,
     failClosedOnHard: true,
+    note: "V51.8: HOLD/cold spill to tip-adjacent shard files keeps tip under hard without raising 98e6; R2 remains long-term.",
   },
   target: {
     stagingPrefix: "cj-durable/staging/",
