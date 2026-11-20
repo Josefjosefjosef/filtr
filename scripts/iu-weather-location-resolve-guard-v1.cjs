@@ -18,7 +18,8 @@ const { createRequire } = require("module");
 const REPO = path.resolve(__dirname, "..");
 const req = createRequire(path.join(REPO, "package.json"));
 const { chromium } = req("playwright");
-const PORT = 8831;
+/** Ephemeral listen port: fixed 8831 collided under smoke parallel pool (EADDRINUSE / 70s flake). */
+let ACTIVE_PORT = 0;
 const OUT = path.join(process.env.TEMP || process.env.TMPDIR || "/tmp", "iu_weather_location_resolve_guard.json");
 
 const PIPELINE_REL = "assets/iu-app-feed-pipeline-v1.js";
@@ -166,7 +167,7 @@ function staticContract(pipeline, indexHtml, smokeYml) {
 }
 
 function startServer() {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const server = http.createServer((reqIn, res) => {
       try {
         let p = decodeURIComponent(new URL(reqIn.url, "http://x").pathname);
@@ -184,7 +185,12 @@ function startServer() {
         res.end("err");
       }
     });
-    server.listen(PORT, "127.0.0.1", () => resolve(server));
+    server.once("error", (err) => reject(err));
+    server.listen(0, "127.0.0.1", () => {
+      const addr = server.address();
+      ACTIVE_PORT = addr && typeof addr === "object" ? addr.port : 0;
+      resolve(server);
+    });
   });
 }
 
@@ -244,7 +250,10 @@ async function boot(browser, seed, opts) {
     if (u.indexOf("open-meteo.com") >= 0) meteo.push(u);
   });
   page.__iuMeteo = meteo;
-  await page.goto("http://127.0.0.1:" + PORT + "/projects/", { waitUntil: "domcontentloaded", timeout: 90000 });
+  await page.goto("http://127.0.0.1:" + ACTIVE_PORT + "/projects/", {
+    waitUntil: "domcontentloaded",
+    timeout: 90000,
+  });
   await page.waitForTimeout(2800);
   await page.evaluate(() => {
     try {
