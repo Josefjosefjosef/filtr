@@ -231,14 +231,35 @@ async function openCalculator(page, calcId, expectedTitle) {
   throw lastErr || new Error("openCalculator failed:" + calcId);
 }
 
-async function measureHeaderStable(page, attempts = 16) {
+async function measureHeaderStable(page, attempts = 40) {
   let last = null;
   for (let i = 0; i < attempts; i++) {
     last = await measureHeader(page);
     if (last && last.header && last.title) return last;
-    await page.waitForTimeout(200);
+    await page.waitForTimeout(250);
   }
   return last;
+}
+
+async function waitForMeasurableHub(page) {
+  await page.waitForFunction(
+    () => {
+      const panel = document.getElementById("iuFinancialCalcPanel");
+      const header = document.querySelector("#iuFinancialCalcPanel .iu-financial-overlay-header");
+      const title = document.getElementById("iuFinancialCalcTitle");
+      if (!panel || panel.hasAttribute("hidden") || !header || !title) return false;
+      if (!panel.classList.contains("iu-financial-overlay-panel--hub")) return false;
+      const hr = header.getBoundingClientRect();
+      let tr = title.getBoundingClientRect();
+      if ((tr.width < 1 || tr.height < 1) && typeof title.getClientRects === "function") {
+        const rects = title.getClientRects();
+        if (rects && rects.length) tr = rects[0];
+      }
+      return hr.width > 1 && hr.height > 1 && tr.width > 1 && tr.height > 1;
+    },
+    null,
+    { timeout: 60000 },
+  );
 }
 
 function validateHubSingleRow(row, viewportLabel) {
@@ -325,6 +346,14 @@ async function runViewport(page, viewport, label) {
 
   await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 120000 });
   await openHub(page);
+  try {
+    await waitForMeasurableHub(page);
+  } catch (_) {
+    // One recovery boot under parallel-pool contention (tablet hub 0×0 rect flake).
+    await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 120000 });
+    await openHub(page);
+    await waitForMeasurableHub(page);
+  }
   fails.push(...validateHubSingleRow(await measureHeaderStable(page), label));
 
   for (const calc of LONG_CALCS) {
