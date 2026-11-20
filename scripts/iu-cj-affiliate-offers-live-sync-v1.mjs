@@ -101,6 +101,8 @@ import {
   applyCumulativeGrowthLedger,
   resolvePublicGrowthBudgetLedger,
   isPublicOfferEligible,
+  buildDeferredNewLedgerDocument,
+  DEFERRED_NEW_LEDGER_FILENAME,
 } from "./iu-cj-affiliate-phase3z-publication-lkg-v51-8.mjs";
 import {
   mergeIntoDurableCatalog,
@@ -2883,6 +2885,29 @@ export async function runOffersLiveSync(opts = {}) {
       fs.writeFileSync(growthBudgetPath, JSON.stringify(growthLedger, null, 2) + "\n", "utf8");
     } catch {
       // best-effort
+    }
+    // Hook: full deferred-new keys → sidecar iu-affiliate-cj-deferred-new-ledger-v51.json
+    // (offers JSON keeps sample≤200). Does NOT unlock growth / never arms uncapped.
+    try {
+      const deferredLedgerPath = path.join(dataDir, DEFERRED_NEW_LEDGER_FILENAME);
+      const ledgerDoc =
+        growthApplied.deferredLedger ||
+        buildDeferredNewLedgerDocument(growthApplied.deferredNew, {
+          reason:
+            growthApplied.budget?.cumulativeRemaining <= 0
+              ? "CUMULATIVE_BUDGET_EXHAUSTED"
+              : "PER_RUN_GROWTH_BUDGET",
+          budget: growthApplied.budget,
+          preferredCurrency: String(env.IU_CJ_OFFERS_PUBLIC_PREFERRED_CURRENCY || "CZK"),
+          runId: env.GITHUB_RUN_ID || null,
+        });
+      fs.mkdirSync(dataDir, { recursive: true });
+      fs.writeFileSync(deferredLedgerPath, JSON.stringify(ledgerDoc, null, 2) + "\n", "utf8");
+      if (!publicationRestore) publicationRestore = {};
+      publicationRestore.deferredNewLedgerPath = deferredLedgerPath;
+      publicationRestore.deferredNewLedgerCount = ledgerDoc.deferredNewCount;
+    } catch {
+      // best-effort; never block promote on sidecar IO
     }
     if (!publicationRestore) publicationRestore = {};
     publicationRestore.publicGrowthBudget = growthApplied.doc.publicGrowthBudget || null;

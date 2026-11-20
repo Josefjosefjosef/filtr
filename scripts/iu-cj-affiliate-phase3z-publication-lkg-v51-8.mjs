@@ -1089,6 +1089,55 @@ export function summarizeLkgHoldProgress(doc) {
 
 export const PUBLIC_GROWTH_BUDGET_SCHEMA = "iu-cj-affiliate-phase3z-public-growth-budget-v51";
 
+/** Sidecar artifact — full deferred-new keys (offers JSON keeps sample ≤200). */
+export const DEFERRED_NEW_LEDGER_SCHEMA = "iu-affiliate-cj-deferred-new-ledger-v51";
+export const DEFERRED_NEW_LEDGER_FILENAME = "iu-affiliate-cj-deferred-new-ledger-v51.json";
+
+/**
+ * Build durable deferred-new ledger document (keys + reasons).
+ * Prefer writing this sidecar over embedding full keys into offers-public JSON.
+ */
+export function buildDeferredNewLedgerDocument(deferredNewKeys, opts = {}) {
+  const keys = Array.isArray(deferredNewKeys) ? deferredNewKeys.map(String) : [];
+  const reason = String(opts.reason || "PER_RUN_GROWTH_BUDGET");
+  const budget = opts.budget || null;
+  return {
+    schema: DEFERRED_NEW_LEDGER_SCHEMA,
+    updatedAt: opts.nowIso || new Date().toISOString(),
+    runId: opts.runId || null,
+    deferredNewCount: keys.length,
+    reason,
+    preferredCurrency: String(opts.preferredCurrency || "CZK").toUpperCase(),
+    budget: budget
+      ? {
+          allowedNew: budget.allowedNew,
+          cumulativeAddedSinceBaseline: budget.cumulativeAddedSinceBaseline,
+          cumulativeRemaining: budget.cumulativeRemaining,
+          uncappedMode: budget.uncappedMode === true,
+          maxCumulativeAbs: budget.maxCumulativeAbs,
+          maxGrowthAbs: budget.maxGrowthAbs,
+          maxGrowthRatio: budget.maxGrowthRatio,
+        }
+      : null,
+    keys,
+    entries: keys.map((key) => {
+      const [advertiserId, productId] = String(key).split("|");
+      return {
+        key,
+        advertiserId: advertiserId || null,
+        productId: productId || null,
+        decision: "DEFERRED_NEW",
+        reason,
+      };
+    }),
+    sampleOnlyInOffers: true,
+    uncappedMode: budget?.uncappedMode === true,
+    growthGateLocked: budget?.uncappedMode !== true,
+    note:
+      "Full deferred-new identity ledger. Offers publicGrowthBudget keeps sample≤200 for size. When ledger is missing historically, reconstruct via durable PUBLICATION_ELIGIBLE not-in-public (expect small gap vs deferredNew count). Never invent SOURCE_CURRENT.",
+  };
+}
+
 /**
  * Per-run + cumulative public growth budget.
  * Prevents splitting one exceptional +47% candidate into repeated +500 batches.
@@ -1218,6 +1267,10 @@ export function applyPublicGrowthBudget(nextDoc, prevDoc, opts = {}) {
   }
   uniquePublic = u.size;
 
+  const deferReason =
+    budget.cumulativeRemaining <= 0
+      ? "CUMULATIVE_BUDGET_EXHAUSTED"
+      : "PER_RUN_GROWTH_BUDGET";
   const deferredLedgerSample = deferredNew.slice(0, 200).map((key) => {
     const [advertiserId, productId] = String(key).split("|");
     return {
@@ -1227,11 +1280,15 @@ export function applyPublicGrowthBudget(nextDoc, prevDoc, opts = {}) {
       CANDIDATE_STATE: "PUBLICATION_ELIGIBLE_NEW",
       GROWTH_CLASS: "EXCEPTIONAL_NEW",
       DECISION: "DEFERRED_NEW",
-      REASON:
-        budget.cumulativeRemaining <= 0
-          ? "CUMULATIVE_BUDGET_EXHAUSTED"
-          : "PER_RUN_GROWTH_BUDGET",
+      REASON: deferReason,
     };
+  });
+  const deferredLedger = buildDeferredNewLedgerDocument(deferredNew, {
+    reason: deferReason,
+    budget,
+    preferredCurrency,
+    nowIso: opts.nowIso,
+    runId: opts.runId || null,
   });
   doc.publicGrowthBudget = {
     schema: PUBLIC_GROWTH_BUDGET_SCHEMA,
@@ -1242,21 +1299,35 @@ export function applyPublicGrowthBudget(nextDoc, prevDoc, opts = {}) {
     deferredNew: deferredNew.length,
     publicEligibleAfter: uniquePublic,
     deferredDecisionLedgerSample: deferredLedgerSample,
+    deferredNewLedgerSchema: DEFERRED_NEW_LEDGER_SCHEMA,
+    deferredNewLedgerFile: DEFERRED_NEW_LEDGER_FILENAME,
+    deferredNewKeysPersistedInOffers: opts.attachDeferredNewKeys === true,
     note:
       deferredNew.length > 0
         ? "ROUTINE_SAFE_NEW_PRODUCT capped; remainder is EXCEPTIONAL_GROWTH (owner approval / cumulative budget)."
         : "Within routine public growth budget",
   };
+  if (opts.attachDeferredNewKeys === true) {
+    doc.publicGrowthBudget.deferredNewKeys = deferredNew;
+  }
 
   return {
     doc,
     budget,
     keptNew: [...keepNew],
     deferredNew,
+    deferredNewKeys: deferredNew.slice(),
+    deferReason,
+    deferredLedger,
     publicEligibleAfter: uniquePublic,
     prevPublicEligible: prevMap.size,
     publicGrowth: Math.max(0, uniquePublic - prevMap.size),
   };
+}
+
+/** @deprecated alias — prefer buildDeferredNewLedgerDocument */
+export function buildDeferredNewLedgerArtifact(opts = {}) {
+  return buildDeferredNewLedgerDocument(opts.deferredNewKeys || opts.keys || [], opts);
 }
 
 export function emptyPublicGrowthBudgetLedger(opts = {}) {
