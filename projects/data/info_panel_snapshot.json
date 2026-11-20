@@ -1,6 +1,6 @@
 {
   "version": 4,
-  "generatedAt": "2026-11-20T03:10:53.003Z",
+  "generatedAt": "2026-11-20T11:36:08.702Z",
   "catalogCount": 31,
   "items": {
     "eur_czk": {
@@ -24,46 +24,46 @@
       "legalStatus": "verified_requires_attribution"
     },
     "bitcoin": {
-      "value": 1378478,
+      "value": 1376410,
       "unit": "Kč",
       "primaryLabel": "",
-      "secondaryValue": "▼ 0,82 %",
+      "secondaryValue": "▼ 3,07 %",
       "trendDirection": "down",
-      "updatedAt": "2026-11-20T03:10:53.003Z",
+      "updatedAt": "2026-11-20T11:36:08.702Z",
       "isLive": true,
       "legalStatus": "verified_requires_attribution"
     },
     "gold": {
-      "value": 78531,
+      "value": 79846,
       "unit": "Kč",
       "primaryLabel": "PAX Gold",
-      "secondaryValue": "▼ 4,54 %",
+      "secondaryValue": "▼ 3,37 %",
       "trendDirection": "down",
-      "updatedAt": "2026-11-20T03:10:53.003Z",
+      "updatedAt": "2026-11-20T11:36:08.702Z",
       "isLive": true,
       "legalStatus": "verified_requires_attribution"
     },
     "fuel": {
-      "value": 40.28,
+      "value": 39.44,
       "unit": "Kč/l",
       "primaryLabel": "Natural 95",
-      "secondaryValue": "▼ 2,70 Kč/l",
+      "secondaryValue": "▼ 0,84 Kč/l",
       "trendDirection": "down",
-      "updatedAt": "46. týden 2026",
+      "updatedAt": "47. týden 2026",
       "isLive": true,
       "legalStatus": "verified_requires_attribution",
-      "referencePeriod": "46. týden 2026"
+      "referencePeriod": "47. týden 2026"
     },
     "transport": {
-      "value": 46.26,
+      "value": 44.4,
       "unit": "Kč/l",
       "primaryLabel": "Motorová nafta",
-      "secondaryValue": "▼ 1,99 Kč/l",
+      "secondaryValue": "▼ 1,86 Kč/l",
       "trendDirection": "down",
-      "updatedAt": "46. týden 2026",
+      "updatedAt": "47. týden 2026",
       "isLive": true,
       "legalStatus": "verified_requires_attribution",
-      "referencePeriod": "46. týden 2026"
+      "referencePeriod": "47. týden 2026"
     },
     "electricity": {
       "value": 102.4,
@@ -350,18 +350,65 @@
   "errors": [],
   "scheduler": {
     "checkedBuckets": [
+      "csu_fuel",
       "cnb",
-      "coingecko"
+      "csu_coicop",
+      "coingecko",
+      "csu_inflation",
+      "mpsv_labor",
+      "csu_wage_q",
+      "csu_wage_y",
+      "csu_gdp",
+      "csu_industry",
+      "csu_construction",
+      "csu_retail",
+      "csu_agriculture",
+      "csu_employment",
+      "csu_population",
+      "csu_births",
+      "csu_deaths",
+      "csu_marriages",
+      "csu_divorces",
+      "csu_foreigners",
+      "csu_seniors",
+      "csu_migration",
+      "csu_education",
+      "csu_health",
+      "csu_crime",
+      "csu_elections"
     ],
     "skippedBuckets": [
-      "cnb"
+      "cnb",
+      "csu_coicop",
+      "csu_inflation",
+      "mpsv_labor",
+      "csu_wage_q",
+      "csu_wage_y",
+      "csu_gdp",
+      "csu_industry",
+      "csu_construction",
+      "csu_retail",
+      "csu_agriculture",
+      "csu_employment",
+      "csu_population",
+      "csu_births",
+      "csu_deaths",
+      "csu_marriages",
+      "csu_divorces",
+      "csu_foreigners",
+      "csu_seniors",
+      "csu_migration",
+      "csu_education",
+      "csu_health",
+      "csu_crime",
+      "csu_elections"
     ]
   },
   "bucketFetchedAt": {
-    "csu_fuel": "2026-11-13T16:18:56.794Z",
+    "csu_fuel": "2026-11-20T11:36:08.702Z",
     "cnb": "2026-11-19T21:29:38.039Z",
     "csu_coicop": "2026-11-11T06:11:28.232Z",
-    "coingecko": "2026-11-20T03:10:53.003Z",
+    "coingecko": "2026-11-20T11:36:08.702Z",
     "csu_inflation": "2026-11-11T06:11:28.232Z",
     "mpsv_labor": "2026-11-10T02:05:33.290Z",
     "csu_wage_q": "2026-09-03T21:41:16.538Z",
