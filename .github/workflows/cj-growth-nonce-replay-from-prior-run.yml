@@ -1,0 +1,90 @@
+# Second independent GitHub Actions RUN that replays a nonce reserved in a prior run.
+# Proves durable D1 OWNER_APPROVAL_REPLAY across separate workflow_dispatch run IDs.
+# Does NOT arm growth / does NOT write catalog.
+name: CJ growth nonce replay from prior run
+
+on:
+  workflow_dispatch:
+    inputs:
+      prior_run_id:
+        description: "Prior workflow run id that uploaded cj-growth-nonce-cross-run-a"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: cj-growth-nonce-cross-run
+  cancel-in-progress: false
+
+jobs:
+  replay-independent-run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download prior run A artifact
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PRIOR_RUN_ID: ${{ inputs.prior_run_id }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/prior-a
+          gh run download "$PRIOR_RUN_ID" -n cj-growth-nonce-cross-run-a -D /tmp/prior-a
+          test -s /tmp/prior-a/cross-run-a.json
+          cp /tmp/prior-a/cross-run-a.json ./cross-run-a.json
+          echo "PRIOR_ARTIFACT_OK=1"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Replay reservation from prior run (must DENY)
+        env:
+          IU_CJ_GROWTH_NONCE_STORE_URL: ${{ secrets.IU_CJ_GROWTH_NONCE_STORE_URL }}
+          IU_CJ_GROWTH_NONCE_STORE_TOKEN: ${{ secrets.IU_CJ_GROWTH_NONCE_STORE_TOKEN }}
+          PRIOR_RUN_ID: ${{ inputs.prior_run_id }}
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          import fs from "node:fs";
+          const prev = JSON.parse(fs.readFileSync("cross-run-a.json", "utf8"));
+          const base = String(process.env.IU_CJ_GROWTH_NONCE_STORE_URL || "").replace(/\/+$/, "");
+          const token = String(process.env.IU_CJ_GROWTH_NONCE_STORE_TOKEN || "");
+          if (!base || token.length < 16) {
+            console.log(JSON.stringify({ ok: false, reason: "SECRETS_MISSING" }));
+            process.exit(2);
+          }
+          const body = prev.body;
+          if (!body || !body.reservationKey) {
+            console.log(JSON.stringify({ ok: false, reason: "ARTIFACT_MISSING_BODY" }));
+            process.exit(2);
+          }
+          const res = await fetch(base + "/v1/reserve", {
+            method: "POST",
+            headers: { authorization: "Bearer " + token, "content-type": "application/json" },
+            body: JSON.stringify(body),
+          });
+          const json = await res.json().catch(() => ({}));
+          const out = {
+            ok: res.status === 409 && json.reason === "OWNER_APPROVAL_REPLAY",
+            status: res.status,
+            reason: json.reason || null,
+            reservationKey: body.reservationKey,
+            nonceHash16: prev.nonceHash16,
+            runId: process.env.GITHUB_RUN_ID,
+            priorRunId: String(process.env.PRIOR_RUN_ID || prev.runId || ""),
+            independentWorkflowRuns: true,
+            job: "replay-independent-run",
+            catalogWrite: false,
+            crossRunReplayDenied: json.reason === "OWNER_APPROVAL_REPLAY",
+          };
+          fs.writeFileSync("cross-run-independent-b.json", JSON.stringify(out, null, 2) + "\n");
+          console.log(JSON.stringify({ ...out, tokenPrinted: false }));
+          if (!out.ok) process.exit(2);
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cj-growth-nonce-cross-run-independent-b
+          path: cross-run-independent-b.json
+          retention-days: 14
