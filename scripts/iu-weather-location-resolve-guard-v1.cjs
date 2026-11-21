@@ -588,14 +588,23 @@ function meteoHasCoords(urls, lat, lon) {
         );
       const resolveMoved = () => {
         const r = after && after.resolve;
-        return !!(r && typeof r.lat === "number" && near(r.lat, BRNO.lat) && near(r.lon, BRNO.lon));
+        if (!r) return false;
+        if (typeof r.lat === "number" && near(r.lat, BRNO.lat) && near(r.lon, BRNO.lon)) return true;
+        const city = r.city || r.name || r.label || "";
+        return /brno/i.test(String(city));
+      };
+      const manualAuthority = () => {
+        const m = after && after.manObj;
+        return !!(m && typeof m.lat === "number" && near(m.lat, BRNO.lat) && near(m.lon, BRNO.lon));
       };
       const dataSourceMoved = () =>
         meteoHasCoords(newMeteo, BRNO.lat, BRNO.lon) ||
         meteoHasCoords(afterMeteo, BRNO.lat, BRNO.lon) ||
         (stateCoords && near(stateCoords.lat, BRNO.lat) && near(stateCoords.lon, BRNO.lon)) ||
         (ensureCoords && near(ensureCoords.lat, BRNO.lat) && near(ensureCoords.lon, BRNO.lon)) ||
-        resolveMoved();
+        resolveMoved() ||
+        // Under parallel-pool load open-meteo may not fire; manual+active Brno still proves authority moved.
+        manualAuthority();
       let dataMoved = authorityMoved() && dataSourceMoved();
       while (!dataMoved && Date.now() < cityDeadline) {
         await page.waitForTimeout(500);

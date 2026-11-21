@@ -599,8 +599,29 @@
     return fetchJsonWithTimeout(src, 3500);
   }
 
+  function catalogGenerationId(doc) {
+    if (!doc || typeof doc !== "object") return "";
+    var g = doc.generationId || doc.snapshotId || doc.updatedAt || "";
+    return String(g || "").trim();
+  }
+
+  /** Fail-closed: never merge pages from mixed catalog generations. */
+  function assertSameCatalogGeneration(pages) {
+    if (!pages || !pages.length) return true;
+    var expect = catalogGenerationId(pages[0]);
+    if (!expect) return true; // legacy lean/sections without generationId — allow
+    for (var i = 1; i < pages.length; i++) {
+      var got = catalogGenerationId(pages[i]);
+      if (got && got !== expect) return false;
+    }
+    return true;
+  }
+
   function mergeSectionPageDocs(pages) {
     if (!pages || !pages.length) return null;
+    if (!assertSameCatalogGeneration(pages)) {
+      throw new Error("offers_generation_mismatch");
+    }
     var base = pages[0];
     var sec0 = base && base.sections && base.sections[0] ? base.sections[0] : null;
     if (!sec0) return base;
