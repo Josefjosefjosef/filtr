@@ -258,6 +258,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-safe-autonomous-growth-v51-8-selftest.mjs
       - name: Durable growth approval nonce atomicity selftest (sqlite UNIQUE; offline; does NOT deploy D1)
         run: node scripts/iu-cj-affiliate-phase3z-growth-approval-nonce-store-v51-8-selftest.mjs
+      - name: Growth nonce lifecycle + COMPLETED evidence selftest (offline; does NOT deploy D1)
+        run: node scripts/iu-cj-affiliate-phase3z-growth-approval-nonce-lifecycle-v51-8-selftest.mjs
       - name: EXECUTE→catalog-sync CI bridge selftest (offline; default disabled; no production write)
         run: node scripts/iu-cj-affiliate-phase3z-execute-growth-activation-ci-v51-8-selftest.mjs
       - name: INVALID_FEED case audit selftest (V51.8; offline)
@@ -1486,6 +1488,27 @@ jobs:
           print(json.dumps({k:d.get(k) for k in ("reason","dryRun","executed","refused","wroteProjectsData","githubEnvWritten","authConsumed","gate","firstBatchMax")}, sort_keys=True))
           PY
           fi
+      - name: COMPLETE growth nonce after verified publication (default off; evidence-gated)
+        if: >
+          github.event_name == 'workflow_dispatch' &&
+          inputs.execute_growth_activation == '1' &&
+          env.IU_CJ_GROWTH_COMPLETE_ENABLED == '1'
+        env:
+          IU_CJ_GROWTH_NONCE_STORE_URL: ${{ secrets.IU_CJ_GROWTH_NONCE_STORE_URL }}
+          IU_CJ_GROWTH_NONCE_STORE_TOKEN: ${{ secrets.IU_CJ_GROWTH_NONCE_STORE_TOKEN }}
+          IU_CJ_GROWTH_NONCE_REQUIRE_DURABLE: "1"
+          IU_CJ_GROWTH_COMPLETE_MODE: complete
+          IU_CJ_GROWTH_COMPLETE_OUT: ${{ runner.temp }}/iu-cj-growth-complete-out.json
+          # Evidence flags must be explicitly set by a trusted follow-up dispatch — never auto-true from arming alone.
+          IU_CJ_GROWTH_EVIDENCE_REQUIRED_CI: ${{ vars.IU_CJ_GROWTH_EVIDENCE_REQUIRED_CI || '0' }}
+          IU_CJ_GROWTH_EVIDENCE_DATA_PR_MERGED: ${{ vars.IU_CJ_GROWTH_EVIDENCE_DATA_PR_MERGED || '0' }}
+          IU_CJ_GROWTH_EVIDENCE_PAGES_PASS: ${{ vars.IU_CJ_GROWTH_EVIDENCE_PAGES_PASS || '0' }}
+          IU_CJ_GROWTH_EVIDENCE_PROD_GENERATION_ID: ${{ vars.IU_CJ_GROWTH_EVIDENCE_PROD_GENERATION_ID || '' }}
+          IU_CJ_GROWTH_EVIDENCE_CONTENT_SHA: ${{ vars.IU_CJ_GROWTH_EVIDENCE_CONTENT_SHA || '' }}
+          IU_CJ_GROWTH_EVIDENCE_PRODUCTS_VERIFIED: ${{ vars.IU_CJ_GROWTH_EVIDENCE_PRODUCTS_VERIFIED || '0' }}
+        run: |
+          set -euo pipefail
+          node scripts/iu-cj-affiliate-phase3z-growth-approval-complete-v51-8.mjs
       - name: Build/promote offers-public (fail-closed)
         env:
           IU_CJ_PRODUCT_FEED_CHECKPOINT_PATH: projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json

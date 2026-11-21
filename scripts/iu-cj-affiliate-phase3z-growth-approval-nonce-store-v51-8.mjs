@@ -8,6 +8,7 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
+import { evaluateNonceTransition } from "./iu-cj-affiliate-phase3z-growth-approval-nonce-lifecycle-v51-8.mjs";
 
 export const GROWTH_NONCE_SCOPE = "EXECUTE_GROWTH_ACTIVATION";
 export const NONCE_STORE_SCHEMA = "iu-cj-growth-approval-nonce-store-v51-8";
@@ -70,11 +71,15 @@ export function createSqliteNonceStore(opts = {}) {
         return { ok: false, reason: "OWNER_APPROVAL_EXPIRED" };
       }
       try {
+        const metaJson =
+          input.operationId != null
+            ? JSON.stringify({ operationId: String(input.operationId) })
+            : null;
         const stmt = db.prepare(`
           INSERT INTO cj_growth_approval_nonces (
             reservation_key, nonce_hash, repository, main_sha, generation_id, scope, actor,
-            state, issued_at, expires_at, reserved_at, run_id
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, 'RESERVED', ?, ?, ?, ?)
+            state, issued_at, expires_at, reserved_at, run_id, meta_json
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, 'RESERVED', ?, ?, ?, ?, ?)
         `);
         stmt.run(
           reservationKey,
@@ -88,6 +93,7 @@ export function createSqliteNonceStore(opts = {}) {
           String(input.expiresAt || ""),
           now,
           input.runId != null ? String(input.runId) : null,
+          metaJson,
         );
         return { ok: true, reason: "NONCE_RESERVED", state: "RESERVED", reservationKey, reservedAt: now };
       } catch (err) {
@@ -102,21 +108,67 @@ export function createSqliteNonceStore(opts = {}) {
       const reservationKey = String(input.reservationKey || "").trim();
       const next = String(input.state || "").trim().toUpperCase();
       const now = String(input.nowIso || new Date().toISOString());
-      const row = db.prepare("SELECT state FROM cj_growth_approval_nonces WHERE reservation_key = ?").get(reservationKey);
+      if (!reservationKey) return { ok: false, reason: "NONCE_RESERVE_INVALID_PAYLOAD" };
+
+      const row = db
+        .prepare(
+          "SELECT state, main_sha, generation_id, run_id, meta_json FROM cj_growth_approval_nonces WHERE reservation_key = ?",
+        )
+        .get(reservationKey);
       if (!row) return { ok: false, reason: "NONCE_NOT_FOUND" };
-      if (next === "ARMED" || next === "COMPLETED") {
-        const col = next === "ARMED" ? "armed_at" : "completed_at";
-        db.prepare(`UPDATE cj_growth_approval_nonces SET state = ?, ${col} = ? WHERE reservation_key = ?`).run(
-          next,
-          now,
-          reservationKey,
-        );
-      } else {
-        db.prepare(
-          `UPDATE cj_growth_approval_nonces SET state = ?, failed_at = ?, fail_reason = ? WHERE reservation_key = ?`,
-        ).run(next, now, input.failReason != null ? String(input.failReason).slice(0, 200) : null, reservationKey);
+
+      const gate = evaluateNonceTransition({ from: row.state, to: next });
+      if (!gate.ok) return { ok: false, reason: gate.reason, from: gate.from, to: gate.to };
+
+      if (input.expectedMainSha) {
+        if (String(row.main_sha || "").toLowerCase() !== String(input.expectedMainSha).toLowerCase()) {
+          return { ok: false, reason: "NONCE_MAIN_SHA_MISMATCH" };
+        }
       }
-      return { ok: true, reason: "NONCE_STATE_UPDATED", state: next };
+      if (input.expectedGenerationId) {
+        if (String(row.generation_id || "") !== String(input.expectedGenerationId)) {
+          return { ok: false, reason: "NONCE_GENERATION_MISMATCH" };
+        }
+      }
+      if (input.expectedOperationId) {
+        const meta = (() => {
+          try {
+            return row.meta_json ? JSON.parse(row.meta_json) : {};
+          } catch {
+            return {};
+          }
+        })();
+        const storedOp = meta.operationId != null ? String(meta.operationId) : "";
+        if (!storedOp || storedOp !== String(input.expectedOperationId)) {
+          return { ok: false, reason: "NONCE_OPERATION_ID_MISMATCH" };
+        }
+      }
+
+      const failReason = input.failReason != null ? String(input.failReason).slice(0, 200) : null;
+      let result;
+      if (next === "ARMED") {
+        result = db
+          .prepare(
+            `UPDATE cj_growth_approval_nonces SET state = ?, armed_at = ? WHERE reservation_key = ? AND state = ?`,
+          )
+          .run(next, now, reservationKey, row.state);
+      } else if (next === "COMPLETED") {
+        result = db
+          .prepare(
+            `UPDATE cj_growth_approval_nonces SET state = ?, completed_at = ? WHERE reservation_key = ? AND state = ?`,
+          )
+          .run(next, now, reservationKey, row.state);
+      } else {
+        result = db
+          .prepare(
+            `UPDATE cj_growth_approval_nonces SET state = ?, failed_at = ?, fail_reason = ? WHERE reservation_key = ? AND state = ?`,
+          )
+          .run(next, now, failReason, reservationKey, row.state);
+      }
+      if (!result || Number(result.changes) !== 1) {
+        return { ok: false, reason: "NONCE_TRANSITION_RACE", from: row.state, to: next };
+      }
+      return { ok: true, reason: "NONCE_STATE_UPDATED", state: next, from: row.state };
     },
     close() {
       try {
