@@ -2,6 +2,8 @@
 /**
  * CI entry for EXECUTE_GROWTH_ACTIVATION → GITHUB_ENV arming overlay.
  * Default: refuse/disabled. Never writes projects/data. Never prints secrets/tokens.
+ * Production nonce store: durable HTTP/D1 only (IU_CJ_GROWTH_NONCE_STORE_URL + TOKEN).
+ * Never falls back to RUNNER_TEMP when GITHUB_ACTIONS=true.
  */
 import crypto from "node:crypto";
 import fs from "node:fs";
@@ -29,7 +31,7 @@ function maskToken(t) {
   return `len=${s.length};sha16=${crypto.createHash("sha256").update(s).digest("hex").slice(0, 16)}`;
 }
 
-export function runExecuteGrowthActivationCi(opts = {}) {
+export async function runExecuteGrowthActivationCi(opts = {}) {
   const env = opts.env || process.env;
   const dryRunRaw = opts.dryRun ?? env.IU_CJ_GROWTH_EXECUTE_DRY_RUN ?? "1";
   const dryRun = !(dryRunRaw === false || String(dryRunRaw).trim() === "0");
@@ -57,7 +59,9 @@ export function runExecuteGrowthActivationCi(opts = {}) {
     return doc;
   }
 
-  const result = executeGrowthActivation({
+  // Production Actions / default CI: durable HTTP/D1 required. Selftests may set allowInsecureLocal+sqlite.
+  const allowInsecureLocal = opts.allowInsecureLocal === true;
+  const result = await executeGrowthActivation({
     ownerApprovalToken: token,
     hmacSecret: env.IU_CJ_GROWTH_OWNER_APPROVAL_HMAC || env.IU_CJ_GROWTH_OWNER_APPROVAL_TOKEN,
     generationId,
@@ -74,7 +78,12 @@ export function runExecuteGrowthActivationCi(opts = {}) {
     rollbackReady: opts.rollbackReady !== false,
     requiredActor: env.IU_CJ_GROWTH_OWNER_ACTORS || undefined,
     actor: env.GITHUB_ACTOR,
-    nonceStorePath: env.IU_CJ_GROWTH_APPROVAL_NONCE_STORE,
+    requireDurable: allowInsecureLocal ? false : true,
+    allowInsecureLocal,
+    nonceStore: opts.nonceStore,
+    nonceSqlitePath: opts.nonceSqlitePath,
+    nonceStoreUrl: opts.nonceStoreUrl || env.IU_CJ_GROWTH_NONCE_STORE_URL,
+    nonceStoreToken: opts.nonceStoreToken || env.IU_CJ_GROWTH_NONCE_STORE_TOKEN,
     env,
     armReceiptPath: opts.armReceiptPath || env.IU_CJ_GROWTH_ARM_RECEIPT_PATH || undefined,
   });
@@ -102,9 +111,11 @@ export function runExecuteGrowthActivationCi(opts = {}) {
     githubEnvWritten,
     firstBatchMax: result.firstBatchMax || 25,
     authConsumed: result.auth?.consumed === true,
+    nonceStoreKind: result.auth?.nonceStoreKind || null,
+    nonceStoreDurable: result.auth?.nonceStoreDurable === true,
     tokenFingerprint: maskToken(token),
     gate: resolvePublicGrowthUncappedGate(env.IU_CJ_PUBLIC_GROWTH_UNCAPPED) ? "1" : "0",
-    note: "CI bridge only — does not write projects/data; offers-live-sync consumes GITHUB_ENV arm flags.",
+    note: "CI bridge only — durable nonce required on Actions; does not write projects/data.",
   };
   if (outPath) {
     fs.mkdirSync(path.dirname(outPath), { recursive: true });
@@ -115,7 +126,7 @@ export function runExecuteGrowthActivationCi(opts = {}) {
 
 const isDirectRun = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isDirectRun) {
-  const doc = runExecuteGrowthActivationCi({});
+  const doc = await runExecuteGrowthActivationCi({});
   console.log(JSON.stringify(doc));
   if (String(process.env.IU_CJ_GROWTH_EXECUTE_ENABLED || "0") === "1") {
     const ok =

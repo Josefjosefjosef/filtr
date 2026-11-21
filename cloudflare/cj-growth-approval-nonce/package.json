@@ -1,0 +1,10 @@
+{
+  "name": "iu-cj-growth-approval-nonce",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Durable atomic nonce reservation Worker for CJ growth EXECUTE approvals (D1).",
+  "main": "src/index.js",
+  "scripts": {
+    "deploy": "echo OWNER_GO_REQUIRED: wrangler d1 create + migrate + secret + deploy"
+  }
+}

@@ -2,7 +2,7 @@
 /**
  * Selftest: SAFE_AUTONOMOUS_GROWTH adaptive batches, STOP, prepare/execute auth,
  * growth gate resolution, dry-run first batch ≤25. Does NOT unlock production growth.
- * Does NOT write projects/data.
+ * Does NOT write projects/data. Uses sqlite durable-semantics store (allowInsecureLocal).
  */
 import assert from "node:assert/strict";
 import fs from "node:fs";
@@ -28,10 +28,15 @@ assert.equal(FORBIDDEN_PERMANENT_PARTNER_CAP, null);
 assert.equal(DEFAULT_FIRST_BATCH_MAX, 25);
 
 const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), "iu-cj-growth-exec-"));
-const nonceStorePath = path.join(tmpRoot, "nonces.json");
+const nonceSqlitePath = path.join(tmpRoot, "nonces.sqlite");
 const hmacSecret = "selftest-hmac-secret-do-not-use-in-prod-32b";
 const mainSha = "1012fc5a10f13aa3248e8e633b0d2a7fad01ae71";
 const generationId = "2026-11-21T07:37:56.158Z";
+const localStoreOpts = {
+  allowInsecureLocal: true,
+  nonceSqlitePath,
+  env: { IU_CJ_GROWTH_NONCE_ALLOW_INSECURE_LOCAL: "1" },
+};
 
 /* ---- Growth gate ---- */
 assert.equal(resolvePublicGrowthUncappedGate(undefined), false);
@@ -88,7 +93,7 @@ const stopShrink = evaluateGrowthStopConditions({
 });
 assert.equal(stopShrink.stop, true);
 
-const neg = runNegativeGrowthGuards();
+const neg = await runNegativeGrowthGuards({ nonceSqlitePath });
 assert.equal(neg.ok, true, JSON.stringify(neg.cases.filter((c) => !c.pass)));
 
 const prep = prepareGrowthActivation({
@@ -102,10 +107,10 @@ assert.equal(prep.ready, true);
 
 /* ---- Auth negative tests ---- */
 const authCases = [];
-function expectDeny(label, opts, expectedReason) {
-  const r = verifyOwnerActivationApproval({
+async function expectDeny(label, opts, expectedReason) {
+  const r = await verifyOwnerActivationApproval({
     hmacSecret,
-    nonceStorePath,
+    ...localStoreOpts,
     expectedGenerationId: generationId,
     expectedMainSha: mainSha,
     ...opts,
@@ -118,9 +123,9 @@ function expectDeny(label, opts, expectedReason) {
   assert.equal(r.ok, false, label + " should deny: " + r.reason);
 }
 
-expectDeny("missing_token", { ownerApprovalToken: "" }, "OWNER_APPROVAL_REQUIRED");
-expectDeny("malformed", { ownerApprovalToken: "not-a-token" }, "OWNER_APPROVAL_MALFORMED");
-expectDeny(
+await expectDeny("missing_token", { ownerApprovalToken: "" }, "OWNER_APPROVAL_REQUIRED");
+await expectDeny("malformed", { ownerApprovalToken: "not-a-token" }, "OWNER_APPROVAL_MALFORMED");
+await expectDeny(
   "invalid_sig",
   {
     ownerApprovalToken: mintOwnerApprovalToken({
@@ -140,7 +145,7 @@ const goodMint = mintOwnerApprovalToken({
   actor: "owner-bot",
   ttlMs: 3_600_000,
 });
-expectDeny(
+await expectDeny(
   "expired",
   {
     ownerApprovalToken: mintOwnerApprovalToken({
@@ -154,7 +159,7 @@ expectDeny(
   },
   "OWNER_APPROVAL_EXPIRED",
 );
-expectDeny(
+await expectDeny(
   "wrong_generation",
   {
     ownerApprovalToken: mintOwnerApprovalToken({
@@ -165,7 +170,7 @@ expectDeny(
   },
   "OWNER_APPROVAL_GENERATION_MISMATCH",
 );
-expectDeny(
+await expectDeny(
   "wrong_main_sha",
   {
     ownerApprovalToken: mintOwnerApprovalToken({
@@ -176,7 +181,7 @@ expectDeny(
   },
   "OWNER_APPROVAL_MAIN_SHA_MISMATCH",
 );
-expectDeny(
+await expectDeny(
   "unauthorized_actor",
   {
     ownerApprovalToken: goodMint.token,
@@ -186,35 +191,62 @@ expectDeny(
   "OWNER_APPROVAL_UNAUTHORIZED_ACTOR",
 );
 
-const okOnce = verifyOwnerActivationApproval({
+const okOnce = await verifyOwnerActivationApproval({
   hmacSecret,
   ownerApprovalToken: goodMint.token,
   expectedGenerationId: generationId,
   expectedMainSha: mainSha,
-  nonceStorePath,
+  ...localStoreOpts,
   consume: true,
 });
 assert.equal(okOnce.ok, true);
+assert.equal(okOnce.nonceStoreKind, "sqlite");
+assert.equal(okOnce.nonceStoreDurable, true);
 authCases.push({ id: "valid_consume", pass: true, reason: "OK" });
 
-const replay = verifyOwnerActivationApproval({
+const replay = await verifyOwnerActivationApproval({
   hmacSecret,
   ownerApprovalToken: goodMint.token,
   expectedGenerationId: generationId,
   expectedMainSha: mainSha,
-  nonceStorePath,
+  ...localStoreOpts,
   consume: true,
 });
 assert.equal(replay.ok, false);
 assert.equal(replay.reason, "OWNER_APPROVAL_REPLAY");
 authCases.push({ id: "replay", pass: replay.reason === "OWNER_APPROVAL_REPLAY", reason: replay.reason });
 
+/* Fail-closed: GITHUB_ACTIONS without durable HTTP → NONCE_STORE_UNAVAILABLE on consume */
+const failClosedMint = mintOwnerApprovalToken({
+  hmacSecret,
+  generationId,
+  mainSha,
+  nonce: "fail-closed-" + Date.now(),
+});
+const failClosed = await verifyOwnerActivationApproval({
+  hmacSecret,
+  ownerApprovalToken: failClosedMint.token,
+  expectedGenerationId: generationId,
+  expectedMainSha: mainSha,
+  requireDurable: true,
+  env: { GITHUB_ACTIONS: "true" },
+  consume: true,
+});
+assert.equal(failClosed.ok, false);
+assert.equal(failClosed.reason, "NONCE_STORE_UNAVAILABLE");
+assert.equal(failClosed.noProductionWrite, true);
+authCases.push({
+  id: "actions_without_durable_fail_closed",
+  pass: failClosed.reason === "NONCE_STORE_UNAVAILABLE",
+  reason: failClosed.reason,
+});
+
 /* ---- EXECUTE: missing approval ---- */
-const execNo = executeGrowthActivation({
+const execNo = await executeGrowthActivation({
   generationId,
   mainSha,
   hmacSecret,
-  nonceStorePath,
+  ...localStoreOpts,
   dryRun: true,
 });
 assert.equal(execNo.executed, false);
@@ -278,10 +310,10 @@ for (let i = 1; i <= 80; i++) {
   };
 }
 
-const dryExec = executeGrowthActivation({
+const dryExec = await executeGrowthActivation({
   ownerApprovalToken: dryToken.token,
   hmacSecret,
-  nonceStorePath,
+  ...localStoreOpts,
   generationId,
   mainSha,
   dryRun: true,
@@ -292,7 +324,7 @@ const dryExec = executeGrowthActivation({
   backupPlanReady: true,
   requiredCiPass: true,
   pagesPass: true,
-  env: { IU_CJ_PUBLIC_GROWTH_UNCAPPED: "0" },
+  env: { IU_CJ_PUBLIC_GROWTH_UNCAPPED: "0", IU_CJ_GROWTH_NONCE_ALLOW_INSECURE_LOCAL: "1" },
 });
 assert.equal(dryExec.reason, "DRY_RUN_OK");
 assert.equal(dryExec.executed, false);
@@ -304,10 +336,10 @@ assert.equal(dryExec.pipelineArming, null);
 assert.equal(dryExec.auth.consumed, false);
 
 /* Live without gate → locked */
-const liveNoGate = executeGrowthActivation({
+const liveNoGate = await executeGrowthActivation({
   ownerApprovalToken: dryToken.token,
   hmacSecret,
-  nonceStorePath,
+  ...localStoreOpts,
   generationId,
   mainSha,
   dryRun: false,
@@ -315,19 +347,19 @@ const liveNoGate = executeGrowthActivation({
   durableProducts: durable,
   joinedPartners: [{ advertiserId: "222", name: "PartnerX", status: "JOINED" }],
   backupPlanReady: true,
-  env: { IU_CJ_PUBLIC_GROWTH_UNCAPPED: "0" },
+  env: { IU_CJ_PUBLIC_GROWTH_UNCAPPED: "0", IU_CJ_GROWTH_NONCE_ALLOW_INSECURE_LOCAL: "1" },
 });
 assert.equal(liveNoGate.reason, "GROWTH_GATE_LOCKED");
 assert.equal(liveNoGate.executed, false);
 
 /* Gate 1 without auth still refuse */
-const gateNoAuth = executeGrowthActivation({
+const gateNoAuth = await executeGrowthActivation({
   dryRun: false,
   generationId,
   mainSha,
   hmacSecret,
-  nonceStorePath,
-  env: { IU_CJ_PUBLIC_GROWTH_UNCAPPED: "1" },
+  ...localStoreOpts,
+  env: { IU_CJ_PUBLIC_GROWTH_UNCAPPED: "1", IU_CJ_GROWTH_NONCE_ALLOW_INSECURE_LOCAL: "1" },
 });
 assert.equal(gateNoAuth.reason, "OWNER_APPROVAL_REQUIRED");
 
@@ -340,10 +372,10 @@ const liveToken = mintOwnerApprovalToken({
   nonce: "live-arm-nonce-" + Date.now(),
 });
 const armPath = path.join(tmpRoot, "arm.json");
-const liveArm = executeGrowthActivation({
+const liveArm = await executeGrowthActivation({
   ownerApprovalToken: liveToken.token,
   hmacSecret,
-  nonceStorePath,
+  ...localStoreOpts,
   generationId,
   mainSha,
   dryRun: false,
@@ -354,7 +386,7 @@ const liveArm = executeGrowthActivation({
   backupPlanReady: true,
   requiredCiPass: true,
   pagesPass: true,
-  env: { IU_CJ_PUBLIC_GROWTH_UNCAPPED: "1" },
+  env: { IU_CJ_PUBLIC_GROWTH_UNCAPPED: "1", IU_CJ_GROWTH_NONCE_ALLOW_INSECURE_LOCAL: "1" },
   armReceiptPath: armPath,
 });
 assert.equal(liveArm.reason, "ARMED_FOR_CATALOG_SYNC");
@@ -363,17 +395,18 @@ assert.equal(liveArm.wroteProjectsData, false);
 assert.equal(liveArm.productionWrite, "NO_DIRECT_PROJECTS_DATA_WRITE");
 assert.equal(liveArm.pipelineArming.envOverlay.IU_CJ_GROWTH_ACTIVATION_ARMED, "1");
 assert.equal(liveArm.pipelineArming.envOverlay.IU_CJ_GROWTH_FIRST_BATCH_MAX, "25");
+assert.equal(liveArm.auth.nonceStoreDurable, true);
 assert.ok(fs.existsSync(armPath));
 
 /* Replay of live token denied */
-const liveReplay = executeGrowthActivation({
+const liveReplay = await executeGrowthActivation({
   ownerApprovalToken: liveToken.token,
   hmacSecret,
-  nonceStorePath,
+  ...localStoreOpts,
   generationId,
   mainSha,
   dryRun: false,
-  env: { IU_CJ_PUBLIC_GROWTH_UNCAPPED: "1" },
+  env: { IU_CJ_PUBLIC_GROWTH_UNCAPPED: "1", IU_CJ_GROWTH_NONCE_ALLOW_INSECURE_LOCAL: "1" },
   backupPlanReady: true,
 });
 assert.equal(liveReplay.reason, "OWNER_APPROVAL_REPLAY");
@@ -401,6 +434,7 @@ console.log(
   JSON.stringify({
     IU_CJ_SAFE_AUTONOMOUS_GROWTH_SELFTEST: "OK",
     EXECUTE_IMPLEMENTATION: "LIVE_PIPELINE_ARM_V1",
+    NONCE_STORE: "sqlite_atomic_local",
     adaptiveOk: aOk,
     adaptiveFail: aFail,
     prepReady: prep.ready,
