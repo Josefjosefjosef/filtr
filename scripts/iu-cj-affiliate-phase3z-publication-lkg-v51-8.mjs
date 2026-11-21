@@ -417,18 +417,13 @@ export function reconcilePublicationProposedVsPublished(opts = {}) {
 }
 
 /**
- * Clone publication docs without JSON.stringify (V8 "Invalid string length" on large catalogs).
- * Prefer structuredClone; fall back to section-wise shallow clone of public offer fields.
+ * Clone publication docs without JSON.stringify (V8 "Invalid string length") and without
+ * structuredClone (ValueDeserializer OOM on ~4GB runner heaps for large LIVE catalogs).
+ * Section-wise clone: shallow-copy top-level metadata (shared growth ledger refs OK) and
+ * deep-copy only sections/coupons/actions/products that LKG merge mutates.
  */
 export function clonePublicationDoc(nextDoc) {
   const src = nextDoc && typeof nextDoc === "object" ? nextDoc : {};
-  if (typeof structuredClone === "function") {
-    try {
-      return structuredClone(src);
-    } catch {
-      /* fall through — e.g. non-cloneable hooks */
-    }
-  }
   const out = { ...src };
   out.sections = Array.isArray(src.sections)
     ? src.sections.map((sec) => ({

@@ -1501,6 +1501,8 @@ jobs:
       - name: Build/promote offers-public (fail-closed)
         env:
           IU_CJ_PRODUCT_FEED_CHECKPOINT_PATH: projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json
+          # Full inventory + LKG merge exceeds default ~4GB heap on ubuntu-latest (OOM ValueDeserializer / alloc).
+          NODE_OPTIONS: --max-old-space-size=8192
         run: node scripts/iu-cj-affiliate-offers-live-sync-v1.mjs
       - name: Upload offers artifact
         uses: actions/upload-artifact@v4
