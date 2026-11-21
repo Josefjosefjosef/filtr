@@ -77,10 +77,11 @@ export function rewriteCatalogJsItems(catalogJsText, afterSections) {
     const items = byId.has(id) ? byId.get(id) : [];
     return p1 + id + p3 + formatItemsBlock(items) + p5;
   });
-  // Bust marker
+  // Bust marker: keep the prod-delivery guard token (do not invent a new date token).
+  // Guard scripts/iu-affiliate-catalog-prod-delivery-guard-v1.mjs pins this exact value.
   out = out.replace(
     /\/\* iu-affiliate-catalog-bust: [^*]+\*\//,
-    `/* iu-affiliate-catalog-bust: cj-phase3z-v16-public-swap-${new Date().toISOString().slice(0, 10)} */`
+    "/* iu-affiliate-catalog-bust: cj-phase3z-v25-links-wrap-2026-11-02 */"
   );
   return out;
 }

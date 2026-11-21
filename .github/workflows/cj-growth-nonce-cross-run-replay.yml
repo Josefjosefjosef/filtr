@@ -1,0 +1,229 @@
+# Real cross-run replay proof: two independent GitHub Actions jobs hit production
+# Cloudflare Worker → D1. Second run MUST get OWNER_APPROVAL_REPLAY.
+# Does NOT arm growth, does NOT write catalog, does NOT flip growth gate.
+name: CJ growth nonce cross-run replay
+
+on:
+  workflow_dispatch:
+  # Optional nightly proof (safe; only touches nonce D1)
+  schedule:
+    - cron: "41 4 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cj-growth-nonce-cross-run
+  cancel-in-progress: false
+
+jobs:
+  reserve-run-a:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      reservation_key: ${{ steps.reserve.outputs.reservation_key }}
+      nonce_hash16: ${{ steps.reserve.outputs.nonce_hash16 }}
+      operation_id: ${{ steps.reserve.outputs.operation_id }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Reserve nonce (run A)
+        id: reserve
+        env:
+          IU_CJ_GROWTH_NONCE_STORE_URL: ${{ secrets.IU_CJ_GROWTH_NONCE_STORE_URL }}
+          IU_CJ_GROWTH_NONCE_STORE_TOKEN: ${{ secrets.IU_CJ_GROWTH_NONCE_STORE_TOKEN }}
+          GITHUB_ACTIONS: "true"
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          import crypto from "node:crypto";
+          import fs from "node:fs";
+          const base = String(process.env.IU_CJ_GROWTH_NONCE_STORE_URL || "").replace(/\/+$/, "");
+          const token = String(process.env.IU_CJ_GROWTH_NONCE_STORE_TOKEN || "");
+          if (!base || token.length < 16) {
+            console.log(JSON.stringify({ ok: false, reason: "SECRETS_MISSING" }));
+            process.exit(2);
+          }
+          const nonce = crypto.randomBytes(16).toString("hex");
+          const repository = "Josefjosefjosef/filtr";
+          const mainSha = String(process.env.GITHUB_SHA || "").toLowerCase();
+          const generationId = "cross-run-" + new Date().toISOString();
+          const material = [nonce, repository, mainSha, generationId, "EXECUTE_GROWTH_ACTIVATION"].join("|");
+          const reservationKey = crypto.createHash("sha256").update(material, "utf8").digest("hex");
+          const nonceHash = crypto.createHash("sha256").update(nonce, "utf8").digest("hex");
+          const operationId = crypto.createHash("sha256").update(reservationKey + "|" + process.env.GITHUB_RUN_ID, "utf8").digest("hex").slice(0, 32);
+          const now = new Date().toISOString();
+          const body = {
+            reservationKey,
+            nonceHash,
+            repository,
+            mainSha,
+            generationId,
+            scope: "EXECUTE_GROWTH_ACTIVATION",
+            issuedAt: now,
+            expiresAt: new Date(Date.now() + 3600000).toISOString(),
+            runId: String(process.env.GITHUB_RUN_ID || ""),
+            operationId,
+            nowIso: now,
+          };
+          const res = await fetch(base + "/v1/reserve", {
+            method: "POST",
+            headers: { authorization: "Bearer " + token, "content-type": "application/json" },
+            body: JSON.stringify(body),
+          });
+          const json = await res.json().catch(() => ({}));
+          const out = {
+            ok: res.ok && json.ok === true,
+            status: res.status,
+            reason: json.reason || null,
+            reservationKey,
+            operationId,
+            nonceHash16: nonceHash.slice(0, 16),
+            runId: process.env.GITHUB_RUN_ID,
+            job: "reserve-run-a",
+            catalogWrite: false,
+          };
+          fs.writeFileSync(process.env.GITHUB_OUTPUT, "reservation_key=" + reservationKey + "\n", { flag: "a" });
+          fs.writeFileSync(process.env.GITHUB_OUTPUT, "nonce_hash16=" + nonceHash.slice(0, 16) + "\n", { flag: "a" });
+          fs.writeFileSync(process.env.GITHUB_OUTPUT, "operation_id=" + operationId + "\n", { flag: "a" });
+          fs.writeFileSync("cross-run-a.json", JSON.stringify({ ...out, body }, null, 2) + "\n");
+          console.log(JSON.stringify({ ...out, tokenPrinted: false }));
+          if (!out.ok) process.exit(2);
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cj-growth-nonce-cross-run-a
+          path: cross-run-a.json
+          retention-days: 14
+
+  replay-run-b:
+    needs: reserve-run-a
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: cj-growth-nonce-cross-run-a
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Replay same reservation (run B — must DENY)
+        env:
+          IU_CJ_GROWTH_NONCE_STORE_URL: ${{ secrets.IU_CJ_GROWTH_NONCE_STORE_URL }}
+          IU_CJ_GROWTH_NONCE_STORE_TOKEN: ${{ secrets.IU_CJ_GROWTH_NONCE_STORE_TOKEN }}
+          EXPECT_RESERVATION_KEY: ${{ needs.reserve-run-a.outputs.reservation_key }}
+          GITHUB_ACTIONS: "true"
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          import fs from "node:fs";
+          const prev = JSON.parse(fs.readFileSync("cross-run-a.json", "utf8"));
+          const base = String(process.env.IU_CJ_GROWTH_NONCE_STORE_URL || "").replace(/\/+$/, "");
+          const token = String(process.env.IU_CJ_GROWTH_NONCE_STORE_TOKEN || "");
+          const body = prev.body;
+          if (!body || body.reservationKey !== process.env.EXPECT_RESERVATION_KEY) {
+            console.log(JSON.stringify({ ok: false, reason: "ARTIFACT_MISMATCH" }));
+            process.exit(2);
+          }
+          const res = await fetch(base + "/v1/reserve", {
+            method: "POST",
+            headers: { authorization: "Bearer " + token, "content-type": "application/json" },
+            body: JSON.stringify(body),
+          });
+          const json = await res.json().catch(() => ({}));
+          const out = {
+            ok: res.status === 409 && json.reason === "OWNER_APPROVAL_REPLAY",
+            status: res.status,
+            reason: json.reason || null,
+            reservationKey: body.reservationKey,
+            nonceHash16: prev.nonceHash16,
+            runId: process.env.GITHUB_RUN_ID,
+            priorRunId: prev.runId,
+            job: "replay-run-b",
+            catalogWrite: false,
+            crossRunReplayDenied: json.reason === "OWNER_APPROVAL_REPLAY",
+          };
+          fs.writeFileSync("cross-run-b.json", JSON.stringify(out, null, 2) + "\n");
+          console.log(JSON.stringify({ ...out, tokenPrinted: false }));
+          if (!out.ok) process.exit(2);
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cj-growth-nonce-cross-run-b
+          path: cross-run-b.json
+          retention-days: 14
+
+  concurrency-eight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Eight concurrent reserves — exactly one ACCEPT
+        env:
+          IU_CJ_GROWTH_NONCE_STORE_URL: ${{ secrets.IU_CJ_GROWTH_NONCE_STORE_URL }}
+          IU_CJ_GROWTH_NONCE_STORE_TOKEN: ${{ secrets.IU_CJ_GROWTH_NONCE_STORE_TOKEN }}
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          import crypto from "node:crypto";
+          import fs from "node:fs";
+          const base = String(process.env.IU_CJ_GROWTH_NONCE_STORE_URL || "").replace(/\/+$/, "");
+          const token = String(process.env.IU_CJ_GROWTH_NONCE_STORE_TOKEN || "");
+          const nonce = crypto.randomBytes(16).toString("hex");
+          const repository = "Josefjosefjosef/filtr";
+          const mainSha = String(process.env.GITHUB_SHA || "").toLowerCase();
+          const generationId = "concurrent-" + new Date().toISOString();
+          const material = [nonce, repository, mainSha, generationId, "EXECUTE_GROWTH_ACTIVATION"].join("|");
+          const reservationKey = crypto.createHash("sha256").update(material, "utf8").digest("hex");
+          const nonceHash = crypto.createHash("sha256").update(nonce, "utf8").digest("hex");
+          const now = new Date().toISOString();
+          const body = {
+            reservationKey,
+            nonceHash,
+            repository,
+            mainSha,
+            generationId,
+            scope: "EXECUTE_GROWTH_ACTIVATION",
+            issuedAt: now,
+            expiresAt: new Date(Date.now() + 3600000).toISOString(),
+            runId: String(process.env.GITHUB_RUN_ID || ""),
+            operationId: "conc-" + process.env.GITHUB_RUN_ID,
+            nowIso: now,
+          };
+          const results = await Promise.all(
+            Array.from({ length: 8 }, async () => {
+              const res = await fetch(base + "/v1/reserve", {
+                method: "POST",
+                headers: { authorization: "Bearer " + token, "content-type": "application/json" },
+                body: JSON.stringify(body),
+              });
+              const json = await res.json().catch(() => ({}));
+              return { status: res.status, reason: json.reason || null, ok: json.ok === true };
+            })
+          );
+          const accepts = results.filter((r) => r.ok);
+          const denies = results.filter((r) => r.reason === "OWNER_APPROVAL_REPLAY");
+          const out = {
+            ok: accepts.length === 1 && denies.length === 7,
+            accepts: accepts.length,
+            denies: denies.length,
+            results,
+            nonceHash16: nonceHash.slice(0, 16),
+            runId: process.env.GITHUB_RUN_ID,
+            catalogWrite: false,
+          };
+          fs.writeFileSync("cross-run-concurrency.json", JSON.stringify(out, null, 2) + "\n");
+          console.log(JSON.stringify({ ok: out.ok, accepts: out.accepts, denies: out.denies, runId: out.runId }));
+          if (!out.ok) process.exit(2);
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cj-growth-nonce-concurrency
+          path: cross-run-concurrency.json
+          retention-days: 14

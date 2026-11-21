@@ -1,0 +1,92 @@
+# Evidence-gated COMPLETED for growth approval nonce.
+# Run ONLY after: required CI PASS + data PR merged + Pages deploy + production read-back.
+# Never completes from arming alone. Never flips growth gate. Never publishes catalog.
+name: CJ growth approval COMPLETED (evidence-gated)
+
+on:
+  workflow_dispatch:
+    inputs:
+      reservation_key:
+        description: "Durable reservation_key from arm receipt"
+        required: true
+        type: string
+      operation_id:
+        description: "Growth operation id bound to reservation"
+        required: true
+        type: string
+      expected_main_sha:
+        description: "40-char main SHA bound to approval"
+        required: true
+        type: string
+      expected_generation_id:
+        description: "Production generation/snapshot id expected after publish"
+        required: true
+        type: string
+      required_ci_pass:
+        description: "Set 1 only if required CI passed for the publish SHA"
+        required: true
+        type: choice
+        options: ["0", "1"]
+      data_pr_merged:
+        description: "Set 1 only if data PR merged"
+        required: true
+        type: choice
+        options: ["0", "1"]
+      pages_deploy_pass:
+        description: "Set 1 only if Pages deploy verified"
+        required: true
+        type: choice
+        options: ["0", "1"]
+      production_generation_id:
+        description: "Live production snapshotId/generationId read-back"
+        required: true
+        type: string
+      content_sha:
+        description: "Content SHA of published offers (hex)"
+        required: true
+        type: string
+      products_verified:
+        description: "Set 1 only if published products verified on production"
+        required: true
+        type: choice
+        options: ["0", "1"]
+
+permissions:
+  contents: read
+
+jobs:
+  complete:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: COMPLETE nonce (fail-closed without full evidence)
+        env:
+          IU_CJ_GROWTH_NONCE_STORE_URL: ${{ secrets.IU_CJ_GROWTH_NONCE_STORE_URL }}
+          IU_CJ_GROWTH_NONCE_STORE_TOKEN: ${{ secrets.IU_CJ_GROWTH_NONCE_STORE_TOKEN }}
+          IU_CJ_GROWTH_NONCE_REQUIRE_DURABLE: "1"
+          IU_CJ_GROWTH_RESERVATION_KEY: ${{ inputs.reservation_key }}
+          IU_CJ_GROWTH_OPERATION_ID: ${{ inputs.operation_id }}
+          IU_CJ_GROWTH_EXPECTED_MAIN_SHA: ${{ inputs.expected_main_sha }}
+          IU_CJ_GROWTH_EXPECTED_GENERATION_ID: ${{ inputs.expected_generation_id }}
+          IU_CJ_GROWTH_EVIDENCE_REQUIRED_CI: ${{ inputs.required_ci_pass }}
+          IU_CJ_GROWTH_EVIDENCE_DATA_PR_MERGED: ${{ inputs.data_pr_merged }}
+          IU_CJ_GROWTH_EVIDENCE_PAGES_PASS: ${{ inputs.pages_deploy_pass }}
+          IU_CJ_GROWTH_EVIDENCE_PROD_GENERATION_ID: ${{ inputs.production_generation_id }}
+          IU_CJ_GROWTH_EVIDENCE_CONTENT_SHA: ${{ inputs.content_sha }}
+          IU_CJ_GROWTH_EVIDENCE_PRODUCTS_VERIFIED: ${{ inputs.products_verified }}
+          IU_CJ_GROWTH_COMPLETE_OUT: ${{ runner.temp }}/iu-cj-growth-complete-out.json
+        run: |
+          set -euo pipefail
+          node scripts/iu-cj-affiliate-phase3z-growth-approval-complete-v51-8.mjs
+          python3 - <<'PY'
+          import json,os
+          p=os.environ["IU_CJ_GROWTH_COMPLETE_OUT"]
+          d=json.load(open(p,encoding="utf-8"))
+          print(json.dumps({k:d.get(k) for k in ("reason","completed","reservationKey","operationId")}, sort_keys=True))
+          if d.get("completed") is not True:
+            raise SystemExit(2)
+          PY
