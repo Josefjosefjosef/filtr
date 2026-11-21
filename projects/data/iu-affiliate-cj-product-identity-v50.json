@@ -1,0 +1,7527 @@
+{
+  "schema": "iu-cj-affiliate-phase3z-product-identity-v50",
+  "at": "2026-11-21T18:46:54.844Z",
+  "runId": "44935720541",
+  "sha": "e62637c3b33451e7a9b8833bd1f389e4868384d4",
+  "note": "UNIQUE = distinct compoundIdentity(advertiserId|productId) in this fetch window. Same productId across partners is NOT a collision. UNIQUE ≠ fetchedRows unless zero duplicates.",
+  "accounting": {
+    "fetchedRowsWithIdentity": 357367,
+    "uniqueIdentitiesInRun": 357367,
+    "duplicateApiRows": 0,
+    "uniqueEqualsFetchedRows": true,
+    "publishedUnique": 2584,
+    "publishedOccurrences": 2823,
+    "duplicateSameFeedSignals": 0,
+    "duplicateCrossFeedSamePartner": 0,
+    "crossPartnerSameProductIdCount": 0
+  },
+  "presentationBudgetNote": "READY→PUBLISHED gap is driven by per-partner presentation budget (selectPresentationSlice), not by wiping UNIQUE identities.",
+  "rows": [
+    {
+      "advertiserId": "5078957",
+      "productId": "5097748072",
+      "compoundIdentity": "5078957|5097748072",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "5181725090",
+      "compoundIdentity": "5078957|5181725090",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "5181725733",
+      "compoundIdentity": "5078957|5181725733",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "5182262930",
+      "compoundIdentity": "5078957|5182262930",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "5182274069",
+      "compoundIdentity": "5078957|5182274069",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "5182777107",
+      "compoundIdentity": "5078957|5182777107",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "5182999363",
+      "compoundIdentity": "5078957|5182999363",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "5604163916",
+      "compoundIdentity": "5078957|5604163916",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "5731140365",
+      "compoundIdentity": "5078957|5731140365",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6050097146",
+      "compoundIdentity": "5078957|6050097146",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6183178305",
+      "compoundIdentity": "5078957|6183178305",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6188303648",
+      "compoundIdentity": "5078957|6188303648",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6189077070",
+      "compoundIdentity": "5078957|6189077070",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6404685247",
+      "compoundIdentity": "5078957|6404685247",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6551728375",
+      "compoundIdentity": "5078957|6551728375",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6595470667",
+      "compoundIdentity": "5078957|6595470667",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6595475186",
+      "compoundIdentity": "5078957|6595475186",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6595480120",
+      "compoundIdentity": "5078957|6595480120",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6595481442",
+      "compoundIdentity": "5078957|6595481442",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6845962282",
+      "compoundIdentity": "5078957|6845962282",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6902026711",
+      "compoundIdentity": "5078957|6902026711",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6905154602",
+      "compoundIdentity": "5078957|6905154602",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6907463148",
+      "compoundIdentity": "5078957|6907463148",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6907484633",
+      "compoundIdentity": "5078957|6907484633",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6907991699",
+      "compoundIdentity": "5078957|6907991699",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6908027288",
+      "compoundIdentity": "5078957|6908027288",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6909213552",
+      "compoundIdentity": "5078957|6909213552",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6909651790",
+      "compoundIdentity": "5078957|6909651790",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6910042001",
+      "compoundIdentity": "5078957|6910042001",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6910106671",
+      "compoundIdentity": "5078957|6910106671",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6913025764",
+      "compoundIdentity": "5078957|6913025764",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6915502091",
+      "compoundIdentity": "5078957|6915502091",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6915634541",
+      "compoundIdentity": "5078957|6915634541",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6915689719",
+      "compoundIdentity": "5078957|6915689719",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6915966628",
+      "compoundIdentity": "5078957|6915966628",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6915987797",
+      "compoundIdentity": "5078957|6915987797",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6915988823",
+      "compoundIdentity": "5078957|6915988823",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6915989088",
+      "compoundIdentity": "5078957|6915989088",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6916549262",
+      "compoundIdentity": "5078957|6916549262",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6921194799",
+      "compoundIdentity": "5078957|6921194799",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6921790733",
+      "compoundIdentity": "5078957|6921790733",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6922950750",
+      "compoundIdentity": "5078957|6922950750",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6923838305",
+      "compoundIdentity": "5078957|6923838305",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6926374718",
+      "compoundIdentity": "5078957|6926374718",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6927869006",
+      "compoundIdentity": "5078957|6927869006",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6927955456",
+      "compoundIdentity": "5078957|6927955456",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6933329637",
+      "compoundIdentity": "5078957|6933329637",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6938267298",
+      "compoundIdentity": "5078957|6938267298",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6938853633",
+      "compoundIdentity": "5078957|6938853633",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6942156586",
+      "compoundIdentity": "5078957|6942156586",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6942873247",
+      "compoundIdentity": "5078957|6942873247",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6944355998",
+      "compoundIdentity": "5078957|6944355998",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6945112862",
+      "compoundIdentity": "5078957|6945112862",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6945671648",
+      "compoundIdentity": "5078957|6945671648",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6946146606",
+      "compoundIdentity": "5078957|6946146606",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6948968582",
+      "compoundIdentity": "5078957|6948968582",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6949555760",
+      "compoundIdentity": "5078957|6949555760",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6949897527",
+      "compoundIdentity": "5078957|6949897527",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6950476832",
+      "compoundIdentity": "5078957|6950476832",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6951983373",
+      "compoundIdentity": "5078957|6951983373",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6953318191",
+      "compoundIdentity": "5078957|6953318191",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6954947578",
+      "compoundIdentity": "5078957|6954947578",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6954950179",
+      "compoundIdentity": "5078957|6954950179",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6956423228",
+      "compoundIdentity": "5078957|6956423228",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6956555224",
+      "compoundIdentity": "5078957|6956555224",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6958386309",
+      "compoundIdentity": "5078957|6958386309",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6958386344",
+      "compoundIdentity": "5078957|6958386344",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6958722454",
+      "compoundIdentity": "5078957|6958722454",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6960769393",
+      "compoundIdentity": "5078957|6960769393",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6961928239",
+      "compoundIdentity": "5078957|6961928239",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6964111499",
+      "compoundIdentity": "5078957|6964111499",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6964280512",
+      "compoundIdentity": "5078957|6964280512",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6964712324",
+      "compoundIdentity": "5078957|6964712324",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6966039807",
+      "compoundIdentity": "5078957|6966039807",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6967220486",
+      "compoundIdentity": "5078957|6967220486",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6967659884",
+      "compoundIdentity": "5078957|6967659884",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6968007204",
+      "compoundIdentity": "5078957|6968007204",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6968013962",
+      "compoundIdentity": "5078957|6968013962",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6968150874",
+      "compoundIdentity": "5078957|6968150874",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6968195910",
+      "compoundIdentity": "5078957|6968195910",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6969139752",
+      "compoundIdentity": "5078957|6969139752",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6969187254",
+      "compoundIdentity": "5078957|6969187254",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6969291779",
+      "compoundIdentity": "5078957|6969291779",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6969820570",
+      "compoundIdentity": "5078957|6969820570",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6970340736",
+      "compoundIdentity": "5078957|6970340736",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6971420432",
+      "compoundIdentity": "5078957|6971420432",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6972167629",
+      "compoundIdentity": "5078957|6972167629",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6972529818",
+      "compoundIdentity": "5078957|6972529818",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6972530268",
+      "compoundIdentity": "5078957|6972530268",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6972876757",
+      "compoundIdentity": "5078957|6972876757",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6972976036",
+      "compoundIdentity": "5078957|6972976036",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6972978160",
+      "compoundIdentity": "5078957|6972978160",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6972998289",
+      "compoundIdentity": "5078957|6972998289",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6974362627",
+      "compoundIdentity": "5078957|6974362627",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6974571638",
+      "compoundIdentity": "5078957|6974571638",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6976240903",
+      "compoundIdentity": "5078957|6976240903",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6976693570",
+      "compoundIdentity": "5078957|6976693570",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6977811153",
+      "compoundIdentity": "5078957|6977811153",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6978163581",
+      "compoundIdentity": "5078957|6978163581",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6978656110",
+      "compoundIdentity": "5078957|6978656110",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6979446526",
+      "compoundIdentity": "5078957|6979446526",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6980069601",
+      "compoundIdentity": "5078957|6980069601",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6981532164",
+      "compoundIdentity": "5078957|6981532164",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6981578155",
+      "compoundIdentity": "5078957|6981578155",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6981741339",
+      "compoundIdentity": "5078957|6981741339",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6981794516",
+      "compoundIdentity": "5078957|6981794516",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6983001327",
+      "compoundIdentity": "5078957|6983001327",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6983834583",
+      "compoundIdentity": "5078957|6983834583",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6985225357",
+      "compoundIdentity": "5078957|6985225357",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6985720734",
+      "compoundIdentity": "5078957|6985720734",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6985721922",
+      "compoundIdentity": "5078957|6985721922",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6985819834",
+      "compoundIdentity": "5078957|6985819834",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6985857003",
+      "compoundIdentity": "5078957|6985857003",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6986009452",
+      "compoundIdentity": "5078957|6986009452",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6986037149",
+      "compoundIdentity": "5078957|6986037149",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6986639642",
+      "compoundIdentity": "5078957|6986639642",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6987748377",
+      "compoundIdentity": "5078957|6987748377",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6987806273",
+      "compoundIdentity": "5078957|6987806273",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6987806446",
+      "compoundIdentity": "5078957|6987806446",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6987815708",
+      "compoundIdentity": "5078957|6987815708",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6987817873",
+      "compoundIdentity": "5078957|6987817873",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6987818249",
+      "compoundIdentity": "5078957|6987818249",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6987818852",
+      "compoundIdentity": "5078957|6987818852",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6987819491",
+      "compoundIdentity": "5078957|6987819491",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6987827956",
+      "compoundIdentity": "5078957|6987827956",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6987828893",
+      "compoundIdentity": "5078957|6987828893",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6987830252",
+      "compoundIdentity": "5078957|6987830252",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6987832323",
+      "compoundIdentity": "5078957|6987832323",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6987836773",
+      "compoundIdentity": "5078957|6987836773",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6987838058",
+      "compoundIdentity": "5078957|6987838058",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6987874775",
+      "compoundIdentity": "5078957|6987874775",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6987939164",
+      "compoundIdentity": "5078957|6987939164",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6988943522",
+      "compoundIdentity": "5078957|6988943522",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6989487301",
+      "compoundIdentity": "5078957|6989487301",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6989569504",
+      "compoundIdentity": "5078957|6989569504",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6989731363",
+      "compoundIdentity": "5078957|6989731363",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6989731533",
+      "compoundIdentity": "5078957|6989731533",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6989734032",
+      "compoundIdentity": "5078957|6989734032",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6989734483",
+      "compoundIdentity": "5078957|6989734483",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6989736725",
+      "compoundIdentity": "5078957|6989736725",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6989736970",
+      "compoundIdentity": "5078957|6989736970",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6989737868",
+      "compoundIdentity": "5078957|6989737868",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6989739152",
+      "compoundIdentity": "5078957|6989739152",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6989739876",
+      "compoundIdentity": "5078957|6989739876",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6989740314",
+      "compoundIdentity": "5078957|6989740314",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6989749150",
+      "compoundIdentity": "5078957|6989749150",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6989758143",
+      "compoundIdentity": "5078957|6989758143",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6989758593",
+      "compoundIdentity": "5078957|6989758593",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6989758878",
+      "compoundIdentity": "5078957|6989758878",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6989768046",
+      "compoundIdentity": "5078957|6989768046",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6989784334",
+      "compoundIdentity": "5078957|6989784334",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6989785355",
+      "compoundIdentity": "5078957|6989785355",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6989794592",
+      "compoundIdentity": "5078957|6989794592",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6992093488",
+      "compoundIdentity": "5078957|6992093488",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6993231242",
+      "compoundIdentity": "5078957|6993231242",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6993643181",
+      "compoundIdentity": "5078957|6993643181",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6993663870",
+      "compoundIdentity": "5078957|6993663870",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6994689115",
+      "compoundIdentity": "5078957|6994689115",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6994704345",
+      "compoundIdentity": "5078957|6994704345",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6994715977",
+      "compoundIdentity": "5078957|6994715977",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6994720897",
+      "compoundIdentity": "5078957|6994720897",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6994728828",
+      "compoundIdentity": "5078957|6994728828",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6995915702",
+      "compoundIdentity": "5078957|6995915702",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6996856785",
+      "compoundIdentity": "5078957|6996856785",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6996857110",
+      "compoundIdentity": "5078957|6996857110",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6996857812",
+      "compoundIdentity": "5078957|6996857812",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6996858043",
+      "compoundIdentity": "5078957|6996858043",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6996858204",
+      "compoundIdentity": "5078957|6996858204",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6996858233",
+      "compoundIdentity": "5078957|6996858233",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6996858242",
+      "compoundIdentity": "5078957|6996858242",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6996858767",
+      "compoundIdentity": "5078957|6996858767",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6996913219",
+      "compoundIdentity": "5078957|6996913219",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6996914003",
+      "compoundIdentity": "5078957|6996914003",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6996914265",
+      "compoundIdentity": "5078957|6996914265",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6996914529",
+      "compoundIdentity": "5078957|6996914529",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6996915708",
+      "compoundIdentity": "5078957|6996915708",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6996915909",
+      "compoundIdentity": "5078957|6996915909",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6996916003",
+      "compoundIdentity": "5078957|6996916003",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6996916004",
+      "compoundIdentity": "5078957|6996916004",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6996916064",
+      "compoundIdentity": "5078957|6996916064",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6996916351",
+      "compoundIdentity": "5078957|6996916351",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6996916390",
+      "compoundIdentity": "5078957|6996916390",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6996917010",
+      "compoundIdentity": "5078957|6996917010",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6996955000",
+      "compoundIdentity": "5078957|6996955000",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6996956043",
+      "compoundIdentity": "5078957|6996956043",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6997025543",
+      "compoundIdentity": "5078957|6997025543",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6997025973",
+      "compoundIdentity": "5078957|6997025973",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6997026144",
+      "compoundIdentity": "5078957|6997026144",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6997027905",
+      "compoundIdentity": "5078957|6997027905",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6997028420",
+      "compoundIdentity": "5078957|6997028420",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6997029737",
+      "compoundIdentity": "5078957|6997029737",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6998114942",
+      "compoundIdentity": "5078957|6998114942",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6998115562",
+      "compoundIdentity": "5078957|6998115562",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6998194286",
+      "compoundIdentity": "5078957|6998194286",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6999825915",
+      "compoundIdentity": "5078957|6999825915",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6999825928",
+      "compoundIdentity": "5078957|6999825928",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6999825967",
+      "compoundIdentity": "5078957|6999825967",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6999826095",
+      "compoundIdentity": "5078957|6999826095",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6999826377",
+      "compoundIdentity": "5078957|6999826377",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6999919414",
+      "compoundIdentity": "5078957|6999919414",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6999920710",
+      "compoundIdentity": "5078957|6999920710",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6999925713",
+      "compoundIdentity": "5078957|6999925713",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6999928123",
+      "compoundIdentity": "5078957|6999928123",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6999929408",
+      "compoundIdentity": "5078957|6999929408",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6999939948",
+      "compoundIdentity": "5078957|6999939948",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "6999948427",
+      "compoundIdentity": "5078957|6999948427",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7000494356",
+      "compoundIdentity": "5078957|7000494356",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7001524864",
+      "compoundIdentity": "5078957|7001524864",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7001632823",
+      "compoundIdentity": "5078957|7001632823",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7001638100",
+      "compoundIdentity": "5078957|7001638100",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7001640331",
+      "compoundIdentity": "5078957|7001640331",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7001646198",
+      "compoundIdentity": "5078957|7001646198",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7001720483",
+      "compoundIdentity": "5078957|7001720483",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7002104621",
+      "compoundIdentity": "5078957|7002104621",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7002146391",
+      "compoundIdentity": "5078957|7002146391",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7003273405",
+      "compoundIdentity": "5078957|7003273405",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7003273792",
+      "compoundIdentity": "5078957|7003273792",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7003276686",
+      "compoundIdentity": "5078957|7003276686",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7003362900",
+      "compoundIdentity": "5078957|7003362900",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7004019000",
+      "compoundIdentity": "5078957|7004019000",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7004486600",
+      "compoundIdentity": "5078957|7004486600",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7004524527",
+      "compoundIdentity": "5078957|7004524527",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7004897102",
+      "compoundIdentity": "5078957|7004897102",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7005275016",
+      "compoundIdentity": "5078957|7005275016",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7005867311",
+      "compoundIdentity": "5078957|7005867311",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7005970526",
+      "compoundIdentity": "5078957|7005970526",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7006363718",
+      "compoundIdentity": "5078957|7006363718",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7006955199",
+      "compoundIdentity": "5078957|7006955199",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7007641129",
+      "compoundIdentity": "5078957|7007641129",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7007871017",
+      "compoundIdentity": "5078957|7007871017",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7007922973",
+      "compoundIdentity": "5078957|7007922973",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7008125041",
+      "compoundIdentity": "5078957|7008125041",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7008136971",
+      "compoundIdentity": "5078957|7008136971",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7008695250",
+      "compoundIdentity": "5078957|7008695250",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7008823145",
+      "compoundIdentity": "5078957|7008823145",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7008845476",
+      "compoundIdentity": "5078957|7008845476",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7009241010",
+      "compoundIdentity": "5078957|7009241010",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7009292849",
+      "compoundIdentity": "5078957|7009292849",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7010395428",
+      "compoundIdentity": "5078957|7010395428",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7010478719",
+      "compoundIdentity": "5078957|7010478719",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7010573166",
+      "compoundIdentity": "5078957|7010573166",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7011087646",
+      "compoundIdentity": "5078957|7011087646",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7011110420",
+      "compoundIdentity": "5078957|7011110420",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7012076249",
+      "compoundIdentity": "5078957|7012076249",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7012076647",
+      "compoundIdentity": "5078957|7012076647",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7012198680",
+      "compoundIdentity": "5078957|7012198680",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7012225007",
+      "compoundIdentity": "5078957|7012225007",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7012654087",
+      "compoundIdentity": "5078957|7012654087",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7013095625",
+      "compoundIdentity": "5078957|7013095625",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7013224920",
+      "compoundIdentity": "5078957|7013224920",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7013230045",
+      "compoundIdentity": "5078957|7013230045",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7013846166",
+      "compoundIdentity": "5078957|7013846166",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7013852033",
+      "compoundIdentity": "5078957|7013852033",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7013870760",
+      "compoundIdentity": "5078957|7013870760",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7014297688",
+      "compoundIdentity": "5078957|7014297688",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7014338906",
+      "compoundIdentity": "5078957|7014338906",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7014340967",
+      "compoundIdentity": "5078957|7014340967",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7014365670",
+      "compoundIdentity": "5078957|7014365670",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7014780362",
+      "compoundIdentity": "5078957|7014780362",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7014989032",
+      "compoundIdentity": "5078957|7014989032",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7015334593",
+      "compoundIdentity": "5078957|7015334593",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7015349997",
+      "compoundIdentity": "5078957|7015349997",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7015391477",
+      "compoundIdentity": "5078957|7015391477",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7015415661",
+      "compoundIdentity": "5078957|7015415661",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7015455182",
+      "compoundIdentity": "5078957|7015455182",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7016022906",
+      "compoundIdentity": "5078957|7016022906",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7016501630",
+      "compoundIdentity": "5078957|7016501630",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7016571703",
+      "compoundIdentity": "5078957|7016571703",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7016652155",
+      "compoundIdentity": "5078957|7016652155",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7017032234",
+      "compoundIdentity": "5078957|7017032234",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7017039710",
+      "compoundIdentity": "5078957|7017039710",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7017075793",
+      "compoundIdentity": "5078957|7017075793",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7017134581",
+      "compoundIdentity": "5078957|7017134581",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7017171840",
+      "compoundIdentity": "5078957|7017171840",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7017192750",
+      "compoundIdentity": "5078957|7017192750",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7017787601",
+      "compoundIdentity": "5078957|7017787601",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7017832578",
+      "compoundIdentity": "5078957|7017832578",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7018212513",
+      "compoundIdentity": "5078957|7018212513",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7018329484",
+      "compoundIdentity": "5078957|7018329484",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7018702641",
+      "compoundIdentity": "5078957|7018702641",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7018803158",
+      "compoundIdentity": "5078957|7018803158",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7018973830",
+      "compoundIdentity": "5078957|7018973830",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7018988450",
+      "compoundIdentity": "5078957|7018988450",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7019834656",
+      "compoundIdentity": "5078957|7019834656",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7020500645",
+      "compoundIdentity": "5078957|7020500645",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7020667507",
+      "compoundIdentity": "5078957|7020667507",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7021338584",
+      "compoundIdentity": "5078957|7021338584",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7021590907",
+      "compoundIdentity": "5078957|7021590907",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7021747647",
+      "compoundIdentity": "5078957|7021747647",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7023007745",
+      "compoundIdentity": "5078957|7023007745",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7024232832",
+      "compoundIdentity": "5078957|7024232832",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7024404657",
+      "compoundIdentity": "5078957|7024404657",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7024467317",
+      "compoundIdentity": "5078957|7024467317",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7025574966",
+      "compoundIdentity": "5078957|7025574966",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7025604528",
+      "compoundIdentity": "5078957|7025604528",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7025604728",
+      "compoundIdentity": "5078957|7025604728",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7025829931",
+      "compoundIdentity": "5078957|7025829931",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7026906163",
+      "compoundIdentity": "5078957|7026906163",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7026906246",
+      "compoundIdentity": "5078957|7026906246",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7027830812",
+      "compoundIdentity": "5078957|7027830812",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7027832650",
+      "compoundIdentity": "5078957|7027832650",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7027928116",
+      "compoundIdentity": "5078957|7027928116",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7028069479",
+      "compoundIdentity": "5078957|7028069479",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7028093467",
+      "compoundIdentity": "5078957|7028093467",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7028252813",
+      "compoundIdentity": "5078957|7028252813",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7028708436",
+      "compoundIdentity": "5078957|7028708436",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7029163467",
+      "compoundIdentity": "5078957|7029163467",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7029441462",
+      "compoundIdentity": "5078957|7029441462",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7029457483",
+      "compoundIdentity": "5078957|7029457483",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7029545797",
+      "compoundIdentity": "5078957|7029545797",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7029545824",
+      "compoundIdentity": "5078957|7029545824",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7029827262",
+      "compoundIdentity": "5078957|7029827262",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7029975966",
+      "compoundIdentity": "5078957|7029975966",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7030399581",
+      "compoundIdentity": "5078957|7030399581",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7030792033",
+      "compoundIdentity": "5078957|7030792033",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7030939367",
+      "compoundIdentity": "5078957|7030939367",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7031010505",
+      "compoundIdentity": "5078957|7031010505",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7031415469",
+      "compoundIdentity": "5078957|7031415469",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7031432232",
+      "compoundIdentity": "5078957|7031432232",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7031456320",
+      "compoundIdentity": "5078957|7031456320",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7031460396",
+      "compoundIdentity": "5078957|7031460396",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7031555457",
+      "compoundIdentity": "5078957|7031555457",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7031671605",
+      "compoundIdentity": "5078957|7031671605",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7032177224",
+      "compoundIdentity": "5078957|7032177224",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7032197533",
+      "compoundIdentity": "5078957|7032197533",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7032243072",
+      "compoundIdentity": "5078957|7032243072",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7032261981",
+      "compoundIdentity": "5078957|7032261981",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7032519458",
+      "compoundIdentity": "5078957|7032519458",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7032960560",
+      "compoundIdentity": "5078957|7032960560",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7032963893",
+      "compoundIdentity": "5078957|7032963893",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7035517472",
+      "compoundIdentity": "5078957|7035517472",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7035590442",
+      "compoundIdentity": "5078957|7035590442",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7035594732",
+      "compoundIdentity": "5078957|7035594732",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7035604939",
+      "compoundIdentity": "5078957|7035604939",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7037093814",
+      "compoundIdentity": "5078957|7037093814",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7037605404",
+      "compoundIdentity": "5078957|7037605404",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7037736398",
+      "compoundIdentity": "5078957|7037736398",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7038256789",
+      "compoundIdentity": "5078957|7038256789",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7038400717",
+      "compoundIdentity": "5078957|7038400717",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7039045982",
+      "compoundIdentity": "5078957|7039045982",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7039068626",
+      "compoundIdentity": "5078957|7039068626",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7039147195",
+      "compoundIdentity": "5078957|7039147195",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7039565556",
+      "compoundIdentity": "5078957|7039565556",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7039567482",
+      "compoundIdentity": "5078957|7039567482",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7039699388",
+      "compoundIdentity": "5078957|7039699388",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7040849041",
+      "compoundIdentity": "5078957|7040849041",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7040954431",
+      "compoundIdentity": "5078957|7040954431",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7040972711",
+      "compoundIdentity": "5078957|7040972711",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7040973938",
+      "compoundIdentity": "5078957|7040973938",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7041449493",
+      "compoundIdentity": "5078957|7041449493",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7041450235",
+      "compoundIdentity": "5078957|7041450235",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7041453338",
+      "compoundIdentity": "5078957|7041453338",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7041453454",
+      "compoundIdentity": "5078957|7041453454",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7041551974",
+      "compoundIdentity": "5078957|7041551974",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7042744623",
+      "compoundIdentity": "5078957|7042744623",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7043167019",
+      "compoundIdentity": "5078957|7043167019",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7043900142",
+      "compoundIdentity": "5078957|7043900142",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7043925796",
+      "compoundIdentity": "5078957|7043925796",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7044642684",
+      "compoundIdentity": "5078957|7044642684",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7044654145",
+      "compoundIdentity": "5078957|7044654145",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7044715280",
+      "compoundIdentity": "5078957|7044715280",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7044736841",
+      "compoundIdentity": "5078957|7044736841",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7044848890",
+      "compoundIdentity": "5078957|7044848890",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7044963589",
+      "compoundIdentity": "5078957|7044963589",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7045170363",
+      "compoundIdentity": "5078957|7045170363",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7045178967",
+      "compoundIdentity": "5078957|7045178967",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7045182449",
+      "compoundIdentity": "5078957|7045182449",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7045189085",
+      "compoundIdentity": "5078957|7045189085",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7045267975",
+      "compoundIdentity": "5078957|7045267975",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7045332063",
+      "compoundIdentity": "5078957|7045332063",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7045347315",
+      "compoundIdentity": "5078957|7045347315",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7045496818",
+      "compoundIdentity": "5078957|7045496818",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7045498779",
+      "compoundIdentity": "5078957|7045498779",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7045902307",
+      "compoundIdentity": "5078957|7045902307",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7046733970",
+      "compoundIdentity": "5078957|7046733970",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7046799277",
+      "compoundIdentity": "5078957|7046799277",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7046934895",
+      "compoundIdentity": "5078957|7046934895",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7047135524",
+      "compoundIdentity": "5078957|7047135524",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7047158838",
+      "compoundIdentity": "5078957|7047158838",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7047218046",
+      "compoundIdentity": "5078957|7047218046",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7047228902",
+      "compoundIdentity": "5078957|7047228902",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7047231846",
+      "compoundIdentity": "5078957|7047231846",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7047275838",
+      "compoundIdentity": "5078957|7047275838",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7047350500",
+      "compoundIdentity": "5078957|7047350500",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7047355097",
+      "compoundIdentity": "5078957|7047355097",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7047359088",
+      "compoundIdentity": "5078957|7047359088",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7047372030",
+      "compoundIdentity": "5078957|7047372030",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7047376208",
+      "compoundIdentity": "5078957|7047376208",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7047392436",
+      "compoundIdentity": "5078957|7047392436",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7047475361",
+      "compoundIdentity": "5078957|7047475361",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7047668382",
+      "compoundIdentity": "5078957|7047668382",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7047813403",
+      "compoundIdentity": "5078957|7047813403",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7047939534",
+      "compoundIdentity": "5078957|7047939534",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7047949709",
+      "compoundIdentity": "5078957|7047949709",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7048090344",
+      "compoundIdentity": "5078957|7048090344",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7048202344",
+      "compoundIdentity": "5078957|7048202344",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7048592974",
+      "compoundIdentity": "5078957|7048592974",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7048830417",
+      "compoundIdentity": "5078957|7048830417",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7049247950",
+      "compoundIdentity": "5078957|7049247950",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7049337675",
+      "compoundIdentity": "5078957|7049337675",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7049340517",
+      "compoundIdentity": "5078957|7049340517",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7049363799",
+      "compoundIdentity": "5078957|7049363799",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7049375498",
+      "compoundIdentity": "5078957|7049375498",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7049381947",
+      "compoundIdentity": "5078957|7049381947",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7049508157",
+      "compoundIdentity": "5078957|7049508157",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7049515638",
+      "compoundIdentity": "5078957|7049515638",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7050087548",
+      "compoundIdentity": "5078957|7050087548",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7050090927",
+      "compoundIdentity": "5078957|7050090927",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7050168064",
+      "compoundIdentity": "5078957|7050168064",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7050251695",
+      "compoundIdentity": "5078957|7050251695",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7050283947",
+      "compoundIdentity": "5078957|7050283947",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7050299157",
+      "compoundIdentity": "5078957|7050299157",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7050621690",
+      "compoundIdentity": "5078957|7050621690",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7050625463",
+      "compoundIdentity": "5078957|7050625463",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7050827891",
+      "compoundIdentity": "5078957|7050827891",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7050829234",
+      "compoundIdentity": "5078957|7050829234",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7050829943",
+      "compoundIdentity": "5078957|7050829943",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7050869997",
+      "compoundIdentity": "5078957|7050869997",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7051193309",
+      "compoundIdentity": "5078957|7051193309",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7051481111",
+      "compoundIdentity": "5078957|7051481111",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7051595736",
+      "compoundIdentity": "5078957|7051595736",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7051599968",
+      "compoundIdentity": "5078957|7051599968",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7051742166",
+      "compoundIdentity": "5078957|7051742166",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7052322850",
+      "compoundIdentity": "5078957|7052322850",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7052455131",
+      "compoundIdentity": "5078957|7052455131",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7053535494",
+      "compoundIdentity": "5078957|7053535494",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7053544724",
+      "compoundIdentity": "5078957|7053544724",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7053594442",
+      "compoundIdentity": "5078957|7053594442",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7053705539",
+      "compoundIdentity": "5078957|7053705539",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7053707759",
+      "compoundIdentity": "5078957|7053707759",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7054016287",
+      "compoundIdentity": "5078957|7054016287",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7054330965",
+      "compoundIdentity": "5078957|7054330965",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7054334469",
+      "compoundIdentity": "5078957|7054334469",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7054740326",
+      "compoundIdentity": "5078957|7054740326",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7055096013",
+      "compoundIdentity": "5078957|7055096013",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7055162325",
+      "compoundIdentity": "5078957|7055162325",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7055461085",
+      "compoundIdentity": "5078957|7055461085",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7055754696",
+      "compoundIdentity": "5078957|7055754696",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7055759078",
+      "compoundIdentity": "5078957|7055759078",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7055764543",
+      "compoundIdentity": "5078957|7055764543",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7055769333",
+      "compoundIdentity": "5078957|7055769333",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7055776761",
+      "compoundIdentity": "5078957|7055776761",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7055895915",
+      "compoundIdentity": "5078957|7055895915",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7055933633",
+      "compoundIdentity": "5078957|7055933633",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7055984464",
+      "compoundIdentity": "5078957|7055984464",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7056200208",
+      "compoundIdentity": "5078957|7056200208",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7056304545",
+      "compoundIdentity": "5078957|7056304545",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7056558150",
+      "compoundIdentity": "5078957|7056558150",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7056558399",
+      "compoundIdentity": "5078957|7056558399",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7056558513",
+      "compoundIdentity": "5078957|7056558513",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7056559157",
+      "compoundIdentity": "5078957|7056559157",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7056614570",
+      "compoundIdentity": "5078957|7056614570",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7056630137",
+      "compoundIdentity": "5078957|7056630137",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7056685572",
+      "compoundIdentity": "5078957|7056685572",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7056693485",
+      "compoundIdentity": "5078957|7056693485",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7057264297",
+      "compoundIdentity": "5078957|7057264297",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7057294990",
+      "compoundIdentity": "5078957|7057294990",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7057798758",
+      "compoundIdentity": "5078957|7057798758",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7057805371",
+      "compoundIdentity": "5078957|7057805371",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7057808708",
+      "compoundIdentity": "5078957|7057808708",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7057886423",
+      "compoundIdentity": "5078957|7057886423",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7058061854",
+      "compoundIdentity": "5078957|7058061854",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7058154511",
+      "compoundIdentity": "5078957|7058154511",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7058289075",
+      "compoundIdentity": "5078957|7058289075",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7058329465",
+      "compoundIdentity": "5078957|7058329465",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7058808849",
+      "compoundIdentity": "5078957|7058808849",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7058817333",
+      "compoundIdentity": "5078957|7058817333",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7059453120",
+      "compoundIdentity": "5078957|7059453120",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7059522806",
+      "compoundIdentity": "5078957|7059522806",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7059828257",
+      "compoundIdentity": "5078957|7059828257",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7059830120",
+      "compoundIdentity": "5078957|7059830120",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7059833207",
+      "compoundIdentity": "5078957|7059833207",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7060145964",
+      "compoundIdentity": "5078957|7060145964",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7060200739",
+      "compoundIdentity": "5078957|7060200739",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7060202936",
+      "compoundIdentity": "5078957|7060202936",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7060204137",
+      "compoundIdentity": "5078957|7060204137",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7060205422",
+      "compoundIdentity": "5078957|7060205422",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7060214305",
+      "compoundIdentity": "5078957|7060214305",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7060255422",
+      "compoundIdentity": "5078957|7060255422",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7060807266",
+      "compoundIdentity": "5078957|7060807266",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7060920504",
+      "compoundIdentity": "5078957|7060920504",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7061053848",
+      "compoundIdentity": "5078957|7061053848",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7061151588",
+      "compoundIdentity": "5078957|7061151588",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7061211969",
+      "compoundIdentity": "5078957|7061211969",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7061291324",
+      "compoundIdentity": "5078957|7061291324",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7061555747",
+      "compoundIdentity": "5078957|7061555747",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7061576506",
+      "compoundIdentity": "5078957|7061576506",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7061747736",
+      "compoundIdentity": "5078957|7061747736",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7062181044",
+      "compoundIdentity": "5078957|7062181044",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7062232073",
+      "compoundIdentity": "5078957|7062232073",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7062245406",
+      "compoundIdentity": "5078957|7062245406",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7062247352",
+      "compoundIdentity": "5078957|7062247352",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7062248900",
+      "compoundIdentity": "5078957|7062248900",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7062978008",
+      "compoundIdentity": "5078957|7062978008",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7063646193",
+      "compoundIdentity": "5078957|7063646193",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7063647841",
+      "compoundIdentity": "5078957|7063647841",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7064056390",
+      "compoundIdentity": "5078957|7064056390",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7064266605",
+      "compoundIdentity": "5078957|7064266605",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7064287530",
+      "compoundIdentity": "5078957|7064287530",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    },
+    {
+      "advertiserId": "5078957",
+      "productId": "7064292860",
+      "compoundIdentity": "5078957|7064292860",
+      "occurrenceCount": 1,
+      "feedIds": [],
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [],
+      "categories": [
+        "aff-inzerce-bazary"
+      ],
+      "published": false
+    }
+  ],
+  "sampleRows": 5000,
+  "sampleCapped": true,
+  "presentationBudgetDeferred": 8138411,
+  "publishPerPartner": null,
+  "evidenceClass": "COMPOUND_IDENTITY_SET_PLUS_SAMPLES",
+  "publicationGate": "STAGING_BLOCKED_LEDGER_ONLY"
+}
