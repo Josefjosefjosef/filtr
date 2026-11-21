@@ -256,6 +256,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-uncapped-growth-readiness-v51-8-selftest.mjs
       - name: SAFE_AUTONOMOUS_GROWTH + EXECUTE auth/arm selftest (V51.8; offline; does NOT arm production)
         run: node scripts/iu-cj-affiliate-phase3z-safe-autonomous-growth-v51-8-selftest.mjs
+      - name: Durable growth approval nonce atomicity selftest (sqlite UNIQUE; offline; does NOT deploy D1)
+        run: node scripts/iu-cj-affiliate-phase3z-growth-approval-nonce-store-v51-8-selftest.mjs
       - name: EXECUTE→catalog-sync CI bridge selftest (offline; default disabled; no production write)
         run: node scripts/iu-cj-affiliate-phase3z-execute-growth-activation-ci-v51-8-selftest.mjs
       - name: INVALID_FEED case audit selftest (V51.8; offline)
@@ -1464,7 +1466,10 @@ jobs:
           IU_CJ_GROWTH_OWNER_APPROVAL_HMAC: ${{ secrets.IU_CJ_GROWTH_OWNER_APPROVAL_HMAC }}
           IU_CJ_GROWTH_EXPECTED_GENERATION_ID: ${{ inputs.growth_expected_generation_id }}
           IU_CJ_GROWTH_EXPECTED_MAIN_SHA: ${{ inputs.growth_expected_main_sha }}
-          IU_CJ_GROWTH_APPROVAL_NONCE_STORE: ${{ runner.temp }}/iu-cj-growth-approval-nonces.json
+          # Durable nonce store (Cloudflare D1 Worker). Never RUNNER_TEMP / cache / artifact.
+          IU_CJ_GROWTH_NONCE_STORE_URL: ${{ secrets.IU_CJ_GROWTH_NONCE_STORE_URL }}
+          IU_CJ_GROWTH_NONCE_STORE_TOKEN: ${{ secrets.IU_CJ_GROWTH_NONCE_STORE_TOKEN }}
+          IU_CJ_GROWTH_NONCE_REQUIRE_DURABLE: "1"
           IU_CJ_GROWTH_EXECUTE_OUT: ${{ runner.temp }}/iu-cj-growth-execute-out.json
           IU_CJ_GROWTH_ARM_RECEIPT_PATH: ${{ runner.temp }}/iu-cj-growth-arm-receipt.json
           # Gate still from repo var (missing/invalid → 0). Live arm requires gate=1 AND valid approval.

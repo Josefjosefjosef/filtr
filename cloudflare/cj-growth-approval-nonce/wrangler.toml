@@ -1,0 +1,19 @@
+# Production CJ growth approval nonce store (D1). Deploy only with owner GO.
+# database_id is resolved at deploy time — do not commit real IDs unless already project policy.
+name = "iu-cj-growth-approval-nonce"
+main = "src/index.js"
+compatibility_date = "2024-11-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+ENVIRONMENT = "production"
+SERVICE = "cj-growth-approval-nonce"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "iu-cj-growth-approval"
+database_id = "00000000-0000-0000-0000-000000000000"
+migrations_dir = "migrations"
+
+# Secrets (Dashboard / wrangler secret put):
+#   IU_CJ_GROWTH_NONCE_STORE_TOKEN

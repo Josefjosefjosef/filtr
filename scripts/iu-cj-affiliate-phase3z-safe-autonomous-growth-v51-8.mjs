@@ -17,6 +17,11 @@ import {
   runGrowthShadowMode,
   reconstructDeferredCandidatesFromDurable,
 } from "./iu-cj-affiliate-phase3z-growth-shadow-mode-v51-8.mjs";
+import {
+  buildReservationKey,
+  hashNonce,
+  resolveGrowthApprovalNonceStore,
+} from "./iu-cj-affiliate-phase3z-growth-approval-nonce-store-v51-8.mjs";
 
 export const SAFE_AUTONOMOUS_GROWTH_SCHEMA =
   "iu-cj-affiliate-phase3z-safe-autonomous-growth-v51-8";
@@ -69,30 +74,6 @@ function resolveHmacSecret(opts = {}) {
   ).trim();
 }
 
-function defaultNonceStorePath(opts = {}) {
-  if (opts.nonceStorePath) return opts.nonceStorePath;
-  if (process.env.IU_CJ_GROWTH_APPROVAL_NONCE_STORE) {
-    return process.env.IU_CJ_GROWTH_APPROVAL_NONCE_STORE;
-  }
-  const base = process.env.RUNNER_TEMP || process.env.TEMP || process.env.TMPDIR || "/tmp";
-  return path.join(base, "iu-cj-growth-approval-nonces.json");
-}
-
-function loadNonceStore(storePath) {
-  try {
-    if (!fs.existsSync(storePath)) return { consumed: {} };
-    const doc = JSON.parse(fs.readFileSync(storePath, "utf8").replace(/^\uFEFF/, ""));
-    return { consumed: doc?.consumed && typeof doc.consumed === "object" ? doc.consumed : {} };
-  } catch {
-    return { consumed: {} };
-  }
-}
-
-function saveNonceStore(storePath, store) {
-  fs.mkdirSync(path.dirname(storePath), { recursive: true });
-  fs.writeFileSync(storePath, JSON.stringify(store, null, 2) + "\n");
-}
-
 /**
  * Mint a time-limited, single-use owner approval token (ops/owner tool + selftests).
  * Never auto-mint in production EXECUTE.
@@ -124,16 +105,20 @@ export function mintOwnerApprovalToken(opts = {}) {
 }
 
 /**
- * Verify owner approval. Fail-closed. Optionally consume nonce (replay protection).
+ * Verify owner approval. Fail-closed. Optionally atomically reserve nonce (replay protection).
+ * Always async — durable store may be HTTP/D1.
+ * Production (GITHUB_ACTIONS / requireDurable): never uses RUNNER_TEMP JSON.
  */
-export function verifyOwnerActivationApproval(opts = {}) {
+export async function verifyOwnerActivationApproval(opts = {}) {
   const secret = resolveHmacSecret(opts);
   const token = String(opts.ownerApprovalToken || "").trim();
-  const now = Date.parse(opts.nowIso || new Date().toISOString());
+  const nowIso = opts.nowIso || new Date().toISOString();
+  const now = Date.parse(nowIso);
   const deny = (reason, extra = {}) => ({
     ok: false,
     reason,
     consumed: false,
+    noProductionWrite: reason === "NONCE_STORE_UNAVAILABLE" || reason === "OWNER_APPROVAL_REPLAY",
     ...extra,
   });
 
@@ -189,24 +174,76 @@ export function verifyOwnerActivationApproval(opts = {}) {
 
   const nonce = String(payload.nonce || "").trim();
   if (!nonce) return deny("OWNER_APPROVAL_NONCE_MISSING");
-  const storePath = defaultNonceStorePath(opts);
-  const store = loadNonceStore(storePath);
-  if (store.consumed[nonce]) {
-    return deny("OWNER_APPROVAL_REPLAY", { nonce, previouslyConsumedAt: store.consumed[nonce] });
-  }
 
+  const repository = String(
+    opts.repository || process.env.GITHUB_REPOSITORY || "Josefjosefjosef/filtr",
+  ).trim();
+  const reservationKey = buildReservationKey({
+    nonce,
+    repository,
+    mainSha: payload.mainSha,
+    generationId: payload.generationId,
+  });
+  const nonceHash = hashNonce(nonce);
+
+  const store =
+    opts.nonceStore ||
+    resolveGrowthApprovalNonceStore({
+      env: opts.env || process.env,
+      requireDurable: opts.requireDurable,
+      allowInsecureLocal: opts.allowInsecureLocal,
+      sqlitePath: opts.nonceSqlitePath || opts.nonceStorePath,
+      legacyJsonPath: opts.legacyJsonPath,
+      baseUrl: opts.nonceStoreUrl,
+      token: opts.nonceStoreToken,
+    });
+
+  // Peek/replay check without consume: attempt is still fail-closed if store unavailable
+  // when consume is requested; dry-run peek may skip reserve.
   if (opts.consume === true) {
-    store.consumed[nonce] = new Date(now).toISOString();
-    saveNonceStore(storePath, store);
+    const reserved = await store.reserve({
+      reservationKey,
+      nonceHash,
+      repository,
+      mainSha: String(payload.mainSha || "").toLowerCase(),
+      generationId: String(payload.generationId || ""),
+      actor: opts.actor || process.env.GITHUB_ACTOR || payload.actor || null,
+      issuedAt: payload.issuedAt,
+      expiresAt: payload.expiresAt,
+      runId: opts.runId || process.env.GITHUB_RUN_ID || null,
+      nowIso,
+    });
+    if (!reserved?.ok) {
+      const reason = reserved?.reason || "NONCE_STORE_UNAVAILABLE";
+      return deny(reason, {
+        reservationKey,
+        nonceStoreKind: store.kind,
+        noProductionWrite: true,
+      });
+    }
+    return {
+      ok: true,
+      reason: "OK",
+      consumed: true,
+      nonceReserved: true,
+      reservationKey,
+      nonceStoreKind: store.kind,
+      nonceStoreDurable: store.durable === true,
+      payload,
+      firstBatchMax: Math.max(1, Math.min(25, Number(payload.firstBatchMax) || DEFAULT_FIRST_BATCH_MAX)),
+      nonceStore: store,
+    };
   }
 
   return {
     ok: true,
     reason: "OK",
-    consumed: opts.consume === true,
+    consumed: false,
+    reservationKey,
+    nonceStoreKind: store.kind,
+    nonceStoreDurable: store.durable === true,
     payload,
     firstBatchMax: Math.max(1, Math.min(25, Number(payload.firstBatchMax) || DEFAULT_FIRST_BATCH_MAX)),
-    nonceStorePath: storePath,
   };
 }
 
@@ -521,7 +558,7 @@ export function prepareGrowthActivation(opts = {}) {
  * dryRun (default true): verify auth + simulate first batch ≤25; do NOT consume nonce; no arm.
  * dryRun false: require gate=1 + prechecks + consume nonce + emit arming env overlay for pipeline.
  */
-export function executeGrowthActivation(opts = {}) {
+export async function executeGrowthActivation(opts = {}) {
   const at = new Date().toISOString();
   const env = opts.env || process.env;
   const gateRaw = env.IU_CJ_PUBLIC_GROWTH_UNCAPPED;
@@ -550,16 +587,29 @@ export function executeGrowthActivation(opts = {}) {
     implementation: "LIVE_PIPELINE_ARM_V1",
   };
 
-  const auth = verifyOwnerActivationApproval({
+  const authCommon = {
     ownerApprovalToken: opts.ownerApprovalToken,
     hmacSecret: opts.hmacSecret,
     expectedGenerationId: generationId,
     expectedMainSha: mainSha,
     requiredActor: opts.requiredActor,
     actor: opts.actor,
+    nonceStore: opts.nonceStore,
+    nonceSqlitePath: opts.nonceSqlitePath,
     nonceStorePath: opts.nonceStorePath,
+    allowInsecureLocal: opts.allowInsecureLocal,
+    requireDurable: opts.requireDurable,
+    nonceStoreUrl: opts.nonceStoreUrl,
+    nonceStoreToken: opts.nonceStoreToken,
+    env: opts.env,
+    repository: opts.repository,
+    runId: opts.runId,
     nowIso: opts.nowIso || at,
-    consume: false, // never consume until live path succeeds prechecks
+  };
+
+  const auth = await verifyOwnerActivationApproval({
+    ...authCommon,
+    consume: false, // never reserve until live path clears prechecks + gate
   });
 
   if (!auth.ok) {
@@ -675,15 +725,8 @@ export function executeGrowthActivation(opts = {}) {
     };
   }
 
-  const consume = verifyOwnerActivationApproval({
-    ownerApprovalToken: opts.ownerApprovalToken,
-    hmacSecret: opts.hmacSecret,
-    expectedGenerationId: generationId,
-    expectedMainSha: mainSha,
-    requiredActor: opts.requiredActor,
-    actor: opts.actor,
-    nonceStorePath: opts.nonceStorePath,
-    nowIso: opts.nowIso || at,
+  const consume = await verifyOwnerActivationApproval({
+    ...authCommon,
     consume: true,
   });
   if (!consume.ok) {
@@ -692,7 +735,40 @@ export function executeGrowthActivation(opts = {}) {
       reason: consume.reason,
       auth: consume,
       dryRunBatch,
-      note: "NO_PRODUCTION_WRITE — approval consume failed (replay/expiry).",
+      noProductionWrite: true,
+      note: "NO_PRODUCTION_WRITE — durable nonce reserve failed (replay/unavailable/expiry).",
+    };
+  }
+
+  try {
+    if (consume.nonceStore && typeof consume.nonceStore.transition === "function" && consume.reservationKey) {
+      await consume.nonceStore.transition({
+        reservationKey: consume.reservationKey,
+        state: "ARMED",
+        nowIso: at,
+      });
+    }
+  } catch {
+    // Transition failure after reserve: nonce already spent — require new owner approval.
+    if (consume.nonceStore && typeof consume.nonceStore.transition === "function" && consume.reservationKey) {
+      try {
+        await consume.nonceStore.transition({
+          reservationKey: consume.reservationKey,
+          state: "FAILED",
+          failReason: "ARM_TRANSITION_FAILED",
+          nowIso: at,
+        });
+      } catch {
+        /* ignore */
+      }
+    }
+    return {
+      ...base,
+      reason: "NONCE_ARM_TRANSITION_FAILED",
+      auth: { ok: false, reason: "NONCE_ARM_TRANSITION_FAILED", consumed: true, reservationKey: consume.reservationKey },
+      dryRunBatch,
+      noProductionWrite: true,
+      note: "NO_PRODUCTION_WRITE — nonce reserved but arm transition failed; new owner approval required.",
     };
   }
 
@@ -706,6 +782,9 @@ export function executeGrowthActivation(opts = {}) {
     adaptiveBatching: true,
     adaptiveBatchRange: { min: 25, max: 400 },
     pipeline: "cj-affiliate-catalog-sync / offers-live-sync",
+    reservationKey: consume.reservationKey || null,
+    nonceStoreKind: consume.nonceStoreKind || null,
+    nonceStoreDurable: consume.nonceStoreDurable === true,
     nonceFingerprint: crypto.createHash("sha256").update(String(consume.payload?.nonce || "")).digest("hex").slice(0, 16),
     expiresAt: consume.payload?.expiresAt || null,
   };
@@ -728,14 +807,22 @@ export function executeGrowthActivation(opts = {}) {
     executed: true,
     reason: "ARMED_FOR_CATALOG_SYNC",
     productionWrite: "NO_DIRECT_PROJECTS_DATA_WRITE",
-    auth: { ok: true, reason: "OK", consumed: true, firstBatchMax: consume.firstBatchMax },
+    auth: {
+      ok: true,
+      reason: "OK",
+      consumed: true,
+      firstBatchMax: consume.firstBatchMax,
+      reservationKey: consume.reservationKey,
+      nonceStoreKind: consume.nonceStoreKind,
+      nonceStoreDurable: consume.nonceStoreDurable === true,
+    },
     dryRunBatch,
     pipelineArming: { arm, envOverlay },
     note: "Activation armed for standard catalog-sync pipeline only. Direct projects/data writes remain forbidden here.",
   };
 }
 
-export function runNegativeGrowthGuards(opts = {}) {
+export async function runNegativeGrowthGuards(opts = {}) {
   const cases = [];
   const baseDoc = opts.offersDoc || { sections: [], liveEnabled: true, stats: { uniqueProducts: 10 } };
 
@@ -772,7 +859,12 @@ export function runNegativeGrowthGuards(opts = {}) {
   cases.push({ id: "stop_collision", pass: coll.stop === true });
 
   // Execute refuse
-  const exec = executeGrowthActivation({ ownerApprovalToken: "nope", expectedOwnerToken: "secret" });
+  const exec = await executeGrowthActivation({
+    ownerApprovalToken: "nope",
+    hmacSecret: "selftest-hmac-secret-do-not-use-in-prod-32b",
+    allowInsecureLocal: true,
+    nonceSqlitePath: opts.nonceSqlitePath,
+  });
   cases.push({ id: "execute_refused", pass: exec.refused === true && exec.executed === false });
 
   // Adaptive size changes with failures
