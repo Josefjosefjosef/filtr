@@ -103,6 +103,37 @@ on:
         required: false
         default: ""
         type: string
+      execute_growth_activation:
+        description: "Arm EXECUTE_GROWTH_ACTIVATION for this run only (requires owner HMAC token + gate var). Default 0 = off."
+        required: true
+        default: "0"
+        type: choice
+        options:
+          - "0"
+          - "1"
+      growth_execute_dry_run:
+        description: "When execute_growth_activation=1: 1=dry-run (no arm/env), 0=live arm into GITHUB_ENV for offers-live-sync"
+        required: true
+        default: "1"
+        type: choice
+        options:
+          - "0"
+          - "1"
+      growth_owner_approval_token:
+        description: "Owner HMAC approval token (never logged). Required only when execute_growth_activation=1."
+        required: false
+        default: ""
+        type: string
+      growth_expected_generation_id:
+        description: "Production generationId the owner approval is bound to"
+        required: false
+        default: ""
+        type: string
+      growth_expected_main_sha:
+        description: "main SHA the owner approval is bound to (40 hex)"
+        required: false
+        default: ""
+        type: string
 
 permissions:
   contents: write
@@ -225,6 +256,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-uncapped-growth-readiness-v51-8-selftest.mjs
       - name: SAFE_AUTONOMOUS_GROWTH + EXECUTE auth/arm selftest (V51.8; offline; does NOT arm production)
         run: node scripts/iu-cj-affiliate-phase3z-safe-autonomous-growth-v51-8-selftest.mjs
+      - name: EXECUTE→catalog-sync CI bridge selftest (offline; default disabled; no production write)
+        run: node scripts/iu-cj-affiliate-phase3z-execute-growth-activation-ci-v51-8-selftest.mjs
       - name: INVALID_FEED case audit selftest (V51.8; offline)
         run: node scripts/iu-cj-affiliate-phase3z-invalid-feed-case-audit-v51-8-selftest.mjs
       - name: Offset-ceiling recovery selftest (V51.8; offline; unsticks 9901 mislabel)
@@ -1422,6 +1455,32 @@ jobs:
             console.log("GAP_DEEPEN_APPLIED=0 reason=" + d.reason);
           }
           NODE
+      - name: EXECUTE growth activation arm (owner-gated; default off)
+        if: github.event_name == 'workflow_dispatch' && inputs.execute_growth_activation == '1'
+        env:
+          IU_CJ_GROWTH_EXECUTE_ENABLED: "1"
+          IU_CJ_GROWTH_EXECUTE_DRY_RUN: ${{ inputs.growth_execute_dry_run }}
+          IU_CJ_GROWTH_OWNER_APPROVAL_TOKEN_INPUT: ${{ inputs.growth_owner_approval_token }}
+          IU_CJ_GROWTH_OWNER_APPROVAL_HMAC: ${{ secrets.IU_CJ_GROWTH_OWNER_APPROVAL_HMAC }}
+          IU_CJ_GROWTH_EXPECTED_GENERATION_ID: ${{ inputs.growth_expected_generation_id }}
+          IU_CJ_GROWTH_EXPECTED_MAIN_SHA: ${{ inputs.growth_expected_main_sha }}
+          IU_CJ_GROWTH_APPROVAL_NONCE_STORE: ${{ runner.temp }}/iu-cj-growth-approval-nonces.json
+          IU_CJ_GROWTH_EXECUTE_OUT: ${{ runner.temp }}/iu-cj-growth-execute-out.json
+          IU_CJ_GROWTH_ARM_RECEIPT_PATH: ${{ runner.temp }}/iu-cj-growth-arm-receipt.json
+          # Gate still from repo var (missing/invalid → 0). Live arm requires gate=1 AND valid approval.
+          IU_CJ_PUBLIC_GROWTH_UNCAPPED: ${{ vars.IU_CJ_PUBLIC_GROWTH_UNCAPPED == '1' && '1' || '0' }}
+        run: |
+          set -euo pipefail
+          node scripts/iu-cj-affiliate-phase3z-execute-growth-activation-ci-v51-8.mjs
+          if [ -f "${IU_CJ_GROWTH_EXECUTE_OUT}" ]; then
+            python3 - <<'PY'
+          import json,os
+          p=os.environ["IU_CJ_GROWTH_EXECUTE_OUT"]
+          d=json.load(open(p,encoding="utf-8"))
+          # Never print token; only reason + booleans.
+          print(json.dumps({k:d.get(k) for k in ("reason","dryRun","executed","refused","wroteProjectsData","githubEnvWritten","authConsumed","gate","firstBatchMax")}, sort_keys=True))
+          PY
+          fi
       - name: Build/promote offers-public (fail-closed)
         env:
           IU_CJ_PRODUCT_FEED_CHECKPOINT_PATH: projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json
