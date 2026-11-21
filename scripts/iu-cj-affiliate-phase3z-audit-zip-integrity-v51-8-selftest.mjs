@@ -105,16 +105,26 @@ assertIntegrityOk(ok);
 
 // 7) Self-reference forbidden inside files[]
 {
-  let threw = false;
+  let threwPrimary = false;
+  let threwLegacy = false;
+  try {
+    buildEvidenceManifest([
+      { path: "a.txt", abs: a },
+      { path: "integrity-manifest.json", abs: a },
+    ]);
+  } catch (e) {
+    threwPrimary = /MANIFEST_SELF_REF_FORBIDDEN/.test(String(e.message || e));
+  }
   try {
     buildEvidenceManifest([
       { path: "a.txt", abs: a },
       { path: "MANIFEST.json", abs: a },
     ]);
   } catch (e) {
-    threw = /MANIFEST_SELF_REF_FORBIDDEN/.test(String(e.message || e));
+    threwLegacy = /MANIFEST_SELF_REF_FORBIDDEN/.test(String(e.message || e));
   }
-  assert(threw, "manifest must reject listing itself");
+  assert(threwPrimary, "manifest must reject listing integrity-manifest.json");
+  assert(threwLegacy, "manifest must reject listing legacy MANIFEST.json");
 }
 
 // 8) Sealed manifest meta (non-circular)
@@ -128,10 +138,12 @@ assertIntegrityOk(ok);
   ]);
   const seal = validateManifestSeal(sealedDir);
   assert(seal.ok === true, "seal validates");
-  const man = JSON.parse(fs.readFileSync(path.join(sealedDir, "MANIFEST.json"), "utf8"));
+  assert(fs.existsSync(path.join(sealedDir, "integrity-manifest.json")), "primary integrity-manifest.json");
+  assert(fs.existsSync(path.join(sealedDir, "integrity-manifest.meta.json")), "primary meta seal");
+  const man = JSON.parse(fs.readFileSync(path.join(sealedDir, "integrity-manifest.json"), "utf8"));
   const pack = validateEvidenceManifest(man, sealedDir);
   assert(pack.ok === true, "sealed pack validates without self-hash");
-  assert(meta.seals === "MANIFEST.json", "meta seals MANIFEST.json");
+  assert(meta.seals === "integrity-manifest.json", "meta seals integrity-manifest.json");
 }
 
 console.log(
