@@ -4,10 +4,10 @@
  * CRC32 must be exactly 8 lowercase hex digits (unsigned 32-bit, no sign-extension).
  *
  * Self-reference rule (deterministic, non-circular):
- * - MANIFEST.json lists evidence files ONLY (never itself, never the outer ZIP, never *.sha256 sidecars).
- * - MANIFEST.meta.json is written AFTER MANIFEST.json and stores sha256/size/crc32 of MANIFEST.json.
- * - Validators skip MANIFEST.json / MANIFEST.meta.json from the "extra file" walk and never require
- *   MANIFEST.json to hash-check itself inside files[].
+ * - integrity-manifest.json lists evidence files ONLY (never itself, never the outer ZIP, never *.sha256 sidecars).
+ * - integrity-manifest.meta.json is written AFTER integrity-manifest.json and seals it (sha256/size/crc32).
+ * - Validators skip integrity-manifest.json / *.meta.json / legacy MANIFEST.json from the "extra file" walk
+ *   and never require the integrity file to hash-check itself inside files[].
  * - Outer ZIP SHA-256 lives only in the sibling `.sha256` text file next to the ZIP (not inside the ZIP).
  */
 import fs from "node:fs";
@@ -15,13 +15,16 @@ import path from "node:path";
 import crypto from "node:crypto";
 
 export const AUDIT_INTEGRITY_SCHEMA = "iu-cj-affiliate-phase3z-audit-zip-integrity-v51-8";
-export const MANIFEST_BASENAME = "MANIFEST.json";
-export const MANIFEST_META_BASENAME = "MANIFEST.meta.json";
+export const MANIFEST_BASENAME = "integrity-manifest.json";
+export const MANIFEST_META_BASENAME = "integrity-manifest.meta.json";
+export const LEGACY_MANIFEST_BASENAME = "MANIFEST.json";
+export const LEGACY_MANIFEST_META_BASENAME = "MANIFEST.meta.json";
 export const FORBIDDEN_MANIFEST_PATHS = Object.freeze([
   MANIFEST_BASENAME,
   MANIFEST_META_BASENAME,
+  LEGACY_MANIFEST_BASENAME,
+  LEGACY_MANIFEST_META_BASENAME,
   "integrity-manifest.txt",
-  "integrity-manifest.json",
 ]);
 
 /** Unsigned CRC-32 (ISO 3309 / PNG/ZIP polynomial). */
@@ -83,13 +86,23 @@ export function buildEvidenceManifest(files) {
     schema: AUDIT_INTEGRITY_SCHEMA,
     generatedAt: new Date().toISOString(),
     selfReferenceRule:
-      "MANIFEST.json excludes itself; MANIFEST.meta.json seals MANIFEST.json; ZIP sha256 is external sidecar only",
+      "integrity-manifest.json excludes itself; integrity-manifest.meta.json seals it; ZIP sha256 is external sidecar only",
     fileCount: entries.length,
     files: entries,
   };
 }
 
-/** Write MANIFEST.json then MANIFEST.meta.json (seal) into dirAbs. */
+function isSkippedIntegrityName(name) {
+  return (
+    name === MANIFEST_BASENAME ||
+    name === MANIFEST_META_BASENAME ||
+    name === LEGACY_MANIFEST_BASENAME ||
+    name === LEGACY_MANIFEST_META_BASENAME ||
+    name === "integrity-manifest.txt"
+  );
+}
+
+/** Write integrity-manifest.json then integrity-manifest.meta.json (seal) into dirAbs. */
 export function writeSealedEvidenceManifest(dirAbs, files) {
   const manifest = buildEvidenceManifest(files);
   const manAbs = path.join(dirAbs, MANIFEST_BASENAME);
@@ -103,9 +116,13 @@ export function writeSealedEvidenceManifest(dirAbs, files) {
     size: manBuf.length,
     sha256: sha256Hex(manBuf),
     crc32: crc32Hex(manBuf),
-    note: "Does not include its own hash. Verify MANIFEST.json via this meta file; verify ZIP via external .sha256 sidecar.",
+    note: "Does not include its own hash. Verify integrity-manifest.json via this meta file; verify ZIP via external .sha256 sidecar.",
   };
-  fs.writeFileSync(path.join(dirAbs, MANIFEST_META_BASENAME), JSON.stringify(meta, null, 2) + "\n", "utf8");
+  const metaBody = JSON.stringify(meta, null, 2) + "\n";
+  fs.writeFileSync(path.join(dirAbs, MANIFEST_META_BASENAME), metaBody, "utf8");
+  // Legacy aliases for older verifiers (same bytes; skipped by walk / forbidden in files[]).
+  fs.writeFileSync(path.join(dirAbs, LEGACY_MANIFEST_BASENAME), manBody, "utf8");
+  fs.writeFileSync(path.join(dirAbs, LEGACY_MANIFEST_META_BASENAME), metaBody, "utf8");
   return { manifest, meta };
 }
 
@@ -178,12 +195,7 @@ export function validateEvidenceManifest(manifest, dirAbs, opts = {}) {
   const disk = new Map();
   const walk = (root, prefix = "") => {
     for (const ent of fs.readdirSync(root, { withFileTypes: true })) {
-      if (
-        ent.name === MANIFEST_BASENAME ||
-        ent.name === MANIFEST_META_BASENAME ||
-        ent.name === "integrity-manifest.txt" ||
-        ent.name === "integrity-manifest.json"
-      ) {
+      if (isSkippedIntegrityName(ent.name)) {
         continue;
       }
       if (opts.skipNames && opts.skipNames.has(ent.name)) continue;

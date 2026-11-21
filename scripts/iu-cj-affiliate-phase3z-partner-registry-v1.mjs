@@ -3443,18 +3443,22 @@ export async function main(argv = process.argv.slice(2)) {
         process.exitCode = 0;
         return;
       }
-      console.error(
+      // Dry dispatch without execute_live_fetch is not a CJ outage. Missing LKG is a
+      // non-blocking warn so catalog-sync selftest/offers jobs are not failed by an
+      // intentional dry staging shape (schedule/live-fetch paths still get real staging).
+      console.log(
         JSON.stringify({
-          ok: false,
-          reason: "REGISTRY_LKG_MISSING_DRY_STAGING",
-          classification: "REGISTRY_ARTIFACT_FAILURE",
+          ok: true,
+          warn: true,
+          reason: "REGISTRY_LKG_MISSING_DRY_STAGING_SOFT",
+          classification: "REGISTRY_EXPECTED_DRY_STAGING",
           stagingSource: staging?.source || null,
           stagingPath: paths.staging,
           tried: lkg.tried,
-          note: "Dry-run empty staging and no prior registry LKG available to preserve.",
+          note: "Dry-run empty staging and no prior registry LKG; soft-exit (not a publish/live failure).",
         })
       );
-      process.exitCode = 1;
+      process.exitCode = 0;
       return;
     }
     console.error(

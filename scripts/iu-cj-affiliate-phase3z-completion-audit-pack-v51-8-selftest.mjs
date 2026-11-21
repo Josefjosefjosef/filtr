@@ -35,9 +35,11 @@ assert(fs.existsSync(built.zipAbs + ".sha256"), "sha256 sidecar");
 assert(fs.existsSync(built.zipAbs + ".crc32"), "crc32 sidecar");
 assert(fs.existsSync(built.zipAbs + ".integrity.json"), "integrity sidecar");
 
-const manAbs = path.join(built.workDir, "MANIFEST.json");
+const manAbs = path.join(built.workDir, "integrity-manifest.json");
+assert(fs.existsSync(manAbs), "integrity-manifest.json present");
+assert(fs.existsSync(path.join(built.workDir, "integrity-manifest.meta.json")), "meta seal present");
 const man = JSON.parse(fs.readFileSync(manAbs, "utf8"));
-assert(!man.files.some((f) => f.path === "MANIFEST.json"), "manifest excludes self");
+assert(!man.files.some((f) => f.path === "MANIFEST.json"), "manifest excludes legacy self");
 assert(!man.files.some((f) => /integrity-manifest/i.test(f.path)), "no integrity-manifest self-ref");
 
 const seal = validateManifestSeal(built.workDir);
