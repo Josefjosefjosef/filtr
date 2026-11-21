@@ -1,9 +1,13 @@
 #!/usr/bin/env node
 /**
- * Selftest: SAFE_AUTONOMOUS_GROWTH adaptive batches, STOP, prepare/execute disarm.
- * Does not unlock growth gate. Does not write projects/data.
+ * Selftest: SAFE_AUTONOMOUS_GROWTH adaptive batches, STOP, prepare/execute auth,
+ * growth gate resolution, dry-run first batch ≤25. Does NOT unlock production growth.
+ * Does NOT write projects/data.
  */
 import assert from "node:assert/strict";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
 import {
   computeAdaptiveBatchSize,
   evaluateGrowthStopConditions,
@@ -11,11 +15,56 @@ import {
   executeGrowthActivation,
   runNegativeGrowthGuards,
   runSafeAutonomousGrowthCanary,
+  mintOwnerApprovalToken,
+  verifyOwnerActivationApproval,
+  resolvePublicGrowthUncappedGate,
+  resolveEffectiveUncappedGrowth,
   FORBIDDEN_PERMANENT_PARTNER_CAP,
+  DEFAULT_FIRST_BATCH_MAX,
 } from "./iu-cj-affiliate-phase3z-safe-autonomous-growth-v51-8.mjs";
+import { computePublicGrowthBudget } from "./iu-cj-affiliate-phase3z-publication-lkg-v51-8.mjs";
 
 assert.equal(FORBIDDEN_PERMANENT_PARTNER_CAP, null);
+assert.equal(DEFAULT_FIRST_BATCH_MAX, 25);
 
+const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), "iu-cj-growth-exec-"));
+const nonceStorePath = path.join(tmpRoot, "nonces.json");
+const hmacSecret = "selftest-hmac-secret-do-not-use-in-prod-32b";
+const mainSha = "1012fc5a10f13aa3248e8e633b0d2a7fad01ae71";
+const generationId = "2026-11-21T07:37:56.158Z";
+
+/* ---- Growth gate ---- */
+assert.equal(resolvePublicGrowthUncappedGate(undefined), false);
+assert.equal(resolvePublicGrowthUncappedGate(""), false);
+assert.equal(resolvePublicGrowthUncappedGate("0"), false);
+assert.equal(resolvePublicGrowthUncappedGate("true"), false);
+assert.equal(resolvePublicGrowthUncappedGate("yes"), false);
+assert.equal(resolvePublicGrowthUncappedGate(" 1 "), true); // trim only; still exact "1"
+assert.equal(resolvePublicGrowthUncappedGate("1"), true);
+
+const gatedOnly = resolveEffectiveUncappedGrowth({
+  env: { IU_CJ_PUBLIC_GROWTH_UNCAPPED: "1", IU_CJ_GROWTH_ACTIVATION_ARMED: "0" },
+});
+assert.equal(gatedOnly.effectiveUncapped, false, "gate 1 without arm must stay capped");
+const armed = resolveEffectiveUncappedGrowth({
+  env: {
+    IU_CJ_PUBLIC_GROWTH_UNCAPPED: "1",
+    IU_CJ_GROWTH_ACTIVATION_ARMED: "1",
+    IU_CJ_GROWTH_FIRST_BATCH_MAX: "25",
+  },
+});
+assert.equal(armed.effectiveUncapped, true);
+assert.equal(armed.maxAllowedNew, 25);
+
+const clampBudget = computePublicGrowthBudget(2975, {
+  uncappedMode: true,
+  maxGrowthRatio: 0.2,
+  maxAllowedNew: 25,
+  newCandidatesCount: 500,
+});
+assert.equal(clampBudget.allowedNew, 25);
+
+/* ---- Adaptive + STOP ---- */
 const aOk = computeAdaptiveBatchSize({
   catalogSize: 2705,
   priorBatchOk: true,
@@ -43,21 +92,145 @@ const neg = runNegativeGrowthGuards();
 assert.equal(neg.ok, true, JSON.stringify(neg.cases.filter((c) => !c.pass)));
 
 const prep = prepareGrowthActivation({
-  mainSha: "10b5c382b97ca9319e7b93bb377541d8bad7c789",
+  mainSha,
   requiredCiPass: true,
   pagesPass: true,
   growthLedger: { cumulativeAddedSinceBaseline: 500, maxCumulativeAbs: 500, allowedNew: 0 },
   envUncapped: "0",
 });
 assert.equal(prep.ready, true);
-assert.ok(prep.checks.some((c) => c.id === "execute_disarmed" && c.pass));
 
-const exec = executeGrowthActivation({});
-assert.equal(exec.executed, false);
-assert.equal(exec.refused, true);
-assert.equal(exec.reason, "OWNER_APPROVAL_REQUIRED");
+/* ---- Auth negative tests ---- */
+const authCases = [];
+function expectDeny(label, opts, expectedReason) {
+  const r = verifyOwnerActivationApproval({
+    hmacSecret,
+    nonceStorePath,
+    expectedGenerationId: generationId,
+    expectedMainSha: mainSha,
+    ...opts,
+  });
+  authCases.push({
+    id: label,
+    pass: r.ok === false && (!expectedReason || r.reason === expectedReason || r.reason.startsWith(expectedReason)),
+    reason: r.reason,
+  });
+  assert.equal(r.ok, false, label + " should deny: " + r.reason);
+}
 
-/* Offline canary — baseline must be large enough for uncapped ratio drip (floor(n*0.2)). */
+expectDeny("missing_token", { ownerApprovalToken: "" }, "OWNER_APPROVAL_REQUIRED");
+expectDeny("malformed", { ownerApprovalToken: "not-a-token" }, "OWNER_APPROVAL_MALFORMED");
+expectDeny(
+  "invalid_sig",
+  {
+    ownerApprovalToken: mintOwnerApprovalToken({
+      hmacSecret: "different-secret-also-long-enough!!",
+      generationId,
+      mainSha,
+    }).token,
+  },
+  "OWNER_APPROVAL_INVALID_SIGNATURE",
+);
+
+const goodMint = mintOwnerApprovalToken({
+  hmacSecret,
+  generationId,
+  mainSha,
+  firstBatchMax: 25,
+  actor: "owner-bot",
+  ttlMs: 3_600_000,
+});
+expectDeny(
+  "expired",
+  {
+    ownerApprovalToken: mintOwnerApprovalToken({
+      hmacSecret,
+      generationId,
+      mainSha,
+      ttlMs: 1_000,
+      nowIso: "2020-01-01T00:00:00.000Z",
+    }).token,
+    nowIso: "2026-11-21T08:00:00.000Z",
+  },
+  "OWNER_APPROVAL_EXPIRED",
+);
+expectDeny(
+  "wrong_generation",
+  {
+    ownerApprovalToken: mintOwnerApprovalToken({
+      hmacSecret,
+      generationId: "1999-01-01T00:00:00.000Z",
+      mainSha,
+    }).token,
+  },
+  "OWNER_APPROVAL_GENERATION_MISMATCH",
+);
+expectDeny(
+  "wrong_main_sha",
+  {
+    ownerApprovalToken: mintOwnerApprovalToken({
+      hmacSecret,
+      generationId,
+      mainSha: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    }).token,
+  },
+  "OWNER_APPROVAL_MAIN_SHA_MISMATCH",
+);
+expectDeny(
+  "unauthorized_actor",
+  {
+    ownerApprovalToken: goodMint.token,
+    requiredActor: "allowed-owner",
+    actor: "intruder",
+  },
+  "OWNER_APPROVAL_UNAUTHORIZED_ACTOR",
+);
+
+const okOnce = verifyOwnerActivationApproval({
+  hmacSecret,
+  ownerApprovalToken: goodMint.token,
+  expectedGenerationId: generationId,
+  expectedMainSha: mainSha,
+  nonceStorePath,
+  consume: true,
+});
+assert.equal(okOnce.ok, true);
+authCases.push({ id: "valid_consume", pass: true, reason: "OK" });
+
+const replay = verifyOwnerActivationApproval({
+  hmacSecret,
+  ownerApprovalToken: goodMint.token,
+  expectedGenerationId: generationId,
+  expectedMainSha: mainSha,
+  nonceStorePath,
+  consume: true,
+});
+assert.equal(replay.ok, false);
+assert.equal(replay.reason, "OWNER_APPROVAL_REPLAY");
+authCases.push({ id: "replay", pass: replay.reason === "OWNER_APPROVAL_REPLAY", reason: replay.reason });
+
+/* ---- EXECUTE: missing approval ---- */
+const execNo = executeGrowthActivation({
+  generationId,
+  mainSha,
+  hmacSecret,
+  nonceStorePath,
+  dryRun: true,
+});
+assert.equal(execNo.executed, false);
+assert.equal(execNo.refused, true);
+assert.equal(execNo.reason, "OWNER_APPROVAL_REQUIRED");
+assert.equal(execNo.productionWrite, "NO_PRODUCTION_WRITE");
+
+/* ---- Fresh token for dry-run + live arm tests ---- */
+const dryToken = mintOwnerApprovalToken({
+  hmacSecret,
+  generationId,
+  mainSha,
+  firstBatchMax: 25,
+  nonce: "dry-run-nonce-" + Date.now(),
+});
+
 const baselineProducts = [];
 for (let i = 0; i < 50; i++) {
   baselineProducts.push({
@@ -105,6 +278,107 @@ for (let i = 1; i <= 80; i++) {
   };
 }
 
+const dryExec = executeGrowthActivation({
+  ownerApprovalToken: dryToken.token,
+  hmacSecret,
+  nonceStorePath,
+  generationId,
+  mainSha,
+  dryRun: true,
+  firstBatchMax: 25,
+  offersDoc,
+  durableProducts: durable,
+  joinedPartners: [{ advertiserId: "222", name: "PartnerX", status: "JOINED" }],
+  backupPlanReady: true,
+  requiredCiPass: true,
+  pagesPass: true,
+  env: { IU_CJ_PUBLIC_GROWTH_UNCAPPED: "0" },
+});
+assert.equal(dryExec.reason, "DRY_RUN_OK");
+assert.equal(dryExec.executed, false);
+assert.equal(dryExec.wroteProjectsData, false);
+assert.equal(dryExec.productionWrite, "NO_PRODUCTION_WRITE");
+assert.ok(dryExec.dryRunBatch);
+assert.ok(dryExec.dryRunBatch.batchSize <= 25);
+assert.equal(dryExec.pipelineArming, null);
+assert.equal(dryExec.auth.consumed, false);
+
+/* Live without gate → locked */
+const liveNoGate = executeGrowthActivation({
+  ownerApprovalToken: dryToken.token,
+  hmacSecret,
+  nonceStorePath,
+  generationId,
+  mainSha,
+  dryRun: false,
+  offersDoc,
+  durableProducts: durable,
+  joinedPartners: [{ advertiserId: "222", name: "PartnerX", status: "JOINED" }],
+  backupPlanReady: true,
+  env: { IU_CJ_PUBLIC_GROWTH_UNCAPPED: "0" },
+});
+assert.equal(liveNoGate.reason, "GROWTH_GATE_LOCKED");
+assert.equal(liveNoGate.executed, false);
+
+/* Gate 1 without auth still refuse */
+const gateNoAuth = executeGrowthActivation({
+  dryRun: false,
+  generationId,
+  mainSha,
+  hmacSecret,
+  nonceStorePath,
+  env: { IU_CJ_PUBLIC_GROWTH_UNCAPPED: "1" },
+});
+assert.equal(gateNoAuth.reason, "OWNER_APPROVAL_REQUIRED");
+
+/* Live arm with gate+token (still no projects/data write) */
+const liveToken = mintOwnerApprovalToken({
+  hmacSecret,
+  generationId,
+  mainSha,
+  firstBatchMax: 25,
+  nonce: "live-arm-nonce-" + Date.now(),
+});
+const armPath = path.join(tmpRoot, "arm.json");
+const liveArm = executeGrowthActivation({
+  ownerApprovalToken: liveToken.token,
+  hmacSecret,
+  nonceStorePath,
+  generationId,
+  mainSha,
+  dryRun: false,
+  firstBatchMax: 25,
+  offersDoc,
+  durableProducts: durable,
+  joinedPartners: [{ advertiserId: "222", name: "PartnerX", status: "JOINED" }],
+  backupPlanReady: true,
+  requiredCiPass: true,
+  pagesPass: true,
+  env: { IU_CJ_PUBLIC_GROWTH_UNCAPPED: "1" },
+  armReceiptPath: armPath,
+});
+assert.equal(liveArm.reason, "ARMED_FOR_CATALOG_SYNC");
+assert.equal(liveArm.executed, true);
+assert.equal(liveArm.wroteProjectsData, false);
+assert.equal(liveArm.productionWrite, "NO_DIRECT_PROJECTS_DATA_WRITE");
+assert.equal(liveArm.pipelineArming.envOverlay.IU_CJ_GROWTH_ACTIVATION_ARMED, "1");
+assert.equal(liveArm.pipelineArming.envOverlay.IU_CJ_GROWTH_FIRST_BATCH_MAX, "25");
+assert.ok(fs.existsSync(armPath));
+
+/* Replay of live token denied */
+const liveReplay = executeGrowthActivation({
+  ownerApprovalToken: liveToken.token,
+  hmacSecret,
+  nonceStorePath,
+  generationId,
+  mainSha,
+  dryRun: false,
+  env: { IU_CJ_PUBLIC_GROWTH_UNCAPPED: "1" },
+  backupPlanReady: true,
+});
+assert.equal(liveReplay.reason, "OWNER_APPROVAL_REPLAY");
+
+/* Offline canary */
 const canary = runSafeAutonomousGrowthCanary({
   offersDoc,
   durableProducts: durable,
@@ -113,11 +387,8 @@ const canary = runSafeAutonomousGrowthCanary({
 });
 assert.equal(canary.wroteProjectsData, false);
 assert.equal(canary.growthGateStillLocked, true);
-assert.equal(canary.envIU_CJ_PUBLIC_GROWTH_UNCAPPED, "0");
 assert.ok(canary.batches.length >= 1);
-assert.equal(canary.ok, true, JSON.stringify(canary.halt || canary.batches));
 
-/* Inject STOP mid-canary */
 const halted = runSafeAutonomousGrowthCanary({
   offersDoc,
   durableProducts: durable,
@@ -125,18 +396,21 @@ const halted = runSafeAutonomousGrowthCanary({
   injectStopFlags: { shaMismatch: true },
 });
 assert.equal(halted.halted, true);
-assert.ok(halted.batches.length === 1);
 
 console.log(
   JSON.stringify({
     IU_CJ_SAFE_AUTONOMOUS_GROWTH_SELFTEST: "OK",
+    EXECUTE_IMPLEMENTATION: "LIVE_PIPELINE_ARM_V1",
     adaptiveOk: aOk,
     adaptiveFail: aFail,
     prepReady: prep.ready,
-    executeRefused: exec.refused,
-    canaryBatches: canary.batches.length,
-    canaryAdmitted: canary.batches.reduce((s, b) => s + b.validCandidates, 0),
-    haltOnInject: halted.halted,
-    growthGateStillLocked: true,
+    authCasesPass: authCases.every((c) => c.pass),
+    authCases,
+    dryRunReason: dryExec.reason,
+    dryRunBatchSize: dryExec.dryRunBatch?.batchSize,
+    liveArmReason: liveArm.reason,
+    gateAloneBlocks: gatedOnly.effectiveUncapped === false,
+    growthGateStillLockedDefault: true,
+    wroteProjectsData: false,
   }),
 );

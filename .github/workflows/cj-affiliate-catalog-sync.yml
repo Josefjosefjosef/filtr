@@ -223,6 +223,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-durable-r2-migration-plan-v51-8.mjs
       - name: Uncapped growth readiness + identity reconcile selftest (V51.8; offline; does NOT arm uncapped)
         run: node scripts/iu-cj-affiliate-phase3z-uncapped-growth-readiness-v51-8-selftest.mjs
+      - name: SAFE_AUTONOMOUS_GROWTH + EXECUTE auth/arm selftest (V51.8; offline; does NOT arm production)
+        run: node scripts/iu-cj-affiliate-phase3z-safe-autonomous-growth-v51-8-selftest.mjs
       - name: INVALID_FEED case audit selftest (V51.8; offline)
         run: node scripts/iu-cj-affiliate-phase3z-invalid-feed-case-audit-v51-8-selftest.mjs
       - name: Offset-ceiling recovery selftest (V51.8; offline; unsticks 9901 mislabel)
@@ -857,10 +859,13 @@ jobs:
       IU_CJ_OFFERS_DEEPEN_PARTNER_BUDGET: ${{ (github.event_name == 'schedule' && github.event.schedule != '17 3 * * *') && '24' || (github.event_name == 'workflow_dispatch' && inputs.offers_mode == 'refresh_priority' && '24' || '48') }}
       IU_CJ_OFFERS_MAX_UNIQUE_DROP_ABS: "50"
       IU_CJ_OFFERS_MAX_UNIQUE_DROP_RATIO: "0.03"
-      # Public growth: absolute 500 + ratio 0.2 remain armed. Uncapped stays DISARMED (never commit "1").
+      # Public growth: absolute 500 + ratio 0.2 remain armed.
+      # Uncapped gate from repo Actions variable only. Missing/invalid → "0". Never commit "1".
+      # Gate "1" alone does NOT unlock growth — per-run EXECUTE must set IU_CJ_GROWTH_ACTIVATION_ARMED=1
+      # (not a sticky repo var). Default armed stays unset/0.
       IU_CJ_OFFERS_MAX_LKG_GROWTH_ABS: "500"
       IU_CJ_OFFERS_MAX_LKG_GROWTH_RATIO: "0.2"
-      IU_CJ_PUBLIC_GROWTH_UNCAPPED: "0"
+      IU_CJ_PUBLIC_GROWTH_UNCAPPED: ${{ vars.IU_CJ_PUBLIC_GROWTH_UNCAPPED == '1' && '1' || '0' }}
       # Chronic incomplete LKG: gradual HOLD after 720h (30d), max 25/run — no mass delete.
       IU_CJ_OFFERS_LKG_STALE_HOURS: "72"
       IU_CJ_OFFERS_LKG_INCOMPLETE_HOLD_HOURS: "720"

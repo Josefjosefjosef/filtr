@@ -1218,7 +1218,11 @@ export function computePublicGrowthBudget(prevPublicUnique, opts = {}) {
   // Surge must NOT zero the per-run drip. Legitimate large backlogs (1k/10k) continue
   // gradually via ratio budget + checkpoints; surge only flags owner review / anomaly.
   // True dump protection remains the per-run ratio bound (never admit the whole surge).
-  const allowedNew = Math.min(perRun, cumulativeRemaining);
+  let allowedNew = Math.min(perRun, cumulativeRemaining);
+  // Optional hard clamp (e.g. first production batch max 25) — never raises budget.
+  if (opts.maxAllowedNew != null && Number.isFinite(Number(opts.maxAllowedNew))) {
+    allowedNew = Math.min(allowedNew, Math.max(0, Math.floor(Number(opts.maxAllowedNew))));
+  }
   return {
     prevPublicUnique: prev,
     maxGrowthAbs: uncappedMode ? null : maxGrowthAbs,
@@ -1228,6 +1232,10 @@ export function computePublicGrowthBudget(prevPublicUnique, opts = {}) {
     cumulativeAddedSinceBaseline: cumulativeAdded,
     cumulativeRemaining: uncappedMode ? null : cumulativeRemaining,
     allowedNew,
+    maxAllowedNew:
+      opts.maxAllowedNew != null && Number.isFinite(Number(opts.maxAllowedNew))
+        ? Math.max(0, Math.floor(Number(opts.maxAllowedNew)))
+        : null,
     uncappedMode,
     surgeRatio,
     surgePause,
