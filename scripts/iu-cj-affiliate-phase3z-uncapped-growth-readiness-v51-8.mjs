@@ -322,11 +322,30 @@ export function detectLiveSyncUncappedEnvWired(repoRoot = process.cwd()) {
   try {
     const p = path.join(repoRoot, "scripts", "iu-cj-affiliate-offers-live-sync-v1.mjs");
     const t = fs.readFileSync(p, "utf8");
-    return (
+    // Live-sync may resolve the gate via resolveEffectiveUncappedGrowth (reads
+    // IU_CJ_PUBLIC_GROWTH_UNCAPPED inside safe-autonomous-growth) rather than
+    // inlining the env name. Both patterns count as wired.
+    const directEnv =
       /IU_CJ_PUBLIC_GROWTH_UNCAPPED/.test(t) &&
       /uncappedMode\s*=/.test(t) &&
-      /applyPublicGrowthBudget\([\s\S]*uncappedMode/.test(t)
-    );
+      /applyPublicGrowthBudget\([\s\S]*uncappedMode/.test(t);
+    const viaResolver =
+      /resolveEffectiveUncappedGrowth/.test(t) &&
+      /uncappedMode\s*=/.test(t) &&
+      /applyPublicGrowthBudget\([\s\S]*uncappedMode/.test(t);
+    if (directEnv || viaResolver) {
+      if (viaResolver) {
+        const growth = path.join(
+          repoRoot,
+          "scripts",
+          "iu-cj-affiliate-phase3z-safe-autonomous-growth-v51-8.mjs",
+        );
+        const g = fs.readFileSync(growth, "utf8");
+        if (!/IU_CJ_PUBLIC_GROWTH_UNCAPPED/.test(g)) return false;
+      }
+      return true;
+    }
+    return false;
   } catch {
     return false;
   }

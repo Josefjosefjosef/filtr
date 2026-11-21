@@ -2,7 +2,7 @@
  * infoUzel.cz — Affiliate services catalog (UI + data).
  * Partner URLs are placeholders until affiliate programs are approved.
  */
-/* iu-affiliate-catalog-bust: cj-phase3z-v25-links-wrap-2026-11-02 */
+/* iu-affiliate-catalog-bust: cj-phase3z-v16-public-swap-2026-11-21 */
 (function iuAffiliateCatalog() {
   "use strict";
 
@@ -507,9 +507,8 @@
       icon: "iu-aff-bottle",
       description: "Odkazy na vybrané drogerie a související obchody.",
       items: [
-
-        affPartner("Tierraverde", "https://www.anrdoezrs.net/click-101883843-17313396-1782831175000", "7612998"),
-        affPartner("Rossmann.cz", "https://www.tkqlhce.com/click-101883843-17236887-1769733415000", "7786972")
+        affPartner("Rossmann.cz", "https://www.tkqlhce.com/click-101883843-17236887-1769733415000", "7786972"),
+        affPartner("Tierraverde", "https://www.anrdoezrs.net/click-101883843-17313396-1782831175000", "7612998")
       ],
     },
     {
@@ -595,7 +594,8 @@
         affPartner("PARYS.CZ", "https://www.jdoqocy.com/click-101883843-12923227-1706866900000", "4887633"),
         affPartner("Sportisimo Europe", "https://www.dpbolvw.net/click-101883843-13592781-1770418717000", "5177969"),
         affPartner("Urbane.cz", "https://www.tkqlhce.com/click-101883843-15359455-1708046402000", "6127623"),
-        affPartner("Velocity Outdoor – Ravin/CenterPoint/Valhalla", "https://www.jdoqocy.com/click-101883843-15747470-1768609346000", "6038648")
+        affPartner("Velocity Outdoor – Ravin/CenterPoint/Valhalla", "https://www.jdoqocy.com/click-101883843-15747470-1768609346000", "6038648"),
+        affPartner("4camping.cz", "https://www.jdoqocy.com/click-101883843-12684495-1708047846000", "4786110")
       ],
     },
     {
@@ -604,8 +604,6 @@
       icon: "iu-home-hobby",
       description: "Odkazy na vybrané obchody pro dům, zahradu a hobby.",
       items: [
-
-        affPartner("Dvere-Erkado.cz", "https://www.jdoqocy.com/click-101883843-13234841-1748446701000", "5027071"),
         affPartner("Butlers.cz", "https://www.kqzyfj.com/click-101883843-12070030-1606779891000", "4432968"),
         affPartner("DECODOMA.CZ", "https://www.anrdoezrs.net/click-101883843-12923226-1706861546000", "4882378"),
         affPartner("Dedoma.sk", "https://www.anrdoezrs.net/click-101883843-13219578-1706861751000", "5000412"),
@@ -623,7 +621,8 @@
         affPartner("Vladeko.cz", "https://www.jdoqocy.com/click-101883843-15273907-1752797996000", "5723506"),
         affPartner("Vyprodejpovleceni /RO", "https://www.tkqlhce.com/click-101883843-15247086-1708045491000", "6109393"),
         affPartner("Zahradajezek.cz/Odsuseda.sk/Jeza.hu", "https://www.kqzyfj.com/click-101883843-14047408-1707862840000", "5444910"),
-        affPartner("Zepter Europe", "https://www.anrdoezrs.net/click-101883843-17074303-1771348022000", "7341377")
+        affPartner("Zepter Europe", "https://www.anrdoezrs.net/click-101883843-17074303-1771348022000", "7341377"),
+        affPartner("Dvere-Erkado.cz", "https://www.jdoqocy.com/click-101883843-13234841-1748446701000", "5027071")
       ],
     },
     {
@@ -669,8 +668,6 @@
         affPartner("Kytary Europe", "https://www.tkqlhce.com/click-101883843-15156146-1708044694000", "4851178"),
         affPartner("LAMAX / LAUBEN / TRUELIFE", "https://www.dpbolvw.net/click-101883843-13897306-1768946965000", "5193265"),
         affPartner("LG CZ", "https://www.tkqlhce.com/click-101883843-15861968-1731638716000", "7073996"),
-        // V23: Svelt World is a portable laptop stand (svelt.us), not a travel agency.
-        // CJ miscategorized as Travel›Accessories → historical aff-cestovni-kancelare error.
         affPartner("Svelt World", "https://www.kqzyfj.com/click-101883843-17323349-1787168356000", "7995512"),
         affPartner("TIPA.EU", "https://www.anrdoezrs.net/click-101883843-14049044-1708047911000", "4921612")
       ],
@@ -681,7 +678,8 @@
       icon: "iu-aff-phone",
       description: "Odkazy na vybrané obchody s mobily a příslušenstvím.",
       items: [
-        affPartner("Tvrzenaskla/Momanio Europe", "https://www.tkqlhce.com/click-101883843-15319724-1708044873000", "6203294")
+        affPartner("Tvrzenaskla/Momanio Europe", "https://www.tkqlhce.com/click-101883843-15319724-1708044873000", "6203294"),
+        affPartner("Picasee", "https://www.anrdoezrs.net/click-101883843-17230095-1768341282000", "6298382")
       ],
     },
     {
@@ -743,7 +741,8 @@
         affPartner("Firmanazazitky.cz", "https://www.kqzyfj.com/click-101883843-17346622-1790103147000", "7918457"),
         affPartner("Hubatacernoska.cz", "https://www.kqzyfj.com/click-101883843-15082897-1654637571000", "5950512"),
         affPartner("KvetinyExpres.cz", "https://www.dpbolvw.net/click-101883843-12081321-1665632892000", "4409645"),
-        affPartner("Manboxeo /DE", "https://www.dpbolvw.net/click-101883843-17033008-1743621165000", "7401912")
+        affPartner("Manboxeo /DE", "https://www.dpbolvw.net/click-101883843-17033008-1743621165000", "7401912"),
+        affPartner("Impresi", "https://www.dpbolvw.net/click-101883843-17230099-1768341967000", "6748811")
       ],
     },
     {
@@ -809,9 +808,8 @@
       icon: "iu-aff-office",
       description: "Odkazy na vybrané obchody a služby zaměřené na kancelářské potřeby a vybavení.",
       items: [
-
-        affPartner("Activa CZ_Bibelot", "https://www.dpbolvw.net/click-101883843-15544489-1708048268000", "5260576"),
-        affPartner("Eobaly", "https://www.jdoqocy.com/click-101883843-15756667-1709047038000", "6721278")
+        affPartner("Eobaly", "https://www.jdoqocy.com/click-101883843-15756667-1709047038000", "6721278"),
+        affPartner("Activa CZ_Bibelot", "https://www.dpbolvw.net/click-101883843-15544489-1708048268000", "5260576")
       ],
     },
   ];
