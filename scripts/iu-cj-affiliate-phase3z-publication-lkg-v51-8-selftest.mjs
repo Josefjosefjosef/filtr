@@ -8,6 +8,7 @@ import {
   LKG_VALIDATION_CLASS,
   buildPublicationDeltaLedger,
   mergeLkgPublishedProducts,
+  clonePublicationDoc,
   evaluateProductShrinkageGate,
   evaluateIdentityChurnGate,
   evaluateLkgGrowthGate,
@@ -753,6 +754,56 @@ assert(
   );
 }
 
+// Large-catalog clone must not use JSON.stringify (Invalid string length).
+{
+  const bigProducts = [];
+  for (let i = 0; i < 8000; i++) {
+    bigProducts.push({
+      advertiserId: "9",
+      productId: "big-" + i,
+      title: "T".repeat(40) + i,
+      imageUrl: "https://example.com/" + i + ".jpg",
+      currentPrice: i,
+      currency: "CZK",
+      affiliateUrl: "https://www.kqzyfj.com/click-101883843-9-" + i,
+      publicationReady: true,
+    });
+  }
+  const bigDoc = {
+    liveEnabled: true,
+    sections: [
+      {
+        sectionKey: "aff-elektro",
+        advertiserId: "9",
+        partnerName: "Big",
+        coupons: [],
+        actions: [],
+        products: bigProducts,
+      },
+    ],
+  };
+  const cloned = clonePublicationDoc(bigDoc);
+  assert(cloned.sections[0].products.length === 8000, "clonePublicationDoc keeps 8000 products");
+  const emptyNext = {
+    liveEnabled: false,
+    sections: [
+      {
+        sectionKey: "aff-elektro",
+        advertiserId: "9",
+        partnerName: "Big",
+        coupons: [],
+        actions: [],
+        products: [],
+      },
+    ],
+  };
+  const bigMerge = mergeLkgPublishedProducts(emptyNext, bigDoc, {
+    nowIso: new Date().toISOString(),
+    sourceSeenKeys: new Set(),
+  });
+  assert(bigMerge.carried >= 1, "large LKG merge carries without Invalid string length");
+}
+
 console.log(
   JSON.stringify({
     IU_CJ_PUBLICATION_LKG_V51_8_SELFTEST: "PASS",
@@ -772,5 +823,6 @@ console.log(
       ok: okLedger.reason,
       routineKept: routine.doc.sections[0].products.length,
     },
+    largeCatalogClone: "PASS",
   })
 );

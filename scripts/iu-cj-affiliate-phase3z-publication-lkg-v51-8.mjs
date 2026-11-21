@@ -417,10 +417,35 @@ export function reconcilePublicationProposedVsPublished(opts = {}) {
 }
 
 /**
+ * Clone publication docs without JSON.stringify (V8 "Invalid string length" on large catalogs).
+ * Prefer structuredClone; fall back to section-wise shallow clone of public offer fields.
+ */
+export function clonePublicationDoc(nextDoc) {
+  const src = nextDoc && typeof nextDoc === "object" ? nextDoc : {};
+  if (typeof structuredClone === "function") {
+    try {
+      return structuredClone(src);
+    } catch {
+      /* fall through — e.g. non-cloneable hooks */
+    }
+  }
+  const out = { ...src };
+  out.sections = Array.isArray(src.sections)
+    ? src.sections.map((sec) => ({
+        ...sec,
+        coupons: Array.isArray(sec?.coupons) ? sec.coupons.map((c) => ({ ...c })) : [],
+        actions: Array.isArray(sec?.actions) ? sec.actions.map((a) => ({ ...a })) : [],
+        products: Array.isArray(sec?.products) ? sec.products.map((p) => ({ ...p })) : [],
+      }))
+    : [];
+  return out;
+}
+
+/**
  * Merge previous LIVE products into rebuilt doc when classified as carry-forward.
  */
 export function mergeLkgPublishedProducts(nextDoc, prevDoc, opts = {}) {
-  const doc = JSON.parse(JSON.stringify(nextDoc || {}));
+  const doc = clonePublicationDoc(nextDoc || {});
   if (!doc.sections) doc.sections = [];
   const delta = buildPublicationDeltaLedger(prevDoc, doc, opts);
   const decisions = [];
@@ -966,7 +991,7 @@ export function releaseLkgHoldsAgainstSource(doc, sourceVerifiedKeys, opts = {})
     opts.revokedAdvertisers instanceof Set
       ? opts.revokedAdvertisers
       : new Set(opts.revokedAdvertisers || []);
-  const out = JSON.parse(JSON.stringify(doc || {}));
+  const out = clonePublicationDoc(doc || {});
   const seen = new Set();
   let holdTotal = 0;
   let reverifyAttempted = 0;
@@ -1255,7 +1280,7 @@ export function computePublicGrowthBudget(prevPublicUnique, opts = {}) {
  * Always keeps previously-LIVE public identities. Prefers preferredCurrency for new slots.
  */
 export function applyPublicGrowthBudget(nextDoc, prevDoc, opts = {}) {
-  const doc = JSON.parse(JSON.stringify(nextDoc || {}));
+  const doc = clonePublicationDoc(nextDoc || {});
   const prevMap = collectPublicEligibleProductMap(prevDoc);
   const preferredCurrency = String(opts.preferredCurrency || "CZK").toUpperCase();
   const requirePrice = opts.requirePrice !== false;
