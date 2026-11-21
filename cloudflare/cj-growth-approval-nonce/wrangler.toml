@@ -1,9 +1,13 @@
-# Production CJ growth approval nonce store (D1). Deploy only with owner GO.
-# database_id is resolved at deploy time — do not commit real IDs unless already project policy.
+# Production CJ growth approval nonce store (D1).
+# Account: 577868e9aac9c289e9323100f68fad16
 name = "iu-cj-growth-approval-nonce"
 main = "src/index.js"
 compatibility_date = "2024-11-01"
 compatibility_flags = ["nodejs_compat"]
+account_id = "577868e9aac9c289e9323100f68fad16"
+
+# Dedicated workers.dev endpoint — not attached to public site routes.
+workers_dev = true
 
 [vars]
 ENVIRONMENT = "production"
@@ -12,7 +16,7 @@ SERVICE = "cj-growth-approval-nonce"
 [[d1_databases]]
 binding = "DB"
 database_name = "iu-cj-growth-approval"
-database_id = "00000000-0000-0000-0000-000000000000"
+database_id = "6c123099-ca27-4527-ba56-1bc0cef2f8b5"
 migrations_dir = "migrations"
 
 # Secrets (Dashboard / wrangler secret put):
