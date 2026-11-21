@@ -25,7 +25,15 @@ function writeJson(abs, obj) {
 function listFilesRecursive(dirAbs, prefix = "") {
   const out = [];
   for (const ent of fs.readdirSync(dirAbs, { withFileTypes: true })) {
-    if (ent.name === "MANIFEST.json" || ent.name === "MANIFEST.meta.json") continue;
+    if (
+      ent.name === "MANIFEST.json" ||
+      ent.name === "MANIFEST.meta.json" ||
+      ent.name === "integrity-manifest.json" ||
+      ent.name === "integrity-manifest.meta.json" ||
+      ent.name === "integrity-manifest.txt"
+    ) {
+      continue;
+    }
     const rel = prefix ? prefix + "/" + ent.name : ent.name;
     const abs = path.join(dirAbs, ent.name);
     if (ent.isDirectory()) out.push(...listFilesRecursive(abs, rel));
@@ -104,13 +112,13 @@ export function buildCompletionAuditPack(opts = {}) {
     evidenceOk: ev.ok,
     fileCount: man.fileCount,
     selfReferenceRule:
-      "MANIFEST.json excludes itself; MANIFEST.meta.json seals MANIFEST; ZIP hashes are external sidecars only",
+      "integrity-manifest.json excludes itself; integrity-manifest.meta.json seals it; ZIP hashes are external sidecars only",
   });
 
   // Post-zip independent re-validation of workDir (source of truth before zip)
   const reSeal = validateManifestSeal(workDir);
   const reEv = validateEvidenceManifest(
-    JSON.parse(fs.readFileSync(path.join(workDir, "MANIFEST.json"), "utf8")),
+    JSON.parse(fs.readFileSync(path.join(workDir, "integrity-manifest.json"), "utf8")),
     workDir,
   );
 
