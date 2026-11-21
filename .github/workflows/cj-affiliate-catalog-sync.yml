@@ -908,7 +908,9 @@ jobs:
       IU_CJ_OFFERS_LKG_INCOMPLETE_HOLD_HOURS: "720"
       IU_CJ_OFFERS_LKG_MAX_AGE_HOLD_PER_RUN: "25"
       # Presentation/runtime budget (prevents RangeError on mega-feeds). Not a CJ API source cap.
-      IU_CJ_OFFERS_PRODUCT_PUBLISH_PER_PARTNER: "25"
+      # 0 = no artificial per-partner presentation wipe; UI still defaults to 3 + "Zobrazit další".
+      # NEW identities remain gated by LKG growth ledger / uncapped arm (owner GO).
+      IU_CJ_OFFERS_PRODUCT_PUBLISH_PER_PARTNER: "0"
       IU_CJ_OFFERS_KEEP_SOURCE_ROWS: "0"
       # V45: full inventory on daily 03:17 + workflow_dispatch offers_mode=full.
       # Progressive inventory on other schedules merges into durable feed-inventory-v40.
@@ -1488,27 +1490,8 @@ jobs:
           print(json.dumps({k:d.get(k) for k in ("reason","dryRun","executed","refused","wroteProjectsData","githubEnvWritten","authConsumed","gate","firstBatchMax")}, sort_keys=True))
           PY
           fi
-      - name: COMPLETE growth nonce after verified publication (default off; evidence-gated)
-        if: >
-          github.event_name == 'workflow_dispatch' &&
-          inputs.execute_growth_activation == '1' &&
-          env.IU_CJ_GROWTH_COMPLETE_ENABLED == '1'
-        env:
-          IU_CJ_GROWTH_NONCE_STORE_URL: ${{ secrets.IU_CJ_GROWTH_NONCE_STORE_URL }}
-          IU_CJ_GROWTH_NONCE_STORE_TOKEN: ${{ secrets.IU_CJ_GROWTH_NONCE_STORE_TOKEN }}
-          IU_CJ_GROWTH_NONCE_REQUIRE_DURABLE: "1"
-          IU_CJ_GROWTH_COMPLETE_MODE: complete
-          IU_CJ_GROWTH_COMPLETE_OUT: ${{ runner.temp }}/iu-cj-growth-complete-out.json
-          # Evidence flags must be explicitly set by a trusted follow-up dispatch — never auto-true from arming alone.
-          IU_CJ_GROWTH_EVIDENCE_REQUIRED_CI: ${{ vars.IU_CJ_GROWTH_EVIDENCE_REQUIRED_CI || '0' }}
-          IU_CJ_GROWTH_EVIDENCE_DATA_PR_MERGED: ${{ vars.IU_CJ_GROWTH_EVIDENCE_DATA_PR_MERGED || '0' }}
-          IU_CJ_GROWTH_EVIDENCE_PAGES_PASS: ${{ vars.IU_CJ_GROWTH_EVIDENCE_PAGES_PASS || '0' }}
-          IU_CJ_GROWTH_EVIDENCE_PROD_GENERATION_ID: ${{ vars.IU_CJ_GROWTH_EVIDENCE_PROD_GENERATION_ID || '' }}
-          IU_CJ_GROWTH_EVIDENCE_CONTENT_SHA: ${{ vars.IU_CJ_GROWTH_EVIDENCE_CONTENT_SHA || '' }}
-          IU_CJ_GROWTH_EVIDENCE_PRODUCTS_VERIFIED: ${{ vars.IU_CJ_GROWTH_EVIDENCE_PRODUCTS_VERIFIED || '0' }}
-        run: |
-          set -euo pipefail
-          node scripts/iu-cj-affiliate-phase3z-growth-approval-complete-v51-8.mjs
+      # COMPLETED is intentionally NOT here (pre-publication). Use workflow
+      # cj-growth-approval-complete.yml after Pages + production read-back evidence.
       - name: Build/promote offers-public (fail-closed)
         env:
           IU_CJ_PRODUCT_FEED_CHECKPOINT_PATH: projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json
