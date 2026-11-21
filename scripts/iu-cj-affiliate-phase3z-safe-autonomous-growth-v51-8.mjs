@@ -22,6 +22,7 @@ import {
   hashNonce,
   resolveGrowthApprovalNonceStore,
 } from "./iu-cj-affiliate-phase3z-growth-approval-nonce-store-v51-8.mjs";
+import { buildGrowthOperationId } from "./iu-cj-affiliate-phase3z-growth-approval-nonce-lifecycle-v51-8.mjs";
 
 export const SAFE_AUTONOMOUS_GROWTH_SCHEMA =
   "iu-cj-affiliate-phase3z-safe-autonomous-growth-v51-8";
@@ -201,6 +202,13 @@ export async function verifyOwnerActivationApproval(opts = {}) {
   // Peek/replay check without consume: attempt is still fail-closed if store unavailable
   // when consume is requested; dry-run peek may skip reserve.
   if (opts.consume === true) {
+    const runId = opts.runId || process.env.GITHUB_RUN_ID || null;
+    const operationId = buildGrowthOperationId({
+      reservationKey,
+      mainSha: payload.mainSha,
+      generationId: payload.generationId,
+      runId,
+    });
     const reserved = await store.reserve({
       reservationKey,
       nonceHash,
@@ -210,7 +218,8 @@ export async function verifyOwnerActivationApproval(opts = {}) {
       actor: opts.actor || process.env.GITHUB_ACTOR || payload.actor || null,
       issuedAt: payload.issuedAt,
       expiresAt: payload.expiresAt,
-      runId: opts.runId || process.env.GITHUB_RUN_ID || null,
+      runId,
+      operationId,
       nowIso,
     });
     if (!reserved?.ok) {
@@ -227,6 +236,7 @@ export async function verifyOwnerActivationApproval(opts = {}) {
       consumed: true,
       nonceReserved: true,
       reservationKey,
+      operationId,
       nonceStoreKind: store.kind,
       nonceStoreDurable: store.durable === true,
       payload,
@@ -740,22 +750,28 @@ export async function executeGrowthActivation(opts = {}) {
     };
   }
 
-  try {
-    if (consume.nonceStore && typeof consume.nonceStore.transition === "function" && consume.reservationKey) {
-      await consume.nonceStore.transition({
+  let armTransition = null;
+  if (consume.nonceStore && typeof consume.nonceStore.transition === "function" && consume.reservationKey) {
+    try {
+      armTransition = await consume.nonceStore.transition({
         reservationKey: consume.reservationKey,
         state: "ARMED",
+        expectedMainSha: mainSha,
+        expectedGenerationId: generationId,
+        expectedOperationId: consume.operationId,
         nowIso: at,
       });
+    } catch {
+      armTransition = { ok: false, reason: "NONCE_ARM_TRANSITION_FAILED" };
     }
-  } catch {
-    // Transition failure after reserve: nonce already spent — require new owner approval.
+  }
+  if (armTransition && armTransition.ok !== true) {
     if (consume.nonceStore && typeof consume.nonceStore.transition === "function" && consume.reservationKey) {
       try {
         await consume.nonceStore.transition({
           reservationKey: consume.reservationKey,
           state: "FAILED",
-          failReason: "ARM_TRANSITION_FAILED",
+          failReason: String(armTransition.reason || "ARM_TRANSITION_FAILED").slice(0, 200),
           nowIso: at,
         });
       } catch {
@@ -765,7 +781,12 @@ export async function executeGrowthActivation(opts = {}) {
     return {
       ...base,
       reason: "NONCE_ARM_TRANSITION_FAILED",
-      auth: { ok: false, reason: "NONCE_ARM_TRANSITION_FAILED", consumed: true, reservationKey: consume.reservationKey },
+      auth: {
+        ok: false,
+        reason: armTransition.reason || "NONCE_ARM_TRANSITION_FAILED",
+        consumed: true,
+        reservationKey: consume.reservationKey,
+      },
       dryRunBatch,
       noProductionWrite: true,
       note: "NO_PRODUCTION_WRITE — nonce reserved but arm transition failed; new owner approval required.",
@@ -783,6 +804,7 @@ export async function executeGrowthActivation(opts = {}) {
     adaptiveBatchRange: { min: 25, max: 400 },
     pipeline: "cj-affiliate-catalog-sync / offers-live-sync",
     reservationKey: consume.reservationKey || null,
+    operationId: consume.operationId || null,
     nonceStoreKind: consume.nonceStoreKind || null,
     nonceStoreDurable: consume.nonceStoreDurable === true,
     nonceFingerprint: crypto.createHash("sha256").update(String(consume.payload?.nonce || "")).digest("hex").slice(0, 16),
@@ -794,6 +816,10 @@ export async function executeGrowthActivation(opts = {}) {
     IU_CJ_GROWTH_ACTIVATION_ARMED: "1",
     IU_CJ_GROWTH_FIRST_BATCH_MAX: String(arm.firstBatchMax),
     IU_CJ_GROWTH_BATCH_MAX_ALLOWED_NEW: String(arm.firstBatchMax),
+    IU_CJ_GROWTH_RESERVATION_KEY: String(arm.reservationKey || ""),
+    IU_CJ_GROWTH_OPERATION_ID: String(arm.operationId || ""),
+    IU_CJ_GROWTH_EXPECTED_GENERATION_ID: String(generationId || ""),
+    IU_CJ_GROWTH_EXPECTED_MAIN_SHA: String(mainSha || ""),
   };
 
   if (opts.armReceiptPath) {
@@ -813,6 +839,7 @@ export async function executeGrowthActivation(opts = {}) {
       consumed: true,
       firstBatchMax: consume.firstBatchMax,
       reservationKey: consume.reservationKey,
+      operationId: consume.operationId,
       nonceStoreKind: consume.nonceStoreKind,
       nonceStoreDurable: consume.nonceStoreDurable === true,
     },

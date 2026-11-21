@@ -1,8 +1,19 @@
 /**
  * Durable atomic nonce reservation for CJ growth EXECUTE approvals.
  * Auth: Bearer IU_CJ_GROWTH_NONCE_STORE_TOKEN (never logged).
+ * State machine: RESERVED→ARMED→COMPLETED; terminals FAILED/STOPPED/EXPIRED/REVOKED.
  */
 const SCOPE = "EXECUTE_GROWTH_ACTIVATION";
+
+const ALLOWED = {
+  RESERVED: ["ARMED", "FAILED", "STOPPED", "EXPIRED", "REVOKED"],
+  ARMED: ["COMPLETED", "FAILED", "STOPPED", "EXPIRED", "REVOKED"],
+  COMPLETED: [],
+  FAILED: [],
+  STOPPED: [],
+  EXPIRED: [],
+  REVOKED: [],
+};
 
 function json(status, body) {
   return new Response(JSON.stringify(body), {
@@ -29,6 +40,21 @@ function authOk(req, env) {
   return timingSafeEqualStr(m[1].trim(), expected);
 }
 
+function evaluateTransition(from, to) {
+  const f = String(from || "").toUpperCase();
+  const t = String(to || "").toUpperCase();
+  if (!ALLOWED[f] || !Object.prototype.hasOwnProperty.call(ALLOWED, t)) {
+    return { ok: false, reason: "NONCE_STATE_INVALID", from: f, to: t };
+  }
+  if (ALLOWED[f].length === 0) {
+    return { ok: false, reason: "NONCE_STATE_TERMINAL", from: f, to: t };
+  }
+  if (!ALLOWED[f].includes(t)) {
+    return { ok: false, reason: "NONCE_TRANSITION_DENIED", from: f, to: t };
+  }
+  return { ok: true, reason: "OK", from: f, to: t };
+}
+
 async function reserve(db, body) {
   const reservationKey = String(body.reservationKey || "").trim();
   const nonceHash = String(body.nonceHash || "").trim();
@@ -40,7 +66,9 @@ async function reserve(db, body) {
   const issuedAt = String(body.issuedAt || "").trim();
   const expiresAt = String(body.expiresAt || "").trim();
   const runId = body.runId != null ? String(body.runId).trim() : null;
+  const operationId = body.operationId != null ? String(body.operationId).trim() : null;
   const now = String(body.nowIso || new Date().toISOString());
+  const metaJson = operationId ? JSON.stringify({ operationId }) : null;
 
   if (!reservationKey || !nonceHash || !repository || !mainSha || !generationId || !issuedAt || !expiresAt) {
     return { ok: false, reason: "NONCE_RESERVE_INVALID_PAYLOAD", status: 400 };
@@ -55,8 +83,8 @@ async function reserve(db, body) {
       .prepare(
         `INSERT INTO cj_growth_approval_nonces (
           reservation_key, nonce_hash, repository, main_sha, generation_id, scope, actor,
-          state, issued_at, expires_at, reserved_at, run_id
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, 'RESERVED', ?, ?, ?, ?)`,
+          state, issued_at, expires_at, reserved_at, run_id, meta_json
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, 'RESERVED', ?, ?, ?, ?, ?)`,
       )
       .bind(
         reservationKey,
@@ -70,6 +98,7 @@ async function reserve(db, body) {
         expiresAt,
         now,
         runId,
+        metaJson,
       )
       .run();
     if (ins?.success === false) {
@@ -81,6 +110,7 @@ async function reserve(db, body) {
       state: "RESERVED",
       reservationKey,
       reservedAt: now,
+      operationId,
     };
   } catch (err) {
     const msg = String(err?.message || err || "");
@@ -97,34 +127,70 @@ async function transition(db, body) {
   const now = String(body.nowIso || new Date().toISOString());
   const failReason = body.failReason != null ? String(body.failReason).slice(0, 200) : null;
   if (!reservationKey) return { ok: false, reason: "NONCE_RESERVE_INVALID_PAYLOAD", status: 400 };
-  const allowed = new Set(["ARMED", "COMPLETED", "FAILED", "STOPPED", "EXPIRED", "REVOKED"]);
-  if (!allowed.has(next)) return { ok: false, reason: "NONCE_STATE_INVALID", status: 400 };
 
   const row = await db
-    .prepare("SELECT state FROM cj_growth_approval_nonces WHERE reservation_key = ? LIMIT 1")
+    .prepare(
+      "SELECT state, main_sha, generation_id, meta_json FROM cj_growth_approval_nonces WHERE reservation_key = ? LIMIT 1",
+    )
     .bind(reservationKey)
     .first();
   if (!row) return { ok: false, reason: "NONCE_NOT_FOUND", status: 404 };
 
-  const cols =
-    next === "ARMED"
-      ? "state = ?, armed_at = ?"
-      : next === "COMPLETED"
-        ? "state = ?, completed_at = ?"
-        : "state = ?, failed_at = ?, fail_reason = ?";
+  const gate = evaluateTransition(row.state, next);
+  if (!gate.ok) return { ...gate, ok: false, status: 409 };
 
-  if (next === "ARMED" || next === "COMPLETED") {
-    await db
-      .prepare(`UPDATE cj_growth_approval_nonces SET ${cols} WHERE reservation_key = ?`)
-      .bind(next, now, reservationKey)
+  if (body.expectedMainSha) {
+    if (String(row.main_sha || "").toLowerCase() !== String(body.expectedMainSha).trim().toLowerCase()) {
+      return { ok: false, reason: "NONCE_MAIN_SHA_MISMATCH", status: 409 };
+    }
+  }
+  if (body.expectedGenerationId) {
+    if (String(row.generation_id || "") !== String(body.expectedGenerationId).trim()) {
+      return { ok: false, reason: "NONCE_GENERATION_MISMATCH", status: 409 };
+    }
+  }
+  if (body.expectedOperationId) {
+    let meta = {};
+    try {
+      meta = row.meta_json ? JSON.parse(row.meta_json) : {};
+    } catch {
+      meta = {};
+    }
+    const storedOp = meta.operationId != null ? String(meta.operationId) : "";
+    if (!storedOp || storedOp !== String(body.expectedOperationId).trim()) {
+      return { ok: false, reason: "NONCE_OPERATION_ID_MISMATCH", status: 409 };
+    }
+  }
+
+  let res;
+  if (next === "ARMED") {
+    res = await db
+      .prepare(
+        `UPDATE cj_growth_approval_nonces SET state = ?, armed_at = ? WHERE reservation_key = ? AND state = ?`,
+      )
+      .bind(next, now, reservationKey, row.state)
+      .run();
+  } else if (next === "COMPLETED") {
+    res = await db
+      .prepare(
+        `UPDATE cj_growth_approval_nonces SET state = ?, completed_at = ? WHERE reservation_key = ? AND state = ?`,
+      )
+      .bind(next, now, reservationKey, row.state)
       .run();
   } else {
-    await db
-      .prepare(`UPDATE cj_growth_approval_nonces SET ${cols} WHERE reservation_key = ?`)
-      .bind(next, now, failReason, reservationKey)
+    res = await db
+      .prepare(
+        `UPDATE cj_growth_approval_nonces SET state = ?, failed_at = ?, fail_reason = ? WHERE reservation_key = ? AND state = ?`,
+      )
+      .bind(next, now, failReason, reservationKey, row.state)
       .run();
   }
-  return { ok: true, reason: "NONCE_STATE_UPDATED", state: next };
+
+  const changes = Number(res?.meta?.changes ?? res?.changes ?? 0);
+  if (changes !== 1) {
+    return { ok: false, reason: "NONCE_TRANSITION_RACE", status: 409, from: row.state, to: next };
+  }
+  return { ok: true, reason: "NONCE_STATE_UPDATED", state: next, from: row.state };
 }
 
 export default {
