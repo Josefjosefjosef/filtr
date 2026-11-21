@@ -2838,10 +2838,16 @@ export async function runOffersLiveSync(opts = {}) {
       maxCumulativeAbs: maxCum,
     });
     let growthLedger = resolvedGrowth.ledger;
-    // Uncapped mode is DISARMED unless IU_CJ_PUBLIC_GROWTH_UNCAPPED=1 (owner-only; never commit true).
-    const uncappedMode = String(env.IU_CJ_PUBLIC_GROWTH_UNCAPPED || "").trim() === "1";
+    // Uncapped requires BOTH Actions gate "1" AND EXECUTE arm (IU_CJ_GROWTH_ACTIVATION_ARMED=1).
+    // Gate alone never unlocks. Never commit uncapped "1".
+    const { resolveEffectiveUncappedGrowth } = await import(
+      "./iu-cj-affiliate-phase3z-safe-autonomous-growth-v51-8.mjs"
+    );
+    const growthMode = resolveEffectiveUncappedGrowth({ env });
+    const uncappedMode = growthMode.effectiveUncapped === true;
     const growthApplied = applyPublicGrowthBudget(doc, prevPublic, {
       uncappedMode,
+      maxAllowedNew: growthMode.maxAllowedNew,
       maxGrowthAbs: Number(env.IU_CJ_OFFERS_MAX_LKG_GROWTH_ABS) || 500,
       maxGrowthRatio: Number(env.IU_CJ_OFFERS_MAX_LKG_GROWTH_RATIO) || 0.2,
       surgeRatio: Number(env.IU_CJ_OFFERS_UNCAPPED_SURGE_RATIO) || 0.5,

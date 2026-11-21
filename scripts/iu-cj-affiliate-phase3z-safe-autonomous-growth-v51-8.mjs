@@ -1,8 +1,10 @@
 /**
- * V51.8 — SAFE_AUTONOMOUS_GROWTH (prepare + adaptive offline batches).
+ * V51.8 — SAFE_AUTONOMOUS_GROWTH (prepare + adaptive batches + production EXECUTE).
  * No permanent per-partner product cap. Adaptive batching is operational protection only.
- * LIVE uncapped growth stays locked until owner sets IU_CJ_PUBLIC_GROWTH_UNCAPPED=1.
- * EXECUTE_GROWTH_ACTIVATION is intentionally stubbed / refuse-without-owner-token.
+ * LIVE uncapped growth requires BOTH:
+ *   1) IU_CJ_PUBLIC_GROWTH_UNCAPPED === "1" (Actions var; never commit "1")
+ *   2) one-time owner HMAC approval bound to generationId + mainSha
+ * EXECUTE never writes projects/data itself — it arms the standard catalog-sync / live-sync path.
  */
 import crypto from "node:crypto";
 import fs from "node:fs";
@@ -22,9 +24,226 @@ export const PREPARE_GROWTH_ACTIVATION_SCHEMA =
   "iu-cj-affiliate-phase3z-prepare-growth-activation-v51-8";
 export const EXECUTE_GROWTH_ACTIVATION_SCHEMA =
   "iu-cj-affiliate-phase3z-execute-growth-activation-v51-8";
+export const OWNER_APPROVAL_SCHEMA = "iu-cj-growth-owner-approval-v1";
+export const GROWTH_ACTIVATION_ARM_SCHEMA = "iu-cj-growth-activation-arm-v1";
 
 /** Permanent numeric partner caps are forbidden — adaptive batches only. */
 export const FORBIDDEN_PERMANENT_PARTNER_CAP = null;
+export const DEFAULT_FIRST_BATCH_MAX = 25;
+export const DEFAULT_APPROVAL_TTL_MS = 2 * 60 * 60 * 1000; // 2h
+
+/**
+ * Fail-closed growth gate: only exact string "1" enables. Missing/invalid → false.
+ */
+export function resolvePublicGrowthUncappedGate(raw) {
+  return String(raw ?? "").trim() === "1";
+}
+
+function b64url(buf) {
+  return Buffer.from(buf)
+    .toString("base64")
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/g, "");
+}
+
+function fromB64url(s) {
+  const pad = "=".repeat((4 - (String(s).length % 4)) % 4);
+  const b64 = String(s).replace(/-/g, "+").replace(/_/g, "/") + pad;
+  return Buffer.from(b64, "base64");
+}
+
+function timingSafeEqualStr(a, b) {
+  const ba = Buffer.from(String(a));
+  const bb = Buffer.from(String(b));
+  if (ba.length !== bb.length) return false;
+  return crypto.timingSafeEqual(ba, bb);
+}
+
+function resolveHmacSecret(opts = {}) {
+  return String(
+    opts.hmacSecret ||
+      process.env.IU_CJ_GROWTH_OWNER_APPROVAL_HMAC ||
+      process.env.IU_CJ_GROWTH_OWNER_APPROVAL_TOKEN ||
+      "",
+  ).trim();
+}
+
+function defaultNonceStorePath(opts = {}) {
+  if (opts.nonceStorePath) return opts.nonceStorePath;
+  if (process.env.IU_CJ_GROWTH_APPROVAL_NONCE_STORE) {
+    return process.env.IU_CJ_GROWTH_APPROVAL_NONCE_STORE;
+  }
+  const base = process.env.RUNNER_TEMP || process.env.TEMP || process.env.TMPDIR || "/tmp";
+  return path.join(base, "iu-cj-growth-approval-nonces.json");
+}
+
+function loadNonceStore(storePath) {
+  try {
+    if (!fs.existsSync(storePath)) return { consumed: {} };
+    const doc = JSON.parse(fs.readFileSync(storePath, "utf8").replace(/^\uFEFF/, ""));
+    return { consumed: doc?.consumed && typeof doc.consumed === "object" ? doc.consumed : {} };
+  } catch {
+    return { consumed: {} };
+  }
+}
+
+function saveNonceStore(storePath, store) {
+  fs.mkdirSync(path.dirname(storePath), { recursive: true });
+  fs.writeFileSync(storePath, JSON.stringify(store, null, 2) + "\n");
+}
+
+/**
+ * Mint a time-limited, single-use owner approval token (ops/owner tool + selftests).
+ * Never auto-mint in production EXECUTE.
+ */
+export function mintOwnerApprovalToken(opts = {}) {
+  const secret = resolveHmacSecret(opts);
+  if (!secret || secret.length < 16) {
+    throw new Error("mintOwnerApprovalToken requires hmacSecret (>=16 chars)");
+  }
+  const now = Date.parse(opts.nowIso || new Date().toISOString());
+  const ttlMs = Math.max(60_000, Number(opts.ttlMs) || DEFAULT_APPROVAL_TTL_MS);
+  const payload = {
+    schema: OWNER_APPROVAL_SCHEMA,
+    scope: "EXECUTE_GROWTH_ACTIVATION",
+    generationId: String(opts.generationId || "").trim(),
+    mainSha: String(opts.mainSha || "").trim().toLowerCase(),
+    firstBatchMax: Math.max(1, Math.min(25, Number(opts.firstBatchMax) || DEFAULT_FIRST_BATCH_MAX)),
+    issuedAt: new Date(now).toISOString(),
+    expiresAt: new Date(now + ttlMs).toISOString(),
+    nonce: String(opts.nonce || crypto.randomBytes(16).toString("hex")),
+    actor: opts.actor ? String(opts.actor).trim() : null,
+  };
+  if (!payload.generationId || !/^[0-9a-f]{40}$/i.test(payload.mainSha)) {
+    throw new Error("mintOwnerApprovalToken requires generationId + 40-char mainSha");
+  }
+  const body = b64url(JSON.stringify(payload));
+  const sig = b64url(crypto.createHmac("sha256", secret).update(body).digest());
+  return { token: `${body}.${sig}`, payload };
+}
+
+/**
+ * Verify owner approval. Fail-closed. Optionally consume nonce (replay protection).
+ */
+export function verifyOwnerActivationApproval(opts = {}) {
+  const secret = resolveHmacSecret(opts);
+  const token = String(opts.ownerApprovalToken || "").trim();
+  const now = Date.parse(opts.nowIso || new Date().toISOString());
+  const deny = (reason, extra = {}) => ({
+    ok: false,
+    reason,
+    consumed: false,
+    ...extra,
+  });
+
+  if (!secret || secret.length < 16) return deny("OWNER_APPROVAL_SECRET_MISSING");
+  if (!token) return deny("OWNER_APPROVAL_REQUIRED");
+
+  const parts = token.split(".");
+  if (parts.length !== 2) return deny("OWNER_APPROVAL_MALFORMED");
+  const [body, sig] = parts;
+  const expectedSig = b64url(crypto.createHmac("sha256", secret).update(body).digest());
+  if (!timingSafeEqualStr(sig, expectedSig)) return deny("OWNER_APPROVAL_INVALID_SIGNATURE");
+
+  let payload;
+  try {
+    payload = JSON.parse(fromB64url(body).toString("utf8"));
+  } catch {
+    return deny("OWNER_APPROVAL_PAYLOAD_INVALID");
+  }
+  if (payload?.schema !== OWNER_APPROVAL_SCHEMA) return deny("OWNER_APPROVAL_SCHEMA_MISMATCH");
+  if (payload?.scope !== "EXECUTE_GROWTH_ACTIVATION") return deny("OWNER_APPROVAL_SCOPE_MISMATCH");
+
+  const exp = Date.parse(payload.expiresAt || "");
+  const issued = Date.parse(payload.issuedAt || "");
+  if (!Number.isFinite(exp) || !Number.isFinite(issued)) return deny("OWNER_APPROVAL_TIME_INVALID");
+  if (now > exp) return deny("OWNER_APPROVAL_EXPIRED", { expiresAt: payload.expiresAt });
+  if (issued > now + 60_000) return deny("OWNER_APPROVAL_ISSUED_IN_FUTURE");
+
+  const expectedGen = String(opts.expectedGenerationId || "").trim();
+  const expectedSha = String(opts.expectedMainSha || "").trim().toLowerCase();
+  if (expectedGen && payload.generationId !== expectedGen) {
+    return deny("OWNER_APPROVAL_GENERATION_MISMATCH", {
+      tokenGenerationId: payload.generationId,
+      expectedGenerationId: expectedGen,
+    });
+  }
+  if (expectedSha && String(payload.mainSha).toLowerCase() !== expectedSha) {
+    return deny("OWNER_APPROVAL_MAIN_SHA_MISMATCH", {
+      tokenMainSha: payload.mainSha,
+      expectedMainSha: expectedSha,
+    });
+  }
+
+  if (opts.requiredActor) {
+    const actor = String(opts.actor || process.env.GITHUB_ACTOR || "").trim();
+    const allowed = String(opts.requiredActor).split(",").map((s) => s.trim()).filter(Boolean);
+    if (!actor || !allowed.includes(actor)) {
+      return deny("OWNER_APPROVAL_UNAUTHORIZED_ACTOR", { actor: actor || null });
+    }
+    if (payload.actor && payload.actor !== actor) {
+      return deny("OWNER_APPROVAL_ACTOR_MISMATCH", { actor, tokenActor: payload.actor });
+    }
+  }
+
+  const nonce = String(payload.nonce || "").trim();
+  if (!nonce) return deny("OWNER_APPROVAL_NONCE_MISSING");
+  const storePath = defaultNonceStorePath(opts);
+  const store = loadNonceStore(storePath);
+  if (store.consumed[nonce]) {
+    return deny("OWNER_APPROVAL_REPLAY", { nonce, previouslyConsumedAt: store.consumed[nonce] });
+  }
+
+  if (opts.consume === true) {
+    store.consumed[nonce] = new Date(now).toISOString();
+    saveNonceStore(storePath, store);
+  }
+
+  return {
+    ok: true,
+    reason: "OK",
+    consumed: opts.consume === true,
+    payload,
+    firstBatchMax: Math.max(1, Math.min(25, Number(payload.firstBatchMax) || DEFAULT_FIRST_BATCH_MAX)),
+    nonceStorePath: storePath,
+  };
+}
+
+/**
+ * Effective uncapped for live-sync: Actions gate "1" AND valid activation arm.
+ * Gate alone never unlocks growth.
+ */
+export function resolveEffectiveUncappedGrowth(opts = {}) {
+  const env = opts.env || process.env;
+  const gate = resolvePublicGrowthUncappedGate(env.IU_CJ_PUBLIC_GROWTH_UNCAPPED);
+  const armed = String(env.IU_CJ_GROWTH_ACTIVATION_ARMED || "").trim() === "1";
+  const firstBatchMax = Math.max(
+    1,
+    Math.min(25, Number(env.IU_CJ_GROWTH_FIRST_BATCH_MAX) || DEFAULT_FIRST_BATCH_MAX),
+  );
+  const adaptiveBatchMax = Math.max(
+    firstBatchMax,
+    Math.min(400, Number(env.IU_CJ_GROWTH_ADAPTIVE_BATCH_MAX) || 0),
+  );
+  const effective = gate && armed;
+  return {
+    gate,
+    armed,
+    effectiveUncapped: effective,
+    firstBatchMax,
+    maxAllowedNew: effective
+      ? Number(env.IU_CJ_GROWTH_BATCH_MAX_ALLOWED_NEW) > 0
+        ? Math.min(400, Math.floor(Number(env.IU_CJ_GROWTH_BATCH_MAX_ALLOWED_NEW)))
+        : firstBatchMax
+      : null,
+    note: !gate
+      ? "GROWTH_GATE_LOCKED"
+      : !armed
+        ? "GATE_1_WITHOUT_EXECUTE_ARM — still capped"
+        : "EFFECTIVE_UNCAPPED_ARMED",
+  };
+}
 
 export const DEFAULT_STOP_THRESHOLDS = Object.freeze({
   maxShrinkRatio: 0.05,
@@ -296,43 +515,223 @@ export function prepareGrowthActivation(opts = {}) {
 }
 
 /**
- * EXECUTE_GROWTH_ACTIVATION — REFUSE unless ownerApprovalToken matches expected.
- * Default: always refuse in this prep phase.
+ * EXECUTE_GROWTH_ACTIVATION — production-ready arming for catalog-sync / live-sync.
+ * Never writes projects/data. Never mints owner approval. Fail-closed.
+ *
+ * dryRun (default true): verify auth + simulate first batch ≤25; do NOT consume nonce; no arm.
+ * dryRun false: require gate=1 + prechecks + consume nonce + emit arming env overlay for pipeline.
  */
 export function executeGrowthActivation(opts = {}) {
-  const expected = String(opts.expectedOwnerToken || process.env.IU_CJ_GROWTH_OWNER_APPROVAL_TOKEN || "");
-  const provided = String(opts.ownerApprovalToken || "");
-  const envUncapped = String(process.env.IU_CJ_PUBLIC_GROWTH_UNCAPPED || "0");
+  const at = new Date().toISOString();
+  const env = opts.env || process.env;
+  const gateRaw = env.IU_CJ_PUBLIC_GROWTH_UNCAPPED;
+  const gateOn = resolvePublicGrowthUncappedGate(gateRaw);
+  const dryRun = opts.dryRun !== false;
+  const generationId = String(opts.generationId || opts.expectedGenerationId || "").trim();
+  const mainSha = String(opts.mainSha || opts.expectedMainSha || "").trim().toLowerCase();
+  const firstBatchMax = Math.max(
+    1,
+    Math.min(DEFAULT_FIRST_BATCH_MAX, Number(opts.firstBatchMax) || DEFAULT_FIRST_BATCH_MAX),
+  );
 
-  if (!expected || !provided || provided !== expected) {
-    return {
-      schema: EXECUTE_GROWTH_ACTIVATION_SCHEMA,
-      at: new Date().toISOString(),
-      executed: false,
-      refused: true,
-      reason: "OWNER_APPROVAL_REQUIRED",
-      envIU_CJ_PUBLIC_GROWTH_UNCAPPED: envUncapped,
-      note: "Activation execute is disarmed until explicit owner approval.",
-    };
-  }
-  if (opts.dryRun !== false) {
-    return {
-      schema: EXECUTE_GROWTH_ACTIVATION_SCHEMA,
-      at: new Date().toISOString(),
-      executed: false,
-      refused: true,
-      reason: "DRY_RUN_ONLY_IN_PREP",
-      note: "Even with token, prep builds refuse live execute (dryRun default true).",
-    };
-  }
-  // Live path intentionally not implemented in prep PR — owner must ship execute follow-up.
-  return {
+  const base = {
     schema: EXECUTE_GROWTH_ACTIVATION_SCHEMA,
-    at: new Date().toISOString(),
+    at,
     executed: false,
     refused: true,
-    reason: "EXECUTE_NOT_IMPLEMENTED_IN_PREP",
-    note: "Safe prep only — no automatic uncapped publish.",
+    dryRun,
+    wroteProjectsData: false,
+    productionWrite: "NO_PRODUCTION_WRITE",
+    envIU_CJ_PUBLIC_GROWTH_UNCAPPED: gateOn ? "1" : "0",
+    growthGateOn: gateOn,
+    generationId: generationId || null,
+    mainSha: mainSha || null,
+    firstBatchMax,
+    implementation: "LIVE_PIPELINE_ARM_V1",
+  };
+
+  const auth = verifyOwnerActivationApproval({
+    ownerApprovalToken: opts.ownerApprovalToken,
+    hmacSecret: opts.hmacSecret,
+    expectedGenerationId: generationId,
+    expectedMainSha: mainSha,
+    requiredActor: opts.requiredActor,
+    actor: opts.actor,
+    nonceStorePath: opts.nonceStorePath,
+    nowIso: opts.nowIso || at,
+    consume: false, // never consume until live path succeeds prechecks
+  });
+
+  if (!auth.ok) {
+    return {
+      ...base,
+      reason: auth.reason === "OWNER_APPROVAL_SECRET_MISSING" ? "OWNER_APPROVAL_REQUIRED" : auth.reason,
+      auth,
+      note: "NO_PRODUCTION_WRITE — owner approval missing or invalid.",
+    };
+  }
+
+  // Prechecks (required for live; recommended for dry-run)
+  const precheckFails = [];
+  if (!generationId) precheckFails.push("missing_generationId");
+  if (!/^[0-9a-f]{40}$/i.test(mainSha)) precheckFails.push("missing_mainSha");
+  if (opts.backupPlanReady === false) precheckFails.push("backup_not_ready");
+  if (opts.requiredCiPass === false) precheckFails.push("required_ci_failed");
+  if (opts.pagesPass === false) precheckFails.push("pages_failed");
+  if (opts.joinedRegistryPass === false) precheckFails.push("joined_registry_failed");
+  if (opts.czEligibilityPass === false) precheckFails.push("cz_eligibility_failed");
+  if (opts.paidPositionsPass === false) precheckFails.push("paid_positions_failed");
+  if (opts.stopMechanismPass === false) precheckFails.push("stop_mechanism_failed");
+  if (opts.rollbackReady === false) precheckFails.push("rollback_not_ready");
+
+  if (precheckFails.length && (opts.requirePrechecks !== false || !dryRun)) {
+    if (!dryRun || opts.requirePrechecks === true) {
+      return {
+        ...base,
+        reason: "PRECHECK_FAILED",
+        precheckFails,
+        auth: { ok: true, reason: "OK", consumed: false },
+        note: "NO_PRODUCTION_WRITE — prechecks blocked EXECUTE.",
+      };
+    }
+  }
+
+  // Optional offline first-batch simulation (never writes)
+  let dryRunBatch = null;
+  if (opts.offersDoc) {
+    const catalogSize = countPublic(opts.offersDoc);
+    const batchSize = Math.min(
+      firstBatchMax,
+      auth.firstBatchMax || firstBatchMax,
+      computeAdaptiveBatchSize({ catalogSize, priorOk: true }),
+    );
+    const shadow = runGrowthShadowMode({
+      offersDoc: opts.offersDoc,
+      durableProducts: opts.durableProducts,
+      joinedPartners: opts.joinedPartners,
+      reportedDeferredNew: opts.reportedDeferredNew,
+      iterations: 1,
+      batchSize,
+      uncappedShadow: true,
+      preferredCurrency: opts.preferredCurrency || "CZK",
+    });
+    const prevPublicSize = catalogSize;
+    const nextPublicSize = shadow.finalPublicSize;
+    const stop = evaluateGrowthStopConditions({
+      prevPublicSize,
+      nextPublicSize,
+      processed: shadow.iterationRows?.[0]?.processed || 0,
+      validCandidates: Math.min(batchSize, shadow.validCandidates || 0),
+      rejected: shadow.iterationRows?.[0]?.rejected || 0,
+      duplicates: shadow.iterationRows?.[0]?.duplicates || 0,
+      collisions: 0,
+      invalidAffiliate: 0,
+      ...(opts.injectStopFlags || {}),
+    });
+    dryRunBatch = {
+      mode: "FIRST_BATCH_SIMULATION",
+      batchSize,
+      validCandidates: shadow.validCandidates || 0,
+      admittedCapped: Math.min(batchSize, shadow.validCandidates || 0),
+      prevPublicSize,
+      nextPublicSize,
+      paidPositionsUntouched: shadow.paidPositionsUntouched !== false,
+      stop,
+      ok: shadow.ok !== false && !stop.stop,
+      wroteProjectsData: false,
+    };
+    if (!dryRunBatch.ok && !dryRun) {
+      return {
+        ...base,
+        reason: "FIRST_BATCH_SIMULATION_STOP",
+        dryRunBatch,
+        auth: { ok: true, reason: "OK", consumed: false },
+        note: "NO_PRODUCTION_WRITE — simulated batch hit STOP.",
+      };
+    }
+  }
+
+  if (dryRun) {
+    return {
+      ...base,
+      refused: false,
+      executed: false,
+      reason: "DRY_RUN_OK",
+      auth: { ok: true, reason: "OK", consumed: false, firstBatchMax: auth.firstBatchMax },
+      dryRunBatch,
+      pipelineArming: null,
+      note: "Dry-run only — approval verified but nonce NOT consumed; growth NOT armed; NO_PRODUCTION_WRITE.",
+    };
+  }
+
+  // LIVE arming path
+  if (!gateOn) {
+    return {
+      ...base,
+      reason: "GROWTH_GATE_LOCKED",
+      auth: { ok: true, reason: "OK", consumed: false },
+      dryRunBatch,
+      note: "NO_PRODUCTION_WRITE — set Actions var IU_CJ_PUBLIC_GROWTH_UNCAPPED=1 after owner approval (never commit 1).",
+    };
+  }
+
+  const consume = verifyOwnerActivationApproval({
+    ownerApprovalToken: opts.ownerApprovalToken,
+    hmacSecret: opts.hmacSecret,
+    expectedGenerationId: generationId,
+    expectedMainSha: mainSha,
+    requiredActor: opts.requiredActor,
+    actor: opts.actor,
+    nonceStorePath: opts.nonceStorePath,
+    nowIso: opts.nowIso || at,
+    consume: true,
+  });
+  if (!consume.ok) {
+    return {
+      ...base,
+      reason: consume.reason,
+      auth: consume,
+      dryRunBatch,
+      note: "NO_PRODUCTION_WRITE — approval consume failed (replay/expiry).",
+    };
+  }
+
+  const arm = {
+    schema: GROWTH_ACTIVATION_ARM_SCHEMA,
+    at,
+    armed: true,
+    generationId,
+    mainSha,
+    firstBatchMax: Math.min(firstBatchMax, consume.firstBatchMax || firstBatchMax),
+    adaptiveBatching: true,
+    adaptiveBatchRange: { min: 25, max: 400 },
+    pipeline: "cj-affiliate-catalog-sync / offers-live-sync",
+    nonceFingerprint: crypto.createHash("sha256").update(String(consume.payload?.nonce || "")).digest("hex").slice(0, 16),
+    expiresAt: consume.payload?.expiresAt || null,
+  };
+
+  const envOverlay = {
+    IU_CJ_PUBLIC_GROWTH_UNCAPPED: "1",
+    IU_CJ_GROWTH_ACTIVATION_ARMED: "1",
+    IU_CJ_GROWTH_FIRST_BATCH_MAX: String(arm.firstBatchMax),
+    IU_CJ_GROWTH_BATCH_MAX_ALLOWED_NEW: String(arm.firstBatchMax),
+  };
+
+  if (opts.armReceiptPath) {
+    fs.mkdirSync(path.dirname(opts.armReceiptPath), { recursive: true });
+    fs.writeFileSync(opts.armReceiptPath, JSON.stringify({ ...arm, envOverlay }, null, 2) + "\n");
+  }
+
+  return {
+    ...base,
+    refused: false,
+    executed: true,
+    reason: "ARMED_FOR_CATALOG_SYNC",
+    productionWrite: "NO_DIRECT_PROJECTS_DATA_WRITE",
+    auth: { ok: true, reason: "OK", consumed: true, firstBatchMax: consume.firstBatchMax },
+    dryRunBatch,
+    pipelineArming: { arm, envOverlay },
+    note: "Activation armed for standard catalog-sync pipeline only. Direct projects/data writes remain forbidden here.",
   };
 }
 
