@@ -314,23 +314,32 @@ export function spillDurableCatalogToShards(fullDoc, opts = {}) {
     }
   }
 
-  // If still over tip budget after all cold spilled, fail closed (eligible-only tip too large).
+  // If still over tip budget after all cold spilled, spill remaining tip rows into cold
+  // shards and keep an index-only tip (stats + empty products). Prefer continueable shards
+  // over failing the whole offers-live-sync schedule (GitHub 100MB tip hard limit).
   tipBytes = tipBytesForProducts(compacted.doc, tipProducts);
   if (tipBytes > tipHardBudget) {
-    return {
-      ok: false,
-      spilled: Object.keys(coldPool).length > 0,
-      tipDoc: null,
-      tipPayload: null,
-      tipBytes,
-      shards: [],
-      generation,
-      identityCount,
-      tipIdentityCount: Object.keys(tipProducts).length,
-      shardIdentityCount: Object.keys(coldPool).length,
-      reason: "TIP_ELIGIBLE_OVER_HARD_AFTER_SPILL",
-      error: `DURABLE_CATALOG_TIP_OVER_HARD_AFTER_SPILL bytes=${tipBytes} tipHardBudget=${tipHardBudget} hardMax=${hardMax}`,
-    };
+    for (const key of Object.keys(tipProducts)) {
+      coldPool[key] = tipProducts[key];
+      delete tipProducts[key];
+    }
+    tipBytes = tipBytesForProducts(compacted.doc, tipProducts);
+    if (tipBytes > tipHardBudget) {
+      return {
+        ok: false,
+        spilled: Object.keys(coldPool).length > 0,
+        tipDoc: null,
+        tipPayload: null,
+        tipBytes,
+        shards: [],
+        generation,
+        identityCount,
+        tipIdentityCount: 0,
+        shardIdentityCount: Object.keys(coldPool).length,
+        reason: "TIP_INDEX_OVER_HARD_AFTER_FULL_SPILL",
+        error: `DURABLE_CATALOG_TIP_OVER_HARD_AFTER_SPILL bytes=${tipBytes} tipHardBudget=${tipHardBudget} hardMax=${hardMax}`,
+      };
+    }
   }
 
   // Collision guard: tip ∩ cold must be empty.

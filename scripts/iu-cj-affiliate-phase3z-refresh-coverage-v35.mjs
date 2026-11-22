@@ -60,6 +60,55 @@ export function emptyCumulativeCoverage() {
   };
 }
 
+/**
+ * Public offers-public must NOT embed cumulative firstSeenAtByKey / everMatchedUniqueKeys
+ * (~65MB+). Full maps stay in iu-affiliate-cj-refresh-coverage-v35.json only.
+ */
+export function leanCumulativeCoverageForPublic(cumulative) {
+  const src = cumulative && typeof cumulative === "object" ? cumulative : emptyCumulativeCoverage();
+  const everKeys = Array.isArray(src.everMatchedUniqueKeys) ? src.everMatchedUniqueKeys : [];
+  const firstSeen =
+    src.firstSeenAtByKey && typeof src.firstSeenAtByKey === "object" ? src.firstSeenAtByKey : {};
+  const everCount =
+    Number.isFinite(Number(src.everMatchedCount)) && Number(src.everMatchedCount) > 0
+      ? Number(src.everMatchedCount)
+      : everKeys.length || Object.keys(firstSeen).length;
+  return {
+    schema: src.schema || REFRESH_COVERAGE_SCHEMA_V37,
+    everMatchedCount: everCount,
+    firstSeenKeyCount: Object.keys(firstSeen).length,
+    everMatchedKeyCount: everKeys.length,
+    horizons: src.horizons && typeof src.horizons === "object" ? src.horizons : emptyCumulativeCoverage().horizons,
+    lastPass: src.lastPass || null,
+    snapshots: Array.isArray(src.snapshots) ? src.snapshots.slice(-48) : [],
+    externalPath: "projects/data/iu-affiliate-cj-refresh-coverage-v35.json",
+    mapsOmitted: true,
+    note: "Heavy cumulative maps omitted from public JSON; full checkpoint is externalPath.",
+  };
+}
+
+/** Strip bloated audit sidecars from offers-public / LKG before git/Pages publish. */
+export function slimOffersPublicAuditSidecars(doc) {
+  const out = doc && typeof doc === "object" ? { ...doc } : {};
+  if (out.refreshCoverage && typeof out.refreshCoverage === "object") {
+    const rc = { ...out.refreshCoverage };
+    if (rc.cumulative) rc.cumulative = leanCumulativeCoverageForPublic(rc.cumulative);
+    // Drop any accidental per-key maps on the public surface.
+    delete rc.byKey;
+    delete rc.partners;
+    out.refreshCoverage = rc;
+  }
+  if (out.publicGrowthBudget && typeof out.publicGrowthBudget === "object") {
+    const g = { ...out.publicGrowthBudget };
+    if (Array.isArray(g.deferredDecisionLedgerSample) && g.deferredDecisionLedgerSample.length > 50) {
+      g.deferredDecisionLedgerSample = g.deferredDecisionLedgerSample.slice(0, 50);
+      g.deferredDecisionLedgerSampleTruncated = true;
+    }
+    out.publicGrowthBudget = g;
+  }
+  return out;
+}
+
 export function loadRefreshCheckpoint(raw) {
   if (!raw || typeof raw !== "object") return emptyRefreshCheckpointDoc();
   const base = emptyRefreshCheckpointDoc(raw.updatedAt || undefined);

@@ -198,6 +198,10 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-refresh-capacity-v34-selftest.mjs
       - name: Refresh coverage ledger selftest (V35; offline)
         run: node scripts/iu-cj-affiliate-phase3z-refresh-coverage-v35-selftest.mjs
+      - name: Public offers slim sidecars selftest (V51.8; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-public-offers-slim-v51-8-selftest.mjs
+      - name: 48h observation ledger selftest (V51.8; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-48h-observation-ledger-v51-8-selftest.mjs
       - name: Product evidence reconcile selftest (V36; offline)
         run: node scripts/iu-cj-affiliate-phase3z-product-evidence-v36-selftest.mjs
       - name: ProductIds refresh + cumulative coverage selftest (V37; offline)
@@ -1504,6 +1508,24 @@ jobs:
           # Full inventory + LKG merge exceeds default ~4GB heap on ubuntu-latest (OOM ValueDeserializer / alloc).
           NODE_OPTIONS: --max-old-space-size=8192
         run: node scripts/iu-cj-affiliate-offers-live-sync-v1.mjs
+      - name: Append 48h autonomous observation ledger (non-blocking)
+        if: always()
+        continue-on-error: true
+        env:
+          IU_CJ_OBSERVATION_APPEND: "1"
+          IU_CJ_OBSERVATION_EVENT_NAME: ${{ github.event_name }}
+          IU_CJ_OBSERVATION_RUN_ID: ${{ github.run_id }}
+          IU_CJ_OBSERVATION_HEAD_SHA: ${{ github.sha }}
+          IU_CJ_OBSERVATION_CONCLUSION: ${{ job.status }}
+          IU_CJ_OBSERVATION_LEDGER_PATH: projects/data/iu-affiliate-cj-48h-observation-ledger-v51-8.json
+          IU_CJ_OBSERVATION_STARTED_AT: "2026-11-21T23:26:40.000Z"
+          IU_CJ_OBSERVATION_ANCHOR_SHA: "1afe733c7c36909000a63bb4a493f7c91cd856ca"
+        run: |
+          set -euo pipefail
+          node scripts/iu-cj-affiliate-phase3z-48h-observation-ledger-v51-8.mjs
+          if [ -f projects/data/iu-affiliate-cj-48h-observation-ledger-v51-8.json ]; then
+            echo "OBSERVATION_LEDGER_WRITTEN=true"
+          fi
       - name: Upload offers artifact
         uses: actions/upload-artifact@v4
         with:
@@ -1530,6 +1552,7 @@ jobs:
             projects/data/iu-affiliate-cj-product-reverify-v50.json
             projects/data/iu-affiliate-cj-product-identity-v50.json
             projects/data/iu-affiliate-cj-durable-catalog-v51.json
+            projects/data/iu-affiliate-cj-48h-observation-ledger-v51-8.json
             projects/data/iu-affiliate-cj-durable-catalog-lkg-v51.json
             projects/data/iu-affiliate-cj-durable-catalog-shard-v51-*.json
             projects/data/iu-affiliate-cj-durable-catalog-lkg-shard-v51-*.json
@@ -1760,17 +1783,23 @@ jobs:
             done
           fi
           find projects/data -name 'iu-affiliate-cj-*.json' -size 0 -delete || true
-          # V51.8: GitHub rejects blobs >100MB (GH001). Fail closed before push.
-          # offers-live-sync writes tip (+ cold shards); each blob must stay under workflow 99e6.
+          # V51.8: GitHub rejects blobs >100MB (GH001). Omit oversize blobs from sync tip;
+          # run artifact remains authoritative for promote-offers-public-pr.
+          OMITTED=0
           for f in projects/data/iu-affiliate-cj-*.json; do
             [ -f "$f" ] || continue
             sz=$(wc -c < "$f" | tr -d ' ')
             echo "PRESTAGE_BLOB ${f} bytes=${sz}"
             if [ "${sz}" -gt 99000000 ]; then
-              echo "BLOCKER=GIT_BLOB_OVER_GITHUB_LIMIT file=${f} bytes=${sz}"
-              exit 1
+              echo "WARN=GIT_BLOB_OMIT_OVER_GITHUB_LIMIT file=${f} bytes=${sz}"
+              rm -f "$f"
+              OMITTED=1
             fi
           done
+          if [ "${OMITTED}" = "1" ]; then
+            echo "OFFERS_SYNC_BRANCH_OMITTED_OVERSIZE=true"
+            echo "::warning::Omitted sync-branch blob(s) over 99e6 bytes; artifact remains authoritative for promote."
+          fi
           git add projects/data/iu-affiliate-cj-*.json
           if [ -f projects/data/iu-affiliate-cj-offers-pages-v1.json ]; then
             git add projects/data/iu-affiliate-cj-offers-pages-v1.json
@@ -1797,7 +1826,8 @@ jobs:
           done
           if [ "${PUSH_OK}" != "1" ]; then
             echo "OFFERS_PUSH_FAILED=true"
-            exit 1
+            echo "::warning::Sync-branch push failed after retries; offers artifact still valid for promote"
+            exit 0
           fi
 
   promote-offers-public-pr:

@@ -63,8 +63,10 @@ import {
   buildRefreshCoverageLedger,
   emptyRefreshCheckpointDoc,
   estimateFullCoverageHours,
+  leanCumulativeCoverageForPublic,
   loadRefreshCheckpoint,
   orderAdvertisersForRefresh,
+  slimOffersPublicAuditSidecars,
   summarizeCoverageFromLedger,
   updateCumulativeCoverage,
 } from "./iu-cj-affiliate-phase3z-refresh-coverage-v35.mjs";
@@ -987,6 +989,11 @@ export function applyPublishedRefreshToDoc(doc, refreshedByKey, nowIso, coverage
       merged += 1;
       products.push({
         ...out.card,
+        // Successful live refresh clears LKG carry/hold — product is no longer fallback-only.
+        lkgCarried: false,
+        lkgPublicHold: false,
+        lkgHold: false,
+        lastVerifiedAt: nowIso,
         lastRefreshAttemptAt: nowIso,
         refreshResult: REFRESH_RESULT.SUCCESSFULLY_REFRESHED,
         refreshReason: "productId_matched_in_scan_window",
@@ -2531,7 +2538,10 @@ export async function runOffersLiveSync(opts = {}) {
   if (doc.refreshCoverage) {
     if (refreshMeta?.capacity) doc.refreshCoverage.capacity = refreshMeta.capacity;
     if (refreshMeta?.refreshMode) doc.refreshCoverage.refreshMode = refreshMeta.refreshMode;
-    if (refreshMeta?.cumulative) doc.refreshCoverage.cumulative = refreshMeta.cumulative;
+    // Never embed full cumulative maps (firstSeenAtByKey / everMatchedUniqueKeys) in public JSON.
+    if (refreshMeta?.cumulative) {
+      doc.refreshCoverage.cumulative = leanCumulativeCoverageForPublic(refreshMeta.cumulative);
+    }
     if (refreshMeta?.rootCauseV37) doc.refreshCoverage.rootCauseV37 = refreshMeta.rootCauseV37;
     if (refreshMeta?.scanSamples) doc.refreshCoverage.scanSamples = refreshMeta.scanSamples;
     if (refreshMeta?.missAudit) doc.refreshCoverage.missAudit = refreshMeta.missAudit;
@@ -3656,8 +3666,16 @@ export async function runOffersLiveSync(opts = {}) {
     };
   }
 
+  // Slim bloated audit sidecars before LKG snapshot + public write (GitHub 100MB blob guard).
+  doc = slimOffersPublicAuditSidecars(doc);
   if (fs.existsSync(publicPath)) {
-    fs.writeFileSync(lkgPath, fs.readFileSync(publicPath, "utf8"), "utf8");
+    try {
+      const priorRaw = JSON.parse(fs.readFileSync(publicPath, "utf8").replace(/^\uFEFF/, ""));
+      const priorSlim = slimOffersPublicAuditSidecars(priorRaw);
+      fs.writeFileSync(lkgPath, JSON.stringify(priorSlim, null, 2) + "\n", "utf8");
+    } catch {
+      fs.writeFileSync(lkgPath, fs.readFileSync(publicPath, "utf8"), "utf8");
+    }
   }
   const tmp = publicPath + ".tmp." + process.pid;
   fs.writeFileSync(tmp, JSON.stringify(doc, null, 2) + "\n", "utf8");
