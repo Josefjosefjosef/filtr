@@ -7,6 +7,7 @@ import {
   collectPublishedProductKeys,
   isOfferExpiredAt,
   mergeRefreshedProductIntoCard,
+  productCurrencyClocks,
   resolveSourceUpdatedAtProvenance,
   stampProductFetchClocks,
   FRESHNESS_POLICY_V32,
@@ -34,6 +35,16 @@ expect(
   "fetch_recent_unknown",
   recent.freshnessStatus === FRESHNESS_STATUS.FETCH_RECENT_SOURCE_AGE_UNKNOWN
 );
+expect("next_check_present", typeof recent.nextCheckAt === "string" && recent.nextCheckAt.length > 10);
+const clocks = productCurrencyClocks(
+  { lastSuccessfulRefreshAt: "2026-11-03T11:00:00Z", sourceUpdatedAtStatus: "NOT_PROVIDED" },
+  now
+);
+expect(
+  "source_timestamp_unavailable_label",
+  clocks.sourceUpdatedAtStatus === "SOURCE_TIMESTAMP_UNAVAILABLE" && clocks.sourceTrusted === false
+);
+expect("next_check_clock", typeof clocks.nextCheckAt === "string");
 
 const sourceFresh = classifyProductFreshness(
   {

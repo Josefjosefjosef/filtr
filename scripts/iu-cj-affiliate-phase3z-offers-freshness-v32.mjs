@@ -178,9 +178,48 @@ export function isOfferExpiredAt(offer, nowMs = Date.now(), opts = {}) {
   return { expired, unknownValidity: false, reason: expired ? "past_valid_to" : "within_window", endMs: end };
 }
 
+function nextCheckIsoFrom(lastCheckMs, nowMs, policy) {
+  if (!Number.isFinite(lastCheckMs)) {
+    return new Date(nowMs + (policy.productPriceAvailabilityMs || 0)).toISOString();
+  }
+  const due = lastCheckMs + (policy.productPriceAvailabilityMs || 0);
+  return new Date(Math.max(nowMs, due)).toISOString();
+}
+
+/**
+ * Measurable currency clocks for a published product.
+ * Distinguishes sourceUpdatedAt (CJ) vs lastVerified* (our successful fetch).
+ * Missing CJ source timestamp → SOURCE_TIMESTAMP_UNAVAILABLE (not inventable as SOURCE_FRESH).
+ */
+export function productCurrencyClocks(row, nowMs = Date.now(), policy = FRESHNESS_POLICY_V32) {
+  const lastVerifiedAt =
+    row?.lastVerifiedAt || row?.lastSuccessfulRefreshAt || row?.lastCheckedAt || row?.fetchedAt || null;
+  const lastVerifiedMs = parseOfferInstant(lastVerifiedAt);
+  const prov = resolveSourceUpdatedAtProvenance(row, { treatEqualCheckAsLegacy: true });
+  const sourceStatus =
+    prov.sourceUpdatedAtStatus === SOURCE_UPDATED_AT_STATUS.PROVIDED
+      ? "SOURCE_TIMESTAMP_PROVIDED"
+      : "SOURCE_TIMESTAMP_UNAVAILABLE";
+  return {
+    lastObtainedAt: lastVerifiedAt,
+    lastVerifiedAt,
+    priceVerifiedAt: row?.priceVerifiedAt || lastVerifiedAt,
+    availabilityVerifiedAt: row?.availabilityVerifiedAt || lastVerifiedAt,
+    sourceUpdatedAt: prov.sourceUpdatedAt,
+    sourceUpdatedAtStatus: sourceStatus,
+    sourceTrusted: sourceStatus === "SOURCE_TIMESTAMP_PROVIDED",
+    publicationEligible:
+      row?.publicationReady !== false &&
+      row?.publicationEligibility !== "PUBLICATION_BLOCKED" &&
+      row?.lkgPublicHold !== true,
+    nextCheckAt: nextCheckIsoFrom(lastVerifiedMs, nowMs, policy),
+  };
+}
+
 export function classifyProductFreshness(row, nowMs = Date.now(), policy = FRESHNESS_POLICY_V32) {
   const lastCheck = parseOfferInstant(row?.lastSuccessfulRefreshAt || row?.lastCheckedAt || row?.fetchedAt);
   const prov = resolveSourceUpdatedAtProvenance(row, { treatEqualCheckAsLegacy: true });
+  const clocks = productCurrencyClocks(row, nowMs, policy);
   if (lastCheck == null) {
     return {
       freshnessStatus: FRESHNESS_STATUS.UNVERIFIED,
@@ -188,6 +227,8 @@ export function classifyProductFreshness(row, nowMs = Date.now(), policy = FRESH
       ageMs: null,
       hidePublicPrice: false,
       sourceUpdatedAtStatus: prov.sourceUpdatedAtStatus,
+      nextCheckAt: clocks.nextCheckAt,
+      currency: clocks,
     };
   }
   const ageMs = Math.max(0, nowMs - lastCheck);
@@ -199,6 +240,8 @@ export function classifyProductFreshness(row, nowMs = Date.now(), policy = FRESH
       hidePublicPrice: true,
       sourceUpdatedAtStatus: prov.sourceUpdatedAtStatus,
       sourceUpdatedAt: prov.sourceUpdatedAt,
+      nextCheckAt: clocks.nextCheckAt,
+      currency: clocks,
     };
   }
   if (ageMs > policy.productPriceAvailabilityMs) {
@@ -209,6 +252,8 @@ export function classifyProductFreshness(row, nowMs = Date.now(), policy = FRESH
       hidePublicPrice: false,
       sourceUpdatedAtStatus: prov.sourceUpdatedAtStatus,
       sourceUpdatedAt: prov.sourceUpdatedAt,
+      nextCheckAt: clocks.nextCheckAt,
+      currency: clocks,
     };
   }
   if (prov.sourceUpdatedAtStatus === SOURCE_UPDATED_AT_STATUS.PROVIDED && prov.sourceUpdatedAtMs != null) {
@@ -221,6 +266,8 @@ export function classifyProductFreshness(row, nowMs = Date.now(), policy = FRESH
         hidePublicPrice: true,
         sourceUpdatedAtStatus: prov.sourceUpdatedAtStatus,
         sourceUpdatedAt: prov.sourceUpdatedAt,
+        nextCheckAt: clocks.nextCheckAt,
+        currency: clocks,
       };
     }
     if (sourceAge > policy.productPriceAvailabilityMs) {
@@ -231,6 +278,8 @@ export function classifyProductFreshness(row, nowMs = Date.now(), policy = FRESH
         hidePublicPrice: false,
         sourceUpdatedAtStatus: prov.sourceUpdatedAtStatus,
         sourceUpdatedAt: prov.sourceUpdatedAt,
+        nextCheckAt: clocks.nextCheckAt,
+        currency: clocks,
       };
     }
     return {
@@ -240,6 +289,8 @@ export function classifyProductFreshness(row, nowMs = Date.now(), policy = FRESH
       hidePublicPrice: false,
       sourceUpdatedAtStatus: prov.sourceUpdatedAtStatus,
       sourceUpdatedAt: prov.sourceUpdatedAt,
+      nextCheckAt: clocks.nextCheckAt,
+      currency: clocks,
     };
   }
   return {
@@ -249,6 +300,8 @@ export function classifyProductFreshness(row, nowMs = Date.now(), policy = FRESH
     hidePublicPrice: false,
     sourceUpdatedAtStatus: prov.sourceUpdatedAtStatus,
     sourceUpdatedAt: null,
+    nextCheckAt: clocks.nextCheckAt,
+    currency: clocks,
   };
 }
 
@@ -365,9 +418,18 @@ export function applyFreshnessToOffersDocument(doc, opts = {}) {
         freshnessReason: fr.freshnessReason,
         lastCheckedAt: p.lastCheckedAt || null,
         lastSuccessfulRefreshAt: p.lastSuccessfulRefreshAt || null,
+        lastVerifiedAt: p.lastVerifiedAt || p.lastSuccessfulRefreshAt || p.lastCheckedAt || null,
+        priceVerifiedAt: p.priceVerifiedAt || p.lastVerifiedAt || p.lastSuccessfulRefreshAt || null,
+        availabilityVerifiedAt:
+          p.availabilityVerifiedAt || p.lastVerifiedAt || p.lastSuccessfulRefreshAt || null,
         fetchedAt: p.fetchedAt || p.lastCheckedAt || null,
         sourceUpdatedAt: fr.sourceUpdatedAt != null ? fr.sourceUpdatedAt : null,
         sourceUpdatedAtStatus: fr.sourceUpdatedAtStatus || SOURCE_UPDATED_AT_STATUS.NOT_PROVIDED,
+        nextCheckAt: fr.nextCheckAt || null,
+        sourceTimestampLabel:
+          fr.sourceUpdatedAtStatus === SOURCE_UPDATED_AT_STATUS.PROVIDED
+            ? "SOURCE_TIMESTAMP_PROVIDED"
+            : "SOURCE_TIMESTAMP_UNAVAILABLE",
       };
       if (fr.freshnessStatus === FRESHNESS_STATUS.STALE) stats.productsStaleMarked += 1;
       if (hideStalePrices && fr.hidePublicPrice) {
