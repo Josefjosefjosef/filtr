@@ -1686,17 +1686,23 @@ jobs:
           fi
           # Refuse to stage zero-byte JSON (would brick schedule promote).
           find projects/data -name 'iu-affiliate-cj-*.json' -size 0 -delete || true
-          # V51.8: GitHub rejects blobs >100MB (GH001). Fail closed before push.
-          # Compact minify is done in offers-live-sync; this gate blocks accidental oversize.
+          # V51.8: GitHub rejects blobs >100MB (GH001). Omit oversize from sync tip;
+          # run artifact remains authoritative (durable spill + slim keep tip under hard).
+          OMITTED=0
           for f in projects/data/iu-affiliate-cj-*.json; do
             [ -f "$f" ] || continue
             sz=$(wc -c < "$f" | tr -d ' ')
             echo "PRESTAGE_BLOB ${f} bytes=${sz}"
             if [ "${sz}" -gt 99000000 ]; then
-              echo "BLOCKER=GIT_BLOB_OVER_GITHUB_LIMIT file=${f} bytes=${sz}"
-              exit 1
+              echo "WARN=GIT_BLOB_OMIT_OVER_GITHUB_LIMIT file=${f} bytes=${sz}"
+              rm -f "$f"
+              OMITTED=1
             fi
           done
+          if [ "${OMITTED}" = "1" ]; then
+            echo "CHECKPOINT_SYNC_BRANCH_OMITTED_OVERSIZE=true"
+            echo "::warning::Omitted checkpoint sync-branch blob(s) over 99e6 bytes; artifact remains authoritative."
+          fi
           git add projects/data/iu-affiliate-cj-*.json
           if git diff --cached --quiet; then
             echo "NO_CHECKPOINT_CHANGES"
