@@ -143,8 +143,11 @@ export function advancePartnerCheckpoint(prev, fetchResult = {}, opts = {}) {
       ? (Number(base.presentationCursor) || 0) + publishPerPartner
       : Number(base.presentationCursor) || 0;
 
-  const remaining =
-    totalCount != null && resumeOffset != null
+  // After a sealed complete pass resumeOffset resets to first — remaining must be 0,
+  // not totalCount-(1-1)=totalCount (false CONTINUATION_PENDING / Tierraverde-class bug).
+  const remaining = complete
+    ? 0
+    : totalCount != null && resumeOffset != null
       ? Math.max(0, totalCount - (resumeOffset - CJ_PRODUCT_SEARCH_OFFSET_FIRST))
       : null;
 

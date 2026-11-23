@@ -118,11 +118,52 @@ const badEval = evaluateFeedCompletenessPass(unexplained);
 assert.equal(badEval.pass, false);
 assert.equal(badEval.unexplainedNonePublished, 1);
 
+// Tierraverde-class: lastComplete=true + offset=1 must NOT be CONTINUATION_PENDING.
+const tierra = buildFeedCompleteness({
+  inventory: {
+    partners: [
+      {
+        advertiserId: "7612998",
+        partnerName: "Tierraverde",
+        joined: true,
+        hasFeed: true,
+        declaredProductCountSum: 324,
+      },
+    ],
+  },
+  offers: { publicGrowthBudget: { cumulativeRemaining: 0 }, sections: [] },
+  continuationByAdvertiser: {
+    "7612998": {
+      offset: 1,
+      mode: "offset",
+      emptyApi: false,
+      currentLoaded: 367,
+      completePassCount: 100,
+      lastComplete: true,
+      productsRemainingEstimate: 0,
+    },
+  },
+});
+assert.ok(
+  !(tierra.partners[0].gapReasons || []).includes("INGESTION_CONTINUATION_PENDING"),
+  "sealed complete pass is not CONTINUATION_PENDING",
+);
+assert.deepEqual(
+  tierra.partners[0].gapReasons,
+  ["INGESTION_COMPLETE_AWAITING_PUBLICATION"],
+  "sealed complete + loaded + published=0 → awaiting publication",
+);
+assert.ok(
+  !(tierra.partners[0].gapReasons || []).includes("FEED_DECLARED_BUT_NONE_PUBLISHED"),
+  "not unexplained silent loss",
+);
+
 console.log(
   JSON.stringify({
     IU_CJ_FEED_COMPLETENESS_V51_8_SELFTEST: "PASS",
     partners: doc.partners.length,
     emptyApiPass: emptyEval.pass,
     unexplainedFail: badEval.pass === false,
+    tierraverdeSealed: true,
   }),
 );

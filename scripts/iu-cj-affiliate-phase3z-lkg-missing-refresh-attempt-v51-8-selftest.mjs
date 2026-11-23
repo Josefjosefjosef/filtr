@@ -8,6 +8,9 @@ import {
   selectMissingRefreshTargets,
   attemptMissingRefreshBatch,
   applyMissingRefreshAttemptsToDoc,
+  emptyRetryQueue,
+  mergeTargetsWithRetryQueue,
+  updateRetryQueueFromAttempts,
 } from "./iu-cj-affiliate-phase3z-lkg-missing-refresh-attempt-v51-8.mjs";
 import { LKG_CAUSE } from "./iu-cj-affiliate-phase3z-lkg-rootcause-audit-v51-8.mjs";
 
@@ -143,11 +146,51 @@ const cleared = applied.doc.sections[0].products.find((p) => p.productId === "P_
 assert(cleared.lkgCarried === false, "REFRESHED clears lkgCarried");
 assert(cleared.refreshReason === "missing_refresh_attempt_v51_8", "attempt reason stamped");
 
+// Durable retry queue: RETRY survives and is due next run; not-due deferred.
+let q = emptyRetryQueue("2026-11-23T12:00:00.000Z");
+q = updateRetryQueueFromAttempts(
+  q,
+  [
+    {
+      key: "ADV1|P_RETRY",
+      advertiserId: "ADV1",
+      productId: "P_RETRY",
+      status: ATTEMPT_STATUS.RETRY_SCHEDULED,
+      attemptedAt: "2026-11-23T12:00:00.000Z",
+      apiResult: "omitPartner_productIds_miss",
+    },
+    {
+      key: "ADV1|P_BAD",
+      advertiserId: "ADV1",
+      productId: "P_BAD",
+      status: ATTEMPT_STATUS.INVALID_DATA,
+      attemptedAt: "2026-11-23T12:00:00.000Z",
+      apiResult: "omitPartner_productId_collision_hold",
+    },
+  ],
+  { nowIso: "2026-11-23T12:00:00.000Z", retryHours: 3 },
+);
+assert(q.items["ADV1|P_RETRY"].closed !== true, "retry open");
+assert(q.items["ADV1|P_RETRY"].nextAttemptAt, "nextAttemptAt set");
+assert(q.items["ADV1|P_BAD"].closed === true, "invalid closed");
+const early = mergeTargetsWithRetryQueue([], q, {
+  nowMs: Date.parse("2026-11-23T13:00:00.000Z"),
+});
+assert(early.targets.length === 0, "not due yet");
+assert(early.deferredNotDue === 1, "deferred counted");
+const due = mergeTargetsWithRetryQueue([], q, {
+  nowMs: Date.parse("2026-11-23T16:00:00.000Z"),
+});
+assert(due.targets.length === 1 && due.targets[0].productId === "P_RETRY", "due from queue");
+assert(due.dueFromQueue === 1, "dueFromQueue");
+
 console.log(
   JSON.stringify({
     ok: true,
     selected: selected.targets.length,
     byStatus: dry.ledger.byStatus,
     appliedMerged: applied.stats.merged,
+    retryQueueOpen: q.counts.open,
+    dueFromQueue: due.dueFromQueue,
   }),
 );

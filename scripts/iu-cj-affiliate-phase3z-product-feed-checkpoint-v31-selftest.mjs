@@ -130,6 +130,24 @@ const fetchDone = {
 const afterDone = advancePartnerCheckpoint(afterB, fetchDone, { pageSize: 100, publishPerPartner: 25 });
 expect("complete_resets_offset", afterDone.resumeOffset === CJ_PRODUCT_SEARCH_OFFSET_FIRST);
 expect("complete_pass_count", afterDone.completePassCount === 1);
+expect("complete_remaining_zero", afterDone.productsRemainingEstimate === 0);
+expect("complete_flag", afterDone.lastComplete === true);
+
+// Tierraverde-class: totalCount > fetched on sealed complete must still remaining=0
+const afterTv = advancePartnerCheckpoint(
+  { advertiserId: "7612998", resumeOffset: 1, completePassCount: 99 },
+  {
+    fetchedCount: 367,
+    totalCount: 686,
+    complete: true,
+    stoppedEarlyForBudget: false,
+    startedOffset: 1,
+    checkpoint: { nextOffset: 1, mode: "offset", complete: true },
+  },
+  { pageSize: 1000, publishPerPartner: 0 },
+);
+expect("tierra_remaining_zero", afterTv.productsRemainingEstimate === 0);
+expect("tierra_complete", afterTv.lastComplete === true);
 
 // Persist round-trip
 const tmp = path.join(os.tmpdir(), "iu-v31-product-feed-cp-" + Date.now() + ".json");
