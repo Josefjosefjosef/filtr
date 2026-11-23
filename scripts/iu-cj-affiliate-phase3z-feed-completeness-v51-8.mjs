@@ -76,10 +76,14 @@ export function buildFeedCompleteness(opts = {}) {
     }
     const cont = continuationByAdv[adv] || null;
     const cjFeedApiEmpty = cont && cont.emptyApi === true && Number(cont.currentLoaded || 0) === 0;
+    // Offset reset to 1 after lastComplete=true is NOT pending (sealed pass).
+    // Pending = incomplete traversal: !lastComplete with remaining/mid-cursor/feed mode.
     const contPending =
       cont &&
       !cjFeedApiEmpty &&
-      (Number(cont.offset) <= 1 ||
+      cont.lastComplete !== true &&
+      (Number(cont.productsRemainingEstimate || 0) > 0 ||
+        Number(cont.offset) > 1 ||
         cont.mode === "feed" ||
         cont.status === "pending" ||
         cont.status === "in_progress");
@@ -92,6 +96,13 @@ export function buildFeedCompleteness(opts = {}) {
         gaps.push("CJ_FEED_API_EMPTY");
       } else if (contPending) {
         gaps.push("INGESTION_CONTINUATION_PENDING");
+      } else if (
+        cont &&
+        cont.lastComplete === true &&
+        Number(cont.currentLoaded || 0) > 0
+      ) {
+        // Sealed complete pass with loaded rows but none in public yet (growth/presentation).
+        gaps.push("INGESTION_COMPLETE_AWAITING_PUBLICATION");
       } else {
         gaps.push("FEED_DECLARED_BUT_NONE_PUBLISHED");
       }
@@ -229,7 +240,7 @@ export function evaluateFeedCompletenessPass(doc) {
     criteria: [
       "inventory snapshot present (partnersInInventory > 0)",
       "unexplainedNonePublished === 0 (no FEED_DECLARED_BUT_NONE_PUBLISHED)",
-      "CJ_FEED_API_EMPTY / GROWTH_BUDGET_BLOCKED / CONTINUATION_PENDING are classified external/ops limits, not silent loss",
+      "CJ_FEED_API_EMPTY / GROWTH_BUDGET_BLOCKED / CONTINUATION_PENDING / INGESTION_COMPLETE_AWAITING_PUBLICATION are classified external/ops limits, not silent loss",
     ],
     externalLimitations: cjEmpty.map((p) => ({
       advertiserId: p.advertiserId,
@@ -246,6 +257,16 @@ export function evaluateFeedCompletenessPass(doc) {
       continuation: p.continuation || null,
       classification: "INGESTION_CONTINUATION_PENDING",
     })),
+    ingestionCompleteAwaitingPublication: partners
+      .filter((p) => (p.gapReasons || []).includes("INGESTION_COMPLETE_AWAITING_PUBLICATION"))
+      .map((p) => ({
+        advertiserId: p.advertiserId,
+        partnerName: p.partnerName,
+        declaredProductCount: p.declaredProductCount,
+        continuation: p.continuation || null,
+        classification: "INGESTION_COMPLETE_AWAITING_PUBLICATION",
+        note: "lastComplete=true with loaded>0; public=0 — growth/presentation gate, not silent feed loss",
+      })),
     growthBudgetEvidence: growthBlocked.map((p) => ({
       advertiserId: p.advertiserId,
       partnerName: p.partnerName,
@@ -310,6 +331,9 @@ async function main() {
         emptyApi: p.emptyApi === true,
         currentLoaded: p.currentLoaded ?? p.loadedProducts ?? null,
         completePassCount: p.completePassCount ?? null,
+        lastComplete: p.lastComplete === true,
+        productsRemainingEstimate:
+          p.productsRemainingEstimate != null ? Number(p.productsRemainingEstimate) : null,
         lastError: p.lastError || null,
       };
     }

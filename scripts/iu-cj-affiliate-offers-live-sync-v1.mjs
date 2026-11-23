@@ -83,6 +83,8 @@ import {
 } from "./iu-cj-affiliate-phase3z-miss-reverify-v38.mjs";
 import {
   runMissingRefreshAttemptsOnOffersDoc,
+  readRetryQueueFile,
+  RETRY_QUEUE_FILENAME,
 } from "./iu-cj-affiliate-phase3z-lkg-missing-refresh-attempt-v51-8.mjs";
 import {
   reprobeEmptyFeedPartners,
@@ -2948,6 +2950,8 @@ export async function runOffersLiveSync(opts = {}) {
       } catch {
         /* non-fatal */
       }
+      const retryQueuePath = path.join(dataDir, RETRY_QUEUE_FILENAME);
+      const priorRetryQueue = readRetryQueueFile(retryQueuePath);
       const attemptRun = await runMissingRefreshAttemptsOnOffersDoc(doc, {
         gqlEnv: attemptGql.pat ? attemptGql : null,
         websitePid: WEBSITE_PID,
@@ -2960,6 +2964,7 @@ export async function runOffersLiveSync(opts = {}) {
         applyToDoc: true,
         runId: env.GITHUB_RUN_ID || null,
         refreshedByKey,
+        retryQueue: priorRetryQueue,
       });
       doc = attemptRun.doc;
       for (const [k, v] of attemptRun.refreshedByKey.entries()) refreshedByKey.set(k, v);
@@ -2971,14 +2976,24 @@ export async function runOffersLiveSync(opts = {}) {
       try {
         fs.mkdirSync(dataDir, { recursive: true });
         fs.writeFileSync(attemptPath, JSON.stringify(attemptRun.ledger, null, 2) + "\n", "utf8");
+        if (attemptRun.retryQueue) {
+          fs.writeFileSync(
+            retryQueuePath,
+            JSON.stringify(attemptRun.retryQueue, null, 2) + "\n",
+            "utf8",
+          );
+        }
       } catch {
         /* non-fatal */
       }
       if (!publicationRestore) publicationRestore = {};
       publicationRestore.missingRefreshAttempts = {
         path: "projects/data/iu-affiliate-cj-lkg-missing-refresh-attempts-v51-8.json",
+        retryQueuePath: "projects/data/" + RETRY_QUEUE_FILENAME,
         targetCount: attemptRun.ledger?.targetCount ?? 0,
         byStatus: attemptRun.ledger?.byStatus || null,
+        queueMerge: attemptRun.ledger?.queueMerge || null,
+        retryQueueCounts: attemptRun.retryQueue?.counts || null,
         applyStats: attemptRun.applyStats || null,
         reverifyMeta: attemptRun.meta || null,
       };

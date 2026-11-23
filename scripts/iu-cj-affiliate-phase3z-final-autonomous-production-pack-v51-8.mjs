@@ -209,12 +209,35 @@ async function main() {
   const emptyFeedReprobe =
     (artifactDir &&
       readJsonSafe(path.join(artifactDir, "iu-affiliate-cj-empty-feed-reprobe-v51-8.json"))) ||
+    readJsonSafe(
+      path.join(process.env.TEMP || "/tmp", "iu-cj-cp-45191511851", "iu-affiliate-cj-empty-feed-reprobe-v51-8.json"),
+    ) ||
     {
       schema: "iu-cj-affiliate-phase3z-empty-feed-reprobe-v51-8",
       note: "No empty-feed reprobe artifact yet — awaiting post-merge live run",
       targetCount: null,
       byStatus: null,
     };
+  const retryQueue =
+    (artifactDir &&
+      readJsonSafe(path.join(artifactDir, "iu-affiliate-cj-lkg-refresh-retry-queue-v51-8.json"))) ||
+    readJsonSafe(
+      path.join(process.env.TEMP || "/tmp", "iu-affiliate-cj-lkg-refresh-retry-queue-v51-8.json"),
+    ) ||
+    {
+      schema: "iu-cj-affiliate-phase3z-lkg-refresh-retry-queue-v51-8",
+      note: "Retry queue created on next live sync after durable-queue PR",
+      counts: null,
+    };
+  const emptyFeedReconcile =
+    readJsonSafe(path.join(process.env.TEMP || "/tmp", "iu-empty-feed-reconcile-v51-8.json")) ||
+    null;
+  const shrinkageReconcile =
+    readJsonSafe(path.join(process.env.TEMP || "/tmp", "iu-catalog-shrinkage-reconcile-v51-8.json")) ||
+    null;
+  const ciEvidence =
+    readJsonSafe(path.join(process.env.TEMP || "/tmp", "iu-ci-data-promote-evidence-v51-8.json")) ||
+    null;
 
   // Observation ledger hydrate + evaluate
   let observation = {
@@ -459,7 +482,11 @@ async function main() {
     PUBLIC_HOLD_FULL_AUDIT: holdAudit,
     LKG_REFRESH_AUDIT: buildLkgRefreshAudit(lkgAudit),
     LKG_MISSING_REFRESH_ATTEMPTS: missingRefreshAttempts,
+    LKG_REFRESH_RETRY_QUEUE: retryQueue,
     EMPTY_FEED_REPROBE: emptyFeedReprobe,
+    EMPTY_FEED_RECONCILE: emptyFeedReconcile,
+    CATALOG_SHRINKAGE_RECONCILE: shrinkageReconcile,
+    CI_DATA_PROMOTE_EVIDENCE: ciEvidence,
     LKG_ROOT_CAUSES: {
       at: nowIso,
       byCause: lkgAudit.byCause || null,

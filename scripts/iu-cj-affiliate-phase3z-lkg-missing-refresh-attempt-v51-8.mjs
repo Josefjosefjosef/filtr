@@ -27,6 +27,10 @@ export const ATTEMPT_STATUS = Object.freeze({
 });
 
 const DEFAULT_URL = "https://infouzel.cz/projects/data/iu-affiliate-cj-offers-public-v1.json";
+export const RETRY_QUEUE_SCHEMA = "iu-cj-affiliate-phase3z-lkg-refresh-retry-queue-v51-8";
+export const RETRY_QUEUE_FILENAME = "iu-affiliate-cj-lkg-refresh-retry-queue-v51-8.json";
+const DEFAULT_RETRY_HOURS = 3;
+const MAX_RETRY_ATTEMPTS = 12;
 
 /**
  * Map V38 probe row → attempt status (honest, no PASS renaming).
@@ -105,6 +109,254 @@ export function selectMissingRefreshTargets(docOrAudit, opts = {}) {
     },
     targets: keys,
   };
+}
+
+export function emptyRetryQueue(nowIso = new Date().toISOString()) {
+  return {
+    schema: RETRY_QUEUE_SCHEMA,
+    updatedAt: nowIso,
+    items: {},
+    note:
+      "Durable RETRY_SCHEDULED / INVALID_DATA queue. Survives run restart; due items are re-attempted automatically.",
+  };
+}
+
+export function loadRetryQueue(raw) {
+  if (!raw || typeof raw !== "object") return emptyRetryQueue();
+  return {
+    ...emptyRetryQueue(raw.updatedAt || undefined),
+    ...raw,
+    schema: RETRY_QUEUE_SCHEMA,
+    items: raw.items && typeof raw.items === "object" ? raw.items : {},
+  };
+}
+
+export function readRetryQueueFile(absPath) {
+  if (!absPath || !fs.existsSync(absPath)) return emptyRetryQueue();
+  try {
+    return loadRetryQueue(JSON.parse(fs.readFileSync(absPath, "utf8")));
+  } catch {
+    return emptyRetryQueue();
+  }
+}
+
+/**
+ * Merge MISSING_REFRESH selection with durable queue due items (no double-count).
+ */
+export function mergeTargetsWithRetryQueue(selectedTargets, queue, opts = {}) {
+  const nowMs = opts.nowMs != null ? Number(opts.nowMs) : Date.now();
+  const byKey = new Map();
+  for (const t of selectedTargets || []) {
+    const key = t.key || `${t.advertiserId}|${t.productId}`;
+    byKey.set(key, { ...t, key, fromQueue: false });
+  }
+  let dueFromQueue = 0;
+  let deferredNotDue = 0;
+  for (const [key, item] of Object.entries(queue?.items || {})) {
+    if (!item || !item.advertiserId || !item.productId) continue;
+    if (item.closed === true) continue;
+    if (item.status === ATTEMPT_STATUS.REFRESHED) continue;
+    // INVALID_DATA stays tracked but is not auto-retried unless forceRetryInvalid.
+    if (
+      item.status === ATTEMPT_STATUS.INVALID_DATA &&
+      opts.forceRetryInvalid !== true
+    ) {
+      continue;
+    }
+    const nextMs = Date.parse(item.nextAttemptAt || "");
+    const due =
+      item.status === ATTEMPT_STATUS.RETRY_SCHEDULED ||
+      item.status === ATTEMPT_STATUS.TECHNICAL_FAILURE ||
+      item.status === ATTEMPT_STATUS.PRODUCT_NOT_FOUND;
+    if (!due) continue;
+    if (Number.isFinite(nextMs) && nextMs > nowMs) {
+      deferredNotDue += 1;
+      continue;
+    }
+    if (byKey.has(key)) {
+      byKey.set(key, {
+        ...byKey.get(key),
+        fromQueue: true,
+        queueAttemptCount: item.attemptCount || 0,
+        priorQueueStatus: item.status,
+      });
+    } else {
+      dueFromQueue += 1;
+      byKey.set(key, {
+        key,
+        advertiserId: String(item.advertiserId),
+        productId: String(item.productId),
+        title: item.title || null,
+        partnershipStatus: item.partnershipStatus || null,
+        causeCode: item.priorCauseCode || LKG_CAUSE.MISSING_REFRESH,
+        dataAgeHours: item.dataAgeHours ?? null,
+        lastVerifiedAt: item.lastVerifiedAt || null,
+        feedId: item.feedId || null,
+        fromQueue: true,
+        queueAttemptCount: item.attemptCount || 0,
+        priorQueueStatus: item.status,
+      });
+    }
+  }
+  return {
+    targets: [...byKey.values()],
+    dueFromQueue,
+    deferredNotDue,
+    selectedOnly: (selectedTargets || []).length,
+  };
+}
+
+/**
+ * Persist attempt outcomes into durable queue (survives restart / next schedule).
+ */
+export function updateRetryQueueFromAttempts(priorQueue, attempts, opts = {}) {
+  const nowIso = opts.nowIso || new Date().toISOString();
+  const retryHours = Math.max(1, Number(opts.retryHours) || DEFAULT_RETRY_HOURS);
+  const maxAttempts = Math.max(1, Number(opts.maxAttempts) || MAX_RETRY_ATTEMPTS);
+  const next = loadRetryQueue(priorQueue);
+  next.updatedAt = nowIso;
+  next.runId = opts.runId || next.runId || null;
+  const nextAttemptAt = new Date(Date.parse(nowIso) + retryHours * 3600000).toISOString();
+  let closed = 0;
+  let scheduled = 0;
+  let invalidHeld = 0;
+  for (const a of attempts || []) {
+    const key = a.key || `${a.advertiserId}|${a.productId}`;
+    const prev = next.items[key] || {};
+    const attemptCount = Number(prev.attemptCount || 0) + 1;
+    if (a.status === ATTEMPT_STATUS.REFRESHED) {
+      next.items[key] = {
+        ...prev,
+        key,
+        advertiserId: a.advertiserId,
+        productId: a.productId,
+        status: ATTEMPT_STATUS.REFRESHED,
+        attemptCount,
+        lastAttemptAt: a.attemptedAt || nowIso,
+        nextAttemptAt: null,
+        closed: true,
+        closedReason: "REFRESHED",
+        apiResult: a.apiResult || null,
+      };
+      closed += 1;
+      continue;
+    }
+    if (a.status === ATTEMPT_STATUS.INVALID_DATA) {
+      next.items[key] = {
+        ...prev,
+        key,
+        advertiserId: a.advertiserId,
+        productId: a.productId,
+        title: a.title || prev.title || null,
+        feedId: a.feedId || prev.feedId || null,
+        status: ATTEMPT_STATUS.INVALID_DATA,
+        attemptCount,
+        lastAttemptAt: a.attemptedAt || nowIso,
+        nextAttemptAt: null,
+        closed: true,
+        closedReason: "IDENTITY_COLLISION_OR_INVALID_DATA",
+        apiResult: a.apiResult || null,
+        identityRepair: a.identityRepair || null,
+        priorCauseCode: a.priorCauseCode || prev.priorCauseCode || null,
+      };
+      invalidHeld += 1;
+      continue;
+    }
+    if (
+      a.status === ATTEMPT_STATUS.PARTNERSHIP_ENDED ||
+      a.status === ATTEMPT_STATUS.SOURCE_UNAVAILABLE
+    ) {
+      next.items[key] = {
+        ...prev,
+        key,
+        advertiserId: a.advertiserId,
+        productId: a.productId,
+        status: a.status,
+        attemptCount,
+        lastAttemptAt: a.attemptedAt || nowIso,
+        nextAttemptAt: null,
+        closed: true,
+        closedReason: a.status,
+        apiResult: a.apiResult || null,
+      };
+      closed += 1;
+      continue;
+    }
+    const exhausted = attemptCount >= maxAttempts;
+    next.items[key] = {
+      ...prev,
+      key,
+      advertiserId: a.advertiserId,
+      productId: a.productId,
+      title: a.title || prev.title || null,
+      feedId: a.feedId || prev.feedId || null,
+      status: exhausted ? ATTEMPT_STATUS.PRODUCT_NOT_FOUND : ATTEMPT_STATUS.RETRY_SCHEDULED,
+      attemptCount,
+      lastAttemptAt: a.attemptedAt || nowIso,
+      nextAttemptAt: exhausted ? null : nextAttemptAt,
+      closed: exhausted,
+      closedReason: exhausted ? "MAX_RETRY_EXHAUSTED" : null,
+      apiResult: a.apiResult || null,
+      evidence: a.evidence || null,
+      priorCauseCode: a.priorCauseCode || prev.priorCauseCode || null,
+      lastVerifiedAt: a.priorLastVerifiedAt || prev.lastVerifiedAt || null,
+      dataAgeHours: a.priorDataAgeHours ?? prev.dataAgeHours ?? null,
+    };
+    if (exhausted) closed += 1;
+    else scheduled += 1;
+  }
+  next.counts = {
+    open: Object.values(next.items).filter((x) => x && x.closed !== true).length,
+    closed: Object.values(next.items).filter((x) => x && x.closed === true).length,
+    scheduledThisPass: scheduled,
+    closedThisPass: closed,
+    invalidHeldThisPass: invalidHeld,
+  };
+  return next;
+}
+
+/**
+ * Stamp nextCheckAt / attempt metadata onto products for RETRY / INVALID (no false publish).
+ */
+export function stampAttemptMetaOnDoc(doc, attempts, nowIso) {
+  const byKey = new Map((attempts || []).map((a) => [a.key, a]));
+  if (byKey.size === 0) return { doc, stamped: 0 };
+  let stamped = 0;
+  const sections = [];
+  for (const sec of doc?.sections || []) {
+    const products = [];
+    for (const p of sec.products || []) {
+      const key = String(p.advertiserId || "") + "|" + String(p.productId || "");
+      const a = byKey.get(key);
+      if (!a || a.status === ATTEMPT_STATUS.REFRESHED) {
+        products.push(p);
+        continue;
+      }
+      stamped += 1;
+      const retryHours = DEFAULT_RETRY_HOURS;
+      const nextCheckAt =
+        a.status === ATTEMPT_STATUS.RETRY_SCHEDULED ||
+        a.status === ATTEMPT_STATUS.TECHNICAL_FAILURE
+          ? new Date(Date.parse(nowIso) + retryHours * 3600000).toISOString()
+          : p.nextCheckAt || null;
+      products.push({
+        ...p,
+        lastRefreshAttemptAt: a.attemptedAt || nowIso,
+        lastRestoreAttempt: a.status,
+        refreshAttemptStatus: a.status,
+        refreshAttemptApiResult: a.apiResult || null,
+        nextCheckAt,
+        identityCollisionHold:
+          a.status === ATTEMPT_STATUS.INVALID_DATA ? true : p.identityCollisionHold === true,
+        publicationClass:
+          a.status === ATTEMPT_STATUS.INVALID_DATA
+            ? p.publicationClass || "IDENTITY_COLLISION"
+            : p.publicationClass,
+      });
+    }
+    sections.push({ ...sec, products });
+  }
+  return { doc: { ...doc, sections }, stamped };
 }
 
 /**
@@ -272,17 +524,21 @@ export function applyMissingRefreshAttemptsToDoc(doc, attemptResult, nowIso) {
 
 /**
  * Convenience: select + attempt + optional apply for a live offers doc.
+ * Merges durable RETRY queue so RETRY_SCHEDULED survives restart / next schedule.
  */
 export async function runMissingRefreshAttemptsOnOffersDoc(doc, opts = {}) {
   const nowIso = opts.nowIso || new Date().toISOString();
+  const nowMs = Date.parse(nowIso) || Date.now();
   const selected = selectMissingRefreshTargets(doc, {
-    nowMs: Date.parse(nowIso) || Date.now(),
+    nowMs,
     source: opts.source || null,
     includeHoldMissing: opts.includeHoldMissing === true,
     includeSourceTimestampCarry: opts.includeSourceTimestampCarry === true,
   });
+  const priorQueue = opts.retryQueue || emptyRetryQueue(nowIso);
+  const merged = mergeTargetsWithRetryQueue(selected.targets, priorQueue, { nowMs });
   const result = await attemptMissingRefreshBatch({
-    targets: selected.targets,
+    targets: merged.targets,
     gqlEnv: opts.gqlEnv,
     websitePid: opts.websitePid,
     emptyApiAdvertiserIds: opts.emptyApiAdvertiserIds,
@@ -294,12 +550,26 @@ export async function runMissingRefreshAttemptsOnOffersDoc(doc, opts = {}) {
     refreshedByKey: opts.refreshedByKey,
   });
   result.ledger.auditSummary = selected.auditSummary;
+  result.ledger.queueMerge = {
+    selectedOnly: merged.selectedOnly,
+    dueFromQueue: merged.dueFromQueue,
+    deferredNotDue: merged.deferredNotDue,
+    attemptedUnique: merged.targets.length,
+  };
+  const nextQueue = updateRetryQueueFromAttempts(priorQueue, result.ledger.attempts, {
+    nowIso,
+    runId: opts.runId,
+    retryHours: opts.retryHours,
+    maxAttempts: opts.maxAttempts,
+  });
+  result.ledger.retryQueueCounts = nextQueue.counts || null;
   let nextDoc = doc;
   let applyStats = null;
   if (opts.applyToDoc === true) {
     const applied = applyMissingRefreshAttemptsToDoc(doc, result, nowIso);
-    nextDoc = applied.doc;
-    applyStats = applied.stats;
+    const stamped = stampAttemptMetaOnDoc(applied.doc, result.ledger.attempts, nowIso);
+    nextDoc = stamped.doc;
+    applyStats = { ...applied.stats, stampedMeta: stamped.stamped };
   }
   return {
     doc: nextDoc,
@@ -308,6 +578,7 @@ export async function runMissingRefreshAttemptsOnOffersDoc(doc, opts = {}) {
     meta: result.meta,
     applyStats,
     selectedCount: selected.targets.length,
+    retryQueue: nextQueue,
   };
 }
 

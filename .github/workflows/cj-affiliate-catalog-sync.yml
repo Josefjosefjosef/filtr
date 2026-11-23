@@ -210,6 +210,10 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-lkg-missing-refresh-attempt-v51-8-selftest.mjs
       - name: Empty feed reprobe selftest (V51.8; offline)
         run: node scripts/iu-cj-affiliate-phase3z-empty-feed-reprobe-v51-8-selftest.mjs
+      - name: Empty feed reconcile selftest (V51.8; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-empty-feed-reconcile-v51-8-selftest.mjs
+      - name: Catalog shrinkage reconcile selftest (V51.8; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-catalog-shrinkage-reconcile-v51-8-selftest.mjs
       - name: Product evidence reconcile selftest (V36; offline)
         run: node scripts/iu-cj-affiliate-phase3z-product-evidence-v36-selftest.mjs
       - name: ProductIds refresh + cumulative coverage selftest (V37; offline)
@@ -1577,6 +1581,7 @@ jobs:
             projects/data/iu-affiliate-cj-refresh-coverage-v35.json
             projects/data/iu-affiliate-cj-miss-products-v38.json
             projects/data/iu-affiliate-cj-lkg-missing-refresh-attempts-v51-8.json
+            projects/data/iu-affiliate-cj-lkg-refresh-retry-queue-v51-8.json
             projects/data/iu-affiliate-cj-empty-feed-reprobe-v51-8.json
             projects/data/iu-affiliate-cj-feed-inventory-v40.json
             projects/data/iu-affiliate-cj-cumulative-coverage-v40.json
@@ -1610,6 +1615,7 @@ jobs:
             projects/data/iu-affiliate-cj-refresh-coverage-v35.json
             projects/data/iu-affiliate-cj-miss-products-v38.json
             projects/data/iu-affiliate-cj-lkg-missing-refresh-attempts-v51-8.json
+            projects/data/iu-affiliate-cj-lkg-refresh-retry-queue-v51-8.json
             projects/data/iu-affiliate-cj-empty-feed-reprobe-v51-8.json
             projects/data/iu-affiliate-cj-feed-inventory-v40.json
             projects/data/iu-affiliate-cj-cumulative-coverage-v40.json
