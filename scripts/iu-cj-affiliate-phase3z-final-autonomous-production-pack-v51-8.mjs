@@ -137,7 +137,8 @@ function buildLkgRefreshAudit(lkgAudit) {
       affiliateUrlValid: x.affiliateUrlValid,
       causeCode: x.causeCode,
       reasons: x.reasons,
-      note: "Safe refresh is schedule refresh_priority + LKG debt advertisers; no mass delete",
+      note:
+        "Safe refresh is schedule refresh_priority + post-LKG productIds MISSING_REFRESH attempts; no mass delete",
     })),
   };
 }
@@ -187,6 +188,33 @@ async function main() {
   } else if (feedCompleteness) {
     feedCompleteness.artifactDir = artifactDir;
   }
+
+  const missingRefreshAttempts =
+    (artifactDir &&
+      readJsonSafe(
+        path.join(artifactDir, "iu-affiliate-cj-lkg-missing-refresh-attempts-v51-8.json"),
+      )) ||
+    readJsonSafe(
+      path.join(
+        process.env.TEMP || "/tmp",
+        "iu-affiliate-cj-lkg-missing-refresh-attempts-v51-8.json",
+      ),
+    ) ||
+    {
+      schema: "iu-cj-affiliate-phase3z-lkg-missing-refresh-attempts-v51-8",
+      note: "No attempt ledger artifact yet — awaiting post-merge refresh_priority live run",
+      targetCount: null,
+      byStatus: null,
+    };
+  const emptyFeedReprobe =
+    (artifactDir &&
+      readJsonSafe(path.join(artifactDir, "iu-affiliate-cj-empty-feed-reprobe-v51-8.json"))) ||
+    {
+      schema: "iu-cj-affiliate-phase3z-empty-feed-reprobe-v51-8",
+      note: "No empty-feed reprobe artifact yet — awaiting post-merge live run",
+      targetCount: null,
+      byStatus: null,
+    };
 
   // Observation ledger hydrate + evaluate
   let observation = {
@@ -430,6 +458,8 @@ async function main() {
     LKG_FULL_INDIVIDUAL_AUDIT: lkgAudit,
     PUBLIC_HOLD_FULL_AUDIT: holdAudit,
     LKG_REFRESH_AUDIT: buildLkgRefreshAudit(lkgAudit),
+    LKG_MISSING_REFRESH_ATTEMPTS: missingRefreshAttempts,
+    EMPTY_FEED_REPROBE: emptyFeedReprobe,
     LKG_ROOT_CAUSES: {
       at: nowIso,
       byCause: lkgAudit.byCause || null,

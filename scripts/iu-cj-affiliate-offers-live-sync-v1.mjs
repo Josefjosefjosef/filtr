@@ -82,6 +82,12 @@ import {
   reverifyMissProductsFromCj,
 } from "./iu-cj-affiliate-phase3z-miss-reverify-v38.mjs";
 import {
+  runMissingRefreshAttemptsOnOffersDoc,
+} from "./iu-cj-affiliate-phase3z-lkg-missing-refresh-attempt-v51-8.mjs";
+import {
+  reprobeEmptyFeedPartners,
+} from "./iu-cj-affiliate-phase3z-empty-feed-reprobe-v51-8.mjs";
+import {
   buildCumulativeCoverageLedgerV40,
   buildFeedInventoryDocument,
   mergeFeedInventoryDocuments,
@@ -511,6 +517,76 @@ function toPublicProductCard(p, sectionKey) {
 }
 
 /**
+ * Union published product cards from primary + secondary docs (dedupe by advertiserId|productId).
+ * Primary fields win on collision. Used so refresh covers LIVE LKG keys before LKG merge.
+ */
+export function unionPublishedSectionsForRefresh(primary, secondary) {
+  const byKey = new Map();
+  const sectionMeta = new Map();
+  const ingest = (doc, preferExisting) => {
+    for (const sec of doc?.sections || []) {
+      const sk = String(sec?.sectionKey || "aff-ostatni");
+      if (!sectionMeta.has(sk)) {
+        sectionMeta.set(sk, {
+          sectionKey: sk,
+          partnerSlug: sec?.partnerSlug || null,
+          partnerName: sec?.partnerName || null,
+          advertiserId: sec?.advertiserId || null,
+          coupons: Array.isArray(sec?.coupons) ? sec.coupons : [],
+          actions: Array.isArray(sec?.actions) ? sec.actions : [],
+        });
+      }
+      for (const p of sec?.products || []) {
+        const key = String(p?.advertiserId || "") + "|" + String(p?.productId || "");
+        if (key === "|") continue;
+        if (preferExisting && byKey.has(key)) continue;
+        byKey.set(key, { ...p, _sectionKey: sk });
+      }
+    }
+  };
+  // Secondary first, then primary overwrites (primary = current build).
+  ingest(secondary, false);
+  ingest(primary, false);
+  const sectionProducts = new Map();
+  for (const [key, p] of byKey.entries()) {
+    const sk = p._sectionKey || "aff-ostatni";
+    if (!sectionProducts.has(sk)) sectionProducts.set(sk, []);
+    const { _sectionKey, ...rest } = p;
+    sectionProducts.get(sk).push(rest);
+    void key;
+    void _sectionKey;
+  }
+  const sections = [];
+  for (const [sk, meta] of sectionMeta.entries()) {
+    sections.push({
+      ...meta,
+      products: sectionProducts.get(sk) || [],
+    });
+  }
+  for (const [sk, products] of sectionProducts.entries()) {
+    if (sectionMeta.has(sk)) continue;
+    sections.push({
+      sectionKey: sk,
+      partnerSlug: null,
+      partnerName: null,
+      advertiserId: products[0]?.advertiserId || null,
+      coupons: [],
+      actions: [],
+      products,
+    });
+  }
+  return {
+    liveEnabled: primary?.liveEnabled === true || secondary?.liveEnabled === true,
+    sections,
+    stats: {
+      unionKeys: byKey.size,
+      primaryKeys: collectPublishedProductKeys(primary).length,
+      secondaryKeys: collectPublishedProductKeys(secondary).length,
+    },
+  };
+}
+
+/**
  * V37: prefer documented shoppingProducts(productIds) for published keys.
  * Scan-window remains fallback when productIds mode is disabled or fails closed per advertiser.
  * Window/productIds miss ≠ product deleted. Never invents sourceUpdatedAt.
@@ -558,12 +634,15 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
     }
   }
   // Fairness: among equal age cohorts, prefer partners with oldest lastScanAt (avoid starving large catalogs).
+  // Preserve LKG debt priority from orderAdvertisersForRefresh (MISSING_REFRESH reconnect).
   const ordered = orderAdvertisersForRefresh(keys, prevByKey).map((g) => {
     const cp = refreshCheckpoint.partners?.[g.advertiserId];
     const lastScanMs = cp?.lastScanAt ? Date.parse(cp.lastScanAt) : 0;
     return { ...g, lastScanMs: Number.isFinite(lastScanMs) ? lastScanMs : 0 };
   });
   ordered.sort((a, b) => {
+    if ((a.lkgDebt > 0) !== (b.lkgDebt > 0)) return a.lkgDebt > 0 ? -1 : 1;
+    if (a.lkgDebtRatio !== b.lkgDebtRatio) return b.lkgDebtRatio - a.lkgDebtRatio;
     if (a.anyRefresh !== b.anyRefresh) return a.anyRefresh ? 1 : -1;
     if (a.oldestMs !== b.oldestMs) return a.oldestMs - b.oldestMs;
     if (a.lastScanMs !== b.lastScanMs) return a.lastScanMs - b.lastScanMs;
@@ -1383,8 +1462,32 @@ export async function sampleProductsForManagedPartners(opts = {}) {
     inventoryPartners: Array.isArray(prevFeedInventory?.partners) ? prevFeedInventory.partners : [],
     starvationHours: Number(env.IU_CJ_OFFERS_STARVATION_HOURS) || 12,
   });
-  const sample = fairPick.selected.slice();
+  // V51.8: owner/ops deepen priority (e.g. Tierraverde 7612998 continuation) — front of sample.
+  const deepenPriorityIds = new Set(
+    String(env.IU_CJ_OFFERS_DEEPEN_PRIORITY_ADVERTISER_IDS || "")
+      .split(/[,;\s]+/)
+      .map((s) => s.trim())
+      .filter(Boolean),
+  );
+  let sample = fairPick.selected.slice();
+  if (deepenPriorityIds.size > 0) {
+    const head = [];
+    const rest = [];
+    for (const p of sample) {
+      if (deepenPriorityIds.has(String(p.advertiserId))) head.push(p);
+      else rest.push(p);
+    }
+    // Also inject active priority partners missing from fair sample (limit trim).
+    for (const p of active) {
+      const id = String(p.advertiserId);
+      if (!deepenPriorityIds.has(id)) continue;
+      if (head.some((x) => String(x.advertiserId) === id)) continue;
+      head.push(p);
+    }
+    sample = head.concat(rest);
+  }
   meta.sampledPartners = sample.length;
+  meta.deepenPriorityAdvertiserIds = [...deepenPriorityIds];
   meta.catalogFairness = {
     schema: fairPick.schema,
     counts: fairPick.counts,
@@ -1542,7 +1645,9 @@ export async function sampleProductsForManagedPartners(opts = {}) {
       partnerMeta.resumePagePresent = Boolean(resumePage);
       // V46/V51.8-c2: deepen incomplete partners; presentation slice still caps published rows.
       // V51.8 (18.11): deepenPartnerBudget prevents unbounded GAP_DEEPEN × pageSize=1000 load.
+      const priorityDeepen = deepenPriorityIds.has(partnerId);
       let needsDeepen =
+        priorityDeepen ||
         prevCp.lastStoppedEarlyForBudget === true ||
         (prevCp.lastComplete !== true && Number(prevCp.lastTotalCount || 0) > 0) ||
         Number(prevCp.productsRemainingEstimate || 0) > pageSize * maxPagesPerPartner ||
@@ -1551,6 +1656,7 @@ export async function sampleProductsForManagedPartners(opts = {}) {
         staleStuck === true;
       if (
         needsDeepen &&
+        !priorityDeepen &&
         deepenIncompleteMaxPages > maxPagesPerPartner &&
         deepenPartnerBudget > 0 &&
         deepenPartnersUsed >= deepenPartnerBudget
@@ -1558,6 +1664,7 @@ export async function sampleProductsForManagedPartners(opts = {}) {
         needsDeepen = false;
         partnerMeta.deepenDeferredBudget = true;
       }
+      if (priorityDeepen) partnerMeta.deepenPriority = true;
       const partnerMaxPages = needsDeepen ? deepenIncompleteMaxPages : maxPagesPerPartner;
       const stopAfter = pageSize * partnerMaxPages;
       partnerMeta.maxPagesBudget = partnerMaxPages;
@@ -2285,14 +2392,21 @@ export async function runOffersLiveSync(opts = {}) {
     doc.stagingBlockReason = stagingBlockReason;
   }
 
-  // Refresh targets = keys in the catalog we are about to publish (authoritative).
-  // Fall back to previous LIVE public when the new build has no products yet.
-  const refreshTargetDoc =
-    collectPublishedProductKeys(doc).length > 0
-      ? { liveEnabled: true, sections: doc.sections }
-      : prevPublic?.liveEnabled === true
-        ? prevPublic
-        : null;
+  // Refresh targets must include LIVE LKG keys. Discovery build alone can omit carried
+  // products (LKG merge runs later) — without union, MISSING_REFRESH never gets productIds attempts.
+  let refreshTargetDoc = null;
+  const docKeysN = collectPublishedProductKeys(doc).length;
+  const prevLive = prevPublic?.liveEnabled === true && collectPublishedProductKeys(prevPublic).length > 0;
+  if (prevLive && docKeysN > 0) {
+    refreshTargetDoc = unionPublishedSectionsForRefresh(
+      { liveEnabled: true, sections: doc.sections },
+      prevPublic,
+    );
+  } else if (docKeysN > 0) {
+    refreshTargetDoc = { liveEnabled: true, sections: doc.sections };
+  } else if (prevLive) {
+    refreshTargetDoc = prevPublic;
+  }
   if (doRefresh && refreshTargetDoc) {
     const refreshed = await refreshPublishedProductsFromCj({
       env,
@@ -2806,6 +2920,106 @@ export async function runOffersLiveSync(opts = {}) {
         publicEligibleAfter: released.publicEligibleAfter,
         holdSummary: summarizeLkgHoldProgress(doc),
       };
+    }
+
+    // V51.8: post-LKG MISSING_REFRESH attempt ledger (productIds). Covers keys restored after
+    // pre-merge refresh union, plus any residual stale carries.
+    {
+      const attemptPat =
+        env.IU_CJ_PAT || env.CJ_API_PAT || env.CJ_PERSONAL_ACCESS_TOKEN || "";
+      const attemptPublisher = String(env.IU_CJ_PUBLISHER_CID || "").trim();
+      const attemptEnabled = env.IU_CJ_OFFERS_MISSING_REFRESH_ATTEMPT !== "0" && Boolean(attemptPat);
+      if (attemptEnabled) {
+      const attemptGql = {
+        pat: attemptPat,
+        publisherCid: attemptPublisher,
+        websitePid: WEBSITE_PID,
+      };
+      const incompleteIds = [...(incompleteAdvertisers || [])].map(String);
+      const emptyIds = [];
+      try {
+        const contPath = path.join(dataDir, "iu-affiliate-cj-feed-continuation-v47.json");
+        if (fs.existsSync(contPath)) {
+          const contDoc = readJson(contPath, null);
+          for (const p of contDoc?.partners || []) {
+            if (p?.emptyApi === true && p.advertiserId) emptyIds.push(String(p.advertiserId));
+          }
+        }
+      } catch {
+        /* non-fatal */
+      }
+      const attemptRun = await runMissingRefreshAttemptsOnOffersDoc(doc, {
+        gqlEnv: attemptGql.pat ? attemptGql : null,
+        websitePid: WEBSITE_PID,
+        emptyApiAdvertiserIds: emptyIds,
+        incompleteAdvertiserIds: incompleteIds,
+        joinedAdvertiserIds: new Set(
+          (doc.sections || []).map((s) => String(s.advertiserId || "")).filter(Boolean),
+        ),
+        source: "post_lkg_merge",
+        applyToDoc: true,
+        runId: env.GITHUB_RUN_ID || null,
+        refreshedByKey,
+      });
+      doc = attemptRun.doc;
+      for (const [k, v] of attemptRun.refreshedByKey.entries()) refreshedByKey.set(k, v);
+      nextReady = readyCounts(doc);
+      const attemptPath = path.join(
+        dataDir,
+        "iu-affiliate-cj-lkg-missing-refresh-attempts-v51-8.json",
+      );
+      try {
+        fs.mkdirSync(dataDir, { recursive: true });
+        fs.writeFileSync(attemptPath, JSON.stringify(attemptRun.ledger, null, 2) + "\n", "utf8");
+      } catch {
+        /* non-fatal */
+      }
+      if (!publicationRestore) publicationRestore = {};
+      publicationRestore.missingRefreshAttempts = {
+        path: "projects/data/iu-affiliate-cj-lkg-missing-refresh-attempts-v51-8.json",
+        targetCount: attemptRun.ledger?.targetCount ?? 0,
+        byStatus: attemptRun.ledger?.byStatus || null,
+        applyStats: attemptRun.applyStats || null,
+        reverifyMeta: attemptRun.meta || null,
+      };
+      if (refreshMeta) {
+        refreshMeta.missingRefreshAttempts = publicationRestore.missingRefreshAttempts;
+      }
+      console.log(
+        JSON.stringify({
+          IU_CJ_MISSING_REFRESH_ATTEMPTS: "OK",
+          targetCount: attemptRun.ledger?.targetCount ?? 0,
+          byStatus: attemptRun.ledger?.byStatus || null,
+          applyStats: attemptRun.applyStats || null,
+        }),
+      );
+
+      // Individual re-verify of CJ_FEED_API_EMPTY partners (1-page probe).
+      if (env.IU_CJ_OFFERS_EMPTY_FEED_REPROBE !== "0" && emptyIds.length > 0) {
+        const reprobe = await reprobeEmptyFeedPartners({
+          partners: emptyIds.map((advertiserId) => ({ advertiserId })),
+          gqlEnv: attemptGql.pat ? attemptGql : null,
+        });
+        const reprobePath = path.join(dataDir, "iu-affiliate-cj-empty-feed-reprobe-v51-8.json");
+        try {
+          fs.writeFileSync(reprobePath, JSON.stringify(reprobe, null, 2) + "\n", "utf8");
+        } catch {
+          /* non-fatal */
+        }
+        publicationRestore.emptyFeedReprobe = {
+          path: "projects/data/iu-affiliate-cj-empty-feed-reprobe-v51-8.json",
+          targetCount: reprobe.targetCount,
+          byStatus: reprobe.byStatus,
+        };
+        console.log(
+          JSON.stringify({
+            IU_CJ_EMPTY_FEED_REPROBE: "OK",
+            targetCount: reprobe.targetCount,
+            byStatus: reprobe.byStatus,
+          }),
+        );
+      }
+      }
     }
 
     // V51.8-maint: preserve last-known availability when current source omits the field.

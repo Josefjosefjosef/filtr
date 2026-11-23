@@ -206,6 +206,10 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-48h-observation-ledger-v51-8-selftest.mjs
       - name: Feed completeness bilance selftest (V51.8; offline)
         run: node scripts/iu-cj-affiliate-phase3z-feed-completeness-v51-8-selftest.mjs
+      - name: LKG missing-refresh attempt selftest (V51.8; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-lkg-missing-refresh-attempt-v51-8-selftest.mjs
+      - name: Empty feed reprobe selftest (V51.8; offline)
+        run: node scripts/iu-cj-affiliate-phase3z-empty-feed-reprobe-v51-8-selftest.mjs
       - name: Product evidence reconcile selftest (V36; offline)
         run: node scripts/iu-cj-affiliate-phase3z-product-evidence-v36-selftest.mjs
       - name: ProductIds refresh + cumulative coverage selftest (V37; offline)
@@ -908,6 +912,9 @@ jobs:
       IU_CJ_OFFERS_DEEPEN_INCOMPLETE_MAX_PAGES: ${{ (github.event_name == 'schedule' && github.event.schedule != '17 3 * * *') && '6' || (github.event_name == 'workflow_dispatch' && inputs.offers_mode == 'refresh_priority' && '6' || '20') }}
       # Fair deepen budget: remainder continues via durable checkpoints next slot (no coverage loss).
       IU_CJ_OFFERS_DEEPEN_PARTNER_BUDGET: ${{ (github.event_name == 'schedule' && github.event.schedule != '17 3 * * *') && '24' || (github.event_name == 'workflow_dispatch' && inputs.offers_mode == 'refresh_priority' && '24' || '48') }}
+      # Tierraverde 7612998 continuation: always deepen-priority (not deferred by partner budget).
+      IU_CJ_OFFERS_DEEPEN_PRIORITY_ADVERTISER_IDS: "7612998"
+      IU_CJ_OFFERS_MISSING_REFRESH_ATTEMPT: "1"
       IU_CJ_OFFERS_MAX_UNIQUE_DROP_ABS: "50"
       IU_CJ_OFFERS_MAX_UNIQUE_DROP_RATIO: "0.03"
       # Public growth: absolute 500 + ratio 0.2 remain armed.
@@ -1569,6 +1576,8 @@ jobs:
             projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json
             projects/data/iu-affiliate-cj-refresh-coverage-v35.json
             projects/data/iu-affiliate-cj-miss-products-v38.json
+            projects/data/iu-affiliate-cj-lkg-missing-refresh-attempts-v51-8.json
+            projects/data/iu-affiliate-cj-empty-feed-reprobe-v51-8.json
             projects/data/iu-affiliate-cj-feed-inventory-v40.json
             projects/data/iu-affiliate-cj-cumulative-coverage-v40.json
             projects/data/iu-affiliate-cj-identity-repair-v40.json
@@ -1600,6 +1609,8 @@ jobs:
             projects/data/iu-affiliate-cj-product-feed-checkpoints-v31.json
             projects/data/iu-affiliate-cj-refresh-coverage-v35.json
             projects/data/iu-affiliate-cj-miss-products-v38.json
+            projects/data/iu-affiliate-cj-lkg-missing-refresh-attempts-v51-8.json
+            projects/data/iu-affiliate-cj-empty-feed-reprobe-v51-8.json
             projects/data/iu-affiliate-cj-feed-inventory-v40.json
             projects/data/iu-affiliate-cj-cumulative-coverage-v40.json
             projects/data/iu-affiliate-cj-identity-repair-v40.json
