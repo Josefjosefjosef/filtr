@@ -62,6 +62,86 @@ function ghJson(args) {
   }
 }
 
+function resolveCheckpointArtifactDir() {
+  const envDir = process.env.IU_CJ_DURABLE_CATALOG_DIR || process.env.IU_CJ_CHECKPOINT_DIR;
+  if (envDir && fs.existsSync(path.join(envDir, "iu-affiliate-cj-feed-inventory-v40.json"))) {
+    return envDir;
+  }
+  const candidates = [
+    path.join(process.env.TEMP || "/tmp", "iu-cj-cp-latest"),
+    path.join(process.env.TEMP || "/tmp", "iu-cj-line-a"),
+    path.join(process.env.TEMP || "/tmp", "iu-cj-cert-cp"),
+  ];
+  for (const c of candidates) {
+    if (fs.existsSync(path.join(c, "iu-affiliate-cj-feed-inventory-v40.json"))) return c;
+  }
+  // Download latest successful catalog-sync checkpoints into TEMP
+  const runs = ghJson([
+    "run",
+    "list",
+    "--workflow",
+    "cj-affiliate-catalog-sync.yml",
+    "--status",
+    "completed",
+    "--limit",
+    "15",
+    "--json",
+    "databaseId,conclusion,event,createdAt",
+  ]);
+  if (!runs.ok || !Array.isArray(runs.data)) return null;
+  const pick = runs.data.find((r) => r.conclusion === "success");
+  if (!pick?.databaseId) return null;
+  const dest = path.join(process.env.TEMP || "/tmp", "iu-cj-cert-cp");
+  fs.rmSync(dest, { recursive: true, force: true });
+  fs.mkdirSync(dest, { recursive: true });
+  const dl = spawnSync(
+    "gh",
+    [
+      "run",
+      "download",
+      String(pick.databaseId),
+      "-n",
+      "iu-affiliate-cj-product-feed-checkpoints",
+      "-D",
+      dest,
+    ],
+    { encoding: "utf8" },
+  );
+  if (dl.status !== 0) return null;
+  if (fs.existsSync(path.join(dest, "iu-affiliate-cj-feed-inventory-v40.json"))) return dest;
+  return null;
+}
+
+function buildLkgRefreshAudit(lkgAudit) {
+  const carried = Array.isArray(lkgAudit?.carried) ? lkgAudit.carried : [];
+  const missing = carried.filter((x) => x.causeCode === "MISSING_REFRESH");
+  return {
+    schema: "iu-cj-lkg-refresh-audit-v51-8",
+    at: new Date().toISOString(),
+    missingRefreshCount: missing.length,
+    carriedCount: carried.length,
+    items: missing.map((x) => ({
+      key: x.key,
+      advertiserId: x.advertiserId,
+      productId: x.productId,
+      feedId: x.feedId,
+      title: x.title,
+      lastVerifiedAt: x.lastVerifiedAt,
+      lastSuccessfulFetchAt: x.lastSuccessfulFetchAt,
+      dataAgeHours: x.dataAgeHours,
+      nextCheckAt: x.nextCheckAt,
+      lastRestoreAttempt: x.lastRestoreAttempt,
+      refreshResult: x.refreshResult,
+      partnershipStatus: x.partnershipStatus,
+      availability: x.availability,
+      affiliateUrlValid: x.affiliateUrlValid,
+      causeCode: x.causeCode,
+      reasons: x.reasons,
+      note: "Safe refresh is schedule refresh_priority + LKG debt advertisers; no mass delete",
+    })),
+  };
+}
+
 async function main() {
   const nowIso = new Date().toISOString();
   const stamp = nowIso.replace(/[-:]/g, "").replace(/\.\d+Z$/, "Z").replace("T", "-").slice(0, 15);
@@ -81,13 +161,32 @@ async function main() {
   const lkgAudit = readJsonSafe(lkgOut) || { error: "LKG_AUDIT_MISSING" };
   const holdAudit = readJsonSafe(holdOut) || { error: "HOLD_AUDIT_MISSING" };
 
-  // Feed completeness
+  // Feed completeness — require inventory/continuation artifacts (not offers-only).
   const feedOut = path.join(process.env.TEMP || "/tmp", `iu-feed-completeness-${stamp}.json`);
-  runNode("scripts/iu-cj-affiliate-phase3z-feed-completeness-v51-8.mjs", {
+  const artifactDir = resolveCheckpointArtifactDir();
+  const feedEnv = {
     IU_CJ_FEED_COMPLETENESS_OUT: feedOut,
     IU_CJ_OFFERS_PUBLIC_URL: OFFERS_URL,
-  });
+  };
+  if (artifactDir) {
+    feedEnv.IU_CJ_FEED_INVENTORY_PATH = path.join(
+      artifactDir,
+      "iu-affiliate-cj-feed-inventory-v40.json",
+    );
+    feedEnv.IU_CJ_DURABLE_CATALOG_DIR = artifactDir;
+    feedEnv.IU_CJ_FEED_CONTINUATION_PATH = path.join(
+      artifactDir,
+      "iu-affiliate-cj-feed-continuation-v47.json",
+    );
+  }
+  runNode("scripts/iu-cj-affiliate-phase3z-feed-completeness-v51-8.mjs", feedEnv);
   const feedCompleteness = readJsonSafe(feedOut) || { error: "FEED_COMPLETENESS_MISSING" };
+  if (feedCompleteness && !feedCompleteness.evaluation && feedCompleteness.partners) {
+    // Defensive: older docs without evaluation block
+    feedCompleteness.artifactDir = artifactDir;
+  } else if (feedCompleteness) {
+    feedCompleteness.artifactDir = artifactDir;
+  }
 
   // Observation ledger hydrate + evaluate
   let observation = {
@@ -175,6 +274,20 @@ async function main() {
       evidence: { cumulativeUsed, cumulativeCap },
     });
   }
+  const feedPass =
+    feedCompleteness.pass === true ||
+    feedCompleteness.ok === true ||
+    feedCompleteness.evaluation?.pass === true;
+  if (!feedPass) {
+    openBlockers.push({
+      id: "FEED_COMPLETENESS_FAIL",
+      evidence: {
+        unexplainedNonePublished: feedCompleteness.totals?.unexplainedNonePublished ?? null,
+        evaluation: feedCompleteness.evaluation || null,
+        artifactDir: feedCompleteness.artifactDir || artifactDir || null,
+      },
+    });
+  }
 
   const removableOpen =
     Number(lkgAudit.removableTechnicalCount || 0) > 0
@@ -257,8 +370,15 @@ async function main() {
         },
         {
           id: "FEED_COMPLETENESS",
-          pass: feedCompleteness.ok === true,
-          detail: feedCompleteness.totals || null,
+          pass:
+            feedCompleteness.pass === true ||
+            feedCompleteness.ok === true ||
+            feedCompleteness.evaluation?.pass === true,
+          detail: {
+            totals: feedCompleteness.totals || null,
+            evaluation: feedCompleteness.evaluation || null,
+            unexplainedNonePublished: feedCompleteness.totals?.unexplainedNonePublished ?? null,
+          },
         },
         {
           id: "GROWTH_GATE_0",
@@ -309,6 +429,7 @@ async function main() {
     },
     LKG_FULL_INDIVIDUAL_AUDIT: lkgAudit,
     PUBLIC_HOLD_FULL_AUDIT: holdAudit,
+    LKG_REFRESH_AUDIT: buildLkgRefreshAudit(lkgAudit),
     LKG_ROOT_CAUSES: {
       at: nowIso,
       byCause: lkgAudit.byCause || null,
