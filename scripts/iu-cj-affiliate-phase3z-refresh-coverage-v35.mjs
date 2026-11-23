@@ -152,10 +152,15 @@ export function orderAdvertisersForRefresh(keys, prevByKey = new Map()) {
     let oldestMs = null;
     let anyRefresh = false;
     let unknownCount = 0;
+    let lkgDebt = 0;
     for (const k of list) {
       const prev = prevByKey.get(advertiserId + "|" + k.productId);
       if (isUnknownFreshness(prev)) unknownCount += 1;
-      const ts = prev?.lastSuccessfulRefreshAt || prev?.fetchedAt || null;
+      if (prev?.lkgCarried === true || prev?.lkgPublicHold === true || prev?.lkgHold === true) {
+        lkgDebt += 1;
+      }
+      const ts =
+        prev?.lastVerifiedAt || prev?.lastSuccessfulRefreshAt || prev?.fetchedAt || null;
       if (ts) {
         anyRefresh = true;
         const ms = Date.parse(ts);
@@ -169,9 +174,14 @@ export function orderAdvertisersForRefresh(keys, prevByKey = new Map()) {
       anyRefresh,
       unknownCount,
       unknownRatio: list.length > 0 ? unknownCount / list.length : 0,
+      lkgDebt,
+      lkgDebtRatio: list.length > 0 ? lkgDebt / list.length : 0,
     });
   }
   scored.sort((a, b) => {
+    // Prefer advertisers with LKG carry/hold debt (reconnect live refresh).
+    if ((a.lkgDebt > 0) !== (b.lkgDebt > 0)) return a.lkgDebt > 0 ? -1 : 1;
+    if (a.lkgDebtRatio !== b.lkgDebtRatio) return b.lkgDebtRatio - a.lkgDebtRatio;
     // Prefer advertisers with any UNKNOWN products (risk of stale presentation).
     if ((a.unknownCount > 0) !== (b.unknownCount > 0)) return a.unknownCount > 0 ? -1 : 1;
     if (a.unknownRatio !== b.unknownRatio) return b.unknownRatio - a.unknownRatio;

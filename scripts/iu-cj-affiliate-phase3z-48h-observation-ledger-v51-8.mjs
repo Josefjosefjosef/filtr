@@ -1,14 +1,24 @@
 #!/usr/bin/env node
 /**
  * Durable 48h autonomous observation ledger (append-only).
- * Evaluates whether post-fix production observation window is complete.
+ * Restores prior ledger, hydrates GitHub schedule evidence, evaluates window.
  * Does NOT flip growth gate. Owner EXECUTE remains separate.
  */
 import fs from "node:fs";
 import path from "node:path";
+import { spawnSync } from "node:child_process";
 
 export const OBSERVATION_SCHEMA = "iu-cj-affiliate-phase3z-48h-observation-ledger-v51-8";
 export const WINDOW_HOURS = 48;
+
+/** Post-fix natural schedule after GH001/durable tip fix — observation restart anchor. */
+export const OBSERVATION_RESTART_AFTER_CRITICAL_FIX = {
+  startedAt: "2026-11-22T23:39:07.000Z",
+  anchorSha: "243d0282572f741fdc563ccdd1d233c1e21c3c21",
+  anchorRunId: "45084387230",
+  anchorNote:
+    "Restarted after critical schedule failures (tip-over-hard + GH001) were fixed; first post-fix natural SUCCESS 45084387230",
+};
 
 export function emptyObservationLedger(opts = {}) {
   return {
@@ -38,22 +48,48 @@ export function appendObservationEvent(ledger, event) {
     at: event.at || new Date().toISOString(),
     kind: event.kind || "catalog_sync",
     eventName: event.eventName || null,
-    runId: event.runId || null,
+    runId: event.runId != null ? String(event.runId) : null,
     headSha: event.headSha || null,
     conclusion: event.conclusion || null,
     offersLiveSync: event.offersLiveSync || null,
     uniqueProducts: event.uniqueProducts ?? null,
     notes: event.notes || null,
   };
+  // Deduplicate by runId+eventName
+  const exists = doc.events.some(
+    (e) => String(e.runId) === String(ev.runId) && e.eventName === ev.eventName,
+  );
+  if (!exists) doc.events.push(ev);
   if (!doc.startedAt && ev.conclusion === "success" && ev.eventName === "schedule") {
     doc.startedAt = ev.at;
     doc.anchorSha = ev.headSha || doc.anchorSha;
   }
-  doc.events.push(ev);
-  // Keep last 200 events
-  if (doc.events.length > 200) doc.events = doc.events.slice(-200);
+  if (doc.events.length > 400) doc.events = doc.events.slice(-400);
   doc.updatedAt = new Date().toISOString();
   doc.evaluation = evaluateObservationWindow(doc, { nowIso: ev.at });
+  return doc;
+}
+
+/**
+ * Apply critical-fix restart: drop pre-fix window if still anchored before fix.
+ */
+export function applyObservationRestartIfNeeded(ledger, restart = OBSERVATION_RESTART_AFTER_CRITICAL_FIX) {
+  const doc = loadObservationLedger(ledger);
+  const startMs = doc.startedAt ? Date.parse(doc.startedAt) : NaN;
+  const restartMs = Date.parse(restart.startedAt);
+  if (!Number.isFinite(restartMs)) return doc;
+  if (!Number.isFinite(startMs) || startMs < restartMs) {
+    doc.startedAt = restart.startedAt;
+    doc.anchorSha = restart.anchorSha;
+    doc.anchorNote = restart.anchorNote;
+    doc.restart = {
+      at: new Date().toISOString(),
+      fromStartedAt: Number.isFinite(startMs) ? new Date(startMs).toISOString() : null,
+      reason: "CRITICAL_SCHEDULE_FAILURES_FIXED",
+      anchorRunId: restart.anchorRunId,
+    };
+    // Keep events but evaluation only counts after new startedAt
+  }
   return doc;
 }
 
@@ -69,22 +105,32 @@ export function evaluateObservationWindow(ledger, opts = {}) {
       requiredHours: WINDOW_HOURS,
       scheduleSuccessCount: 0,
       scheduleFailureCount: 0,
+      catchupSuccessCount: 0,
       criticalFailuresAfterStart: [],
     };
   }
   const elapsedHours = Math.max(0, (nowMs - startMs) / 3600000);
-  const after = (doc.events || []).filter((e) => Date.parse(e.at) >= startMs);
+  const after = (doc.events || []).filter((e) => {
+    const t = Date.parse(e.at);
+    return Number.isFinite(t) && t >= startMs;
+  });
   const scheduleSuccess = after.filter(
     (e) => e.eventName === "schedule" && e.conclusion === "success",
   );
   const scheduleFailure = after.filter(
     (e) => e.eventName === "schedule" && e.conclusion === "failure",
   );
+  const catchupSuccess = after.filter(
+    (e) =>
+      e.eventName === "workflow_dispatch" &&
+      e.conclusion === "success" &&
+      /catchup|CATCHUP/i.test(String(e.notes || "")),
+  );
   const critical = after.filter(
     (e) =>
       e.conclusion === "failure" &&
-      (e.offersLiveSync === "failure" || e.kind === "catalog_sync") &&
-      e.eventName === "schedule",
+      e.eventName === "schedule" &&
+      (e.offersLiveSync === "failure" || e.kind === "catalog_sync"),
   );
   const complete =
     elapsedHours >= WINDOW_HOURS &&
@@ -103,9 +149,13 @@ export function evaluateObservationWindow(ledger, opts = {}) {
     requiredHours: WINDOW_HOURS,
     scheduleSuccessCount: scheduleSuccess.length,
     scheduleFailureCount: scheduleFailure.length,
+    catchupSuccessCount: catchupSuccess.length,
     criticalFailuresAfterStart: critical.slice(-10),
     startedAt: doc.startedAt,
     anchorSha: doc.anchorSha,
+    endsAt: new Date(startMs + WINDOW_HOURS * 3600000).toISOString(),
+    naturalScheduleOnly: true,
+    note: "Catchup workflow_dispatch is recorded for ops but never counted as natural schedule success.",
   };
 }
 
@@ -113,6 +163,58 @@ export function writeObservationLedger(absPath, ledger) {
   fs.mkdirSync(path.dirname(absPath), { recursive: true });
   fs.writeFileSync(absPath, JSON.stringify(ledger, null, 2) + "\n", "utf8");
   return absPath;
+}
+
+/**
+ * Hydrate schedule/catchup events from `gh run list` (optional; CI/local with gh).
+ */
+export function hydrateObservationFromGh(ledger, opts = {}) {
+  let doc = loadObservationLedger(ledger);
+  const limit = Math.max(20, Number(opts.limit) || 40);
+  const repo = opts.repo || process.env.GITHUB_REPOSITORY || "Josefjosefjosef/filtr";
+  const r = spawnSync(
+    "gh",
+    [
+      "run",
+      "list",
+      "--repo",
+      repo,
+      "--workflow",
+      "cj-affiliate-catalog-sync.yml",
+      "--limit",
+      String(limit),
+      "--json",
+      "databaseId,event,conclusion,status,createdAt,updatedAt,headSha,displayTitle",
+    ],
+    { encoding: "utf8" },
+  );
+  if (r.status !== 0) {
+    doc.hydrateError = String(r.stderr || r.stdout || "gh_run_list_failed").slice(0, 500);
+    return doc;
+  }
+  let runs = [];
+  try {
+    runs = JSON.parse(r.stdout || "[]");
+  } catch {
+    doc.hydrateError = "gh_json_parse_failed";
+    return doc;
+  }
+  for (const run of runs) {
+    if (run.status !== "completed") continue;
+    const isCatchup = /CATCHUP/i.test(String(run.displayTitle || ""));
+    doc = appendObservationEvent(doc, {
+      at: run.createdAt,
+      eventName: run.event,
+      runId: run.databaseId,
+      headSha: run.headSha,
+      conclusion: run.conclusion,
+      offersLiveSync: run.conclusion,
+      notes: isCatchup ? "CATCHUP_DISPATCH_NOT_SCHEDULE" : null,
+    });
+  }
+  doc.hydratedAt = new Date().toISOString();
+  doc.evaluation = evaluateObservationWindow(doc);
+  return doc;
 }
 
 const isDirect =
@@ -127,23 +229,28 @@ if (isDirect) {
   let doc = fs.existsSync(p)
     ? loadObservationLedger(JSON.parse(fs.readFileSync(p, "utf8")))
     : emptyObservationLedger({
-        startedAt: process.env.IU_CJ_OBSERVATION_STARTED_AT || null,
-        anchorSha: process.env.IU_CJ_OBSERVATION_ANCHOR_SHA || null,
-        anchorNote: "Seeded from first post-merge successful schedule 44961819737",
+        startedAt: process.env.IU_CJ_OBSERVATION_STARTED_AT || OBSERVATION_RESTART_AFTER_CRITICAL_FIX.startedAt,
+        anchorSha: process.env.IU_CJ_OBSERVATION_ANCHOR_SHA || OBSERVATION_RESTART_AFTER_CRITICAL_FIX.anchorSha,
+        anchorNote: OBSERVATION_RESTART_AFTER_CRITICAL_FIX.anchorNote,
       });
-  if (!doc.startedAt && process.env.IU_CJ_OBSERVATION_STARTED_AT) {
-    doc.startedAt = process.env.IU_CJ_OBSERVATION_STARTED_AT;
-    doc.anchorSha = process.env.IU_CJ_OBSERVATION_ANCHOR_SHA || doc.anchorSha;
+  doc = applyObservationRestartIfNeeded(doc);
+  if (process.env.IU_CJ_OBSERVATION_HYDRATE_GH === "1") {
+    doc = hydrateObservationFromGh(doc);
   }
   if (process.env.IU_CJ_OBSERVATION_APPEND === "1") {
-    // Map GitHub job.status (success/failure) onto conclusion.
     const jobStatus = String(process.env.IU_CJ_OBSERVATION_CONCLUSION || "").toLowerCase();
     const conclusion =
       jobStatus === "success" || jobStatus === "failure" || jobStatus === "cancelled"
         ? jobStatus
         : process.env.IU_CJ_OBSERVATION_CONCLUSION || null;
+    const eventName = process.env.IU_CJ_OBSERVATION_EVENT_NAME || null;
+    const notes =
+      process.env.IU_CJ_OBSERVATION_NOTES ||
+      (String(process.env.IU_CJ_CATCHUP_DISPATCH || "") === "1"
+        ? "CATCHUP_DISPATCH_NOT_SCHEDULE"
+        : null);
     doc = appendObservationEvent(doc, {
-      eventName: process.env.IU_CJ_OBSERVATION_EVENT_NAME || null,
+      eventName,
       runId: process.env.IU_CJ_OBSERVATION_RUN_ID || null,
       headSha: process.env.IU_CJ_OBSERVATION_HEAD_SHA || null,
       conclusion,
@@ -151,10 +258,11 @@ if (isDirect) {
       uniqueProducts: process.env.IU_CJ_OBSERVATION_UNIQUE
         ? Number(process.env.IU_CJ_OBSERVATION_UNIQUE)
         : null,
+      notes,
     });
   } else {
     doc.evaluation = evaluateObservationWindow(doc);
   }
   writeObservationLedger(p, doc);
-  console.log(JSON.stringify({ ok: true, path: p, evaluation: doc.evaluation }, null, 2));
+  console.log(JSON.stringify({ ok: true, path: p, evaluation: doc.evaluation, restart: doc.restart || null }, null, 2));
 }
