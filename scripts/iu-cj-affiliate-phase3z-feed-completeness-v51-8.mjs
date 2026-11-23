@@ -162,6 +162,7 @@ export function buildFeedCompleteness(opts = {}) {
     });
   }
 
+  const sorted = rows.sort((a, b) => String(a.advertiserId).localeCompare(String(b.advertiserId)));
   return {
     schema: "iu-cj-affiliate-phase3z-feed-completeness-v51-8",
     at: new Date().toISOString(),
@@ -185,7 +186,7 @@ export function buildFeedCompleteness(opts = {}) {
       holdProductRows: holdProducts,
       carriedProductRows: carriedProducts,
     },
-    partners: rows.sort((a, b) => String(a.advertiserId).localeCompare(String(b.advertiserId))),
+    partners: sorted,
     chain: [
       "CJ API",
       "available feeds (inventory)",
@@ -196,6 +197,62 @@ export function buildFeedCompleteness(opts = {}) {
       "growth gate/budget",
       "publication",
     ],
+  };
+}
+
+/** Evidence-based pass: unexplained silent losses must be zero; classified gaps are OK. */
+export function evaluateFeedCompletenessPass(doc) {
+  const partners = Array.isArray(doc?.partners) ? doc.partners : [];
+  const unexplained = partners.filter((p) =>
+    (p.gapReasons || []).includes("FEED_DECLARED_BUT_NONE_PUBLISHED"),
+  );
+  const cjEmpty = partners.filter((p) => (p.gapReasons || []).includes("CJ_FEED_API_EMPTY"));
+  const contPending = partners.filter((p) =>
+    (p.gapReasons || []).includes("INGESTION_CONTINUATION_PENDING"),
+  );
+  const growthBlocked = partners.filter((p) =>
+    (p.gapReasons || []).includes("GROWTH_BUDGET_BLOCKED_ELIGIBLE"),
+  );
+  const inventoryPresent = Number(doc?.totals?.partnersInInventory || 0) > 0;
+  const pass =
+    inventoryPresent &&
+    unexplained.length === 0 &&
+    Number(doc?.totals?.unexplainedNonePublished ?? unexplained.length) === 0;
+  return {
+    pass,
+    ok: pass,
+    inventoryPresent,
+    unexplainedNonePublished: unexplained.length,
+    cjFeedApiEmptyPartners: cjEmpty.length,
+    ingestionContinuationPending: contPending.length,
+    growthBudgetBlockedPartners: growthBlocked.length,
+    criteria: [
+      "inventory snapshot present (partnersInInventory > 0)",
+      "unexplainedNonePublished === 0 (no FEED_DECLARED_BUT_NONE_PUBLISHED)",
+      "CJ_FEED_API_EMPTY / GROWTH_BUDGET_BLOCKED / CONTINUATION_PENDING are classified external/ops limits, not silent loss",
+    ],
+    externalLimitations: cjEmpty.map((p) => ({
+      advertiserId: p.advertiserId,
+      partnerName: p.partnerName,
+      declaredProductCount: p.declaredProductCount,
+      continuation: p.continuation || null,
+      classification: "CJ_FEED_API_EMPTY",
+      note: "CJ product-search returned empty despite inventory declared count — external/source limit",
+    })),
+    continuationEvidence: contPending.map((p) => ({
+      advertiserId: p.advertiserId,
+      partnerName: p.partnerName,
+      declaredProductCount: p.declaredProductCount,
+      continuation: p.continuation || null,
+      classification: "INGESTION_CONTINUATION_PENDING",
+    })),
+    growthBudgetEvidence: growthBlocked.map((p) => ({
+      advertiserId: p.advertiserId,
+      partnerName: p.partnerName,
+      eligibleProducts: p.eligibleProducts,
+      growthBudgetBlocked: p.growthBudgetBlocked,
+      classification: "GROWTH_BUDGET_BLOCKED_ELIGIBLE",
+    })),
   };
 }
 
@@ -280,22 +337,30 @@ async function main() {
   doc.totals.unexplainedNonePublished = doc.partners.filter((p) =>
     (p.gapReasons || []).includes("FEED_DECLARED_BUT_NONE_PUBLISHED"),
   ).length;
+  doc.evaluation = evaluateFeedCompletenessPass(doc);
+  doc.ok = doc.evaluation.ok === true;
+  doc.pass = doc.evaluation.pass === true;
   fs.writeFileSync(outPath, JSON.stringify(doc, null, 2) + "\n", "utf8");
   console.log(
     JSON.stringify(
       {
-        ok: true,
+        ok: doc.ok,
+        pass: doc.pass,
         outPath,
         partners: doc.partners.length,
         totals: doc.totals,
         gapPartners: doc.partners.filter((p) => (p.gapReasons || []).length).length,
         unexplainedNonePublished: doc.totals.unexplainedNonePublished,
         growthBudgetBlockedPartners: doc.totals.growthBudgetBlockedPartners,
+        cjFeedApiEmptyPartners: doc.totals.cjFeedApiEmptyPartners,
+        ingestionContinuationPending: doc.totals.ingestionContinuationPending,
+        evaluation: doc.evaluation,
       },
       null,
       2,
     ),
   );
+  if (!doc.pass) process.exitCode = 2;
 }
 
 const isDirect =

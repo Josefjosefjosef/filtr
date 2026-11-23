@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 import assert from "node:assert/strict";
-import { buildFeedCompleteness } from "./iu-cj-affiliate-phase3z-feed-completeness-v51-8.mjs";
+import {
+  buildFeedCompleteness,
+  evaluateFeedCompletenessPass,
+} from "./iu-cj-affiliate-phase3z-feed-completeness-v51-8.mjs";
 
 const inventory = {
   counts: { partnersListed: 2, partnersWithFeed: 1, declaredProductCountSum: 10 },
@@ -86,4 +89,40 @@ const emptyApi = buildFeedCompleteness({
   continuationByAdvertiser: { "8": { offset: 1, mode: "offset", emptyApi: true, currentLoaded: 0 } },
 });
 assert.deepEqual(emptyApi.partners[0].gapReasons, ["CJ_FEED_API_EMPTY"]);
-console.log(JSON.stringify({ IU_CJ_FEED_COMPLETENESS_V51_8_SELFTEST: "PASS", partners: doc.partners.length }));
+emptyApi.totals = emptyApi.totals || {};
+emptyApi.totals.unexplainedNonePublished = 0;
+emptyApi.totals.partnersInInventory = 1;
+const emptyEval = evaluateFeedCompletenessPass(emptyApi);
+assert.equal(emptyEval.pass, true);
+assert.equal(emptyEval.cjFeedApiEmptyPartners, 1);
+assert.equal(emptyEval.externalLimitations.length, 1);
+
+const unexplained = buildFeedCompleteness({
+  inventory: {
+    partners: [
+      {
+        advertiserId: "7",
+        partnerName: "Silent",
+        joined: true,
+        hasFeed: true,
+        declaredProductCountSum: 20,
+      },
+    ],
+  },
+  offers: { publicGrowthBudget: { cumulativeRemaining: 0 }, sections: [] },
+});
+unexplained.totals = unexplained.totals || {};
+unexplained.totals.partnersInInventory = 1;
+unexplained.totals.unexplainedNonePublished = 1;
+const badEval = evaluateFeedCompletenessPass(unexplained);
+assert.equal(badEval.pass, false);
+assert.equal(badEval.unexplainedNonePublished, 1);
+
+console.log(
+  JSON.stringify({
+    IU_CJ_FEED_COMPLETENESS_V51_8_SELFTEST: "PASS",
+    partners: doc.partners.length,
+    emptyApiPass: emptyEval.pass,
+    unexplainedFail: badEval.pass === false,
+  }),
+);
