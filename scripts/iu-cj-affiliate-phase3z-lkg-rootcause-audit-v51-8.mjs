@@ -106,10 +106,12 @@ export function classifyLkgProductFull(p, sec, nowMs = Date.now()) {
   } else if (isHold) causeCode = LKG_CAUSE.PROTECTIVE_HOLD;
   else if (isCarry) causeCode = LKG_CAUSE.MISSING_REFRESH;
 
+  // SOURCE_TIMESTAMP_UNAVAILABLE is truthful CJ limitation (not inventable) — not a removable defect.
   const removableTechnical =
     causeCode === LKG_CAUSE.MISSING_REFRESH ||
-    causeCode === LKG_CAUSE.SOURCE_TIMESTAMP_UNAVAILABLE_CARRY ||
-    causeCode === LKG_CAUSE.INGESTION_TECHNICAL;
+    causeCode === LKG_CAUSE.INGESTION_TECHNICAL ||
+    causeCode === LKG_CAUSE.INVALID_AFFILIATE_URL ||
+    causeCode === LKG_CAUSE.IDENTITY_COLLISION;
 
   return {
     key: productKey(p),
