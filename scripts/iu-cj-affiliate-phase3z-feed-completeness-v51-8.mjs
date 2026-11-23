@@ -11,6 +11,7 @@ export function buildFeedCompleteness(opts = {}) {
   const offers = opts.offers || {};
   const growth = offers.publicGrowthBudget || opts.growth || {};
   const durableByAdv = opts.durableEligibleByAdvertiser || {};
+  const continuationByAdv = opts.continuationByAdvertiser || {};
   const partners = Array.isArray(inventory.partners) ? inventory.partners : [];
   const growthRemaining =
     growth.cumulativeRemaining != null
@@ -73,11 +74,24 @@ export function buildFeedCompleteness(opts = {}) {
     if (partner.hasFeed === true && declared === 0 && published === 0 && durableEligible === 0) {
       gaps.push("EMPTY_FEED");
     }
+    const cont = continuationByAdv[adv] || null;
+    const cjFeedApiEmpty = cont && cont.emptyApi === true && Number(cont.currentLoaded || 0) === 0;
+    const contPending =
+      cont &&
+      !cjFeedApiEmpty &&
+      (Number(cont.offset) <= 1 ||
+        cont.mode === "feed" ||
+        cont.status === "pending" ||
+        cont.status === "in_progress");
     if (partner.hasFeed === true && declared != null && declared > 0 && published === 0) {
       if (durableEligible > 0 && growthExhausted) {
         gaps.push("GROWTH_BUDGET_BLOCKED_ELIGIBLE");
       } else if (durableEligible > 0) {
         gaps.push("DURABLE_ELIGIBLE_AWAITING_PUBLICATION");
+      } else if (cjFeedApiEmpty) {
+        gaps.push("CJ_FEED_API_EMPTY");
+      } else if (contPending) {
+        gaps.push("INGESTION_CONTINUATION_PENDING");
       } else {
         gaps.push("FEED_DECLARED_BUT_NONE_PUBLISHED");
       }
@@ -105,13 +119,18 @@ export function buildFeedCompleteness(opts = {}) {
       holdProducts: hold,
       carriedProducts: carried,
       growthBudgetBlocked: durableEligible > 0 && growthExhausted ? durableEligible : null,
+      continuation: cont,
       gapReasons: gaps,
       note:
         declared == null
           ? "CJ declared total unknown/null for partner — report processed/published only"
           : durableEligible > 0 && published === 0 && growthExhausted
             ? "Eligible durable products present; public growth cumulative budget exhausted (not silent feed loss)"
-            : "declaredProductCountSum is inventory-declared, not a guarantee of CJ API completeness",
+            : cjFeedApiEmpty
+              ? "CJ product-search API returns empty for authorized feed despite inventory declared count"
+              : contPending && published === 0
+                ? "Progressive feed continuation pending (offset/cursor) — not silent post-ingest loss"
+                : "declaredProductCountSum is inventory-declared, not a guarantee of CJ API completeness",
     });
   }
 
@@ -218,7 +237,32 @@ async function main() {
   }
   const offers = await (await fetch(offersUrl)).json();
   const durableEligibleByAdvertiser = loadDurableEligibleByAdvertiser(durableDir);
-  const doc = buildFeedCompleteness({ inventory, offers, durableEligibleByAdvertiser });
+  const continuationByAdvertiser = {};
+  const contPath =
+    process.env.IU_CJ_FEED_CONTINUATION_PATH ||
+    path.join(durableDir, "iu-affiliate-cj-feed-continuation-v47.json");
+  if (fs.existsSync(contPath)) {
+    const contDoc = JSON.parse(fs.readFileSync(contPath, "utf8"));
+    for (const p of contDoc.partners || []) {
+      const adv = String(p.advertiserId || "").trim();
+      if (!adv) continue;
+      continuationByAdvertiser[adv] = {
+        offset: p.nextCursor?.offset ?? p.checkpoint?.offset ?? p.offset ?? null,
+        mode: p.nextCursor?.mode ?? p.checkpoint?.mode ?? p.mode ?? null,
+        status: p.status || p.continuationStatus || null,
+        emptyApi: p.emptyApi === true,
+        currentLoaded: p.currentLoaded ?? p.loadedProducts ?? null,
+        completePassCount: p.completePassCount ?? null,
+        lastError: p.lastError || null,
+      };
+    }
+  }
+  const doc = buildFeedCompleteness({
+    inventory,
+    offers,
+    durableEligibleByAdvertiser,
+    continuationByAdvertiser,
+  });
   doc.totals.durableEligibleAdvertisers = Object.keys(durableEligibleByAdvertiser).length;
   doc.totals.durableEligibleProducts = Object.values(durableEligibleByAdvertiser).reduce(
     (n, v) => n + Number(v || 0),
@@ -226,6 +270,12 @@ async function main() {
   );
   doc.totals.growthBudgetBlockedPartners = doc.partners.filter((p) =>
     (p.gapReasons || []).includes("GROWTH_BUDGET_BLOCKED_ELIGIBLE"),
+  ).length;
+  doc.totals.ingestionContinuationPending = doc.partners.filter((p) =>
+    (p.gapReasons || []).includes("INGESTION_CONTINUATION_PENDING"),
+  ).length;
+  doc.totals.cjFeedApiEmptyPartners = doc.partners.filter((p) =>
+    (p.gapReasons || []).includes("CJ_FEED_API_EMPTY"),
   ).length;
   doc.totals.unexplainedNonePublished = doc.partners.filter((p) =>
     (p.gapReasons || []).includes("FEED_DECLARED_BUT_NONE_PUBLISHED"),

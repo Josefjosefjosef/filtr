@@ -70,4 +70,20 @@ const blocked = buildFeedCompleteness({
 });
 assert.deepEqual(blocked.partners[0].gapReasons, ["GROWTH_BUDGET_BLOCKED_ELIGIBLE"]);
 assert.equal(blocked.partners[0].growthBudgetBlocked, 40);
+const emptyApi = buildFeedCompleteness({
+  inventory: {
+    partners: [
+      {
+        advertiserId: "8",
+        partnerName: "EmptyAPI",
+        joined: true,
+        hasFeed: true,
+        declaredProductCountSum: 50,
+      },
+    ],
+  },
+  offers: { publicGrowthBudget: { cumulativeRemaining: 0 }, sections: [] },
+  continuationByAdvertiser: { "8": { offset: 1, mode: "offset", emptyApi: true, currentLoaded: 0 } },
+});
+assert.deepEqual(emptyApi.partners[0].gapReasons, ["CJ_FEED_API_EMPTY"]);
 console.log(JSON.stringify({ IU_CJ_FEED_COMPLETENESS_V51_8_SELFTEST: "PASS", partners: doc.partners.length }));
