@@ -2,8 +2,10 @@
 import assert from "node:assert/strict";
 import {
   appendObservationEvent,
+  applyObservationRestartIfNeeded,
   emptyObservationLedger,
   evaluateObservationWindow,
+  OBSERVATION_RESTART_AFTER_CRITICAL_FIX,
 } from "./iu-cj-affiliate-phase3z-48h-observation-ledger-v51-8.mjs";
 
 let doc = emptyObservationLedger({ anchorSha: "abc" });
@@ -56,5 +58,14 @@ clean = appendObservationEvent(clean, {
 const done = evaluateObservationWindow(clean, { nowIso: "2026-11-22T01:00:00.000Z" });
 assert.equal(done.complete, true);
 assert.equal(done.reason, "OBSERVATION_48H_CLEAN");
+
+// After critical failures, restart window to post-fix natural schedule.
+let restarted = applyObservationRestartIfNeeded(doc, OBSERVATION_RESTART_AFTER_CRITICAL_FIX);
+assert.equal(restarted.startedAt, OBSERVATION_RESTART_AFTER_CRITICAL_FIX.startedAt);
+const afterRestart = evaluateObservationWindow(restarted, {
+  nowIso: "2026-11-23T12:00:00.000Z",
+});
+assert.equal(afterRestart.reason, "PENDING_48H_ELAPSED");
+assert.equal(afterRestart.criticalFailuresAfterStart.length, 0);
 
 console.log(JSON.stringify({ IU_CJ_48H_OBSERVATION_LEDGER_SELFTEST: "PASS" }));
