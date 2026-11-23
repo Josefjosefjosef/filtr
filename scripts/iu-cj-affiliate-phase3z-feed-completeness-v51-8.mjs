@@ -10,7 +10,15 @@ export function buildFeedCompleteness(opts = {}) {
   const inventory = opts.inventory || {};
   const offers = opts.offers || {};
   const growth = offers.publicGrowthBudget || opts.growth || {};
+  const durableByAdv = opts.durableEligibleByAdvertiser || {};
   const partners = Array.isArray(inventory.partners) ? inventory.partners : [];
+  const growthRemaining =
+    growth.cumulativeRemaining != null
+      ? Number(growth.cumulativeRemaining)
+      : growth.maxCumulativeAbs != null && growth.cumulativeAddedSinceBaseline != null
+        ? Number(growth.maxCumulativeAbs) - Number(growth.cumulativeAddedSinceBaseline)
+        : null;
+  const growthExhausted = growthRemaining === 0 || Number(growth.allowedNew) === 0;
   const byAdvPublished = {};
   let publishedProducts = 0;
   let holdProducts = 0;
@@ -59,11 +67,20 @@ export function buildFeedCompleteness(opts = {}) {
     const published = pub.publishedUnique.size;
     const hold = pub.holdUnique.size;
     const carried = pub.carriedUnique.size;
+    const durableEligible = Number(durableByAdv[adv] || 0);
     const gaps = [];
     if (partner.hasFeed !== true && published > 0) gaps.push("PUBLISHED_WITHOUT_CURRENT_FEED_FLAG");
-    if (partner.hasFeed === true && declared === 0 && published === 0) gaps.push("EMPTY_FEED");
+    if (partner.hasFeed === true && declared === 0 && published === 0 && durableEligible === 0) {
+      gaps.push("EMPTY_FEED");
+    }
     if (partner.hasFeed === true && declared != null && declared > 0 && published === 0) {
-      gaps.push("FEED_DECLARED_BUT_NONE_PUBLISHED");
+      if (durableEligible > 0 && growthExhausted) {
+        gaps.push("GROWTH_BUDGET_BLOCKED_ELIGIBLE");
+      } else if (durableEligible > 0) {
+        gaps.push("DURABLE_ELIGIBLE_AWAITING_PUBLICATION");
+      } else {
+        gaps.push("FEED_DECLARED_BUT_NONE_PUBLISHED");
+      }
     }
     if (partner.joined === false && published > 0) gaps.push("PUBLISHED_WHILE_NOT_JOINED");
     if (partner.inventoryStatus && /error|blocked/i.test(String(partner.inventoryStatus))) {
@@ -83,16 +100,18 @@ export function buildFeedCompleteness(opts = {}) {
       processedItems: null,
       deduplicatedItems: null,
       rejectedItems: null,
-      eligibleProducts: null,
+      eligibleProducts: durableEligible > 0 ? durableEligible : null,
       publishedProducts: published,
       holdProducts: hold,
       carriedProducts: carried,
-      growthBudgetBlocked: null,
+      growthBudgetBlocked: durableEligible > 0 && growthExhausted ? durableEligible : null,
       gapReasons: gaps,
       note:
         declared == null
           ? "CJ declared total unknown/null for partner — report processed/published only"
-          : "declaredProductCountSum is inventory-declared, not a guarantee of CJ API completeness",
+          : durableEligible > 0 && published === 0 && growthExhausted
+            ? "Eligible durable products present; public growth cumulative budget exhausted (not silent feed loss)"
+            : "declaredProductCountSum is inventory-declared, not a guarantee of CJ API completeness",
     });
   }
 
@@ -161,6 +180,24 @@ export function buildFeedCompleteness(opts = {}) {
   };
 }
 
+function loadDurableEligibleByAdvertiser(dirAbs) {
+  const out = {};
+  if (!dirAbs || !fs.existsSync(dirAbs)) return out;
+  const names = fs.readdirSync(dirAbs).filter((n) =>
+    /^iu-affiliate-cj-durable-catalog-shard-v51-.*\.json$/i.test(n),
+  );
+  for (const name of names) {
+    const shard = JSON.parse(fs.readFileSync(path.join(dirAbs, name), "utf8"));
+    const products = shard.products || {};
+    for (const key of Object.keys(products)) {
+      const adv = String(key.split("|")[0] || "").trim();
+      if (!adv) continue;
+      out[adv] = (out[adv] || 0) + 1;
+    }
+  }
+  return out;
+}
+
 async function main() {
   const invPath =
     process.env.IU_CJ_FEED_INVENTORY_PATH ||
@@ -171,13 +208,28 @@ async function main() {
   const outPath =
     process.env.IU_CJ_FEED_COMPLETENESS_OUT ||
     path.join(process.env.TEMP || "/tmp", "iu-feed-completeness.json");
+  const durableDir =
+    process.env.IU_CJ_DURABLE_CATALOG_DIR ||
+    path.dirname(invPath);
 
   let inventory = {};
   if (fs.existsSync(invPath)) {
     inventory = JSON.parse(fs.readFileSync(invPath, "utf8"));
   }
   const offers = await (await fetch(offersUrl)).json();
-  const doc = buildFeedCompleteness({ inventory, offers });
+  const durableEligibleByAdvertiser = loadDurableEligibleByAdvertiser(durableDir);
+  const doc = buildFeedCompleteness({ inventory, offers, durableEligibleByAdvertiser });
+  doc.totals.durableEligibleAdvertisers = Object.keys(durableEligibleByAdvertiser).length;
+  doc.totals.durableEligibleProducts = Object.values(durableEligibleByAdvertiser).reduce(
+    (n, v) => n + Number(v || 0),
+    0,
+  );
+  doc.totals.growthBudgetBlockedPartners = doc.partners.filter((p) =>
+    (p.gapReasons || []).includes("GROWTH_BUDGET_BLOCKED_ELIGIBLE"),
+  ).length;
+  doc.totals.unexplainedNonePublished = doc.partners.filter((p) =>
+    (p.gapReasons || []).includes("FEED_DECLARED_BUT_NONE_PUBLISHED"),
+  ).length;
   fs.writeFileSync(outPath, JSON.stringify(doc, null, 2) + "\n", "utf8");
   console.log(
     JSON.stringify(
@@ -187,6 +239,8 @@ async function main() {
         partners: doc.partners.length,
         totals: doc.totals,
         gapPartners: doc.partners.filter((p) => (p.gapReasons || []).length).length,
+        unexplainedNonePublished: doc.totals.unexplainedNonePublished,
+        growthBudgetBlockedPartners: doc.totals.growthBudgetBlockedPartners,
       },
       null,
       2,

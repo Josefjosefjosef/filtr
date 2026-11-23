@@ -26,7 +26,12 @@ const inventory = {
 };
 const offers = {
   stats: { uniqueProducts: 1 },
-  publicGrowthBudget: { cumulativeAddedSinceBaseline: 500, cumulativeRemaining: 0, deferredNew: 9 },
+  publicGrowthBudget: {
+    cumulativeAddedSinceBaseline: 500,
+    cumulativeRemaining: 0,
+    allowedNew: 0,
+    deferredNew: 9,
+  },
   sections: [
     {
       sectionKey: "aff-elektro",
@@ -34,8 +39,35 @@ const offers = {
     },
   ],
 };
-const doc = buildFeedCompleteness({ inventory, offers });
+const doc = buildFeedCompleteness({
+  inventory,
+  offers,
+  durableEligibleByAdvertiser: { "1": 10 },
+});
 assert.equal(doc.partners.length, 2);
 assert.equal(doc.partners.find((p) => p.advertiserId === "1").publishedProducts, 1);
 assert.equal(doc.growthBudget.cumulativeRemaining, 0);
+const a = doc.partners.find((p) => p.advertiserId === "1");
+assert.ok(!(a.gapReasons || []).includes("FEED_DECLARED_BUT_NONE_PUBLISHED"));
+const inv2 = {
+  partners: [
+    {
+      advertiserId: "9",
+      partnerName: "Blocked",
+      joined: true,
+      hasFeed: true,
+      declaredProductCountSum: 100,
+    },
+  ],
+};
+const blocked = buildFeedCompleteness({
+  inventory: inv2,
+  offers: {
+    publicGrowthBudget: { cumulativeRemaining: 0, allowedNew: 0 },
+    sections: [],
+  },
+  durableEligibleByAdvertiser: { "9": 40 },
+});
+assert.deepEqual(blocked.partners[0].gapReasons, ["GROWTH_BUDGET_BLOCKED_ELIGIBLE"]);
+assert.equal(blocked.partners[0].growthBudgetBlocked, 40);
 console.log(JSON.stringify({ IU_CJ_FEED_COMPLETENESS_V51_8_SELFTEST: "PASS", partners: doc.partners.length }));
