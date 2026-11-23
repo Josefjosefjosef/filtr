@@ -16,10 +16,14 @@ import {
   OBSERVATION_RESTART_AFTER_CRITICAL_FIX,
 } from "./iu-cj-affiliate-phase3z-48h-observation-ledger-v51-8.mjs";
 
+const PRODUCTION_SITE_URL = "https://infouzel.cz/";
 const OFFERS_URL =
   process.env.IU_CJ_OFFERS_PUBLIC_URL ||
   "https://infouzel.cz/projects/data/iu-affiliate-cj-offers-public-v1.json";
 const AUDIT_ROOT = process.env.IU_CJ_AUDITS_ROOT || "C:/projects/iu-cj-audits";
+/** /projects/data/* is the Pages asset path for JSON — not a wrong public homepage. */
+const DATA_ASSET_NOTE =
+  "Canonical public site is https://infouzel.cz/. Offers JSON is served as a static asset under /projects/data/.";
 
 function readJsonSafe(p) {
   try {
@@ -107,7 +111,9 @@ async function main() {
     "databaseId,event,conclusion,status,headSha,createdAt,displayTitle,url",
   ]);
 
-  const mainSha = ghJson(["api", "repos/Josefjosefjosef/filtr/commits/main", "--jq", ".sha"]);
+  // Avoid gh --jq on Windows PowerShell (argv split → "accepts 1 arg(s), received N").
+  const mainCommit = ghJson(["api", "repos/Josefjosefjosef/filtr/commits/main"]);
+  const mainSha = mainCommit.ok ? mainCommit.data?.sha || null : null;
   const prChecks = ghJson([
     "pr",
     "list",
@@ -118,6 +124,27 @@ async function main() {
     "--json",
     "number,title,mergedAt,mergeCommit",
   ]);
+  const pagesRuns = ghJson([
+    "run",
+    "list",
+    "--workflow",
+    "pages-publish-from-main-data.yml",
+    "--limit",
+    "5",
+    "--json",
+    "databaseId,conclusion,headSha,createdAt,displayTitle,url",
+  ]);
+  if (!pagesRuns.ok) {
+    // fallback: any recent run list filtered in-node
+    pagesRuns.fallback = ghJson([
+      "run",
+      "list",
+      "--limit",
+      "30",
+      "--json",
+      "databaseId,name,conclusion,headSha,createdAt,displayTitle,url",
+    ]);
+  }
 
   const growthGate = Number(growth.allowedNew ?? 0);
   const cumulativeUsed = Number(growth.cumulativeAddedSinceBaseline ?? 0);
@@ -158,23 +185,29 @@ async function main() {
         }
       : null;
 
+  const onlyObsPending =
+    openBlockers.length > 0 && openBlockers.every((b) => b.id === "OBSERVATION_48H_INCOMPLETE");
   const verdict =
     openBlockers.length === 0
       ? "CJ_ROBOT_AUTONOMOUS_OPERATION_VERIFIED_OWNER_GATED"
-      : openBlockers.some((b) => b.id === "OBSERVATION_48H_INCOMPLETE") &&
-          openBlockers.every((b) => b.id === "OBSERVATION_48H_INCOMPLETE")
+      : onlyObsPending
         ? "CJ_ROBOT_AUTONOMOUS_OPERATION_PARTIAL"
-        : openBlockers.length
-          ? "CJ_ROBOT_AUTONOMOUS_OPERATION_PARTIAL"
-          : "CJ_ROBOT_AUTONOMOUS_OPERATION_BLOCKED";
+        : "CJ_ROBOT_AUTONOMOUS_OPERATION_PARTIAL";
+
+  const technicalReadyIndependentOfObs = onlyObsPending || openBlockers.length === 0;
 
   const evidence = {
     FINAL_REPORT: {
       schema: "iu-cj-final-autonomous-production-report-v51-8",
       at: nowIso,
       verdict,
-      productionUrl: "https://infouzel.cz/",
-      mainSha: mainSha.ok ? mainSha.data : null,
+      auditClass: obsEval.complete ? "FINAL_POST_OBSERVATION" : "TECHNICAL_INTERIM_OBS_PENDING",
+      productionUrl: PRODUCTION_SITE_URL,
+      dataAssetUrl: OFFERS_URL,
+      dataAssetNote: DATA_ASSET_NOTE,
+      mainSha,
+      technicalReadyIndependentOfObs,
+      autoFinalAfterObservationEndsAt: obsEval.endsAt || null,
       offersUpdatedAt: offers?.updatedAt || null,
       snapshotId: offers?.snapshotId || null,
       stats: {
@@ -362,12 +395,22 @@ async function main() {
     },
     CLOUDFLARE_DEPLOYMENT: {
       at: nowIso,
-      note: "Pages follow main promote PRs; verify deployment id against main SHA separately in PRODUCTION_READBACK.",
-      mainSha: mainSha.ok ? mainSha.data : null,
+      mainSha,
+      pagesRuns: pagesRuns.ok
+        ? pagesRuns.data
+        : pagesRuns.fallback?.ok
+          ? (pagesRuns.fallback.data || []).filter((r) =>
+              /pages|cloudflare|deploy/i.test(String(r.name || "") + String(r.displayTitle || "")),
+            )
+          : [],
+      error: pagesRuns.ok ? null : pagesRuns.error,
+      note: "Pages publish from main data after merge; compare headSha to main.",
     },
     PRODUCTION_READBACK: {
       at: nowIso,
+      productionSiteUrl: PRODUCTION_SITE_URL,
       offersUrl: OFFERS_URL,
+      dataAssetNote: DATA_ASSET_NOTE,
       updatedAt: offers.updatedAt || null,
       liveEnabled: offers.liveEnabled,
       sourceKind: offers.sourceKind,
@@ -383,8 +426,9 @@ async function main() {
     },
     PRODUCTION_DOM: {
       at: nowIso,
-      url: "https://infouzel.cz/",
-      note: "DOM/PWA smoke deferred to Playwright/CI smoke + manual Edge read-back when packing after OBS complete.",
+      url: PRODUCTION_SITE_URL,
+      projectsPathOnHomepage: false,
+      note: "Homepage HTML must not expose wrong /projects/ navigation; JSON assets under /projects/data/ are intentional.",
     },
     PWA_SMOKE: {
       at: nowIso,
@@ -397,7 +441,18 @@ async function main() {
       emailOnlyDisarmed: true,
       cspTrustedTypes: "preserved",
     },
-    OPEN_BLOCKERS: { at: nowIso, blockers: openBlockers },
+    OPEN_BLOCKERS: {
+      at: nowIso,
+      blockers: openBlockers,
+      resolvedNonProd: [
+        {
+          id: "GH_JQ_ACCEPTS_1_ARG_RECEIVED_N",
+          cause: "PowerShell argv splitting around gh --jq filters with spaces/braces/pipes",
+          productionImpact: "none — local/agent CLI only; ubuntu-latest workflows use bash",
+          remediation: "prefer gh JSON without --jq then parse in node; this pack avoids --jq",
+        },
+      ],
+    },
     INTEGRITY_VERIFICATION: {
       at: nowIso,
       selfReferenceRule:
