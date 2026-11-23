@@ -1336,6 +1336,70 @@ jobs:
           else
             echo "EMAIL_ONLY_BRIDGE_RESTORED=0"
           fi
+          # V51.8: durable RETRY queue must load across schedule/restart (artifact + sync tip).
+          # Without this, nextAttemptAt items are lost and only fresh MISSING_REFRESH is seen.
+          RQ="projects/data/iu-affiliate-cj-lkg-refresh-retry-queue-v51-8.json"
+          RA="projects/data/iu-affiliate-cj-lkg-missing-refresh-attempts-v51-8.json"
+          if [ -f "$RQ" ] && [ ! -s "$RQ" ]; then rm -f "$RQ"; fi
+          if [ -f "$RA" ] && [ ! -s "$RA" ]; then rm -f "$RA"; fi
+          if [ ! -s "$RQ" ]; then
+            restore_git_file \
+              "origin/data/cj-affiliate-catalog-sync:projects/data/iu-affiliate-cj-lkg-refresh-retry-queue-v51-8.json" \
+              "$RQ" \
+              || restore_git_file "FETCH_HEAD:projects/data/iu-affiliate-cj-lkg-refresh-retry-queue-v51-8.json" "$RQ" \
+              || true
+          fi
+          if [ ! -s "$RA" ]; then
+            restore_git_file \
+              "origin/data/cj-affiliate-catalog-sync:projects/data/iu-affiliate-cj-lkg-missing-refresh-attempts-v51-8.json" \
+              "$RA" \
+              || restore_git_file "FETCH_HEAD:projects/data/iu-affiliate-cj-lkg-missing-refresh-attempts-v51-8.json" "$RA" \
+              || true
+          fi
+          if [ ! -s "$RQ" ] || [ ! -s "$RA" ]; then
+            set +e
+            PRIOR_RQ_RUN=$(gh run list \
+              --workflow cj-affiliate-catalog-sync.yml \
+              --branch main \
+              --status completed \
+              --limit 20 \
+              --json databaseId,conclusion \
+              --jq '[.[] | select(.conclusion=="success")][0].databaseId')
+            if [ -n "${PRIOR_RQ_RUN}" ] && [ "${PRIOR_RQ_RUN}" != "null" ]; then
+              mkdir -p "${RUNNER_TEMP}/iu-cj-retry-prior"
+              if [ ! -s "${RUNNER_TEMP}/iu-cj-retry-prior/iu-affiliate-cj-lkg-refresh-retry-queue-v51-8.json" ]; then
+                gh run download "${PRIOR_RQ_RUN}" \
+                  -n iu-affiliate-cj-product-feed-checkpoints \
+                  -D "${RUNNER_TEMP}/iu-cj-retry-prior" \
+                  2>/tmp/iu-retry-prior.err
+              fi
+              if [ ! -s "$RQ" ] && [ -s "${RUNNER_TEMP}/iu-cj-retry-prior/iu-affiliate-cj-lkg-refresh-retry-queue-v51-8.json" ]; then
+                cp "${RUNNER_TEMP}/iu-cj-retry-prior/iu-affiliate-cj-lkg-refresh-retry-queue-v51-8.json" "$RQ"
+                echo "RETRY_QUEUE_PRIOR_RUN_RESTORE=${PRIOR_RQ_RUN} bytes=$(wc -c < "$RQ" | tr -d ' ')"
+              fi
+              if [ ! -s "$RA" ] && [ -s "${RUNNER_TEMP}/iu-cj-retry-prior/iu-affiliate-cj-lkg-missing-refresh-attempts-v51-8.json" ]; then
+                cp "${RUNNER_TEMP}/iu-cj-retry-prior/iu-affiliate-cj-lkg-missing-refresh-attempts-v51-8.json" "$RA"
+                echo "RETRY_ATTEMPTS_PRIOR_RUN_RESTORE=${PRIOR_RQ_RUN} bytes=$(wc -c < "$RA" | tr -d ' ')"
+              fi
+            else
+              echo "RETRY_QUEUE_PRIOR_RUN_NONE"
+            fi
+            set -e
+          fi
+          if [ -s "$RQ" ]; then
+            echo "RETRY_QUEUE_RESTORED=1"
+            python3 - <<'PY'
+          import json
+          p="projects/data/iu-affiliate-cj-lkg-refresh-retry-queue-v51-8.json"
+          j=json.load(open(p))
+          items=j.get("items") or {}
+          vals=list(items.values()) if isinstance(items, dict) else (items if isinstance(items, list) else [])
+          open_n=sum(1 for v in vals if isinstance(v, dict) and not v.get("closed") and str(v.get("status") or "")=="RETRY_SCHEDULED")
+          print("RETRY_QUEUE_ITEMS", len(vals), "OPEN_RETRY_SCHEDULED", open_n, "UPDATED", j.get("updatedAt"))
+          PY
+          else
+            echo "RETRY_QUEUE_RESTORED=0"
+          fi
           # Prefer R2/public LIVE partner overlay for section mapping (not stale Pages tip).
           if curl -fsSL "https://infouzel.cz/projects/data/iu-affiliate-cj-managed-public-v1.json" \
             -o projects/data/iu-affiliate-cj-managed-public-v1.json; then
@@ -1667,7 +1731,9 @@ jobs:
           if [ -s "$FUN" ]; then cp "$FUN" "${STASH}/$(basename "$FUN")"; fi
           # V50: stash THIS RUN's continuation/progress/history/durable ledgers before orphan wipe.
           for f in iu-affiliate-cj-feed-continuation-v47.json iu-affiliate-cj-declared-product-decomposition-v47.json iu-affiliate-cj-missing-feed-partners-v47.json iu-affiliate-cj-product-progress-v48.json iu-affiliate-cj-fetched-published-funnel-v48.json iu-affiliate-cj-price-availability-history-v48.json iu-affiliate-cj-durable-price-history-v50.json iu-affiliate-cj-durable-price-history-archive-v51.json iu-affiliate-cj-product-reverify-v50.json iu-affiliate-cj-product-identity-v50.json iu-affiliate-cj-durable-catalog-v51.json iu-affiliate-cj-durable-catalog-lkg-v51.json iu-affiliate-cj-public-growth-budget-v51.json \
-            iu-affiliate-cj-48h-observation-ledger-v51-8.json; do
+            iu-affiliate-cj-48h-observation-ledger-v51-8.json \
+            iu-affiliate-cj-lkg-refresh-retry-queue-v51-8.json \
+            iu-affiliate-cj-lkg-missing-refresh-attempts-v51-8.json; do
             if [ -s "projects/data/${f}" ]; then cp "projects/data/${f}" "${STASH}/${f}"; fi
           done
           # V51.8: stash durable cold shards + LKG shards (orphan wipe would otherwise drop them).
@@ -1690,7 +1756,9 @@ jobs:
           done
           # Never redirect failed git show into empty files (V31 wiped offers-public to size 0).
           for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json iu-affiliate-cj-miss-products-v38.json iu-affiliate-cj-feed-inventory-v40.json iu-affiliate-cj-cumulative-coverage-v40.json iu-affiliate-cj-identity-repair-v40.json iu-affiliate-cj-product-funnel-v46.json iu-affiliate-cj-feed-continuation-v47.json iu-affiliate-cj-declared-product-decomposition-v47.json iu-affiliate-cj-missing-feed-partners-v47.json iu-affiliate-cj-product-progress-v48.json iu-affiliate-cj-fetched-published-funnel-v48.json iu-affiliate-cj-price-availability-history-v48.json iu-affiliate-cj-durable-price-history-v50.json iu-affiliate-cj-durable-price-history-archive-v51.json iu-affiliate-cj-product-reverify-v50.json iu-affiliate-cj-product-identity-v50.json iu-affiliate-cj-durable-catalog-v51.json iu-affiliate-cj-public-growth-budget-v51.json \
-            iu-affiliate-cj-48h-observation-ledger-v51-8.json; do
+            iu-affiliate-cj-48h-observation-ledger-v51-8.json \
+            iu-affiliate-cj-lkg-refresh-retry-queue-v51-8.json \
+            iu-affiliate-cj-lkg-missing-refresh-attempts-v51-8.json; do
             tmp="${STASH}/prev/${f}.tmp"
             if git show "origin/${SYNC_BRANCH}:projects/data/${f}" > "${tmp}" 2>/dev/null; then
               if [ -s "${tmp}" ]; then mv "${tmp}" "${STASH}/prev/${f}"; else rm -f "${tmp}"; fi
@@ -1726,7 +1794,9 @@ jobs:
           if [ -s "${STASH}/$(basename "$FUN")" ]; then cp "${STASH}/$(basename "$FUN")" "projects/data/$(basename "$FUN")"; fi
           # Restore live offers into workspace for the following Commit offers step (orphan wiped them).
           for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json iu-affiliate-cj-miss-products-v38.json iu-affiliate-cj-feed-inventory-v40.json iu-affiliate-cj-cumulative-coverage-v40.json iu-affiliate-cj-identity-repair-v40.json iu-affiliate-cj-product-funnel-v46.json iu-affiliate-cj-feed-continuation-v47.json iu-affiliate-cj-declared-product-decomposition-v47.json iu-affiliate-cj-missing-feed-partners-v47.json iu-affiliate-cj-product-progress-v48.json iu-affiliate-cj-fetched-published-funnel-v48.json iu-affiliate-cj-price-availability-history-v48.json iu-affiliate-cj-durable-price-history-v50.json iu-affiliate-cj-durable-price-history-archive-v51.json iu-affiliate-cj-product-reverify-v50.json iu-affiliate-cj-product-identity-v50.json iu-affiliate-cj-durable-catalog-v51.json iu-affiliate-cj-durable-catalog-lkg-v51.json iu-affiliate-cj-public-growth-budget-v51.json \
-            iu-affiliate-cj-48h-observation-ledger-v51-8.json; do
+            iu-affiliate-cj-48h-observation-ledger-v51-8.json \
+            iu-affiliate-cj-lkg-refresh-retry-queue-v51-8.json \
+            iu-affiliate-cj-lkg-missing-refresh-attempts-v51-8.json; do
             if [ -s "${STASH}/live/${f}" ]; then cp "${STASH}/live/${f}" "projects/data/${f}"; fi
             if [ -s "${STASH}/$(basename "${f}")" ] && [ ! -s "projects/data/${f}" ]; then
               cp "${STASH}/$(basename "${f}")" "projects/data/${f}"
@@ -1794,7 +1864,9 @@ jobs:
           done
           # V45: offers slim tip must preserve feed-inventory/cumulative/identity (was wiping Persist step).
           for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json iu-affiliate-cj-miss-products-v38.json iu-affiliate-cj-feed-inventory-v40.json iu-affiliate-cj-cumulative-coverage-v40.json iu-affiliate-cj-identity-repair-v40.json iu-affiliate-cj-product-funnel-v46.json iu-affiliate-cj-feed-continuation-v47.json iu-affiliate-cj-declared-product-decomposition-v47.json iu-affiliate-cj-missing-feed-partners-v47.json iu-affiliate-cj-product-progress-v48.json iu-affiliate-cj-fetched-published-funnel-v48.json iu-affiliate-cj-price-availability-history-v48.json iu-affiliate-cj-durable-price-history-v50.json iu-affiliate-cj-durable-price-history-archive-v51.json iu-affiliate-cj-product-reverify-v50.json iu-affiliate-cj-product-identity-v50.json iu-affiliate-cj-durable-catalog-v51.json iu-affiliate-cj-durable-catalog-lkg-v51.json iu-affiliate-cj-public-growth-budget-v51.json \
-            iu-affiliate-cj-48h-observation-ledger-v51-8.json; do
+            iu-affiliate-cj-48h-observation-ledger-v51-8.json \
+            iu-affiliate-cj-lkg-refresh-retry-queue-v51-8.json \
+            iu-affiliate-cj-lkg-missing-refresh-attempts-v51-8.json; do
             if [ -f "projects/data/${f}" ]; then cp "projects/data/${f}" "${STASH}/${f}"; fi
           done
           mkdir -p "${STASH}/durable-shards"
@@ -1811,7 +1883,9 @@ jobs:
               > "${STASH}/prev/iu-affiliate-cj-${name}-v1.json" 2>/dev/null || true
           done
           for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json iu-affiliate-cj-miss-products-v38.json iu-affiliate-cj-feed-inventory-v40.json iu-affiliate-cj-cumulative-coverage-v40.json iu-affiliate-cj-identity-repair-v40.json iu-affiliate-cj-product-funnel-v46.json iu-affiliate-cj-feed-continuation-v47.json iu-affiliate-cj-declared-product-decomposition-v47.json iu-affiliate-cj-missing-feed-partners-v47.json iu-affiliate-cj-product-progress-v48.json iu-affiliate-cj-fetched-published-funnel-v48.json iu-affiliate-cj-price-availability-history-v48.json iu-affiliate-cj-durable-price-history-v50.json iu-affiliate-cj-durable-price-history-archive-v51.json iu-affiliate-cj-product-reverify-v50.json iu-affiliate-cj-product-identity-v50.json iu-affiliate-cj-durable-catalog-v51.json iu-affiliate-cj-durable-catalog-lkg-v51.json iu-affiliate-cj-public-growth-budget-v51.json \
-            iu-affiliate-cj-48h-observation-ledger-v51-8.json; do
+            iu-affiliate-cj-48h-observation-ledger-v51-8.json \
+            iu-affiliate-cj-lkg-refresh-retry-queue-v51-8.json \
+            iu-affiliate-cj-lkg-missing-refresh-attempts-v51-8.json; do
             tmp="${STASH}/prev/${f}.tmp"
             if git show "origin/${SYNC_BRANCH}:projects/data/${f}" > "${tmp}" 2>/dev/null; then
               if [ -s "${tmp}" ]; then mv "${tmp}" "${STASH}/prev/${f}"; else rm -f "${tmp}"; fi
@@ -1835,7 +1909,9 @@ jobs:
             fi
           done
           for f in iu-affiliate-cj-offers-public-v1.json iu-affiliate-cj-offers-public-lkg-v1.json iu-affiliate-cj-offers-sync-audit-v1.json iu-affiliate-cj-product-feed-checkpoints-v31.json iu-affiliate-cj-refresh-coverage-v35.json iu-affiliate-cj-miss-products-v38.json iu-affiliate-cj-feed-inventory-v40.json iu-affiliate-cj-cumulative-coverage-v40.json iu-affiliate-cj-identity-repair-v40.json iu-affiliate-cj-product-funnel-v46.json iu-affiliate-cj-feed-continuation-v47.json iu-affiliate-cj-declared-product-decomposition-v47.json iu-affiliate-cj-missing-feed-partners-v47.json iu-affiliate-cj-product-progress-v48.json iu-affiliate-cj-fetched-published-funnel-v48.json iu-affiliate-cj-price-availability-history-v48.json iu-affiliate-cj-durable-price-history-v50.json iu-affiliate-cj-durable-price-history-archive-v51.json iu-affiliate-cj-product-reverify-v50.json iu-affiliate-cj-product-identity-v50.json iu-affiliate-cj-durable-catalog-v51.json iu-affiliate-cj-durable-catalog-lkg-v51.json iu-affiliate-cj-public-growth-budget-v51.json \
-            iu-affiliate-cj-48h-observation-ledger-v51-8.json; do
+            iu-affiliate-cj-48h-observation-ledger-v51-8.json \
+            iu-affiliate-cj-lkg-refresh-retry-queue-v51-8.json \
+            iu-affiliate-cj-lkg-missing-refresh-attempts-v51-8.json; do
             if [ -s "${STASH}/${f}" ]; then cp "${STASH}/${f}" "projects/data/${f}"
             elif [ -s "${STASH}/prev/${f}" ]; then cp "${STASH}/prev/${f}" "projects/data/${f}"; fi
           done
