@@ -11,6 +11,7 @@ name: CJ Affiliate catalog sync (fetch ? publish)
 # does not consume MAX_CATCHUPS_PER_UTC_DAY (V51.8-maint).
 # schedule-reregister: 2026-11-12T08:45Z — rebind after GHA undelivered 03:17+06:17 (V51.8-closure).
 # schedule-reregister: 2026-11-23T07:40Z — rebind after SLOT_MISS 00/12/18 UTC (catchup recovered; natural cadence degraded).
+# schedule-reregister: 2026-11-23T11:10Z — rebind after undelivered 09:17 UTC natural slot (watchdog not_stale; production line closeout).
 # Independent recovery: cloudflare/cj-catalog-sync-watchdog (CF cron → catch-up dispatch)
 # complements GHA schedule-watch when both catalog and watch crons vanish.
 
