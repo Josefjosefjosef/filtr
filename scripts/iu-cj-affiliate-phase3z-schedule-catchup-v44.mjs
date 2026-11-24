@@ -3,7 +3,8 @@
  *
  * Rules (single owner, no parallel publisher):
  * - Never invent a "schedule" event — catch-up is workflow_dispatch only.
- * - Never fire when a catalog-sync run is already in_progress/queued.
+ * - Never fire when a catalog-sync run is already in_progress/queued/pending/waiting.
+ * - Never fire when a natural schedule run is pending/queued (prefer schedule over catch-up).
  * - At most six catch-ups per UTC day (default) — eight :17 slots exist; daycap 4
  *   left multi-miss days unrecovered after catch-up budget exhaust. Cap 6 still
  *   bounds storms while covering cascading GHA undelivery.
@@ -47,11 +48,25 @@ export function isCatchupDispatchRun(run) {
  * @param {object} opts
  * @param {{ counts?: { miss?: number, pending?: number }, slots?: Array<{classification?: string, hour?: number, expectedUtc?: string}>, latestSchedule?: { ageHours?: number|null }|null }} opts.slotReport
  * @param {number} [opts.catalogInProgressCount]
- * @param {Array<{ created_at?: string, event?: string, conclusion?: string|null }>} [opts.recentCatalogRuns]
+ * @param {number} [opts.schedulePendingCount] pending/queued/waiting natural schedule runs
+ * @param {Array<{ created_at?: string, event?: string, status?: string, conclusion?: string|null }>} [opts.recentCatalogRuns]
  * @param {Date} [opts.now]
  * @param {number} [opts.maxCatchupsPerUtcDay]
  * @param {number} [opts.cooldownHours]
  */
+export const CATALOG_BUSY_STATUSES = new Set([
+  "in_progress",
+  "queued",
+  "pending",
+  "waiting",
+  "requested",
+]);
+
+export function isCatalogRunBusy(run) {
+  if (!run || typeof run !== "object") return false;
+  return CATALOG_BUSY_STATUSES.has(String(run.status || ""));
+}
+
 export function decideScheduleCatchup(opts = {}) {
   const now = opts.now instanceof Date ? opts.now : new Date();
   const slotReport = opts.slotReport || {};
@@ -63,11 +78,33 @@ export function decideScheduleCatchup(opts = {}) {
     opts.cooldownHoursMultiMiss ?? CATCHUP_COOLDOWN_HOURS_MULTI_MISS;
   const runs = Array.isArray(opts.recentCatalogRuns) ? opts.recentCatalogRuns : [];
 
-  if (inProg > 0) {
+  // Prefer a natural schedule that is already accepted by GHA but waiting on concurrency.
+  // Catch-up must not jump the queue ahead of schedule (evidence: 45370496099 vs 45370997169).
+  const schedulePendingExplicit = Number(opts.schedulePendingCount || 0);
+  const schedulePendingFromRuns = runs.filter(
+    (r) => String(r.event || "") === "schedule" && isCatalogRunBusy(r),
+  ).length;
+  const schedulePending = Math.max(schedulePendingExplicit, schedulePendingFromRuns);
+  if (schedulePending > 0) {
+    return {
+      allow: false,
+      reason: "SCHEDULE_PENDING_OR_QUEUED",
+      mode: null,
+      schedulePendingCount: schedulePending,
+      evidenceClass: "CURRENT_PRODUCTION",
+      note: "Natural schedule already pending/queued — catch-up must not occupy concurrency ahead of it.",
+    };
+  }
+
+  // Recount busy runs from recent list (covers status=pending that older jq missed).
+  const busyFromRuns = runs.filter((r) => isCatalogRunBusy(r)).length;
+  const busy = Math.max(inProg, busyFromRuns);
+  if (busy > 0) {
     return {
       allow: false,
       reason: "CATALOG_IN_PROGRESS",
       mode: null,
+      catalogBusyCount: busy,
       evidenceClass: "CURRENT_PRODUCTION",
     };
   }

@@ -73,7 +73,45 @@ export function buildCompletionAuditPack(opts = {}) {
   const ev = validateEvidenceManifest(man, workDir);
   assertIntegrityOk(ev);
 
-  const zipName = `phase3z-cj-robot-completion-${stamp}.zip`;
+  const zipName =
+    opts.zipName ||
+    `phase3z-cj-robot-completion-${stamp}.zip`;
+  // Human-facing INTEGRITY_MANIFEST.json must name THIS archive (never a prior pack).
+  // Excludes itself from files[] to avoid self-hash circularity; ZIP sha256 is sidecar-only.
+  {
+    const files = listFilesRecursive(workDir)
+      .filter((f) => {
+        const b = path.posix.basename(f.path);
+        return (
+          b !== "INTEGRITY_MANIFEST.json" &&
+          b !== "MANIFEST.json" &&
+          b !== "MANIFEST.meta.json" &&
+          b !== "integrity-manifest.json" &&
+          b !== "integrity-manifest.meta.json"
+        );
+      })
+      .map((f) => {
+        const buf = fs.readFileSync(f.abs);
+        return {
+          path: f.path,
+          size: buf.length,
+          sha256: sha256Hex(buf),
+          crc32: crc32Hex(buf),
+        };
+      })
+      .sort((a, b) => a.path.localeCompare(b.path));
+    writeJson(path.join(workDir, "INTEGRITY_MANIFEST.json"), {
+      schema: "iu-cj-integrity-manifest-v1",
+      at: new Date().toISOString(),
+      zip: zipName,
+      bytes: null,
+      fileCount: files.length,
+      files,
+      note:
+        "Per-file sha256/crc32 for evidence inside ZIP. This manifest is excluded from files[]. Outer ZIP sha256 is only in sibling .sha256 sidecar.",
+    });
+  }
+
   const zipAbs = path.join(outRoot, zipName);
   if (fs.existsSync(zipAbs)) fs.unlinkSync(zipAbs);
 
@@ -101,6 +139,19 @@ export function buildCompletionAuditPack(opts = {}) {
   const zipCrc = crc32Hex(zipBuf);
   fs.writeFileSync(zipAbs + ".sha256", zipSha + "\n", "utf8");
   fs.writeFileSync(zipAbs + ".crc32", zipCrc + "\n", "utf8");
+  // Patch workDir INTEGRITY_MANIFEST bytes field for local verify (not re-zipped).
+  try {
+    const imPath = path.join(workDir, "INTEGRITY_MANIFEST.json");
+    if (fs.existsSync(imPath)) {
+      const im = JSON.parse(fs.readFileSync(imPath, "utf8"));
+      im.bytes = zipBuf.length;
+      im.zipSha256Sidecar = zipSha;
+      im.zipCrc32Sidecar = zipCrc;
+      writeJson(imPath, im);
+    }
+  } catch {
+    /* non-fatal */
+  }
   writeJson(zipAbs + ".integrity.json", {
     schema: "iu-cj-affiliate-phase3z-completion-audit-integrity-v51-8",
     at: new Date().toISOString(),
@@ -117,10 +168,10 @@ export function buildCompletionAuditPack(opts = {}) {
 
   // Post-zip independent re-validation of workDir (source of truth before zip)
   const reSeal = validateManifestSeal(workDir);
-  const reEv = validateEvidenceManifest(
-    JSON.parse(fs.readFileSync(path.join(workDir, "integrity-manifest.json"), "utf8")),
-    workDir,
-  );
+  const sealedManAbs = fs.existsSync(path.join(workDir, "integrity-manifest.json"))
+    ? path.join(workDir, "integrity-manifest.json")
+    : path.join(workDir, "MANIFEST.json");
+  const reEv = validateEvidenceManifest(JSON.parse(fs.readFileSync(sealedManAbs, "utf8")), workDir);
 
   return {
     ok: reSeal.ok && reEv.ok,

@@ -19,6 +19,58 @@ const denyInProg = decideScheduleCatchup({
 });
 assert(denyInProg.allow === false && denyInProg.reason === "CATALOG_IN_PROGRESS", "in-progress");
 
+// Natural schedule already pending must beat catch-up (concurrency priority).
+const denySchedulePending = decideScheduleCatchup({
+  now,
+  catalogInProgressCount: 0,
+  schedulePendingCount: 1,
+  slotReport: { counts: { miss: 2 }, slots: [{ classification: "SLOT_MISS", hour: 0 }] },
+});
+assert(
+  denySchedulePending.allow === false &&
+    denySchedulePending.reason === "SCHEDULE_PENDING_OR_QUEUED",
+  "schedule pending blocks catch-up",
+);
+
+const denySchedulePendingFromRuns = decideScheduleCatchup({
+  now,
+  catalogInProgressCount: 0,
+  slotReport: { counts: { miss: 2 }, slots: [{ classification: "SLOT_MISS", hour: 0 }] },
+  recentCatalogRuns: [
+    {
+      event: "schedule",
+      status: "pending",
+      created_at: "2026-11-05T06:55:00Z",
+      display_title: "CJ catalog sync (schedule)",
+    },
+  ],
+});
+assert(
+  denySchedulePendingFromRuns.allow === false &&
+    denySchedulePendingFromRuns.reason === "SCHEDULE_PENDING_OR_QUEUED",
+  "pending schedule in recent runs blocks catch-up",
+);
+
+const denyBusyPendingDispatch = decideScheduleCatchup({
+  now,
+  catalogInProgressCount: 0,
+  slotReport: { counts: { miss: 2 }, slots: [{ classification: "SLOT_MISS", hour: 0 }] },
+  recentCatalogRuns: [
+    {
+      event: "workflow_dispatch",
+      status: "pending",
+      created_at: "2026-11-05T06:55:00Z",
+      display_title: "CATCHUP_DISPATCH_NOT_SCHEDULE",
+      catchup_dispatch: "1",
+    },
+  ],
+});
+assert(
+  denyBusyPendingDispatch.allow === false &&
+    denyBusyPendingDispatch.reason === "CATALOG_IN_PROGRESS",
+  "pending catch-up dispatch counted busy",
+);
+
 const denyNoMiss = decideScheduleCatchup({
   now,
   catalogInProgressCount: 0,
