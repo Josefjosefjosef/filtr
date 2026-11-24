@@ -170,9 +170,13 @@ export function mergeTargetsWithRetryQueue(selectedTargets, queue, opts = {}) {
       item.status === ATTEMPT_STATUS.PRODUCT_NOT_FOUND;
     if (!due) continue;
     if (Number.isFinite(nextMs) && nextMs > nowMs) {
+      // Honor backoff: never re-attempt via selectedOnly MISSING_REFRESH while not due.
+      // (Night catchup+schedule race previously burned attempts and reset nextAttemptAt.)
       deferredNotDue += 1;
+      byKey.delete(key);
       continue;
     }
+    dueFromQueue += 1;
     if (byKey.has(key)) {
       byKey.set(key, {
         ...byKey.get(key),
@@ -181,7 +185,6 @@ export function mergeTargetsWithRetryQueue(selectedTargets, queue, opts = {}) {
         priorQueueStatus: item.status,
       });
     } else {
-      dueFromQueue += 1;
       byKey.set(key, {
         key,
         advertiserId: String(item.advertiserId),
