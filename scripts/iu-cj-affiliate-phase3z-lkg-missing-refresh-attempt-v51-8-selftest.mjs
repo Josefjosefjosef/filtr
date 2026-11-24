@@ -178,11 +178,48 @@ const early = mergeTargetsWithRetryQueue([], q, {
 });
 assert(early.targets.length === 0, "not due yet");
 assert(early.deferredNotDue === 1, "deferred counted");
+// Overlap: selected MISSING_REFRESH must NOT burn a not-due queue item (catchup/schedule race).
+const overlapEarly = mergeTargetsWithRetryQueue(
+  [
+    {
+      key: "ADV1|P_RETRY",
+      advertiserId: "ADV1",
+      productId: "P_RETRY",
+      causeCode: LKG_CAUSE.MISSING_REFRESH,
+    },
+    {
+      key: "ADV1|P_OTHER",
+      advertiserId: "ADV1",
+      productId: "P_OTHER",
+      causeCode: LKG_CAUSE.MISSING_REFRESH,
+    },
+  ],
+  q,
+  { nowMs: Date.parse("2026-11-23T13:00:00.000Z") },
+);
+assert(overlapEarly.targets.length === 1, "not-due queue key removed from selectedOnly");
+assert(overlapEarly.targets[0].productId === "P_OTHER", "unrelated selected kept");
+assert(overlapEarly.deferredNotDue === 1, "deferred counted with overlap");
 const due = mergeTargetsWithRetryQueue([], q, {
   nowMs: Date.parse("2026-11-23T16:00:00.000Z"),
 });
 assert(due.targets.length === 1 && due.targets[0].productId === "P_RETRY", "due from queue");
 assert(due.dueFromQueue === 1, "dueFromQueue");
+const overlapDue = mergeTargetsWithRetryQueue(
+  [
+    {
+      key: "ADV1|P_RETRY",
+      advertiserId: "ADV1",
+      productId: "P_RETRY",
+      causeCode: LKG_CAUSE.MISSING_REFRESH,
+    },
+  ],
+  q,
+  { nowMs: Date.parse("2026-11-23T16:00:00.000Z") },
+);
+assert(overlapDue.targets.length === 1, "due overlap kept");
+assert(overlapDue.dueFromQueue === 1, "dueFromQueue counts overlap");
+assert(overlapDue.targets[0].fromQueue === true, "overlap marked fromQueue");
 
 console.log(
   JSON.stringify({
