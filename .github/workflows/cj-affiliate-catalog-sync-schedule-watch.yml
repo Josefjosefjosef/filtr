@@ -68,11 +68,13 @@ jobs:
             '[.workflow_runs[] | select(.conclusion=="failure" and .created_at >= $c)] | length')"
           CANCEL_48="$(echo "${RAW}" | jq --arg c "$CUTOFF" \
             '[.workflow_runs[] | select(.conclusion=="cancelled" and .created_at >= $c)] | length')"
-          INPROG="$(echo "${RAW}" | jq \
-            '[.workflow_runs[] | select(.status=="in_progress" or .status=="queued")] | length')"
+          # Busy = concurrency occupants. Include pending/waiting/requested (GHA queues schedule as pending).
+          BUSY_JQ='[.workflow_runs[] | select(.status=="in_progress" or .status=="queued" or .status=="pending" or .status=="waiting" or .status=="requested")] | length'
+          INPROG="$(echo "${RAW}" | jq "${BUSY_JQ}")"
           # Any event in-flight (schedule OR dispatch) blocks catch-up.
-          INPROG_ANY="$(gh api "repos/${REPO}/actions/workflows/${WF_ID}/runs?per_page=20" --jq \
-            '[.workflow_runs[] | select(.status=="in_progress" or .status=="queued")] | length')"
+          INPROG_ANY="$(gh api "repos/${REPO}/actions/workflows/${WF_ID}/runs?per_page=20" --jq "${BUSY_JQ}")"
+          SCHEDULE_PENDING="$(echo "${RAW}" | jq \
+            '[.workflow_runs[] | select((.status=="in_progress" or .status=="queued" or .status=="pending" or .status=="waiting" or .status=="requested"))] | length')"
           ALL_RECENT="$(gh api "repos/${REPO}/actions/workflows/${WF_ID}/runs?per_page=30")"
           echo "${ALL_RECENT}" > /tmp/iu-cj-catalog-all-recent.json
           echo "SUCCESS_48H=${SUCCESS_48}"
@@ -80,6 +82,7 @@ jobs:
           echo "CANCEL_48H=${CANCEL_48}"
           echo "IN_PROGRESS=${INPROG}"
           echo "IN_PROGRESS_ANY=${INPROG_ANY}"
+          echo "SCHEDULE_PENDING=${SCHEDULE_PENDING}"
           LATEST="$(echo "${RAW}" | jq -r '.workflow_runs[0] // empty | "\(.id) \(.conclusion) \(.created_at)"')"
           echo "LATEST_SCHEDULE=${LATEST:-none}"
           echo "${RAW}" > /tmp/iu-cj-schedule-raw.json
@@ -89,6 +92,7 @@ jobs:
           SLOT_RC=$?
           set -e
           export INPROG_ANY
+          export SCHEDULE_PENDING
           node --input-type=module <<'NODE'
           import fs from "node:fs";
           import { classifyScheduleSlots } from "./scripts/iu-cj-affiliate-phase3z-schedule-slot-watch-v42.mjs";
@@ -100,6 +104,7 @@ jobs:
           const decision = decideScheduleCatchup({
             slotReport: report,
             catalogInProgressCount: Number(process.env.INPROG_ANY || 0),
+            schedulePendingCount: Number(process.env.SCHEDULE_PENDING || 0),
             recentCatalogRuns: all.workflow_runs || [],
           });
           fs.writeFileSync("/tmp/iu-cj-catchup-decision.json", JSON.stringify(decision, null, 2));
