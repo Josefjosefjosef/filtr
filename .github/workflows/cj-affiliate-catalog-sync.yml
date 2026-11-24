@@ -2044,6 +2044,16 @@ jobs:
                       if adv and pid:
                           s.add(adv+"|"+pid)
               return len(s)
+          def public_unique(doc):
+              # Prefer stats.uniqueProducts (compound public catalog). section_unique
+              # inflates with LKG hold rows and caused false LIVE_UNIQUE_REGRESSION
+              # (evidence: catchup 45330205613 incoming_u=3486 live_u=4293 while
+              # uniqueProducts 2627 vs 2629).
+              st=doc.get("stats") or {}
+              u=st.get("uniqueProducts")
+              if isinstance(u, int) and u >= 0:
+                  return u
+              return section_unique(doc)
           def load_url(url):
               # Prefer curl + browser UA: bare urllib often gets CF/GitHub Pages 403 from Actions
               # (evidence run 44300425257 LIVE_OFFERS_FETCH_FAIL HTTP 403 → gates skipped).
@@ -2093,18 +2103,20 @@ jobs:
                   )
               live_ts=str(live.get("updatedAt") or "")
               in_ts=str(d.get("updatedAt") or "")
-              live_u=section_unique(live)
-              in_u=section_unique(d)
+              live_sec=section_unique(live)
+              in_sec=section_unique(d)
+              live_u=public_unique(live)
+              in_u=public_unique(d)
               print(
                   f"PROMOTE_MONOTONIC src={live_src} live_ts={live_ts} incoming_ts={in_ts} "
-                  f"live_u={live_u} incoming_u={in_u}"
+                  f"live_u={live_u} incoming_u={in_u} live_sec={live_sec} incoming_sec={in_sec}"
               )
               # Refuse stale SHA race: older payload must not overwrite newer LIVE public.
               if live_ts and in_ts and in_ts < live_ts:
                   raise SystemExit(
                       f"BLOCKER=OFFERS_PROMOTE_STALE_UPDATED_AT incoming={in_ts} live={live_ts}"
                   )
-              # Refuse large unexplained unique drop vs current LIVE (queued stale LKG race).
+              # Refuse large unexplained uniqueProducts drop vs LIVE (not section/hold inflation).
               if live_u > 0 and in_u < live_u * 0.9 and (live_u - in_u) > 50:
                   raise SystemExit(
                       f"BLOCKER=OFFERS_PROMOTE_LIVE_UNIQUE_REGRESSION incoming_u={in_u} live_u={live_u}"
