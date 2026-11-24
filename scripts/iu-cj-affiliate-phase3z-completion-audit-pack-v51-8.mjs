@@ -168,10 +168,10 @@ export function buildCompletionAuditPack(opts = {}) {
 
   // Post-zip independent re-validation of workDir (source of truth before zip)
   const reSeal = validateManifestSeal(workDir);
-  const reEv = validateEvidenceManifest(
-    JSON.parse(fs.readFileSync(path.join(workDir, "integrity-manifest.json"), "utf8")),
-    workDir,
-  );
+  const sealedManAbs = fs.existsSync(path.join(workDir, "integrity-manifest.json"))
+    ? path.join(workDir, "integrity-manifest.json")
+    : path.join(workDir, "MANIFEST.json");
+  const reEv = validateEvidenceManifest(JSON.parse(fs.readFileSync(sealedManAbs, "utf8")), workDir);
 
   return {
     ok: reSeal.ok && reEv.ok,

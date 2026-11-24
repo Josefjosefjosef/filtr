@@ -98,7 +98,9 @@ function isSkippedIntegrityName(name) {
     name === MANIFEST_META_BASENAME ||
     name === LEGACY_MANIFEST_BASENAME ||
     name === LEGACY_MANIFEST_META_BASENAME ||
-    name === "integrity-manifest.txt"
+    name === "integrity-manifest.txt" ||
+    // Human-facing alias written after sealed evidence manifest; not part of sealed files[].
+    name === "INTEGRITY_MANIFEST.json"
   );
 }
 
