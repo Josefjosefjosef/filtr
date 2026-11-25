@@ -5,6 +5,8 @@
  * NOT_YET_SEEN ≠ CONFIRMED_REMOVED.
  */
 
+import { normalizeCjProductText } from "./iu-cj-affiliate-utf8-title-normalize-v51-8.mjs";
+
 export const REMOVAL_CLASS = Object.freeze({
   NOT_YET_SEEN: "NOT_YET_SEEN",
   CONFIRMED_REMOVED: "CONFIRMED_REMOVED",
@@ -530,8 +532,25 @@ export function mergeLkgPublishedProducts(nextDoc, prevDoc, opts = {}) {
     const holdPublic = forceHold;
     const ageExceeded = row.ageExceeded === true || (Number(row.ageHours) >= 72);
     const recoveryMode = opts.recoveryMode === true;
+    // LKG carry must re-apply UTF-8 normalize: prior public titles may still hold
+    // CP852 mojibake and toPublicProductCard is not re-run on carried rows.
+    const titleN = normalizeCjProductText(prev.product?.title ?? prev.product?.name ?? null);
+    const descN = normalizeCjProductText(prev.product?.description ?? null);
     const product = {
       ...prev.product,
+      title: titleN.text,
+      name: titleN.text ?? prev.product?.name ?? null,
+      description: descN.text,
+      utf8Normalize: {
+        ...(prev.product?.utf8Normalize && typeof prev.product.utf8Normalize === "object"
+          ? prev.product.utf8Normalize
+          : {}),
+        titleRepaired: titleN.repaired === true,
+        descriptionRepaired: descN.repaired === true,
+        titleReason: titleN.reason,
+        descriptionReason: descN.reason,
+        appliedAt: "lkg_carry",
+      },
       publicationReady: true,
       publishable: !holdPublic,
       publicOffer: !holdPublic,
