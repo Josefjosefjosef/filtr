@@ -6,6 +6,7 @@ import {
   throttleCj,
   validatePatForCjImport,
 } from "./iu-cj-affiliate-phase1-lib.mjs";
+import { normalizeCjProductText } from "./iu-cj-affiliate-utf8-title-normalize-v51-8.mjs";
 
 export const CJ_GRAPHQL_PRODUCT_URL = "https://ads.api.cj.com/query";
 /** Legacy REST host; DNS ENOTFOUND in current CJ infra — do not use for new probes. */
@@ -341,8 +342,12 @@ export function mapGraphqlProductRow(row, websitePid, opts = {}) {
   const price = row?.price || {};
   const click = row?.linkCode?.clickUrl || "";
   const affiliate = parseAffiliateClickUrl(click, websitePid);
-  const title = row?.title != null ? String(row.title) : "";
-  const desc = row?.description != null ? String(row.description) : "";
+  const titleRaw = row?.title != null ? String(row.title) : "";
+  const descRaw = row?.description != null ? String(row.description) : "";
+  const titleN = normalizeCjProductText(titleRaw);
+  const descN = normalizeCjProductText(descRaw);
+  const title = titleN.text || "";
+  const desc = descN.text || "";
   const feedIdRaw =
     row?.adId != null
       ? row.adId
@@ -359,6 +364,12 @@ export function mapGraphqlProductRow(row, websitePid, opts = {}) {
     name: title || null,
     variant: null,
     description: desc || null,
+    utf8Normalize: {
+      titleRepaired: titleN.repaired,
+      descriptionRepaired: descN.repaired,
+      titleReason: titleN.reason,
+      descriptionReason: descN.reason,
+    },
     price: price.amount != null ? String(price.amount) : null,
     currency: price.currency != null ? String(price.currency) : null,
     availability: row?.availability != null ? String(row.availability) : null,

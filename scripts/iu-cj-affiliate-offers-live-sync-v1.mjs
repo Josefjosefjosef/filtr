@@ -39,6 +39,7 @@ import {
   isProductSearchOffsetCeiling,
   mapGraphqlProductRow,
 } from "./iu-cj-affiliate-phase2-product-api.mjs";
+import { normalizeCjProductText } from "./iu-cj-affiliate-utf8-title-normalize-v51-8.mjs";
 import {
   advancePartnerCheckpoint,
   emptyProductFeedCheckpointState,
@@ -480,12 +481,14 @@ function toPublicProductCard(p, sectionKey) {
   if (p.currentPrice == null || !p.currency) return null;
   // Never publish zero/negative as a confirmed sale price (Phase 3Y).
   if (!isPositiveSalePrice(p.currentPrice)) return null;
+  const titleN = normalizeCjProductText(p.title || null);
+  const descN = normalizeCjProductText(p.description || null);
   return {
     productId: p.productId || null,
     productVariant: p.productVariant || null,
     brand: p.brand || null,
-    title: p.title || null,
-    description: p.description || null,
+    title: titleN.text,
+    description: descN.text,
     imageUrl: p.imageUrl,
     currentPrice: p.currentPrice,
     originalPrice: p.originalPrice ?? null,
