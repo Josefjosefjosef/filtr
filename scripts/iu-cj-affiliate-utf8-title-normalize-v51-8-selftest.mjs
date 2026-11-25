@@ -8,6 +8,7 @@ import {
   looksLikeCp852Utf8Mojibake,
   normalizeCjProductFields,
   normalizeCjProductText,
+  normalizeOffersPublicDocTexts,
   tryRepairCp852Utf8Mojibake,
 } from "./iu-cj-affiliate-utf8-title-normalize-v51-8.mjs";
 
@@ -67,10 +68,23 @@ assert(fields.title === "Měkká knížka", "fields title");
 assert(fields.description === "Popis výrobku český", "fields description");
 assert(fields.utf8Normalize.titleRepaired === true, "fields title repaired flag");
 
+const doc = {
+  sections: [
+    {
+      sectionKey: "aff-nabytek",
+      products: [{ title: toCp852Mojibake("Šatní skříň"), description: null }],
+    },
+  ],
+};
+const pass = normalizeOffersPublicDocTexts(doc);
+assert(pass.titleRepaired === 1 && pass.scanned === 1, "final pass repaired 1");
+assert(doc.sections[0].products[0].title === "Šatní skříň", "final pass title clear");
+
 console.log(
   JSON.stringify({
     ok: true,
     schema: "iu-cj-affiliate-utf8-title-normalize-v51-8-selftest",
     samples: samples.length,
+    finalPass: pass,
   })
 );
