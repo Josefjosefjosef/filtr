@@ -4,6 +4,8 @@
  * Fixture checks are mandatory; committed-artifact checks run when artifacts exist (read-only).
  */
 import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
 import {
   buildJoinedEndedInventory,
   loadInventoryFromArtifacts,
@@ -56,6 +58,36 @@ const prev = { partners: [mk(1, "joined"), mk(2, "joined"), mk(3, "joined"), mk(
 const diff = buildJoinedEndedInventory({ registry, offersPublic, previousRegistry: prev });
 check("diff_ended_includes_6_and_5", diff.lists.endedIds.join(",") === "5,6", diff.lists.endedIds);
 check("diff_joined_stays_4", diff.denominators.joined === 4, diff.denominators);
+
+// 2b) ENDED diff via IU_CJ_PREVIOUS_REGISTRY_PATH with two fixture registries (TEMP-only, outside repo)
+{
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "iu-cj-ended-diff-"));
+  try {
+    const curPath = path.join(tmpDir, "current-registry.json");
+    const prevPath = path.join(tmpDir, "previous-registry.json");
+    const offPath = path.join(tmpDir, "offers-public.json");
+    fs.writeFileSync(curPath, JSON.stringify(registry), "utf8");
+    fs.writeFileSync(prevPath, JSON.stringify(prev), "utf8");
+    fs.writeFileSync(offPath, JSON.stringify(offersPublic), "utf8");
+    const withPrev = loadInventoryFromArtifacts({
+      IU_CJ_REGISTRY_PATH: curPath,
+      IU_CJ_OFFERS_PUBLIC_PATH: offPath,
+      IU_CJ_PREVIOUS_REGISTRY_PATH: prevPath,
+    });
+    check("env_prev_ended_diff_emitted", withPrev.lists.endedIds.join(",") === "5,6" && withPrev.ended.fromPreviousRegistryDiff === 1 && withPrev.ended.diffSkippedReason === null, withPrev.ended);
+    check("env_prev_joined_ended_disjoint", withPrev.guards.joinedEndedDisjoint === true && withPrev.denominators.joined === 4, withPrev.denominators);
+    const noPrev = loadInventoryFromArtifacts({ IU_CJ_REGISTRY_PATH: curPath, IU_CJ_OFFERS_PUBLIC_PATH: offPath });
+    check("env_no_prev_skips_diff", noPrev.ended.fromPreviousRegistryDiff === 0 && noPrev.ended.diffSkippedReason === "no_previous_registry", noPrev.ended);
+    const badPrev = loadInventoryFromArtifacts({
+      IU_CJ_REGISTRY_PATH: curPath,
+      IU_CJ_OFFERS_PUBLIC_PATH: offPath,
+      IU_CJ_PREVIOUS_REGISTRY_PATH: path.join(tmpDir, "missing.json"),
+    });
+    check("env_prev_unreadable_skips_diff", badPrev.ended.fromPreviousRegistryDiff === 0 && badPrev.ended.diffSkippedReason === "previous_registry_unreadable", badPrev.ended);
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+}
 
 // 3) ENDED must NOT be inferred when CJ API down / fetch incomplete
 const apiDown = buildJoinedEndedInventory({

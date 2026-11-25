@@ -219,11 +219,22 @@ export function loadInventoryFromArtifacts(env = process.env) {
   const registryPath = env.IU_CJ_REGISTRY_PATH || DEFAULT_REGISTRY_PATH;
   const offersPath = env.IU_CJ_OFFERS_PUBLIC_PATH || DEFAULT_OFFERS_PUBLIC_PATH;
   const prevPath = env.IU_CJ_PREVIOUS_REGISTRY_PATH || null;
-  return buildJoinedEndedInventory({
+  let previousRegistry = null;
+  let previousUnreadable = false;
+  if (prevPath) {
+    try {
+      previousRegistry = readJson(prevPath);
+    } catch {
+      previousUnreadable = true; // never infer ENDED from a missing/corrupt previous registry
+    }
+  }
+  const inv = buildJoinedEndedInventory({
     registry: readJson(registryPath),
     offersPublic: readJson(offersPath),
-    previousRegistry: prevPath ? readJson(prevPath) : null,
+    previousRegistry,
   });
+  if (previousUnreadable) inv.ended.diffSkippedReason = "previous_registry_unreadable";
+  return inv;
 }
 
 function isDirectRun() {
