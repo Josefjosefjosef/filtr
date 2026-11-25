@@ -133,3 +133,42 @@ export function normalizeCjProductFields(fields = {}) {
     },
   };
 }
+
+/**
+ * In-place final pass over offers-public sections[].products[] titles/descriptions.
+ * Covers LKG-carried rows and any path that skipped toPublicProductCard.
+ * @param {object|null|undefined} doc
+ * @returns {{ titleRepaired: number, descriptionRepaired: number, scanned: number }}
+ */
+export function normalizeOffersPublicDocTexts(doc) {
+  const stats = { titleRepaired: 0, descriptionRepaired: 0, scanned: 0 };
+  if (!doc || typeof doc !== "object") return stats;
+  for (const sec of doc.sections || []) {
+    for (const p of sec.products || []) {
+      if (!p || typeof p !== "object") continue;
+      stats.scanned += 1;
+      const titleN = normalizeCjProductText(p.title ?? p.name ?? null);
+      const descN = normalizeCjProductText(p.description ?? null);
+      if (titleN.repaired) {
+        p.title = titleN.text;
+        if (p.name != null) p.name = titleN.text;
+        stats.titleRepaired += 1;
+      }
+      if (descN.repaired) {
+        p.description = descN.text;
+        stats.descriptionRepaired += 1;
+      }
+      if (titleN.repaired || descN.repaired) {
+        p.utf8Normalize = {
+          ...(p.utf8Normalize && typeof p.utf8Normalize === "object" ? p.utf8Normalize : {}),
+          titleRepaired: titleN.repaired === true,
+          descriptionRepaired: descN.repaired === true,
+          titleReason: titleN.reason,
+          descriptionReason: descN.reason,
+          appliedAt: "offers_public_final_pass",
+        };
+      }
+    }
+  }
+  return stats;
+}

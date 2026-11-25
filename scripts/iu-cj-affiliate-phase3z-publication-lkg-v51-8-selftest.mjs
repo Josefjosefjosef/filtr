@@ -42,7 +42,8 @@ const prev = {
         {
           advertiserId: "1",
           productId: "keep-missing",
-          title: "LKG",
+          // CP852 mojibake for "Šatní" — must be repaired on LKG carry
+          title: "┼áatn├ş sk┼Ö├ş┼ł",
           imageUrl: "https://example.com/a.jpg",
           currentPrice: 10,
           currency: "CZK",
@@ -122,6 +123,8 @@ assert(
   keptProd.publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_ELIGIBLE,
   "not-yet-seen keep public"
 );
+assert(keptProd.title === "Šatní skříň", "LKG carry repairs CP852 mojibake title");
+assert(keptProd.utf8Normalize?.titleRepaired === true, "LKG carry utf8Normalize flag");
 assert(isPublicOfferEligible(keptProd) === true, "pending-reverify still public-eligible");
 assert(keptProd.freshnessStatus === "LAST_KNOWN_PENDING_REVERIFY", "pending freshness");
 assert(keptProd.sourceFreshLabelForbidden === true, "no CURRENT label");

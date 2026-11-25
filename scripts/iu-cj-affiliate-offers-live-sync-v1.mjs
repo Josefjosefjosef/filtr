@@ -39,7 +39,10 @@ import {
   isProductSearchOffsetCeiling,
   mapGraphqlProductRow,
 } from "./iu-cj-affiliate-phase2-product-api.mjs";
-import { normalizeCjProductText } from "./iu-cj-affiliate-utf8-title-normalize-v51-8.mjs";
+import {
+  normalizeCjProductText,
+  normalizeOffersPublicDocTexts,
+} from "./iu-cj-affiliate-utf8-title-normalize-v51-8.mjs";
 import {
   advancePartnerCheckpoint,
   emptyProductFeedCheckpointState,
@@ -3451,6 +3454,8 @@ export async function runOffersLiveSync(opts = {}) {
   const validation = validateOffersPublicPayload(doc, {
     allowLive: doc.liveEnabled === true && armed,
   });
+  // Final UTF-8 pass (LKG carry + any path that skipped toPublicProductCard).
+  const utf8FinalPass = normalizeOffersPublicDocTexts(doc);
   if (!validation.ok) {
     return {
       ok: false,
@@ -3460,6 +3465,7 @@ export async function runOffersLiveSync(opts = {}) {
       errors: validation.errors,
       counts: nextReady,
       productMeta,
+      utf8FinalPass,
     };
   }
 
