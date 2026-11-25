@@ -208,6 +208,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-feed-completeness-v51-8-selftest.mjs
       - name: LKG missing-refresh attempt selftest (V51.8; offline)
         run: node scripts/iu-cj-affiliate-phase3z-lkg-missing-refresh-attempt-v51-8-selftest.mjs
+      - name: UTF-8 title normalize selftest (V51.8; CS/SK/PL; offline)
+        run: node scripts/iu-cj-affiliate-utf8-title-normalize-v51-8-selftest.mjs
       - name: Empty feed reprobe selftest (V51.8; offline)
         run: node scripts/iu-cj-affiliate-phase3z-empty-feed-reprobe-v51-8-selftest.mjs
       - name: Empty feed reconcile selftest (V51.8; offline)
