@@ -159,6 +159,7 @@ import {
   indexProductsByCompoundIdentity,
 } from "./iu-cj-affiliate-phase3z-product-reverify-v50.mjs";
 import { buildProductIdentityLedger } from "./iu-cj-affiliate-phase3z-product-identity-v50.mjs";
+import { createSyncPhaseObserver } from "./iu-cj-affiliate-sync-phase-observer-v51-8.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const WEBSITE_PID = "101883843";
@@ -2260,6 +2261,8 @@ export async function runOffersLiveSync(opts = {}) {
   const armed = env.IU_CJ_OFFERS_PROMOTE_ARMED === "1";
   const liveWanted = env.IU_CJ_OFFERS_LIVE_ENABLED === "1";
   const sampleProducts = opts.sampleProducts !== false && env.IU_CJ_OFFERS_SAMPLE_PRODUCTS !== "0";
+  // Observe-only phase timing (IU_CJ_SYNC_PHASE_PROFILE=1, default OFF → pass-through no-op; stderr only).
+  const phaseObs = createSyncPhaseObserver(env);
 
   const staging = readJson(path.join(dataDir, "iu-affiliate-cj-staging-v1.json"), {
     apiOutage: true,
@@ -2326,7 +2329,7 @@ export async function runOffersLiveSync(opts = {}) {
   let coverageLedger = null;
 
   if (sampleProducts && products.length === 0) {
-    const sampled = await sampleProductsForManagedPartners({
+    const sampled = await phaseObs.timePhase("product_discovery", () => sampleProductsForManagedPartners({
       env,
       partners: managedPublic.partners || [],
       websitePid: WEBSITE_PID,
@@ -2336,7 +2339,7 @@ export async function runOffersLiveSync(opts = {}) {
       maxPagesPerPartner: opts.productMaxPages,
       publishPerPartner: opts.productPublishPerPartner,
       inventoryFeeds: opts.inventoryFeeds,
-    });
+    }));
     products = sampled.products;
     productMeta = sampled.meta;
     sourceProducts = sampled.sourceProducts || null;
@@ -2413,14 +2416,14 @@ export async function runOffersLiveSync(opts = {}) {
     refreshTargetDoc = prevPublic;
   }
   if (doRefresh && refreshTargetDoc) {
-    const refreshed = await refreshPublishedProductsFromCj({
+    const refreshed = await phaseObs.timePhase("published_refresh", () => refreshPublishedProductsFromCj({
       env,
       prevPublic: refreshTargetDoc,
       websitePid: WEBSITE_PID,
       pageSize: Number.isFinite(refreshPageSize) ? refreshPageSize : 1000,
       maxPages: Number.isFinite(refreshMaxPages) ? refreshMaxPages : 5,
       refreshCheckpointPath: opts.refreshCheckpointPath,
-    });
+    }));
     refreshedByKey = refreshed.refreshedByKey;
     coverageLedger = refreshed.coverageLedger || null;
     for (const row of coverageLedger?.rows || []) {
@@ -2461,7 +2464,7 @@ export async function runOffersLiveSync(opts = {}) {
       const joinedAdvertiserIds = new Set(
         (doc.sections || []).map((s) => String(s.advertiserId || "")).filter(Boolean)
       );
-      const re = await reverifyMissProductsFromCj({
+      const re = await phaseObs.timePhase("miss_reverify", () => reverifyMissProductsFromCj({
         missKeys,
         gqlEnv,
         websitePid: WEBSITE_PID,
@@ -2470,7 +2473,7 @@ export async function runOffersLiveSync(opts = {}) {
         nowIso,
         titleByKey,
         joinedAdvertiserIds,
-      });
+      }));
       for (const [k, v] of re.refreshedByKey.entries()) refreshedByKey.set(k, v);
       for (const k of re.matchedKeys) {
         const row = coverageByKey.get(k);

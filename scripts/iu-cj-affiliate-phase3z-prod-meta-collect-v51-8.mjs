@@ -31,7 +31,7 @@ export function collectProdMetaFromOffersJson(doc, opts = {}) {
     updatedAt: doc.updatedAt ?? null,
     liveEnabled: doc.liveEnabled === true,
     LIVE: gb.publicEligibleAfter ?? stats.uniquePublicEligible ?? null,
-    DEFERRED_NEW: gb.deferredNew ?? null,
+    DEFERRED_NEW: Number(gb.deferredNew ?? 0),
     growthCum: gb.cumulativeAddedSinceBaseline ?? null,
     growthRem: gb.cumulativeRemaining ?? null,
     ownerGate: gb.exceptionalGrowthRequiresOwner === true,
@@ -60,6 +60,7 @@ export function assertCompleteProdMeta(meta) {
     "partners",
     "growthCum",
     "ownerGate",
+    "DEFERRED_NEW",
   ];
   const missing = required.filter((k) => meta?.[k] == null);
   return {
