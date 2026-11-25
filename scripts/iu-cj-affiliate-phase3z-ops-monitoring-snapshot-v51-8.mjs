@@ -10,12 +10,18 @@
  */
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import crypto from "node:crypto";
+import { classifyScheduleSlots } from "./iu-cj-affiliate-phase3z-schedule-slot-watch-v42.mjs";
 
 export const OPS_MONITORING_SNAPSHOT_SCHEMA =
   "iu-cj-affiliate-phase3z-ops-monitoring-snapshot-v51-8";
 
+export const OPS_INCIDENT_LEDGER_SCHEMA =
+  "iu-cj-affiliate-phase3z-ops-incident-ledger-v51-8";
+
 export const OPS_ANOMALY = Object.freeze({
   MISSING_SCHEDULE: "MISSING_SCHEDULE",
+  MISSING_SCHEDULE_SLOT: "MISSING_SCHEDULE_SLOT",
   HOLD_SURGE: "HOLD_SURGE",
   GROWTH_GATE_FLIP: "GROWTH_GATE_FLIP",
   UNAUTHORIZED_UNCAPPED: "UNAUTHORIZED_UNCAPPED",
@@ -106,7 +112,10 @@ export function buildOpsMonitoringSnapshot({
   retryQueueOpen,
   emailPublishingArmed,
   uncappedMode,
+  scheduleRuns,
+  now,
 } = {}) {
+  const nowDate = now instanceof Date ? now : now ? new Date(now) : new Date();
   const holdN = normalizeHold(hold);
   const growthN = normalizeGrowth(growth);
   const unique = Math.max(0, Math.trunc(num(uniqueProducts)));
@@ -165,6 +174,29 @@ export function buildOpsMonitoringSnapshot({
     });
   }
 
+  // Natural schedule slot coverage (24h window). Only evaluated when the caller
+  // supplies scheduleRuns (natural `schedule` event runs; never workflow_dispatch).
+  let scheduleSlots = null;
+  if (Array.isArray(scheduleRuns)) {
+    const report = classifyScheduleSlots(scheduleRuns, nowDate);
+    const missed = report.slots.filter((s) => s.classification === "SLOT_MISS");
+    scheduleSlots = {
+      watchResult: report.watchResult,
+      burninStatus: report.burninStatus,
+      counts: report.counts,
+      missedSlots: missed.map((s) => ({ hour: s.hour, expectedUtc: s.expectedUtc })),
+    };
+    for (const s of missed) {
+      anomalies.push({
+        code: OPS_ANOMALY.MISSING_SCHEDULE_SLOT,
+        level: missed.length >= 2 ? "CRIT" : "WARN",
+        detail: `natural schedule slot ${String(s.hour).padStart(2, "0")}:17 UTC missing (expected ${s.expectedUtc})`,
+        hour: s.hour,
+        expectedUtc: s.expectedUtc,
+      });
+    }
+  }
+
   if (
     holdN.prior != null &&
     holdN.prior > 0 &&
@@ -210,8 +242,9 @@ export function buildOpsMonitoringSnapshot({
 
   return {
     schema: OPS_MONITORING_SNAPSHOT_SCHEMA,
-    at: new Date().toISOString(),
+    at: nowDate.toISOString(),
     mainSha: mainSha != null ? String(mainSha) : null,
+    scheduleSlots,
     lastScheduleRun: lastScheduleRun ?? null,
     lastPromote: lastPromote ?? null,
     metrics: {
@@ -239,6 +272,70 @@ export function buildOpsMonitoringSnapshot({
       "UNAUTHORIZED_UNCAPPED requires ownerApproved on growth.",
       "EMAIL_ARMED_UNEXPECTED whenever emailPublishingArmed is true.",
     ],
+  };
+}
+
+export const OPS_INCIDENT_LEDGER_ENTRY_KEYS = Object.freeze([
+  "incidentId",
+  "code",
+  "level",
+  "status",
+  "detectedAt",
+  "detail",
+  "slotExpectedUtc",
+  "evidenceClass",
+  "recommendedAction",
+]);
+
+const RECOMMENDED_ACTION = Object.freeze({
+  [OPS_ANOMALY.MISSING_SCHEDULE]: "SCHEDULE_CATCHUP_IF_SLOT_MISS",
+  [OPS_ANOMALY.MISSING_SCHEDULE_SLOT]: "SCHEDULE_CATCHUP_BOUNDED_DISPATCH",
+  [OPS_ANOMALY.HOLD_SURGE]: "RECORD_INCIDENT_REVIEW_HOLD",
+  [OPS_ANOMALY.GROWTH_GATE_FLIP]: "RECORD_INCIDENT_OWNER_REVIEW",
+  [OPS_ANOMALY.UNAUTHORIZED_UNCAPPED]: "RECORD_INCIDENT_OWNER_REVIEW",
+  [OPS_ANOMALY.EMAIL_ARMED_UNEXPECTED]: "RECORD_INCIDENT_OWNER_REVIEW",
+});
+
+/**
+ * Pure incident ledger from a snapshot (deterministic ids; no IO, no secrets).
+ * Never arms growth / email; recommendedAction is advisory text only.
+ */
+export function buildOpsIncidentLedger(snapshot) {
+  const snap = asObj(snapshot);
+  const anomalies = Array.isArray(snap.anomalies) ? snap.anomalies : [];
+  const detectedAt = snap.at ?? new Date().toISOString();
+  const entries = anomalies.map((a) => {
+    const slotExpectedUtc = a.expectedUtc ?? null;
+    const idSeed = [a.code, slotExpectedUtc ?? "", snap.mainSha ?? ""].join("|");
+    return {
+      incidentId:
+        "inc-" + crypto.createHash("sha1").update(idSeed).digest("hex").slice(0, 16),
+      code: a.code,
+      level: a.level ?? "WARN",
+      status: "OPEN",
+      detectedAt,
+      detail: a.detail ?? null,
+      slotExpectedUtc,
+      evidenceClass: "OFFLINE_SNAPSHOT",
+      recommendedAction: RECOMMENDED_ACTION[a.code] ?? "RECORD_INCIDENT",
+    };
+  });
+  const byLevel = { CRIT: 0, WARN: 0 };
+  for (const e of entries) byLevel[e.level] = (byLevel[e.level] ?? 0) + 1;
+  const m = asObj(snap.metrics);
+  return {
+    schema: OPS_INCIDENT_LEDGER_SCHEMA,
+    generatedAt: detectedAt,
+    mainSha: snap.mainSha ?? null,
+    entries,
+    counts: { total: entries.length, ...byLevel },
+    gates: {
+      growthGate: m.growthGate === true,
+      uncappedMode: m.uncappedMode === true,
+      emailPublishingArmed: m.emailPublishingArmed === true,
+    },
+    autoArmed: { growth: false, email: false },
+    ok: entries.length === 0,
   };
 }
 
@@ -363,6 +460,137 @@ export function runOpsMonitoringSnapshotSelftest() {
     "email_armed_unexpected",
     emailArmed.anomalyCodes.includes(OPS_ANOMALY.EMAIL_ARMED_UNEXPECTED),
     emailArmed.anomalyCodes,
+  );
+
+  // --- Natural schedule slot coverage (offline fixtures, fixed clock) ---
+  const NOW = new Date("2026-11-25T10:00:00.000Z");
+  const slotRun = (hour, dayOffset, delayMin = 5) => {
+    const base = Date.UTC(2026, 10, 25 + dayOffset, hour, 17, 0, 0);
+    return {
+      id: `r-${dayOffset}-${hour}`,
+      created_at: new Date(base + delayMin * 60000).toISOString(),
+      conclusion: "success",
+      head_sha: "a".repeat(40),
+    };
+  };
+  // 09:17 today is still PENDING_OBSERVATION (age 43m); 00..06 today + 12..21 yesterday are due.
+  const allRuns = [
+    slotRun(0, 0), slotRun(3, 0), slotRun(6, 0), slotRun(9, 0),
+    slotRun(12, -1), slotRun(15, -1), slotRun(18, -1), slotRun(21, -1),
+  ];
+  const withoutHours = (hours) =>
+    allRuns.filter((r) => !hours.some((h) => r.id.endsWith(`-${h}`) && r.id.startsWith("r-0")));
+  const slotInput = (runs) => ({
+    mainSha: "1".repeat(40),
+    now: NOW,
+    scheduleRuns: runs,
+    lastScheduleRun: { id: "x", at: "2026-11-25T09:22:00Z" },
+    hold: { current: 10, prior: 10 },
+    growth: { gate: false, priorGate: false },
+    emailPublishingArmed: false,
+    uncappedMode: false,
+  });
+
+  const slotsOk = buildOpsMonitoringSnapshot(slotInput(allRuns));
+  check(
+    "slots_all_present_no_miss",
+    !slotsOk.anomalyCodes.includes(OPS_ANOMALY.MISSING_SCHEDULE_SLOT) &&
+      slotsOk.scheduleSlots?.counts?.miss === 0,
+    slotsOk.scheduleSlots,
+  );
+  check("slots_all_present_ok", slotsOk.ok === true, slotsOk.anomalyCodes);
+
+  const slotsPending = buildOpsMonitoringSnapshot(
+    slotInput(allRuns.filter((r) => r.id !== "r-0-9")),
+  );
+  check(
+    "slot_pending_not_missing",
+    !slotsPending.anomalyCodes.includes(OPS_ANOMALY.MISSING_SCHEDULE_SLOT) &&
+      slotsPending.scheduleSlots?.counts?.pending >= 1,
+    slotsPending.scheduleSlots,
+  );
+
+  const slotsOneMiss = buildOpsMonitoringSnapshot(slotInput(withoutHours([6])));
+  const oneMissAnoms = slotsOneMiss.anomalies.filter(
+    (a) => a.code === OPS_ANOMALY.MISSING_SCHEDULE_SLOT,
+  );
+  check(
+    "slot_one_miss_warn",
+    oneMissAnoms.length === 1 &&
+      oneMissAnoms[0].level === "WARN" &&
+      oneMissAnoms[0].hour === 6 &&
+      slotsOneMiss.ok === false,
+    oneMissAnoms,
+  );
+
+  const slotsTwoMiss = buildOpsMonitoringSnapshot(slotInput(withoutHours([3, 6])));
+  const twoMissAnoms = slotsTwoMiss.anomalies.filter(
+    (a) => a.code === OPS_ANOMALY.MISSING_SCHEDULE_SLOT,
+  );
+  check(
+    "slot_two_miss_crit",
+    twoMissAnoms.length === 2 && twoMissAnoms.every((a) => a.level === "CRIT"),
+    twoMissAnoms,
+  );
+
+  // --- Incident ledger schema ---
+  const ledgerClean = buildOpsIncidentLedger(slotsOk);
+  check(
+    "ledger_clean_schema",
+    ledgerClean.schema === OPS_INCIDENT_LEDGER_SCHEMA &&
+      ledgerClean.ok === true &&
+      ledgerClean.entries.length === 0 &&
+      ledgerClean.counts.total === 0,
+    ledgerClean,
+  );
+
+  const ledger = buildOpsIncidentLedger(slotsTwoMiss);
+  check(
+    "ledger_schema_name",
+    ledger.schema === OPS_INCIDENT_LEDGER_SCHEMA,
+    ledger.schema,
+  );
+  check(
+    "ledger_entries_for_missing_slots",
+    ledger.entries.length === 2 &&
+      ledger.entries.every((e) => e.code === OPS_ANOMALY.MISSING_SCHEDULE_SLOT),
+    ledger.entries,
+  );
+  check(
+    "ledger_entry_keys_complete",
+    ledger.entries.every((e) =>
+      OPS_INCIDENT_LEDGER_ENTRY_KEYS.every((k) => Object.prototype.hasOwnProperty.call(e, k)),
+    ),
+    ledger.entries[0],
+  );
+  check(
+    "ledger_entry_status_open_and_slot_set",
+    ledger.entries.every(
+      (e) => e.status === "OPEN" && /^\d{4}-\d{2}-\d{2}T/.test(String(e.slotExpectedUtc)),
+    ),
+    ledger.entries,
+  );
+  const ledgerAgain = buildOpsIncidentLedger(slotsTwoMiss);
+  check(
+    "ledger_ids_deterministic_and_unique",
+    JSON.stringify(ledger.entries.map((e) => e.incidentId)) ===
+      JSON.stringify(ledgerAgain.entries.map((e) => e.incidentId)) &&
+      new Set(ledger.entries.map((e) => e.incidentId)).size === ledger.entries.length,
+    ledger.entries.map((e) => e.incidentId),
+  );
+  check(
+    "ledger_counts_match",
+    ledger.counts.total === 2 && ledger.counts.CRIT === 2 && ledger.ok === false,
+    ledger.counts,
+  );
+  check(
+    "ledger_gates_disarmed_no_autoarm",
+    ledger.gates.growthGate === false &&
+      ledger.gates.uncappedMode === false &&
+      ledger.gates.emailPublishingArmed === false &&
+      ledger.autoArmed.growth === false &&
+      ledger.autoArmed.email === false,
+    { gates: ledger.gates, autoArmed: ledger.autoArmed },
   );
 
   const failed = checks.filter((c) => !c.ok);
