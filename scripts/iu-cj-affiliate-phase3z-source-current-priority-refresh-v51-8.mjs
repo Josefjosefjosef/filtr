@@ -151,7 +151,7 @@ export function auditSourceCurrentHonesty(doc, opts = {}) {
     sourceCurrentProven: counts.sourceCurrent > 0,
     sample,
     note:
-      "SOURCE_CURRENT requires authoritative CJ sourceUpdatedAt (PROVIDED) within policy. Fetch/check time is never source time.",
+      "SOURCE_CURRENT requires authoritative CJ sourceUpdatedAt (PROVIDED) within policy. Fetch/check time is never source time. SOURCE_CURRENT=0 with VERIFIED_RECENT>0 is honest (PASS), not a failure.",
   };
 }
 
