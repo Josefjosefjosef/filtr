@@ -54,6 +54,8 @@ export function appendObservationEvent(ledger, event) {
     offersLiveSync: event.offersLiveSync || null,
     uniqueProducts: event.uniqueProducts ?? null,
     notes: event.notes || null,
+    // Optional REFRESHED=0 residual classification (offline classifier output; never gates growth).
+    residual: event.residual || null,
   };
   // Deduplicate by runId+eventName
   const exists = doc.events.some(
@@ -136,7 +138,29 @@ export function evaluateObservationWindow(ledger, opts = {}) {
     elapsedHours >= WINDOW_HOURS &&
     scheduleSuccess.length >= 2 &&
     critical.length === 0;
+  const residualEvents = after.filter((e) => e.residual && e.residual.residualClass);
+  const residualByClass = {};
+  for (const e of residualEvents) {
+    const c = String(e.residual.residualClass);
+    residualByClass[c] = (residualByClass[c] || 0) + 1;
+  }
+  const lastResidual = residualEvents.length
+    ? residualEvents[residualEvents.length - 1].residual
+    : null;
+  let consecutiveNonRefreshed = 0;
+  for (let i = residualEvents.length - 1; i >= 0; i -= 1) {
+    if (residualEvents[i].residual.refreshed === 0) consecutiveNonRefreshed += 1;
+    else break;
+  }
   return {
+    refreshedZeroResidual: {
+      observations: residualEvents.length,
+      byClass: residualByClass,
+      lastClass: lastResidual ? lastResidual.residualClass : null,
+      consecutiveRefreshedZero: consecutiveNonRefreshed,
+      lastBlocking: lastResidual ? lastResidual.blocking === true : null,
+      informationalOnly: true,
+    },
     complete,
     reason: complete
       ? "OBSERVATION_48H_CLEAN"
