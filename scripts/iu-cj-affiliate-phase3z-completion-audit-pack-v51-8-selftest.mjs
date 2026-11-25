@@ -42,6 +42,15 @@ const man = JSON.parse(fs.readFileSync(manAbs, "utf8"));
 assert(!man.files.some((f) => f.path === "MANIFEST.json"), "manifest excludes legacy self");
 assert(!man.files.some((f) => /integrity-manifest/i.test(f.path)), "no integrity-manifest self-ref");
 
+const imAbs = path.join(built.workDir, "INTEGRITY_MANIFEST.json");
+assert(fs.existsSync(imAbs), "INTEGRITY_MANIFEST.json present");
+const im = JSON.parse(fs.readFileSync(imAbs, "utf8"));
+assert(Array.isArray(im.files), "INTEGRITY_MANIFEST.json files[] is array");
+assert(
+  !im.files.some((f) => path.posix.basename(String(f.path || f).replace(/\\/g, "/")) === "INTEGRITY_MANIFEST.json"),
+  "INTEGRITY_MANIFEST.json files[] excludes itself",
+);
+
 const seal = validateManifestSeal(built.workDir);
 assert(seal.ok, "seal ok: " + JSON.stringify(seal.failures));
 const ev = validateEvidenceManifest(man, built.workDir);
