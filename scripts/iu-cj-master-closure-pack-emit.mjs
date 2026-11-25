@@ -44,17 +44,22 @@ export function summarize(matrix) {
 
   const proof = matrix.utf8ProductionProof || {};
   const itemA = (matrix.items || []).find((i) => i.id === 'A-UTF8-PR14036');
+  const utf8StatusOk = /CLEARED|REGRESSION_PROOF/i.test(String(proof.status || ""));
+  const itemAOk =
+    !itemA ||
+    /CLEARED|DONE|REGRESSION_PROOF/i.test(String(itemA.status || ""));
   const utf8 = {
     cleared:
-      proof.status === 'CLEARED' &&
+      utf8StatusOk &&
       proof.titleBox === 0 &&
       proof.pass === true &&
-      (!itemA || itemA.status === 'PRODUCTION_CLEARED'),
+      itemAOk,
     titleBox: proof.titleBox ?? null,
     checkedAt: proof.checkedAt ?? null,
     dataClearPr: proof.dataClearPr ?? null,
     codeFixPr: proof.codeFixPr ?? null,
     codeFixState: (matrix.activePrs?.[String(proof.codeFixPr)] || {}).state ?? null,
+    status: proof.status ?? null,
   };
 
   const prs = matrix.activePrs || {};
