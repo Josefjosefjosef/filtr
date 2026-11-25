@@ -282,6 +282,8 @@ jobs:
         run: node scripts/iu-cj-affiliate-phase3z-growth-approval-nonce-store-v51-8-selftest.mjs
       - name: Growth nonce lifecycle + COMPLETED evidence selftest (offline; does NOT deploy D1)
         run: node scripts/iu-cj-affiliate-phase3z-growth-approval-nonce-lifecycle-v51-8-selftest.mjs
+      - name: Adaptive growth controller selftest (V51.8; offline; DISARMED-only; no production activation)
+        run: node scripts/iu-cj-affiliate-phase3z-adaptive-growth-controller-v51-8-selftest.mjs
       - name: EXECUTE→catalog-sync CI bridge selftest (offline; default disabled; no production write)
         run: node scripts/iu-cj-affiliate-phase3z-execute-growth-activation-ci-v51-8-selftest.mjs
       - name: INVALID_FEED case audit selftest (V51.8; offline)
