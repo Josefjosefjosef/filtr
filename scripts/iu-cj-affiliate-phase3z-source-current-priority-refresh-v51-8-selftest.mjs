@@ -96,6 +96,24 @@ expect(
 const cleanAudit = auditSourceCurrentHonesty({ sections: [{ products: [doc.sections[0].products[0]] }] }, { nowMs: now });
 expect("clean_doc_honest", cleanAudit.honest === true && cleanAudit.counts.sourceCurrent === 1);
 
+// SOURCE_CURRENT=0 with VERIFIED_RECENT>0 is PASS honesty (not a failure) — note asserted
+const zeroCurrentAudit = auditSourceCurrentHonesty(
+  { sections: [{ products: [doc.sections[0].products[1], doc.sections[0].products[2]] }] },
+  { nowMs: now },
+);
+expect(
+  "source_current_zero_verified_recent_is_honest",
+  zeroCurrentAudit.counts.sourceCurrent === 0 &&
+    zeroCurrentAudit.verifiedRecentNotCurrent > 0 &&
+    zeroCurrentAudit.honest === true &&
+    zeroCurrentAudit.counts.dishonest === 0 &&
+    zeroCurrentAudit.sourceCurrentProven === false,
+);
+expect(
+  "source_current_zero_honesty_note_asserted",
+  /SOURCE_CURRENT=0 with VERIFIED_RECENT>0 is honest \(PASS\), not a failure/.test(zeroCurrentAudit.note),
+);
+
 // --- priority planner ---
 const plan = planPriorityRefresh(doc, { nowMs: now, limit: 50 });
 expect("plan_read_only", plan.readOnly === true && plan.writes === 0);
