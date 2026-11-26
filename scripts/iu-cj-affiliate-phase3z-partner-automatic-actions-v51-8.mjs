@@ -5,6 +5,7 @@
  */
 import { classifyFromCjEvidence } from "./iu-cj-affiliate-phase3z-partner-registry-v1.mjs";
 import { diagnoseSourceReadAccess } from "./iu-cj-affiliate-phase3z-verification-pipeline-v51-8.mjs";
+import { STATIC_CATALOG_BLOCKED_UNTIL_CONDITIONS } from "./iu-cj-affiliate-phase3z-static-main-catalog-v13.mjs";
 
 export const PARTNER_ACTION = Object.freeze({
   REVIEW_PRESENTATION_BUDGET_NOT_A_GROWTH_CAP: "REVIEW_PRESENTATION_BUDGET_NOT_A_GROWTH_CAP",
@@ -53,6 +54,8 @@ export function executePartnerAutomaticStep(row, opts = {}) {
       primaryCategory: row.primaryCategory,
     });
     const czOk = row.czEligible === true;
+    const blockedReason = STATIC_CATALOG_BLOCKED_UNTIL_CONDITIONS[advertiserId] || null;
+    const sectionReady = classified.sectionId != null && czOk && relationship === "joined";
     return {
       advertiserId,
       step,
@@ -61,15 +64,17 @@ export function executePartnerAutomaticStep(row, opts = {}) {
       rule: classified.rule,
       source: classified.source,
       sectionUnresolved: classified.sectionId == null,
-      publicationReady: classified.sectionId != null && czOk && relationship === "joined",
+      publicationReady: sectionReady && !blockedReason,
       merchantSubtype: classified.merchantSubtype || null,
-      reason: classified.sectionId
-        ? czOk
-          ? "SECTION_ASSIGNED_CZ_ATTESTED"
-          : "SECTION_ASSIGNED_PUBLICATION_STILL_BLOCKED"
-        : classified.merchantSubtype === "DEPARTMENT_STORE"
-          ? "DEPARTMENT_STORE_NO_SINGLE_TILE"
-          : "SECTION_STILL_UNRESOLVED",
+      reason: blockedReason && sectionReady
+        ? blockedReason
+        : classified.sectionId
+          ? czOk
+            ? "SECTION_ASSIGNED_CZ_ATTESTED"
+            : "SECTION_ASSIGNED_PUBLICATION_STILL_BLOCKED"
+          : classified.merchantSubtype === "DEPARTMENT_STORE"
+            ? "DEPARTMENT_STORE_NO_SINGLE_TILE"
+            : "SECTION_STILL_UNRESOLVED",
     };
   }
   const access = diagnoseSourceReadAccess(opts.env || process.env);

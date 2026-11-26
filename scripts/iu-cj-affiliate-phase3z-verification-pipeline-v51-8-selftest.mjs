@@ -175,6 +175,29 @@ const onbuy = executePartnerAutomaticStep({
 });
 expect("onbuy_not_bazar", onbuy.sectionId == null && onbuy.publicationReady === false && onbuy.merchantSubtype === "DEPARTMENT_STORE" && onbuy.reason === "DEPARTMENT_STORE_NO_SINGLE_TILE");
 
+const readyCategory = "<parent>Clothing/Apparel</parent><child>Womens</child>";
+const readyControl = executePartnerAutomaticStep({
+  advertiserId: "900001",
+  automaticNextStep: "ASSIGN_PRIMARY_SECTION",
+  relationshipStatus: "joined",
+  czEligible: true,
+  primaryCategory: readyCategory,
+});
+expect("section_assignment_can_be_ready", readyControl.publicationReady === true && readyControl.sectionId === "aff-moda");
+for (const [advertiserId, reason] of [
+  ["7417963", "ONBUY_SECTION_UNRESOLVED"],
+  ["4686326", "PARAGON_UNSUITABLE_DESTINATION"],
+]) {
+  const blocked = executePartnerAutomaticStep({
+    advertiserId,
+    automaticNextStep: "ASSIGN_PRIMARY_SECTION",
+    relationshipStatus: "joined",
+    czEligible: true,
+    primaryCategory: readyCategory,
+  });
+  expect("blocked_" + advertiserId, blocked.publicationReady === false && blocked.reason === reason);
+}
+
 const specialist = buildAssortmentProfile({
   advertiser: {
     advertiserName: "Lekarna Test",
