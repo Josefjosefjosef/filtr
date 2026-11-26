@@ -13,7 +13,11 @@ function check(name, fn) {
   console.log('PASS ' + name);
 }
 
-const candidates = Array.from({ length: 100 }, (_, i) => ({ id: 'p' + i }));
+const candidates = Array.from({ length: 100 }, (_, i) => ({
+  id: 'p' + i,
+  verifiedEligible: true,
+  verificationState: 'VERIFIED_ELIGIBLE',
+}));
 const healthy = evaluateGrowthHealth({ uniqueProducts: 1000, holdCount: 10, invalidRate: 0.01, syncDurationMs: 1000, pagesFail: 0 });
 
 check('batch size estimate respects caps', () => {
@@ -84,6 +88,20 @@ check('env IU_CJ_PUBLIC_GROWTH_UNCAPPED does not affect planner', () => {
     if (prev === undefined) delete process.env.IU_CJ_PUBLIC_GROWTH_UNCAPPED;
     else process.env.IU_CJ_PUBLIC_GROWTH_UNCAPPED = prev;
   }
+});
+
+check('armed rejects historical candidates that are not verified eligible', () => {
+  const historical = Array.from({ length: 20 }, (_, i) => ({ id: 'hist' + i, verificationState: 'DEFERRED_CANDIDATE_UNVERIFIED' }));
+  const r = planAdaptiveBatch({
+    candidates: historical,
+    health: healthy,
+    remainingCumulative: 1000,
+    uncappedGate: true,
+    executeArmed: true,
+  });
+  assert.equal(r.allowed, 0);
+  assert.equal(r.reason, 'NO_VERIFIED_ELIGIBLE');
+  assert.equal(r.selected.length, 0);
 });
 
 console.log('SELFTEST_PASS count=' + results.length);
