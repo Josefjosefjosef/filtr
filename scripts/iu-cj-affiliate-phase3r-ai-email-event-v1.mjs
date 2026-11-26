@@ -169,8 +169,87 @@ export function validateAiEventPayload(payload, sourceText = "") {
 }
 
 /**
+ * Diacritics-insensitive helper (kupón -> kupon, zľavový -> zlavovy). Keeps string length semantics simple
+ * for regex matching only; never used to build output values other than coupon tokens (ASCII).
+ */
+function foldDiacritics(s) {
+  return String(s || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+const COUPON_WORD_RE_SRC =
+  "(?:(?:slevov\\w*|zlavov\\w*|promo|discount|coupon|voucher)\\s+)*(?:kupon\\w*|coupon\\w*|code\\w*|kod\\w*|voucher\\w*)";
+const COUPON_NEGATION_RES = [
+  // CZ/SK: "není kupón", "ne kupón", "nie je kupón", "nemáte kupón", "není to kupón", "nejde o kupón"
+  new RegExp(
+    "\\b(?:ne|neni|nie\\s+je|nie\\s+su|nema(?:te)?|nemas|nebude|nejde\\s+o|nejedna\\s+se\\s+o|nejedna\\s+sa\\s+o)\\s+(?:to\\s+|zadny\\s+|zadna\\s+)?" +
+      COUPON_WORD_RE_SRC,
+    "gi",
+  ),
+  // CZ/SK: "bez kupónu", "bez slevového kódu"
+  new RegExp("\\bbez\\s+" + COUPON_WORD_RE_SRC, "gi"),
+  // CZ/SK: "kupón není potřeba", "kód nie je potrebný"
+  new RegExp(
+    "\\b" + COUPON_WORD_RE_SRC + "\\s+(?:neni|nie\\s+je|nebude)\\s+(?:potreb\\w*|nutn\\w*|treba|vyzad\\w*)",
+    "gi",
+  ),
+  // EN: "not a coupon", "no coupon", "no code needed", "without a coupon code", "don't need a code"
+  new RegExp(
+    "\\b(?:no|not\\s+an?|isn'?t\\s+an?|is\\s+not\\s+an?|without\\s+(?:an?\\s+|any\\s+|the\\s+)?|do(?:es)?n'?t\\s+need\\s+(?:an?\\s+)?|do(?:es)?\\s+not\\s+need\\s+(?:an?\\s+)?)\\s*" +
+      COUPON_WORD_RE_SRC +
+      "\\b",
+    "gi",
+  ),
+  // EN: "coupon is not needed", "code isn't required"
+  new RegExp(
+    "\\b" + COUPON_WORD_RE_SRC + "\\s+(?:is\\s+|are\\s+)?(?:not|n'?t)\\s+(?:needed|required|necessary)",
+    "gi",
+  ),
+];
+const COUPON_POSITIVE_RE =
+  /\bkupon\w*|\bcoupon\w*|promo\s*code|(?:slevov\w*|zlavov\w*|discount|voucher)\s+(?:kod|code)\w*|\bvoucher\w*/i;
+
+/**
+ * Remove negated coupon phrases (CZ/SK/EN) so editorial "ne kupón" / "not a coupon" never counts as a coupon.
+ * @param {string} raw
+ * @returns {{ text: string, negated: boolean }} text is diacritics-folded with negated phrases blanked
+ */
+export function stripCouponNegations(raw) {
+  let text = foldDiacritics(raw);
+  let negated = false;
+  for (const re of COUPON_NEGATION_RES) {
+    re.lastIndex = 0;
+    text = text.replace(re, () => {
+      negated = true;
+      return " ";
+    });
+  }
+  return { text, negated };
+}
+
+/**
+ * All CJ advertiser CIDs explicitly labelled `CID` in text (supports "CID: 1, 2" lists). Never coupons.
+ * @param {string} raw
+ * @returns {string[]}
+ */
+export function extractAdvertiserCidsFromText(raw) {
+  const out = new Set();
+  const re = /\bCIDs?\b\s*[:#=\-]?\s*(\d{4,12}(?:(?:\s*[,;/&+]\s*|\s+(?:a|and|und|i)\s+)\d{4,12})*)/gi;
+  const blob = String(raw || "");
+  let m;
+  while ((m = re.exec(blob))) {
+    for (const d of m[1].match(/\d{4,12}/g) || []) out.add(d);
+  }
+  return [...out];
+}
+
+/**
  * Extract a coupon-like token without ever returning a CJ advertiser CID.
- * Prefers tokens after kupón/coupon/code labels; skips pure digit CIDs.
+ * - Labeled tokens (kupón/coupon/code/kód...) win; pure-numeric REAL codes are accepted ONLY when labeled,
+ *   4..12 digits, not a year, and not any CID named in the text / advertiserId.
+ * - Letters-only tokens must be upper-case in the source (so "Kupón platí" never yields "PLATI").
+ * - Negated phrases ("není kupón", "not a coupon") are removed first.
  * @param {string} raw
  * @param {string|null} advertiserId
  * @returns {string|null}
@@ -198,35 +277,62 @@ const COUPON_CODE_STOPWORDS = new Set(
     "FALSE",
     "TEST",
     "INFO",
+    "KOD",
+    "PLATI",
+    "PLATNOST",
+    "PLATNY",
+    "LINK",
+    "TERMS",
+    "SLEVA",
+    "ZLAVA",
+    "DISCOUNT",
+    "SALE",
+    "NOVE",
+    "NOVY",
+    "NEWS",
+    "NEWSLETTER",
   ].map((s) => s.toUpperCase()),
 );
 
 export function extractDeterministicCouponCode(raw, advertiserId = null) {
-  const blob = String(raw || "");
-  if (!blob) return null;
-  const cidDigits = advertiserId ? String(advertiserId).replace(/\D/g, "") : "";
-  const labeled =
-    blob.match(
-      /(?:kup[oó]n|coupon|promo\s*code|slevov(?:ý|y)\s+k[oó]d|code)\s*[:#\-\s]*([A-Z0-9][A-Z0-9\-_]{3,15})\b/i,
-    ) || null;
-  const candidates = [];
-  if (labeled && labeled[1]) candidates.push({ tok: labeled[1].toUpperCase(), labeled: true });
-  const re = /\b([A-Z0-9][A-Z0-9\-_]{3,15})\b/g;
+  const stripped = stripCouponNegations(raw);
+  const blob = stripped.text;
+  if (!blob.trim()) return null;
+  const cidSet = new Set(extractAdvertiserCidsFromText(String(raw || "")));
+  const advDigits = advertiserId ? String(advertiserId).replace(/\D/g, "") : "";
+  if (advDigits) cidSet.add(advDigits);
+  const accept = (tok, labeled) => {
+    if (!tok) return false;
+    const up = tok.toUpperCase();
+    if (cidSet.has(tok)) return false;
+    if (/^CID\d*$/i.test(tok)) return false;
+    if (COUPON_CODE_STOPWORDS.has(up)) return false;
+    if (/^\d+$/.test(tok)) {
+      // Pure numeric: only a REAL labeled coupon code (never an unlabeled number = likely CID/id).
+      if (!labeled) return false;
+      if (tok.length < 4 || tok.length > 12) return false;
+      if (/^(?:19|20)\d{2}$/.test(tok)) return false;
+      return true;
+    }
+    const hasDigit = /\d/.test(tok);
+    const hasLetter = /[A-Za-z]/.test(tok);
+    if (hasDigit && hasLetter) return labeled ? true : tok === up;
+    // Letters only: must be upper-case in source and long enough; only when labeled.
+    return labeled && tok === up && tok.length >= 4;
+  };
+  const labelRe = new RegExp(
+    "(?:\\bkupon\\w*|\\bcoupon\\w*|promo\\s*code|(?:slevov\\w*|zlavov\\w*|discount|voucher)\\s+(?:kod|code)|\\bkod\\b|\\bcode\\b)(?:[ \\t]+(?:code|kod))?[ \\t]*[:#=\\-]?[ \\t]*[\"'(\\[]?([A-Za-z0-9][A-Za-z0-9\\-_]{2,19})\\b",
+    "gi",
+  );
   let m;
-  while ((m = re.exec(blob))) {
-    candidates.push({ tok: String(m[1]).toUpperCase(), labeled: false });
+  while ((m = labelRe.exec(blob))) {
+    if (accept(m[1], true)) return m[1].toUpperCase();
   }
-  for (const c of candidates) {
-    const tok = c.tok;
-    if (!tok) continue;
-    // Never treat pure-numeric CJ advertiser CIDs as coupon codes.
-    if (/^\d{4,12}$/.test(tok)) continue;
-    if (cidDigits && tok === cidDigits) continue;
-    if (/^CID\d*$/i.test(tok)) continue;
-    if (COUPON_CODE_STOPWORDS.has(tok)) continue;
-    // Unlabeled: require a digit so plain words (MAIL, SALE…) are not codes.
-    if (!c.labeled && !/\d/.test(tok)) continue;
-    return tok;
+  // Negated mail ("není kupón SLEVA20"): never fall back to unlabeled tokens.
+  if (stripped.negated) return null;
+  const re = /\b([A-Z0-9][A-Z0-9\-_]{3,15})\b/g;
+  while ((m = re.exec(blob))) {
+    if (accept(m[1], false)) return m[1].toUpperCase();
   }
   return null;
 }
@@ -253,10 +359,25 @@ export function deterministicEventFallback(row = {}) {
     };
   }
   let eventType = AI_EVENT_TYPE.INFORMATIONAL;
-  if (
+  // Diacritics-folded views. Coupon intent is computed AFTER removing negated phrases (CZ/SK/EN).
+  const ftext = foldDiacritics(text);
+  const rawFolded = subject + "\n" + excerpt;
+  const couponView = stripCouponNegations(rawFolded);
+  const couponIntent =
+    COUPON_POSITIVE_RE.test(couponView.text) || (cats.includes("coupon") && !couponView.negated);
+  const OFFER_CTX_RE = /\b(?:offer\w*|coupon\w*|kupon\w*|promo\w*|akce|akci|akcie|nabidk\w*|ponuk\w*|sleva|slevy|zlava|zlavy|voucher\w*|deal\w*)\b/;
+  const PARTNERSHIP_CTX_RE = /partnership|partnersk\w*|spoluprac\w*|affiliate\s+(?:program|account)|publisher\s+account|your\s+application|vase\s+zadost|\bucet\b|\baccount\b/;
+  const offerCtx = OFFER_CTX_RE.test(ftext);
+  const partnershipCtx = PARTNERSHIP_CTX_RE.test(ftext);
+  const strictEnd = /terminat|ukonc|ended|rejected|declined|zamitn/.test(ftext);
+  const softEnd = /\bending\b|\bends\b|zrusen|ukoncujeme/.test(ftext);
+  // Offer/coupon end is NOT a partnership end: "ended" / "ukončení" need partnership context
+  // (or no offer context at all, preserving legacy behaviour for plain rejection/termination mails).
+  const partnerEnded =
     cats.includes("program_rejection_or_end") ||
-    /terminat|ukonč|ended|rejected|declined/.test(text)
-  ) {
+    (strictEnd && (partnershipCtx || !offerCtx)) ||
+    (softEnd && partnershipCtx);
+  if (partnerEnded) {
     eventType = AI_EVENT_TYPE.PARTNER_ENDED;
   } else if (
     cats.includes("program_approval") ||
@@ -265,31 +386,34 @@ export function deterministicEventFallback(row = {}) {
     /approv|schv[aá]len|welcome|joined|přijat|accepted|v[ií]t[aá]me|invitation|thank you for joining/.test(text)
   ) {
     eventType = AI_EVENT_TYPE.PARTNER_APPROVED;
-  } else if (/expir|platnost.*skon|coupon.*end|offer.*end/.test(text) && /\bcoupon\b|\bkup[oó]n\b|promo/.test(text)) {
-    eventType = AI_EVENT_TYPE.COUPON_EXPIRED;
   } else if (
-    cats.includes("coupon") ||
-    // Require coupon/kupón as a word; reject editorial "ne kupón" / "není kupón".
-    (/\bcoupon\b|\bkup[oó]n\b|promo code|slevov/.test(text) &&
-      !/\bne\s+kup[oó]n\b|\bnen[ií]\s+kup[oó]n\b|\bno\s+coupon\b|\bnot\s+a\s+coupon\b/.test(text))
+    (/expir|vyprs|no longer valid|platnost[^\n.]{0,40}(?:skonc|vyprs|konc)|(?:coupon\w*|offer\w*|promo\w*|kupon\w*|akce|akci|nabidk\w*|sleva|zlava|voucher\w*)[^\n.]{0,60}\b(?:ends?|ended|ending|skonc\w*|ukonc\w*|vyprs\w*|konci)\b/.test(
+      ftext,
+    )) &&
+    (couponIntent || offerCtx)
   ) {
+    eventType = AI_EVENT_TYPE.COUPON_EXPIRED;
+  } else if (couponIntent) {
     eventType = AI_EVENT_TYPE.COUPON_NEW;
-  } else if (cats.includes("terms_change") || /terms|podm[ií]nk/.test(text)) {
+  } else if (cats.includes("terms_change") || /terms|podmin/.test(ftext)) {
     eventType = AI_EVENT_TYPE.TERMS_CHANGED;
-  } else if (/product|produkt|sku|katalog/.test(text)) {
+  } else if (/\bproducts?\b|\bprodukt\w*|\bsku\b|\bkatalog\w*/.test(ftext)) {
+    // Word-bounded: "skupina" / "tisku" must not look like SKU/product mail.
     eventType = AI_EVENT_TYPE.PRODUCT_NEW;
-  } else if (/price|cena|offer change|změna nab/.test(text)) {
+  } else if (/\bprices?\b|\bcen[auye]\b|\bcenou\b|offer change|zmena nab/.test(ftext)) {
     eventType = AI_EVENT_TYPE.OFFER_CHANGED;
-  } else if (/sale|akce|discount|sleva/.test(text)) {
+  } else if (/\bsales?\b|\bakc(?:e|i|ie|emi)\b|\bdiscount\w*|\bslev\w*|\bzlav\w*/.test(ftext)) {
+    // Word-bounded: "atrakce" must not look like an "akce" promo.
     eventType = AI_EVENT_TYPE.PROMO_NEW;
   } else if (!cats.length && !subject) {
     eventType = AI_EVENT_TYPE.UNTRUSTED_OR_UNCLEAR;
   }
   const rawBlob = subject + "\n" + excerpt;
-  const cidMatch = rawBlob.match(/\bCID[:\s#]*([0-9]{4,12})\b/i);
+  const textCids = extractAdvertiserCidsFromText(rawBlob);
+  // Several distinct CIDs in one mail = ambiguous attribution: never guess an advertiser from the first one.
   const advertiserId =
     (row.advertiserId ? String(row.advertiserId).replace(/\D/g, "").slice(0, 12) : null) ||
-    (cidMatch ? cidMatch[1] : null);
+    (textCids.length === 1 ? textCids[0] : null);
   const partnerName = row.partnerName ? String(row.partnerName).slice(0, 120) : null;
   // Coupon code: never pick CID digits / pure numeric advertiser ids as the code.
   const couponCode = extractDeterministicCouponCode(rawBlob, advertiserId);
