@@ -239,6 +239,8 @@ for (const [i, fixture] of ALL_CONTENT_FIXTURES.entries()) {
 
 // 8) reconcile / publish simulation (DISARMED vs in-memory armed simulation)
 const reconcileBase = {
+  // Simulation clock = fixture mail Date header (12 Oct 2026); validity windows are checked against it.
+  now: "2026-10-12T10:00:00Z",
   events: allEvents,
   stagingLinks: [],
   managedPartners: CATALOG.map((c) => ({ advertiserId: c.advertiserId, active: true })),
