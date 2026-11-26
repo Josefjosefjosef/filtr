@@ -19,6 +19,11 @@ expect("partner_name", js.includes("partnerName"));
 expect("conditions", js.includes("conditionsSummary"));
 expect("product_image", js.includes("iuAffiliatePhase2Offers__img"));
 expect("show_more", js.includes("Zobrazit další"));
+expect("show_more_truncated_lean_loads_full_shard", js.includes("productsTruncated") && js.includes("loadMore") && js.includes("force: true"));
+expect("show_more_default_visible_3", js.includes("defaultVisibleProducts: 3"));
+expect("large_catalog_batch_constant", js.includes("PRODUCT_RENDER_BATCH"));
+expect("large_catalog_batch_append", js.includes("appendRange") && js.includes("revealNextBatch"));
+expect("large_catalog_scroll_sentinel", js.includes("data-iu-aff-batch-sentinel") && js.includes("IntersectionObserver"));
 expect("no_prod_bypass", js.includes("public_stub_no_staging_data"));
 expect("dark_mode_css", css.includes("prefers-color-scheme: dark"));
 expect("responsive_grid", css.includes("max-width: 767px"));
@@ -32,6 +37,9 @@ expect("white_card_css", css.includes("background: #fff"));
 expect("catalog_hooks_offers", catalog.includes("iuAffiliatePhase2OffersRender"));
 expect("catalog_loads_offers_script", catalog.includes("ensurePhase2OffersScript"));
 expect("publication_ready_filter", js.includes("publicationReady === true") || js.includes("publicationReady!==true") || js.includes("c.publicationReady === true"));
+expect("cls_loading_skeleton", js.includes("showLoadingSkeleton") && css.includes("data-iu-aff-offers-loading"));
+expect("cls_img_slot", js.includes("iuAffiliatePhase2Offers__imgSlot") && css.includes("aspect-ratio"));
+expect("cls_no_blank_empty_minheight", !/iuAffiliatePhase2Offers\s*\{[^}]*min-height:\s*[1-9]/i.test(css));
 
 const ok = failures.length === 0;
 console.log(
