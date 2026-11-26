@@ -125,6 +125,7 @@ import { persistDeferredNewKeys } from "./iu-cj-affiliate-deferred-new-keys-pers
 import {
   mergeIntoDurableCatalog,
   seedDurableCatalogFromOffersPublic,
+  retainMissingPublicSnapshotIdentities,
   evaluatePublicPopulationGates,
   applyAvailabilityPublicationHolds,
   publicationEligibilityFromAvailability,
@@ -3347,6 +3348,11 @@ export async function runOffersLiveSync(opts = {}) {
     }
     if (!priorDurable?.products && prevPublic?.sections) {
       priorDurable = seedDurableCatalogFromOffersPublic(prevPublic, {
+        nowIso: new Date().toISOString(),
+      }).doc;
+    }
+    if (prevPublic?.sections) {
+      priorDurable = retainMissingPublicSnapshotIdentities(priorDurable, prevPublic, {
         nowIso: new Date().toISOString(),
       }).doc;
     }
