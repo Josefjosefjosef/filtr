@@ -1131,6 +1131,9 @@ export const PUBLIC_GROWTH_BUDGET_SCHEMA = "iu-cj-affiliate-phase3z-public-growt
 /** Sidecar artifact — full deferred-new keys (offers JSON keeps sample ≤200). */
 export const DEFERRED_NEW_LEDGER_SCHEMA = "iu-affiliate-cj-deferred-new-ledger-v51";
 export const DEFERRED_NEW_LEDGER_FILENAME = "iu-affiliate-cj-deferred-new-ledger-v51.json";
+/** Keys-only gzip companion (see iu-cj-affiliate-deferred-new-keys-persist-v51-8.mjs). */
+export const DEFERRED_NEW_KEYS_JSONL_GZ = "iu-affiliate-cj-deferred-new-keys-v51.jsonl.gz";
+export const DEFERRED_NEW_KEYS_META_FILENAME = "iu-affiliate-cj-deferred-new-keys-v51.meta.json";
 
 /**
  * Build durable deferred-new ledger document (keys + reasons).
@@ -1403,7 +1406,11 @@ export function applyPublicGrowthBudget(nextDoc, prevDoc, opts = {}) {
     deferredDecisionLedgerSample: deferredLedgerSample,
     deferredNewLedgerSchema: DEFERRED_NEW_LEDGER_SCHEMA,
     deferredNewLedgerFile: DEFERRED_NEW_LEDGER_FILENAME,
+    deferredNewKeysFile: DEFERRED_NEW_KEYS_JSONL_GZ,
+    deferredNewKeysMetaFile: DEFERRED_NEW_KEYS_META_FILENAME,
     deferredNewKeysPersistedInOffers: opts.attachDeferredNewKeys === true,
+    deferredNewKeysPersistedSidecar: false,
+    deferredNewKeysForPublicPages: false,
     note:
       deferredNew.length > 0
         ? "ROUTINE_SAFE_NEW_PRODUCT capped; remainder is EXCEPTIONAL_GROWTH (owner approval / cumulative budget)."
