@@ -10,6 +10,7 @@ import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { isCjTrackingUrl, assertAllowedDataWrite } from "./iu-cj-affiliate-catalog-sync-publish-gate-v1.mjs";
+import { normalizeRelationshipStatus } from "./iu-cj-affiliate-phase3z-partner-lifecycle-v51-8.mjs";
 import { parseAffiliateCatalogOrdered } from "./iu-cj-affiliate-phase2-partner-slot-inventory-v1.mjs";
 
 export const PHASE3Z_STATIC_CATALOG_SCHEMA = "iu-affiliate-cj-main-buttons-static-v13";
@@ -61,7 +62,7 @@ export function buildStaticMainButtonCatalog(registry, opts = {}) {
 
   for (const p of registry?.partners || []) {
     const advId = String(p.advertiserId || "");
-    const joined = String(p.relationshipStatus || "").toLowerCase() === "joined";
+    const joined = normalizeRelationshipStatus(p.relationshipStatus) === "joined";
     if (!joined) continue;
     if (p.mainButtonReady !== true) {
       blockers.push({
@@ -133,7 +134,7 @@ export function buildStaticMainButtonCatalog(registry, opts = {}) {
   const sha256 = crypto.createHash("sha256").update(bodyForHash).digest("hex");
 
   const joined = (registry?.partners || []).filter(
-    (p) => String(p.relationshipStatus || "").toLowerCase() === "joined"
+    (p) => normalizeRelationshipStatus(p.relationshipStatus) === "joined"
   ).length;
 
   return {
@@ -253,7 +254,7 @@ export function syncStaticMainButtonsFromRegistry(registry, previousStatic, opts
     const prev = previousById.get(id);
     const partner = registry.partners.find((row) => String(row.advertiserId) === id);
     if (!prev || !partner) continue;
-    if (String(partner.relationshipStatus || "").toLowerCase() === "ended") continue;
+    if (normalizeRelationshipStatus(partner.relationshipStatus) === "ended") continue;
     const nextUrl = String(partner.selectedClickUrl || "");
     const nextSection = String(partner.sectionId || "");
     if ((nextUrl && nextUrl !== String(prev.url || "")) || (nextSection && nextSection !== String(prev.sectionId || ""))) {

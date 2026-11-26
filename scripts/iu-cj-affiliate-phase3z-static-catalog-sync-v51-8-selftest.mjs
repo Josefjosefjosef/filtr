@@ -182,10 +182,67 @@ for (const target of [start + 1, 200, 250, 500]) {
   sizes.push(target);
 }
 
+function idsOf(catalog) {
+  return (catalog.buttons || []).map((button) => String(button.advertiserId)).sort();
+}
+function cohort(count) {
+  const rows = [];
+  for (let i = 1; i <= count; i += 1) rows.push(partner(String(100000 + i)));
+  return rows;
+}
+function shrink(from, to) {
+  const full = cohort(from);
+  const base = sync(full, previous);
+  assert.equal(base.ok, true);
+  const kept = full.slice(0, to);
+  const next = sync(kept, base.catalog);
+  assert.equal(next.ok, true);
+  assert.deepEqual(idsOf(next.catalog), kept.map((row) => row.advertiserId).sort());
+  return { from, to, removed: from - to };
+}
+const shrinks = [shrink(195, 194), shrink(195, 178), shrink(250, 200), shrink(500, 250)];
+
+const mixedBase = sync([partner("1"), partner("2"), partner("3")], previous);
+const mixed = sync([partner("2"), partner("3"), partner("4")], mixedBase.catalog);
+assert.equal(mixed.ok, true);
+assert.deepEqual(idsOf(mixed.catalog), ["2", "3", "4"]);
+
+const endedSet = sync([
+  partner("1"),
+  partner("2", { relationshipStatus: "ended" }),
+], mixed.catalog);
+assert.equal(endedSet.ok, true);
+assert.deepEqual(idsOf(endedSet.catalog), ["1"]);
+const rejoined = sync([
+  partner("1"),
+  partner("2", { relationshipStatus: "rejoined" }),
+], endedSet.catalog);
+assert.equal(rejoined.ok, true);
+assert.deepEqual(idsOf(rejoined.catalog), ["1", "2"]);
+
+const terms = sync([partner("1", { publicPromotionAllowed: false })], one.catalog);
+assert.equal(terms.ok, true);
+assert.deepEqual(idsOf(terms.catalog), []);
+
+const duplicate = sync([partner("1"), partner("1", { displayNameCs: "Dup" })], previous);
+assert.deepEqual(idsOf(duplicate.catalog), ["1"]);
+
+const emptyKeeps = sync([], mixed.catalog);
+assert.equal(emptyKeeps.ok, false);
+assert.equal(emptyKeeps.reason, "INCOMPLETE_REGISTRY");
+assert.deepEqual(idsOf(emptyKeeps.catalog), idsOf(mixed.catalog));
+
+const sameInput = [partner("1"), partner("2")];
+const firstPass = sync(sameInput, previous);
+const secondPass = sync(sameInput, firstPass.catalog);
+assert.deepEqual(idsOf(firstPass.catalog), idsOf(secondPass.catalog));
+assert.equal(firstPass.catalog.manifest.sha256, secondPass.catalog.manifest.sha256);
+
 console.log(JSON.stringify({
   IU_CJ_STATIC_CATALOG_SYNC_SELFTEST: "PASS",
   start,
   sizes,
+  shrinks,
   onbuyPublished: false,
   paragonPublished: false,
 }));
