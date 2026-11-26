@@ -80,11 +80,22 @@ const pass = normalizeOffersPublicDocTexts(doc);
 assert(pass.titleRepaired === 1 && pass.scanned === 1, "final pass repaired 1");
 assert(doc.sections[0].products[0].title === "Šatní skříň", "final pass title clear");
 
+// Windows-1252 literal class (descriptions): ÔÇŽ → … ; must not touch × / Úž
+const winEllipsis = normalizeCjProductText("museumÔÇŽ things");
+assert(winEllipsis.repaired === true && winEllipsis.text === "museum… things", "win1252 ellipsis");
+const winApos = normalizeCjProductText("wonÔÇÖt stay");
+assert(winApos.repaired === true && winApos.text === "won’t stay", "win1252 apostrophe");
+const keepTimes = normalizeCjProductText("124 × 124");
+assert(keepTimes.repaired === false && keepTimes.text === "124 × 124", "keep multiplication sign");
+const keepCzech = normalizeCjProductText("Úžasný kousek");
+assert(keepCzech.repaired === false && keepCzech.text === "Úžasný kousek", "keep Czech Úž");
+
 console.log(
   JSON.stringify({
     ok: true,
     schema: "iu-cj-affiliate-utf8-title-normalize-v51-8-selftest",
     samples: samples.length,
     finalPass: pass,
+    win1252: true,
   })
 );

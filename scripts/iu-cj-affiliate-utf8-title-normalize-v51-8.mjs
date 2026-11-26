@@ -100,6 +100,35 @@ export function tryRepairCp852Utf8Mojibake(text) {
 }
 
 /**
+ * Common Windows-1252 / UTF-8 misdecode literals (e.g. ellipsis/quotes as ÔÇŽ).
+ * Applied only as exact multi-char sequence replacements — never touches × / Úž / ß.
+ */
+export const WIN1252_UTF8_LITERAL_REPAIRS = Object.freeze([
+  ["ÔÇŽ", "…"],
+  ["ÔÇÖ", "’"],
+  ["ÔÇØ", "“"],
+  ["ÔÇù", "”"],
+  ["ÔÇô", "–"],
+  ["ÔÇö", "—"],
+  ["Â©", "©"],
+  ["Â®", "®"],
+]);
+
+export function tryRepairWin1252Utf8Literals(text) {
+  const input = String(text || "");
+  if (!input) return null;
+  let out = input;
+  let hit = false;
+  for (const [bad, good] of WIN1252_UTF8_LITERAL_REPAIRS) {
+    if (out.includes(bad)) {
+      out = out.split(bad).join(good);
+      hit = true;
+    }
+  }
+  return hit && out !== input ? out : null;
+}
+
+/**
  * Normalize a CJ product text field. Returns original when repair is refused.
  * @param {string|null|undefined} text
  * @returns {{ text: string|null, repaired: boolean, reason: string|null }}
@@ -108,14 +137,33 @@ export function normalizeCjProductText(text) {
   if (text == null) return { text: null, repaired: false, reason: null };
   const input = String(text);
   if (!input) return { text: input, repaired: false, reason: null };
-  if (!looksLikeCp852Utf8Mojibake(input)) {
-    return { text: input, repaired: false, reason: null };
+
+  // Stage A: CP852→UTF-8 reverse (titleBox historical class)
+  if (looksLikeCp852Utf8Mojibake(input)) {
+    const repaired = tryRepairCp852Utf8Mojibake(input);
+    if (repaired) {
+      const stageB = tryRepairWin1252Utf8Literals(repaired) || repaired;
+      return {
+        text: stageB,
+        repaired: true,
+        reason:
+          stageB !== repaired
+            ? "CP852_UTF8_REPAIRED+WIN1252_LITERALS"
+            : "CP852_UTF8_REPAIRED",
+      };
+    }
   }
-  const repaired = tryRepairCp852Utf8Mojibake(input);
-  if (!repaired) {
+
+  // Stage B: Windows-1252 literal sequences (descriptions with ÔÇŽ etc.)
+  const win = tryRepairWin1252Utf8Literals(input);
+  if (win) {
+    return { text: win, repaired: true, reason: "WIN1252_UTF8_LITERALS_REPAIRED" };
+  }
+
+  if (looksLikeCp852Utf8Mojibake(input)) {
     return { text: input, repaired: false, reason: "CP852_REPAIR_REFUSED" };
   }
-  return { text: repaired, repaired: true, reason: "CP852_UTF8_REPAIRED" };
+  return { text: input, repaired: false, reason: null };
 }
 
 export function normalizeCjProductFields(fields = {}) {
