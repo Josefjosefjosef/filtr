@@ -1050,7 +1050,12 @@ export function backfillAvailabilityFromPrevious(doc, prevPublic, opts = {}) {
       const a = entry.availability;
       if (a == null || String(a).trim() === "") continue;
       const n = String(a).toLowerCase().replace(/[_-]+/g, " ");
+      const negated =
+        /(^|\b)(out of stock|outofstock|sold out|unavailable|nedostupn|not in stock|not available|není skladem|neni skladem)/.test(
+          n
+        );
       const recognized =
+        !negated &&
         /(^|\b)(in stock|instock|available|skladem|preorder|pre order|backorder|back order)\b/.test(
           n
         );
