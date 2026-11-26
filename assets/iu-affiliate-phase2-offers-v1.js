@@ -677,12 +677,14 @@
     }
 
     function paintWindow() {
+      var into = 0;
+      try { into = Math.max(0, -grid.getBoundingClientRect().top); } catch (_) {}
       var plan = iuAffiliateWindowPlan({
         count: shown,
         columns: columnCount(),
         rowHeight: measuredRow(),
         windowSize: PRODUCT_DOM_WINDOW,
-        scrollIntoList: Math.max(0, scrollY() - (host.getBoundingClientRect().top + scrollY())),
+        scrollIntoList: into,
       });
       windowStart = plan.start;
       grid.textContent = "";
@@ -698,7 +700,7 @@
         if (painting || shown <= visible) return;
         var y = scrollY();
         var into = 0;
-        try { into = Math.max(0, y - (host.getBoundingClientRect().top + y)); } catch (_) {}
+        try { into = Math.max(0, -grid.getBoundingClientRect().top); } catch (_) {}
         var row = measuredRow();
         var plan = iuAffiliateWindowPlan({
           count: shown,
@@ -721,6 +723,7 @@
       };
       try { window.addEventListener("scroll", onScroll, { passive: true }); } catch (_) {}
       try { document.addEventListener("scroll", onScroll, { passive: true, capture: true }); } catch (_) {}
+      try { document.body.addEventListener("scroll", onScroll, { passive: true }); } catch (_) {}
     }
 
     function paintInitial() {
