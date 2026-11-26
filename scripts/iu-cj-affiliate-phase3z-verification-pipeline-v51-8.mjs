@@ -274,6 +274,51 @@ export function planFairBatch(identities, opts = {}) {
   };
 }
 
+/** Dedup historical deferred identities with pending hold identities. Does not read CJ or arm growth. */
+export function planHistoricalVerificationQueue(input = {}, opts = {}) {
+  const deferred = Array.isArray(input.deferred) ? input.deferred : [];
+  const hold = Array.isArray(input.hold) ? input.hold : [];
+  const byKey = new Map();
+  let overlap = 0;
+  for (const row of deferred) {
+    if (!row || typeof row.key !== "string" || !row.key) continue;
+    byKey.set(row.key, { ...row, queueSource: "DEFERRED" });
+  }
+  for (const row of hold) {
+    if (!row || typeof row.key !== "string" || !row.key) continue;
+    if (byKey.has(row.key)) {
+      overlap += 1;
+      const prev = byKey.get(row.key);
+      byKey.set(row.key, {
+        ...prev,
+        queueSource: "DEFERRED_AND_HOLD",
+        holdState: row.holdState || row.state || null,
+      });
+    } else {
+      byKey.set(row.key, { ...row, queueSource: "HOLD" });
+    }
+  }
+  const identities = [...byKey.values()];
+  const checkpoint = opts.checkpoint || emptyCheckpoint(opts.nowMs != null ? Number(opts.nowMs) : Date.now());
+  let completedInQueue = 0;
+  for (const row of identities) {
+    const done = checkpoint.completed && checkpoint.completed[row.key];
+    if (done && TERMINAL.has(done.state)) completedInQueue += 1;
+  }
+  const planned = planFairBatch(identities, { ...opts, checkpoint });
+  return {
+    unique: identities.length,
+    overlap,
+    debt: identities.length - completedInQueue,
+    completed: completedInQueue,
+    batch: planned.batch,
+    partnersConsidered: planned.partnersConsidered,
+    growthExecute: "DISARMED",
+    executeArmed: false,
+    publicationExecute: false,
+  };
+}
+
 function writeCheckpointAtomic(outPath, checkpoint, expectedGeneration) {
   const dir = path.dirname(outPath);
   fs.mkdirSync(dir, { recursive: true });

@@ -8,7 +8,9 @@ import {
   attestEligibility,
   dedupeVerificationGroups,
   diagnoseSourceReadAccess,
+  emptyCheckpoint,
   loadCheckpoint,
+  planHistoricalVerificationQueue,
   runAuthorizedSourceLookup,
   runVerificationBatch,
   VERIFICATION_STATE,
@@ -213,6 +215,33 @@ const endedPartner = executePartnerAutomaticStep({
   primaryCategory: "<parent>Department Stores/Malls</parent><child>Department Stores</child>",
 });
 expect("ended_partner", endedPartner.reason === "PARTNER_ENDED" && endedPartner.publicationReady === false);
+
+const deferredQueue = Array.from({ length: 30 }, (_, i) => ({ key: "d|" + i, advertiserId: "p" + (i % 3) }));
+const holdQueue = [
+  { key: "d|0", advertiserId: "p0", holdState: "pending_verification" },
+  { key: "h|1", advertiserId: "p9", holdState: "pending_verification" },
+];
+const firstQueue = planHistoricalVerificationQueue(
+  { deferred: deferredQueue, hold: holdQueue },
+  { limit: 4, maxPerPartner: 2, nowMs: 1 },
+);
+expect("historical_queue_dedup", firstQueue.unique === 31 && firstQueue.overlap === 1 && firstQueue.debt === 31);
+expect("historical_queue_disarmed", firstQueue.executeArmed === false && firstQueue.growthExecute === "DISARMED" && firstQueue.batch.length === 4);
+const queueCheckpoint = emptyCheckpoint(1);
+for (const row of firstQueue.batch) queueCheckpoint.nextAttemptAt[row.key] = 99;
+queueCheckpoint.completed[firstQueue.batch[0].key] = { state: VERIFICATION_STATE.CONFIRMED_UNAVAILABLE };
+const secondQueue = planHistoricalVerificationQueue(
+  { deferred: deferredQueue, hold: holdQueue },
+  { limit: 4, maxPerPartner: 2, nowMs: 1, checkpoint: queueCheckpoint },
+);
+const firstKeys = new Set(firstQueue.batch.map((row) => row.key));
+expect(
+  "historical_queue_progress",
+  secondQueue.completed === 1 &&
+    secondQueue.debt === 30 &&
+    secondQueue.batch.length === 4 &&
+    secondQueue.batch.every((row) => !firstKeys.has(row.key)),
+);
 
 fs.rmSync(outPath, { force: true });
 
