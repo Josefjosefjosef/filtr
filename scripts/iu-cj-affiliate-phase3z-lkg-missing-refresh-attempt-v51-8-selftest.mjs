@@ -9,6 +9,7 @@ import {
   attemptMissingRefreshBatch,
   applyMissingRefreshAttemptsToDoc,
   emptyRetryQueue,
+  loadRetryQueue,
   mergeTargetsWithRetryQueue,
   updateRetryQueueFromAttempts,
 } from "./iu-cj-affiliate-phase3z-lkg-missing-refresh-attempt-v51-8.mjs";
@@ -172,12 +173,15 @@ q = updateRetryQueueFromAttempts(
 );
 assert(q.items["ADV1|P_RETRY"].closed !== true, "retry open");
 assert(q.items["ADV1|P_RETRY"].nextAttemptAt, "nextAttemptAt set");
-assert(q.items["ADV1|P_BAD"].closed === true, "invalid closed");
+assert(q.items["ADV1|P_BAD"].closed !== true, "collision stays reopenable");
+assert(q.items["ADV1|P_BAD"].queueClass === "IDENTITY_COLLISION_HOLD", "collision class");
+assert(q.items["ADV1|P_BAD"].advertiserId === "ADV1", "collision keeps advertiser");
+assert(q.items["ADV1|P_BAD"].productId === "P_BAD", "collision keeps product");
 const early = mergeTargetsWithRetryQueue([], q, {
   nowMs: Date.parse("2026-11-23T13:00:00.000Z"),
 });
 assert(early.targets.length === 0, "not due yet");
-assert(early.deferredNotDue === 1, "deferred counted");
+assert(early.deferredNotDue === 2, "retry and collision deferred");
 // Overlap: selected MISSING_REFRESH must NOT burn a not-due queue item (catchup/schedule race).
 const overlapEarly = mergeTargetsWithRetryQueue(
   [
@@ -199,7 +203,7 @@ const overlapEarly = mergeTargetsWithRetryQueue(
 );
 assert(overlapEarly.targets.length === 1, "not-due queue key removed from selectedOnly");
 assert(overlapEarly.targets[0].productId === "P_OTHER", "unrelated selected kept");
-assert(overlapEarly.deferredNotDue === 1, "deferred counted with overlap");
+assert(overlapEarly.deferredNotDue === 2, "deferred counted with overlap");
 const due = mergeTargetsWithRetryQueue([], q, {
   nowMs: Date.parse("2026-11-23T16:00:00.000Z"),
 });
@@ -220,6 +224,90 @@ const overlapDue = mergeTargetsWithRetryQueue(
 assert(overlapDue.targets.length === 1, "due overlap kept");
 assert(overlapDue.dueFromQueue === 1, "dueFromQueue counts overlap");
 assert(overlapDue.targets[0].fromQueue === true, "overlap marked fromQueue");
+
+let exhaustedQueue = emptyRetryQueue("2026-11-23T12:00:00.000Z");
+for (let n = 0; n < 12; n += 1) {
+  exhaustedQueue = updateRetryQueueFromAttempts(
+    exhaustedQueue,
+    [
+      {
+        key: "ADV9|P_OLD",
+        advertiserId: "ADV9",
+        productId: "P_OLD",
+        status: ATTEMPT_STATUS.RETRY_SCHEDULED,
+        attemptedAt: "2026-11-23T12:00:00.000Z",
+        apiResult: "omitPartner_productIds_miss",
+      },
+    ],
+    { nowIso: "2026-11-23T12:00:00.000Z", retryHours: 3, maxAttempts: 12 },
+  );
+}
+const parked = exhaustedQueue.items["ADV9|P_OLD"];
+assert(parked.status === ATTEMPT_STATUS.RETRY_SCHEDULED, "exhausted is not product-not-found");
+assert(parked.queueClass === "LONG_TERM_RECHECK", "long recheck class");
+assert(parked.closed !== true, "exhausted stays in the ledger");
+assert(parked.holdReason === "RETRY_EXHAUSTED", "exhaustion is a hold reason");
+const beforeLong = mergeTargetsWithRetryQueue([], exhaustedQueue, {
+  nowMs: Date.parse("2026-11-24T12:00:00.000Z"),
+});
+assert(beforeLong.targets.length === 0, "not retried the next day");
+const afterLong = mergeTargetsWithRetryQueue([], exhaustedQueue, {
+  nowMs: Date.parse("2026-12-01T12:00:00.000Z"),
+});
+assert(afterLong.targets.length === 1, "rechecked after the long interval");
+assert(afterLong.targets[0].advertiserId === "ADV9" && afterLong.targets[0].productId === "P_OLD", "same identity");
+
+const historical = loadRetryQueue({
+  updatedAt: "2026-11-26T20:18:23.513Z",
+  items: {
+    "A|exhausted": {
+      key: "A|exhausted",
+      advertiserId: "A",
+      productId: "exhausted",
+      status: "PRODUCT_NOT_FOUND",
+      attemptCount: 15,
+      closed: true,
+      closedReason: "MAX_RETRY_EXHAUSTED",
+      nextAttemptAt: null,
+    },
+    "A|collision": {
+      key: "A|collision",
+      advertiserId: "A",
+      productId: "collision",
+      status: "INVALID_DATA",
+      attemptCount: 1,
+      closed: true,
+      closedReason: "INVALID_DATA",
+      nextAttemptAt: null,
+    },
+    "B|open": {
+      key: "B|open",
+      advertiserId: "B",
+      productId: "open",
+      status: "RETRY_SCHEDULED",
+      attemptCount: 2,
+      closed: false,
+      nextAttemptAt: "2026-11-26T20:00:00.000Z",
+    },
+    "C|refreshed": {
+      key: "C|refreshed",
+      advertiserId: "C",
+      productId: "refreshed",
+      status: "REFRESHED",
+      closed: true,
+      closedReason: "REFRESHED",
+    },
+  },
+});
+assert(historical.items["A|exhausted"].queueClass === "LONG_TERM_RECHECK", "historical exhausted reopened");
+assert(historical.items["A|exhausted"].closed === false, "historical exhausted not closed");
+assert(historical.items["A|exhausted"].advertiserId === "A" && historical.items["A|exhausted"].productId === "exhausted", "exhausted identity kept");
+assert(historical.items["A|collision"].queueClass === "IDENTITY_COLLISION_HOLD", "historical collision held");
+assert(historical.items["A|collision"].closed === false, "historical collision not closed");
+assert(historical.items["B|open"].status === "RETRY_SCHEDULED" && historical.items["B|open"].attemptCount === 2, "open retry unchanged");
+assert(historical.items["C|refreshed"].closed === true, "refreshed stays closed");
+const historicalDue = mergeTargetsWithRetryQueue([], historical, { nowMs: Date.parse("2026-11-26T21:00:00.000Z") });
+assert(historicalDue.targets.length === 1 && historicalDue.targets[0].key === "B|open", "migrated history is not immediately selected");
 
 console.log(
   JSON.stringify({
