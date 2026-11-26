@@ -30,7 +30,7 @@ export function normalizePublicationAvailability(raw) {
   const s = String(raw).trim();
   if (!s) return { class: "UNKNOWN_EMPTY", reason: "AVAILABILITY_EMPTY" };
   const n = s.toLowerCase().replace(/[_-]+/g, " ").replace(/\s+/g, " ").trim();
-  if (/(^|\b)(out of stock|outofstock|sold out|nedostupn[eéaáyý]?)\b/.test(n)) {
+  if (/(^|\b)(out of stock|outofstock|sold out|unavailable|nedostupn[eéaáyý]?|not in stock|not available|není skladem|neni skladem)\b/.test(n)) {
     return { class: "OUT_OF_STOCK", reason: "AVAILABILITY_OUT_OF_STOCK" };
   }
   if (/(^|\b)(preorder|pre order|p[rř]edobjedn[aá]vk[ay]?)\b/.test(n)) {
