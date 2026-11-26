@@ -14,7 +14,7 @@
   /* Pages scale: prefer per-section shard (then lean pages) over full audit JSON (~28MB). */
   var OFFERS_PAGES_LEAN_PATH = "/projects/data/iu-affiliate-cj-offers-pages-v1.json";
   var OFFERS_SECTION_BASE = "/projects/data/iu-affiliate-cj-offers-sections-v1/";
-  var CSS_HREF = "/assets/iu-affiliate-phase2-offers-v1.css?v=cj-phase3z-offers-v34";
+  var CSS_HREF = "/assets/iu-affiliate-phase2-offers-v1.css?v=cj-phase3z-offers-v33";
 
   function escapeHtml(s) {
     return String(s == null ? "" : s)
@@ -339,6 +339,104 @@
     host.insertAdjacentHTML("beforeend", parts.join(""));
   }
 
+  /* After the initial 3 cards, append in batches so large catalogs never mount all DOM at once. */
+  var PRODUCT_RENDER_BATCH = 24;
+
+  function buildProductCard(c, preview) {
+    var el = document.createElement("article");
+    el.className = "iuAffiliatePhase2Offers__card";
+    el.setAttribute("role", "listitem");
+    var img =
+      c.imageUrl && /^https:\/\//i.test(String(c.imageUrl)) && (c.publicationReady || preview)
+        ? '<img class="iuAffiliatePhase2Offers__img" src="' +
+          escapeHtml(c.imageUrl) +
+          '" alt="" loading="lazy" decoding="async" />'
+        : "";
+    var brand = c.brand
+      ? '<div class="iuAffiliatePhase2Offers__brand">' + escapeHtml(c.brand) + "</div>"
+      : "";
+    var pendingReverify =
+      c.freshnessStatus === "LAST_KNOWN_PENDING_REVERIFY" ||
+      c.sourceFreshLabelForbidden === true;
+    if (pendingReverify) {
+      el.setAttribute("data-iu-freshness", "LAST_KNOWN_PENDING_REVERIFY");
+    } else if (c.freshnessStatus) {
+      el.setAttribute("data-iu-freshness", String(c.freshnessStatus));
+    }
+    var price = isPositiveSalePrice(c.currentPrice)
+      ? '<div class="iuAffiliatePhase2Offers__price"' +
+        (pendingReverify ? ' data-iu-price-claim="LAST_KNOWN"' : ' data-iu-price-claim="SOURCE_VERIFIED"') +
+        ">" +
+        escapeHtml(String(c.currentPrice)) +
+        (c.currency ? " " + escapeHtml(String(c.currency)) : "") +
+        "</div>"
+      : "";
+    var freshnessMeta = pendingReverify
+      ? '<div class="iuAffiliatePhase2Offers__meta" data-iu-freshness-label="1">Poslední známá cena — čeká ověření (není aktuální zdroj).</div>'
+      : "";
+    var orig = isPositiveSalePrice(c.originalPrice)
+      ? '<div class="iuAffiliatePhase2Offers__meta iuAffiliatePhase2Offers__priceWas">Původně: ' +
+        escapeHtml(String(c.originalPrice)) +
+        "</div>"
+      : "";
+    var disc = c.discountLabel || c.savingsLabel
+      ? '<div class="iuAffiliatePhase2Offers__discount">' +
+        escapeHtml(c.discountLabel || c.savingsLabel) +
+        "</div>"
+      : "";
+    var desc = c.description
+      ? '<div class="iuAffiliatePhase2Offers__meta">' + escapeHtml(c.description) + "</div>"
+      : "";
+    var valid = c.validTo || c.validityTo
+      ? '<div class="iuAffiliatePhase2Offers__meta">Platnost do: ' +
+        escapeHtml(c.validTo || c.validityTo) +
+        "</div>"
+      : "";
+    var partner = c.partnerName
+      ? '<div class="iuAffiliatePhase2Offers__meta">' + escapeHtml(c.partnerName) + "</div>"
+      : "";
+    var availText = availabilityLabel(c.availability);
+    var availMeta = availText
+      ? '<div class="iuAffiliatePhase2Offers__meta" data-iu-availability="' +
+        escapeHtml(classifyAvailability(c.availability)) +
+        '">' +
+        escapeHtml(availText) +
+        "</div>"
+      : "";
+    var ctaLabel = c.ctaLabel || "Zobrazit nabídku";
+    var link =
+      c.affiliateUrl && c.publicationReady
+        ? '<a class="iuAffiliatePhase2Offers__cardLink" href="' +
+          escapeHtml(c.affiliateUrl) +
+          '" rel="sponsored noopener" target="_blank">' +
+          escapeHtml(ctaLabel) +
+          "</a>"
+        : "";
+    el.innerHTML =
+      img +
+      brand +
+      '<h3 class="iuAffiliatePhase2Offers__cardTitle">' +
+      escapeHtml(c.title || "") +
+      "</h3>" +
+      partner +
+      desc +
+      price +
+      availMeta +
+      freshnessMeta +
+      orig +
+      disc +
+      valid +
+      link;
+    var imgEl = el.querySelector ? el.querySelector("img.iuAffiliatePhase2Offers__img") : null;
+    if (imgEl) {
+      imgEl.addEventListener("error", function (ev) {
+        var t = ev && ev.target;
+        if (t && t.classList) t.classList.add("iuAffiliatePhase2Offers__img--failed");
+      });
+    }
+    return el;
+  }
+
   function renderProducts(host, cards, display, opts) {
     var preview = opts && opts.preview;
     var list = (cards || []).filter(function (c) {
@@ -346,124 +444,176 @@
     });
     if (!list.length) return;
     var visible = (display && display.defaultVisibleProducts) || 3;
+    var batchSize = PRODUCT_RENDER_BATCH;
     var grid = document.createElement("div");
     grid.className = "iuAffiliatePhase2Offers__grid";
     grid.setAttribute("role", "list");
     host.appendChild(grid);
 
-    function paint(limit) {
+    var shown = 0;
+    var sentinel = null;
+    var io = null;
+
+    function appendRange(from, to) {
+      var end = Math.min(to, list.length);
+      if (from >= end) return 0;
+      var frag = document.createDocumentFragment();
+      for (var i = from; i < end; i++) {
+        frag.appendChild(buildProductCard(list[i], preview));
+      }
+      grid.appendChild(frag);
+      return end - from;
+    }
+
+    function paintInitial() {
+      stopSentinel();
       grid.innerHTML = "";
-      for (var i = 0; i < Math.min(limit, list.length); i++) {
-        var c = list[i];
-        var el = document.createElement("article");
-        el.className = "iuAffiliatePhase2Offers__card";
-        el.setAttribute("role", "listitem");
-        var img =
-          c.imageUrl && /^https:\/\//i.test(String(c.imageUrl)) && (c.publicationReady || preview)
-            ? '<img class="iuAffiliatePhase2Offers__img" src="' +
-              escapeHtml(c.imageUrl) +
-              '" alt="" loading="lazy" decoding="async" />'
-            : "";
-        var brand = c.brand
-          ? '<div class="iuAffiliatePhase2Offers__brand">' + escapeHtml(c.brand) + "</div>"
-          : "";
-        var pendingReverify =
-          c.freshnessStatus === "LAST_KNOWN_PENDING_REVERIFY" ||
-          c.sourceFreshLabelForbidden === true;
-        if (pendingReverify) {
-          el.setAttribute("data-iu-freshness", "LAST_KNOWN_PENDING_REVERIFY");
-        } else if (c.freshnessStatus) {
-          el.setAttribute("data-iu-freshness", String(c.freshnessStatus));
-        }
-        var price = isPositiveSalePrice(c.currentPrice)
-          ? '<div class="iuAffiliatePhase2Offers__price"' +
-            (pendingReverify ? ' data-iu-price-claim="LAST_KNOWN"' : ' data-iu-price-claim="SOURCE_VERIFIED"') +
-            ">" +
-            escapeHtml(String(c.currentPrice)) +
-            (c.currency ? " " + escapeHtml(String(c.currency)) : "") +
-            "</div>"
-          : "";
-        var freshnessMeta = pendingReverify
-          ? '<div class="iuAffiliatePhase2Offers__meta" data-iu-freshness-label="1">Poslední známá cena — čeká ověření (není aktuální zdroj).</div>'
-          : "";
-        var orig = isPositiveSalePrice(c.originalPrice)
-          ? '<div class="iuAffiliatePhase2Offers__meta iuAffiliatePhase2Offers__priceWas">Původně: ' +
-            escapeHtml(String(c.originalPrice)) +
-            "</div>"
-          : "";
-        var disc = c.discountLabel || c.savingsLabel
-          ? '<div class="iuAffiliatePhase2Offers__discount">' +
-            escapeHtml(c.discountLabel || c.savingsLabel) +
-            "</div>"
-          : "";
-        var desc = c.description
-          ? '<div class="iuAffiliatePhase2Offers__meta">' + escapeHtml(c.description) + "</div>"
-          : "";
-        var valid = c.validTo || c.validityTo
-          ? '<div class="iuAffiliatePhase2Offers__meta">Platnost do: ' +
-            escapeHtml(c.validTo || c.validityTo) +
-            "</div>"
-          : "";
-        var partner = c.partnerName
-          ? '<div class="iuAffiliatePhase2Offers__meta">' + escapeHtml(c.partnerName) + "</div>"
-          : "";
-        var availText = availabilityLabel(c.availability);
-        var availMeta = availText
-          ? '<div class="iuAffiliatePhase2Offers__meta" data-iu-availability="' +
-            escapeHtml(classifyAvailability(c.availability)) +
-            '">' +
-            escapeHtml(availText) +
-            "</div>"
-          : "";
-        var ctaLabel = c.ctaLabel || "Zobrazit nabídku";
-        var link =
-          c.affiliateUrl && c.publicationReady
-            ? '<a class="iuAffiliatePhase2Offers__cardLink" href="' +
-              escapeHtml(c.affiliateUrl) +
-              '" rel="sponsored noopener" target="_blank">' +
-              escapeHtml(ctaLabel) +
-              "</a>"
-            : "";
-        el.innerHTML =
-          img +
-          brand +
-          '<h3 class="iuAffiliatePhase2Offers__cardTitle">' +
-          escapeHtml(c.title || "") +
-          "</h3>" +
-          partner +
-          desc +
-          price +
-          availMeta +
-          freshnessMeta +
-          orig +
-          disc +
-          valid +
-          link;
-        var imgEl = el.querySelector ? el.querySelector("img.iuAffiliatePhase2Offers__img") : null;
-        if (imgEl) {
-          imgEl.addEventListener("error", function (ev) {
-            var t = ev && ev.target;
-            if (t && t.classList) t.classList.add("iuAffiliatePhase2Offers__img--failed");
-          });
-        }
-        grid.appendChild(el);
+      shown = appendRange(0, visible);
+    }
+
+    function revealNextBatch() {
+      if (shown >= list.length) return 0;
+      var added = appendRange(shown, shown + batchSize);
+      shown += added;
+      return added;
+    }
+
+    function stopSentinel() {
+      if (io) {
+        try {
+          io.disconnect();
+        } catch (_) {}
+        io = null;
+      }
+      if (sentinel && sentinel.parentNode) {
+        sentinel.parentNode.removeChild(sentinel);
+      }
+      sentinel = null;
+    }
+
+    function ensureSentinel() {
+      /* Sentinel only after the user expands past the intro 3 — never auto-bypass first click. */
+      if (shown <= visible || shown >= list.length || truncated) {
+        stopSentinel();
+        return;
+      }
+      if (!sentinel) {
+        sentinel = document.createElement("div");
+        sentinel.className = "iuAffiliatePhase2Offers__sentinel";
+        sentinel.setAttribute("data-iu-aff-batch-sentinel", "1");
+        sentinel.setAttribute("aria-hidden", "true");
+        sentinel.style.cssText = "height:1px;width:100%;pointer-events:none;";
+        host.appendChild(sentinel);
+      } else if (sentinel.parentNode !== host) {
+        host.appendChild(sentinel);
+      }
+      /* Keep sentinel after the more-button when both exist. */
+      if (btn && btn.parentNode === host) {
+        host.appendChild(btn);
+        host.appendChild(sentinel);
+      }
+      if (!io && typeof IntersectionObserver === "function") {
+        io = new IntersectionObserver(
+          function (entries) {
+            var hit = false;
+            for (var ei = 0; ei < entries.length; ei++) {
+              if (entries[ei] && entries[ei].isIntersecting) {
+                hit = true;
+                break;
+              }
+            }
+            if (!hit || loading || truncated || shown >= list.length) return;
+            revealNextBatch();
+            syncMoreButton();
+            if (shown >= list.length) stopSentinel();
+          },
+          { root: null, rootMargin: "400px 0px", threshold: 0 }
+        );
+        io.observe(sentinel);
       }
     }
-    paint(visible);
-    if (list.length > visible) {
-      var btn = document.createElement("button");
+
+    var moreLabel = (display && display.showMoreLabel) || "Zobrazit další";
+    var loadMore = opts && typeof opts.loadMore === "function" ? opts.loadMore : null;
+    /* Lean-pages fallback ships only intro cards (productsTruncated) — more exist in the full shard. */
+    var truncated = !!(opts && opts.truncated && loadMore);
+    var btn = null;
+    var loading = false;
+
+    function syncMoreButton() {
+      if (!btn) return;
+      if (loading) return;
+      if (truncated || shown < list.length) {
+        btn.hidden = false;
+        btn.disabled = false;
+        btn.textContent = moreLabel;
+        btn.setAttribute("data-iu-aff-more-mode", truncated ? "load" : "batch");
+        ensureSentinel();
+      } else if (list.length > visible) {
+        stopSentinel();
+        btn.hidden = false;
+        btn.disabled = false;
+        btn.textContent = "Skrýt další";
+        btn.setAttribute("data-iu-aff-more-mode", "collapse");
+      } else {
+        stopSentinel();
+        btn.hidden = true;
+      }
+    }
+
+    paintInitial();
+
+    if (list.length > visible || truncated) {
+      btn = document.createElement("button");
       btn.type = "button";
       btn.className = "iuAffiliatePhase2Offers__more iuRadioChip";
-      btn.textContent = (display && display.showMoreLabel) || "Zobrazit další";
-      var expanded = false;
+      btn.textContent = moreLabel;
+      btn.setAttribute("data-iu-aff-more-mode", truncated ? "load" : "batch");
       btn.addEventListener("click", function () {
-        expanded = !expanded;
-        paint(expanded ? list.length : visible);
-        btn.textContent = expanded
-          ? "Skrýt další"
-          : (display && display.showMoreLabel) || "Zobrazit další";
+        if (loading) return;
+        if (!truncated && shown >= list.length && list.length > visible) {
+          paintInitial();
+          syncMoreButton();
+          try {
+            grid.scrollIntoView({ block: "nearest", behavior: "smooth" });
+          } catch (_) {}
+          return;
+        }
+        if (!truncated) {
+          /* One batch per click — never mounts the full catalog in a single turn. */
+          revealNextBatch();
+          syncMoreButton();
+          return;
+        }
+        loading = true;
+        btn.disabled = true;
+        btn.textContent = "Načítám…";
+        loadMore()
+          .then(function (full) {
+            var more = (full || []).filter(function (c) {
+              return productPubliclyShowable(c, preview);
+            });
+            if (more.length > list.length) list = more;
+            truncated = false;
+            loading = false;
+            btn.disabled = false;
+            if (list.length <= visible) {
+              stopSentinel();
+              if (btn.parentNode) btn.parentNode.removeChild(btn);
+              btn = null;
+              return;
+            }
+            revealNextBatch();
+            syncMoreButton();
+          })
+          .catch(function () {
+            loading = false;
+            btn.disabled = false;
+            btn.textContent = moreLabel;
+          });
       });
       host.appendChild(btn);
+      syncMoreButton();
     }
   }
 
@@ -526,11 +676,25 @@
     for (var aj = 0; aj < actions.length; aj++) {
       renderAction(mount, actions[aj], { preview: false });
     }
+    var secTotal = Number(sec.productCountTotal) || 0;
+    var secTruncated =
+      sec.productsTruncated === true || (secTotal > 0 && secTotal > (sec.products || []).length);
     renderProducts(
       mount,
       products,
       { defaultVisibleProducts: 3, showMoreLabel: "Zobrazit další" },
-      { preview: false }
+      {
+        preview: false,
+        truncated: secTruncated && isSafeSectionKey(sectionKey),
+        loadMore: function () {
+          return fetchOffersSectionShard(sectionKey, { force: true, timeoutMs: 20000 }).then(
+            function (full) {
+              var s = full && full.sections && full.sections[0];
+              return (s && s.products) || [];
+            }
+          );
+        },
+      }
     );
     mount.hidden = false;
   }
@@ -703,16 +867,23 @@
     return true;
   }
 
-  function fetchOffersSectionShard(sectionKey) {
+  /** opts.force: ignore the failed flag (user-initiated Zobrazit dalsi retry); opts.timeoutMs: per-request abort. */
+  function fetchOffersSectionShard(sectionKey, opts) {
     if (!isSafeSectionKey(sectionKey)) return Promise.reject(new Error("bad_section_key"));
-    if (sectionFailed[sectionKey]) return Promise.reject(new Error("section_failed"));
+    var force = !!(opts && opts.force);
+    var timeoutMs = (opts && opts.timeoutMs) || 2500;
+    if (force) {
+      delete sectionFailed[sectionKey];
+      delete sectionInflight[sectionKey];
+    }
+    if (!force && sectionFailed[sectionKey]) return Promise.reject(new Error("section_failed"));
     if (sectionCached[sectionKey]) return Promise.resolve(sectionCached[sectionKey]);
     /* Dedupe: concurrent callers share the in-flight promise (shard + __pN pages fetched once). */
-    if (sectionInflight[sectionKey]) return sectionInflight[sectionKey];
+    if (!force && sectionInflight[sectionKey]) return sectionInflight[sectionKey];
     var epoch = cacheEpoch;
     var bust = String(Date.now());
     var src = OFFERS_SECTION_BASE + encodeURIComponent(sectionKey) + ".json?v=" + bust;
-    var p = fetchJsonWithTimeout(src, 2500)
+    var p = fetchJsonWithTimeout(src, timeoutMs)
       .then(function (first) {
         var pageCount = first && first.pageCount ? Number(first.pageCount) : 1;
         if (!(pageCount > 1)) return first;
@@ -725,7 +896,7 @@
             String(pg) +
             ".json?v=" +
             bust;
-          jobs.push(fetchJsonWithTimeout(pageUrl, 2500));
+          jobs.push(fetchJsonWithTimeout(pageUrl, timeoutMs));
         }
         return Promise.all(jobs).then(function (rest) {
           return mergeSectionPageDocs([first].concat(rest));
