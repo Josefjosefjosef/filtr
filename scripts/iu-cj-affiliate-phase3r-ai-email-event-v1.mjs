@@ -168,6 +168,69 @@ export function validateAiEventPayload(payload, sourceText = "") {
   return { ok: true, events: out };
 }
 
+/**
+ * Extract a coupon-like token without ever returning a CJ advertiser CID.
+ * Prefers tokens after kupón/coupon/code labels; skips pure digit CIDs.
+ * @param {string} raw
+ * @param {string|null} advertiserId
+ * @returns {string|null}
+ */
+const COUPON_CODE_STOPWORDS = new Set(
+  [
+    "MAIL",
+    "EMAIL",
+    "COUPON",
+    "KUPON",
+    "KUPÓN",
+    "PROMO",
+    "CODE",
+    "PARTNER",
+    "UPDATE",
+    "SUBJECT",
+    "FROM",
+    "HTTP",
+    "HTTPS",
+    "WWW",
+    "HTML",
+    "CID",
+    "NULL",
+    "TRUE",
+    "FALSE",
+    "TEST",
+    "INFO",
+  ].map((s) => s.toUpperCase()),
+);
+
+export function extractDeterministicCouponCode(raw, advertiserId = null) {
+  const blob = String(raw || "");
+  if (!blob) return null;
+  const cidDigits = advertiserId ? String(advertiserId).replace(/\D/g, "") : "";
+  const labeled =
+    blob.match(
+      /(?:kup[oó]n|coupon|promo\s*code|slevov(?:ý|y)\s+k[oó]d|code)\s*[:#\-\s]*([A-Z0-9][A-Z0-9\-_]{3,15})\b/i,
+    ) || null;
+  const candidates = [];
+  if (labeled && labeled[1]) candidates.push({ tok: labeled[1].toUpperCase(), labeled: true });
+  const re = /\b([A-Z0-9][A-Z0-9\-_]{3,15})\b/g;
+  let m;
+  while ((m = re.exec(blob))) {
+    candidates.push({ tok: String(m[1]).toUpperCase(), labeled: false });
+  }
+  for (const c of candidates) {
+    const tok = c.tok;
+    if (!tok) continue;
+    // Never treat pure-numeric CJ advertiser CIDs as coupon codes.
+    if (/^\d{4,12}$/.test(tok)) continue;
+    if (cidDigits && tok === cidDigits) continue;
+    if (/^CID\d*$/i.test(tok)) continue;
+    if (COUPON_CODE_STOPWORDS.has(tok)) continue;
+    // Unlabeled: require a digit so plain words (MAIL, SALE…) are not codes.
+    if (!c.labeled && !/\d/.test(tok)) continue;
+    return tok;
+  }
+  return null;
+}
+
 /** Deterministic FALLBACK — never labeled as AI. */
 export function deterministicEventFallback(row = {}) {
   const subject = String(row.subjectSafe || row.subject || "");
@@ -202,9 +265,14 @@ export function deterministicEventFallback(row = {}) {
     /approv|schv[aá]len|welcome|joined|přijat|accepted|v[ií]t[aá]me|invitation|thank you for joining/.test(text)
   ) {
     eventType = AI_EVENT_TYPE.PARTNER_APPROVED;
-  } else if (/expir|platnost.*skon|coupon.*end|offer.*end/.test(text) && /coupon|kup[oó]n|promo/.test(text)) {
+  } else if (/expir|platnost.*skon|coupon.*end|offer.*end/.test(text) && /\bcoupon\b|\bkup[oó]n\b|promo/.test(text)) {
     eventType = AI_EVENT_TYPE.COUPON_EXPIRED;
-  } else if (cats.includes("coupon") || /kup[oó]n|coupon|promo code|slevov/.test(text)) {
+  } else if (
+    cats.includes("coupon") ||
+    // Require coupon/kupón as a word; reject editorial "ne kupón" / "není kupón".
+    (/\bcoupon\b|\bkup[oó]n\b|promo code|slevov/.test(text) &&
+      !/\bne\s+kup[oó]n\b|\bnen[ií]\s+kup[oó]n\b|\bno\s+coupon\b|\bnot\s+a\s+coupon\b/.test(text))
+  ) {
     eventType = AI_EVENT_TYPE.COUPON_NEW;
   } else if (cats.includes("terms_change") || /terms|podm[ií]nk/.test(text)) {
     eventType = AI_EVENT_TYPE.TERMS_CHANGED;
@@ -217,12 +285,14 @@ export function deterministicEventFallback(row = {}) {
   } else if (!cats.length && !subject) {
     eventType = AI_EVENT_TYPE.UNTRUSTED_OR_UNCLEAR;
   }
-  const cidMatch = (subject + "\n" + excerpt).match(/\bCID[:\s#]*([0-9]{4,12})\b/i);
-  const couponMatch = (subject + "\n" + excerpt).match(/\b([A-Z0-9]{4,16})\b/);
+  const rawBlob = subject + "\n" + excerpt;
+  const cidMatch = rawBlob.match(/\bCID[:\s#]*([0-9]{4,12})\b/i);
   const advertiserId =
     (row.advertiserId ? String(row.advertiserId).replace(/\D/g, "").slice(0, 12) : null) ||
     (cidMatch ? cidMatch[1] : null);
   const partnerName = row.partnerName ? String(row.partnerName).slice(0, 120) : null;
+  // Coupon code: never pick CID digits / pure numeric advertiser ids as the code.
+  const couponCode = extractDeterministicCouponCode(rawBlob, advertiserId);
   // Welcome / approval: use redacted subject+excerpt as assortment signal for category bridge.
   const productHint =
     eventType === AI_EVENT_TYPE.PARTNER_APPROVED || eventType === AI_EVENT_TYPE.PRODUCT_NEW
@@ -235,9 +305,7 @@ export function deterministicEventFallback(row = {}) {
     effectiveDate: null,
     couponCode:
       eventType === AI_EVENT_TYPE.COUPON_NEW || eventType === AI_EVENT_TYPE.COUPON_EXPIRED
-        ? couponMatch
-          ? couponMatch[1]
-          : null
+        ? couponCode
         : null,
     termsSummary: null,
     productHint,

@@ -173,6 +173,41 @@ const fb = deterministicEventFallback({
 });
 expect("product_det", fb.eventType === AI_EVENT_TYPE.PRODUCT_NEW);
 
+const cidCouponTrap = deterministicEventFallback({
+  subjectSafe: "Partner update",
+  excerptSafe: "CID: 5277391\nKupón SUMMER25 platí do pátku",
+  categories: ["coupon"],
+});
+expect(
+  "coupon_not_cid",
+  cidCouponTrap.eventType === AI_EVENT_TYPE.COUPON_NEW &&
+    cidCouponTrap.couponCode === "SUMMER25" &&
+    cidCouponTrap.advertiserId === "5277391",
+  cidCouponTrap
+);
+
+const cidOnlyNoCode = deterministicEventFallback({
+  subjectSafe: "Coupon mail",
+  excerptSafe: "CID: 5277391\nnový kupón v příloze",
+  categories: ["coupon"],
+});
+expect(
+  "cid_alone_not_coupon_code",
+  cidOnlyNoCode.couponCode == null && cidOnlyNoCode.advertiserId === "5277391",
+  cidOnlyNoCode
+);
+
+const editorialNeKupon = deterministicEventFallback({
+  subjectSafe: "Tip na víkend",
+  excerptSafe: "Toto není kupón, jen editorial tip na výlet.",
+  categories: [],
+});
+expect(
+  "editorial_ne_kupon_not_coupon_new",
+  editorialNeKupon.eventType !== AI_EVENT_TYPE.COUPON_NEW,
+  editorialNeKupon
+);
+
 if (failures.length) {
   console.log(JSON.stringify({ OK: false, failures }, null, 2));
   process.exit(1);
