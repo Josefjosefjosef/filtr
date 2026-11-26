@@ -73,23 +73,19 @@ export function looksLikeCp852Utf8Mojibake(text) {
  * @param {string} text
  * @returns {string|null}
  */
-export function tryRepairCp852Utf8Mojibake(text) {
-  const input = String(text || "");
-  if (!input || !looksLikeCp852Utf8Mojibake(input)) return null;
-  const map = getCp852ReverseMap();
+function repairMappedRun(chars, map) {
+  if (!chars.length) return null;
   const bytes = [];
-  for (const ch of input) {
+  for (const ch of chars) {
     if (!map.has(ch)) return null;
     bytes.push(map.get(ch));
   }
-  // Source feeds truncate long descriptions mid-character (e.g. 2000 chars): drop ONE trailing
-  // incomplete UTF-8 sequence (1-3 bytes) instead of failing the whole repair.
   let end = bytes.length;
   for (let back = 1; back <= 3 && back <= bytes.length; back++) {
     const b = bytes[bytes.length - back];
-    if ((b & 0xc0) === 0x80) continue; // continuation byte — keep scanning for lead
+    if ((b & 0xc0) === 0x80) continue;
     const need = b >= 0xf0 ? 4 : b >= 0xe0 ? 3 : b >= 0xc0 ? 2 : 1;
-    if (need > back) end = bytes.length - back; // lead byte without all its continuations
+    if (need > back) end = bytes.length - back;
     break;
   }
   let repaired;
@@ -98,18 +94,47 @@ export function tryRepairCp852Utf8Mojibake(text) {
   } catch {
     return null;
   }
-  if (!repaired || repaired.includes("\uFFFD")) return null;
-  if (repaired === input) return null;
-  const boxBefore = countBoxDrawing(input);
-  const boxAfter = countBoxDrawing(repaired);
-  if (boxAfter >= boxBefore) return null;
-  const scoreBefore = countCeDiacritics(input) - boxBefore * 3;
-  const scoreAfter = countCeDiacritics(repaired) - boxAfter * 3;
-  // Lower score is tolerated only when ALL box glyphs vanish AND the whole string round-trips as
-  // strict UTF-8 (no U+FFFD above): English/mixed text has no CE diacritics, and OEM-mojibake
-  // glyphs (Ô/Ö/ó…) inflate the "before" CE score, so the score cannot improve there.
-  if (boxAfter !== 0 && scoreAfter <= scoreBefore) return null;
+  const source = chars.join("");
+  if (!repaired || repaired === source) return null;
+  if (repaired.includes("\uFFFD")) {
+    const cut = repaired.indexOf("\uFFFD");
+    repaired = repaired.slice(0, cut);
+  }
+  if (!repaired || repaired === source) return null;
+  if (countBoxDrawing(repaired) >= countBoxDrawing(source)) return null;
   return repaired;
+}
+
+export function tryRepairCp852Utf8Mojibake(text) {
+  const input = String(text || "");
+  if (!input || !looksLikeCp852Utf8Mojibake(input)) return null;
+  const map = getCp852ReverseMap();
+  const chars = Array.from(input);
+  if (chars.every((ch) => map.has(ch))) return repairMappedRun(chars, map);
+  let out = "";
+  let run = [];
+  let changed = false;
+  const flush = () => {
+    if (!run.length) return;
+    const repaired = repairMappedRun(run, map);
+    if (repaired) {
+      out += repaired;
+      changed = true;
+    } else {
+      out += run.join("");
+    }
+    run = [];
+  };
+  for (const ch of chars) {
+    if (map.has(ch)) run.push(ch);
+    else {
+      flush();
+      out += ch;
+    }
+  }
+  flush();
+  if (!changed || countBoxDrawing(out) >= countBoxDrawing(input)) return null;
+  return out;
 }
 
 /**
@@ -168,24 +193,37 @@ export function normalizeCjProductText(text) {
     const repaired = tryRepairCp852Utf8Mojibake(input);
     if (repaired) {
       const stageB = tryRepairWin1252Utf8Literals(repaired) || repaired;
-      return {
-        text: stageB,
-        repaired: true,
-        reason:
-          stageB !== repaired
-            ? "CP852_UTF8_REPAIRED+WIN1252_LITERALS"
-            : "CP852_UTF8_REPAIRED",
-      };
+      if (countBoxDrawing(stageB) === 0) {
+        return {
+          text: stageB,
+          repaired: true,
+          reason:
+            stageB !== repaired
+              ? "CP852_UTF8_REPAIRED+WIN1252_LITERALS"
+              : "CP852_UTF8_REPAIRED",
+        };
+      }
     }
   }
 
   // Stage B: Windows-1252 literal sequences (descriptions with ÔÇŽ etc.)
   const win = tryRepairWin1252Utf8Literals(input);
-  if (win) {
+  const afterWin = win || input;
+  if (looksLikeCp852Utf8Mojibake(afterWin)) {
+    const again = tryRepairCp852Utf8Mojibake(afterWin);
+    if (again && countBoxDrawing(again) === 0) {
+      return {
+        text: again,
+        repaired: true,
+        reason: win ? "WIN1252_THEN_CP852" : "CP852_UTF8_REPAIRED",
+      };
+    }
+  }
+  if (win && countBoxDrawing(win) === 0) {
     return { text: win, repaired: true, reason: "WIN1252_UTF8_LITERALS_REPAIRED" };
   }
 
-  if (looksLikeCp852Utf8Mojibake(input)) {
+  if (looksLikeCp852Utf8Mojibake(afterWin)) {
     return { text: input, repaired: false, reason: "CP852_REPAIR_REFUSED" };
   }
   return { text: input, repaired: false, reason: null };
