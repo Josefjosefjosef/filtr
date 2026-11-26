@@ -122,14 +122,64 @@ export function emptyRetryQueue(nowIso = new Date().toISOString()) {
   };
 }
 
+export function migrateClosedRetryHistory(queue, nowIso = new Date().toISOString()) {
+  const nextAt = new Date(Date.parse(nowIso) + LONG_TERM_RECHECK_MS).toISOString();
+  let exhaustedMigrated = 0;
+  let collisionMigrated = 0;
+  const items = queue.items || {};
+  for (const [key, item] of Object.entries(items)) {
+    if (!item || !item.advertiserId || !item.productId) continue;
+    if (item.confirmedAbsent === true || item.queueClass === "SOURCE_NOT_FOUND_CONFIRMED") continue;
+    if (item.queueClass === "LONG_TERM_RECHECK" || item.queueClass === "IDENTITY_COLLISION_HOLD") continue;
+    const exhaustedClosed =
+      item.closed === true &&
+      item.status === ATTEMPT_STATUS.PRODUCT_NOT_FOUND &&
+      Number(item.attemptCount || 0) >= MAX_RETRY_ATTEMPTS;
+    if (exhaustedClosed) {
+      items[key] = {
+        ...item,
+        key,
+        status: ATTEMPT_STATUS.RETRY_SCHEDULED,
+        queueClass: "LONG_TERM_RECHECK",
+        identityScope: "advertiserId|productId",
+        closed: false,
+        closedReason: null,
+        holdReason: "RETRY_EXHAUSTED",
+        nextAttemptAt: nextAt,
+        migratedFrom: "MAX_RETRY_EXHAUSTED",
+      };
+      exhaustedMigrated += 1;
+      continue;
+    }
+    if (item.status === ATTEMPT_STATUS.INVALID_DATA && item.closed === true) {
+      items[key] = {
+        ...item,
+        key,
+        status: ATTEMPT_STATUS.INVALID_DATA,
+        queueClass: "IDENTITY_COLLISION_HOLD",
+        identityScope: "advertiserId|productId",
+        closed: false,
+        closedReason: null,
+        holdReason: "IDENTITY_COLLISION_HOLD",
+        nextAttemptAt: nextAt,
+        migratedFrom: "IDENTITY_COLLISION",
+      };
+      collisionMigrated += 1;
+    }
+  }
+  queue.migration = { exhaustedMigrated, collisionMigrated, at: nowIso };
+  return queue;
+}
+
 export function loadRetryQueue(raw) {
   if (!raw || typeof raw !== "object") return emptyRetryQueue();
-  return {
+  const queue = {
     ...emptyRetryQueue(raw.updatedAt || undefined),
     ...raw,
     schema: RETRY_QUEUE_SCHEMA,
     items: raw.items && typeof raw.items === "object" ? raw.items : {},
   };
+  return migrateClosedRetryHistory(queue, raw.updatedAt || new Date().toISOString());
 }
 
 export function readRetryQueueFile(absPath) {
