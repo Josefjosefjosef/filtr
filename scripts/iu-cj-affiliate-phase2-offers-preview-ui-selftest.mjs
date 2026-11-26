@@ -22,6 +22,8 @@ expect("show_more", js.includes("Zobrazit další"));
 expect("show_more_truncated_lean_loads_full_shard", js.includes("productsTruncated") && js.includes("loadMore") && js.includes("force: true"));
 expect("show_more_default_visible_3", js.includes("defaultVisibleProducts: 3"));
 expect("large_catalog_batch_constant", js.includes("PRODUCT_RENDER_BATCH"));
+expect("dom_window_not_catalog_cap", js.includes("PRODUCT_DOM_WINDOW") && js.includes("trimToWindow") && js.includes("iuAffiliatePhase2Offers__windowSpacer"));
+expect("dom_window_keeps_first_three", js.includes("defaultVisibleProducts: 3") && js.includes("paintInitial"));
 expect("large_catalog_batch_append", js.includes("appendRange") && js.includes("revealNextBatch"));
 expect("large_catalog_scroll_sentinel", js.includes("data-iu-aff-batch-sentinel") && js.includes("IntersectionObserver"));
 expect("no_prod_bypass", js.includes("public_stub_no_staging_data"));
