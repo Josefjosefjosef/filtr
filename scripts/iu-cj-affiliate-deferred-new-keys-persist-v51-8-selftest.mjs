@@ -5,6 +5,7 @@
  */
 
 import assert from "node:assert/strict";
+import crypto from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -113,6 +114,29 @@ const bigPersisted = await persistDeferredNewKeys(big, { dataDir: bigDir, runId:
 assert.equal(bigPersisted.keyCount, 5000);
 const bigLoad = await loadDeferredNewKeySet(bigDir);
 assert.equal(bigLoad.uniqueCount, 5000);
+
+const ledgerHash = crypto.createHash("sha256").update(fs.readFileSync(persisted.ledgerPath)).digest("hex");
+assert.equal(persisted.meta.ledgerSha256, ledgerHash);
+assert.equal(persisted.meta.generation, 1);
+fs.writeFileSync(persisted.ledgerPath + ".partial", "{ partial");
+const duringInterrupt = await loadDeferredNewKeySet(persisted.ledgerPath, { preferGz: false });
+assert.equal(duringInterrupt.uniqueCount, curKeys.length);
+fs.rmSync(persisted.ledgerPath + ".partial", { force: true });
+let staleRefused = false;
+try {
+  await persistDeferredNewKeys(["9|overwrite"], {
+    dataDir,
+    runId: "STALE",
+    expectedGeneration: 0,
+  });
+} catch (err) {
+  staleRefused = err && err.code === "STALE_DEFERRED_SIDECAR";
+}
+assert.equal(staleRefused, true);
+const afterStale = await loadDeferredNewKeySet(dataDir);
+assert.equal(afterStale.uniqueCount, curKeys.length);
+assert.ok(afterStale.keys.has("7|newOnly"));
+assert.equal(afterStale.keys.has("9|overwrite"), false);
 
 console.log(
   JSON.stringify({

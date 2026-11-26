@@ -17,6 +17,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import crypto from "node:crypto";
 import readline from "node:readline";
 import { createReadStream, createWriteStream } from "node:fs";
 import { pipeline } from "node:stream/promises";
@@ -116,8 +117,9 @@ export function buildDeferredNewKeysOnlyDocument(deferredNewKeys, opts = {}) {
 /** Stream keys as gzipped JSONL (one key string per line). */
 export async function writeDeferredNewKeysJsonlGz(keys, filePath) {
   ensureDir(path.dirname(filePath));
+  const partial = filePath + ".partial";
   const gzip = createGzip({ level: 6 });
-  const out = createWriteStream(filePath);
+  const out = createWriteStream(partial);
   const done = pipeline(gzip, out);
   for (const k of keys) {
     if (!gzip.write(JSON.stringify(k) + "\n")) {
@@ -126,6 +128,7 @@ export async function writeDeferredNewKeysJsonlGz(keys, filePath) {
   }
   gzip.end();
   await done;
+  fs.renameSync(partial, filePath);
   return { path: filePath, count: keys.length, bytes: fs.statSync(filePath).size };
 }
 
@@ -133,7 +136,8 @@ export async function writeDeferredNewKeysJsonlGz(keys, filePath) {
 export function writeDeferredNewKeysOnlyLedger(keys, filePath, meta = {}) {
   ensureDir(path.dirname(filePath));
   const docMeta = buildDeferredNewKeysOnlyDocument([], meta);
-  const fd = fs.openSync(filePath, "w");
+  const partial = filePath + ".partial";
+  const fd = fs.openSync(partial, "w");
   try {
     const w = (s) => fs.writeSync(fd, s);
     w("{\n");
@@ -161,6 +165,7 @@ export function writeDeferredNewKeysOnlyLedger(keys, filePath, meta = {}) {
   } finally {
     fs.closeSync(fd);
   }
+  fs.renameSync(partial, filePath);
   return { path: filePath, count: keys.length, bytes: fs.statSync(filePath).size };
 }
 
@@ -175,6 +180,20 @@ export async function persistDeferredNewKeys(deferredNewKeys, opts = {}, env = p
   const ledgerPath = path.join(outDir, DEFERRED_NEW_LEDGER_FILENAME);
   const jsonlGzPath = path.join(outDir, DEFERRED_NEW_KEYS_JSONL_GZ);
   const metaPath = path.join(outDir, DEFERRED_NEW_KEYS_META_FILENAME);
+  let previousGeneration = 0;
+  if (fs.existsSync(metaPath)) {
+    try {
+      previousGeneration = Number(JSON.parse(fs.readFileSync(metaPath, "utf8")).generation) || 0;
+    } catch {
+      previousGeneration = 0;
+    }
+  }
+  if (opts.expectedGeneration != null && Number(opts.expectedGeneration) !== previousGeneration) {
+    const err = new Error("STALE_DEFERRED_SIDECAR");
+    err.code = "STALE_DEFERRED_SIDECAR";
+    throw err;
+  }
+  const generation = previousGeneration + 1;
 
   const ledgerWrite = writeDeferredNewKeysOnlyLedger(keys, ledgerPath, opts);
   const gzWrite = await writeDeferredNewKeysJsonlGz(keys, jsonlGzPath);
@@ -190,6 +209,8 @@ export async function persistDeferredNewKeys(deferredNewKeys, opts = {}, env = p
     ledgerPath,
     jsonlGzPath,
     ledgerBytes: ledgerWrite.bytes,
+    ledgerSha256: crypto.createHash("sha256").update(fs.readFileSync(ledgerPath)).digest("hex"),
+    generation,
     jsonlGzBytes: gzWrite.bytes,
     reason: String(opts.reason || "PER_RUN_GROWTH_BUDGET"),
     preferredCurrency: String(opts.preferredCurrency || "CZK").toUpperCase(),
