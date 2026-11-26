@@ -6,6 +6,12 @@ import { compoundIdentity } from "./iu-cj-affiliate-phase3z-durable-price-histor
 
 export const PRODUCT_IDENTITY_SCHEMA = "iu-cj-affiliate-phase3z-product-identity-v50";
 
+export function identityCompoundKey(advertiserId, productId, productVariant) {
+  const base = compoundIdentity(advertiserId, productId);
+  const variant = String(productVariant || "").trim();
+  return variant ? base + "|" + variant : base;
+}
+
 /**
  * Build identity ledger from fetched/mapped rows + published doc.
  * each fetched row: { advertiserId, productId, feedId?, currency?, language?, categoryKey? }
@@ -27,11 +33,12 @@ export function buildProductIdentityLedger(opts = {}) {
     const adv = row.advertiserId != null ? String(row.advertiserId) : "";
     const pid = row.productId != null ? String(row.productId) : "";
     if (!adv || !pid) continue;
-    const key = compoundIdentity(adv, pid);
+    const key = identityCompoundKey(adv, pid, row.productVariant);
     const feedId = row.feedId != null ? String(row.feedId) : "";
     const entry = byCompound.get(key) || {
       advertiserId: adv,
       productId: pid,
+      productVariant: String(row.productVariant || "").trim() || null,
       compoundIdentity: key,
       occurrenceCount: 0,
       feedIds: new Set(),
@@ -73,7 +80,7 @@ export function buildProductIdentityLedger(opts = {}) {
       const adv = p.advertiserId != null ? String(p.advertiserId) : "";
       const pid = p.productId != null ? String(p.productId) : "";
       if (!adv || !pid) continue;
-      const key = compoundIdentity(adv, pid);
+      const key = identityCompoundKey(adv, pid, p.productVariant);
       publishedOccurrences.push(key);
       publishedKeys.add(key);
     }
@@ -87,6 +94,7 @@ export function buildProductIdentityLedger(opts = {}) {
     .map((e) => ({
       advertiserId: e.advertiserId,
       productId: e.productId,
+      productVariant: e.productVariant,
       compoundIdentity: e.compoundIdentity,
       occurrenceCount: e.occurrenceCount,
       feedIds: [...e.feedIds],
@@ -102,7 +110,7 @@ export function buildProductIdentityLedger(opts = {}) {
     runId,
     sha: opts.sha || null,
     note:
-      "UNIQUE = distinct compoundIdentity(advertiserId|productId) in this fetch window. Same productId across partners is NOT a collision. UNIQUE ≠ fetchedRows unless zero duplicates.",
+      "UNIQUE = distinct compoundIdentity in this fetch window. A non-empty product variant is part of the key. Same productId across partners is NOT a collision. UNIQUE ≠ fetchedRows unless zero duplicates.",
     accounting: {
       fetchedRowsWithIdentity: fetchedCount,
       uniqueIdentitiesInRun: uniqueInRun,
