@@ -497,6 +497,10 @@ function isPositiveSalePrice(raw) {
   return Number.isFinite(n) && n > 0;
 }
 
+export function publicProductSectionKey(product) {
+  return [product?.advertiserId || "", product?.productId || "", product?.productVariant || ""].join("|");
+}
+
 function toPublicProductCard(p, sectionKey) {
   if (!p || p.publicationReady !== true) return null;
   if (!isCjTrackingUrl(p.affiliateUrl)) return null;
@@ -1272,7 +1276,7 @@ export function buildOffersPublicFromStaging(opts = {}) {
       }
       pub.sectionKeys = sectionKeys;
       const sec = secBucket(pub.sectionKey, pub.advertiserId, pub.partnerName);
-      const key = String(pub.productId || "") + "|" + String(pub.productVariant || "");
+      const key = publicProductSectionKey(pub);
       if (sec.seenProductKeys.has(key)) {
         bump("duplicate_product");
         continue;
