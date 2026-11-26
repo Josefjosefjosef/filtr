@@ -96,17 +96,23 @@ export function planAdaptiveBatch({
   if (uncappedGate !== true || executeArmed !== true) {
     return { allowed: 0, reason: REASON_OWNER_GATES_DISARMED, selected: [] };
   }
+  const verified = list.filter(
+    (c) => c && c.verifiedEligible === true && c.verificationState === 'VERIFIED_ELIGIBLE'
+  );
   if (!health || typeof health !== 'object' || health.stop === true) {
     return { allowed: 0, reason: 'HEALTH_STOP', selected: [] };
   }
   const remaining = Math.floor(num(remainingCumulative));
   if (remaining <= 0) return { allowed: 0, reason: 'CUMULATIVE_CAP_REACHED', selected: [] };
-  let allowed = Math.min(list.length, remaining);
+  if (verified.length === 0) {
+    return { allowed: 0, reason: 'NO_VERIFIED_ELIGIBLE', selected: [] };
+  }
+  let allowed = Math.min(verified.length, remaining);
   if (health.throttle === true) allowed = Math.floor(allowed / 2);
   return {
     allowed,
     reason: allowed > 0 ? 'OK' : 'NO_CANDIDATES',
-    selected: list.slice(0, allowed),
+    selected: verified.slice(0, allowed),
   };
 }
 

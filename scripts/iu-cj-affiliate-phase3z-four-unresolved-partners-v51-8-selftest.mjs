@@ -4,7 +4,8 @@
  * 4786110 4camping.cz → aff-sport-outdoor (publishable)
  * 6298382 Picasee Europe → aff-mobily (publishable)
  * 6748811 Impresi CZ/SK → aff-kvetiny-darky (publishable)
- * 7417963 OnBuy EU → HOLD (no onbuy.com/cz destination among approved links)
+ * 7417963 OnBuy EU → aff-inzerce-bazary via the general department-store rule.
+ * Publication stays blocked: no onbuy.com/cz destination and no CID override.
  */
 import {
   classifyFromCjEvidence,
@@ -51,6 +52,8 @@ const cases = [
     primaryCategory: "<parent>Department Stores/Malls</parent><child>Department Stores</child>",
     expectSection: null,
     expectPublishable: false,
+    expectRule: "department_store_no_single_taxonomy_tile",
+    expectSource: "cj_category_merchant_subtype_v51_8",
     holdReason: "NO_CZ_DESTINATION_LINK",
   },
 ];
@@ -62,8 +65,12 @@ for (const c of cases) {
     assert(r.sectionId === c.expectSection, c.advertiserId + "_section", r);
     assert(!!PHASE3Z_CID_SECTION_OVERRIDES_V6[c.advertiserId], c.advertiserId + "_cid_override");
   } else {
-    assert(r.sectionId == null, c.advertiserId + "_hold_no_section", r);
+    assert(r.sectionId == null, c.advertiserId + "_not_a_bazar", r);
+    assert(r.rule === c.expectRule, c.advertiserId + "_department_store_rule", r);
+    assert(r.source === c.expectSource, c.advertiserId + "_not_a_cid_override", r);
+    assert(r.merchantSubtype === "DEPARTMENT_STORE", c.advertiserId + "_subtype", r);
     assert(!PHASE3Z_CID_SECTION_OVERRIDES_V6[c.advertiserId], c.advertiserId + "_no_force_override");
+    assert(!/\/cz(\/|$)/i.test(c.programUrl), c.advertiserId + "_cz_destination_absent");
   }
   results.push({
     advertiserId: c.advertiserId,
@@ -90,6 +97,29 @@ const photoNoCid = classifyFromCjEvidence({
   primaryCategory: "<parent>Art/Photo/Music</parent><child>Photo</child>",
 });
 assert(photoNoCid.sectionId === "aff-kvetiny-darky", "photo_exact_without_cid", photoNoCid);
+
+const otherDepartmentStore = classifyFromCjEvidence({
+  advertiserName: "Example Department Store",
+  programUrl: "https://example-mall.example/sk/",
+  primaryCategory: "<parent>Department Stores/Malls</parent><child>Department Stores</child>",
+});
+assert(otherDepartmentStore.sectionId == null, "department_store_rule_is_general", otherDepartmentStore);
+assert(otherDepartmentStore.merchantSubtype === "DEPARTMENT_STORE", "department_store_subtype", otherDepartmentStore);
+assert(otherDepartmentStore.source === "cj_category_merchant_subtype_v51_8", "department_store_not_cid", otherDepartmentStore);
+
+const classifieds = classifyFromCjEvidence({
+  advertiserName: "Aukro Bazar",
+  programUrl: "https://aukro.cz/",
+  primaryCategory: "<parent>Department Stores/Malls</parent><child>Department Stores</child>",
+});
+assert(classifieds.sectionId === "aff-inzerce-bazary", "classifieds_keep_existing_tile", classifieds);
+
+const ambiguous = classifyFromCjEvidence({
+  advertiserName: "Unclear Merchant",
+  programUrl: "https://example.example/",
+  primaryCategory: "<parent>Business</parent><child>Other</child>",
+});
+assert(ambiguous.sectionId == null, "ambiguous_stays_unresolved", ambiguous);
 
 console.log(
   JSON.stringify({
