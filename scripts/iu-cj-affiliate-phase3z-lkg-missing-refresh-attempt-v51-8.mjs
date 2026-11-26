@@ -31,6 +31,7 @@ export const RETRY_QUEUE_SCHEMA = "iu-cj-affiliate-phase3z-lkg-refresh-retry-que
 export const RETRY_QUEUE_FILENAME = "iu-affiliate-cj-lkg-refresh-retry-queue-v51-8.json";
 const DEFAULT_RETRY_HOURS = 3;
 const MAX_RETRY_ATTEMPTS = 12;
+export const LONG_TERM_RECHECK_MS = 7 * 24 * 60 * 60 * 1000;
 
 /**
  * Map V38 probe row → attempt status (honest, no PASS renaming).
@@ -121,14 +122,64 @@ export function emptyRetryQueue(nowIso = new Date().toISOString()) {
   };
 }
 
+export function migrateClosedRetryHistory(queue, nowIso = new Date().toISOString()) {
+  const nextAt = new Date(Date.parse(nowIso) + LONG_TERM_RECHECK_MS).toISOString();
+  let exhaustedMigrated = 0;
+  let collisionMigrated = 0;
+  const items = queue.items || {};
+  for (const [key, item] of Object.entries(items)) {
+    if (!item || !item.advertiserId || !item.productId) continue;
+    if (item.confirmedAbsent === true || item.queueClass === "SOURCE_NOT_FOUND_CONFIRMED") continue;
+    if (item.queueClass === "LONG_TERM_RECHECK" || item.queueClass === "IDENTITY_COLLISION_HOLD") continue;
+    const exhaustedClosed =
+      item.closed === true &&
+      item.status === ATTEMPT_STATUS.PRODUCT_NOT_FOUND &&
+      Number(item.attemptCount || 0) >= MAX_RETRY_ATTEMPTS;
+    if (exhaustedClosed) {
+      items[key] = {
+        ...item,
+        key,
+        status: ATTEMPT_STATUS.RETRY_SCHEDULED,
+        queueClass: "LONG_TERM_RECHECK",
+        identityScope: "advertiserId|productId",
+        closed: false,
+        closedReason: null,
+        holdReason: "RETRY_EXHAUSTED",
+        nextAttemptAt: nextAt,
+        migratedFrom: "MAX_RETRY_EXHAUSTED",
+      };
+      exhaustedMigrated += 1;
+      continue;
+    }
+    if (item.status === ATTEMPT_STATUS.INVALID_DATA && item.closed === true) {
+      items[key] = {
+        ...item,
+        key,
+        status: ATTEMPT_STATUS.INVALID_DATA,
+        queueClass: "IDENTITY_COLLISION_HOLD",
+        identityScope: "advertiserId|productId",
+        closed: false,
+        closedReason: null,
+        holdReason: "IDENTITY_COLLISION_HOLD",
+        nextAttemptAt: nextAt,
+        migratedFrom: "IDENTITY_COLLISION",
+      };
+      collisionMigrated += 1;
+    }
+  }
+  queue.migration = { exhaustedMigrated, collisionMigrated, at: nowIso };
+  return queue;
+}
+
 export function loadRetryQueue(raw) {
   if (!raw || typeof raw !== "object") return emptyRetryQueue();
-  return {
+  const queue = {
     ...emptyRetryQueue(raw.updatedAt || undefined),
     ...raw,
     schema: RETRY_QUEUE_SCHEMA,
     items: raw.items && typeof raw.items === "object" ? raw.items : {},
   };
+  return migrateClosedRetryHistory(queue, raw.updatedAt || new Date().toISOString());
 }
 
 export function readRetryQueueFile(absPath) {
@@ -159,7 +210,8 @@ export function mergeTargetsWithRetryQueue(selectedTargets, queue, opts = {}) {
     // INVALID_DATA stays tracked but is not auto-retried unless forceRetryInvalid.
     if (
       item.status === ATTEMPT_STATUS.INVALID_DATA &&
-      opts.forceRetryInvalid !== true
+      opts.forceRetryInvalid !== true &&
+      item.queueClass !== "IDENTITY_COLLISION_HOLD"
     ) {
       continue;
     }
@@ -167,7 +219,8 @@ export function mergeTargetsWithRetryQueue(selectedTargets, queue, opts = {}) {
     const due =
       item.status === ATTEMPT_STATUS.RETRY_SCHEDULED ||
       item.status === ATTEMPT_STATUS.TECHNICAL_FAILURE ||
-      item.status === ATTEMPT_STATUS.PRODUCT_NOT_FOUND;
+      item.status === ATTEMPT_STATUS.PRODUCT_NOT_FOUND ||
+      (item.status === ATTEMPT_STATUS.INVALID_DATA && item.queueClass === "IDENTITY_COLLISION_HOLD");
     if (!due) continue;
     if (Number.isFinite(nextMs) && nextMs > nowMs) {
       // Honor backoff: never re-attempt via selectedOnly MISSING_REFRESH while not due.
@@ -253,11 +306,14 @@ export function updateRetryQueueFromAttempts(priorQueue, attempts, opts = {}) {
         title: a.title || prev.title || null,
         feedId: a.feedId || prev.feedId || null,
         status: ATTEMPT_STATUS.INVALID_DATA,
+        queueClass: "IDENTITY_COLLISION_HOLD",
+        identityScope: "advertiserId|productId",
         attemptCount,
         lastAttemptAt: a.attemptedAt || nowIso,
-        nextAttemptAt: null,
-        closed: true,
-        closedReason: "IDENTITY_COLLISION_OR_INVALID_DATA",
+        nextAttemptAt: new Date(Date.parse(nowIso) + LONG_TERM_RECHECK_MS).toISOString(),
+        closed: false,
+        closedReason: null,
+        holdReason: "IDENTITY_COLLISION_HOLD",
         apiResult: a.apiResult || null,
         identityRepair: a.identityRepair || null,
         priorCauseCode: a.priorCauseCode || prev.priorCauseCode || null,
@@ -286,6 +342,7 @@ export function updateRetryQueueFromAttempts(priorQueue, attempts, opts = {}) {
       continue;
     }
     const exhausted = attemptCount >= maxAttempts;
+    const confirmedAbsent = a.confirmedAbsent === true;
     next.items[key] = {
       ...prev,
       key,
@@ -293,19 +350,26 @@ export function updateRetryQueueFromAttempts(priorQueue, attempts, opts = {}) {
       productId: a.productId,
       title: a.title || prev.title || null,
       feedId: a.feedId || prev.feedId || null,
-      status: exhausted ? ATTEMPT_STATUS.PRODUCT_NOT_FOUND : ATTEMPT_STATUS.RETRY_SCHEDULED,
+      status: confirmedAbsent ? ATTEMPT_STATUS.PRODUCT_NOT_FOUND : ATTEMPT_STATUS.RETRY_SCHEDULED,
+      queueClass: confirmedAbsent ? "SOURCE_NOT_FOUND_CONFIRMED" : exhausted ? "LONG_TERM_RECHECK" : "ACTIVE_RETRY",
+      identityScope: "advertiserId|productId",
       attemptCount,
       lastAttemptAt: a.attemptedAt || nowIso,
-      nextAttemptAt: exhausted ? null : nextAttemptAt,
-      closed: exhausted,
-      closedReason: exhausted ? "MAX_RETRY_EXHAUSTED" : null,
+      nextAttemptAt: confirmedAbsent
+        ? null
+        : exhausted
+          ? new Date(Date.parse(nowIso) + LONG_TERM_RECHECK_MS).toISOString()
+          : nextAttemptAt,
+      closed: confirmedAbsent,
+      closedReason: confirmedAbsent ? "SOURCE_NOT_FOUND_CONFIRMED" : null,
+      holdReason: confirmedAbsent ? "SOURCE_NOT_FOUND_CONFIRMED" : exhausted ? "RETRY_EXHAUSTED" : "RETRY_WAIT",
       apiResult: a.apiResult || null,
       evidence: a.evidence || null,
       priorCauseCode: a.priorCauseCode || prev.priorCauseCode || null,
       lastVerifiedAt: a.priorLastVerifiedAt || prev.lastVerifiedAt || null,
       dataAgeHours: a.priorDataAgeHours ?? prev.dataAgeHours ?? null,
     };
-    if (exhausted) closed += 1;
+    if (confirmedAbsent) closed += 1;
     else scheduled += 1;
   }
   next.counts = {
