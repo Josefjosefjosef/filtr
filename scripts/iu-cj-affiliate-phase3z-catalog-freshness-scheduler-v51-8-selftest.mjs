@@ -93,9 +93,22 @@ assert.equal(serverError.failureClass, "TEMPORARY");
 assert.equal(serverError.retryable, true);
 const gone = applyCatalogCheckResult(product("A", "a2", "2026-11-26T08:00:00.000Z"), { ok: false, httpStatus: 404 }, now);
 assert.equal(gone.failureClass, "PERMANENT");
-assert.equal(gone.retryable, false);
+assert.equal(gone.retryable, true);
+assert.equal(gone.holdReason, "LONG_TERM_RECHECK");
+assert.equal(gone.advertiserId, "A");
+assert.equal(gone.itemId, "a2");
 const gonePlan = planCatalogFreshnessBatch([gone], { nowMs: now, limit: 4, maxPerPartner: 1 });
 assert.equal(gonePlan.batch.length, 0);
+const goneLater = planCatalogFreshnessBatch([gone], { nowMs: now + 8 * 24 * 60 * 60 * 1000, limit: 4, maxPerPartner: 1 });
+assert.equal(goneLater.batch.length, 1);
+assert.equal(goneLater.batch[0].advertiserId, "A");
+assert.equal(goneLater.batch[0].itemId, "a2");
+const unscheduled = planCatalogFreshnessBatch(
+  [{ kind: "product", advertiserId: "Z", itemId: "z1" }],
+  { nowMs: now, limit: 4, maxPerPartner: 1 },
+);
+assert.equal(unscheduled.batch.length, 1);
+assert.equal(unscheduled.batch[0].clockClass, "UNSCHEDULED");
 
 const busy = planCatalogFreshnessBatch(
   [product("A", "a0", "2026-11-26T08:00:00.000Z"), product("B", "b1", "2026-11-26T08:00:00.000Z")],
