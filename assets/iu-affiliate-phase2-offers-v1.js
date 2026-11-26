@@ -549,8 +549,45 @@
 
   var publicCached = null;
   var publicFailed = false;
+  var publicInflight = null;
+  var leanInflight = null;
   var sectionCached = Object.create(null);
   var sectionFailed = Object.create(null);
+  /* P0 dedupe: in-flight promises (shard + lean/full fallback) so concurrent callers share ONE network fetch. */
+  var sectionInflight = Object.create(null);
+  var fallbackInflight = null;
+  /* Bumped on every invalidation; responses that started under an older epoch are never cached. */
+  var cacheEpoch = 0;
+  var knownGenerationId = "";
+  /* Latest-render-wins: older async render passes must not repaint after a newer one started. */
+  var renderSeq = 0;
+
+  /** Drop cached/in-flight/failed state (all sections, or one). In-flight stale responses are not cached. */
+  function invalidateOffersCache(sectionKey) {
+    cacheEpoch++;
+    if (sectionKey && isSafeSectionKey(sectionKey)) {
+      delete sectionCached[sectionKey];
+      delete sectionFailed[sectionKey];
+      delete sectionInflight[sectionKey];
+    } else {
+      sectionCached = Object.create(null);
+      sectionFailed = Object.create(null);
+      sectionInflight = Object.create(null);
+      knownGenerationId = "";
+    }
+    publicCached = null;
+    publicFailed = false;
+    fallbackInflight = null;
+  }
+
+  /** ISO-ish generation ids (updatedAt/snapshotId) sort chronologically; opaque ids → not comparable. */
+  function generationIsOlder(gen, known) {
+    var a = Date.parse(gen);
+    var b = Date.parse(known);
+    return Number.isFinite(a) && Number.isFinite(b) && a < b;
+  }
+  /** In-flight section shard promises — concurrent callers share one network fetch. */
+  var sectionInflight = Object.create(null);
 
   function fetchJsonWithTimeout(url, timeoutMs) {
     var ctrl = typeof AbortController !== "undefined" ? new AbortController() : null;
@@ -581,22 +618,37 @@
   function fetchOffersPublicFull() {
     if (publicFailed) return Promise.resolve(null);
     if (publicCached) return Promise.resolve(publicCached);
+    if (publicInflight) return publicInflight;
     var src = OFFERS_PUBLIC_PATH + "?v=" + String(Date.now());
     /* Last-resort monolith (~4MB gzip / ~28MB raw) — short abort permanently failed mobile. */
-    return fetchJsonWithTimeout(src, 20000)
+    publicInflight = fetchJsonWithTimeout(src, 20000)
       .then(function (j) {
         publicCached = j;
+        publicInflight = null;
         return j;
       })
       .catch(function () {
         publicFailed = true;
+        publicInflight = null;
         return null;
       });
+    return publicInflight;
   }
 
   function fetchOffersPagesLean() {
+    if (leanInflight) return leanInflight;
     var src = OFFERS_PAGES_LEAN_PATH + "?v=" + String(Date.now());
-    return fetchJsonWithTimeout(src, 3500);
+    leanInflight = fetchJsonWithTimeout(src, 3500).then(
+      function (j) {
+        leanInflight = null;
+        return j;
+      },
+      function (err) {
+        leanInflight = null;
+        throw err;
+      }
+    );
+    return leanInflight;
   }
 
   function catalogGenerationId(doc) {
@@ -644,40 +696,53 @@
     return out;
   }
 
-  function fetchOffersSectionShard(sectionKey) {
+  function fetchOffersSectionShard(sectionKey, opts) {
     if (!isSafeSectionKey(sectionKey)) return Promise.reject(new Error("bad_section_key"));
-    if (sectionFailed[sectionKey]) return Promise.reject(new Error("section_failed"));
-    if (sectionCached[sectionKey]) return Promise.resolve(sectionCached[sectionKey]);
+    var force = opts && opts.force === true;
+    if (force) {
+      delete sectionFailed[sectionKey];
+      delete sectionCached[sectionKey];
+      delete sectionInflight[sectionKey];
+    }
+    if (!force && sectionFailed[sectionKey]) return Promise.reject(new Error("section_failed"));
+    if (!force && sectionCached[sectionKey]) return Promise.resolve(sectionCached[sectionKey]);
+    if (!force && sectionInflight[sectionKey]) return sectionInflight[sectionKey];
     var bust = String(Date.now());
     var src = OFFERS_SECTION_BASE + encodeURIComponent(sectionKey) + ".json?v=" + bust;
-    return fetchJsonWithTimeout(src, 2500)
+    var timeoutMs = force ? 20000 : 2500;
+    var p = fetchJsonWithTimeout(src, timeoutMs)
       .then(function (first) {
         var pageCount = first && first.pageCount ? Number(first.pageCount) : 1;
         if (!(pageCount > 1)) {
           sectionCached[sectionKey] = first;
+          delete sectionInflight[sectionKey];
           return first;
         }
         var jobs = [];
-        for (var p = 2; p <= pageCount; p++) {
+        for (var pg = 2; pg <= pageCount; pg++) {
           var pageUrl =
             OFFERS_SECTION_BASE +
             encodeURIComponent(sectionKey) +
             "__p" +
-            String(p) +
+            String(pg) +
             ".json?v=" +
             bust;
-          jobs.push(fetchJsonWithTimeout(pageUrl, 2500));
+          jobs.push(fetchJsonWithTimeout(pageUrl, timeoutMs));
         }
         return Promise.all(jobs).then(function (rest) {
           var merged = mergeSectionPageDocs([first].concat(rest));
           sectionCached[sectionKey] = merged;
+          delete sectionInflight[sectionKey];
           return merged;
         });
       })
       .catch(function (err) {
+        delete sectionInflight[sectionKey];
         sectionFailed[sectionKey] = true;
         throw err;
       });
+    sectionInflight[sectionKey] = p;
+    return p;
   }
 
   /**
