@@ -58,8 +58,10 @@ import {
   mergeRefreshedProductIntoCard,
   stampProductFetchClocks,
   FRESHNESS_STATUS,
+  FRESHNESS_POLICY_V32,
   SOURCE_UPDATED_AT_STATUS,
 } from "./iu-cj-affiliate-phase3z-offers-freshness-v32.mjs";
+import { planCatalogFreshnessBatch } from "./iu-cj-affiliate-phase3z-catalog-freshness-scheduler-v51-8.mjs";
 import {
   REFRESH_MODE,
   REFRESH_RESULT,
@@ -442,7 +444,7 @@ export function offerEvidenceText(linkOrProduct = {}) {
     .join(" | ");
 }
 
-function toPublicOfferCard(card) {
+function toPublicOfferCard(card, clock = {}) {
   if (!card || card.state !== PUB_STATE.PUBLICATION_READY || card.publicationReady !== true) {
     return null;
   }
@@ -450,6 +452,11 @@ function toPublicOfferCard(card) {
   if (!affiliateOk) return null;
   const kind = card.kind === "coupon" ? "coupon" : "action";
   if (kind === "coupon" && !String(card.couponCode || "").trim()) return null;
+  const checkedAt =
+    typeof clock.checkedAt === "string" && Number.isFinite(Date.parse(clock.checkedAt))
+      ? new Date(Date.parse(clock.checkedAt)).toISOString()
+      : null;
+  const sourceUpdatedAt = card.sourceUpdatedAt ? String(card.sourceUpdatedAt) : null;
   return {
     kind,
     offerId: card.offerId || null,
@@ -470,6 +477,14 @@ function toPublicOfferCard(card) {
     blockers: [],
     sourceSystem: "cj_link_search_staging",
     fixtureOnly: false,
+    fetchedAt: checkedAt,
+    lastCheckedAt: checkedAt,
+    lastSuccessfulVerificationAt: checkedAt,
+    sourceUpdatedAt,
+    nextCheckAt:
+      checkedAt == null
+        ? null
+        : new Date(Date.parse(checkedAt) + FRESHNESS_POLICY_V32.productPriceAvailabilityMs).toISOString(),
   };
 }
 
@@ -658,6 +673,38 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
     if (a.lastScanMs !== b.lastScanMs) return a.lastScanMs - b.lastScanMs;
     return String(a.advertiserId).localeCompare(String(b.advertiserId));
   });
+  const dueItems = [];
+  for (const row of prevByKey.values()) {
+    dueItems.push({
+      kind: "product",
+      advertiserId: row.advertiserId,
+      itemId: row.productId,
+      nextCheckAt: row.nextCheckAt || null,
+      validTo: row.validTo || null,
+      priceChanged: row.priceChangeClassification === "PRICE_CHANGED",
+      availabilityChanged: row.availabilityChangeSource === "cj_product_refresh" && row.previousAvailability != null,
+      lastSuccessfulVerificationAt: row.lastSuccessfulVerificationAt || row.lastVerifiedAt || null,
+    });
+  }
+  for (const sec of prevPublic?.sections || []) {
+    for (const offer of [...(sec.coupons || []), ...(sec.actions || [])]) {
+      dueItems.push({
+        kind: offer.kind === "coupon" ? "coupon" : "action",
+        advertiserId: offer.advertiserId,
+        itemId: offer.offerId,
+        nextCheckAt: offer.nextCheckAt || null,
+        validTo: offer.validTo || null,
+        lastSuccessfulVerificationAt: offer.lastSuccessfulVerificationAt || null,
+      });
+    }
+  }
+  const freshnessPlan = planCatalogFreshnessBatch(dueItems, {
+    nowMs: Date.now(),
+    limit: Math.max(1, dueItems.length || 1),
+    maxPerPartner: Math.max(1, dueItems.length || 1),
+  });
+  meta.freshnessDue = freshnessPlan.due;
+  meta.freshnessUnique = freshnessPlan.unique;
   meta.advertisers = ordered.length;
   const refreshedByKey = new Map();
   const matchedKeys = new Set();
@@ -1174,7 +1221,11 @@ export function buildOffersPublicFromStaging(opts = {}) {
       card.kind = "coupon";
       card.couponCode = String(link.couponCode).trim();
     }
-    const pubBase = toPublicOfferCard(card);
+    const checkedAt =
+      typeof staging.fetchedAt === "string" && Number.isFinite(Date.parse(staging.fetchedAt))
+        ? staging.fetchedAt
+        : null;
+    const pubBase = toPublicOfferCard(card, { checkedAt });
     if (!pubBase || !pubBase.sectionKey) {
       bump("public_card_rejected");
       continue;
