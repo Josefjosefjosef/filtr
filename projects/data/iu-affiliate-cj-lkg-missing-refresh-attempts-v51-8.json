@@ -1,0 +1,2471 @@
+{
+  "schema": "iu-cj-affiliate-phase3z-lkg-missing-refresh-attempts-v51-8",
+  "at": "2026-11-26T20:18:23.513Z",
+  "source": "post_lkg_merge",
+  "runId": "45883906945",
+  "targetCount": 121,
+  "byStatus": {
+    "REFRESHED": 1,
+    "SOURCE_UNAVAILABLE": 0,
+    "PRODUCT_NOT_FOUND": 0,
+    "PARTNERSHIP_ENDED": 0,
+    "INVALID_DATA": 48,
+    "RETRY_SCHEDULED": 72,
+    "TECHNICAL_FAILURE": 0
+  },
+  "reverifyMeta": {
+    "missIn": 121,
+    "recoveredScoped": 1,
+    "recoveredIdentityProbe": 0,
+    "stillMissing": 120,
+    "identityRepairCandidates": 48,
+    "apiRequests": 44,
+    "errors": 0,
+    "identityCollisions": 48
+  },
+  "credentialsPresent": true,
+  "attempts": [
+    {
+      "key": "4432968|P61809",
+      "advertiserId": "4432968",
+      "productId": "P61809",
+      "feedId": null,
+      "title": "BERGAMO Hrnek na espresso 65 ml - modrá",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-23T08:05:07.998Z",
+      "priorDataAgeHours": 84.221,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4432968|P64411",
+      "advertiserId": "4432968",
+      "productId": "P64411",
+      "feedId": null,
+      "title": "HANG ON Skleněná ozdoba žena s brýlemi",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-23T08:05:07.998Z",
+      "priorDataAgeHours": 84.221,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4920521|4598580_4",
+      "advertiserId": "4920521",
+      "productId": "4598580_4",
+      "feedId": null,
+      "title": "Postel Mystic 90x200 cm, přírodní buk",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-23T04:09:48.742Z",
+      "priorDataAgeHours": 88.143,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4901154|F186197",
+      "advertiserId": "4901154",
+      "productId": "F186197",
+      "feedId": null,
+      "title": "KINDERKRAFT Židlička jídelní Tummie grey",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-20T06:45:46.348Z",
+      "priorDataAgeHours": 157.544,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4432968|P45882",
+      "advertiserId": "4432968",
+      "productId": "P45882",
+      "feedId": null,
+      "title": "HANG ON Ozdoba žralok",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-20T02:53:00.591Z",
+      "priorDataAgeHours": 161.423,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4432968|P48526",
+      "advertiserId": "4432968",
+      "productId": "P48526",
+      "feedId": null,
+      "title": "TOPEE Stojací lampa - béžová",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-14T12:09:43.254Z",
+      "priorDataAgeHours": 296.145,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5005974|278_2356",
+      "advertiserId": "5005974",
+      "productId": "278_2356",
+      "feedId": null,
+      "title": "PAOLA női pizsama bambuszból M Rózsaszín / Pink",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-10T12:00:02.622Z",
+      "priorDataAgeHours": 392.306,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4920521|5002259_6",
+      "advertiserId": "4920521",
+      "productId": "5002259_6",
+      "feedId": null,
+      "title": "Šatní skříň se zrcadlem Bremen, 136 cm, dub artisan/bílá",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-09T03:41:55.710Z",
+      "priorDataAgeHours": 424.608,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4920521|4615480_13",
+      "advertiserId": "4920521",
+      "productId": "4615480_13",
+      "feedId": null,
+      "title": "Vysoká kuchyňská skříň Modena, 60 cm, dub artisan/černá",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-09T03:41:55.710Z",
+      "priorDataAgeHours": 424.608,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4920521|4620996_0",
+      "advertiserId": "4920521",
+      "productId": "4620996_0",
+      "feedId": null,
+      "title": "Rohová sedací souprava Pedro Mini, světle šedá látka, pravý roh",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-09T03:41:55.710Z",
+      "priorDataAgeHours": 424.608,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5493238|1056938",
+      "advertiserId": "5493238",
+      "productId": "1056938",
+      "feedId": null,
+      "title": "MERCURY Ergonomická kancelářská židle HEALTH černá, č. AOJ1906S (rozbalená)",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-09T03:41:55.710Z",
+      "priorDataAgeHours": 424.608,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5381727|66582_GRA2",
+      "advertiserId": "5381727",
+      "productId": "66582_GRA2",
+      "feedId": null,
+      "title": "Taburet Lorelle látka: Grande 81",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-09T03:41:55.710Z",
+      "priorDataAgeHours": 424.608,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5381727|78105_LEV5",
+      "advertiserId": "5381727",
+      "productId": "78105_LEV5",
+      "feedId": null,
+      "title": "Sedací souprava Berrto Provedení: Levá U, látka: Aubron 4",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-09T03:41:55.710Z",
+      "priorDataAgeHours": 424.608,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4432968|P63918",
+      "advertiserId": "4432968",
+      "productId": "P63918",
+      "feedId": null,
+      "title": "PEANUTS Hrnek Snoopy s mašlí 380 ml - zelená/růžová",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-09T03:41:55.710Z",
+      "priorDataAgeHours": 424.608,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4432968|P64324",
+      "advertiserId": "4432968",
+      "productId": "P64324",
+      "feedId": null,
+      "title": "XMAS Podnos Santa 33 cm",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-09T03:41:55.710Z",
+      "priorDataAgeHours": 424.608,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4432968|P63837",
+      "advertiserId": "4432968",
+      "productId": "P63837",
+      "feedId": null,
+      "title": "CRYSTAL LED Jedle skleněná 28 cm - stříbrná",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-09T03:41:55.710Z",
+      "priorDataAgeHours": 424.608,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4432968|P64292",
+      "advertiserId": "4432968",
+      "productId": "P64292",
+      "feedId": null,
+      "title": "PEANUTS Dárková taška střední Snoopy s mašlí - zelená",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4432968|P64183",
+      "advertiserId": "4432968",
+      "productId": "P64183",
+      "feedId": null,
+      "title": "SWEET XMAS Utěrka cukrová tyčinka - růžová",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5381727|18963_GOJ2",
+      "advertiserId": "5381727",
+      "productId": "18963_GOJ2",
+      "feedId": null,
+      "title": "Sedací souprava Josette Provedení: Pravá varianta - podle zad, látka: Grande 81",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5005974|1092_5370",
+      "advertiserId": "5005974",
+      "productId": "1092_5370",
+      "feedId": null,
+      "title": "Ručník MOLLIS 50x100 cm Žlutá",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "6109393|POS/PAR/140/OR/1",
+      "advertiserId": "6109393",
+      "productId": "POS/PAR/140/OR/1",
+      "feedId": null,
+      "title": "Posteľ PARIS zvýšená 140x200 cm, orech Rošt: Bez roštu, Matrac: Bez matraca",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "6109393|3D/MAR/GAL/BAR/7080/200",
+      "advertiserId": "6109393",
+      "productId": "3D/MAR/GAL/BAR/7080/200",
+      "feedId": null,
+      "title": "3D Bavlnené obliečky MARIO GALAXY farebné, 100% bavlna Rozmer obliečky: 70 x 80 cm | 140 x 200 cm",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "6109393|DEK/FLE/MEL/DUO/150/SMER",
+      "advertiserId": "6109393",
+      "productId": "DEK/FLE/MEL/DUO/150/SMER",
+      "feedId": null,
+      "title": "Fleecová deka MELVIRA DUO, svetlomarhuľová Rozmer: 150 x 200 cm",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "6109393|MIK/WIN/VZOR/7080200",
+      "advertiserId": "6109393",
+      "productId": "MIK/WIN/VZOR/7080200",
+      "feedId": null,
+      "title": "Obliečky z mikrovlákna WINTERPINE vzorované Rozmer obliečky: 70 x 80 cm | 140 x 200 cm",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "6109393|POS/ADA/160/DU/7",
+      "advertiserId": "6109393",
+      "productId": "POS/ADA/160/DU/7",
+      "feedId": null,
+      "title": "Postel ADA 160 x 200 cm, dub Rošt: S lamelovým roštem, Matrace: Bez matrace",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "6109393|POS/PAR/90/DU/6",
+      "advertiserId": "6109393",
+      "productId": "POS/PAR/90/DU/6",
+      "feedId": null,
+      "title": "Postel PARIS zvýšená 90 x 200 cm, dub Rošt: S laťkovým roštem, Matrace: Matrace Deluxe 10 cm",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4901154|F197507",
+      "advertiserId": "4901154",
+      "productId": "F197507",
+      "feedId": null,
+      "title": "CYBEX Hluboká skládací korba Mios / Coya Style Collection City Grey 2026 Platinum",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5393861|78218",
+      "advertiserId": "5393861",
+      "productId": "78218",
+      "feedId": null,
+      "title": "Káva Zlaté Zrnko - Ránko - od Lenka Šóošová a Roman Juraško",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-20T11:45:39.177Z",
+      "priorDataAgeHours": 152.546,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5954793|100411791001",
+      "advertiserId": "5954793",
+      "productId": "100411791001",
+      "feedId": null,
+      "title": "Lupilu® Dětská tepláková souprava s BIO bavlnou, 2dílná (béžová, 50/56)",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5954793|100405365007",
+      "advertiserId": "5954793",
+      "productId": "100405365007",
+      "feedId": null,
+      "title": "Crivit Pánské funkční kraťasy 2v1 (šedá, L (52/54))",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5954793|100396749",
+      "advertiserId": "5954793",
+      "productId": "100396749",
+      "feedId": null,
+      "title": "Lego® City 60454 Prázdninový dobrodružný karavan",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4901154|F136325",
+      "advertiserId": "4901154",
+      "productId": "F136325",
+      "feedId": null,
+      "title": "CANPOL BABIES Chladící kousátko delfín modré",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4887633|210113",
+      "advertiserId": "4887633",
+      "productId": "210113",
+      "feedId": null,
+      "title": "Carp zoom krmítko s plovákem crystal bait float 19 g",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-22T07:17:49.368Z",
+      "priorDataAgeHours": 109.009,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "6215286|62182",
+      "advertiserId": "6215286",
+      "productId": "62182",
+      "feedId": null,
+      "title": "Dryer 80 sušící síť, černá",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-09T03:41:55.710Z",
+      "priorDataAgeHours": 424.608,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "6215286|22633",
+      "advertiserId": "6215286",
+      "productId": "22633",
+      "feedId": null,
+      "title": "H2-L400 sieťovačka drevená, dvojitá, 200 cm",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5277391|2944247-12990971",
+      "advertiserId": "5277391",
+      "productId": "2944247-12990971",
+      "feedId": null,
+      "title": "Under Armour Men's LEGEND DOWN HOODED JACKET - Men's",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5277391|2436989-11216498",
+      "advertiserId": "5277391",
+      "productId": "2436989-11216498",
+      "feedId": null,
+      "title": "DIM INVISIFREE PADDED BRA - Dámska hladká vystužená podprsenka - hnedá",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5277391|2467180-11344578",
+      "advertiserId": "5277391",
+      "productId": "2467180-11344578",
+      "feedId": null,
+      "title": "Grafitowa bluza męska Lightweight Raglan Sweat Fruit of the Loom",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5894154|43301",
+      "advertiserId": "5894154",
+      "productId": "43301",
+      "feedId": null,
+      "title": "Serpentin surový Peru - EXTRA LARGE - cca 6 - 8 cm",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-22T06:01:19.457Z",
+      "priorDataAgeHours": 110.284,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5894154|33544",
+      "advertiserId": "5894154",
+      "productId": "33544",
+      "feedId": null,
+      "title": "Vonné tyčinky Sagrada Madre Palo Santo a Rose - růže - 30 g",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-20T11:45:39.177Z",
+      "priorDataAgeHours": 152.546,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5894154|7202",
+      "advertiserId": "5894154",
+      "productId": "7202",
+      "feedId": null,
+      "title": "Záhněda tromlovaná AA kvalita - XXL - cca 4 - 5 cm",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-13T17:57:26.256Z",
+      "priorDataAgeHours": 314.349,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5894154|67046",
+      "advertiserId": "5894154",
+      "productId": "67046",
+      "feedId": null,
+      "title": "Tyrkys Cotton Candy prsten stříbro Ag 925 R18 - 52 mm (US 6), 5,1 g",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-13T17:57:26.256Z",
+      "priorDataAgeHours": 314.349,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5894154|27542",
+      "advertiserId": "5894154",
+      "productId": "27542",
+      "feedId": null,
+      "title": "Jaspis červený masážní hmatka srdce - cca 4 cm",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5611262|26729",
+      "advertiserId": "5611262",
+      "productId": "26729",
+      "feedId": null,
+      "title": "Dárková sada pro barvené vlasy Subrina Professional Colour Set + taštička zdarma (082130) + dárek zdarma",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5478796|103887",
+      "advertiserId": "5478796",
+      "productId": "103887",
+      "feedId": null,
+      "title": "Benetton Colors Man Blue toaletní voda pro muže 100 ml",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "6306286|331618",
+      "advertiserId": "6306286",
+      "productId": "331618",
+      "feedId": null,
+      "title": "Svetlohnedé workery",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-23T08:05:07.998Z",
+      "priorDataAgeHours": 84.221,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "6306286|331803",
+      "advertiserId": "6306286",
+      "productId": "331803",
+      "feedId": null,
+      "title": "Bordové šaty s čipkou",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-22T07:17:49.368Z",
+      "priorDataAgeHours": 109.009,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4327375|PPY2-SUD02K_59X",
+      "advertiserId": "4327375",
+      "productId": "PPY2-SUD02K_59X",
+      "feedId": null,
+      "title": "Rotate  Šaty",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-22T06:01:19.457Z",
+      "priorDataAgeHours": 110.284,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "7726276|ZPY2-MKD600_77X",
+      "advertiserId": "7726276",
+      "productId": "ZPY2-MKD600_77X",
+      "feedId": null,
+      "title": "Sako dámské s viskózou",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-22T06:01:19.457Z",
+      "priorDataAgeHours": 110.284,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "6754118|331104",
+      "advertiserId": "6754118",
+      "productId": "331104",
+      "feedId": null,
+      "title": "Béžové polokozačky",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-21T22:07:49.262Z",
+      "priorDataAgeHours": 118.176,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "6306286|322919",
+      "advertiserId": "6306286",
+      "productId": "322919",
+      "feedId": null,
+      "title": "Snehule z brúsenej kože",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-20T10:44:02.790Z",
+      "priorDataAgeHours": 153.572,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4327375|99KK-KBU41T_TSP",
+      "advertiserId": "4327375",
+      "productId": "99KK-KBU41T_TSP",
+      "feedId": null,
+      "title": "Villeroy & Boch  Sada sklenic na víno  Toy's Delight 380 ml 2-pack",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-18T16:02:49.146Z",
+      "priorDataAgeHours": 196.26,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "6754118|310542",
+      "advertiserId": "6754118",
+      "productId": "310542",
+      "feedId": null,
+      "title": "Černé polokozačky",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-12T15:36:25.605Z",
+      "priorDataAgeHours": 340.699,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5316217|999538",
+      "advertiserId": "5316217",
+      "productId": "999538",
+      "feedId": null,
+      "title": "Kožený batoh hnědý - Greenwood Agnar",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-12T01:11:46.867Z",
+      "priorDataAgeHours": 355.11,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5316217|215069",
+      "advertiserId": "5316217",
+      "productId": "215069",
+      "feedId": null,
+      "title": "Pánska kožená taška tmavohnedá - Greenwood Doule",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-09T03:41:55.710Z",
+      "priorDataAgeHours": 424.608,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5316217|1130405",
+      "advertiserId": "5316217",
+      "productId": "1130405",
+      "feedId": null,
+      "title": "Dámska kabelka na rameno hnedá - Firenze Maita",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-09T03:41:55.710Z",
+      "priorDataAgeHours": 424.608,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "7726276|ZPY2-SJM505_55J",
+      "advertiserId": "7726276",
+      "productId": "ZPY2-SJM505_55J",
+      "feedId": null,
+      "title": "regular fit džíny pánské",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-09T03:41:55.710Z",
+      "priorDataAgeHours": 424.608,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "7726276|ZPY2-LGD517_00X",
+      "advertiserId": "7726276",
+      "productId": "ZPY2-LGD517_00X",
+      "feedId": null,
+      "title": "Ponožky dámské 3-pack",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-09T03:41:55.710Z",
+      "priorDataAgeHours": 424.608,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "6754118|316349",
+      "advertiserId": "6754118",
+      "productId": "316349",
+      "feedId": null,
+      "title": "Bílá PUFFY sukně",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-09T03:41:55.710Z",
+      "priorDataAgeHours": 424.608,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "6754118|323551",
+      "advertiserId": "6754118",
+      "productId": "323551",
+      "feedId": null,
+      "title": "Černé zateplené tenisky",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-09T03:41:55.710Z",
+      "priorDataAgeHours": 424.608,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "6754118|313830",
+      "advertiserId": "6754118",
+      "productId": "313830",
+      "feedId": null,
+      "title": "Béžové polokozačky",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4327375|9BYA-SWD0TW_59A",
+      "advertiserId": "4327375",
+      "productId": "9BYA-SWD0TW_59A",
+      "feedId": null,
+      "title": "Desigual  Svetr z vlněné směsi  MALMOE",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4327375|9BYH-SZD060_99X",
+      "advertiserId": "4327375",
+      "productId": "9BYH-SZD060_99X",
+      "feedId": null,
+      "title": "Under Armour  Tréninkové šortky  Rival",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4327375|9BY2-BIDZII_05X",
+      "advertiserId": "4327375",
+      "productId": "9BY2-BIDZII_05X",
+      "feedId": null,
+      "title": "women'secret  brazilky dámské",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4327375|9BY2-SWMZO3_00X",
+      "advertiserId": "4327375",
+      "productId": "9BY2-SWMZO3_00X",
+      "feedId": null,
+      "title": "C.P. Company  rozepínací svetr pánský s příměsí vlny",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4327375|PPY2-TSM05U_00X",
+      "advertiserId": "4327375",
+      "productId": "PPY2-TSM05U_00X",
+      "feedId": null,
+      "title": "Guess  Bavlněné tričko",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "6306286|309942",
+      "advertiserId": "6306286",
+      "productId": "309942",
+      "feedId": null,
+      "title": "Čierne lakované nízke čižmy",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5147910|WQx8KVna",
+      "advertiserId": "5147910",
+      "productId": "WQx8KVna",
+      "feedId": null,
+      "title": "Mikina bez kapuce Unisex TO JE PRÁCE - JDE SE PRACOVÁT - EDICE ( 4 )",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "6044117|121453",
+      "advertiserId": "6044117",
+      "productId": "121453",
+      "feedId": null,
+      "title": "Luxusní dámská kožená crossbody Katana Rebora, hnědá",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "6044117|71043",
+      "advertiserId": "6044117",
+      "productId": "71043",
+      "feedId": null,
+      "title": "Dámská kožená crossbody kabelka Lara sweet, tmavě zelená",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5316217|998314",
+      "advertiserId": "5316217",
+      "productId": "998314",
+      "feedId": null,
+      "title": "Pánská kožená crossbody taška černá - Peterson Wyatt",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4882378|9kgd2cd70c7fef717844d4a6c6d7a13c",
+      "advertiserId": "4882378",
+      "productId": "9kgd2cd70c7fef717844d4a6c6d7a13c",
+      "feedId": null,
+      "title": "Froté osuška FROZEN 2 Blue 70 x 140 cm",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-22T07:17:49.368Z",
+      "priorDataAgeHours": 109.009,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4882378|7ohd16c99dff96aff2f7ecb7c0c660a9",
+      "advertiserId": "4882378",
+      "productId": "7ohd16c99dff96aff2f7ecb7c0c660a9",
+      "feedId": null,
+      "title": "Odpadkový koš SWING TWIST černá a stříbrná 25 l",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-22T07:17:49.368Z",
+      "priorDataAgeHours": 109.009,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4882378|fs03cb05c6285c3351fcaf51d96ca699",
+      "advertiserId": "4882378",
+      "productId": "fs03cb05c6285c3351fcaf51d96ca699",
+      "feedId": null,
+      "title": "Dřevěný box na papírové kapesníky 24 x 14 cm",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-22T07:17:49.368Z",
+      "priorDataAgeHours": 109.009,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "scoped_productIds_hit",
+      "identityRepair": null,
+      "status": "REFRESHED",
+      "evidence": {
+        "recovered": true,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "8010554|1000196715",
+      "advertiserId": "8010554",
+      "productId": "1000196715",
+      "feedId": null,
+      "title": "SCHN SDN5810570 Sedna - Rámeček IP44 jednonásobný, Graphite",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4882378|o1q5f053d7853aaf8c5da98513c6e5e3",
+      "advertiserId": "4882378",
+      "productId": "o1q5f053d7853aaf8c5da98513c6e5e3",
+      "feedId": null,
+      "title": "Dámské anatomické pantofle na klínku hnědé vel. 42",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4882378|5aea54d895c3532a46f981469f76940e",
+      "advertiserId": "4882378",
+      "productId": "5aea54d895c3532a46f981469f76940e",
+      "feedId": null,
+      "title": "Filcová vánoční dekorace STROMEK zelený 42 cm",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4882378|dec_5764902",
+      "advertiserId": "4882378",
+      "productId": "dec_5764902",
+      "feedId": null,
+      "title": "Boxerky Lonka pánské obrázkové KEVIN tramvaje vel. L",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5000412|lk0cd66aaf04d95066d0732042812fb6",
+      "advertiserId": "5000412",
+      "productId": "lk0cd66aaf04d95066d0732042812fb6",
+      "feedId": null,
+      "title": "Darčeková kazeta čajov FRUIT INFUSIONS Assorted 60 sáčkov",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5027071|7444",
+      "advertiserId": "5027071",
+      "productId": "7444",
+      "feedId": null,
+      "title": "Bezfalcové interiérové dveře Altamura Intersie Lux 704",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5027071|7476",
+      "advertiserId": "5027071",
+      "productId": "7476",
+      "feedId": null,
+      "title": "Interiérové dveře Intersie Lux Červená 616 - Výška 210 cm",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "7816491|244727",
+      "advertiserId": "7816491",
+      "productId": "244727",
+      "feedId": null,
+      "title": "Sprchový kout Antelo L/P - 6 mm - chrom, transparentní sklo - 100x90x190 cm - otočný",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "7816491|181768",
+      "advertiserId": "7816491",
+      "productId": "181768",
+      "feedId": null,
+      "title": "DEANTE Podomítkový rám, pro závěsné WC mísy bez tlačítka + WC CERSANIT DELFI + SOFT SEDÁTKO CST_WC01 X DE2",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "7816491|247668",
+      "advertiserId": "7816491",
+      "productId": "247668",
+      "feedId": null,
+      "title": "Sprchová zástěna Walk-in Onyx Duo L/P - 8 mm - kulatá vzpěra - zlatá, mléčné sklo - 80x200 cm",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "7816491|144029",
+      "advertiserId": "7816491",
+      "productId": "144029",
+      "feedId": null,
+      "title": "MEXEN - KIOTO Sprchová zástěna WALK-IN 120x200 cm 8 mm, zlatá, transparent 800-120-101-50-00",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "7918457|19865",
+      "advertiserId": "7918457",
+      "productId": "19865",
+      "feedId": null,
+      "title": "Steaková degustace v restauraci COMIX v Plzni",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "7918457|17588",
+      "advertiserId": "7918457",
+      "productId": "17588",
+      "feedId": null,
+      "title": "Asijské veganské degustační menu pro dva",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "7918457|13062",
+      "advertiserId": "7918457",
+      "productId": "13062",
+      "feedId": null,
+      "title": "Venkovní únikovka Cesta k nesmrtelnosti",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "7918457|18570",
+      "advertiserId": "7918457",
+      "productId": "18570",
+      "feedId": null,
+      "title": "Úniková hra Saw",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "7918457|18687",
+      "advertiserId": "7918457",
+      "productId": "18687",
+      "feedId": null,
+      "title": "Zážitkový kurz malování v Opavě",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "7918457|8949",
+      "advertiserId": "7918457",
+      "productId": "8949",
+      "feedId": null,
+      "title": "Nechte se hýčkat na Petra Clinic – 3000 Kč",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "7918457|19642",
+      "advertiserId": "7918457",
+      "productId": "19642",
+      "feedId": null,
+      "title": "Nocování v ZOO Tábor s výhledem do výběhů",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "7918457|13066",
+      "advertiserId": "7918457",
+      "productId": "13066",
+      "feedId": null,
+      "title": "Záhada starého Hradce",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5950512|PREFIX59811775",
+      "advertiserId": "5950512",
+      "productId": "PREFIX59811775",
+      "feedId": null,
+      "title": "Sada 3 kufříků - Stará mapa",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5950512|PREFIX59809758",
+      "advertiserId": "5950512",
+      "productId": "PREFIX59809758",
+      "feedId": null,
+      "title": "Antistresové malovánky pro děti i dospělé",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5950512|PREFIX59811101",
+      "advertiserId": "5950512",
+      "productId": "PREFIX59811101",
+      "feedId": null,
+      "title": "Víno k 60. narozeninám - Ty jedeš dál",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "7401912|10770",
+      "advertiserId": "7401912",
+      "productId": "10770",
+      "feedId": null,
+      "title": "Getrocknetes Schweinefleisch Jerkyboxeo - Original 25 g",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4905039|24300747-4069545233669",
+      "advertiserId": "4905039",
+      "productId": "24300747-4069545233669",
+      "feedId": null,
+      "title": "Pánská kotníková obuv Bugatti 331-AP033-5000 black 48",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-23T08:05:07.998Z",
+      "priorDataAgeHours": 84.221,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "7923950|18367703/46",
+      "advertiserId": "7923950",
+      "productId": "18367703/46",
+      "feedId": null,
+      "title": "PodoWell OCTAVIO pánská diabetická kotníková obuv černá Velikost: 46",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-23T08:05:07.998Z",
+      "priorDataAgeHours": 84.221,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5780936|522201-1000/9873-5",
+      "advertiserId": "5780936",
+      "productId": "522201-1000/9873-5",
+      "feedId": null,
+      "title": "FIRST DEGREE First Degree Arcade shoes – black/reflective BLACK size 5",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4805198|30673854",
+      "advertiserId": "4805198",
+      "productId": "30673854",
+      "feedId": null,
+      "title": "Hellfire - Karin Fossum",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4805198|803670334",
+      "advertiserId": "4805198",
+      "productId": "803670334",
+      "feedId": null,
+      "title": "When Your Child Says \"I Do\" - Chris Polski",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4805198|803672853",
+      "advertiserId": "4805198",
+      "productId": "803672853",
+      "feedId": null,
+      "title": "Nebe s péčí (poškozené) - Pavlína Brzáková, Jaroslav Dušek",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5477885|437641-4",
+      "advertiserId": "5477885",
+      "productId": "437641-4",
+      "feedId": null,
+      "title": "Billie Holiday – Songs For Distingué Lovers LP",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5477885|460625-2",
+      "advertiserId": "5477885",
+      "productId": "460625-2",
+      "feedId": null,
+      "title": "Ariana Grande – Thank U, Next CD",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5477885|51572-2",
+      "advertiserId": "5477885",
+      "productId": "51572-2",
+      "feedId": null,
+      "title": "Soundgarden – Badmotorfinger CD",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5598091|1267873",
+      "advertiserId": "5598091",
+      "productId": "1267873",
+      "feedId": null,
+      "title": "Pánev Tefal Intuition B8170444 24 cm",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-23T08:05:07.998Z",
+      "priorDataAgeHours": 84.221,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4694431|1623",
+      "advertiserId": "4694431",
+      "productId": "1623",
+      "feedId": null,
+      "title": "MEATER Block sada bezdrátových teploměrů na maso",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "7327751|20006",
+      "advertiserId": "7327751",
+      "productId": "20006",
+      "feedId": null,
+      "title": "Alumilite Bella tál 12 cm - Porland",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5598091|1316640",
+      "advertiserId": "5598091",
+      "productId": "1316640",
+      "feedId": null,
+      "title": "Rotační kulmofén Rowenta Brush Activ UB9534F0 Stříbrný/Černý",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5598091|1363848",
+      "advertiserId": "5598091",
+      "productId": "1363848",
+      "feedId": null,
+      "title": "Kastrol s poklicí Tefal Easy Cook & Clean 24 cm B5544653",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4883722|821545892640328303",
+      "advertiserId": "4883722",
+      "productId": "821545892640328303",
+      "feedId": null,
+      "title": "Niceboy Bezdrátová sluchátka Sora Black",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "6546769|57330421891449",
+      "advertiserId": "6546769",
+      "productId": "57330421891449",
+      "feedId": null,
+      "title": "Venkovní stolní lampa SMART+ Bluetooth Twist, RGBW IP44",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-22T08:44:16.890Z",
+      "priorDataAgeHours": 107.569,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "6546769|43333680726173",
+      "advertiserId": "6546769",
+      "productId": "43333680726173",
+      "feedId": null,
+      "title": "USB LED podlinkové svítidlo 40cm LINEAR FLAT, bílá",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "6546769|56366072856953",
+      "advertiserId": "6546769",
+      "productId": "56366072856953",
+      "feedId": null,
+      "title": "LED pásek flexibilní Audio, TV Voice Receiver 2M RGB",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4901154|F197906",
+      "advertiserId": "4901154",
+      "productId": "F197906",
+      "feedId": null,
+      "title": "LOVI Dudlík silikonový dynamický Prime 6-18m 3ks Peony Pink",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4901154|F158694",
+      "advertiserId": "4901154",
+      "productId": "F158694",
+      "feedId": null,
+      "title": "NUBY Síťka na krmení 6 m+, červená",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4901154|F177470",
+      "advertiserId": "4901154",
+      "productId": "F177470",
+      "feedId": null,
+      "title": "EKO Hnízdo pro miminko oboustranné bavlněné Dogs Stars Mint 90x60 cm",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "4901154|F197558",
+      "advertiserId": "4901154",
+      "productId": "F197558",
+      "feedId": null,
+      "title": "ADAMEX Adaptéry na autosedačku ke kočárku Como",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "5603344|733099",
+      "advertiserId": "5603344",
+      "productId": "733099",
+      "feedId": null,
+      "title": "Unisex cyklo rukavice silvini sarca modrá m",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productId_collision_hold",
+      "identityRepair": null,
+      "status": "INVALID_DATA",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    },
+    {
+      "key": "7449050|13643438",
+      "advertiserId": "7449050",
+      "productId": "13643438",
+      "feedId": null,
+      "title": "PIRELLI 285/35ZR23*Y SCO ZERO AS 107Y XL (e)A8A NCS",
+      "priorCauseCode": "MISSING_REFRESH",
+      "priorLastVerifiedAt": "2026-11-08T06:12:55.108Z",
+      "priorDataAgeHours": 446.091,
+      "attemptedAt": "2026-11-26T20:18:23.513Z",
+      "apiResult": "omitPartner_productIds_miss",
+      "identityRepair": null,
+      "status": "RETRY_SCHEDULED",
+      "evidence": {
+        "recovered": false,
+        "emptyApiPartner": false,
+        "incompletePartner": true,
+        "partnershipStatus": null
+      }
+    }
+  ],
+  "note": "Every MISSING_REFRESH key listed was attempted via shoppingProducts(productIds) scoped + omitPartner reverify. Miss ≠ mass delete.",
+  "auditSummary": {
+    "carriedCount": 1681,
+    "holdCount": 7,
+    "byCause": {
+      "SOURCE_TIMESTAMP_UNAVAILABLE_CARRY": 1567,
+      "MISSING_REFRESH": 121
+    }
+  },
+  "queueMerge": {
+    "selectedOnly": 121,
+    "dueFromQueue": 13,
+    "deferredNotDue": 0,
+    "attemptedUnique": 121
+  },
+  "retryQueueCounts": {
+    "open": 10,
+    "closed": 127,
+    "scheduledThisPass": 10,
+    "closedThisPass": 63,
+    "invalidHeldThisPass": 48
+  }
+}

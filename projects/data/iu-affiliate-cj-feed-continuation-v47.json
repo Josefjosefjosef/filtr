@@ -1,0 +1,2855 @@
+{
+  "schema": "iu-cj-affiliate-phase3z-feed-continuation-v47",
+  "evidenceClass": "CURRENT_PRODUCTION",
+  "at": "2026-11-26T19:41:05.780Z",
+  "runId": "45883906945",
+  "sha": "143c89d0a1611ee64c66c2dc32892ad71552f6c1",
+  "note": "Continuation proof across durable checkpoints. Declared feed metadata counts are not loaded products. Presentation budget ≠ API source cap.",
+  "counts": {
+    "partnersTracked": 105,
+    "withFeedTracked": 105,
+    "advanced": 83,
+    "completedPass": 49,
+    "stuck": 0,
+    "emptyApi": 17,
+    "firstSeen": 0,
+    "resumeOffsetGtFirst": 39
+  },
+  "partners": [
+    {
+      "advertiserId": "2624620",
+      "partnerName": "ABBYY",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 8,
+      "currentLoaded": 8,
+      "previousTotal": 40,
+      "currentTotal": 40,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 105,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:40:04.550Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 8→8"
+    },
+    {
+      "advertiserId": "4322332",
+      "partnerName": "Nazuby.cz",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 0,
+      "currentLoaded": 0,
+      "previousTotal": 0,
+      "currentTotal": 0,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 171,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:41:02.636Z",
+      "progressed": false,
+      "emptyApi": true,
+      "proofLine": "1→1 | loaded 0→0"
+    },
+    {
+      "advertiserId": "4327375",
+      "partnerName": "Answear.cz",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 6001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 9001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 5292,
+      "currentLoaded": 2000,
+      "previousTotal": 141637,
+      "currentTotal": 142018,
+      "productsRemainingEstimate": 133018,
+      "completePassCount": 0,
+      "lastComplete": false,
+      "lastError": "http_400",
+      "lastRunAt": "2026-11-26T19:33:28.093Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "6001→9001 | loaded 5292→2000"
+    },
+    {
+      "advertiserId": "4384608",
+      "partnerName": "Vivantis.cz",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 6001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 8001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2939,
+      "currentLoaded": 1796,
+      "previousTotal": 23656,
+      "currentTotal": 23808,
+      "productsRemainingEstimate": 15808,
+      "completePassCount": 13,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:35:26.898Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "6001→8001 | loaded 2939→1796"
+    },
+    {
+      "advertiserId": "4686326",
+      "partnerName": "Paragon Software Group",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 12,
+      "currentLoaded": 12,
+      "previousTotal": 22,
+      "currentTotal": 22,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 171,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:40:05.774Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 12→12"
+    },
+    {
+      "advertiserId": "4758296",
+      "partnerName": "SUPERZOO.cz",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 0,
+      "currentLoaded": 0,
+      "previousTotal": 0,
+      "currentTotal": 0,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 202,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:40:13.500Z",
+      "progressed": false,
+      "emptyApi": true,
+      "proofLine": "1→1 | loaded 0→0"
+    },
+    {
+      "advertiserId": "4786110",
+      "partnerName": "4camping.cz",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 0,
+      "currentLoaded": 0,
+      "previousTotal": 0,
+      "currentTotal": 0,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 103,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:40:15.086Z",
+      "progressed": false,
+      "emptyApi": true,
+      "proofLine": "1→1 | loaded 0→0"
+    },
+    {
+      "advertiserId": "4851178",
+      "partnerName": "Kytary Europe",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 3001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 5001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2599,
+      "currentLoaded": 1802,
+      "previousTotal": 17082,
+      "currentTotal": 17082,
+      "productsRemainingEstimate": 12082,
+      "completePassCount": 0,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:35:38.907Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "3001→5001 | loaded 2599→1802"
+    },
+    {
+      "advertiserId": "4901154",
+      "partnerName": "Feedo.cz",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 3001,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 2649,
+      "currentLoaded": 758,
+      "previousTotal": 3807,
+      "currentTotal": 3759,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 66,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:38:04.544Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "3001→1 | loaded 2649→758"
+    },
+    {
+      "advertiserId": "4921612",
+      "partnerName": "TIPA.EU",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 3001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 5001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2545,
+      "currentLoaded": 1559,
+      "previousTotal": 22663,
+      "currentTotal": 22663,
+      "productsRemainingEstimate": 17663,
+      "completePassCount": 0,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:35:22.629Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "3001→5001 | loaded 2545→1559"
+    },
+    {
+      "advertiserId": "4927529",
+      "partnerName": "KÄRCHER.CZ",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 3001,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 2563,
+      "currentLoaded": 198,
+      "previousTotal": 3200,
+      "currentTotal": 3199,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 67,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:38:13.189Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "3001→1 | loaded 2563→198"
+    },
+    {
+      "advertiserId": "4932883",
+      "partnerName": "SIKO.CZ",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 6001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 9001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 5047,
+      "currentLoaded": 2433,
+      "previousTotal": 57945,
+      "currentTotal": 57900,
+      "productsRemainingEstimate": 48900,
+      "completePassCount": 0,
+      "lastComplete": false,
+      "lastError": "http_400",
+      "lastRunAt": "2026-11-26T19:34:14.294Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "6001→9001 | loaded 5047→2433"
+    },
+    {
+      "advertiserId": "4949011",
+      "partnerName": "BAMBULE.cz",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 9001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 6001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2697,
+      "currentLoaded": 4713,
+      "previousTotal": 41872,
+      "currentTotal": 41945,
+      "productsRemainingEstimate": 35945,
+      "completePassCount": 1,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:34:37.180Z",
+      "progressed": false,
+      "emptyApi": false,
+      "proofLine": "9001→6001 | loaded 2697→4713"
+    },
+    {
+      "advertiserId": "5005974",
+      "partnerName": "SoftCotton Europe",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 1486,
+      "currentLoaded": 1474,
+      "previousTotal": 1694,
+      "currentTotal": 1689,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 113,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:37:56.971Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 1486→1474"
+    },
+    {
+      "advertiserId": "5006891",
+      "partnerName": "Dr.Max.SK",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 9001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 4927,
+      "currentLoaded": 0,
+      "previousTotal": 131434,
+      "currentTotal": 0,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 64,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:33:29.205Z",
+      "progressed": false,
+      "emptyApi": true,
+      "proofLine": "9001→1 | loaded 4927→0"
+    },
+    {
+      "advertiserId": "5021212",
+      "partnerName": "DECATHLON.CZ",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 0,
+      "currentLoaded": 0,
+      "previousTotal": 0,
+      "currentTotal": 0,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 171,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:40:59.730Z",
+      "progressed": false,
+      "emptyApi": true,
+      "proofLine": "1→1 | loaded 0→0"
+    },
+    {
+      "advertiserId": "5047092",
+      "partnerName": "SEPHORA.cz",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 6001,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 2429,
+      "currentLoaded": 1435,
+      "previousTotal": 7825,
+      "currentTotal": 7803,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 37,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:36:39.030Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "6001→1 | loaded 2429→1435"
+    },
+    {
+      "advertiserId": "5078957",
+      "partnerName": "AUKRO CZ/SK",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 9001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 5698,
+      "currentLoaded": 0,
+      "previousTotal": 4066481,
+      "currentTotal": 0,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 69,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:32:27.783Z",
+      "progressed": false,
+      "emptyApi": true,
+      "proofLine": "9001→1 | loaded 5698→0"
+    },
+    {
+      "advertiserId": "5096017",
+      "partnerName": "Mentislab.cz",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 161,
+      "currentLoaded": 161,
+      "previousTotal": 161,
+      "currentTotal": 161,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 160,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:40:01.564Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 161→161"
+    },
+    {
+      "advertiserId": "5147910",
+      "partnerName": "T-shock.eu",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 6001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 8001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2599,
+      "currentLoaded": 1765,
+      "previousTotal": 12186,
+      "currentTotal": 12183,
+      "productsRemainingEstimate": 4183,
+      "completePassCount": 2,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:35:59.862Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "6001→8001 | loaded 2599→1765"
+    },
+    {
+      "advertiserId": "5153670",
+      "partnerName": "4kids.cz",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 3001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 5001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2965,
+      "currentLoaded": 2000,
+      "previousTotal": 16406,
+      "currentTotal": 16406,
+      "productsRemainingEstimate": 11406,
+      "completePassCount": 0,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:35:42.190Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "3001→5001 | loaded 2965→2000"
+    },
+    {
+      "advertiserId": "5177969",
+      "partnerName": "Sportisimo Europe",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 6001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 9001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 5026,
+      "currentLoaded": 2748,
+      "previousTotal": 154908,
+      "currentTotal": 153390,
+      "productsRemainingEstimate": 144390,
+      "completePassCount": 12,
+      "lastComplete": false,
+      "lastError": "http_400",
+      "lastRunAt": "2026-11-26T19:33:21.686Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "6001→9001 | loaded 5026→2748"
+    },
+    {
+      "advertiserId": "5193265",
+      "partnerName": "LAMAX / LAUBEN / TRUELIFE",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 215,
+      "currentLoaded": 214,
+      "previousTotal": 422,
+      "currentTotal": 420,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 104,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:39:51.291Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 215→214"
+    },
+    {
+      "advertiserId": "5217822",
+      "partnerName": "Decoronline Europe",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 3001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2517,
+      "currentLoaded": 192,
+      "previousTotal": 3198,
+      "currentTotal": 3193,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 77,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:37:47.828Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "3001→1 | loaded 2517→192"
+    },
+    {
+      "advertiserId": "5234320",
+      "partnerName": "Gourmetkava Europe",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 3001,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 1212,
+      "currentLoaded": 1038,
+      "previousTotal": 4789,
+      "currentTotal": 4791,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 62,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:37:28.852Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "3001→1 | loaded 1212→1038"
+    },
+    {
+      "advertiserId": "5260576",
+      "partnerName": "Activa CZ_Bibelot CZ/SK",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 3001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 5001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2958,
+      "currentLoaded": 2000,
+      "previousTotal": 15632,
+      "currentTotal": 15613,
+      "productsRemainingEstimate": 10613,
+      "completePassCount": 23,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:35:45.575Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "3001→5001 | loaded 2958→2000"
+    },
+    {
+      "advertiserId": "5277391",
+      "partnerName": "Bezvasport cz/sk",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 6001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 9001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 5270,
+      "currentLoaded": 2190,
+      "previousTotal": 260307,
+      "currentTotal": 262299,
+      "productsRemainingEstimate": 253299,
+      "completePassCount": 2,
+      "lastComplete": false,
+      "lastError": "http_400",
+      "lastRunAt": "2026-11-26T19:32:51.900Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "6001→9001 | loaded 5270→2190"
+    },
+    {
+      "advertiserId": "5284767",
+      "partnerName": "Gorila.sk",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 9001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 6001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 4722,
+      "currentLoaded": 5434,
+      "previousTotal": 175661,
+      "currentTotal": 175661,
+      "productsRemainingEstimate": 169661,
+      "completePassCount": 11,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:33:16.531Z",
+      "progressed": false,
+      "emptyApi": false,
+      "proofLine": "9001→6001 | loaded 4722→5434"
+    },
+    {
+      "advertiserId": "5300173",
+      "partnerName": "Pneuboss",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 6001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 9001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 5434,
+      "currentLoaded": 2803,
+      "previousTotal": 62243,
+      "currentTotal": 62343,
+      "productsRemainingEstimate": 53343,
+      "completePassCount": 1,
+      "lastComplete": false,
+      "lastError": "http_400",
+      "lastRunAt": "2026-11-26T19:34:02.188Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "6001→9001 | loaded 5434→2803"
+    },
+    {
+      "advertiserId": "5306925",
+      "partnerName": "Reedog Europe",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 0,
+      "currentLoaded": 0,
+      "previousTotal": 0,
+      "currentTotal": 0,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 73,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:38:20.494Z",
+      "progressed": false,
+      "emptyApi": true,
+      "proofLine": "1→1 | loaded 0→0"
+    },
+    {
+      "advertiserId": "5316217",
+      "partnerName": "Kabea",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 3001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2697,
+      "currentLoaded": 1690,
+      "previousTotal": 4893,
+      "currentTotal": 4832,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 112,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:37:17.788Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "3001→1 | loaded 2697→1690"
+    },
+    {
+      "advertiserId": "5320945",
+      "partnerName": "Expondo GMBH",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 1356,
+      "currentLoaded": 1407,
+      "previousTotal": 1562,
+      "currentTotal": 1569,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 99,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:37:05.702Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 1356→1407"
+    },
+    {
+      "advertiserId": "5321357",
+      "partnerName": "Grada CZ/SK",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 6001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 8001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2586,
+      "currentLoaded": 2000,
+      "previousTotal": 10563,
+      "currentTotal": 10562,
+      "productsRemainingEstimate": 2562,
+      "completePassCount": 1,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:36:20.920Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "6001→8001 | loaded 2586→2000"
+    },
+    {
+      "advertiserId": "5381657",
+      "partnerName": "Dermalogica.cz",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 144,
+      "currentLoaded": 132,
+      "previousTotal": 144,
+      "currentTotal": 132,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 160,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:39:57.187Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 144→132"
+    },
+    {
+      "advertiserId": "5393861",
+      "partnerName": "Zlatezrnko cz/sk",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 986,
+      "currentLoaded": 969,
+      "previousTotal": 1073,
+      "currentTotal": 1072,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 125,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:39:38.813Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 986→969"
+    },
+    {
+      "advertiserId": "5398156",
+      "partnerName": "Petissimo Europe",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 3001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 5001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2846,
+      "currentLoaded": 1869,
+      "previousTotal": 7649,
+      "currentTotal": 7649,
+      "productsRemainingEstimate": 2649,
+      "completePassCount": 39,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:36:30.017Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "3001→5001 | loaded 2846→1869"
+    },
+    {
+      "advertiserId": "5401824",
+      "partnerName": "Bushman CZ SK EU",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 3001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2594,
+      "currentLoaded": 465,
+      "previousTotal": 3460,
+      "currentTotal": 3466,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 77,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:37:40.194Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "3001→1 | loaded 2594→465"
+    },
+    {
+      "advertiserId": "5402439",
+      "partnerName": "Factcool Europe",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 9001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 5278,
+      "currentLoaded": 0,
+      "previousTotal": 43592,
+      "currentTotal": 0,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 16,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:34:28.096Z",
+      "progressed": false,
+      "emptyApi": true,
+      "proofLine": "9001→1 | loaded 5278→0"
+    },
+    {
+      "advertiserId": "5404810",
+      "partnerName": "Husky cz/sk",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 6001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 8001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2590,
+      "currentLoaded": 1756,
+      "previousTotal": 10194,
+      "currentTotal": 10411,
+      "productsRemainingEstimate": 2411,
+      "completePassCount": 1,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:36:26.855Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "6001→8001 | loaded 2590→1756"
+    },
+    {
+      "advertiserId": "5408233",
+      "partnerName": "Sensilab Europe",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 251,
+      "currentLoaded": 688,
+      "previousTotal": 251,
+      "currentTotal": 688,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 102,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:37:32.979Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 251→688"
+    },
+    {
+      "advertiserId": "5417788",
+      "partnerName": "Vesely-drak",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 2001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2,
+      "currentLoaded": 1986,
+      "previousTotal": 6003,
+      "currentTotal": 5992,
+      "productsRemainingEstimate": 3992,
+      "completePassCount": 68,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:38:42.383Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→2001 | loaded 2→1986"
+    },
+    {
+      "advertiserId": "5421525",
+      "partnerName": "Libristo Europe",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 1000,
+      "currentLoaded": 1000,
+      "previousTotal": 1000,
+      "currentTotal": 1000,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 89,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:37:09.017Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 1000→1000"
+    },
+    {
+      "advertiserId": "5444910",
+      "partnerName": "Zahradajezek.cz/Odsuseda.sk/Jeza.hu",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 1650,
+      "currentLoaded": 560,
+      "previousTotal": 1852,
+      "currentTotal": 560,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 140,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:38:43.857Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 1650→560"
+    },
+    {
+      "advertiserId": "5493238",
+      "partnerName": "Dxracer cz-sk/Kancelarskezidle.com",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 3001,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 5001,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 2658,
+      "currentLoaded": 1784,
+      "previousTotal": 5804,
+      "currentTotal": 5802,
+      "productsRemainingEstimate": 802,
+      "completePassCount": 52,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:36:49.384Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "3001→5001 | loaded 2658→1784"
+    },
+    {
+      "advertiserId": "5525941",
+      "partnerName": "Spa.cz",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 0,
+      "currentLoaded": 0,
+      "previousTotal": 0,
+      "currentTotal": 0,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 171,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:40:34.140Z",
+      "progressed": false,
+      "emptyApi": true,
+      "proofLine": "1→1 | loaded 0→0"
+    },
+    {
+      "advertiserId": "5554901",
+      "partnerName": "Nature's Finest",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 3001,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 815,
+      "currentLoaded": 208,
+      "previousTotal": 3380,
+      "currentTotal": 3380,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 67,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:38:07.313Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "3001→1 | loaded 815→208"
+    },
+    {
+      "advertiserId": "5611262",
+      "partnerName": "SvetKadernictvi.cz / SvetKadernictva.sk",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 2001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 852,
+      "currentLoaded": 1850,
+      "previousTotal": 8853,
+      "currentTotal": 8862,
+      "productsRemainingEstimate": 6862,
+      "completePassCount": 60,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:38:24.186Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→2001 | loaded 852→1850"
+    },
+    {
+      "advertiserId": "5614135",
+      "partnerName": "Gavri.cz",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 0,
+      "currentLoaded": 0,
+      "previousTotal": 0,
+      "currentTotal": 0,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 66,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-12T20:31:51.791Z",
+      "progressed": false,
+      "emptyApi": true,
+      "proofLine": "1→1 | loaded 0→0"
+    },
+    {
+      "advertiserId": "5654758",
+      "partnerName": "Unizdrav",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 3001,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 1253,
+      "currentLoaded": 815,
+      "previousTotal": 4162,
+      "currentTotal": 4188,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 63,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:38:01.058Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "3001→1 | loaded 1253→815"
+    },
+    {
+      "advertiserId": "5701422",
+      "partnerName": "Bodyworld Europe",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 2001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 0,
+      "currentLoaded": 1909,
+      "previousTotal": 0,
+      "currentTotal": 3655,
+      "productsRemainingEstimate": 1655,
+      "completePassCount": 65,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:38:19.332Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→2001 | loaded 0→1909"
+    },
+    {
+      "advertiserId": "5706839",
+      "partnerName": "Amix-store / Meliora CZ",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 2001,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 795,
+      "currentLoaded": 1969,
+      "previousTotal": 6802,
+      "currentTotal": 6802,
+      "productsRemainingEstimate": 4802,
+      "completePassCount": 40,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:38:30.089Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→2001 | loaded 795→1969"
+    },
+    {
+      "advertiserId": "5725783",
+      "partnerName": "Bauerhockey.cz/Kappa-sport.cz",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 3001,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 2423,
+      "currentLoaded": 741,
+      "previousTotal": 3749,
+      "currentTotal": 3747,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 66,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:38:06.102Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "3001→1 | loaded 2423→741"
+    },
+    {
+      "advertiserId": "5744714",
+      "partnerName": "EZshop CZ/SK",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 34,
+      "currentLoaded": 37,
+      "previousTotal": 68,
+      "currentTotal": 74,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 171,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:40:02.925Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 34→37"
+    },
+    {
+      "advertiserId": "5755636",
+      "partnerName": "Foreo",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 318,
+      "currentLoaded": 318,
+      "previousTotal": 318,
+      "currentTotal": 318,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 148,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:39:52.665Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 318→318"
+    },
+    {
+      "advertiserId": "5780936",
+      "partnerName": "Horsefeathers Europe",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 3001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2582,
+      "currentLoaded": 656,
+      "previousTotal": 3692,
+      "currentTotal": 3657,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 87,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:36:58.201Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "3001→1 | loaded 2582→656"
+    },
+    {
+      "advertiserId": "5823422",
+      "partnerName": "Dedra /pl",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 3001,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 1618,
+      "currentLoaded": 1278,
+      "previousTotal": 4912,
+      "currentTotal": 4911,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 56,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:37:12.435Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "3001→1 | loaded 1618→1278"
+    },
+    {
+      "advertiserId": "5870560",
+      "partnerName": "Benlemi Europe",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 9001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 2001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 1000,
+      "currentLoaded": 2000,
+      "previousTotal": 13945,
+      "currentTotal": 12388,
+      "productsRemainingEstimate": 10388,
+      "completePassCount": 26,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:36:12.060Z",
+      "progressed": false,
+      "emptyApi": false,
+      "proofLine": "9001→2001 | loaded 1000→2000"
+    },
+    {
+      "advertiserId": "5884820",
+      "partnerName": "Scandishop cz/sk/hu/ro",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 3001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2625,
+      "currentLoaded": 156,
+      "previousTotal": 3148,
+      "currentTotal": 3157,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 88,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:37:06.986Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "3001→1 | loaded 2625→156"
+    },
+    {
+      "advertiserId": "5889034",
+      "partnerName": "VidaXL",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 9001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 2001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2872,
+      "currentLoaded": 1985,
+      "previousTotal": 33686,
+      "currentTotal": 7232,
+      "productsRemainingEstimate": 5232,
+      "completePassCount": 13,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:34:52.281Z",
+      "progressed": false,
+      "emptyApi": false,
+      "proofLine": "9001→2001 | loaded 2872→1985"
+    },
+    {
+      "advertiserId": "5938081",
+      "partnerName": "Trenyrkarna Europe",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 6001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 8001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2485,
+      "currentLoaded": 1890,
+      "previousTotal": 13081,
+      "currentTotal": 13081,
+      "productsRemainingEstimate": 5081,
+      "completePassCount": 2,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:35:54.658Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "6001→8001 | loaded 2485→1890"
+    },
+    {
+      "advertiserId": "5992572",
+      "partnerName": "Bohempia Global",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 1921,
+      "currentLoaded": 0,
+      "previousTotal": 2241,
+      "currentTotal": 0,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 96,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:38:47.865Z",
+      "progressed": false,
+      "emptyApi": true,
+      "proofLine": "1→1 | loaded 1921→0"
+    },
+    {
+      "advertiserId": "6002445",
+      "partnerName": "Svět Plodů CZ/SK",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 691,
+      "currentLoaded": 688,
+      "previousTotal": 691,
+      "currentTotal": 688,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 206,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:39:42.153Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 691→688"
+    },
+    {
+      "advertiserId": "6065245",
+      "partnerName": "Dopplershop cz/sk",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 3001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2557,
+      "currentLoaded": 174,
+      "previousTotal": 3189,
+      "currentTotal": 3175,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 117,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:38:11.774Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "3001→1 | loaded 2557→174"
+    },
+    {
+      "advertiserId": "6065327",
+      "partnerName": "Ecomodi",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 7,
+      "currentLoaded": 7,
+      "previousTotal": 14,
+      "currentTotal": 14,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 171,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:40:07.283Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 7→7"
+    },
+    {
+      "advertiserId": "6109393",
+      "partnerName": "Vyprodejpovleceni CZ/SK/HU/RO",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 6001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 8001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2585,
+      "currentLoaded": 1753,
+      "previousTotal": 10691,
+      "currentTotal": 10677,
+      "productsRemainingEstimate": 2677,
+      "completePassCount": 33,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:36:24.470Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "6001→8001 | loaded 2585→1753"
+    },
+    {
+      "advertiserId": "6112132",
+      "partnerName": "Gorenje.cz",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 705,
+      "currentLoaded": 705,
+      "previousTotal": 705,
+      "currentTotal": 705,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 212,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:39:43.830Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 705→705"
+    },
+    {
+      "advertiserId": "6127623",
+      "partnerName": "Urbane.cz",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 691,
+      "currentLoaded": 691,
+      "previousTotal": 691,
+      "currentTotal": 691,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 125,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:39:45.231Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 691→691"
+    },
+    {
+      "advertiserId": "6203294",
+      "partnerName": "Tvrzenaskla/Momanio Europe",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 3001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 5001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2906,
+      "currentLoaded": 1651,
+      "previousTotal": 9853,
+      "currentTotal": 9888,
+      "productsRemainingEstimate": 4888,
+      "completePassCount": 10,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:36:09.098Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "3001→5001 | loaded 2906→1651"
+    },
+    {
+      "advertiserId": "6215286",
+      "partnerName": "E-sportshop CZ/SK",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 2001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2397,
+      "currentLoaded": 1789,
+      "previousTotal": 2868,
+      "currentTotal": 2895,
+      "productsRemainingEstimate": 895,
+      "completePassCount": 147,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:38:51.174Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→2001 | loaded 2397→1789"
+    },
+    {
+      "advertiserId": "6253448",
+      "partnerName": "Monkeymum.com",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 0,
+      "currentLoaded": 0,
+      "previousTotal": 0,
+      "currentTotal": 0,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 66,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-12T20:31:44.168Z",
+      "progressed": false,
+      "emptyApi": true,
+      "proofLine": "1→1 | loaded 0→0"
+    },
+    {
+      "advertiserId": "6256015",
+      "partnerName": "Lelosi Europe",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 3001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 5001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2769,
+      "currentLoaded": 1904,
+      "previousTotal": 5722,
+      "currentTotal": 5700,
+      "productsRemainingEstimate": 700,
+      "completePassCount": 49,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:36:35.793Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "3001→5001 | loaded 2769→1904"
+    },
+    {
+      "advertiserId": "6258510",
+      "partnerName": "Jeans-shop CZ/SK",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 3001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 5001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2834,
+      "currentLoaded": 1998,
+      "previousTotal": 8685,
+      "currentTotal": 8683,
+      "productsRemainingEstimate": 3683,
+      "completePassCount": 28,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:36:18.154Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "3001→5001 | loaded 2834→1998"
+    },
+    {
+      "advertiserId": "6294181",
+      "partnerName": "Rehabilitacnipomucky.cz/sk/pl",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 628,
+      "currentLoaded": 638,
+      "previousTotal": 1424,
+      "currentTotal": 1423,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 114,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:39:27.211Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 628→638"
+    },
+    {
+      "advertiserId": "6298382",
+      "partnerName": "Picasee",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 9001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 6001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 1832,
+      "currentLoaded": 5856,
+      "previousTotal": 188669,
+      "currentTotal": 211910,
+      "productsRemainingEstimate": 205910,
+      "completePassCount": 5,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:33:01.774Z",
+      "progressed": false,
+      "emptyApi": false,
+      "proofLine": "9001→6001 | loaded 1832→5856"
+    },
+    {
+      "advertiserId": "6358042",
+      "partnerName": "Sanitino Europe",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 6001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 9001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 4382,
+      "currentLoaded": 2901,
+      "previousTotal": 80899,
+      "currentTotal": 80814,
+      "productsRemainingEstimate": 71814,
+      "completePassCount": 0,
+      "lastComplete": false,
+      "lastError": "http_400",
+      "lastRunAt": "2026-11-26T19:33:50.191Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "6001→9001 | loaded 4382→2901"
+    },
+    {
+      "advertiserId": "6393044",
+      "partnerName": "Exejeans.cz",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 6001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 8001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 3000,
+      "currentLoaded": 1518,
+      "previousTotal": 12249,
+      "currentTotal": 13304,
+      "productsRemainingEstimate": 5304,
+      "completePassCount": 0,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:36:03.128Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "6001→8001 | loaded 3000→1518"
+    },
+    {
+      "advertiserId": "6464420",
+      "partnerName": "Allegro.cz",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 2001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 0,
+      "currentLoaded": 2000,
+      "previousTotal": 0,
+      "currentTotal": 565193,
+      "productsRemainingEstimate": 563193,
+      "completePassCount": 12,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:40:11.436Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→2001 | loaded 0→2000"
+    },
+    {
+      "advertiserId": "6466592",
+      "partnerName": "Mojelekarna.cz",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 9001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2391,
+      "currentLoaded": 0,
+      "previousTotal": 9820,
+      "currentTotal": 0,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 46,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:36:43.183Z",
+      "progressed": false,
+      "emptyApi": true,
+      "proofLine": "9001→1 | loaded 2391→0"
+    },
+    {
+      "advertiserId": "6492736",
+      "partnerName": "Ahifi",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 3001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 5001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2742,
+      "currentLoaded": 1697,
+      "previousTotal": 17636,
+      "currentTotal": 17630,
+      "productsRemainingEstimate": 12630,
+      "completePassCount": 0,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:35:36.076Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "3001→5001 | loaded 2742→1697"
+    },
+    {
+      "advertiserId": "6492944",
+      "partnerName": "Soaphoria SK/CZ",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 749,
+      "currentLoaded": 749,
+      "previousTotal": 749,
+      "currentTotal": 749,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 190,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:39:41.116Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 749→749"
+    },
+    {
+      "advertiserId": "6511227",
+      "partnerName": "Vitapur Europe",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 1328,
+      "currentLoaded": 1324,
+      "previousTotal": 1484,
+      "currentTotal": 1509,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 107,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:37:38.746Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 1328→1324"
+    },
+    {
+      "advertiserId": "6659563",
+      "partnerName": "Shapenbarefoot.com",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 239,
+      "currentLoaded": 245,
+      "previousTotal": 239,
+      "currentTotal": 245,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 113,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:37:23.717Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 239→245"
+    },
+    {
+      "advertiserId": "6721278",
+      "partnerName": "Eobaly CZ/SK",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 2001,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 1434,
+      "currentLoaded": 1269,
+      "previousTotal": 2854,
+      "currentTotal": 2854,
+      "productsRemainingEstimate": 854,
+      "completePassCount": 83,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:38:54.325Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→2001 | loaded 1434→1269"
+    },
+    {
+      "advertiserId": "6748811",
+      "partnerName": "Impresi",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 2001,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 1057,
+      "currentLoaded": 1062,
+      "previousTotal": 2160,
+      "currentTotal": 2160,
+      "productsRemainingEstimate": 160,
+      "completePassCount": 74,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:39:09.205Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→2001 | loaded 1057→1062"
+    },
+    {
+      "advertiserId": "6785595",
+      "partnerName": "Tui.cz",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 0,
+      "currentLoaded": 0,
+      "previousTotal": 0,
+      "currentTotal": 0,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 171,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:40:29.740Z",
+      "progressed": false,
+      "emptyApi": true,
+      "proofLine": "1→1 | loaded 0→0"
+    },
+    {
+      "advertiserId": "6796197",
+      "partnerName": "Warsawsneakerstore.com",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 9001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 1000,
+      "currentLoaded": 0,
+      "previousTotal": 27654,
+      "currentTotal": 0,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 32,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:35:23.479Z",
+      "progressed": false,
+      "emptyApi": true,
+      "proofLine": "9001→1 | loaded 1000→0"
+    },
+    {
+      "advertiserId": "6892836",
+      "partnerName": "Skinners Europe",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 3001,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 1017,
+      "currentLoaded": 890,
+      "previousTotal": 4795,
+      "currentTotal": 4795,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 56,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:37:31.264Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "3001→1 | loaded 1017→890"
+    },
+    {
+      "advertiserId": "6972484",
+      "partnerName": "imago.cz",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 0,
+      "currentLoaded": 0,
+      "previousTotal": 0,
+      "currentTotal": 0,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 202,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:40:11.848Z",
+      "progressed": false,
+      "emptyApi": true,
+      "proofLine": "1→1 | loaded 0→0"
+    },
+    {
+      "advertiserId": "6976980",
+      "partnerName": "Dormeo Europe",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 550,
+      "currentLoaded": 506,
+      "previousTotal": 550,
+      "currentTotal": 506,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 136,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:37:58.362Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 550→506"
+    },
+    {
+      "advertiserId": "7133039",
+      "partnerName": "Byrokko World",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 63,
+      "currentLoaded": 62,
+      "previousTotal": 63,
+      "currentTotal": 62,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 111,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:37:02.441Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 63→62"
+    },
+    {
+      "advertiserId": "7149746",
+      "partnerName": "Diablochairs Europe",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 225,
+      "currentLoaded": 227,
+      "previousTotal": 225,
+      "currentTotal": 227,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 127,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:37:53.805Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 225→227"
+    },
+    {
+      "advertiserId": "7260722",
+      "partnerName": "Rajhraciek Europe",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 6001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 9001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 5236,
+      "currentLoaded": 2143,
+      "previousTotal": 46418,
+      "currentTotal": 46525,
+      "productsRemainingEstimate": 37525,
+      "completePassCount": 0,
+      "lastComplete": false,
+      "lastError": "http_400",
+      "lastRunAt": "2026-11-26T19:34:26.294Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "6001→9001 | loaded 5236→2143"
+    },
+    {
+      "advertiserId": "7327751",
+      "partnerName": "KitchenShop Europe",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 6001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2650,
+      "currentLoaded": 1891,
+      "previousTotal": 7954,
+      "currentTotal": 7954,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 32,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:36:32.833Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "6001→1 | loaded 2650→1891"
+    },
+    {
+      "advertiserId": "7341377",
+      "partnerName": "Zepter Europe",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 3001,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 823,
+      "currentLoaded": 658,
+      "previousTotal": 4773,
+      "currentTotal": 4770,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 63,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:37:35.947Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "3001→1 | loaded 823→658"
+    },
+    {
+      "advertiserId": "7401912",
+      "partnerName": "Manboxeo CZ/SK/HU/DE",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 3001,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 1754,
+      "currentLoaded": 780,
+      "previousTotal": 3938,
+      "currentTotal": 3907,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 65,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:38:02.951Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "3001→1 | loaded 1754→780"
+    },
+    {
+      "advertiserId": "7416299",
+      "partnerName": "BAMchocolate Europe",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 183,
+      "currentLoaded": 186,
+      "previousTotal": 183,
+      "currentTotal": 186,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 131,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:37:19.236Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 183→186"
+    },
+    {
+      "advertiserId": "7424533",
+      "partnerName": "Bruderland Europe",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 1072,
+      "currentLoaded": 1074,
+      "previousTotal": 1218,
+      "currentTotal": 1206,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 109,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:37:14.572Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 1072→1074"
+    },
+    {
+      "advertiserId": "7474250",
+      "partnerName": "Brainmarket Europe",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 3001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 5001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2733,
+      "currentLoaded": 1890,
+      "previousTotal": 5369,
+      "currentTotal": 5371,
+      "productsRemainingEstimate": 371,
+      "completePassCount": 61,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:36:42.114Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "3001→5001 | loaded 2733→1890"
+    },
+    {
+      "advertiserId": "7612998",
+      "partnerName": "Tierraverde CZ/SK",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "offset"
+      },
+      "previousLoaded": 367,
+      "currentLoaded": 366,
+      "previousTotal": 686,
+      "currentTotal": 684,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 125,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:32:27.453Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 367→366"
+    },
+    {
+      "advertiserId": "7643241",
+      "partnerName": "Puella Europe",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 101,
+      "currentLoaded": 109,
+      "previousTotal": 101,
+      "currentTotal": 109,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 131,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:37:52.218Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 101→109"
+    },
+    {
+      "advertiserId": "7702047",
+      "partnerName": "Dermacol",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 3,
+      "currentLoaded": 801,
+      "previousTotal": 3,
+      "currentTotal": 801,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 154,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:38:16.726Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 3→801"
+    },
+    {
+      "advertiserId": "7745362",
+      "partnerName": "Decoled /DE",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 1284,
+      "currentLoaded": 1167,
+      "previousTotal": 1285,
+      "currentTotal": 1303,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 132,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:38:46.468Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "1→1 | loaded 1284→1167"
+    },
+    {
+      "advertiserId": "7787127",
+      "partnerName": "Musclesupplements EU",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 6001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2544,
+      "currentLoaded": 238,
+      "previousTotal": 6239,
+      "currentTotal": 6239,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 44,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:36:56.555Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "6001→1 | loaded 2544→238"
+    },
+    {
+      "advertiserId": "7793108",
+      "partnerName": "Veneti CZ/SK/HU",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 3001,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 9001,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 2424,
+      "currentLoaded": 4774,
+      "previousTotal": 86309,
+      "currentTotal": 86412,
+      "productsRemainingEstimate": 77412,
+      "completePassCount": 1,
+      "lastComplete": false,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:33:44.957Z",
+      "progressed": true,
+      "emptyApi": false,
+      "proofLine": "3001→9001 | loaded 2424→4774"
+    },
+    {
+      "advertiserId": "7859657",
+      "partnerName": "Jan Nowak EU",
+      "hasFeed": true,
+      "previousCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "nextCursor": {
+        "offset": 1,
+        "page": null,
+        "mode": "feed"
+      },
+      "previousLoaded": 790,
+      "currentLoaded": 0,
+      "previousTotal": 790,
+      "currentTotal": 0,
+      "productsRemainingEstimate": 0,
+      "completePassCount": 123,
+      "lastComplete": true,
+      "lastError": null,
+      "lastRunAt": "2026-11-26T19:37:25.115Z",
+      "progressed": false,
+      "emptyApi": true,
+      "proofLine": "1→1 | loaded 790→0"
+    }
+  ]
+}
