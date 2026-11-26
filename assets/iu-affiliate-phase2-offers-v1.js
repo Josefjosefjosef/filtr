@@ -597,6 +597,10 @@
       return productPubliclyShowable(c, preview);
     });
     if (!list.length) return;
+    try {
+      var pendingNav = window.__iuScrollRestorePendingNav;
+      if (pendingNav && Number(pendingNav.y) > 400) host.style.contentVisibility = "visible";
+    } catch (_) {}
     var visible = (display && display.defaultVisibleProducts) || 3;
     var batchSize = PRODUCT_RENDER_BATCH;
     var grid = document.createElement("div");
@@ -699,6 +703,10 @@
       var onScroll = function () {
         if (painting || shown <= visible) return;
         var y = scrollY();
+        if (host.style.contentVisibility === "visible") {
+          var hostRect = host.getBoundingClientRect();
+          if (hostRect.bottom > 0 && hostRect.top < (window.innerHeight || 0)) host.style.contentVisibility = "";
+        }
         var into = 0;
         try { into = Math.max(0, -grid.getBoundingClientRect().top); } catch (_) {}
         var row = measuredRow();
