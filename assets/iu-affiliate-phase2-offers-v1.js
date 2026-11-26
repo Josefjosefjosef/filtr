@@ -83,11 +83,7 @@
     }
     if (item.priceHiddenReason) return false;
     if (!isPositiveSalePrice(item.currentPrice)) return false;
-    // Defense-in-depth: never paint confirmed out-of-stock / empty availability as buyable.
-    var availClass = classifyAvailability(item.availability);
-    if (availClass === "OUT_OF_STOCK" || availClass === "UNKNOWN_EMPTY" || availClass === "UNKNOWN_UNRECOGNIZED") {
-      return false;
-    }
+    if (!availabilityAllowsPublicPaint(item.availability)) return false;
     return offerInPublicTimeWindow(item);
   }
 
@@ -101,6 +97,19 @@
     if (/(^|\b)(backorder|back order)\b/.test(n)) return "BACKORDER";
     if (/(^|\b)(in stock|instock|available|skladem)\b/.test(n)) return "IN_STOCK";
     return "UNKNOWN_UNRECOGNIZED";
+  }
+
+  function availabilityAllowsPublicPaint(raw) {
+    var availClass = classifyAvailability(raw);
+    if (
+      availClass === "OUT_OF_STOCK" ||
+      availClass === "UNKNOWN_NULL" ||
+      availClass === "UNKNOWN_EMPTY" ||
+      availClass === "UNKNOWN_UNRECOGNIZED"
+    ) {
+      return false;
+    }
+    return true;
   }
 
   function availabilityLabel(raw) {
