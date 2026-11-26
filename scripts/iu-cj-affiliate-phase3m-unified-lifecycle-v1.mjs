@@ -459,34 +459,56 @@ export function applyConfirmedEndedAtomic({
   };
 }
 
+function couponRowMatches(row, couponId, advertiserId) {
+  const cid = String(couponId || "");
+  const ids = [row?.id, row?.couponId, row?.offerId].map((value) => String(value || ""));
+  if (!ids.includes(cid)) return false;
+  if (advertiserId != null && String(row?.advertiserId || "") !== String(advertiserId)) return false;
+  return true;
+}
+
+function unpublishExpiredCoupon(row) {
+  return {
+    ...row,
+    publicationReady: false,
+    publishable: false,
+    blockers: ["EXPIRED"],
+  };
+}
+
 /**
- * Expire a single coupon without removing the partner.
+ * Expire one coupon identity without removing the partner or the row.
+ * Section placements use the same advertiser and offer identity.
+ * This does not write a source-verification clock and does not change liveEnabled.
  */
 export function expireSingleCoupon({ offersPublic, couponId, advertiserId } = {}) {
-  const offers = offersPublic && typeof offersPublic === "object" ? { ...offersPublic } : null;
+  const offers = offersPublic && typeof offersPublic === "object" ? offersPublic : null;
   if (!offers) {
     return { ok: false, reason: "no_offers", nextOffersPublic: null };
   }
-  const cid = String(couponId || "");
   const aid = advertiserId != null ? String(advertiserId) : null;
-  const coupons = (Array.isArray(offers.coupons) ? offers.coupons : []).filter((c) => {
-    if (String(c?.id || c?.couponId || "") === cid) {
-      if (aid && String(c.advertiserId) !== aid) return true;
-      return false;
-    }
-    return true;
+  let expired = 0;
+  const mark = (row) => {
+    if (!couponRowMatches(row, couponId, aid)) return row;
+    expired += 1;
+    return unpublishExpiredCoupon(row);
+  };
+  const coupons = (Array.isArray(offers.coupons) ? offers.coupons : []).map(mark);
+  const sections = (Array.isArray(offers.sections) ? offers.sections : []).map((sec) => {
+    if (!sec || typeof sec !== "object" || !Array.isArray(sec.coupons)) return sec;
+    return { ...sec, coupons: sec.coupons.map(mark) };
   });
   return {
     ok: true,
     action: LIFECYCLE_ACTION.EXPIRE_COUPON_ONLY,
     liveEnabled: false,
+    expired,
+    partnerPreserved: true,
     nextOffersPublic: {
       ...offers,
-      liveEnabled: false,
       coupons,
-      stats: { ...(offers.stats || {}), coupons: coupons.length },
+      sections,
     },
-    partnerPreserved: true,
   };
 }
 
