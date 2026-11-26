@@ -34,6 +34,7 @@ import { classifyPolicyManagement } from "./iu-cj-affiliate-phase3f-dynamic-cata
 import { parseAffiliateCatalogOrdered } from "./iu-cj-affiliate-phase2-partner-slot-inventory-v1.mjs";
 import {
   buildAssortmentProfile,
+  classifyMerchantSubtype,
   selectPrimarySectionWithAssortment,
   auditLinkCandidateBuckets,
   explainTaxonomy36vs38,
@@ -1097,7 +1098,8 @@ export const PHASE3Z_CID_SECTION_OVERRIDES_V6 = Object.freeze({
   "4786110": { sectionId: "aff-sport-outdoor", rule: "4camping_camping_hiking_cz", confidence: "high" },
   "6298382": { sectionId: "aff-mobily", rule: "picasee_mobile_accessories_cz", confidence: "high" },
   "6748811": { sectionId: "aff-kvetiny-darky", rule: "impresi_photo_canvas_gifts_cz", confidence: "high" },
-  // 7417963 OnBuy EU intentionally NOT overridden: no onbuy.com/cz destination among approved links.
+  // Department stores, including OnBuy EU 7417963, are not CID overrides and are not bazars.
+  // classifyMerchantSubtype keeps sectionId null until one assortment dominates.
 });
 
 /** Infer section from CJ category + name/domain only (ignores section_map). */
@@ -1133,6 +1135,40 @@ export function classifyFromCjEvidence(advertiser) {
       evidence: ["name_ground_transport", "taxonomy:aff-letenky=Doprava a cestování"],
       taxonomyFit: true,
       semanticOk: true,
+    };
+  }
+
+  const subtype = classifyMerchantSubtype({
+    name: advertiser?.advertiserName,
+    programUrl: advertiser?.programUrl,
+    categoryParent: cat.parent,
+    categoryChild: cat.child,
+  });
+  if (subtype.merchantSubtype === "CLASSIFIEDS" && subtype.sectionId) {
+    return {
+      sectionId: subtype.sectionId,
+      source: "cj_category_merchant_subtype_v51_8",
+      confidence: "medium",
+      categoryKey: cat.key || null,
+      rule: subtype.rule,
+      merchantSubtype: subtype.merchantSubtype,
+      evidence: ["classifieds_name_or_category", "tile:aff-inzerce-bazary"],
+      taxonomyFit: true,
+      semanticOk: true,
+    };
+  }
+  if (subtype.merchantSubtype === "DEPARTMENT_STORE") {
+    return {
+      sectionId: null,
+      source: "cj_category_merchant_subtype_v51_8",
+      confidence: "medium",
+      categoryKey: cat.key || null,
+      rule: subtype.rule,
+      merchantSubtype: subtype.merchantSubtype,
+      evidence: ["cj_primary:" + (cat.key || ""), "not_classifieds", "no_single_infouzel_tile"],
+      taxonomyFit: false,
+      holdHint: subtype.rule,
+      semanticOk: false,
     };
   }
 
