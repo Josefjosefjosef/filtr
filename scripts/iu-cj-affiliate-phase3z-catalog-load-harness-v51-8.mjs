@@ -21,7 +21,7 @@
  *
  * Env:
  *   IU_CJ_LOAD_MAX   upper bound for scale tiers (default 10000 for --scale,
- *                    5000 for selftest). Tiers: 1k 5k 10k 50k 100k 300k.
+ *                    5000 for selftest). Tiers: 1k 5k 10k 25k 50k 100k 200k 300k.
  *                    Hard cap 1,000,000.
  *   Local 300k:  $env:IU_CJ_LOAD_MAX = "300000"
  *                node scripts/iu-cj-affiliate-phase3z-catalog-load-harness-v51-8.mjs --scale
@@ -33,7 +33,7 @@ import { spawnSync } from "node:child_process";
 export const CATALOG_LOAD_HARNESS_SCHEMA =
   "iu-cj-affiliate-phase3z-catalog-load-harness-v51-8";
 
-export const LOAD_SCALE_TIERS = Object.freeze([1000, 5000, 10000, 50000, 100000, 300000]);
+export const LOAD_SCALE_TIERS = Object.freeze([1000, 5000, 10000, 25000, 50000, 100000, 200000, 300000]);
 export const LOAD_DEFAULT_SELFTEST_MAX = 5000;
 export const LOAD_DEFAULT_SCALE_MAX = 10000;
 export const LOAD_HARD_CAP = 1000000;
