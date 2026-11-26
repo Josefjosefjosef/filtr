@@ -28,9 +28,82 @@ export const DEFERRED_NEW_LEDGER_SCHEMA = "iu-affiliate-cj-deferred-new-ledger-v
 export const DEFERRED_NEW_LEDGER_FILENAME = "iu-affiliate-cj-deferred-new-ledger-v51.json";
 export const DEFERRED_NEW_KEYS_JSONL_GZ = "iu-affiliate-cj-deferred-new-keys-v51.jsonl.gz";
 export const DEFERRED_NEW_KEYS_META_FILENAME = "iu-affiliate-cj-deferred-new-keys-v51.meta.json";
+export const DEFERRED_ACTIVE_FILENAME = "iu-affiliate-cj-deferred-new-active-v51.json";
 
 function ensureDir(dir) {
   fs.mkdirSync(dir, { recursive: true });
+}
+
+function sha256File(filePath) {
+  return crypto.createHash("sha256").update(fs.readFileSync(filePath)).digest("hex");
+}
+
+function readJsonIf(filePath) {
+  try {
+    if (!fs.existsSync(filePath)) return null;
+    return JSON.parse(fs.readFileSync(filePath, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+function generationDir(outDir, generation) {
+  return path.join(outDir, "generations", String(generation));
+}
+
+function acquireWriteLock(outDir) {
+  ensureDir(outDir);
+  const lockPath = path.join(outDir, ".deferred-write.lock");
+  let fd;
+  try {
+    fd = fs.openSync(lockPath, "wx");
+  } catch (err) {
+    if (err && err.code === "EEXIST") {
+      const busy = new Error("CONCURRENT_DEFERRED_WRITE");
+      busy.code = "CONCURRENT_DEFERRED_WRITE";
+      throw busy;
+    }
+    throw err;
+  }
+  fs.writeSync(fd, String(process.pid));
+  fs.closeSync(fd);
+  return lockPath;
+}
+
+function releaseWriteLock(lockPath) {
+  if (lockPath) fs.rmSync(lockPath, { force: true });
+}
+
+function publishJsonAtomic(filePath, value) {
+  const partial = filePath + ".partial";
+  fs.writeFileSync(partial, JSON.stringify(value, null, 2) + "\n", "utf8");
+  fs.renameSync(partial, filePath);
+}
+
+export function readActiveDeferredGeneration(outDir) {
+  return readJsonIf(path.join(outDir, DEFERRED_ACTIVE_FILENAME));
+}
+
+export function verifyDeferredGenerationDir(genDir) {
+  const ledger = path.join(genDir, DEFERRED_NEW_LEDGER_FILENAME);
+  const gz = path.join(genDir, DEFERRED_NEW_KEYS_JSONL_GZ);
+  const manifest = readJsonIf(path.join(genDir, "manifest.json"));
+  if (!manifest) return { ok: false, reason: "MISSING_MANIFEST" };
+  if (!fs.existsSync(ledger)) return { ok: false, reason: "MISSING_LEDGER" };
+  if (!fs.existsSync(gz)) return { ok: false, reason: "MISSING_GZIP" };
+  let ledgerSha = null;
+  let gzSha = null;
+  try {
+    ledgerSha = sha256File(ledger);
+    gzSha = sha256File(gz);
+  } catch {
+    return { ok: false, reason: "HASH_READ_FAILED" };
+  }
+  if (ledgerSha !== manifest.ledgerSha256 || gzSha !== manifest.jsonlGzSha256) {
+    return { ok: false, reason: "SHA256_MISMATCH", ledgerSha, gzSha };
+  }
+  if (Number(manifest.keyCount) < 0) return { ok: false, reason: "MISSING_COUNT" };
+  return { ok: true, manifest, ledger, gz, ledgerSha, gzSha };
 }
 
 function resolveOutDir(opts = {}, env = process.env) {
@@ -173,15 +246,42 @@ export function writeDeferredNewKeysOnlyLedger(keys, filePath, meta = {}) {
  * Persist current deferredNew keyset. Safe for DISARMED sync (no growth unlock).
  * @returns {{ ok: boolean, keyCount: number, ledgerPath: string, jsonlGzPath: string, metaPath: string, auditCopy: string|null, publicGrowthBudgetPatch: object }}
  */
+export function restorePreviousValidDeferredGeneration(outDir) {
+  const root = path.join(outDir, "generations");
+  const active = readActiveDeferredGeneration(outDir);
+  const current = active ? Number(active.generation) || 0 : 0;
+  if (current > 0) {
+    const currentCheck = verifyDeferredGenerationDir(generationDir(outDir, current));
+    if (currentCheck.ok) return { restored: false, reason: "ACTIVE_VALID", generation: current };
+  }
+  if (!fs.existsSync(root)) return { restored: false, reason: "NO_GENERATIONS" };
+  const older = fs
+    .readdirSync(root)
+    .map((name) => Number(name))
+    .filter((n) => Number.isFinite(n) && n > 0 && n < current)
+    .sort((a, b) => b - a);
+  for (const generation of older) {
+    const check = verifyDeferredGenerationDir(generationDir(outDir, generation));
+    if (!check.ok) continue;
+    publishJsonAtomic(path.join(outDir, DEFERRED_ACTIVE_FILENAME), {
+      ...check.manifest,
+      relativeDir: path.join("generations", String(generation)),
+    });
+    return { restored: true, generation, manifest: check.manifest };
+  }
+  return { restored: false, reason: "NO_VALID_PREVIOUS" };
+}
+
 export async function persistDeferredNewKeys(deferredNewKeys, opts = {}, env = process.env) {
   const keys = normalizeDeferredNewKeys(deferredNewKeys);
   const outDir = resolveOutDir(opts, env);
   ensureDir(outDir);
-  const ledgerPath = path.join(outDir, DEFERRED_NEW_LEDGER_FILENAME);
-  const jsonlGzPath = path.join(outDir, DEFERRED_NEW_KEYS_JSONL_GZ);
+  const lockPath = acquireWriteLock(outDir);
+  try {
   const metaPath = path.join(outDir, DEFERRED_NEW_KEYS_META_FILENAME);
-  let previousGeneration = 0;
-  if (fs.existsSync(metaPath)) {
+  const active = readActiveDeferredGeneration(outDir);
+  let previousGeneration = active ? Number(active.generation) || 0 : 0;
+  if (!previousGeneration && fs.existsSync(metaPath)) {
     try {
       previousGeneration = Number(JSON.parse(fs.readFileSync(metaPath, "utf8")).generation) || 0;
     } catch {
@@ -194,30 +294,63 @@ export async function persistDeferredNewKeys(deferredNewKeys, opts = {}, env = p
     throw err;
   }
   const generation = previousGeneration + 1;
-
+  const genDir = generationDir(outDir, generation);
+  fs.rmSync(genDir, { recursive: true, force: true });
+  ensureDir(genDir);
+  const ledgerPath = path.join(genDir, DEFERRED_NEW_LEDGER_FILENAME);
+  const jsonlGzPath = path.join(genDir, DEFERRED_NEW_KEYS_JSONL_GZ);
   const ledgerWrite = writeDeferredNewKeysOnlyLedger(keys, ledgerPath, opts);
+  if (typeof opts.afterLedger === "function") opts.afterLedger({ generation, genDir, ledgerPath });
   const gzWrite = await writeDeferredNewKeysJsonlGz(keys, jsonlGzPath);
+  const ledgerSha256 = sha256File(ledgerPath);
+  const jsonlGzSha256 = sha256File(jsonlGzPath);
+  const manifest = {
+    schema: DEFERRED_NEW_KEYS_SCHEMA,
+    generation,
+    keyCount: keys.length,
+    ledgerSha256,
+    jsonlGzSha256,
+    ledgerBytes: ledgerWrite.bytes,
+    jsonlGzBytes: gzWrite.bytes,
+    forPublicPages: false,
+    runId: opts.runId != null && String(opts.runId).trim() ? String(opts.runId) : "UNKNOWN",
+    updatedAt: opts.nowIso || new Date().toISOString(),
+  };
+  publishJsonAtomic(path.join(genDir, "manifest.json"), manifest);
+  const verified = verifyDeferredGenerationDir(genDir);
+  if (!verified.ok) {
+    const err = new Error(verified.reason || "GENERATION_NOT_CONSISTENT");
+    err.code = verified.reason || "GENERATION_NOT_CONSISTENT";
+    throw err;
+  }
+  publishJsonAtomic(path.join(outDir, DEFERRED_ACTIVE_FILENAME), {
+    ...manifest,
+    relativeDir: path.join("generations", String(generation)),
+  });
+  fs.copyFileSync(ledgerPath, path.join(outDir, DEFERRED_NEW_LEDGER_FILENAME));
+  fs.copyFileSync(jsonlGzPath, path.join(outDir, DEFERRED_NEW_KEYS_JSONL_GZ));
 
   const meta = {
     schema: DEFERRED_NEW_KEYS_SCHEMA,
-    updatedAt: opts.nowIso || new Date().toISOString(),
-    runId: opts.runId != null && String(opts.runId).trim() ? String(opts.runId) : "UNKNOWN",
+    updatedAt: manifest.updatedAt,
+    runId: manifest.runId,
     deferredNewCount: keys.length,
     keysOnly: true,
-    ledgerFile: path.basename(ledgerPath),
-    jsonlGzFile: path.basename(jsonlGzPath),
+    ledgerFile: DEFERRED_NEW_LEDGER_FILENAME,
+    jsonlGzFile: DEFERRED_NEW_KEYS_JSONL_GZ,
     ledgerPath,
     jsonlGzPath,
     ledgerBytes: ledgerWrite.bytes,
-    ledgerSha256: crypto.createHash("sha256").update(fs.readFileSync(ledgerPath)).digest("hex"),
+    ledgerSha256,
+    jsonlGzSha256,
     generation,
     jsonlGzBytes: gzWrite.bytes,
     reason: String(opts.reason || "PER_RUN_GROWTH_BUDGET"),
     preferredCurrency: String(opts.preferredCurrency || "CZK").toUpperCase(),
     forPublicPages: false,
-    note: "Durable current deferredNew keyset for inventory set-diff. Prefer jsonl.gz for streaming; ledger JSON is keys-only.",
+    note: "One generation directory holds ledger and gzip. The active pointer switches only after both hashes match.",
   };
-  fs.writeFileSync(metaPath, JSON.stringify(meta, null, 2) + "\n", "utf8");
+  publishJsonAtomic(metaPath, meta);
 
   let auditCopy = null;
   const auditDir = resolveAuditDir(opts, env);
@@ -260,7 +393,11 @@ export async function persistDeferredNewKeys(deferredNewKeys, opts = {}, env = p
     auditCopy,
     publicGrowthBudgetPatch,
     meta,
+    generation,
   };
+  } finally {
+    releaseWriteLock(lockPath);
+  }
 }
 
 /** Stream keys from keys-only ledger JSON (pretty `keys: [` layout) or fallback JSON.parse. */
@@ -358,10 +495,27 @@ export async function loadDeferredNewKeySet(fileOrDir, opts = {}) {
   let meta = null;
 
   if (fs.existsSync(target) && fs.statSync(target).isDirectory()) {
-    ledgerPath = path.join(target, DEFERRED_NEW_LEDGER_FILENAME);
-    gzPath = path.join(target, DEFERRED_NEW_KEYS_JSONL_GZ);
-    const metaPath = path.join(target, DEFERRED_NEW_KEYS_META_FILENAME);
-    if (fs.existsSync(metaPath)) meta = JSON.parse(fs.readFileSync(metaPath, "utf8"));
+    const active = readActiveDeferredGeneration(target);
+    if (active && active.generation) {
+      let check = verifyDeferredGenerationDir(generationDir(target, active.generation));
+      if (!check.ok) {
+        const restored = restorePreviousValidDeferredGeneration(target);
+        if (restored.restored) {
+          check = verifyDeferredGenerationDir(generationDir(target, restored.generation));
+        }
+      }
+      if (check.ok) {
+        ledgerPath = check.ledger;
+        gzPath = check.gz;
+        meta = check.manifest;
+      }
+    }
+    if (!gzPath && !ledgerPath) {
+      ledgerPath = path.join(target, DEFERRED_NEW_LEDGER_FILENAME);
+      gzPath = path.join(target, DEFERRED_NEW_KEYS_JSONL_GZ);
+      const metaPath = path.join(target, DEFERRED_NEW_KEYS_META_FILENAME);
+      if (fs.existsSync(metaPath)) meta = JSON.parse(fs.readFileSync(metaPath, "utf8"));
+    }
   } else if (/\.meta\.json$/i.test(target)) {
     meta = JSON.parse(fs.readFileSync(target, "utf8"));
     const dir = path.dirname(target);

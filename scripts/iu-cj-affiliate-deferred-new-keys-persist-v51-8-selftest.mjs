@@ -138,6 +138,59 @@ assert.equal(afterStale.uniqueCount, curKeys.length);
 assert.ok(afterStale.keys.has("7|newOnly"));
 assert.equal(afterStale.keys.has("9|overwrite"), false);
 
+fs.writeFileSync(path.join(dataDir, ".deferred-write.lock"), "held");
+let concurrent = false;
+try {
+  await persistDeferredNewKeys(["9|busy"], { dataDir, runId: "BUSY" });
+} catch (err) {
+  concurrent = err && err.code === "CONCURRENT_DEFERRED_WRITE";
+}
+fs.rmSync(path.join(dataDir, ".deferred-write.lock"), { force: true });
+assert.equal(concurrent, true);
+
+let interrupted = false;
+try {
+  await persistDeferredNewKeys(["8|partial"], {
+    dataDir,
+    runId: "INTERRUPT",
+    afterLedger() {
+      throw new Error("INTERRUPT_AFTER_LEDGER");
+    },
+  });
+} catch (err) {
+  interrupted = err && err.message === "INTERRUPT_AFTER_LEDGER";
+}
+assert.equal(interrupted, true);
+const afterInterrupt = await loadDeferredNewKeySet(dataDir);
+assert.equal(afterInterrupt.meta.generation, 1);
+assert.ok(afterInterrupt.keys.has("7|newOnly"));
+
+const second = await persistDeferredNewKeys(["8|second"], { dataDir, runId: "GEN2" });
+assert.equal(second.generation, 2);
+assert.equal(second.publicGrowthBudgetPatch.deferredNewKeysForPublicPages, false);
+fs.writeFileSync(second.jsonlGzPath, Buffer.from("not-gzip"));
+const restored = await loadDeferredNewKeySet(dataDir);
+assert.equal(restored.meta.generation, 1);
+assert.equal(restored.keys.has("8|second"), false);
+assert.ok(restored.keys.has("7|newOnly"));
+
+const scale = [];
+for (const n of [5000, 25000, 100000, 300000]) {
+  const dir = path.join(tmp, "scale-" + n);
+  const keys = Array.from({ length: n }, (_, i) => "s|" + i);
+  const started = Date.now();
+  const saved = await persistDeferredNewKeys(keys, { dataDir: dir, runId: "SCALE" + n });
+  const fromGz = await loadDeferredNewKeySet(dir);
+  const fromLedger = await loadDeferredNewKeySet(saved.ledgerPath, { preferGz: false });
+  assert.equal(fromGz.uniqueCount, n);
+  assert.equal(fromLedger.uniqueCount, n);
+  assert.equal(fromGz.meta.generation, saved.generation);
+  assert.equal(saved.meta.ledgerSha256.length, 64);
+  assert.equal(saved.meta.jsonlGzSha256.length, 64);
+  assert.equal(saved.publicGrowthBudgetPatch.deferredNewKeysForPublicPages, false);
+  scale.push({ n, ms: Date.now() - started, generation: saved.generation });
+}
+
 console.log(
   JSON.stringify({
     IU_CJ_DEFERRED_NEW_KEYS_PERSIST_V51_8_SELFTEST: "PASS",
@@ -147,6 +200,7 @@ console.log(
     reconcilable: delta.reconcilable,
     declaredDelta: delta.declaredDelta,
     bigUnique: bigLoad.uniqueCount,
+    scale,
     tmp,
   })
 );
