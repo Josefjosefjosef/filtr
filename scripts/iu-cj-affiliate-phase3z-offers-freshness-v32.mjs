@@ -425,7 +425,7 @@ export function applyFreshnessToOffersDocument(doc, opts = {}) {
         fetchedAt: p.fetchedAt || p.lastCheckedAt || null,
         sourceUpdatedAt: fr.sourceUpdatedAt != null ? fr.sourceUpdatedAt : null,
         sourceUpdatedAtStatus: fr.sourceUpdatedAtStatus || SOURCE_UPDATED_AT_STATUS.NOT_PROVIDED,
-        nextCheckAt: fr.nextCheckAt || null,
+        nextCheckAt: p.nextCheckAt || fr.nextCheckAt || null,
         sourceTimestampLabel:
           fr.sourceUpdatedAtStatus === SOURCE_UPDATED_AT_STATUS.PROVIDED
             ? "SOURCE_TIMESTAMP_PROVIDED"
