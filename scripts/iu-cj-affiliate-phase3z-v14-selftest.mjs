@@ -11,10 +11,7 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
-import {
-  buildStaticMainButtonCatalog,
-  assertCatalogDeterministic,
-} from "./iu-cj-affiliate-phase3z-static-main-catalog-v13.mjs";
+import { syncStaticMainButtonsFromRegistry } from "./iu-cj-affiliate-phase3z-static-main-catalog-v13.mjs";
 import {
   evaluateSwapPreflight,
   simulateAtomicSwap,
@@ -56,24 +53,20 @@ expect("browser_no_cj_api", staticCatalog.browserCjApiDependency === false);
 expect("joined_matches_buttons_plus_blockers", joinedCount === buttonCount + Number(staticCatalog.counts?.missingMainButtons || 0), staticCatalog.counts);
 expect("ready_matches_buttons", readyCount === buttonCount, staticCatalog.counts);
 expect("buttons_gt0", buttonCount >= 175, staticCatalog.counts);
-expect("missing_main_blockers", Number(staticCatalog.counts?.missingMainButtons || 0) === 2, staticCatalog.counts);
-expect("buttons_match_registry_ready", buttonCount === 195, staticCatalog.counts);
-expect("joined_match_registry", joinedCount === 197, staticCatalog.counts);
 expect("dups_0", staticCatalog.counts.duplicates === 0);
 expect("paragon_blocked", (staticCatalog.remainingBlockers || []).some((b) => String(b.advertiserId) === "4686326"));
 expect("svelt_elektro", (staticCatalog.buttons || []).some((b) => String(b.advertiserId) === "7995512" && b.sectionId === "aff-elektro"));
 
-const rebuilt = buildStaticMainButtonCatalog(registry);
-/* Static V13 may include manually enrolled MAIN buttons ahead of registry snapshot rebuild. */
+const rebuilt = syncStaticMainButtonsFromRegistry(registry, staticCatalog);
+expect("registry_sync_safe", rebuilt.ok === true && rebuilt.paidPreserved === true, rebuilt.reason);
+expect("sync_count_follows_registry", rebuilt.catalog.counts.buttons === rebuilt.readyCount);
 expect(
-  "rebuild_not_exceed_static",
-  rebuilt.counts.buttons <= buttonCount,
-  { rebuilt: rebuilt.counts.buttons, staticButtons: buttonCount }
+  "onbuy_not_published",
+  !(rebuilt.catalog.buttons || []).some((button) => String(button.advertiserId) === "7417963"),
 );
 expect(
-  "static_includes_registry_ready",
-  rebuilt.counts.buttons === 0 || buttonCount >= rebuilt.counts.buttons,
-  rebuilt.counts
+  "paragon_not_published",
+  !(rebuilt.catalog.buttons || []).some((button) => String(button.advertiserId) === "4686326"),
 );
 
 // Armed production catalog must be detected by disarmed preflight (fail-closed signal).

@@ -165,6 +165,80 @@ export function buildStaticMainButtonCatalog(registry, opts = {}) {
   };
 }
 
+/** Partners that stay unpublished until their own conditions are met. */
+export const STATIC_CATALOG_BLOCKED_UNTIL_CONDITIONS = {
+  "7417963": "ONBUY_SECTION_UNRESOLVED",
+  "4686326": "PARAGON_UNSUITABLE_DESTINATION",
+};
+
+function partnerIsPaid(partner) {
+  const management = String(partner?.management || "");
+  return management === "PAID_RESERVED" || management === "MANUAL_PROTECTED" || partner?.paidPosition === true;
+}
+
+/**
+ * Bring the static button catalog in line with the joined registry.
+ * A new ready partner updates the result. It does not require a frozen button count.
+ * Unsafe inputs keep the previous catalog.
+ */
+export function syncStaticMainButtonsFromRegistry(registry, previousStatic, opts = {}) {
+  const previous = previousStatic && typeof previousStatic === "object" ? previousStatic : null;
+  const keep = (reason) => ({ ok: false, reason, catalog: previous, rollback: true, paidPreserved: true });
+  if (opts.registryAvailable === false) return keep("REGISTRY_OUTAGE");
+  if (opts.corruptSnapshot === true) return keep("CORRUPT_SNAPSHOT");
+  if (opts.lockHeld === true) return keep("CONCURRENT_WRITE");
+  if (!registry || !Array.isArray(registry.partners) || registry.partners.length === 0) return keep("INCOMPLETE_REGISTRY");
+  const prevGen = previous && Number.isFinite(Number(previous.generation)) ? Number(previous.generation) : 0;
+  if (opts.expectedGeneration != null && Number(opts.expectedGeneration) !== prevGen) return keep("STALE_CONCURRENT_WRITE");
+
+  const paidIds = new Set((opts.paidAdvertiserIds || []).map(String));
+  for (const partner of registry.partners) {
+    if (partnerIsPaid(partner)) paidIds.add(String(partner.advertiserId));
+  }
+  const previousById = new Map((previous?.buttons || []).map((button) => [String(button.advertiserId), button]));
+  for (const id of paidIds) {
+    const prev = previousById.get(id);
+    const partner = registry.partners.find((row) => String(row.advertiserId) === id);
+    if (!prev || !partner) continue;
+    if (String(partner.relationshipStatus || "").toLowerCase() === "ended") continue;
+    const nextUrl = String(partner.selectedClickUrl || "");
+    const nextSection = String(partner.sectionId || "");
+    if ((nextUrl && nextUrl !== String(prev.url || "")) || (nextSection && nextSection !== String(prev.sectionId || ""))) {
+      return { ok: false, reason: "PAID_POSITION_PROTECTED", catalog: previous, rollback: true, paidPreserved: true, advertiserId: id };
+    }
+  }
+
+  const conditions = opts.publicationConditionsMet || {};
+  const partners = registry.partners.map((partner) => {
+    const id = String(partner.advertiserId || "");
+    if (STATIC_CATALOG_BLOCKED_UNTIL_CONDITIONS[id] && conditions[id] !== true) {
+      return { ...partner, mainButtonReady: false, mainButtonStatus: STATIC_CATALOG_BLOCKED_UNTIL_CONDITIONS[id] };
+    }
+    if (partner.czMarketEligibility === false || partner.publicPromotionAllowed === false) {
+      return { ...partner, mainButtonReady: false, mainButtonStatus: "CZ_NOT_ELIGIBLE" };
+    }
+    return partner;
+  });
+  const rebuilt = buildStaticMainButtonCatalog({ ...registry, partners }, opts);
+  rebuilt.publicButtonSwapArmed = previous ? previous.publicButtonSwapArmed === true : false;
+  rebuilt.liveEnabled = previous ? previous.liveEnabled === true : false;
+  rebuilt.generation = prevGen + 1;
+  rebuilt.syncedFromRegistry = true;
+  return {
+    ok: true,
+    reason: "SYNCED",
+    catalog: rebuilt,
+    readyCount: rebuilt.counts.buttons,
+    rollback: false,
+    paidPreserved: true,
+    generation: rebuilt.generation,
+  };
+}
+
+export function rollbackStaticMainButtons(previousStatic) {
+  return { ok: true, reason: "ROLLBACK", catalog: previousStatic || null, rollback: true };
+}
+
 /** Preview wrapper — never arms swap; for visual/inventory QA only. */
 export function buildStaticMainButtonPreview(catalog) {
   return {
@@ -215,6 +289,18 @@ function main() {
   }
 
   const titles = sectionTitleMap(ROOT);
+  if (argv.includes("--sync-registry")) {
+    const previous = readJson(outStatic);
+    const synced = syncStaticMainButtonsFromRegistry(registry, previous, { sectionTitles: titles });
+    if (!synced.ok) {
+      console.error(JSON.stringify({ ok: false, reason: synced.reason }));
+      process.exit(1);
+    }
+    const writeRepo = argv.includes("--write-repo") || process.env.IU_CJ_PHASE3Z_WRITE_REPO === "1";
+    if (writeRepo) writeJson(outStatic, synced.catalog);
+    console.log(JSON.stringify({ ok: true, buttons: synced.catalog.counts.buttons, generation: synced.generation, wrote: writeRepo }));
+    return;
+  }
   const catalog = buildStaticMainButtonCatalog(registry, { sectionTitles: titles });
   const preview = buildStaticMainButtonPreview(catalog);
   const again = buildStaticMainButtonCatalog(registry, {

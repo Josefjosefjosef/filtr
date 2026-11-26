@@ -1,0 +1,133 @@
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import {
+  rollbackStaticMainButtons,
+  syncStaticMainButtonsFromRegistry,
+} from "./iu-cj-affiliate-phase3z-static-main-catalog-v13.mjs";
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const click = "https://www.anrdoezrs.net/click-101883843-12920057";
+
+function partner(id, extra = {}) {
+  return {
+    advertiserId: String(id),
+    relationshipStatus: "joined",
+    mainButtonReady: true,
+    selectedClickUrl: click,
+    sectionId: "aff-test",
+    displayNameCs: "Partner " + id,
+    management: "CJ_MANAGED",
+    ...extra,
+  };
+}
+
+function sync(partners, previous, opts) {
+  return syncStaticMainButtonsFromRegistry({ partners }, previous, opts);
+}
+
+const previous = {
+  generation: 4,
+  publicButtonSwapArmed: true,
+  liveEnabled: true,
+  buttons: [partner("1")].map((row) => ({
+    advertiserId: row.advertiserId,
+    title: row.displayNameCs,
+    url: row.selectedClickUrl,
+    sectionId: row.sectionId,
+  })),
+};
+
+const one = sync([partner("1")], previous);
+assert.equal(one.ok, true);
+assert.equal(one.catalog.counts.buttons, 1);
+
+const added = sync([partner("1"), partner("2"), partner("3")], one.catalog);
+assert.equal(added.ok, true);
+assert.equal(added.catalog.counts.buttons, 3);
+
+const ended = sync([partner("1"), partner("2", { relationshipStatus: "ended", mainButtonReady: false })], added.catalog);
+assert.equal(ended.catalog.buttons.some((button) => button.advertiserId === "2"), false);
+
+const nextUrl = "https://www.jdoqocy.com/click-101883843-15273907";
+const urlChanged = sync([partner("1", { selectedClickUrl: nextUrl })], one.catalog);
+assert.equal(urlChanged.catalog.buttons[0].url, nextUrl);
+
+const sectionChanged = sync([partner("1", { sectionId: "aff-moda" })], one.catalog);
+assert.equal(sectionChanged.catalog.buttons[0].sectionId, "aff-moda");
+
+const czBlocked = sync([partner("1", { czMarketEligibility: false })], one.catalog);
+assert.equal(czBlocked.catalog.counts.buttons, 0);
+assert.equal(czBlocked.catalog.remainingBlockers[0].status, "CZ_NOT_ELIGIBLE");
+
+const outage = sync([partner("1")], previous, { registryAvailable: false });
+assert.equal(outage.ok, false);
+assert.equal(outage.reason, "REGISTRY_OUTAGE");
+assert.equal(outage.catalog, previous);
+
+const incomplete = syncStaticMainButtonsFromRegistry({ partners: [] }, previous);
+assert.equal(incomplete.reason, "INCOMPLETE_REGISTRY");
+assert.equal(incomplete.catalog, previous);
+
+const corrupt = sync([partner("1")], previous, { corruptSnapshot: true });
+assert.equal(corrupt.reason, "CORRUPT_SNAPSHOT");
+assert.equal(corrupt.catalog, previous);
+
+const stale = sync([partner("1")], previous, { expectedGeneration: 1 });
+assert.equal(stale.reason, "STALE_CONCURRENT_WRITE");
+assert.equal(stale.catalog, previous);
+
+const concurrent = sync([partner("1")], previous, { lockHeld: true });
+assert.equal(concurrent.reason, "CONCURRENT_WRITE");
+
+const paidPrevious = {
+  ...previous,
+  buttons: [{ advertiserId: "9", title: "Paid", url: click, sectionId: "aff-test" }],
+};
+const paid = sync(
+  [partner("9", { management: "PAID_RESERVED", selectedClickUrl: nextUrl })],
+  paidPrevious,
+);
+assert.equal(paid.ok, false);
+assert.equal(paid.reason, "PAID_POSITION_PROTECTED");
+assert.equal(paid.catalog, paidPrevious);
+
+const rolled = rollbackStaticMainButtons(previous);
+assert.equal(rolled.ok, true);
+assert.equal(rolled.catalog, previous);
+
+const onbuy = sync([partner("7417963", { displayNameCs: "OnBuy EU", mainButtonReady: true })], previous);
+assert.equal(onbuy.catalog.buttons.some((button) => button.advertiserId === "7417963"), false);
+const paragon = sync([partner("4686326", { displayNameCs: "Paragon", mainButtonReady: true })], previous);
+assert.equal(paragon.catalog.buttons.some((button) => button.advertiserId === "4686326"), false);
+
+const registry = JSON.parse(fs.readFileSync(path.join(root, "projects/data/iu-affiliate-cj-partner-registry-v1.json"), "utf8"));
+const staticCatalog = JSON.parse(fs.readFileSync(path.join(root, "projects/data/iu-affiliate-cj-main-buttons-static-v13.json"), "utf8"));
+const current = syncStaticMainButtonsFromRegistry(registry, staticCatalog);
+assert.equal(current.ok, true);
+assert.equal(current.catalog.buttons.some((button) => button.advertiserId === "7417963"), false);
+assert.equal(current.catalog.buttons.some((button) => button.advertiserId === "4686326"), false);
+const start = current.catalog.counts.buttons;
+const sizes = [];
+for (const target of [start + 1, 200, 250, 500]) {
+  const extra = [];
+  for (let i = start; i < target; i += 1) {
+    extra.push(partner(900000 + i, { displayNameCs: "Scale " + i, sectionId: "aff-scale" }));
+  }
+  const grown = syncStaticMainButtonsFromRegistry(
+    { ...registry, partners: registry.partners.concat(extra) },
+    current.catalog,
+  );
+  assert.equal(grown.ok, true);
+  assert.equal(grown.catalog.counts.buttons, target);
+  sizes.push(target);
+}
+
+console.log(JSON.stringify({
+  IU_CJ_STATIC_CATALOG_SYNC_SELFTEST: "PASS",
+  start,
+  sizes,
+  onbuyPublished: false,
+  paragonPublished: false,
+}));
