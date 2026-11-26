@@ -237,16 +237,31 @@ try {
   if (typeof window !== "undefined") window.__iuFoldCsSharedImpl = iuFoldCsShared;
 } catch (_) {}
 
-/* P0: reload always returns to top (like seznam.cz) */
+function iuReloadRestoresSection() {
+  try {
+    var nav = performance.getEntriesByType("navigation")[0];
+    if (!nav || nav.type !== "reload") return false;
+    if (typeof window.iuScrollRestoreRequest !== "function") return false;
+    return window.iuScrollRestoreRequest() === true;
+  } catch (_) {
+    return false;
+  }
+}
+
+/* P0: history.scrollRestoration stays manual. Reload of a saved section restores that position. */
 try {
   if (typeof history !== "undefined" && "scrollRestoration" in history) history.scrollRestoration = "manual";
   if (typeof window !== "undefined") {
     window.scrollTo(0, 0);
-    window.addEventListener("load", function(){ window.scrollTo(0, 0); });
-    /* P0 scroll restore: bfcache return (ev.persisted) keeps the browser-preserved position —
-       forcing top here erased scroll on Back from an external page. Reload stays top via "load". */
-    window.addEventListener("pageshow", function(ev){
+    window.addEventListener("load", function () {
+      if (iuReloadRestoresSection()) return;
+      window.scrollTo(0, 0);
+    });
+    /* P0 scroll restore: bfcache return (ev.persisted) keeps the browser-preserved position.
+       A reload of a section restores the saved position. Other loads still start at the top. */
+    window.addEventListener("pageshow", function (ev) {
       if (ev && ev.persisted) return;
+      if (iuReloadRestoresSection()) return;
       try {
         if (sessionStorage.getItem("iu_external_nav_armed") === "1") return;
         if (sessionStorage.getItem("iuPwaExternalReturnMainScrollY")) return;
@@ -410,13 +425,20 @@ try {
   function iuSrMaxMainScrollY() {
     try {
       var srRoot = iuSrScrollRoot();
-      var doc = srRoot || document.scrollingElement || document.documentElement;
-      var viewH = srRoot ? srRoot.clientHeight : (window.innerHeight || 0);
-      try {
-        var vv = window.visualViewport;
-        if (!srRoot && vv && vv.height) viewH = Math.max(viewH, Math.round(vv.height));
-      } catch (_) {}
-      return doc ? Math.max(0, doc.scrollHeight - viewH) : 0;
+      if (srRoot) return Math.max(0, srRoot.scrollHeight - srRoot.clientHeight);
+      /* Desktop keeps overflow on body while html is overflow hidden.
+         document.scrollingElement is then the html element and reports no
+         scroll room, so a reload restore waited until the 6 s timeout. */
+      var best = 0;
+      function consider(el) {
+        if (!el) return;
+        var room = Math.max(0, (el.scrollHeight || 0) - (el.clientHeight || 0));
+        if (room > best) best = room;
+      }
+      consider(document.scrollingElement);
+      consider(document.documentElement);
+      consider(document.body);
+      return best;
     } catch (_) {
       return 0;
     }
@@ -452,8 +474,9 @@ try {
     /* HOLD until the window expires: the back-navigation re-render (view swap, async feed batches,
        mobile shell sync) can scroll to 0 AFTER a successful restore — a one-shot restore loses. */
     var maxY = iuSrMaxMainScrollY();
-    if (maxY >= target - 2 && Math.abs(iuSrGetY() - target) > 2) {
-      iuSrSetY(target);
+    var goal = Math.min(target, maxY);
+    if (goal > 0 && Math.abs(iuSrGetY() - goal) > 2) {
+      iuSrSetY(goal);
     }
     try { requestAnimationFrame(iuSrRestoreTick); } catch (_) { iuSrCancelRestore(); }
   }
@@ -598,6 +621,13 @@ try {
   window.addEventListener("popstate", function () {
     try { iuSrRequestRestore(iuSrRouteKey()); } catch (_) {}
   });
+  /* Arm a reload restore before the offers list paints. The load listener is
+     too late: the list otherwise lays out at scroll 0 and a later body scroll
+     leaves the saved position on the chips above the products. */
+  try {
+    var navEarly = performance.getEntriesByType("navigation")[0];
+    if (navEarly && navEarly.type === "reload") iuSrRequestRestore(iuSrRouteKey());
+  } catch (_) {}
 })();
 
 // === MAINTENANCE
