@@ -237,16 +237,31 @@ try {
   if (typeof window !== "undefined") window.__iuFoldCsSharedImpl = iuFoldCsShared;
 } catch (_) {}
 
-/* P0: reload always returns to top (like seznam.cz) */
+function iuReloadRestoresSection() {
+  try {
+    var nav = performance.getEntriesByType("navigation")[0];
+    if (!nav || nav.type !== "reload") return false;
+    if (typeof window.iuScrollRestoreRequest !== "function") return false;
+    return window.iuScrollRestoreRequest() === true;
+  } catch (_) {
+    return false;
+  }
+}
+
+/* P0: history.scrollRestoration stays manual. Reload of a saved section restores that position. */
 try {
   if (typeof history !== "undefined" && "scrollRestoration" in history) history.scrollRestoration = "manual";
   if (typeof window !== "undefined") {
     window.scrollTo(0, 0);
-    window.addEventListener("load", function(){ window.scrollTo(0, 0); });
-    /* P0 scroll restore: bfcache return (ev.persisted) keeps the browser-preserved position —
-       forcing top here erased scroll on Back from an external page. Reload stays top via "load". */
-    window.addEventListener("pageshow", function(ev){
+    window.addEventListener("load", function () {
+      if (iuReloadRestoresSection()) return;
+      window.scrollTo(0, 0);
+    });
+    /* P0 scroll restore: bfcache return (ev.persisted) keeps the browser-preserved position.
+       A reload of a section restores the saved position. Other loads still start at the top. */
+    window.addEventListener("pageshow", function (ev) {
       if (ev && ev.persisted) return;
+      if (iuReloadRestoresSection()) return;
       try {
         if (sessionStorage.getItem("iu_external_nav_armed") === "1") return;
         if (sessionStorage.getItem("iuPwaExternalReturnMainScrollY")) return;

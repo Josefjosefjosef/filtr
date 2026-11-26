@@ -462,6 +462,38 @@
   /* DOM window, not a catalog cap. The user can still reach every eligible card; older cards leave the DOM. */
   var PRODUCT_DOM_WINDOW = 48;
 
+  /* Row-based window. A CSS grid shows several cards per row, so a spacer must
+     grow by row height, not by the sum of every removed card. */
+  function iuAffiliateWindowPlan(input) {
+    var count = Math.max(0, (input && input.count) || 0);
+    var columns = Math.max(1, (input && input.columns) || 1);
+    var rowHeight = input && input.rowHeight > 0 ? input.rowHeight : 220;
+    var windowSize = Math.max(columns, (input && input.windowSize) || PRODUCT_DOM_WINDOW);
+    var into = Math.max(0, (input && input.scrollIntoList) || 0);
+    var rows = count === 0 ? 0 : Math.ceil(count / columns);
+    var startRow = rowHeight > 0 ? Math.floor(into / rowHeight) : 0;
+    if (startRow < 0) startRow = 0;
+    var start = startRow * columns;
+    var maxStart = Math.max(0, count - windowSize);
+    if (start > maxStart) start = maxStart - (maxStart % columns);
+    if (start < 0) start = 0;
+    var end = Math.min(count, start + windowSize);
+    var topRows = Math.floor(start / columns);
+    var renderedRows = end > start ? Math.ceil((end - start) / columns) : 0;
+    var bottomRows = Math.max(0, rows - topRows - renderedRows);
+    return {
+      start: start,
+      end: end,
+      columns: columns,
+      topPx: topRows * rowHeight,
+      bottomPx: bottomRows * rowHeight,
+      totalPx: rows * rowHeight,
+    };
+  }
+  try {
+    window.iuAffiliateWindowPlan = iuAffiliateWindowPlan;
+  } catch (_) {}
+
   function buildProductCard(c, preview) {
     var el = document.createElement("article");
     el.className = "iuAffiliatePhase2Offers__card";
@@ -573,8 +605,6 @@
     host.appendChild(grid);
 
     var shown = 0;
-    var sentinel = null;
-    var io = null;
 
     function appendRange(from, to) {
       var end = Math.min(to, list.length);
@@ -587,101 +617,130 @@
       return end - from;
     }
 
-    var spacer = document.createElement("div");
-    spacer.className = "iuAffiliatePhase2Offers__windowSpacer";
-    spacer.setAttribute("aria-hidden", "true");
-    spacer.style.cssText = "height:0;width:100%;pointer-events:none;";
-    host.insertBefore(spacer, grid);
+    var topSpacer = document.createElement("div");
+    topSpacer.className = "iuAffiliatePhase2Offers__windowSpacer";
+    topSpacer.setAttribute("aria-hidden", "true");
+    topSpacer.style.cssText = "height:0;width:100%;pointer-events:none;overflow:hidden;";
+    var bottomSpacer = document.createElement("div");
+    bottomSpacer.className = "iuAffiliatePhase2Offers__windowSpacer";
+    bottomSpacer.setAttribute("aria-hidden", "true");
+    bottomSpacer.style.cssText = "height:0;width:100%;pointer-events:none;overflow:hidden;";
+    host.insertBefore(topSpacer, grid);
+    host.appendChild(bottomSpacer);
 
-    function resetWindow() {
-      spacer.style.height = "0px";
+    var windowStart = 0;
+    var rowHeight = 0;
+    var lastGrowY = -1;
+    var painting = false;
+    var scrollBound = false;
+
+    function columnCount() {
+      var cols = 1;
+      try {
+        var tpl = getComputedStyle(grid).gridTemplateColumns || "";
+        var parts = tpl.split(" ").filter(function (part) { return part && part !== "/"; });
+        if (parts.length > 1) cols = parts.length;
+      } catch (_) {}
+      return cols;
     }
 
-    function trimToWindow() {
-      var cards = grid.children;
-      while (cards.length > PRODUCT_DOM_WINDOW) {
-        var first = cards[0];
-        var h = 220;
-        try {
-          if (first.getBoundingClientRect) {
-            var measured = first.getBoundingClientRect().height;
-            if (measured > 0) h = measured;
-          }
-        } catch (_) {}
-        var prev = parseFloat(spacer.style.height) || 0;
-        spacer.style.height = prev + h + "px";
-        grid.removeChild(first);
-      }
+    function measuredRow() {
+      if (rowHeight >= 80 && rowHeight <= 640) return rowHeight;
+      var card = grid.querySelector(".iuAffiliatePhase2Offers__card");
+      var h = 0;
+      var gap = 14;
+      try {
+        if (card && card.getBoundingClientRect) h = card.getBoundingClientRect().height;
+      } catch (_) {}
+      try {
+        var g = parseFloat(getComputedStyle(grid).rowGap);
+        if (g > 0) gap = g;
+      } catch (_) {}
+      if (h >= 80 && h <= 640) rowHeight = h + gap;
+      else rowHeight = 220;
+      return rowHeight;
+    }
+
+    function scrollY() {
+      var y = 0;
+      try { y = Math.max(y, window.scrollY || 0); } catch (_) {}
+      try { if (document.body) y = Math.max(y, document.body.scrollTop || 0); } catch (_) {}
+      try {
+        var se = document.scrollingElement;
+        if (se) y = Math.max(y, se.scrollTop || 0);
+      } catch (_) {}
+      try {
+        var lc = document.getElementById("leftContent");
+        if (lc) y = Math.max(y, lc.scrollTop || 0);
+      } catch (_) {}
+      return y;
+    }
+
+    function paintWindow() {
+      var plan = iuAffiliateWindowPlan({
+        count: shown,
+        columns: columnCount(),
+        rowHeight: measuredRow(),
+        windowSize: PRODUCT_DOM_WINDOW,
+        scrollIntoList: Math.max(0, scrollY() - (host.getBoundingClientRect().top + scrollY())),
+      });
+      windowStart = plan.start;
+      grid.textContent = "";
+      appendRange(plan.start, plan.end);
+      topSpacer.style.height = plan.topPx + "px";
+      bottomSpacer.style.height = plan.bottomPx + "px";
+    }
+
+    function bindScroll() {
+      if (scrollBound) return;
+      scrollBound = true;
+      var onScroll = function () {
+        if (painting || shown <= visible) return;
+        var y = scrollY();
+        var into = 0;
+        try { into = Math.max(0, y - (host.getBoundingClientRect().top + y)); } catch (_) {}
+        var row = measuredRow();
+        var plan = iuAffiliateWindowPlan({
+          count: shown,
+          columns: columnCount(),
+          rowHeight: row,
+          windowSize: PRODUCT_DOM_WINDOW,
+          scrollIntoList: into,
+        });
+        var viewH = 800;
+        try { viewH = window.innerHeight || viewH; } catch (_) {}
+        var grew = false;
+        if (shown < list.length && into + viewH > plan.totalPx - row * 2 && y >= lastGrowY + row) {
+          lastGrowY = y;
+          shown = Math.min(list.length, shown + batchSize);
+          grew = true;
+        }
+        if (!grew && plan.start === windowStart) return;
+        painting = true;
+        try { paintWindow(); } finally { painting = false; }
+      };
+      try { window.addEventListener("scroll", onScroll, { passive: true }); } catch (_) {}
+      try { document.addEventListener("scroll", onScroll, { passive: true, capture: true }); } catch (_) {}
     }
 
     function paintInitial() {
-      stopSentinel();
-      resetWindow();
-      grid.innerHTML = "";
+      grid.textContent = "";
       shown = appendRange(0, visible);
+      windowStart = 0;
+      lastGrowY = -1;
+      rowHeight = 0;
+      topSpacer.style.height = "0px";
+      bottomSpacer.style.height = "0px";
     }
 
     function revealNextBatch() {
       if (shown >= list.length) return 0;
-      var added = appendRange(shown, shown + batchSize);
-      shown += added;
-      trimToWindow();
-      return added;
-    }
-
-    function stopSentinel() {
-      if (io) {
-        try {
-          io.disconnect();
-        } catch (_) {}
-        io = null;
-      }
-      if (sentinel && sentinel.parentNode) {
-        sentinel.parentNode.removeChild(sentinel);
-      }
-      sentinel = null;
-    }
-
-    function ensureSentinel() {
-      /* Sentinel only after the user expands past the intro 3 — never auto-bypass first click. */
-      if (shown <= visible || shown >= list.length || truncated) {
-        stopSentinel();
-        return;
-      }
-      if (!sentinel) {
-        sentinel = document.createElement("div");
-        sentinel.className = "iuAffiliatePhase2Offers__sentinel";
-        sentinel.setAttribute("data-iu-aff-batch-sentinel", "1");
-        sentinel.setAttribute("aria-hidden", "true");
-        sentinel.style.cssText = "height:1px;width:100%;pointer-events:none;";
-        host.appendChild(sentinel);
-      } else if (sentinel.parentNode !== host) {
-        host.appendChild(sentinel);
-      }
-      /* Keep sentinel after the more-button when both exist. */
-      if (btn && btn.parentNode === host) {
-        host.appendChild(btn);
-        host.appendChild(sentinel);
-      }
-      if (!io && typeof IntersectionObserver === "function") {
-        io = new IntersectionObserver(
-          function (entries) {
-            var hit = false;
-            for (var ei = 0; ei < entries.length; ei++) {
-              if (entries[ei] && entries[ei].isIntersecting) {
-                hit = true;
-                break;
-              }
-            }
-            if (!hit || loading || truncated || shown >= list.length) return;
-            revealNextBatch();
-            syncMoreButton();
-            if (shown >= list.length) stopSentinel();
-          },
-          { root: null, rootMargin: "400px 0px", threshold: 0 }
-        );
-        io.observe(sentinel);
-      }
+      var before = shown;
+      shown = Math.min(list.length, shown + batchSize);
+      painting = true;
+      try { paintWindow(); } finally { painting = false; }
+      bindScroll();
+      return shown - before;
     }
 
     var moreLabel = (display && display.showMoreLabel) || "Zobrazit další";
@@ -699,20 +758,31 @@
         btn.disabled = false;
         btn.textContent = moreLabel;
         btn.setAttribute("data-iu-aff-more-mode", truncated ? "load" : "batch");
-        ensureSentinel();
       } else if (list.length > visible) {
-        stopSentinel();
         btn.hidden = false;
         btn.disabled = false;
         btn.textContent = "Skrýt další";
         btn.setAttribute("data-iu-aff-more-mode", "collapse");
       } else {
-        stopSentinel();
         btn.hidden = true;
       }
     }
 
     paintInitial();
+    try {
+      requestAnimationFrame(function () {
+        var pending = window.__iuScrollRestorePendingNav;
+        if (!pending || !(Number(pending.y) > 400) || list.length <= visible) return;
+        var row = measuredRow();
+        var cols = columnCount();
+        var rowsNeeded = Math.ceil(Number(pending.y) / row) + 1;
+        shown = Math.min(list.length, Math.max(shown, rowsNeeded * cols));
+        painting = true;
+        try { paintWindow(); } finally { painting = false; }
+        bindScroll();
+        syncMoreButton();
+      });
+    } catch (_) {}
 
     if (list.length > visible || truncated) {
       btn = document.createElement("button");
@@ -749,7 +819,6 @@
             loading = false;
             btn.disabled = false;
             if (list.length <= visible) {
-              stopSentinel();
               if (btn.parentNode) btn.parentNode.removeChild(btn);
               btn = null;
               return;
