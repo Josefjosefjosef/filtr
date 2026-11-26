@@ -76,7 +76,9 @@ export function buildStaticMainButtonCatalog(registry, opts = {}) {
       continue;
     }
     if (!advId || seen.has(advId)) continue;
-    const url = PROTECTED_SLOT_CLICK_URLS[advId] || String(p.selectedClickUrl || "");
+    const rawUrl = String(p.selectedClickUrl || "");
+    const protectedSlot = PROTECTED_SLOT_CLICK_IDENTITY[advId];
+    const url = protectedSlot ? (sameProtectedClick(rawUrl, protectedSlot) ? rawUrl : "") : rawUrl;
     const sectionId = String(p.sectionId || "");
     const title = String(p.displayNameCs || p.cjName || p.advertiserName || "").trim();
     if (!url || !isCjTrackingUrl(url) || !sectionId || !title) {
@@ -171,11 +173,29 @@ export const STATIC_CATALOG_BLOCKED_UNTIL_CONDITIONS = {
   "4686326": "PARAGON_UNSUITABLE_DESTINATION",
 };
 
-/** Slot guards pin these click hosts. A registry host rotation must not move them. */
-export const PROTECTED_SLOT_CLICK_URLS = {
-  "5096493": "https://www.anrdoezrs.net/click-101883843-13386171-1779903990000",
-  "6130482": "https://www.kqzyfj.com/click-101883843-15237230-1753820095000",
+/** Protected slots keep publisher and link id. CJ may rotate the click host. */
+export const PROTECTED_SLOT_CLICK_IDENTITY = {
+  "5096493": { publisherId: "101883843", linkId: "13386171" },
+  "6130482": { publisherId: "101883843", linkId: "15237230" },
 };
+
+export function cjClickIdentity(url) {
+  const match = String(url || "").match(
+    /^https:\/\/www\.(anrdoezrs|jdoqocy|dpbolvw|kqzyfj|tkqlhce)\.(com|net)\/click-(\d+)-(\d+)(?:-(\d+))?/i
+  );
+  if (!match) return null;
+  return {
+    host: match[1].toLowerCase() + "." + match[2].toLowerCase(),
+    publisherId: match[3],
+    linkId: match[4],
+    suffix: match[5] || "",
+  };
+}
+
+export function sameProtectedClick(url, identity) {
+  const parsed = cjClickIdentity(url);
+  return !!parsed && parsed.publisherId === identity.publisherId && parsed.linkId === identity.linkId;
+}
 
 function partnerIsPaid(partner) {
   const management = String(partner?.management || "");

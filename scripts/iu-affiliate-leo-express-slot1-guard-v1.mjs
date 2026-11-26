@@ -11,6 +11,7 @@ import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import { bootstrapGuardContext, bootstrapGuardPage } from "./guards/guard-playwright-bootstrap.mjs";
 import { listenGuardServer } from "./guards/guard-repo-static-server.mjs";
+import { sameProtectedClick } from "./iu-cj-affiliate-phase3z-static-main-catalog-v13.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
@@ -23,6 +24,7 @@ const SECTION = "aff-letenky";
 const SECTION_TITLE = "Doprava a cestování";
 const PARTNER_TITLE = "Leo Express Europe";
 const CJ_URL = "https://www.kqzyfj.com/click-101883843-15237230-1753820095000";
+const SLOT_IDENTITY = { publisherId: "101883843", linkId: "15237230" };
 const DISCLOSURE =
   "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
 const REPORT = path.join(
@@ -265,7 +267,7 @@ try {
     ok(tag + ":slots_ready_ge_1", snap.slots >= 1, "n=" + snap.slots);
     ok(tag + ":empty_visible_0", (snap.emptyVisible != null ? snap.emptyVisible : 0) === 0, "empty=" + (snap.emptyVisible != null ? snap.emptyVisible : 0));
     ok(tag + ":slot1_text", snap.firstText === PARTNER_TITLE, snap.firstText);
-    ok(tag + ":slot1_href", snap.firstHref === CJ_URL, snap.firstHref);
+    ok(tag + ":slot1_href", sameProtectedClick(snap.firstHref, SLOT_IDENTITY), snap.firstHref);
     ok(tag + ":slot1_target", snap.firstTarget === "_blank", snap.firstTarget);
     ok(tag + ":slot1_rel_sponsored", /\bsponsored\b/.test(snap.firstRel), snap.firstRel);
     ok(tag + ":slot1_rel_noopener", /\bnoopener\b/.test(snap.firstRel), snap.firstRel);

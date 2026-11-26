@@ -4,6 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   rollbackStaticMainButtons,
+  sameProtectedClick,
   syncStaticMainButtonsFromRegistry,
 } from "./iu-cj-affiliate-phase3z-static-main-catalog-v13.mjs";
 
@@ -109,9 +110,27 @@ assert.equal(current.ok, true);
 assert.equal(current.catalog.buttons.some((button) => button.advertiserId === "7417963"), false);
 assert.equal(current.catalog.buttons.some((button) => button.advertiserId === "4686326"), false);
 const booking = current.catalog.buttons.find((button) => button.advertiserId === "5096493");
-assert.equal(booking.url, "https://www.anrdoezrs.net/click-101883843-13386171-1779903990000");
+assert.equal(sameProtectedClick(booking.url, { publisherId: "101883843", linkId: "13386171" }), true);
+assert.equal(booking.url, "https://www.tkqlhce.com/click-101883843-13386171-1779903990000");
 const leo = current.catalog.buttons.find((button) => button.advertiserId === "6130482");
-assert.equal(leo.url, "https://www.kqzyfj.com/click-101883843-15237230-1753820095000");
+assert.equal(sameProtectedClick(leo.url, { publisherId: "101883843", linkId: "15237230" }), true);
+assert.equal(leo.url, "https://www.dpbolvw.net/click-101883843-15237230-1753820095000");
+const rotated = sync([
+  partner("5096493", {
+    displayNameCs: "Booking.com",
+    sectionId: "aff-ubytovani-hotely",
+    selectedClickUrl: "https://www.kqzyfj.com/click-101883843-13386171-1779903990000",
+  }),
+], previous);
+assert.equal(rotated.catalog.buttons[0].url, "https://www.kqzyfj.com/click-101883843-13386171-1779903990000");
+const wrongLink = sync([
+  partner("5096493", {
+    displayNameCs: "Booking.com",
+    sectionId: "aff-ubytovani-hotely",
+    selectedClickUrl: "https://www.tkqlhce.com/click-101883843-1-1",
+  }),
+], previous);
+assert.equal(wrongLink.catalog.buttons.some((button) => button.advertiserId === "5096493"), false);
 const start = current.catalog.counts.buttons;
 const sizes = [];
 for (const target of [start + 1, 200, 250, 500]) {
