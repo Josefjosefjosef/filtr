@@ -60,6 +60,19 @@ function makePrev(n = 10) {
     makeProduct(1, "y", { affiliateUrl: "https://evil.example/click" }),
   );
   assert.equal(bad.rejectReason, "BAD_AFFILIATE_URL");
+  const missingWww = validateShadowCandidate(
+    makeProduct(1, "www", { affiliateUrl: "https://kqzyfj.com/click-101883843-1" }),
+  );
+  assert.equal(missingWww.rejectReason, "BAD_AFFILIATE_URL");
+  const outsideHost = validateShadowCandidate(
+    makeProduct(1, "host", { affiliateUrl: "https://www.pjatr.com/click-101883843-1", currency: "EUR" }),
+  );
+  assert.equal(outsideHost.rejectReason, "BAD_AFFILIATE_URL");
+  assert.equal(outsideHost.ok, false);
+  const notAClick = validateShadowCandidate(
+    makeProduct(1, "path", { affiliateUrl: "https://www.kqzyfj.com/catalog/item" }),
+  );
+  assert.equal(notAClick.rejectReason, "BAD_AFFILIATE_URL");
 }
 
 {
