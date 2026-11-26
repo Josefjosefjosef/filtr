@@ -121,6 +121,21 @@ for (const keep of ["124 \u00d7 124", "\u00dA\u017easn\u00fd", "Stra\u00dfe 5\u0
   // truncated mid-character: "ž" = C5 BE → CP852 "Ï" bytes; cut after lead byte C5 (CP852 0xC5 = \u253c)
   const trunc = normalizeCjProductText("Postel \u00e1\u2502\u2551 ulo\u253c");
   assert(trunc.repaired === false || !trunc.text.includes("\ufffd"), "truncated tail never yields U+FFFD");
+  // Prod 5335380|800000647117: CP852 reverse is clean Czech plus one trailing U+FFFD
+  // (source bytes EF BF BD). Middle U+FFFD still refuses the whole string.
+  const fffdMarker =
+    CP852_80_FF[0xef - 0x80] + CP852_80_FF[0xbf - 0x80] + CP852_80_FF[0xbd - 0x80];
+  const cutGood = "Postel s \u010delem a \u00falo\u017en\u00fdm prostorem";
+  const cutBad = toCp852Mojibake(cutGood + "\uFFFD");
+  assert(cutBad.endsWith(fffdMarker), "fffd marker is EF BF BD via CP852");
+  const cutFixed = tryRepairCp852Utf8Mojibake(cutBad);
+  assert(cutFixed === cutGood, "trailing U+FFFD stripped: " + JSON.stringify(cutFixed));
+  assert(!String(cutFixed).includes("\uFFFD"), "stripped result has no U+FFFD");
+  const cutNorm = normalizeCjProductText(cutBad);
+  assert(cutNorm.repaired === true && cutNorm.text === cutGood, "normalize strips trailing U+FFFD");
+  assert(normalizeCjProductText(cutNorm.text).repaired === false, "trailing-FFFD repair idempotent");
+  const midBad = toCp852Mojibake("Postel \uFFFD \u010delem");
+  assert(tryRepairCp852Utf8Mojibake(midBad) === null, "middle U+FFFD refused");
   const doc2 = { sections: [{ products: [{ title: "ok", ctaLabel: "Zobrazit v\u251c\u017brobek", imageUrl: "https://x/U\u2563\u00fc.jpg" }] }] };
   const p2 = normalizeOffersPublicDocTexts(doc2);
   assert(p2.otherFieldsRepaired === 1 && doc2.sections[0].products[0].ctaLabel === "Zobrazit v\u00fdrobek", "final pass ctaLabel");

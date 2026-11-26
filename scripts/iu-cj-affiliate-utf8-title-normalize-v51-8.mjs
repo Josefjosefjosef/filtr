@@ -98,7 +98,15 @@ export function tryRepairCp852Utf8Mojibake(text) {
   } catch {
     return null;
   }
-  if (!repaired || repaired.includes("\uFFFD")) return null;
+  if (!repaired) return null;
+  if (repaired.includes("\uFFFD")) {
+    // A hard feed cut is often stored as the three UTF-8 bytes of U+FFFD (EF BF BD).
+    // That sequence is complete, so the lead-byte trim above leaves it in place.
+    // Keep the repair only when every U+FFFD is a trailing suffix and the rest is clean.
+    const stripped = repaired.replace(/\uFFFD+$/u, "");
+    if (!stripped || stripped.includes("\uFFFD")) return null;
+    repaired = stripped;
+  }
   if (repaired === input) return null;
   const boxBefore = countBoxDrawing(input);
   const boxAfter = countBoxDrawing(repaired);
