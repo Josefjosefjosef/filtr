@@ -25,6 +25,12 @@ export const REVERIFY_CLASS = Object.freeze({
   KEEP_PENDING: "KEEP_PENDING",
 });
 
+export function reverifyIdentityKey(advertiserId, productId, productVariant) {
+  const base = compoundIdentity(advertiserId, productId);
+  const variant = String(productVariant || "").trim();
+  return variant ? base + "|" + variant : base;
+}
+
 function mapGet(m, k) {
   if (!m) return null;
   if (typeof m.get === "function") return m.get(k) || null;
@@ -52,7 +58,7 @@ export function buildProductReverifyLedger(opts = {}) {
       const adv = p.advertiserId != null ? String(p.advertiserId) : "";
       const pid = p.productId != null ? String(p.productId) : "";
       if (!adv || !pid) continue;
-      const key = compoundIdentity(adv, pid);
+      const key = reverifyIdentityKey(adv, pid, p.productVariant);
       if (seen.has(key)) continue;
       seen.add(key);
 
@@ -196,6 +202,7 @@ export function buildProductReverifyLedger(opts = {}) {
       rows.push({
         advertiserId: adv,
         productId: pid,
+        productVariant: String(p.productVariant || "").trim() || null,
         compoundIdentity: key,
         feedId: p.feedId != null ? p.feedId : null,
         sectionKey: sec.sectionKey || null,
@@ -691,7 +698,7 @@ export function indexProductsByCompoundIdentity(doc) {
       const adv = p.advertiserId != null ? String(p.advertiserId) : "";
       const pid = p.productId != null ? String(p.productId) : "";
       if (!adv || !pid) continue;
-      const key = compoundIdentity(adv, pid);
+      const key = reverifyIdentityKey(adv, pid, p.productVariant);
       if (!m.has(key)) m.set(key, p);
     }
   }
