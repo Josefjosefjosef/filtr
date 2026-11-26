@@ -120,11 +120,16 @@
 }
 .iuAffiliatePhase2Offers__img {
   width: 100%;
+  /* CLS: reserve the full image slot before load / on error (no 0→9rem jump). */
+  height: 9rem;
   max-height: 9rem;
   object-fit: contain;
   margin-bottom: 0.35rem;
   border-radius: 8px;
   background: #f8fafc;
+}
+.iuAffiliatePhase2Offers__img--failed {
+  visibility: hidden; /* keep reserved dimensions; no broken-image glyph */
 }
 .iuAffiliatePhase2Offers__cta,
 .iuAffiliatePhase2Offers__cardLink {
