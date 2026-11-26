@@ -465,6 +465,8 @@
     "iu-cj-affiliate-phase3z-partner-registry-selftest": "node scripts/iu-cj-affiliate-phase3z-partner-registry-v1-selftest.mjs",
     "iu-cj-affiliate-joined-ended-inventory": "node scripts/iu-cj-affiliate-joined-ended-inventory-v1.mjs",
     "iu-cj-affiliate-joined-ended-inventory-selftest": "node scripts/iu-cj-affiliate-joined-ended-inventory-v1-selftest.mjs",
+    "iu-cj-affiliate-joined-partner-recon-export": "node scripts/iu-cj-affiliate-joined-partner-recon-export-v1.mjs",
+    "iu-cj-affiliate-joined-partner-recon-export-selftest": "node scripts/iu-cj-affiliate-joined-partner-recon-export-v1-selftest.mjs",
     "iu-cj-affiliate-phase3z-partner-lifecycle-audit-selftest": "node scripts/iu-cj-affiliate-phase3z-partner-lifecycle-audit-v51-8-selftest.mjs",
     "iu-cj-affiliate-phase3z-main-button-readiness-v12-selftest": "node scripts/iu-cj-affiliate-phase3z-main-button-readiness-v12-selftest.mjs",
     "iu-cj-affiliate-phase3z-v12-attach-main-buttons": "node scripts/iu-cj-affiliate-phase3z-v12-attach-main-buttons.mjs",
@@ -719,13 +721,16 @@
     "iu-cj-affiliate-phase3z-catalog-capacity-model-selftest": "node scripts/iu-cj-affiliate-phase3z-catalog-capacity-model-v51-8-selftest.mjs",
     "iu-cj-affiliate-phase3z-hold-delta-reconcile-selftest": "node scripts/iu-cj-affiliate-phase3z-hold-delta-reconcile-v51-8.mjs",
     "iu-cj-affiliate-utf8-title-normalize-selftest": "node scripts/iu-cj-affiliate-utf8-title-normalize-v51-8-selftest.mjs",
+    "iu-affiliate-phase2-offers-inflight-dedupe-selftest": "node scripts/iu-affiliate-phase2-offers-inflight-dedupe-selftest.mjs",
     "iu-cj-affiliate-sync-phase-observer-selftest": "node scripts/iu-cj-affiliate-sync-phase-observer-v51-8.mjs",
     "iu-cj-affiliate-phase3z-source-current-priority-refresh-selftest": "node scripts/iu-cj-affiliate-phase3z-source-current-priority-refresh-v51-8-selftest.mjs",
     "iu-cj-affiliate-phase3z-source-current-priority-refresh-audit": "node scripts/iu-cj-affiliate-phase3z-source-current-priority-refresh-v51-8.mjs",
     "iu-cj-affiliate-phase3z-catalog-load-harness-selftest": "node scripts/iu-cj-affiliate-phase3z-catalog-load-harness-v51-8.mjs",
     "iu-cj-affiliate-phase3z-catalog-load-harness-scale": "node scripts/iu-cj-affiliate-phase3z-catalog-load-harness-v51-8.mjs --scale",
     "iu-cj-affiliate-phase3z-individual-completeness-audit-selftest": "node scripts/iu-cj-affiliate-phase3z-individual-completeness-audit-v51-8-selftest.mjs",
-    "iu-cj-affiliate-phase3z-individual-completeness-audit": "node scripts/iu-cj-affiliate-phase3z-individual-completeness-audit-v51-8.mjs --file projects/data/iu-affiliate-cj-offers-public-v1.json"
+    "iu-cj-affiliate-phase3z-individual-completeness-audit": "node scripts/iu-cj-affiliate-phase3z-individual-completeness-audit-v51-8.mjs --file projects/data/iu-affiliate-cj-offers-public-v1.json",
+    "iu-cj-robot-master-completion-gate-selftest": "node scripts/iu-cj-robot-master-completion-gate-v1-selftest.mjs",
+    "iu-cj-affiliate-deferred-new-chain-regression-selftest": "node scripts/iu-cj-affiliate-deferred-new-chain-regression-v1.mjs --selftest"
   },
   "devDependencies": {
     "playwright": "^1.49.0",
