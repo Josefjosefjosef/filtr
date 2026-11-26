@@ -233,6 +233,9 @@ const archHttp = prepareCjResponseArchive({ httpStatus: 401, body: "<err/>" });
 expect("archive_401_not_ok", archHttp.ok === false);
 
 expect("verify_url_ok", verifyAffiliateUrl("https://www.anrdoezrs.net/click-101883843-15802025").ok === true);
+expect("verify_qksrv_rejected", verifyAffiliateUrl("https://www.qksrv.net/click-101883843-15802025").ok === false);
+expect("verify_non_www_rejected", verifyAffiliateUrl("https://anrdoezrs.net/click-101883843-15802025").ok === false);
+expect("verify_subdomain_rejected", verifyAffiliateUrl("https://evil.anrdoezrs.net/click-101883843-15802025").ok === false);
 expect("go_off_publish_guard", plan1.publishable === false);
 expect("locks_untouched_note", true);
 expect("zero_live_http", plan1.CJ_LIVE_HTTP_CALLS === 0);

@@ -7,6 +7,7 @@ import {
   validatePatForCjImport,
 } from "./iu-cj-affiliate-phase1-lib.mjs";
 import { normalizeCjProductText } from "./iu-cj-affiliate-utf8-title-normalize-v51-8.mjs";
+import { isCjTrackingUrl } from "./iu-cj-affiliate-catalog-sync-publish-gate-v1.mjs";
 
 export const CJ_GRAPHQL_PRODUCT_URL = "https://ads.api.cj.com/query";
 /** Legacy REST host; DNS ENOTFOUND in current CJ infra — do not use for new probes. */
@@ -20,26 +21,17 @@ export const CJ_LEGACY_PRODUCT_SEARCH_HOST = "product-search.api.cj.com";
  */
 const CLICK_URL_RE = /^https?:\/\/[^/]+\/click-(\d+)-(\d+)(?:-(\d+))?(?:[/?]|$)/i;
 
-/** Documented CJ click redirect host suffixes (not arbitrary third-party domains). */
-export const CJ_TRUSTED_CLICK_HOST_SUFFIXES = [
-  "anrdoezrs.net",
-  "kqzyfj.com",
-  "tkqlhce.com",
-  "jdoqocy.com",
-  "qksrv.net",
-  "emjcd.com",
-  "dpbolvw.net",
-  "apmebf.com",
-  "cj.dotomi.com",
+/** Publication click hosts. A suffix or a non-www host is not a click link. */
+export const CJ_TRUSTED_CLICK_HOSTS = [
+  "www.anrdoezrs.net",
+  "www.jdoqocy.com",
+  "www.dpbolvw.net",
+  "www.kqzyfj.com",
+  "www.tkqlhce.com",
 ];
 
 export function isTrustedCjClickHost(clickUrl) {
-  try {
-    const h = new URL(String(clickUrl)).hostname.toLowerCase().replace(/^www\./, "");
-    return CJ_TRUSTED_CLICK_HOST_SUFFIXES.some((s) => h === s || h.endsWith("." + s));
-  } catch {
-    return false;
-  }
+  return isCjTrackingUrl(clickUrl);
 }
 
 export function parseAffiliateClickUrl(clickUrl, expectedWebsitePid) {
