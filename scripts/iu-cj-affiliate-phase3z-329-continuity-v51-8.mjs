@@ -20,8 +20,10 @@ export const CONTINUITY_STATUS = Object.freeze({
   UNKNOWN: "UNKNOWN",
 });
 
-export function compoundKey(advertiserId, productId) {
-  return String(advertiserId || "") + "|" + String(productId || "");
+export function compoundKey(advertiserId, productId, productVariant) {
+  const base = String(advertiserId || "") + "|" + String(productId || "");
+  const variant = String(productVariant || "").trim();
+  return variant ? base + "|" + variant : base;
 }
 
 export function normalizeKey(k) {
@@ -34,22 +36,54 @@ export function normalizeKey(k) {
 
 function collectDocKeys(doc) {
   const map = new Map();
+  const variantsByBase = new Map();
   for (const sec of doc?.sections || []) {
     for (const p of sec.products || []) {
       if (!p) continue;
-      const raw = compoundKey(p.advertiserId, p.productId);
+      const variant = String(p.productVariant || "").trim();
+      const baseRaw = compoundKey(p.advertiserId, p.productId);
+      const raw = compoundKey(p.advertiserId, p.productId, variant);
       const n = normalizeKey(raw);
-      if (!map.has(n)) {
-        map.set(n, {
-          raw,
-          product: p,
-          hold:
-            p.lkgPublicHold === true ||
-            p.publicationEligibility === "PUBLICATION_HOLD" ||
-            p.publicOffer === false,
-          retained: p.lkgCarried === true || p.catalogStatus === "CATALOG_RETAINED",
-        });
-      }
+      const base = normalizeKey(baseRaw);
+      const entry = {
+        raw,
+        product: p,
+        hold:
+          p.lkgPublicHold === true ||
+          p.publicationEligibility === "PUBLICATION_HOLD" ||
+          p.publicOffer === false,
+        retained: p.lkgCarried === true || p.catalogStatus === "CATALOG_RETAINED",
+        currency: p.currency || null,
+      };
+      const prevExact = map.get(n);
+      if (!prevExact) map.set(n, entry);
+      else prevExact.collision = true;
+      if (!variantsByBase.has(base)) variantsByBase.set(base, []);
+      const list = variantsByBase.get(base);
+      if (!list.includes(variant)) list.push(variant);
+    }
+  }
+  for (const [base, variants] of variantsByBase) {
+    const named = variants.filter((item) => item);
+    if (named.length > 1 || (named.length === 1 && map.has(base))) {
+      const currencies = named.map((item) => {
+        const hit = map.get(normalizeKey(base + "|" + item));
+        return hit?.currency || null;
+      });
+      const prev = map.get(base) || {
+        raw: base,
+        product: null,
+        hold: false,
+        retained: false,
+        currency: null,
+      };
+      prev.collision = true;
+      prev.variants = named;
+      prev.currencies = currencies;
+      map.set(base, prev);
+    } else if (named.length === 1 && !map.has(base)) {
+      const only = map.get(normalizeKey(base + "|" + named[0]));
+      if (only) map.set(base, only);
     }
   }
   return map;
@@ -126,7 +160,10 @@ export function reconstruct329Continuity(input = {}) {
     let status = CONTINUITY_STATUS.UNKNOWN;
     let confidence = "low";
     if (liveHit) {
-      if (liveHit.hold) {
+      if (liveHit.collision) {
+        status = CONTINUITY_STATUS.IDENTITY_COLLISION;
+        confidence = "high";
+      } else if (liveHit.hold) {
         status = CONTINUITY_STATUS.CURRENT_PUBLICATION_HOLD;
         confidence = "high";
       } else if (liveHit.retained) {
@@ -184,6 +221,8 @@ export function reconstruct329Continuity(input = {}) {
         inLkgDoc: !!lkgHit,
         historicalMissHits: histMissHits,
         historicalOfferHits: histOfferHits,
+        variants: liveHit?.variants || null,
+        currencies: liveHit?.currencies || (liveHit?.currency ? [liveHit.currency] : null),
       },
     });
   }
