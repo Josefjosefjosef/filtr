@@ -1034,6 +1034,17 @@
     return "NOTICE";
   }
 
+  /* A failed section fetch must not become an empty clear. Use a document only
+     when that document actually contains the requested section. */
+  function offersFailureDocumentPlan(doc, sectionKey) {
+    if (!doc || doc.liveEnabled !== true || doc.ok === false) return "FAIL";
+    var sections = doc.sections || [];
+    for (var i = 0; i < sections.length; i++) {
+      if (sections[i] && sections[i].sectionKey === sectionKey) return "USE";
+    }
+    return "FAIL";
+  }
+
   function lastGoodRequest(sectionKey) {
     return new Request(OFFERS_SECTION_BASE + encodeURIComponent(sectionKey) + ".json");
   }
@@ -1264,8 +1275,11 @@
   function fetchOffersPublic(sectionKey) {
     if (sectionKey && isSafeSectionKey(sectionKey)) {
       return fetchOffersSectionShard(sectionKey).catch(function () {
-        if (publicCached) return publicCached;
-        return fetchOffersFallback();
+        if (offersFailureDocumentPlan(publicCached, sectionKey) === "USE") return publicCached;
+        return fetchOffersFallback().then(function (doc) {
+          if (offersFailureDocumentPlan(doc, sectionKey) === "USE") return doc;
+          return Promise.reject(new Error("offers_unavailable"));
+        });
       });
     }
     return fetchOffersFallback();
