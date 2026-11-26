@@ -459,6 +459,8 @@
 
   /* After the initial 3 cards, append in batches so large catalogs never mount all DOM at once. */
   var PRODUCT_RENDER_BATCH = 24;
+  /* DOM window, not a catalog cap. The user can still reach every eligible card; older cards leave the DOM. */
+  var PRODUCT_DOM_WINDOW = 48;
 
   function buildProductCard(c, preview) {
     var el = document.createElement("article");
@@ -585,8 +587,36 @@
       return end - from;
     }
 
+    var spacer = document.createElement("div");
+    spacer.className = "iuAffiliatePhase2Offers__windowSpacer";
+    spacer.setAttribute("aria-hidden", "true");
+    spacer.style.cssText = "height:0;width:100%;pointer-events:none;";
+    host.insertBefore(spacer, grid);
+
+    function resetWindow() {
+      spacer.style.height = "0px";
+    }
+
+    function trimToWindow() {
+      var cards = grid.children;
+      while (cards.length > PRODUCT_DOM_WINDOW) {
+        var first = cards[0];
+        var h = 220;
+        try {
+          if (first.getBoundingClientRect) {
+            var measured = first.getBoundingClientRect().height;
+            if (measured > 0) h = measured;
+          }
+        } catch (_) {}
+        var prev = parseFloat(spacer.style.height) || 0;
+        spacer.style.height = prev + h + "px";
+        grid.removeChild(first);
+      }
+    }
+
     function paintInitial() {
       stopSentinel();
+      resetWindow();
       grid.innerHTML = "";
       shown = appendRange(0, visible);
     }
@@ -595,6 +625,7 @@
       if (shown >= list.length) return 0;
       var added = appendRange(shown, shown + batchSize);
       shown += added;
+      trimToWindow();
       return added;
     }
 
