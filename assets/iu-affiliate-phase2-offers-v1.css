@@ -3,9 +3,58 @@
   margin: 1rem 0 1.25rem;
   min-height: 0;
   contain: layout style;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 0px;
 }
 .iuAffiliatePhase2Offers[hidden] {
   display: none !important;
+}
+/* CLS: reserve skeleton only while shard fetch is in flight (not on empty cats). */
+.iuAffiliatePhase2Offers[data-iu-aff-offers-loading="1"] {
+  content-visibility: visible;
+  contain-intrinsic-size: auto 18rem;
+}
+.iuAffiliatePhase2Offers__skel {
+  background: linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%);
+  background-size: 200% 100%;
+  border-radius: 12px;
+  border: 1px solid #e8e8e8;
+  margin-bottom: 1rem;
+}
+.iuAffiliatePhase2Offers__skelAction {
+  min-height: 6.75rem;
+}
+.iuAffiliatePhase2Offers__skelGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  gap: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+.iuAffiliatePhase2Offers__skelCard {
+  margin-bottom: 0;
+  min-height: 8rem;
+  padding: 0.95rem 1.05rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  background: #fff;
+}
+.iuAffiliatePhase2Offers__skelImg {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  max-height: 9rem;
+  border-radius: 8px;
+  background: #e2e8f0;
+}
+.iuAffiliatePhase2Offers__skelLine {
+  height: 0.7rem;
+  border-radius: 4px;
+  border: 0;
+  margin: 0;
+  background: #e2e8f0;
+}
+.iuAffiliatePhase2Offers__skelLine--short {
+  width: 42%;
 }
 .iuAffiliatePhase2Offers__banner {
   font-size: 0.75rem;
@@ -118,15 +167,32 @@
   color: #7a3b00;
   margin-top: 0.35rem;
 }
-.iuAffiliatePhase2Offers__img {
+/* CLS: aspect-ratio slot reserves image box before decode (orthogonal to fixed height). */
+.iuAffiliatePhase2Offers__imgSlot {
   width: 100%;
   /* CLS: reserve the full image slot before load / on error (no 0→9rem jump). */
+  aspect-ratio: 4 / 3;
   height: 9rem;
   max-height: 9rem;
-  object-fit: contain;
   margin-bottom: 0.35rem;
   border-radius: 8px;
   background: #f8fafc;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.iuAffiliatePhase2Offers__img {
+  width: 100%;
+  /* Fill aspect-ratio imgSlot; slot itself caps at 9rem (CLS + #14071). */
+  height: 100%;
+  max-height: 9rem;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+.iuAffiliatePhase2Offers__img--failed {
+  visibility: hidden; /* keep reserved dimensions; no broken-image glyph */
 }
 .iuAffiliatePhase2Offers__img--failed {
   visibility: hidden; /* keep reserved dimensions; no broken-image glyph */
@@ -159,12 +225,14 @@
   outline-offset: 2px;
 }
 @media (max-width: 767px) {
-  .iuAffiliatePhase2Offers__grid {
+  .iuAffiliatePhase2Offers__grid,
+  .iuAffiliatePhase2Offers__skelGrid {
     grid-template-columns: 1fr;
   }
 }
 @media (min-width: 768px) and (max-width: 1023px) {
-  .iuAffiliatePhase2Offers__grid {
+  .iuAffiliatePhase2Offers__grid,
+  .iuAffiliatePhase2Offers__skelGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -195,7 +263,12 @@
     color: #60a5fa;
   }
   .iuAffiliatePhase2Offers__img,
-  .iuAffiliatePhase2Offers__logo {
+  .iuAffiliatePhase2Offers__imgSlot,
+  .iuAffiliatePhase2Offers__logo,
+  .iuAffiliatePhase2Offers__skel,
+  .iuAffiliatePhase2Offers__skelCard,
+  .iuAffiliatePhase2Offers__skelImg,
+  .iuAffiliatePhase2Offers__skelLine {
     background: #27272a;
     border-color: #3f3f46;
   }

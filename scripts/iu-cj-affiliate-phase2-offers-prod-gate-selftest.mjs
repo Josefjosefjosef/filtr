@@ -34,7 +34,7 @@ if (stub.liveEnabled === true) {
 }
 
 /* Minimal DOM + fetch harness */
-const mountState = { html: "", hidden: true, calls: 0 };
+const mountState = { html: "", hidden: true, calls: 0, attrs: Object.create(null) };
 const documentMock = {
   getElementById(id) {
     if (id === "iuAffiliatePhase2Offers") {
@@ -54,6 +54,16 @@ const documentMock = {
         set innerHTML(v) {
           mountState.html = v;
           mountState.calls += 1;
+        },
+        style: { minHeight: "" },
+        setAttribute(k, v) {
+          mountState.attrs[k] = String(v);
+        },
+        removeAttribute(k) {
+          delete mountState.attrs[k];
+        },
+        getAttribute(k) {
+          return Object.prototype.hasOwnProperty.call(mountState.attrs, k) ? mountState.attrs[k] : null;
         },
         insertAdjacentHTML() {
           mountState.calls += 1;
@@ -94,10 +104,22 @@ const documentMock = {
 };
 
 const fetchCalls = [];
+const memoryStore = Object.create(null);
 const sandbox = {
   window: { __iuAffiliatePhase2OffersBooted: false },
   document: documentMock,
   location: { hostname: "www.infouzel.cz", search: "" },
+  sessionStorage: {
+    getItem(k) {
+      return Object.prototype.hasOwnProperty.call(memoryStore, k) ? memoryStore[k] : null;
+    },
+    setItem(k, v) {
+      memoryStore[k] = String(v);
+    },
+    removeItem(k) {
+      delete memoryStore[k];
+    },
+  },
   fetch(url) {
     fetchCalls.push(String(url));
     return Promise.resolve({
