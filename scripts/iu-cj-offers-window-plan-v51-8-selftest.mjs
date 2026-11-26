@@ -53,6 +53,14 @@ assert.equal(seen.size, count);
 
 assert.equal(src.includes("IntersectionObserver"), false);
 assert.equal(src.includes("spacer.style.height = prev + h"), false);
+assert.equal(src.includes("iu-offers-section-last-good-v1"), true);
+const planStart = src.indexOf("function offersOfflinePaintPlan");
+const planEnd = src.indexOf("function lastGoodRequest");
+assert.ok(planStart > 0 && planEnd > planStart);
+const offersOfflinePaintPlan = new Function(src.slice(planStart, planEnd) + "\nreturn offersOfflinePaintPlan;")();
+assert.equal(offersOfflinePaintPlan(true, false), "LAST_GOOD");
+assert.equal(offersOfflinePaintPlan(false, true), "KEEP");
+assert.equal(offersOfflinePaintPlan(false, false), "NOTICE");
 
 console.log(JSON.stringify({
   IU_CJ_OFFERS_WINDOW_SELFTEST: "PASS",

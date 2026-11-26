@@ -1015,6 +1015,65 @@
       });
   }
 
+  var OFFERS_LAST_GOOD_CACHE = "iu-offers-section-last-good-v1";
+
+  function offersOfflinePaintPlan(hasLastGood, hasVisibleCards) {
+    if (hasLastGood) return "LAST_GOOD";
+    if (hasVisibleCards) return "KEEP";
+    return "NOTICE";
+  }
+
+  function lastGoodRequest(sectionKey) {
+    return new Request(OFFERS_SECTION_BASE + encodeURIComponent(sectionKey) + ".json");
+  }
+
+  function rememberSectionLastGood(sectionKey, doc) {
+    try {
+      if (!window.caches || !doc || !isSafeSectionKey(sectionKey)) return;
+      caches.open(OFFERS_LAST_GOOD_CACHE).then(function (cache) {
+        return cache.put(
+          lastGoodRequest(sectionKey),
+          new Response(JSON.stringify(doc), { headers: { "Content-Type": "application/json" } })
+        );
+      }).catch(function () {});
+    } catch (_) {}
+  }
+
+  function readSectionLastGood(sectionKey) {
+    try {
+      if (!window.caches || !isSafeSectionKey(sectionKey)) return Promise.resolve(null);
+      return caches.open(OFFERS_LAST_GOOD_CACHE).then(function (cache) {
+        return cache.match(lastGoodRequest(sectionKey));
+      }).then(function (res) {
+        return res ? res.json() : null;
+      }).catch(function () {
+        return null;
+      });
+    } catch (_) {
+      return Promise.resolve(null);
+    }
+  }
+
+  function showOfflineNotice(mount, hasData) {
+    if (!mount) return;
+    var existing = document.getElementById("iuAffiliateOffersOfflineNotice");
+    if (existing && existing.parentNode) existing.parentNode.removeChild(existing);
+    var note = document.createElement("p");
+    note.id = "iuAffiliateOffersOfflineNotice";
+    note.setAttribute("role", "status");
+    note.style.margin = "0.5rem 0";
+    note.style.padding = "0.5rem 0.75rem";
+    note.textContent = hasData
+      ? "Jste offline. Zobrazuje se poslední uložený přehled."
+      : "Jste offline. Aktuální nabídky teď nejsou k dispozici.";
+    mount.hidden = false;
+    mount.insertBefore(note, mount.firstChild);
+  }
+
+  function mountHasOfferCards(mount) {
+    return !!(mount && mount.querySelector(".iuAffiliatePhase2Offers__card, .iuAffiliatePhase2Offers__coupon, .iuAffiliatePhase2Offers__action"));
+  }
+
   function isSafeSectionKey(sectionKey) {
     return typeof sectionKey === "string" && /^[a-z0-9][a-z0-9._-]{0,80}$/i.test(sectionKey);
   }
@@ -1142,7 +1201,10 @@
       })
       .then(
         function (doc) {
-          if (settleSectionDoc(doc, epoch)) sectionCached[sectionKey] = doc;
+          if (settleSectionDoc(doc, epoch)) {
+            sectionCached[sectionKey] = doc;
+            rememberSectionLastGood(sectionKey, doc);
+          }
           if (sectionInflight[sectionKey] === p) delete sectionInflight[sectionKey];
           return doc;
         },
@@ -1198,6 +1260,7 @@
     return fetchOffersFallback();
   }
 
+  window.iuOffersOfflinePaintPlan = offersOfflinePaintPlan;
   window.iuAffiliatePhase2OffersRender = function (sectionKey) {
     if (!sectionKey) return;
     activeSectionKey = sectionKey;
@@ -1222,7 +1285,24 @@
         renderPublicSection(doc, sectionKey, gen);
       })
       .catch(function () {
-        if (gen === renderGen) clearMount(ensureMount());
+        if (gen !== renderGen) return;
+        readSectionLastGood(sectionKey).then(function (saved) {
+          if (gen !== renderGen) return;
+          var plan = offersOfflinePaintPlan(!!(saved && saved.liveEnabled === true), mountHasOfferCards(ensureMount()));
+          if (plan === "LAST_GOOD") {
+            renderPublicSection(saved, sectionKey, gen);
+            showOfflineNotice(ensureMount(), true);
+            return;
+          }
+          var mount = ensureMount();
+          if (plan === "KEEP") {
+            showOfflineNotice(mount, true);
+            return;
+          }
+          finishLoading(mount);
+          if (mount) mount.innerHTML = "";
+          showOfflineNotice(mount, false);
+        });
       });
   };
 
