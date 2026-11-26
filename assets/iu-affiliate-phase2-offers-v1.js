@@ -443,18 +443,52 @@
       }
     }
     paint(visible);
-    if (list.length > visible) {
+    /* Lean-pages fallback ships only intro cards (productsTruncated) — more exist in the full shard. */
+    var loadMore = opts && typeof opts.loadMore === "function" ? opts.loadMore : null;
+    var truncated = !!(opts && opts.truncated && loadMore);
+    if (list.length > visible || truncated) {
       var btn = document.createElement("button");
       btn.type = "button";
       btn.className = "iuAffiliatePhase2Offers__more iuRadioChip";
-      btn.textContent = (display && display.showMoreLabel) || "Zobrazit další";
+      var moreLabel = (display && display.showMoreLabel) || "Zobrazit další";
+      btn.textContent = moreLabel;
       var expanded = false;
-      btn.addEventListener("click", function () {
+      var loading = false;
+      var toggle = function () {
         expanded = !expanded;
         paint(expanded ? list.length : visible);
-        btn.textContent = expanded
-          ? "Skrýt další"
-          : (display && display.showMoreLabel) || "Zobrazit další";
+        btn.textContent = expanded ? "Skrýt další" : moreLabel;
+      };
+      btn.addEventListener("click", function () {
+        if (loading) return;
+        if (!truncated) {
+          toggle();
+          return;
+        }
+        loading = true;
+        btn.disabled = true;
+        btn.textContent = "Načítám…";
+        loadMore()
+          .then(function (full) {
+            var more = (full || []).filter(function (c) {
+              return productPubliclyShowable(c, preview);
+            });
+            if (more.length > list.length) list = more;
+            truncated = false;
+            loading = false;
+            btn.disabled = false;
+            if (list.length <= visible) {
+              if (btn.parentNode) btn.parentNode.removeChild(btn);
+              return;
+            }
+            expanded = false;
+            toggle();
+          })
+          .catch(function () {
+            loading = false;
+            btn.disabled = false;
+            btn.textContent = moreLabel;
+          });
       });
       host.appendChild(btn);
     }
@@ -519,11 +553,25 @@
     for (var aj = 0; aj < actions.length; aj++) {
       renderAction(mount, actions[aj], { preview: false });
     }
+    var secTotal = Number(sec.productCountTotal) || 0;
+    var secTruncated =
+      sec.productsTruncated === true || (secTotal > 0 && secTotal > (sec.products || []).length);
     renderProducts(
       mount,
       products,
       { defaultVisibleProducts: 3, showMoreLabel: "Zobrazit další" },
-      { preview: false }
+      {
+        preview: false,
+        truncated: secTruncated && isSafeSectionKey(sectionKey),
+        loadMore: function () {
+          return fetchOffersSectionShard(sectionKey, { force: true, timeoutMs: 20000 }).then(
+            function (full) {
+              var s = full && full.sections && full.sections[0];
+              return (s && s.products) || [];
+            }
+          );
+        },
+      }
     );
     mount.hidden = false;
   }
@@ -644,13 +692,16 @@
     return out;
   }
 
-  function fetchOffersSectionShard(sectionKey) {
+  /** opts.force: ignore the failed flag (user-initiated "Zobrazit další" retry); opts.timeoutMs: per-request abort. */
+  function fetchOffersSectionShard(sectionKey, opts) {
     if (!isSafeSectionKey(sectionKey)) return Promise.reject(new Error("bad_section_key"));
-    if (sectionFailed[sectionKey]) return Promise.reject(new Error("section_failed"));
+    var force = !!(opts && opts.force);
+    var timeoutMs = (opts && opts.timeoutMs) || 2500;
+    if (!force && sectionFailed[sectionKey]) return Promise.reject(new Error("section_failed"));
     if (sectionCached[sectionKey]) return Promise.resolve(sectionCached[sectionKey]);
     var bust = String(Date.now());
     var src = OFFERS_SECTION_BASE + encodeURIComponent(sectionKey) + ".json?v=" + bust;
-    return fetchJsonWithTimeout(src, 2500)
+    return fetchJsonWithTimeout(src, timeoutMs)
       .then(function (first) {
         var pageCount = first && first.pageCount ? Number(first.pageCount) : 1;
         if (!(pageCount > 1)) {
@@ -666,7 +717,7 @@
             String(p) +
             ".json?v=" +
             bust;
-          jobs.push(fetchJsonWithTimeout(pageUrl, 2500));
+          jobs.push(fetchJsonWithTimeout(pageUrl, timeoutMs));
         }
         return Promise.all(jobs).then(function (rest) {
           var merged = mergeSectionPageDocs([first].concat(rest));

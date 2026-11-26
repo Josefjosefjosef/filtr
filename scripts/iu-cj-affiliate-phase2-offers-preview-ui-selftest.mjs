@@ -19,6 +19,8 @@ expect("partner_name", js.includes("partnerName"));
 expect("conditions", js.includes("conditionsSummary"));
 expect("product_image", js.includes("iuAffiliatePhase2Offers__img"));
 expect("show_more", js.includes("Zobrazit další"));
+expect("show_more_truncated_lean_loads_full_shard", js.includes("productsTruncated") && js.includes("loadMore") && js.includes("force: true"));
+expect("show_more_default_visible_3", js.includes("defaultVisibleProducts: 3"));
 expect("no_prod_bypass", js.includes("public_stub_no_staging_data"));
 expect("dark_mode_css", css.includes("prefers-color-scheme: dark"));
 expect("responsive_grid", css.includes("max-width: 767px"));
