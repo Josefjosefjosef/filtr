@@ -3,7 +3,7 @@
  * V36 — single authoritative product evidence + reconciliation.
  *
  * Layers (same snapshotId):
- * - uniqueKey = advertiserId|productId
+ * - uniqueKey = advertiserId|productId, plus |productVariant when a variant is present
  * - occurrence = uniqueKey + sectionKey (+ occurrenceIndex)
  *
  * refreshCoverage.publishedCatalog.* MUST be computable from occurrence rows.
@@ -19,8 +19,10 @@ export const REFRESH_RESULT_V36 = Object.freeze({
   NOT_IN_REFRESH_TARGET_SET: "NOT_IN_REFRESH_TARGET_SET",
 });
 
-export function productKey(advertiserId, productId) {
-  return String(advertiserId || "") + "|" + String(productId || "");
+export function productKey(advertiserId, productId, productVariant) {
+  const base = String(advertiserId || "") + "|" + String(productId || "");
+  if (productVariant == null || String(productVariant).trim() === "") return base;
+  return base + "|" + String(productVariant).trim();
 }
 
 export function occurrenceId(advertiserId, productId, sectionKey, indexInSection) {
@@ -53,7 +55,7 @@ export function reconcilePublishedProductEvidence(opts = {}) {
     for (const p of sec.products || []) {
       const adv = p.advertiserId != null ? String(p.advertiserId) : "";
       const pid = p.productId != null ? String(p.productId) : "";
-      const key = productKey(adv, pid);
+      const key = productKey(adv, pid, p.productVariant);
       const secKey = sec.sectionKey || p.sectionKey || null;
       const cov = coverageByKey.get(key) || null;
       const ref = refreshedByKey.get(key) || null;
@@ -109,6 +111,7 @@ export function reconcilePublishedProductEvidence(opts = {}) {
           productKey: key,
           advertiserId: adv,
           productId: pid,
+          productVariant: p.productVariant != null && String(p.productVariant).trim() !== "" ? String(p.productVariant).trim() : null,
           refreshResult,
           refreshReason,
           lastRefreshAttemptAt,
@@ -270,7 +273,7 @@ export function auditReconcilePublicDoc(doc) {
   const uniq = new Map();
   for (const sec of doc?.sections || []) {
     for (const p of sec.products || []) {
-      const key = p.productKey || productKey(p.advertiserId, p.productId);
+      const key = p.productKey || productKey(p.advertiserId, p.productId, p.productVariant);
       occ.push(p.refreshResult || "(none)");
       if (!uniq.has(key)) uniq.set(key, p.refreshResult || "(none)");
       else if (p.refreshResult === REFRESH_RESULT_V36.SUCCESSFULLY_REFRESHED) uniq.set(key, p.refreshResult);
