@@ -92,9 +92,19 @@ try {
   check("older manifest generation within TTL retained", existsSync(a(`iu-info-system-core-v1.${OLDER}.js`)));
   check("expired generation dropped", !existsSync(a(`iu-info-system-core-v1.${EXPIRED}.js`)));
   check("current deploy file untouched", readFileSync(a(`iu-info-system-core-v1.${NEW}.js`), "utf8") === "/* new core */");
-  const man = JSON.parse(readFileSync(a("iu-retained-assets-v1.json"), "utf8"));
-  check("manifest lists retained files only", man.files.length === 4 && man.files.every((f) => !f.file.includes(NEW)));
-  check("manifest keeps original firstSeenUtc for older generation", man.files.some((f) => f.file.includes(OLDER) && Date.now() - Date.parse(f.firstSeenUtc) > 9 * 3600 * 1000));
+  const manPath = a("iu-retained-assets-v1.json");
+  check("retained manifest written", existsSync(manPath));
+  if (existsSync(manPath)) {
+    const man = JSON.parse(readFileSync(manPath, "utf8"));
+    check("manifest lists retained files only", man.files.length === 4 && man.files.every((f) => !f.file.includes(NEW)));
+    check(
+      "manifest keeps original firstSeenUtc for older generation",
+      man.files.some((f) => f.file.includes(OLDER) && Date.now() - Date.parse(f.firstSeenUtc) > 9 * 3600 * 1000)
+    );
+  } else {
+    check("manifest lists retained files only", false);
+    check("manifest keeps original firstSeenUtc for older generation", false);
+  }
 
   // Fail-open: unreachable origin must not fail the deploy.
   const r2 = await runScript({ IU_PAGES_STAGE_DIR: stageAbs, IU_PAGES_LIVE_ORIGIN: "http://127.0.0.1:1" });
