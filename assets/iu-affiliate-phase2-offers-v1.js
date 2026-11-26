@@ -14,7 +14,22 @@
   /* Pages scale: prefer per-section shard (then lean pages) over full audit JSON (~28MB). */
   var OFFERS_PAGES_LEAN_PATH = "/projects/data/iu-affiliate-cj-offers-pages-v1.json";
   var OFFERS_SECTION_BASE = "/projects/data/iu-affiliate-cj-offers-sections-v1/";
-  var CSS_HREF = "/assets/iu-affiliate-phase2-offers-v1.css?v=cj-phase3z-offers-v33";
+  var CSS_HREF = "/assets/iu-affiliate-phase2-offers-v1.css?v=cj-phase3z-offers-v35-cls";
+  var SHAPE_STORE_KEY = "iuAffOfferShape.v1";
+  /* Compact first-visit CLS hints (lean shapes). Avoids blank min-height on empty cats. */
+  var OFFER_SHAPE_HINT = {
+    "aff-inzerce-bazary": "actions",
+    "aff-cestovni-kancelare": "actions",
+    "aff-pojisteni": "actions",
+    "aff-sperky-hodinky": "products",
+    "aff-sportovni-obleceni": "products",
+    "aff-pneu-pneuservis": "products",
+    "aff-drogerie": "products",
+    "aff-software": "products",
+    "aff-ubytovani-hotely": "products"
+  };
+  var renderGen = 0;
+  var activeSectionKey = "";
 
   function escapeHtml(s) {
     return String(s == null ? "" : s)
@@ -173,6 +188,109 @@
     if (!mount) return;
     mount.innerHTML = "";
     mount.hidden = true;
+    try {
+      mount.removeAttribute("aria-busy");
+      mount.removeAttribute("data-iu-aff-offers-loading");
+      mount.removeAttribute("data-iu-aff-offers-shape");
+      if (mount.style) mount.style.minHeight = "";
+    } catch (_) {}
+  }
+
+  function readShapeStore() {
+    try {
+      var raw = sessionStorage.getItem(SHAPE_STORE_KEY);
+      if (!raw) return Object.create(null);
+      var parsed = JSON.parse(raw);
+      return parsed && typeof parsed === "object" ? parsed : Object.create(null);
+    } catch (_) {
+      return Object.create(null);
+    }
+  }
+
+  function writeShapeHint(sectionKey, shape) {
+    if (!sectionKey || !shape) return;
+    try {
+      var store = readShapeStore();
+      store[sectionKey] = shape;
+      sessionStorage.setItem(SHAPE_STORE_KEY, JSON.stringify(store));
+    } catch (_) {}
+  }
+
+  function resolveOfferShape(sectionKey) {
+    var store = readShapeStore();
+    if (store[sectionKey] === "actions" || store[sectionKey] === "products" || store[sectionKey] === "mixed") {
+      return store[sectionKey];
+    }
+    if (OFFER_SHAPE_HINT[sectionKey]) return OFFER_SHAPE_HINT[sectionKey];
+    return "mixed";
+  }
+
+  function shapeFromCounts(couponsLen, actionsLen, productsLen) {
+    var c = couponsLen > 0;
+    var a = actionsLen > 0;
+    var p = productsLen > 0;
+    if (p && !c && !a) return "products";
+    if ((c || a) && !p) return "actions";
+    return "mixed";
+  }
+
+  function skeletonHtml(shape) {
+    var action =
+      '<div class="iuAffiliatePhase2Offers__skel iuAffiliatePhase2Offers__skelAction" aria-hidden="true"></div>';
+    var card =
+      '<article class="iuAffiliatePhase2Offers__skel iuAffiliatePhase2Offers__skelCard" aria-hidden="true">' +
+      '<div class="iuAffiliatePhase2Offers__skelImg"></div>' +
+      '<div class="iuAffiliatePhase2Offers__skelLine"></div>' +
+      '<div class="iuAffiliatePhase2Offers__skelLine iuAffiliatePhase2Offers__skelLine--short"></div>' +
+      "</article>";
+    if (shape === "products") {
+      return (
+        '<div class="iuAffiliatePhase2Offers__skelGrid" role="presentation">' +
+        card +
+        card +
+        card +
+        "</div>"
+      );
+    }
+    if (shape === "actions") {
+      return action + action + action;
+    }
+    return action + action + '<div class="iuAffiliatePhase2Offers__skelGrid" role="presentation">' + card + card + card + "</div>";
+  }
+
+  function showLoadingSkeleton(mount, sectionKey) {
+    if (!mount) return;
+    loadCssOnce();
+    var shape = resolveOfferShape(sectionKey);
+    mount.hidden = false;
+    try {
+      mount.setAttribute("aria-busy", "true");
+      mount.setAttribute("data-iu-aff-offers-loading", "1");
+      mount.setAttribute("data-iu-aff-offers-shape", shape);
+      if (mount.style) mount.style.minHeight = "";
+    } catch (_) {}
+    mount.innerHTML = skeletonHtml(shape);
+  }
+
+  function finishLoading(mount) {
+    if (!mount) return;
+    try {
+      mount.removeAttribute("aria-busy");
+      mount.removeAttribute("data-iu-aff-offers-loading");
+      mount.removeAttribute("data-iu-aff-offers-shape");
+      if (mount.style) mount.style.minHeight = "";
+    } catch (_) {}
+  }
+
+  function rememberMountHeight(mount, sectionKey) {
+    if (!mount || !sectionKey) return;
+    try {
+      var h = mount.getBoundingClientRect ? mount.getBoundingClientRect().height : 0;
+      if (!(h > 40)) return;
+      var store = readShapeStore();
+      store[sectionKey + ":h"] = Math.round(h);
+      sessionStorage.setItem(SHAPE_STORE_KEY, JSON.stringify(store));
+    } catch (_) {}
   }
 
   function copyText(txt, btn) {
@@ -348,9 +466,11 @@
     el.setAttribute("role", "listitem");
     var img =
       c.imageUrl && /^https:\/\//i.test(String(c.imageUrl)) && (c.publicationReady || preview)
-        ? '<img class="iuAffiliatePhase2Offers__img" src="' +
+        ? '<div class="iuAffiliatePhase2Offers__imgSlot" aria-hidden="true">' +
+          '<img class="iuAffiliatePhase2Offers__img" src="' +
           escapeHtml(c.imageUrl) +
-          '" alt="" loading="lazy" decoding="async" />'
+          '" alt="" loading="lazy" decoding="async" width="320" height="240" />' +
+          "</div>"
         : "";
     var brand = c.brand
       ? '<div class="iuAffiliatePhase2Offers__brand">' + escapeHtml(c.brand) + "</div>"
@@ -617,12 +737,14 @@
     }
   }
 
-  function renderPreviewBlock(data, sectionKey) {
+  function renderPreviewBlock(data, sectionKey, gen) {
+    if (gen != null && gen !== renderGen) return;
     if (!data || data.previewGate === "public_stub_no_staging_data") return;
     if (!data.ok || data.sectionKey !== sectionKey) return;
     var mount = ensureMount();
     if (!mount) return;
     loadCssOnce();
+    finishLoading(mount);
     mount.innerHTML =
       '<div class="iuAffiliatePhase2Offers__banner" role="status">NÁHLED CJ Phase 2 — neveřejná publikace (localhost). liveEnabled=false.</div>';
     renderCoupon(mount, data.coupon, { preview: true });
@@ -637,17 +759,22 @@
         '<div class="iuAffiliatePhase2Offers__meta">Žádné schválené kupóny ani produkty k zobrazení.</div>';
     }
     mount.hidden = false;
+    rememberMountHeight(mount, sectionKey);
   }
 
-  function renderPublicSection(doc, sectionKey) {
+  function renderPublicSection(doc, sectionKey, gen) {
+    if (gen != null && gen !== renderGen) return;
     var mount = ensureMount();
     if (!mount) return;
-    clearMount(mount);
     if (!doc || doc.liveEnabled !== true) {
       /* Feature flag off — never show unverified offers on production hosts. */
+      clearMount(mount);
       return;
     }
-    if (doc.ok === false) return;
+    if (doc.ok === false) {
+      clearMount(mount);
+      return;
+    }
     var sections = doc.sections || [];
     var sec = null;
     for (var i = 0; i < sections.length; i++) {
@@ -656,7 +783,10 @@
         break;
       }
     }
-    if (!sec) return;
+    if (!sec) {
+      clearMount(mount);
+      return;
+    }
 
     var coupons = (sec.coupons || []).filter(function (c) {
       return c && c.publicationReady === true && c.couponCode && offerInPublicTimeWindow(c);
@@ -667,9 +797,17 @@
     var products = (sec.products || []).filter(function (p) {
       return productPubliclyShowable(p, false);
     });
-    if (!coupons.length && !actions.length && !products.length) return;
+    if (!coupons.length && !actions.length && !products.length) {
+      clearMount(mount);
+      return;
+    }
 
     loadCssOnce();
+    writeShapeHint(sectionKey, shapeFromCounts(coupons.length, actions.length, products.length));
+    /* Replace skeleton in place (keep mount visible) to avoid 0→content CLS. */
+    finishLoading(mount);
+    mount.innerHTML = "";
+    mount.hidden = false;
     for (var ci = 0; ci < coupons.length; ci++) {
       renderCoupon(mount, coupons[ci], { preview: false });
     }
@@ -696,7 +834,7 @@
         },
       }
     );
-    mount.hidden = false;
+    rememberMountHeight(mount, sectionKey);
   }
 
   var previewCached = null;
@@ -962,20 +1100,30 @@
 
   window.iuAffiliatePhase2OffersRender = function (sectionKey) {
     if (!sectionKey) return;
+    activeSectionKey = sectionKey;
+    var gen = ++renderGen;
+    var mount = ensureMount();
+    if (mount) showLoadingSkeleton(mount, sectionKey);
     if (previewEnabled()) {
       fetchPreview()
         .then(function (data) {
-          renderPreviewBlock(data, sectionKey);
+          renderPreviewBlock(data, sectionKey, gen);
         })
-        .catch(function () {});
+        .catch(function () {
+          if (gen === renderGen) clearMount(ensureMount());
+        });
       return;
     }
     var seq = ++renderSeq;
-    fetchOffersPublic(sectionKey).then(function (doc) {
-      /* Stale-response guard: a newer Render()/Clear() superseded this pass. */
-      if (seq !== renderSeq) return;
-      renderPublicSection(doc, sectionKey);
-    });
+    fetchOffersPublic(sectionKey)
+      .then(function (doc) {
+        /* Stale-response guard: a newer Render()/Clear() superseded this pass. */
+        if (seq !== renderSeq) return;
+        renderPublicSection(doc, sectionKey, gen);
+      })
+      .catch(function () {
+        if (gen === renderGen) clearMount(ensureMount());
+      });
   };
 
   /** Drop cached offers (all, or one section) — e.g. after a catalog generation bump. */

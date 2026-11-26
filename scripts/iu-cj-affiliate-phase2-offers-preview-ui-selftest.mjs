@@ -37,6 +37,9 @@ expect("white_card_css", css.includes("background: #fff"));
 expect("catalog_hooks_offers", catalog.includes("iuAffiliatePhase2OffersRender"));
 expect("catalog_loads_offers_script", catalog.includes("ensurePhase2OffersScript"));
 expect("publication_ready_filter", js.includes("publicationReady === true") || js.includes("publicationReady!==true") || js.includes("c.publicationReady === true"));
+expect("cls_loading_skeleton", js.includes("showLoadingSkeleton") && css.includes("data-iu-aff-offers-loading"));
+expect("cls_img_slot", js.includes("iuAffiliatePhase2Offers__imgSlot") && css.includes("aspect-ratio"));
+expect("cls_no_blank_empty_minheight", !/iuAffiliatePhase2Offers\s*\{[^}]*min-height:\s*[1-9]/i.test(css));
 
 const ok = failures.length === 0;
 console.log(
