@@ -76,7 +76,7 @@ export function buildStaticMainButtonCatalog(registry, opts = {}) {
       continue;
     }
     if (!advId || seen.has(advId)) continue;
-    const url = String(p.selectedClickUrl || "");
+    const url = PROTECTED_SLOT_CLICK_URLS[advId] || String(p.selectedClickUrl || "");
     const sectionId = String(p.sectionId || "");
     const title = String(p.displayNameCs || p.cjName || p.advertiserName || "").trim();
     if (!url || !isCjTrackingUrl(url) || !sectionId || !title) {
@@ -169,6 +169,12 @@ export function buildStaticMainButtonCatalog(registry, opts = {}) {
 export const STATIC_CATALOG_BLOCKED_UNTIL_CONDITIONS = {
   "7417963": "ONBUY_SECTION_UNRESOLVED",
   "4686326": "PARAGON_UNSUITABLE_DESTINATION",
+};
+
+/** Slot guards pin these click hosts. A registry host rotation must not move them. */
+export const PROTECTED_SLOT_CLICK_URLS = {
+  "5096493": "https://www.anrdoezrs.net/click-101883843-13386171-1779903990000",
+  "6130482": "https://www.kqzyfj.com/click-101883843-15237230-1753820095000",
 };
 
 function partnerIsPaid(partner) {

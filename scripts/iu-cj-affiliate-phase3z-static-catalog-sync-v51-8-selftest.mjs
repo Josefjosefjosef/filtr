@@ -108,6 +108,10 @@ const current = syncStaticMainButtonsFromRegistry(registry, staticCatalog);
 assert.equal(current.ok, true);
 assert.equal(current.catalog.buttons.some((button) => button.advertiserId === "7417963"), false);
 assert.equal(current.catalog.buttons.some((button) => button.advertiserId === "4686326"), false);
+const booking = current.catalog.buttons.find((button) => button.advertiserId === "5096493");
+assert.equal(booking.url, "https://www.anrdoezrs.net/click-101883843-13386171-1779903990000");
+const leo = current.catalog.buttons.find((button) => button.advertiserId === "6130482");
+assert.equal(leo.url, "https://www.kqzyfj.com/click-101883843-15237230-1753820095000");
 const start = current.catalog.counts.buttons;
 const sizes = [];
 for (const target of [start + 1, 200, 250, 500]) {
