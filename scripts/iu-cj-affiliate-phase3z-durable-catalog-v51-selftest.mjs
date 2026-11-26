@@ -61,6 +61,38 @@ const seed = seedDurableCatalogFromOffersPublic({
 assert(seed.stats.catalogUnique === 2, "seed 2");
 assert(seed.stats.publicEligible === 2, "seed public 2");
 
+function blockedUrlRow(productId, affiliateUrl, currency) {
+  return mergeIntoDurableCatalog(emptyDurableCatalog(now), [
+    {
+      advertiserId: "1",
+      productId,
+      title: productId,
+      currentPrice: "10.00",
+      currency,
+      availability: "in stock",
+      affiliateUrl,
+    },
+  ], { nowIso: now });
+}
+const missingWww = blockedUrlRow("missing-www", "https://kqzyfj.com/click-101883843-1", "CZK");
+const outsideHost = blockedUrlRow("outside-host", "https://www.pjatr.com/click-101883843-1", "EUR");
+const notAClick = blockedUrlRow("not-a-click", "https://www.kqzyfj.com/catalog/item", "CZK");
+for (const [label, result] of [
+  ["missing-www", missingWww],
+  ["outside-host", outsideHost],
+  ["not-a-click", notAClick],
+]) {
+  const row = result.doc.products["1|" + label];
+  assert(row, label + " identity stays in the catalog");
+  assert(row.publicOffer === false, label + " is not public");
+  assert(
+    row.publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_BLOCKED,
+    label + " is blocked"
+  );
+}
+assert(outsideHost.doc.products["1|outside-host"].currency === "EUR", "foreign currency stays on the blocked row");
+assert(missingWww.doc.products["1|missing-www"].lastSourceMatchAt === now, "blocked upsert still records the source match");
+
 const windowOnlyA = [
   {
     advertiserId: "1",
