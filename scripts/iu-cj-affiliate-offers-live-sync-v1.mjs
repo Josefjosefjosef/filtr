@@ -120,6 +120,7 @@ import {
   buildDeferredNewLedgerDocument,
   DEFERRED_NEW_LEDGER_FILENAME,
 } from "./iu-cj-affiliate-phase3z-publication-lkg-v51-8.mjs";
+import { persistDeferredNewKeys } from "./iu-cj-affiliate-deferred-new-keys-persist-v51-8.mjs";
 import {
   mergeIntoDurableCatalog,
   seedDurableCatalogFromOffersPublic,
@@ -3145,28 +3146,70 @@ export async function runOffersLiveSync(opts = {}) {
     } catch {
       // best-effort
     }
-    // Hook: full deferred-new keys → sidecar iu-affiliate-cj-deferred-new-ledger-v51.json
-    // (offers JSON keeps sample≤200). Does NOT unlock growth / never arms uncapped.
+    // Hook: FULL deferred-new identity keys → keys-only sidecar (+ jsonl.gz).
+    // Offers JSON keeps sample only (never embed ~300k keys into Pages).
+    // Does NOT unlock growth / never arms uncapped.
     try {
-      const deferredLedgerPath = path.join(dataDir, DEFERRED_NEW_LEDGER_FILENAME);
-      const ledgerDoc =
-        growthApplied.deferredLedger ||
-        buildDeferredNewLedgerDocument(growthApplied.deferredNew, {
-          reason:
-            growthApplied.budget?.cumulativeRemaining <= 0
-              ? "CUMULATIVE_BUDGET_EXHAUSTED"
-              : "PER_RUN_GROWTH_BUDGET",
-          budget: growthApplied.budget,
-          preferredCurrency: String(env.IU_CJ_OFFERS_PUBLIC_PREFERRED_CURRENCY || "CZK"),
-          runId: env.GITHUB_RUN_ID || null,
-        });
-      fs.mkdirSync(dataDir, { recursive: true });
-      fs.writeFileSync(deferredLedgerPath, JSON.stringify(ledgerDoc, null, 2) + "\n", "utf8");
+      const deferredPersist = await persistDeferredNewKeys(growthApplied.deferredNew, {
+        dataDir,
+        reason:
+          growthApplied.budget?.cumulativeRemaining <= 0
+            ? "CUMULATIVE_BUDGET_EXHAUSTED"
+            : "PER_RUN_GROWTH_BUDGET",
+        budget: growthApplied.budget,
+        preferredCurrency: String(env.IU_CJ_OFFERS_PUBLIC_PREFERRED_CURRENCY || "CZK"),
+        runId: env.GITHUB_RUN_ID || null,
+        catalogGeneration: env.IU_CJ_CATALOG_GENERATION || "UNKNOWN",
+        nowIso: new Date().toISOString(),
+      });
       if (!publicationRestore) publicationRestore = {};
-      publicationRestore.deferredNewLedgerPath = deferredLedgerPath;
-      publicationRestore.deferredNewLedgerCount = ledgerDoc.deferredNewCount;
+      publicationRestore.deferredNewLedgerPath = deferredPersist.ledgerPath;
+      publicationRestore.deferredNewLedgerCount = deferredPersist.keyCount;
+      publicationRestore.deferredNewKeysJsonlGzPath = deferredPersist.jsonlGzPath;
+      publicationRestore.deferredNewKeysMetaPath = deferredPersist.metaPath;
+      publicationRestore.deferredNewKeysPersistedSidecar = true;
+      if (growthApplied.doc?.publicGrowthBudget && typeof growthApplied.doc.publicGrowthBudget === "object") {
+        Object.assign(growthApplied.doc.publicGrowthBudget, deferredPersist.publicGrowthBudgetPatch);
+      }
     } catch {
       // best-effort; never block promote on sidecar IO
+      try {
+        // Fallback: legacy fat-in-memory document only if keys-only writer failed early.
+        const deferredLedgerPath = path.join(dataDir, DEFERRED_NEW_LEDGER_FILENAME);
+        const ledgerDoc =
+          growthApplied.deferredLedger ||
+          buildDeferredNewLedgerDocument(growthApplied.deferredNew, {
+            reason:
+              growthApplied.budget?.cumulativeRemaining <= 0
+                ? "CUMULATIVE_BUDGET_EXHAUSTED"
+                : "PER_RUN_GROWTH_BUDGET",
+            budget: growthApplied.budget,
+            preferredCurrency: String(env.IU_CJ_OFFERS_PUBLIC_PREFERRED_CURRENCY || "CZK"),
+            runId: env.GITHUB_RUN_ID || null,
+          });
+        // Prefer keys-only shape even in fallback (drop entries to avoid OOM/99MB omit).
+        const keysOnly = {
+          schema: ledgerDoc.schema,
+          updatedAt: ledgerDoc.updatedAt,
+          runId: ledgerDoc.runId,
+          catalogGeneration: ledgerDoc.catalogGeneration,
+          deferredNewCount: Array.isArray(ledgerDoc.keys) ? ledgerDoc.keys.length : 0,
+          reason: ledgerDoc.reason,
+          preferredCurrency: ledgerDoc.preferredCurrency,
+          budget: ledgerDoc.budget,
+          keys: Array.isArray(ledgerDoc.keys) ? ledgerDoc.keys : [],
+          keysOnly: true,
+          sampleOnlyInOffers: true,
+          evidenceCompleteness: "FULL_KEYS",
+        };
+        fs.mkdirSync(dataDir, { recursive: true });
+        fs.writeFileSync(deferredLedgerPath, JSON.stringify(keysOnly, null, 2) + "\n", "utf8");
+        if (!publicationRestore) publicationRestore = {};
+        publicationRestore.deferredNewLedgerPath = deferredLedgerPath;
+        publicationRestore.deferredNewLedgerCount = keysOnly.deferredNewCount;
+      } catch {
+        // swallow
+      }
     }
     if (!publicationRestore) publicationRestore = {};
     publicationRestore.publicGrowthBudget = growthApplied.doc.publicGrowthBudget || null;
