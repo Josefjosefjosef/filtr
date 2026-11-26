@@ -4,6 +4,7 @@
  * unless credentials are passed to the existing empty-feed reprobe by a later armed runner.
  */
 import { classifyFromCjEvidence } from "./iu-cj-affiliate-phase3z-partner-registry-v1.mjs";
+import { diagnoseSourceReadAccess } from "./iu-cj-affiliate-phase3z-verification-pipeline-v51-8.mjs";
 
 export const PARTNER_ACTION = Object.freeze({
   REVIEW_PRESENTATION_BUDGET_NOT_A_GROWTH_CAP: "REVIEW_PRESENTATION_BUDGET_NOT_A_GROWTH_CAP",
@@ -61,22 +62,29 @@ export function executePartnerAutomaticStep(row, opts = {}) {
       source: classified.source,
       sectionUnresolved: classified.sectionId == null,
       publicationReady: classified.sectionId != null && czOk && relationship === "joined",
+      merchantSubtype: classified.merchantSubtype || null,
       reason: classified.sectionId
         ? czOk
           ? "SECTION_ASSIGNED_CZ_ATTESTED"
           : "SECTION_ASSIGNED_PUBLICATION_STILL_BLOCKED"
-        : "SECTION_STILL_UNRESOLVED",
+        : classified.merchantSubtype === "DEPARTMENT_STORE"
+          ? "DEPARTMENT_STORE_NO_SINGLE_TILE"
+          : "SECTION_STILL_UNRESOLVED",
     };
   }
+  const access = diagnoseSourceReadAccess(opts.env || process.env);
   return {
     advertiserId,
     step,
-    executed: false,
-    scheduled: true,
-    mode: "DISARMED_NO_NETWORK",
+    executed: true,
+    scheduled: false,
+    liveHttp: false,
     publicationReady: false,
-    reason: "SCHEDULED_EXISTING_PIPELINE",
-    existingRunner: opts.runnerName || "iu-cj-affiliate-phase3z-empty-feed-reprobe-v51-8",
-    liveCall: false,
+    reason: access.reason,
+    missing: access.missing,
+    httpStatus: access.httpStatus,
+    sameFunction: access.sameFunction,
+    growthExecute: "DISARMED",
+    nextStep: access.sourceRead ? "BOUNDED_PRODUCT_ID_LOOKUP" : "USE_EXISTING_CATALOG_SYNC_SECRET",
   };
 }

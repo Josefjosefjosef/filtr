@@ -296,19 +296,176 @@ export function loadCheckpoint(outPath) {
 }
 
 /**
- * Isolated batch. lookup is optional and local. Network stays off unless the caller
- * passes liveLookupEnabled, which this DISARMED runner still refuses.
+ * SOURCE_READ uses the same credential gate as refreshPublishedProductsFromCj.
+ * Growth execute and publication stay disarmed even when a read is authorized.
+ * Missing local env is SKIPPED_NO_CREDENTIALS, not an HTTP failure and not a growth gate.
  */
-export function runVerificationBatch(opts = {}) {
-  if (opts.liveLookupEnabled === true) {
+export function diagnoseSourceReadAccess(env = process.env) {
+  const patNames = ["IU_CJ_PAT", "CJ_API_PAT", "CJ_PERSONAL_ACCESS_TOKEN"];
+  const patName = patNames.find((name) => String(env[name] || "").trim() !== "") || null;
+  const publisherPresent = String(env.IU_CJ_PUBLISHER_CID || "").trim() !== "";
+  const missing = [];
+  if (!patName) missing.push("IU_CJ_PAT|CJ_API_PAT|CJ_PERSONAL_ACCESS_TOKEN");
+  if (!publisherPresent) missing.push("IU_CJ_PUBLISHER_CID");
+  return {
+    operation: "SOURCE_READ",
+    sourceRead: missing.length === 0,
+    reason: missing.length === 0 ? "AUTHORIZED_SOURCE_READ_SAME_AS_REFRESH" : "SKIPPED_NO_CREDENTIALS",
+    missing,
+    patEnvName: patName,
+    sameCondition: "!pat || !publisherCid",
+    sameFunction: "refreshPublishedProductsFromCj",
+    sameFile: "scripts/iu-cj-affiliate-offers-live-sync-v1.mjs",
+    growthExecute: "DISARMED",
+    publicationExecute: false,
+    productionActivation: false,
+    httpStatus: null,
+    notGrowthGate: true,
+  };
+}
+
+function sourceRecordFromCjRow(row) {
+  if (!row || typeof row !== "object") return null;
+  const price = row.price && typeof row.price === "object" ? row.price.amount : row.price;
+  return {
+    title: row.title || row.name || null,
+    description: row.description || null,
+    currentPrice: price != null ? Number(price) : null,
+    currency: (row.price && row.price.currency) || row.currency || null,
+    availability: row.availability || row.advertiserAvailability || null,
+    affiliateUrl: row.link || row.clickUrl || row.buyUrl || null,
+    imageUrl: row.imageUrl || row.imageLink || null,
+    language: row.language || null,
+    sectionId: row.sectionId || null,
+    sourceUpdatedAt: row.lastUpdated || row.sourceUpdatedAt || null,
+    productId: row.id || row.productId || null,
+  };
+}
+
+/**
+ * Bounded read through the existing product-id fetch. Default cap is 4 identities.
+ * confirmSourceRead must be true. Injected fetchProducts is for tests; production uses
+ * fetchShoppingProductsByProductIds from the existing product API module.
+ */
+export async function runAuthorizedSourceLookup(opts = {}) {
+  const env = opts.env || process.env;
+  const access = diagnoseSourceReadAccess(env);
+  const cap = Math.max(1, Math.min(8, Number(opts.maxIdentities) || 4));
+  const identities = (opts.identities || []).slice(0, cap);
+  if (!access.sourceRead) {
     return {
-      schema: VERIFICATION_PIPELINE_SCHEMA,
-      mode: PIPELINE_MODE.DISARMED_OFFLINE,
+      ...access,
       refused: true,
-      reason: "LIVE_LOOKUP_REFUSED_DISARMED",
-      metrics: { uniqueAttempts: 0, verifiedEligible: 0 },
+      liveHttp: false,
+      identitiesAttempted: 0,
+      results: [],
+      growth: { allowed: 0, reason: "OWNER_GATES_DISARMED", selected: [] },
     };
   }
+  if (opts.confirmSourceRead !== true) {
+    return {
+      ...access,
+      refused: true,
+      reason: "SOURCE_READ_NOT_CONFIRMED",
+      liveHttp: false,
+      identitiesAttempted: 0,
+      results: [],
+      growth: { allowed: 0, reason: "OWNER_GATES_DISARMED", selected: [] },
+    };
+  }
+  const byPartner = new Map();
+  for (const item of identities) {
+    const id = compositeIdentity(item);
+    if (!byPartner.has(id.advertiserId)) byPartner.set(id.advertiserId, []);
+    byPartner.get(id.advertiserId).push(id);
+  }
+  const partnerCap = Math.max(1, Math.min(2, Number(opts.maxPartners) || 1));
+  const partners = [...byPartner.keys()].sort().slice(0, partnerCap);
+  const fetchProducts =
+    typeof opts.fetchProducts === "function"
+      ? opts.fetchProducts
+      : async (gqlEnv, advertiserId, ids) => {
+          const api = await import("./iu-cj-affiliate-phase2-product-api.mjs");
+          return api.fetchShoppingProductsByProductIds(gqlEnv, advertiserId, ids, {
+            batchSize: Math.min(8, ids.length || 1),
+          });
+        };
+  const patName = access.patEnvName;
+  const gqlEnv = {
+    pat: String(env[patName] || ""),
+    publisherCid: String(env.IU_CJ_PUBLISHER_CID || "").trim(),
+    websitePid: String(env.IU_CJ_WEBSITE_PID || ""),
+  };
+  const results = [];
+  let httpStatus = null;
+  for (const advertiserId of partners) {
+    const ids = byPartner.get(advertiserId).map((row) => row.productId);
+    let fetched = null;
+    try {
+      fetched = await fetchProducts(gqlEnv, advertiserId, ids);
+    } catch (err) {
+      const status = Number(err && (err.status || err.statusCode)) || null;
+      httpStatus = status;
+      for (const row of byPartner.get(advertiserId)) {
+        results.push({
+          ...attestEligibility(row, { relationship: "joined", sourceRecord: null, nowMs: opts.nowMs }),
+          lookupError: status ? "HTTP_" + status : "LOOKUP_THROW",
+        });
+      }
+      continue;
+    }
+    const kind = String(fetched && (fetched.kind || fetched.error) || "");
+    if (/401/.test(kind)) httpStatus = 401;
+    else if (/403/.test(kind)) httpStatus = 403;
+    else if (/429/.test(kind)) httpStatus = 429;
+    const byId = new Map();
+    for (const row of (fetched && fetched.resultList) || []) {
+      const rec = sourceRecordFromCjRow(row);
+      if (rec && rec.productId) byId.set(String(rec.productId), rec);
+    }
+    for (const row of byPartner.get(advertiserId)) {
+      const rec = byId.get(row.productId) || null;
+      results.push(
+        attestEligibility(row, {
+          relationship: opts.relationship || "joined",
+          sourceRecord: rec,
+          czEligible: opts.czEligible,
+          termsAccepted: opts.termsAccepted,
+          nowMs: opts.nowMs,
+        })
+      );
+    }
+  }
+  const verifiedQueue = results
+    .filter((row) => row.verifiedEligible === true)
+    .map((row) => ({
+      key: row.key,
+      verifiedEligible: true,
+      verificationState: VERIFICATION_STATE.VERIFIED_ELIGIBLE,
+    }));
+  return {
+    ...access,
+    refused: false,
+    liveHttp: typeof opts.fetchProducts !== "function",
+    httpStatus,
+    identitiesAttempted: results.length,
+    results,
+    verifiedEligible: verifiedQueue.length,
+    growth: planAdaptiveBatch({
+      candidates: verifiedQueue,
+      health: { ok: true, stop: false, throttle: false },
+      remainingCumulative: 0,
+      uncappedGate: false,
+      executeArmed: false,
+    }),
+  };
+}
+
+/**
+ * Isolated batch. Local records do not perform HTTP.
+ * Authorized CJ reads go through runAuthorizedSourceLookup, not through a growth gate.
+ */
+export function runVerificationBatch(opts = {}) {
   const nowMs = opts.nowMs != null ? Number(opts.nowMs) : Date.now();
   const checkpoint = opts.checkpoint || emptyCheckpoint(nowMs);
   const plan = planFairBatch(opts.identities || [], {

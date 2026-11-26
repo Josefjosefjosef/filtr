@@ -5,6 +5,45 @@
  */
 import { parseCjPrimaryCategory } from "./iu-cj-affiliate-phase3e-partner-recon-v1.mjs";
 
+export const MERCHANT_SUBTYPE = Object.freeze({
+  MARKETPLACE_NEW_GOODS: "MARKETPLACE_NEW_GOODS",
+  MARKETPLACE_USED_GOODS: "MARKETPLACE_USED_GOODS",
+  CLASSIFIEDS: "CLASSIFIEDS",
+  DEPARTMENT_STORE: "DEPARTMENT_STORE",
+  GENERAL_RETAIL: "GENERAL_RETAIL",
+  SPECIALIZED_MARKETPLACE: "SPECIALIZED_MARKETPLACE",
+});
+
+/** Classifieds use the existing inzerce tile. A department store is not a bazar. */
+export function classifyMerchantSubtype({ name, programUrl, categoryParent, categoryChild } = {}) {
+  const blob = [name, programUrl, categoryParent, categoryChild].filter(Boolean).join(" ");
+  if (/\b(bazar|bazos|aukro|classifieds?|inzerce|second[\s-]?hand)\b/i.test(blob)) {
+    return {
+      merchantSubtype: MERCHANT_SUBTYPE.CLASSIFIEDS,
+      sectionId: "aff-inzerce-bazary",
+      rule: "classifieds_existing_tile",
+    };
+  }
+  if (
+    /department stores\/malls/i.test(String(categoryParent || "")) &&
+    /\bdepartment\s*stores?\b/i.test(String(categoryChild || ""))
+  ) {
+    return {
+      merchantSubtype: MERCHANT_SUBTYPE.DEPARTMENT_STORE,
+      sectionId: null,
+      rule: "department_store_no_single_taxonomy_tile",
+    };
+  }
+  if (/\b(allegro|amazon|ebay|marketplace)\b/i.test(blob)) {
+    return {
+      merchantSubtype: MERCHANT_SUBTYPE.MARKETPLACE_NEW_GOODS,
+      sectionId: null,
+      rule: "marketplace_new_goods_needs_dominant_assortment",
+    };
+  }
+  return { merchantSubtype: null, sectionId: null, rule: null };
+}
+
 export const MERCHANT_TYPE = Object.freeze({
   SPECIALIST: "SPECIALIST",
   MULTI_ASSORTMENT: "MULTI_ASSORTMENT",
@@ -126,21 +165,6 @@ export function buildAssortmentProfile({
   }
 
   const nameBlob = `${name} ${programUrl}`;
-  const categoryBlob = `${cat.parent || ""} ${cat.child || ""}`;
-  if (
-    /department stores\/malls/i.test(cat.parent || "") &&
-    /\bdepartment\s*stores?\b/i.test(cat.child || "")
-  ) {
-    if (!knownSections || knownSections.has("aff-inzerce-bazary")) {
-      pushSignal(
-        bySection,
-        "aff-inzerce-bazary",
-        "inzerce",
-        45,
-        "cj_primary_category:department_store_marketplace"
-      );
-    }
-  }
   for (const kg of KEYWORD_GROUPS) {
     if (kg.re.test(nameBlob)) {
       if (!knownSections || knownSections.has(kg.sectionId)) {
@@ -214,10 +238,8 @@ export function buildAssortmentProfile({
 
   let merchantType = MERCHANT_TYPE.UNKNOWN;
   let confidence = "low";
-  const typeBlob = `${nameBlob} ${categoryBlob}`;
   if (
-    MARKETPLACE_RE.test(typeBlob) ||
-    (/\bdepartment\s*stores?\b/i.test(categoryBlob) && /malls/i.test(categoryBlob)) ||
+    MARKETPLACE_RE.test(nameBlob) ||
     significant.some((s) => s.sectionId === "aff-inzerce-bazary" && s.weight >= 25)
   ) {
     merchantType = MERCHANT_TYPE.MARKETPLACE;
@@ -242,13 +264,23 @@ export function buildAssortmentProfile({
     confidence = "low";
   }
 
-  if (!top) {
+  const merchantSubtypeInfo = classifyMerchantSubtype({
+    name,
+    programUrl,
+    categoryParent: cat.parent,
+    categoryChild: cat.child,
+  });
+  if (!top && merchantSubtypeInfo.merchantSubtype === MERCHANT_SUBTYPE.DEPARTMENT_STORE) {
+    merchantType = MERCHANT_TYPE.UNIVERSAL_ESHOP;
+    confidence = "medium";
+  } else if (!top) {
     confidence = "low";
     merchantType = MERCHANT_TYPE.UNKNOWN;
   }
 
   return {
     merchantType,
+    merchantSubtype: merchantSubtypeInfo.merchantSubtype,
     primaryAssortment: top
       ? { sectionId: top.sectionId, group: top.group, weight: top.weight }
       : null,

@@ -7,7 +7,9 @@ import { executePartnerAutomaticStep } from "./iu-cj-affiliate-phase3z-partner-a
 import {
   attestEligibility,
   dedupeVerificationGroups,
+  diagnoseSourceReadAccess,
   loadCheckpoint,
+  runAuthorizedSourceLookup,
   runVerificationBatch,
   VERIFICATION_STATE,
 } from "./iu-cj-affiliate-phase3z-verification-pipeline-v51-8.mjs";
@@ -116,8 +118,40 @@ try {
 }
 expect("stale_checkpoint_refused", staleThrew);
 
-const refused = runVerificationBatch({ identities, liveLookupEnabled: true });
-expect("live_lookup_refused", refused.refused === true);
+const localDespiteFlag = runVerificationBatch({
+  identities: [{ advertiserId: "A", productId: "1", key: "A|1", localRecord: full }],
+  relationships: { A: "joined" },
+  czByAdvertiser: { A: true },
+  termsAccepted: true,
+  liveLookupEnabled: true,
+  limit: 1,
+  nowMs: 1_700_000_000_000,
+});
+expect("local_batch_is_not_a_growth_refusal", localDespiteFlag.refused !== true && localDespiteFlag.metrics.verifiedEligible === 1);
+
+const denied = diagnoseSourceReadAccess({});
+expect("missing_credentials_not_http", denied.reason === "SKIPPED_NO_CREDENTIALS" && denied.httpStatus == null && denied.notGrowthGate === true && denied.missing.length === 2);
+
+const looked = await runAuthorizedSourceLookup({
+  env: { IU_CJ_PAT: "present", IU_CJ_PUBLISHER_CID: "present" },
+  confirmSourceRead: true,
+  identities: [{ advertiserId: "9", productId: "ok" }],
+  czEligible: true,
+  termsAccepted: true,
+  fetchProducts: async () => ({
+    ok: true,
+    kind: "success",
+    resultList: [{ id: "ok", title: full.title, description: full.description, price: { amount: full.currentPrice, currency: "CZK" }, availability: "IN_STOCK", link: full.affiliateUrl, imageUrl: full.imageUrl, language: "cs", lastUpdated: full.sourceUpdatedAt, sectionId: full.sectionId }],
+  }),
+});
+expect("authorized_read_uses_existing_fetch_slot", looked.refused === false && looked.liveHttp === false && looked.verifiedEligible === 1 && looked.growth.allowed === 0 && looked.growth.reason === "OWNER_GATES_DISARMED");
+
+const noCreds = await runAuthorizedSourceLookup({
+  env: {},
+  confirmSourceRead: true,
+  identities: [{ advertiserId: "9", productId: "ok" }],
+});
+expect("no_creds_skips_before_http", noCreds.reason === "SKIPPED_NO_CREDENTIALS" && noCreds.liveHttp === false && noCreds.identitiesAttempted === 0);
 
 const growthArmedUnverified = planAdaptiveBatch({
   candidates: [{ key: "hist", verificationState: "DEFERRED_CANDIDATE_UNVERIFIED" }],
@@ -137,7 +171,7 @@ const onbuy = executePartnerAutomaticStep({
   relationshipStatus: "joined",
   czEligible: false,
 });
-expect("onbuy_section", onbuy.sectionId === "aff-inzerce-bazary" && onbuy.sectionUnresolved === false && onbuy.publicationReady === false && onbuy.source === "cj_category_exact_v2");
+expect("onbuy_not_bazar", onbuy.sectionId == null && onbuy.publicationReady === false && onbuy.merchantSubtype === "DEPARTMENT_STORE" && onbuy.reason === "DEPARTMENT_STORE_NO_SINGLE_TILE");
 
 const specialist = buildAssortmentProfile({
   advertiser: {
@@ -155,14 +189,14 @@ const marketplace = buildAssortmentProfile({
     primaryCategory: "<parent>Department Stores/Malls</parent><child>Department Stores</child>",
   },
 });
-expect("marketplace_type", marketplace.merchantType === "MARKETPLACE" && marketplace.primaryAssortment && marketplace.primaryAssortment.sectionId === "aff-inzerce-bazary");
+expect("department_store_not_bazar", marketplace.merchantSubtype === "DEPARTMENT_STORE" && marketplace.merchantType === "UNIVERSAL_ESHOP" && !marketplace.primaryAssortment);
 
 const digital = executePartnerAutomaticStep({
   advertiserId: "1",
   automaticNextStep: "BOUNDED_API_REPROBE",
   relationshipStatus: "joined",
 });
-expect("reprobe_not_live", digital.executed === false && digital.liveCall === false && digital.mode === "DISARMED_NO_NETWORK");
+expect("reprobe_skipped_without_credentials", digital.executed === true && digital.liveHttp === false && digital.reason === "SKIPPED_NO_CREDENTIALS");
 
 const paid = executePartnerAutomaticStep({
   advertiserId: "2",
