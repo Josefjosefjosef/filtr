@@ -118,7 +118,7 @@ export function planCatalogFreshnessBatch(items, opts = {}) {
       (item.priceChanged === true ? 60 * 60 * 1000 : 0) +
       (item.availabilityChanged === true ? 60 * 60 * 1000 : 0) +
       (item.relationshipStatus === "ended" ? 2 * 60 * 60 * 1000 : 0);
-    const row = { ...item, score, overdueMs: overdue };
+    const row = { ...item, score, overdueMs: overdue, clockClass: missingClock ? "UNSCHEDULED" : "OVERDUE" };
     if (!byPartner.has(row.advertiserId)) byPartner.set(row.advertiserId, []);
     byPartner.get(row.advertiserId).push(row);
   }
@@ -162,6 +162,7 @@ export function planCatalogFreshnessBatch(items, opts = {}) {
 }
 
 export const MAX_SOURCE_ATTEMPTS = 5;
+export const LONG_TERM_RECHECK_MS = 7 * 24 * 60 * 60 * 1000;
 
 export function classifySourceHttp(status) {
   const code = Number(status);
@@ -195,16 +196,21 @@ export function applyCatalogCheckResult(item, result, nowMs) {
     const failureClass = classifySourceHttp(result && result.httpStatus);
     const delay = retryDelayMs(attempt, result, interval);
     const exhausted = failureClass === "PERMANENT" || attempt >= MAX_SOURCE_ATTEMPTS;
+    const confirmedAbsent = result && result.confirmedAbsent === true;
     return {
       ...base,
       ok: false,
       attempt,
       httpStatus: result && result.httpStatus != null ? Number(result.httpStatus) : null,
       failureClass,
-      retryable: !exhausted,
+      retryable: confirmedAbsent ? false : true,
       circuitOpen: attempt >= MAX_SOURCE_ATTEMPTS,
-      retryNotBefore: exhausted ? null : new Date(nowMs + delay).toISOString(),
-      holdReason: failureClass === "PERMANENT" ? "PERMANENT_SOURCE_FAILURE" : exhausted ? "RETRY_EXHAUSTED" : "RETRY_WAIT",
+      retryNotBefore: confirmedAbsent ? null : new Date(nowMs + (exhausted ? LONG_TERM_RECHECK_MS : delay)).toISOString(),
+      holdReason: confirmedAbsent
+        ? "SOURCE_NOT_FOUND_CONFIRMED"
+        : exhausted
+          ? "LONG_TERM_RECHECK"
+          : "RETRY_WAIT",
       lastFailedAttemptAt: nowIso,
       lkgKept: true,
       sourceVerified: false,
