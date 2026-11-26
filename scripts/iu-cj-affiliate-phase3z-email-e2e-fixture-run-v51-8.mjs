@@ -22,11 +22,20 @@ import {
   FIXTURE_FACTCOOL_SK,
 } from "./iu-cj-affiliate-phase2-forpsi-imap-fixtures.mjs";
 import {
+  activateCommercialActionDedupOfflineSelftestTrustContext,
+  buildCommercialActionKey,
+  buildMailboxMessageKey,
+  buildOfflineTestMailboxMessageKey,
   classifyPartnerEmail,
+  commercialActionDraftToDedupRecord,
+  createCommercialActionDedupSealAuthorityForOfflineSelftest,
   evaluateCommercialActionDedup,
   extractCommercialDraftsForOfflineTest,
+  initCommercialActionDedupOfflineSelftestSeal,
   processSyntheticPartnerMessage,
+  resetCommercialActionDedupTrustStateForOfflineSelftestHarness,
   resolveCjPartnerIdentity,
+  sealCommercialActionDedupRecordFromTrustedImapPipeline,
   PRODUCTION_SIGNING_ENABLED,
   PROCESSING_STATE,
 } from "./iu-cj-affiliate-phase2-email-ingest-lib.mjs";
@@ -392,12 +401,80 @@ if (booking && booking.classification.commercialKinds.includes("coupon_offer")) 
     detail: "Editorial mail saying 'ne kupón' is classified coupon_offer (keyword match). 0 drafts extracted and partner identity unresolved, so it cannot publish.",
   });
 }
-findings.push({
-  id: "COMMERCIAL_ACTION_DEDUP_TRUST_BLOCKED_OFFLINE",
-  severity: "INFO",
-  detail:
-    "Offline fixture mailbox keys are not trust-eligible, so commercial-action dedupe is fail-closed (requires_review: mailbox_key_not_trust_eligible). Trusted dedupe can only be exercised with the real IMAP adapter identity (owner scenario B).",
-});
+let trustedDedup = { trustedNew: null, trustedDuplicate: null, unauthorized: null, productionSeal: null };
+try {
+  resetCommercialActionDedupTrustStateForOfflineSelftestHarness();
+  const sealReady = initCommercialActionDedupOfflineSelftestSeal("offline-fixture-seal-not-a-production-key");
+  const contextReady = activateCommercialActionDedupOfflineSelftestTrustContext();
+  const sealAuthority = createCommercialActionDedupSealAuthorityForOfflineSelftest();
+  const trustedMailbox = buildOfflineTestMailboxMessageKey({
+    uidvalidity: 51,
+    uid: 8,
+    testCaseId: "trusted-commercial-dedup",
+  });
+  const draft = {
+    commercialActionIndex: 0,
+    rawBlockFingerprint: "authorized-commercial-block",
+    advertiserCid: "5277391",
+    territory: { signal: "CZ" },
+  };
+  draft.commercialActionKey = buildCommercialActionKey(trustedMailbox, 0, draft.rawBlockFingerprint);
+  const sealed = commercialActionDraftToDedupRecord(draft, trustedMailbox, { sealAuthority });
+  const candidate = {
+    commercialActionKey: draft.commercialActionKey,
+    mailboxKey: trustedMailbox,
+    actionIndex: 0,
+    blockFingerprint: draft.rawBlockFingerprint,
+    advertiserCid: "5277391",
+    territorySignal: "CZ",
+  };
+  trustedDedup.trustedNew = evaluateCommercialActionDedup([], candidate);
+  trustedDedup.trustedDuplicate = evaluateCommercialActionDedup([sealed], candidate);
+  const unauthorizedMailbox = buildMailboxMessageKey({
+    mailbox: trustedMailbox.mailbox,
+    folder: trustedMailbox.folder,
+    uidvalidity: trustedMailbox.uidvalidity,
+    uid: trustedMailbox.uid,
+  });
+  trustedDedup.unauthorized = evaluateCommercialActionDedup([sealed], {
+    ...candidate,
+    mailboxKey: unauthorizedMailbox,
+  });
+  trustedDedup.productionSeal = sealCommercialActionDedupRecordFromTrustedImapPipeline();
+  expect(
+    "trusted_dedup_context",
+    sealReady.ok === true && contextReady.ok === true && !!sealAuthority && trustedMailbox.ok === true,
+    "offline trust context",
+  );
+  expect(
+    "trusted_dedup_new_then_duplicate",
+    trustedDedup.trustedNew.decision === "new_action" &&
+      trustedDedup.trustedDuplicate.decision === "duplicate_skip" &&
+      trustedDedup.trustedDuplicate.skip === true,
+    trustedDedup.trustedNew.decision + "/" + trustedDedup.trustedDuplicate.decision,
+  );
+  expect(
+    "unauthorized_mailbox_not_deduped",
+    trustedDedup.unauthorized.decision === "requires_review" &&
+      trustedDedup.unauthorized.reason === "mailbox_key_not_trust_eligible" &&
+      trustedDedup.unauthorized.skip !== true,
+    trustedDedup.unauthorized.reason,
+  );
+  expect(
+    "production_imap_seal_stays_blocked",
+    PRODUCTION_SIGNING_ENABLED === false && trustedDedup.productionSeal.ok === false,
+    trustedDedup.productionSeal.reason,
+  );
+} finally {
+  resetCommercialActionDedupTrustStateForOfflineSelftestHarness();
+}
+if (failures.some((f) => f.id === "trusted_dedup_context" || f.id === "trusted_dedup_new_then_duplicate" || f.id === "unauthorized_mailbox_not_deduped" || f.id === "production_imap_seal_stays_blocked")) {
+  findings.push({
+    id: "COMMERCIAL_ACTION_DEDUP_TRUST_BLOCKED_OFFLINE",
+    severity: "INFO",
+    detail: "Isolated offline trust fixture did not both dedupe an authorized commercial action and block an unauthorized mailbox.",
+  });
+}
 
 // 11) readiness inventory (read-only)
 const readiness = buildEmailE2EReadinessAudit({ repoRoot: REPO_ROOT });
