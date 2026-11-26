@@ -10,6 +10,7 @@ import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { isCjTrackingUrl, assertAllowedDataWrite } from "./iu-cj-affiliate-catalog-sync-publish-gate-v1.mjs";
+import { normalizeRelationshipStatus } from "./iu-cj-affiliate-phase3z-partner-lifecycle-v51-8.mjs";
 import { parseAffiliateCatalogOrdered } from "./iu-cj-affiliate-phase2-partner-slot-inventory-v1.mjs";
 
 export const PHASE3Z_STATIC_CATALOG_SCHEMA = "iu-affiliate-cj-main-buttons-static-v13";
@@ -61,7 +62,7 @@ export function buildStaticMainButtonCatalog(registry, opts = {}) {
 
   for (const p of registry?.partners || []) {
     const advId = String(p.advertiserId || "");
-    const joined = String(p.relationshipStatus || "").toLowerCase() === "joined";
+    const joined = normalizeRelationshipStatus(p.relationshipStatus) === "joined";
     if (!joined) continue;
     if (p.mainButtonReady !== true) {
       blockers.push({
@@ -76,7 +77,10 @@ export function buildStaticMainButtonCatalog(registry, opts = {}) {
       continue;
     }
     if (!advId || seen.has(advId)) continue;
-    const url = String(p.selectedClickUrl || "");
+    const rawUrl = String(p.selectedClickUrl || "");
+    const protectedSlot = PROTECTED_SLOT_CLICK_IDENTITY[advId];
+    const identityOk = !protectedSlot || (sameProtectedClick(rawUrl, protectedSlot) && protectedDestinationOk(p, protectedSlot));
+    const url = protectedSlot ? (identityOk ? rawUrl : "") : rawUrl;
     const sectionId = String(p.sectionId || "");
     const title = String(p.displayNameCs || p.cjName || p.advertiserName || "").trim();
     if (!url || !isCjTrackingUrl(url) || !sectionId || !title) {
@@ -130,7 +134,7 @@ export function buildStaticMainButtonCatalog(registry, opts = {}) {
   const sha256 = crypto.createHash("sha256").update(bodyForHash).digest("hex");
 
   const joined = (registry?.partners || []).filter(
-    (p) => String(p.relationshipStatus || "").toLowerCase() === "joined"
+    (p) => normalizeRelationshipStatus(p.relationshipStatus) === "joined"
   ).length;
 
   return {
@@ -163,6 +167,130 @@ export function buildStaticMainButtonCatalog(registry, opts = {}) {
     },
     note: "Static pre-generated CJ main buttons. PUBLIC_SWAP DISARMED until explicit GO.",
   };
+}
+
+/** Partners that stay unpublished until their own conditions are met. */
+export const STATIC_CATALOG_BLOCKED_UNTIL_CONDITIONS = {
+  "7417963": "ONBUY_SECTION_UNRESOLVED",
+  "4686326": "PARAGON_UNSUITABLE_DESTINATION",
+};
+
+/** Protected slots keep publisher, link id, and destination host. CJ may rotate the click host. */
+export const PROTECTED_SLOT_CLICK_IDENTITY = {
+  "5096493": { advertiserId: "5096493", publisherId: "101883843", linkId: "13386171", destinationHost: "booking.com" },
+  "6130482": { advertiserId: "6130482", publisherId: "101883843", linkId: "15237230", destinationHost: "leoexpress.com" },
+};
+
+const CJ_CLICK_HOSTS = new Set([
+  "www.anrdoezrs.net",
+  "www.jdoqocy.com",
+  "www.dpbolvw.net",
+  "www.kqzyfj.com",
+  "www.tkqlhce.com",
+]);
+
+export function cjClickIdentity(url) {
+  let parsed;
+  try {
+    parsed = new URL(String(url || ""));
+  } catch {
+    return null;
+  }
+  if (parsed.protocol !== "https:") return null;
+  if (parsed.username || parsed.password) return null;
+  const host = parsed.hostname.toLowerCase();
+  if (!CJ_CLICK_HOSTS.has(host)) return null;
+  const match = parsed.pathname.match(/^\/click-(\d+)-(\d+)(?:-(\d+))?$/);
+  if (!match) return null;
+  return { host, publisherId: match[1], linkId: match[2], suffix: match[3] || "" };
+}
+
+export function sameProtectedClick(url, identity) {
+  const parsed = cjClickIdentity(url);
+  return !!parsed && parsed.publisherId === identity.publisherId && parsed.linkId === identity.linkId;
+}
+
+export function protectedDestinationOk(partner, identity) {
+  const raw = partner && (partner.selectedDestination || partner.selectedDestinationRaw);
+  if (!raw || !identity || !identity.destinationHost) return true;
+  let parsed;
+  try {
+    parsed = new URL(String(raw));
+  } catch {
+    return false;
+  }
+  if (parsed.protocol !== "https:") return false;
+  if (parsed.username || parsed.password) return false;
+  const host = parsed.hostname.toLowerCase().replace(/^www\./, "");
+  return host === String(identity.destinationHost).toLowerCase().replace(/^www\./, "");
+}
+
+function partnerIsPaid(partner) {
+  const management = String(partner?.management || "");
+  return management === "PAID_RESERVED" || management === "MANUAL_PROTECTED" || partner?.paidPosition === true;
+}
+
+/**
+ * Bring the static button catalog in line with the joined registry.
+ * A new ready partner updates the result. It does not require a frozen button count.
+ * Unsafe inputs keep the previous catalog.
+ */
+export function syncStaticMainButtonsFromRegistry(registry, previousStatic, opts = {}) {
+  const previous = previousStatic && typeof previousStatic === "object" ? previousStatic : null;
+  const keep = (reason) => ({ ok: false, reason, catalog: previous, rollback: true, paidPreserved: true });
+  if (opts.registryAvailable === false) return keep("REGISTRY_OUTAGE");
+  if (opts.corruptSnapshot === true) return keep("CORRUPT_SNAPSHOT");
+  if (opts.lockHeld === true) return keep("CONCURRENT_WRITE");
+  if (!registry || !Array.isArray(registry.partners) || registry.partners.length === 0) return keep("INCOMPLETE_REGISTRY");
+  const prevGen = previous && Number.isFinite(Number(previous.generation)) ? Number(previous.generation) : 0;
+  if (opts.expectedGeneration != null && Number(opts.expectedGeneration) !== prevGen) return keep("STALE_CONCURRENT_WRITE");
+
+  const paidIds = new Set((opts.paidAdvertiserIds || []).map(String));
+  for (const partner of registry.partners) {
+    if (partnerIsPaid(partner)) paidIds.add(String(partner.advertiserId));
+  }
+  const previousById = new Map((previous?.buttons || []).map((button) => [String(button.advertiserId), button]));
+  for (const id of paidIds) {
+    const prev = previousById.get(id);
+    const partner = registry.partners.find((row) => String(row.advertiserId) === id);
+    if (!prev || !partner) continue;
+    if (normalizeRelationshipStatus(partner.relationshipStatus) === "ended") continue;
+    const nextUrl = String(partner.selectedClickUrl || "");
+    const nextSection = String(partner.sectionId || "");
+    if ((nextUrl && nextUrl !== String(prev.url || "")) || (nextSection && nextSection !== String(prev.sectionId || ""))) {
+      return { ok: false, reason: "PAID_POSITION_PROTECTED", catalog: previous, rollback: true, paidPreserved: true, advertiserId: id };
+    }
+  }
+
+  const conditions = opts.publicationConditionsMet || {};
+  const partners = registry.partners.map((partner) => {
+    const id = String(partner.advertiserId || "");
+    if (STATIC_CATALOG_BLOCKED_UNTIL_CONDITIONS[id] && conditions[id] !== true) {
+      return { ...partner, mainButtonReady: false, mainButtonStatus: STATIC_CATALOG_BLOCKED_UNTIL_CONDITIONS[id] };
+    }
+    if (partner.czMarketEligibility === false || partner.publicPromotionAllowed === false) {
+      return { ...partner, mainButtonReady: false, mainButtonStatus: "CZ_NOT_ELIGIBLE" };
+    }
+    return partner;
+  });
+  const rebuilt = buildStaticMainButtonCatalog({ ...registry, partners }, opts);
+  rebuilt.publicButtonSwapArmed = previous ? previous.publicButtonSwapArmed === true : false;
+  rebuilt.liveEnabled = previous ? previous.liveEnabled === true : false;
+  rebuilt.generation = prevGen + 1;
+  rebuilt.syncedFromRegistry = true;
+  return {
+    ok: true,
+    reason: "SYNCED",
+    catalog: rebuilt,
+    readyCount: rebuilt.counts.buttons,
+    rollback: false,
+    paidPreserved: true,
+    generation: rebuilt.generation,
+  };
+}
+
+export function rollbackStaticMainButtons(previousStatic) {
+  return { ok: true, reason: "ROLLBACK", catalog: previousStatic || null, rollback: true };
 }
 
 /** Preview wrapper — never arms swap; for visual/inventory QA only. */
@@ -215,6 +343,18 @@ function main() {
   }
 
   const titles = sectionTitleMap(ROOT);
+  if (argv.includes("--sync-registry")) {
+    const previous = readJson(outStatic);
+    const synced = syncStaticMainButtonsFromRegistry(registry, previous, { sectionTitles: titles });
+    if (!synced.ok) {
+      console.error(JSON.stringify({ ok: false, reason: synced.reason }));
+      process.exit(1);
+    }
+    const writeRepo = argv.includes("--write-repo") || process.env.IU_CJ_PHASE3Z_WRITE_REPO === "1";
+    if (writeRepo) writeJson(outStatic, synced.catalog);
+    console.log(JSON.stringify({ ok: true, buttons: synced.catalog.counts.buttons, generation: synced.generation, wrote: writeRepo }));
+    return;
+  }
   const catalog = buildStaticMainButtonCatalog(registry, { sectionTitles: titles });
   const preview = buildStaticMainButtonPreview(catalog);
   const again = buildStaticMainButtonCatalog(registry, {

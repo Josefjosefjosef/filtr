@@ -11,6 +11,7 @@ import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import { bootstrapGuardContext, bootstrapGuardPage } from "./guards/guard-playwright-bootstrap.mjs";
 import { listenGuardServer } from "./guards/guard-repo-static-server.mjs";
+import { sameProtectedClick } from "./iu-cj-affiliate-phase3z-static-main-catalog-v13.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(ROOT, "package.json"));
@@ -22,6 +23,7 @@ const SECTION = "aff-ubytovani-hotely";
 const SECTION_TITLE = "Ubytování a hotely";
 const PARTNER_TITLE = "Booking.com";
 const CJ_URL = "https://www.anrdoezrs.net/click-101883843-13386171-1779903990000";
+const SLOT_IDENTITY = { publisherId: "101883843", linkId: "13386171" };
 const DISCLOSURE =
   "Tato sekce obsahuje reklamní a partnerské odkazy na externí služby a obchody.";
 const REPORT = path.join(
@@ -259,7 +261,7 @@ try {
     ok(tag + ":slots_ready_ge_1", snap.slots >= 1, "n=" + snap.slots);
     ok(tag + ":empty_visible_0", (snap.emptyVisible != null ? snap.emptyVisible : 0) === 0, "empty=" + (snap.emptyVisible != null ? snap.emptyVisible : 0));
     ok(tag + ":slot1_text", snap.firstText === PARTNER_TITLE, snap.firstText);
-    ok(tag + ":slot1_href", snap.firstHref === CJ_URL, snap.firstHref);
+    ok(tag + ":slot1_href", sameProtectedClick(snap.firstHref, SLOT_IDENTITY), snap.firstHref);
     ok(tag + ":slot1_target", snap.firstTarget === "_blank", snap.firstTarget);
     ok(tag + ":slot1_rel_sponsored", /\bsponsored\b/.test(snap.firstRel), snap.firstRel);
     ok(tag + ":slot1_rel_noopener", /\bnoopener\b/.test(snap.firstRel), snap.firstRel);
@@ -269,7 +271,7 @@ try {
     ok(tag + ":slot1_is_anchor", snap.tagName === "A");
     ok(tag + ":slot1_no_img", snap.hasImg === false);
     ok(tag + ":slot1_no_direct_booking", !/^https?:\/\/(www\.)?booking\.com/i.test(snap.firstHref));
-    ok(tag + ":slot1_protected", snap.firstText === PARTNER_TITLE && snap.firstHref === CJ_URL);
+    ok(tag + ":slot1_protected", snap.firstText === PARTNER_TITLE && sameProtectedClick(snap.firstHref, SLOT_IDENTITY));
     ok(tag + ":centered", snap.centered === true);
     ok(tag + ":no_js_errors", pageErrors.length === 0, pageErrors.slice(0, 2).join("|"));
 
