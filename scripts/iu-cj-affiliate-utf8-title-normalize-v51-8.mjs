@@ -82,21 +82,111 @@ export function tryRepairCp852Utf8Mojibake(text) {
     if (!map.has(ch)) return null;
     bytes.push(map.get(ch));
   }
+  // Source feeds truncate long descriptions mid-character (e.g. 2000 chars): drop ONE trailing
+  // incomplete UTF-8 sequence (1-3 bytes) instead of failing the whole repair.
+  let end = bytes.length;
+  for (let back = 1; back <= 3 && back <= bytes.length; back++) {
+    const b = bytes[bytes.length - back];
+    if ((b & 0xc0) === 0x80) continue; // continuation byte — keep scanning for lead
+    const need = b >= 0xf0 ? 4 : b >= 0xe0 ? 3 : b >= 0xc0 ? 2 : 1;
+    if (need > back) end = bytes.length - back; // lead byte without all its continuations
+    break;
+  }
   let repaired;
   try {
-    repaired = Buffer.from(bytes).toString("utf8");
+    repaired = Buffer.from(bytes.slice(0, end)).toString("utf8");
   } catch {
     return null;
   }
-  if (!repaired || repaired.includes("\uFFFD")) return null;
+  if (!repaired) return null;
+  if (repaired.includes("\uFFFD")) {
+    // A hard feed cut is often stored as the three UTF-8 bytes of U+FFFD (EF BF BD).
+    // That sequence is complete, so the lead-byte trim above leaves it in place.
+    // Keep the repair only when every U+FFFD is a trailing suffix and the rest is clean.
+    const stripped = repaired.replace(/\uFFFD+$/u, "");
+    if (!stripped || stripped.includes("\uFFFD")) return null;
+    repaired = stripped;
+  }
   if (repaired === input) return null;
   const boxBefore = countBoxDrawing(input);
   const boxAfter = countBoxDrawing(repaired);
   if (boxAfter >= boxBefore) return null;
   const scoreBefore = countCeDiacritics(input) - boxBefore * 3;
   const scoreAfter = countCeDiacritics(repaired) - boxAfter * 3;
-  if (scoreAfter <= scoreBefore) return null;
+  // Lower score is tolerated only when ALL box glyphs vanish AND the whole string round-trips as
+  // strict UTF-8 (no U+FFFD above): English/mixed text has no CE diacritics, and OEM-mojibake
+  // glyphs (Ô/Ö/ó…) inflate the "before" CE score, so the score cannot improve there.
+  if (boxAfter !== 0 && scoreAfter <= scoreBefore) return null;
   return repaired;
+}
+
+/**
+ * Whole-string CP852 repair, otherwise repair only non-ASCII runs that contain box drawing.
+ * ASCII and already-correct Unicode runs stay byte-for-byte. Fail closed if any box glyph remains.
+ * @param {string} text
+ * @returns {string|null}
+ */
+export function tryRepairCp852Utf8MojibakeSegmented(text) {
+  const input = String(text || "");
+  const whole = tryRepairCp852Utf8Mojibake(input);
+  if (whole) return whole;
+  if (!looksLikeCp852Utf8Mojibake(input)) return null;
+  let changed = false;
+  const parts = input.split(/([\u0000-\u007f]+)/);
+  const out = parts.map((part) => {
+    if (!part || part.charCodeAt(0) < 128) return part;
+    if (!looksLikeCp852Utf8Mojibake(part)) return part;
+    const fixed = tryRepairCp852Utf8Mojibake(part);
+    if (!fixed) return part;
+    changed = true;
+    return fixed;
+  });
+  if (!changed) return null;
+  const joined = out.join("");
+  if (countBoxDrawing(joined) !== 0) return null;
+  if (joined === input) return null;
+  return joined;
+}
+
+/**
+ * Common Windows-1252 / UTF-8 misdecode literals (e.g. ellipsis/quotes as ÔÇŽ).
+ * Applied only as exact multi-char sequence replacements — never touches × / Úž / ß.
+ */
+/*
+ * Table uses \u escapes (source-encoding safe). Prefix "\u00d4\u00c7" = UTF-8 lead bytes E2 80
+ * misread through an OEM page (CP852 / CP850); third glyph = original third byte:
+ *   CP852: \u017d=A6 …  \u00d6=99 ’  \u015b=98 ‘  \u0165=9C “  \u0141=9D ”  \u00f4=93 –  \u00f6=94 —  \u00f3=A2 •
+ *   CP850: \u00aa=A6 …  \u00a3=9C “  \u00d8=9D ”
+ * Each key is a fixed 3-char (or 2-char Latin-1) sequence; × (\u00d7), Úž, ß never appear as keys.
+ */
+export const WIN1252_UTF8_LITERAL_REPAIRS = Object.freeze([
+  ["\u00d4\u00c7\u017d", "\u2026"],
+  ["\u00d4\u00c7\u00aa", "\u2026"],
+  ["\u00d4\u00c7\u00d6", "\u2019"],
+  ["\u00d4\u00c7\u015b", "\u2018"],
+  ["\u00d4\u00c7\u0165", "\u201c"],
+  ["\u00d4\u00c7\u00a3", "\u201c"],
+  ["\u00d4\u00c7\u0141", "\u201d"],
+  ["\u00d4\u00c7\u00d8", "\u201d"],
+  ["\u00d4\u00c7\u00f4", "\u2013"],
+  ["\u00d4\u00c7\u00f6", "\u2014"],
+  ["\u00d4\u00c7\u00f3", "\u2022"],
+  ["\u00c2\u00a9", "\u00a9"],
+  ["\u00c2\u00ae", "\u00ae"],
+]);
+
+export function tryRepairWin1252Utf8Literals(text) {
+  const input = String(text || "");
+  if (!input) return null;
+  let out = input;
+  let hit = false;
+  for (const [bad, good] of WIN1252_UTF8_LITERAL_REPAIRS) {
+    if (out.includes(bad)) {
+      out = out.split(bad).join(good);
+      hit = true;
+    }
+  }
+  return hit && out !== input ? out : null;
 }
 
 /**
@@ -108,14 +198,33 @@ export function normalizeCjProductText(text) {
   if (text == null) return { text: null, repaired: false, reason: null };
   const input = String(text);
   if (!input) return { text: input, repaired: false, reason: null };
-  if (!looksLikeCp852Utf8Mojibake(input)) {
-    return { text: input, repaired: false, reason: null };
+
+  // Stage A: CP852→UTF-8 reverse (titleBox historical class)
+  if (looksLikeCp852Utf8Mojibake(input)) {
+    const repaired = tryRepairCp852Utf8MojibakeSegmented(input);
+    if (repaired) {
+      const stageB = tryRepairWin1252Utf8Literals(repaired) || repaired;
+      return {
+        text: stageB,
+        repaired: true,
+        reason:
+          stageB !== repaired
+            ? "CP852_UTF8_REPAIRED+WIN1252_LITERALS"
+            : "CP852_UTF8_REPAIRED",
+      };
+    }
   }
-  const repaired = tryRepairCp852Utf8Mojibake(input);
-  if (!repaired) {
+
+  // Stage B: Windows-1252 literal sequences (descriptions with ÔÇŽ etc.)
+  const win = tryRepairWin1252Utf8Literals(input);
+  if (win) {
+    return { text: win, repaired: true, reason: "WIN1252_UTF8_LITERALS_REPAIRED" };
+  }
+
+  if (looksLikeCp852Utf8Mojibake(input)) {
     return { text: input, repaired: false, reason: "CP852_REPAIR_REFUSED" };
   }
-  return { text: repaired, repaired: true, reason: "CP852_UTF8_REPAIRED" };
+  return { text: input, repaired: false, reason: null };
 }
 
 export function normalizeCjProductFields(fields = {}) {
@@ -141,12 +250,21 @@ export function normalizeCjProductFields(fields = {}) {
  * @returns {{ titleRepaired: number, descriptionRepaired: number, scanned: number }}
  */
 export function normalizeOffersPublicDocTexts(doc) {
-  const stats = { titleRepaired: 0, descriptionRepaired: 0, scanned: 0 };
+  const stats = { titleRepaired: 0, descriptionRepaired: 0, otherFieldsRepaired: 0, scanned: 0 };
   if (!doc || typeof doc !== "object") return stats;
   for (const sec of doc.sections || []) {
     for (const p of sec.products || []) {
       if (!p || typeof p !== "object") continue;
       stats.scanned += 1;
+      // Other presentation text fields (never URLs / ids): e.g. constant ctaLabel "Zobrazit výrobek".
+      for (const f of ["ctaLabel", "brand"]) {
+        if (typeof p[f] !== "string" || !p[f]) continue;
+        const n = normalizeCjProductText(p[f]);
+        if (n.repaired) {
+          p[f] = n.text;
+          stats.otherFieldsRepaired += 1;
+        }
+      }
       const titleN = normalizeCjProductText(p.title ?? p.name ?? null);
       const descN = normalizeCjProductText(p.description ?? null);
       if (titleN.repaired) {
