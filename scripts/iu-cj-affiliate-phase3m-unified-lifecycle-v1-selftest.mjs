@@ -314,6 +314,40 @@ const exp = expireSingleCoupon({
 });
 expect("expire_coupon_only", exp.ok && exp.partnerPreserved === true);
 expect("expire_leaves_other", exp.nextOffersPublic.coupons.some((c) => c.id === "c2"));
+expect("expire_keeps_row", exp.nextOffersPublic.coupons.some((c) => c.id === "c1" && c.publicationReady === false));
+expect("expire_keeps_catalog_flag", exp.nextOffersPublic.liveEnabled === false);
+
+const sectionExpire = expireSingleCoupon({
+  offersPublic: {
+    liveEnabled: true,
+    coupons: [],
+    sections: [
+      {
+        sectionKey: "aff-zdravi-doplnky",
+        coupons: [
+          { advertiserId: "7692699", offerId: "17182892", publicationReady: true, currency: "CZK" },
+          { advertiserId: "5154182", offerId: "17182892", publicationReady: true, currency: "EUR" },
+        ],
+      },
+      {
+        sectionKey: "aff-dum-zahrada",
+        coupons: [
+          { advertiserId: "7692699", offerId: "17182892", publicationReady: true },
+        ],
+      },
+    ],
+  },
+  couponId: "17182892",
+  advertiserId: "7692699",
+});
+const expiredPlacements = sectionExpire.nextOffersPublic.sections.flatMap((sec) => sec.coupons).filter((row) => row.advertiserId === "7692699");
+const otherAdvertiser = sectionExpire.nextOffersPublic.sections[0].coupons.find((row) => row.advertiserId === "5154182");
+expect("expire_section_both_placements", expiredPlacements.length === 2 && expiredPlacements.every((row) => row.publicationReady === false && row.publishable === false));
+expect("expire_other_advertiser_same_offer", otherAdvertiser.publicationReady === true);
+expect("expire_no_source_clock", expiredPlacements.every((row) => row.lastSuccessfulVerificationAt == null && row.lastCheckedAt == null));
+expect("expire_keeps_currency", expiredPlacements[0].currency === "CZK" && otherAdvertiser.currency === "EUR");
+expect("expire_does_not_disarm_catalog", sectionExpire.nextOffersPublic.liveEnabled === true);
+expect("expire_does_not_arm", sectionExpire.liveEnabled === false);
 
 // --- 14-17 unsafe ENDED ---
 for (const [id, ctx] of [
