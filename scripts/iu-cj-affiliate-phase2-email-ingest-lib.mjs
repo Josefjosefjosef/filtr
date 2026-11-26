@@ -1635,10 +1635,18 @@ export function classifyPartnerEmail(message) {
   ) {
     commercialKinds.push(COMMERCIAL_KIND.program_welcome);
   }
+  // Negated editorial ("ne kupón", "bez kupónu", "not a coupon") must not become coupon_offer.
+  // Operates on a copy. Real labelled coupons stay. Does not strip a lone U+FFFD or arbitrary text.
+  const couponScan = body
+    .replace(/\bne(?:n[ií]|jde\s+o|m[aá]te|n[ií]\s+to)?\s+kup[oó]n\w*/gi, " ")
+    .replace(/\bnie\s+je\s+kup[oó]n\w*/gi, " ")
+    .replace(/\bbez\s+kup[oó]n\w*/gi, " ")
+    .replace(/\bnot\s+a\s+(?:coupon|promo\s+code)\b/gi, " ")
+    .replace(/\bwithout\s+a\s+coupon\b/gi, " ");
   if (/booking\.com|marketing|inspir/i.test(subject + body) && !/\b(kód|code|coupon|sleva|kupón)\b/i.test(body)) {
     commercialKinds.push(COMMERCIAL_KIND.marketing_inspiration);
   }
-  if (/\b(kupón|coupon|kód|code)\b/i.test(body) || COUPON_INLINE.test(body)) {
+  if (/\b(kupón|coupon|kód|code)\b/i.test(couponScan) || COUPON_INLINE.test(couponScan)) {
     commercialKinds.push(COMMERCIAL_KIND.coupon_offer);
   }
   if ((body.match(/\d{1,2}\s*%/g) || []).length >= 2) {
