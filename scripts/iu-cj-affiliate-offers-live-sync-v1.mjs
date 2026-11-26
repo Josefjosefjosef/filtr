@@ -58,7 +58,6 @@ import {
   mergeRefreshedProductIntoCard,
   stampProductFetchClocks,
   FRESHNESS_STATUS,
-  FRESHNESS_POLICY_V32,
   SOURCE_UPDATED_AT_STATUS,
 } from "./iu-cj-affiliate-phase3z-offers-freshness-v32.mjs";
 import { planCatalogFreshnessBatch } from "./iu-cj-affiliate-phase3z-catalog-freshness-scheduler-v51-8.mjs";
@@ -452,9 +451,13 @@ function toPublicOfferCard(card, clock = {}) {
   if (!affiliateOk) return null;
   const kind = card.kind === "coupon" ? "coupon" : "action";
   if (kind === "coupon" && !String(card.couponCode || "").trim()) return null;
-  const checkedAt =
-    typeof clock.checkedAt === "string" && Number.isFinite(Date.parse(clock.checkedAt))
-      ? new Date(Date.parse(clock.checkedAt)).toISOString()
+  const offerLoadedAt =
+    typeof clock.offerFetchedAt === "string" && Number.isFinite(Date.parse(clock.offerFetchedAt))
+      ? new Date(Date.parse(clock.offerFetchedAt)).toISOString()
+      : null;
+  const batchFetchedAt =
+    typeof clock.batchFetchedAt === "string" && Number.isFinite(Date.parse(clock.batchFetchedAt))
+      ? new Date(Date.parse(clock.batchFetchedAt)).toISOString()
       : null;
   const sourceUpdatedAt = card.sourceUpdatedAt ? String(card.sourceUpdatedAt) : null;
   return {
@@ -477,14 +480,14 @@ function toPublicOfferCard(card, clock = {}) {
     blockers: [],
     sourceSystem: "cj_link_search_staging",
     fixtureOnly: false,
-    fetchedAt: checkedAt,
-    lastCheckedAt: checkedAt,
-    lastSuccessfulVerificationAt: checkedAt,
+    sourceBatchFetchedAt: batchFetchedAt,
+    offerLoadedAt,
+    fetchedAt: offerLoadedAt,
+    lastCheckedAt: card.lastCheckedAt || null,
+    lastSuccessfulVerificationAt: card.lastSuccessfulVerificationAt || null,
+    lastFailedAttemptAt: card.lastFailedAttemptAt || null,
     sourceUpdatedAt,
-    nextCheckAt:
-      checkedAt == null
-        ? null
-        : new Date(Date.parse(checkedAt) + FRESHNESS_POLICY_V32.productPriceAvailabilityMs).toISOString(),
+    nextCheckAt: card.nextCheckAt || null,
   };
 }
 
@@ -1221,11 +1224,12 @@ export function buildOffersPublicFromStaging(opts = {}) {
       card.kind = "coupon";
       card.couponCode = String(link.couponCode).trim();
     }
-    const checkedAt =
+    const batchFetchedAt =
       typeof staging.fetchedAt === "string" && Number.isFinite(Date.parse(staging.fetchedAt))
         ? staging.fetchedAt
         : null;
-    const pubBase = toPublicOfferCard(card, { checkedAt });
+    const offerFetchedAt = typeof link.fetchedAt === "string" ? link.fetchedAt : null;
+    const pubBase = toPublicOfferCard(card, { batchFetchedAt, offerFetchedAt });
     if (!pubBase || !pubBase.sectionKey) {
       bump("public_card_rejected");
       continue;

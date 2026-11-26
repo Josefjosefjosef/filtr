@@ -85,15 +85,33 @@ export function planCatalogFreshnessBatch(items, opts = {}) {
   const deduped = dedupeCatalogItems(items);
   const byPartner = new Map();
   let due = 0;
+  let heldForRetry = 0;
+  const maxPerRun = Math.max(1, Math.floor(Number(opts.maxAttemptsPerRun) || 1));
   for (const item of deduped.items) {
-    const retryAt = checkpoint.nextAttemptAt && checkpoint.nextAttemptAt[item.key];
-    if (retryAt != null && Number(retryAt) > nowMs) continue;
     const overdue = dueMs(item, nowMs);
     const missingClock = !item.nextCheckAt;
-    if (!missingClock && overdue <= 0 && expiryBoost(item, nowMs) === 0 && item.relationshipStatus !== "ended") {
+    const selectable =
+      missingClock ||
+      overdue > 0 ||
+      expiryBoost(item, nowMs) > 0 ||
+      item.relationshipStatus === "ended";
+    if (!selectable) continue;
+    due += 1;
+    const retryAt = Date.parse(String(item.retryNotBefore || (checkpoint.nextAttemptAt && checkpoint.nextAttemptAt[item.key]) || ""));
+    const inFlight = checkpoint.inFlight && checkpoint.inFlight[item.key] === true;
+    const partnerOpen = checkpoint.circuitOpen && checkpoint.circuitOpen[item.advertiserId] === true;
+    const runAttempts = Number(checkpoint.attemptsThisRun && checkpoint.attemptsThisRun[item.key]) || 0;
+    if (
+      item.retryable === false ||
+      item.circuitOpen === true ||
+      inFlight ||
+      partnerOpen ||
+      runAttempts >= maxPerRun ||
+      (Number.isFinite(retryAt) && retryAt > nowMs)
+    ) {
+      heldForRetry += 1;
       continue;
     }
-    due += 1;
     const score =
       overdue +
       expiryBoost(item, nowMs) +
@@ -137,9 +155,27 @@ export function planCatalogFreshnessBatch(items, opts = {}) {
     batch,
     partnersInBatch: new Set(batch.map((row) => row.advertiserId)).size,
     debtAfterBatch: Math.max(0, due - batch.length),
+    heldForRetry,
     executeArmed: false,
     publicationExecute: false,
   };
+}
+
+export const MAX_SOURCE_ATTEMPTS = 5;
+
+export function classifySourceHttp(status) {
+  const code = Number(status);
+  if (!Number.isFinite(code) || code === 0 || code === 408 || code === 429) return "TEMPORARY";
+  if (code >= 500) return "TEMPORARY";
+  if (code >= 400) return "PERMANENT";
+  return "TEMPORARY";
+}
+
+function retryDelayMs(attempt, result, interval) {
+  const header = Number(result && result.retryAfterSeconds);
+  if (Number.isFinite(header) && header >= 0) return Math.round(header * 1000);
+  const step = Math.max(1, attempt);
+  return Math.min(interval, 1000 * 2 ** Math.min(step, 8));
 }
 
 /**
@@ -156,13 +192,20 @@ export function applyCatalogCheckResult(item, result, nowMs) {
   };
   if (!result || result.ok !== true) {
     const attempt = Math.max(0, Math.floor(Number(item && item.attempt) || 0)) + 1;
-    const backoff = Math.min(interval, 1000 * 2 ** Math.min(attempt, 8));
+    const failureClass = classifySourceHttp(result && result.httpStatus);
+    const delay = retryDelayMs(attempt, result, interval);
+    const exhausted = failureClass === "PERMANENT" || attempt >= MAX_SOURCE_ATTEMPTS;
     return {
       ...base,
       ok: false,
       attempt,
+      httpStatus: result && result.httpStatus != null ? Number(result.httpStatus) : null,
+      failureClass,
+      retryable: !exhausted,
+      circuitOpen: attempt >= MAX_SOURCE_ATTEMPTS,
+      retryNotBefore: exhausted ? null : new Date(nowMs + delay).toISOString(),
+      holdReason: failureClass === "PERMANENT" ? "PERMANENT_SOURCE_FAILURE" : exhausted ? "RETRY_EXHAUSTED" : "RETRY_WAIT",
       lastFailedAttemptAt: nowIso,
-      nextAttemptAt: new Date(nowMs + backoff).toISOString(),
       lkgKept: true,
       sourceVerified: false,
     };
@@ -180,5 +223,56 @@ export function applyCatalogCheckResult(item, result, nowMs) {
     nextCheckAt: new Date(nowMs + interval).toISOString(),
     lkgKept: false,
     sourceVerified: true,
+  };
+}
+
+export function propagateIdentityVerification(rows, result) {
+  const advertiserId = String(result && result.advertiserId != null ? result.advertiserId : "");
+  const productId = String(result && result.productId != null ? result.productId : "");
+  let updated = 0;
+  let removed = 0;
+  const next = [];
+  for (const row of rows || []) {
+    const sameAdvertiser = String(row.advertiserId || "") === advertiserId;
+    const sameProduct = String(row.productId || "") === productId;
+    if (!sameAdvertiser || !sameProduct) {
+      next.push(row);
+      continue;
+    }
+    if (row.productVariant && String(row.productVariant) !== String(result.productVariant || "")) {
+      next.push(row);
+      continue;
+    }
+    if (result.removed === true) {
+      removed += 1;
+      continue;
+    }
+    updated += 1;
+    next.push({
+      ...row,
+      currentPrice: result.currentPrice,
+      currency: result.currency,
+      availability: result.availability,
+      relationshipStatus: result.relationshipStatus || row.relationshipStatus,
+      sourceUpdatedAt: result.sourceUpdatedAt != null ? result.sourceUpdatedAt : row.sourceUpdatedAt || null,
+      lastSuccessfulVerificationAt: result.lastSuccessfulVerificationAt || row.lastSuccessfulVerificationAt || null,
+    });
+  }
+  return { rows: next, updated, removed };
+}
+
+export function estimateFreshnessCapacity(input = {}) {
+  const uniqueIdentities = Math.max(0, Math.floor(Number(input.uniqueIdentities) || 0));
+  const batchSize = Math.max(1, Math.floor(Number(input.productIdsBatchSize) || 100));
+  const callIntervalMs = Math.max(1, Math.floor(Number(input.callIntervalMs) || 2600));
+  const requests = uniqueIdentities === 0 ? 0 : Math.ceil(uniqueIdentities / batchSize);
+  const minutes = (requests * callIntervalMs) / 60000;
+  return {
+    uniqueIdentities,
+    requests,
+    minutesPerPass: Number(minutes.toFixed(2)),
+    withinThreeHours: minutes <= 180,
+    measured: false,
+    estimate: true,
   };
 }
