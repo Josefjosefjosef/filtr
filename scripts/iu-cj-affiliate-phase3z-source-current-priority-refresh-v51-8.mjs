@@ -49,7 +49,11 @@ const TIER_BASE = Object.freeze({
 const CURRENT_CLAIMS = new Set(["SOURCE_FRESH", "FRESH", "SOURCE_CURRENT", "CURRENT"]);
 
 function productKey(p) {
-  return `${String(p?.advertiserId ?? "").trim()}|${String(p?.productId ?? "").trim()}`;
+  const advertiserId = String(p?.advertiserId ?? "").trim();
+  const productId = String(p?.productId ?? "").trim();
+  const variant = String(p?.productVariant ?? "").trim();
+  const base = advertiserId + "|" + productId;
+  return variant ? base + "|" + variant : base;
 }
 
 function hasIdentity(p) {
@@ -205,6 +209,7 @@ export function planPriorityRefresh(doc, opts = {}) {
       key,
       advertiserId: String(p.advertiserId).trim(),
       productId: String(p.productId).trim(),
+      productVariant: String(p.productVariant || "").trim() || null,
       feedId: p.feedId != null ? String(p.feedId) : null,
       title: p.title || null,
       tier: pr.tier,
@@ -226,6 +231,7 @@ export function planPriorityRefresh(doc, opts = {}) {
     key: t.key,
     advertiserId: t.advertiserId,
     productId: t.productId,
+    productVariant: t.productVariant || null,
     feedId: t.feedId || null,
     tier: t.tier,
     score: Math.round(t.score * 100) / 100,
