@@ -23,6 +23,11 @@ const now = Date.parse("2026-11-03T12:00:00Z");
 expect("expired_coupon", isOfferExpiredAt({ validTo: "2026-11-01T00:00:00Z" }, now).expired === true);
 expect("future_coupon", isOfferExpiredAt({ validTo: "2099-01-01T00:00:00Z" }, now).expired === false);
 expect(
+  "not_yet_active_is_not_expired",
+  isOfferExpiredAt({ validFrom: "2026-12-01T00:00:00Z", validTo: "2026-12-31T00:00:00Z" }, now).notYetActive === true &&
+    isOfferExpiredAt({ validFrom: "2026-12-01T00:00:00Z", validTo: "2026-12-31T00:00:00Z" }, now).expired === false
+);
+expect(
   "unknown_validity_not_unlimited",
   isOfferExpiredAt({ couponCode: "X" }, now).unknownValidity === true
 );
@@ -95,6 +100,7 @@ const doc = {
         { offerId: "c1", validTo: "2020-01-01", publicationReady: true },
         { offerId: "c2", validTo: "2099-01-01", publicationReady: true },
         { offerId: "c3", publicationReady: true },
+        { offerId: "c4", validFrom: "2026-12-01T00:00:00Z", validTo: "2026-12-31T00:00:00Z", publicationReady: true, currency: "EUR" },
       ],
       actions: [{ offerId: "a1", validTo: "2099-06-01", publicationReady: true }],
       products: [
@@ -121,7 +127,16 @@ const doc = {
 const applied = applyFreshnessToOffersDocument(doc, { nowMs: now });
 expect("coupon_expired_hidden", applied.stats.couponsExpiredHidden === 1);
 expect("coupon_unknown_hidden", applied.stats.couponsUnknownValidityHidden === 1);
-expect("coupon_kept", applied.doc.sections[0].coupons.length === 1);
+expect("coupon_not_yet_active", applied.stats.couponsNotYetActiveRetained === 1);
+expect("coupon_kept", applied.doc.sections[0].coupons.length === 4);
+const expiredCoupon = applied.doc.sections[0].coupons.find((row) => row.offerId === "c1");
+const futureCoupon = applied.doc.sections[0].coupons.find((row) => row.offerId === "c4");
+const activeCoupon = applied.doc.sections[0].coupons.find((row) => row.offerId === "c2");
+expect("expired_row_unpublished", expiredCoupon.publicationReady === false && expiredCoupon.blockers[0] === "EXPIRED");
+expect("expired_row_no_source_clock", expiredCoupon.lastSuccessfulVerificationAt == null);
+expect("future_row_unpublished", futureCoupon.publicationReady === false && futureCoupon.validityStatus === "NOT_YET_ACTIVE");
+expect("future_row_keeps_currency", futureCoupon.currency === "EUR");
+expect("active_coupon_stays_ready", activeCoupon.publicationReady === true);
 expect("stale_product_hidden", applied.stats.productsPriceHidden === 1);
 expect("fresh_product_kept", applied.doc.sections[0].products.length === 1);
 expect(

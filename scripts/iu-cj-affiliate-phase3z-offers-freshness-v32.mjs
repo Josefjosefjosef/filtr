@@ -163,19 +163,52 @@ export function stampProductFetchClocks(row, nowIso, opts = {}) {
  * Missing end date ⇒ not treated as unlimited (unknownValidity).
  */
 export function isOfferExpiredAt(offer, nowMs = Date.now(), opts = {}) {
+  const startRaw = offer?.validFrom || offer?.validFromDate || offer?.startDate || null;
   const endRaw = offer?.validTo || offer?.validUntil || offer?.endDate || offer?.expiresAt || null;
+  const start = parseOfferInstant(startRaw);
   const end = parseOfferInstant(endRaw);
+  if (start != null && nowMs < start) {
+    return {
+      expired: false,
+      notYetActive: true,
+      unknownValidity: false,
+      reason: "before_valid_from",
+      endMs: end,
+      startMs: start,
+    };
+  }
   if (end == null) {
     return {
       expired: false,
+      notYetActive: false,
       unknownValidity: true,
       reason: "no_end_date_not_unlimited",
       endMs: null,
+      startMs: start,
     };
   }
   const inclusive = opts.endsAtInclusive === true;
   const expired = inclusive ? nowMs > end : nowMs >= end;
-  return { expired, unknownValidity: false, reason: expired ? "past_valid_to" : "within_window", endMs: end };
+  return {
+    expired,
+    notYetActive: false,
+    unknownValidity: false,
+    reason: expired ? "past_valid_to" : "within_window",
+    endMs: end,
+    startMs: start,
+  };
+}
+
+function retainUnpublishedOffer(row, status) {
+  return {
+    ...row,
+    publicationReady: false,
+    publishable: false,
+    blockers: [status],
+    freshnessStatus: status === "EXPIRED" ? FRESHNESS_STATUS.EXPIRED : FRESHNESS_STATUS.UNVERIFIED,
+    freshnessReason: status,
+    validityStatus: status,
+  };
 }
 
 function nextCheckIsoFrom(lastCheckMs, nowMs, policy) {
@@ -306,8 +339,8 @@ export function classifyProductFreshness(row, nowMs = Date.now(), policy = FRESH
 }
 
 /**
- * Filter public document: drop expired coupons/actions; optionally hide stale product prices.
- * Does not invent new prices. Mutates a shallow-cloned document.
+ * Keep expired and not-yet-started coupons and actions in the document, unpublished.
+ * Does not invent a source-verification clock or a price.
  */
 export function applyFreshnessToOffersDocument(doc, opts = {}) {
   const nowMs = opts.nowMs != null ? Number(opts.nowMs) : Date.now();
@@ -328,8 +361,10 @@ export function applyFreshnessToOffersDocument(doc, opts = {}) {
   };
   const stats = {
     couponsExpiredHidden: 0,
+    couponsNotYetActiveRetained: 0,
     couponsUnknownValidityHidden: 0,
     actionsExpiredHidden: 0,
+    actionsNotYetActiveRetained: 0,
     actionsUnknownValidityHidden: 0,
     productsPriceHidden: 0,
     productsStaleMarked: 0,
@@ -349,14 +384,22 @@ export function applyFreshnessToOffersDocument(doc, opts = {}) {
       const hasId = c.offerId != null && String(c.offerId).trim() !== "";
       if (!hasId) {
         stats.couponsUnknownValidityHidden += 1;
+        next.coupons.push(retainUnpublishedOffer(c, "UNKNOWN_VALIDITY"));
+        continue;
+      }
+      if (ex.notYetActive) {
+        stats.couponsNotYetActiveRetained += 1;
+        next.coupons.push(retainUnpublishedOffer(c, "NOT_YET_ACTIVE"));
         continue;
       }
       if (ex.expired) {
         stats.couponsExpiredHidden += 1;
+        next.coupons.push(retainUnpublishedOffer(c, "EXPIRED"));
         continue;
       }
       if (ex.unknownValidity && hideUnknownValidity) {
         stats.couponsUnknownValidityHidden += 1;
+        next.coupons.push(retainUnpublishedOffer(c, "UNKNOWN_VALIDITY"));
         continue;
       }
       // publicationReady must not follow from mere existence — require identity + bounded (or explicit) validity.
@@ -379,14 +422,22 @@ export function applyFreshnessToOffersDocument(doc, opts = {}) {
       const hasId = a.offerId != null && String(a.offerId).trim() !== "";
       if (!hasId) {
         stats.actionsUnknownValidityHidden += 1;
+        next.actions.push(retainUnpublishedOffer(a, "UNKNOWN_VALIDITY"));
+        continue;
+      }
+      if (ex.notYetActive) {
+        stats.actionsNotYetActiveRetained += 1;
+        next.actions.push(retainUnpublishedOffer(a, "NOT_YET_ACTIVE"));
         continue;
       }
       if (ex.expired) {
         stats.actionsExpiredHidden += 1;
+        next.actions.push(retainUnpublishedOffer(a, "EXPIRED"));
         continue;
       }
       if (ex.unknownValidity && hideUnknownValidity) {
         stats.actionsUnknownValidityHidden += 1;
+        next.actions.push(retainUnpublishedOffer(a, "UNKNOWN_VALIDITY"));
         continue;
       }
       const validityStatus = ex.unknownValidity ? "UNKNOWN" : "BOUNDED";
