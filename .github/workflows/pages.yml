@@ -130,6 +130,14 @@ jobs:
           set -euo pipefail
           node scripts/iu-pages-stage-artifact-v1.mjs
 
+      # Deploy skew fix: keep previous generation(s) of hashed assets (<name>.<oldSHA>.js|css)
+      # for a TTL so open tabs / cached HTML do not 404 right after deploy. Best-effort, fail-open.
+      - name: Retain previous hashed assets (deploy skew overlap)
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/iu-pages-retain-prev-assets-v1.mjs
+
       - name: Pages artifact allowlist guard (SC-EXP-01)
         shell: bash
         run: |

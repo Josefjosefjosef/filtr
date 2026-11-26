@@ -452,6 +452,9 @@ jobs:
           fi
           npm run iu-pages-stage-artifact
           npm run iu-pages-artifact-guard
+          # Deploy skew: previous hashed assets retained across Pages deploys (local fake origin, no network).
+          npm run iu-pages-retain-prev-assets-selftest
+          grep -n 'iu-pages-retain-prev-assets-v1.mjs' .github/workflows/pages.yml
           # Ensure smoke checkout is not polluted for later UI guards.
           rm -rf dist-pages
 
