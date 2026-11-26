@@ -10,6 +10,7 @@ import {
   normalizeCjProductText,
   normalizeOffersPublicDocTexts,
   tryRepairCp852Utf8Mojibake,
+  tryRepairCp852Utf8MojibakeSegmented,
 } from "./iu-cj-affiliate-utf8-title-normalize-v51-8.mjs";
 
 function assert(cond, msg) {
@@ -136,6 +137,11 @@ for (const keep of ["124 \u00d7 124", "\u00dA\u017easn\u00fd", "Stra\u00dfe 5\u0
   assert(normalizeCjProductText(cutNorm.text).repaired === false, "trailing-FFFD repair idempotent");
   const midBad = toCp852Mojibake("Postel \uFFFD \u010delem");
   assert(tryRepairCp852Utf8Mojibake(midBad) === null, "middle U+FFFD refused");
+  const mixed = "Postel s \u010delem " + toCp852Mojibake("\u00falo\u017en\u00fd prostor");
+  const mixedN = normalizeCjProductText(mixed);
+  assert(mixedN.repaired === true && mixedN.text === "Postel s \u010delem \u00falo\u017en\u00fd prostor", "mixed clean+mojibake: " + JSON.stringify(mixedN.text));
+  assert(countBoxDrawing(mixedN.text) === 0, "mixed leaves no box");
+  assert(normalizeCjProductText("ok\uFFFD").repaired === false, "lone U+FFFD is not stripped");
   const doc2 = { sections: [{ products: [{ title: "ok", ctaLabel: "Zobrazit v\u251c\u017brobek", imageUrl: "https://x/U\u2563\u00fc.jpg" }] }] };
   const p2 = normalizeOffersPublicDocTexts(doc2);
   assert(p2.otherFieldsRepaired === 1 && doc2.sections[0].products[0].ctaLabel === "Zobrazit v\u00fdrobek", "final pass ctaLabel");

@@ -121,6 +121,34 @@ export function tryRepairCp852Utf8Mojibake(text) {
 }
 
 /**
+ * Whole-string CP852 repair, otherwise repair only non-ASCII runs that contain box drawing.
+ * ASCII and already-correct Unicode runs stay byte-for-byte. Fail closed if any box glyph remains.
+ * @param {string} text
+ * @returns {string|null}
+ */
+export function tryRepairCp852Utf8MojibakeSegmented(text) {
+  const input = String(text || "");
+  const whole = tryRepairCp852Utf8Mojibake(input);
+  if (whole) return whole;
+  if (!looksLikeCp852Utf8Mojibake(input)) return null;
+  let changed = false;
+  const parts = input.split(/([\u0000-\u007f]+)/);
+  const out = parts.map((part) => {
+    if (!part || part.charCodeAt(0) < 128) return part;
+    if (!looksLikeCp852Utf8Mojibake(part)) return part;
+    const fixed = tryRepairCp852Utf8Mojibake(part);
+    if (!fixed) return part;
+    changed = true;
+    return fixed;
+  });
+  if (!changed) return null;
+  const joined = out.join("");
+  if (countBoxDrawing(joined) !== 0) return null;
+  if (joined === input) return null;
+  return joined;
+}
+
+/**
  * Common Windows-1252 / UTF-8 misdecode literals (e.g. ellipsis/quotes as ÔÇŽ).
  * Applied only as exact multi-char sequence replacements — never touches × / Úž / ß.
  */
@@ -173,7 +201,7 @@ export function normalizeCjProductText(text) {
 
   // Stage A: CP852→UTF-8 reverse (titleBox historical class)
   if (looksLikeCp852Utf8Mojibake(input)) {
-    const repaired = tryRepairCp852Utf8Mojibake(input);
+    const repaired = tryRepairCp852Utf8MojibakeSegmented(input);
     if (repaired) {
       const stageB = tryRepairWin1252Utf8Literals(repaired) || repaired;
       return {
