@@ -126,6 +126,21 @@ export function buildAssortmentProfile({
   }
 
   const nameBlob = `${name} ${programUrl}`;
+  const categoryBlob = `${cat.parent || ""} ${cat.child || ""}`;
+  if (
+    /department stores\/malls/i.test(cat.parent || "") &&
+    /\bdepartment\s*stores?\b/i.test(cat.child || "")
+  ) {
+    if (!knownSections || knownSections.has("aff-inzerce-bazary")) {
+      pushSignal(
+        bySection,
+        "aff-inzerce-bazary",
+        "inzerce",
+        45,
+        "cj_primary_category:department_store_marketplace"
+      );
+    }
+  }
   for (const kg of KEYWORD_GROUPS) {
     if (kg.re.test(nameBlob)) {
       if (!knownSections || knownSections.has(kg.sectionId)) {
@@ -199,7 +214,12 @@ export function buildAssortmentProfile({
 
   let merchantType = MERCHANT_TYPE.UNKNOWN;
   let confidence = "low";
-  if (MARKETPLACE_RE.test(nameBlob) || significant.some((s) => s.sectionId === "aff-inzerce-bazary" && s.weight >= 25)) {
+  const typeBlob = `${nameBlob} ${categoryBlob}`;
+  if (
+    MARKETPLACE_RE.test(typeBlob) ||
+    (/\bdepartment\s*stores?\b/i.test(categoryBlob) && /malls/i.test(categoryBlob)) ||
+    significant.some((s) => s.sectionId === "aff-inzerce-bazary" && s.weight >= 25)
+  ) {
     merchantType = MERCHANT_TYPE.MARKETPLACE;
     confidence = "medium";
   } else if (DIGITAL_RE.test(nameBlob) && significant.length <= 2) {

@@ -342,6 +342,11 @@ export const PHASE3Z_CATEGORY_RULES_V2 = Object.freeze({
       reason: "cj_virtual_malls_apparel_affinity",
       confidence: "low",
     },
+    "department stores/malls|department stores": {
+      sectionId: "aff-inzerce-bazary",
+      reason: "cj_department_store_marketplace",
+      confidence: "medium",
+    },
   },
   /** Parent-only fallbacks when child is empty/unknown but parent is unambiguous. */
   parent: {
@@ -1097,7 +1102,9 @@ export const PHASE3Z_CID_SECTION_OVERRIDES_V6 = Object.freeze({
   "4786110": { sectionId: "aff-sport-outdoor", rule: "4camping_camping_hiking_cz", confidence: "high" },
   "6298382": { sectionId: "aff-mobily", rule: "picasee_mobile_accessories_cz", confidence: "high" },
   "6748811": { sectionId: "aff-kvetiny-darky", rule: "impresi_photo_canvas_gifts_cz", confidence: "high" },
-  // 7417963 OnBuy EU intentionally NOT overridden: no onbuy.com/cz destination among approved links.
+  // Department-store marketplaces (including OnBuy EU 7417963) use the general
+  // "department stores/malls|department stores" rule → aff-inzerce-bazary.
+  // No CID override. A missing CZ destination still blocks publication.
 });
 
 /** Infer section from CJ category + name/domain only (ignores section_map). */
