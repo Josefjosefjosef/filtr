@@ -50,7 +50,7 @@ try {
   const base = { hasTitle: true, hasPrice: true, hasUrl: true };
   const c1 = classifyIdentity({ ...base, inLedger: true });
   check("ledger-only complete => blocked_growth_only", c1.primaryState === "blocked_growth_only");
-  check("ledger-only without any record => still blocked_growth_only (missing data only demoted when a record exists)", classifyIdentity({ inLedger: true, hasTitle: false, hasPrice: false, hasUrl: false }).primaryState === "blocked_growth_only");
+  check("ledger-only without source record is pending_verification, not growth-blocked", (() => { const r = classifyIdentity({ inLedger: true, hasTitle: false, hasPrice: false, hasUrl: false }); return r.primaryState === "pending_verification" && r.stateReason === "HISTORICAL_DEFERRED_UNVERIFIED_NO_SOURCE_RECORD"; })());
   check("shard-only => pending_verification", classifyIdentity({ ...base, inShard: true }).primaryState === "pending_verification");
   check("hold wins over ledger", classifyIdentity({ ...base, inLedger: true, offers: { hold: true, ready: false, occurrences: 1 } }).primaryState === "hold");
   check("visible published wins over ledger+retry", classifyIdentity({ ...base, inLedger: true, retry: { status: "RETRY_SCHEDULED" }, offers: { hold: false, ready: true, occurrences: 1 } }).primaryState === "published");
@@ -101,7 +101,7 @@ try {
   check("shard-only pending_verification", byKey["3|g"].primaryState === "pending_verification");
   check("offers-only published", byKey["4|off"].primaryState === "published" && byKey["4|off"].shard === null);
   check("ledger-only: null fields + missingReason, not 0", byKey["9|ledgeronly"].title === null && byKey["9|ledgeronly"].currentPrice === null && byKey["9|ledgeronly"].missingReason === "NO_PRODUCT_RECORD_IN_ANY_SOURCE_ONLY_IDENTITY_KEY_KNOWN");
-  check("current deferred sample identity added", byKey["7|newsample"]?.primaryState === "blocked_growth_only");
+  check("current deferred sample without a product record is pending_verification", byKey["7|newsample"]?.primaryState === "pending_verification" && byKey["7|newsample"]?.stateReason === "HISTORICAL_DEFERRED_UNVERIFIED_NO_SOURCE_RECORD");
   check("unevaluable states report null", r.countsByPrimaryState.technical_failure === null && r.countsByPrimaryState.unsuitable_cz_market === null);
   check("delta file written + residual math", fs.existsSync(path.join(out, r.deltaName)) && r.delta.declaredDelta === 1 && r.delta.identityLevel.ledgerKeysNowInCurrentOffers.total === 2, r.deltaName);
   check("diff: hold entered from known prev", r.diff.hold.enteredFromKnownPrev.includes("2|d"));

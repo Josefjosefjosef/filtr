@@ -68,7 +68,7 @@ export const STATE_EVALUATION = Object.freeze({
   hold: { evaluated: true, basis: "current offers lkgPublicHold===true || publicationEligibility==PUBLICATION_HOLD" },
   retry: { evaluated: true, basis: "retry queue RETRY_SCHEDULED — retry-queue scope only" },
   lkg: { evaluated: true, basis: "offers lkgCarried (not visible/hold) or LKG snapshot only" },
-  blocked_growth_only: { evaluated: true, basis: "deferred ledger / current deferred sample membership with complete business data" },
+  blocked_growth_only: { evaluated: true, basis: "deferred membership AND title+price+affiliateUrl all present; ledger key alone is pending_verification" },
   eligible_new: { evaluated: true, basis: "offers.publicGrowthBudget.keptNew (measured); classifier never promotes deferred rows" },
   unavailable: { evaluated: true, basis: "current offers record with out-of-stock/unavailable availability — offers scope only" },
   duplicate: { evaluated: true, basis: "duplicate key occurrences across ledger/shards measured; duplicates collapse into one identity" },
@@ -235,10 +235,13 @@ export function classifyIdentity(ev) {
     else if (o.refreshResult === "NOT_IN_SCAN_WINDOW") cand.set("pending_verification", "OFFERS_NOT_IN_SCAN_WINDOW");
     else cand.set("unknown_with_reason", `OFFERS_NOT_READY_${o.freshnessReason || "REASON_ABSENT"}`);
   }
-  const dataComplete = ev.hasTitle && ev.hasPrice && ev.hasUrl;
+  const dataComplete = ev.hasTitle === true && ev.hasPrice === true && ev.hasUrl === true;
   const hasRecord = ev.inShard || !!o;
-  if ((ev.inLedger || ev.inDefSample) && hasRecord && !dataComplete) cand.set("missing_business_data", "TITLE_PRICE_OR_URL_ABSENT");
-  else if (ev.inLedger || ev.inDefSample) cand.set("blocked_growth_only", ev.inDefSample && !ev.inLedger ? "CURRENT_DEFERRED_SAMPLE" : "DEFERRED_LEDGER_CUMULATIVE_BUDGET");
+  if (ev.inLedger || ev.inDefSample) {
+    if (!dataComplete && hasRecord) cand.set("missing_business_data", "TITLE_PRICE_OR_URL_ABSENT");
+    else if (!dataComplete) cand.set("pending_verification", "HISTORICAL_DEFERRED_UNVERIFIED_NO_SOURCE_RECORD");
+    else cand.set("blocked_growth_only", ev.inDefSample && !ev.inLedger ? "CURRENT_DEFERRED_SAMPLE" : "DEFERRED_LEDGER_CUMULATIVE_BUDGET");
+  }
   if (!cand.size) {
     if (ev.inShard || ev.inPrevOffers) cand.set("pending_verification", "NOT_IN_CURRENT_OFFERS_NOR_DEFERRED_LEDGER_REVERIFY_REQUIRED");
     else if (ev.inHist) cand.set("unknown_with_reason", "ONLY_IN_STALE_HISTORICAL_CATALOG_SNAPSHOT");
