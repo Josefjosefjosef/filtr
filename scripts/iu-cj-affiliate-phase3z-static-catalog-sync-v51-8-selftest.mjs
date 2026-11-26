@@ -3,6 +3,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
+  cjClickIdentity,
+  protectedDestinationOk,
   rollbackStaticMainButtons,
   sameProtectedClick,
   syncStaticMainButtonsFromRegistry,
@@ -131,6 +133,39 @@ const wrongLink = sync([
   }),
 ], previous);
 assert.equal(wrongLink.catalog.buttons.some((button) => button.advertiserId === "5096493"), false);
+const bookingIdentity = { publisherId: "101883843", linkId: "13386171", destinationHost: "booking.com" };
+for (const host of ["www.anrdoezrs.net", "www.jdoqocy.com", "www.dpbolvw.net", "www.kqzyfj.com", "www.tkqlhce.com"]) {
+  const url = "https://" + host + "/click-101883843-13386171-1779903990000";
+  assert.equal(cjClickIdentity(url).host, host);
+  assert.equal(sameProtectedClick(url, bookingIdentity), true);
+}
+assert.equal(sameProtectedClick("https://www.anrdoezrs.net/click-999-13386171-1", bookingIdentity), false);
+assert.equal(sameProtectedClick("https://www.anrdoezrs.net/click-101883843-1-1", bookingIdentity), false);
+assert.equal(cjClickIdentity("https://evil.anrdoezrs.net/click-101883843-13386171-1"), null);
+assert.equal(cjClickIdentity("https://www.anrdoezrs.net.evil.com/click-101883843-13386171-1"), null);
+assert.equal(cjClickIdentity("https://example.com/?next=https://www.anrdoezrs.net/click-101883843-13386171-1"), null);
+assert.equal(cjClickIdentity("http://www.anrdoezrs.net/click-101883843-13386171-1"), null);
+assert.equal(cjClickIdentity("https://user:pass@www.anrdoezrs.net/click-101883843-13386171-1"), null);
+assert.equal(cjClickIdentity("not a url www.anrdoezrs.net/click-101883843-13386171-1"), null);
+assert.equal(protectedDestinationOk({ selectedDestination: "https://www.booking.com/" }, bookingIdentity), true);
+assert.equal(protectedDestinationOk({ selectedDestination: "https://evil.example/booking.com" }, bookingIdentity), false);
+const movedShop = sync([
+  partner("5096493", {
+    displayNameCs: "Booking.com",
+    sectionId: "aff-ubytovani-hotely",
+    selectedClickUrl: "https://www.tkqlhce.com/click-101883843-13386171-1779903990000",
+    selectedDestination: "https://evil.example/",
+  }),
+], previous);
+assert.equal(movedShop.catalog.buttons.some((button) => button.advertiserId === "5096493"), false);
+const impostor = sync([
+  partner("111111", {
+    displayNameCs: "Not Booking",
+    sectionId: "aff-ubytovani-hotely",
+    selectedClickUrl: "https://www.tkqlhce.com/click-101883843-13386171-1779903990000",
+  }),
+], previous);
+assert.equal(impostor.catalog.buttons.some((button) => button.advertiserId === "5096493"), false);
 const start = current.catalog.counts.buttons;
 const sizes = [];
 for (const target of [start + 1, 200, 250, 500]) {

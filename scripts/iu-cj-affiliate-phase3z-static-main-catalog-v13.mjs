@@ -78,7 +78,8 @@ export function buildStaticMainButtonCatalog(registry, opts = {}) {
     if (!advId || seen.has(advId)) continue;
     const rawUrl = String(p.selectedClickUrl || "");
     const protectedSlot = PROTECTED_SLOT_CLICK_IDENTITY[advId];
-    const url = protectedSlot ? (sameProtectedClick(rawUrl, protectedSlot) ? rawUrl : "") : rawUrl;
+    const identityOk = !protectedSlot || (sameProtectedClick(rawUrl, protectedSlot) && protectedDestinationOk(p, protectedSlot));
+    const url = protectedSlot ? (identityOk ? rawUrl : "") : rawUrl;
     const sectionId = String(p.sectionId || "");
     const title = String(p.displayNameCs || p.cjName || p.advertiserName || "").trim();
     if (!url || !isCjTrackingUrl(url) || !sectionId || !title) {
@@ -173,28 +174,54 @@ export const STATIC_CATALOG_BLOCKED_UNTIL_CONDITIONS = {
   "4686326": "PARAGON_UNSUITABLE_DESTINATION",
 };
 
-/** Protected slots keep publisher and link id. CJ may rotate the click host. */
+/** Protected slots keep publisher, link id, and destination host. CJ may rotate the click host. */
 export const PROTECTED_SLOT_CLICK_IDENTITY = {
-  "5096493": { publisherId: "101883843", linkId: "13386171" },
-  "6130482": { publisherId: "101883843", linkId: "15237230" },
+  "5096493": { advertiserId: "5096493", publisherId: "101883843", linkId: "13386171", destinationHost: "booking.com" },
+  "6130482": { advertiserId: "6130482", publisherId: "101883843", linkId: "15237230", destinationHost: "leoexpress.com" },
 };
 
+const CJ_CLICK_HOSTS = new Set([
+  "www.anrdoezrs.net",
+  "www.jdoqocy.com",
+  "www.dpbolvw.net",
+  "www.kqzyfj.com",
+  "www.tkqlhce.com",
+]);
+
 export function cjClickIdentity(url) {
-  const match = String(url || "").match(
-    /^https:\/\/www\.(anrdoezrs|jdoqocy|dpbolvw|kqzyfj|tkqlhce)\.(com|net)\/click-(\d+)-(\d+)(?:-(\d+))?/i
-  );
+  let parsed;
+  try {
+    parsed = new URL(String(url || ""));
+  } catch {
+    return null;
+  }
+  if (parsed.protocol !== "https:") return null;
+  if (parsed.username || parsed.password) return null;
+  const host = parsed.hostname.toLowerCase();
+  if (!CJ_CLICK_HOSTS.has(host)) return null;
+  const match = parsed.pathname.match(/^\/click-(\d+)-(\d+)(?:-(\d+))?$/);
   if (!match) return null;
-  return {
-    host: match[1].toLowerCase() + "." + match[2].toLowerCase(),
-    publisherId: match[3],
-    linkId: match[4],
-    suffix: match[5] || "",
-  };
+  return { host, publisherId: match[1], linkId: match[2], suffix: match[3] || "" };
 }
 
 export function sameProtectedClick(url, identity) {
   const parsed = cjClickIdentity(url);
   return !!parsed && parsed.publisherId === identity.publisherId && parsed.linkId === identity.linkId;
+}
+
+export function protectedDestinationOk(partner, identity) {
+  const raw = partner && (partner.selectedDestination || partner.selectedDestinationRaw);
+  if (!raw || !identity || !identity.destinationHost) return true;
+  let parsed;
+  try {
+    parsed = new URL(String(raw));
+  } catch {
+    return false;
+  }
+  if (parsed.protocol !== "https:") return false;
+  if (parsed.username || parsed.password) return false;
+  const host = parsed.hostname.toLowerCase().replace(/^www\./, "");
+  return host === String(identity.destinationHost).toLowerCase().replace(/^www\./, "");
 }
 
 function partnerIsPaid(partner) {
