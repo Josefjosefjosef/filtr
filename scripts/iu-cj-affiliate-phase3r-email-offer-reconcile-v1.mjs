@@ -24,6 +24,29 @@ function normCode(c) {
     .replace(/\s+/g, "");
 }
 
+/** Epoch ms of the offer validity end (date-only values are valid through the whole day UTC); null if unparseable. */
+function validityEndMs(ev) {
+  const v = ev?.validTo || ev?.validThrough || ev?.endDate || ev?.expiresAt;
+  if (!v) return null;
+  const s = String(v).trim();
+  const t = Date.parse(s);
+  if (!Number.isFinite(t)) return null;
+  return /^\d{4}-\d{2}-\d{2}$/.test(s) ? t + 86400000 : t;
+}
+
+/** Stable signature of an email offer (advertiser + code + validity + terms) for duplicate/conflict detection. */
+function offerSignature(ev, adv, code) {
+  return [
+    adv,
+    code,
+    String(ev?.eventType || ""),
+    String(ev?.validTo || ev?.validThrough || ev?.endDate || ev?.expiresAt || "").trim(),
+    String(ev?.termsSummary || ev?.conditionsSummary || ev?.conditions || "")
+      .trim()
+      .toLowerCase(),
+  ].join("|");
+}
+
 function isJoinedAdvertiser(advertiserId, joinedIds) {
   const id = isPlausibleCjAdvertiserId(advertiserId);
   if (!id) return false;
@@ -102,6 +125,8 @@ function emailOnlyGateReasons(ev, ctx) {
   if (!ctx.hasOfferSignal) reasons.push("missing_coupon_or_promo_signal");
   if (!ctx.hasTerms) reasons.push("missing_conditions");
   if (!ctx.hasValidity) reasons.push("missing_validity_window");
+  if (ctx.validityExpired) reasons.push("validity_already_expired");
+  if (ctx.codeIsCid) reasons.push("coupon_code_is_advertiser_cid");
   if (!ctx.confidence) reasons.push("confidence_too_low");
   if (!ctx.czUsable) reasons.push("not_cz_usable");
   if (ctx.forged) reasons.push("forged_or_spoofed_email");
@@ -125,6 +150,22 @@ export function reconcileEmailOffersWithCjStaging(opts = {}) {
     (opts.paragonHoldIds || []).map((x) => isPlausibleCjAdvertiserId(x)).filter(Boolean)
   );
   const testFixtureMode = opts.testFixtureMode === true;
+  const nowParsed = opts.now != null ? Date.parse(String(opts.now)) : Date.now();
+  const nowMs = Number.isFinite(nowParsed) ? nowParsed : Date.now();
+
+  // Pre-pass: detect same coupon (advertiser+code) announced with different validity/terms (conflicting offers).
+  const sigsByAdvCode = new Map();
+  for (const ev of events) {
+    const t = String(ev?.eventType || "");
+    if (t === AI_EVENT_TYPE.COUPON_EXPIRED || (t !== AI_EVENT_TYPE.COUPON_NEW && t !== AI_EVENT_TYPE.PROMO_NEW && t !== AI_EVENT_TYPE.OFFER_CHANGED && t !== AI_EVENT_TYPE.PRODUCT_NEW)) continue;
+    const a = isPlausibleCjAdvertiserId(ev?.advertiserId);
+    const c = normCode(ev?.couponCode);
+    if (!a || !c) continue;
+    const k = a + "|" + c;
+    if (!sigsByAdvCode.has(k)) sigsByAdvCode.set(k, new Set());
+    sigsByAdvCode.get(k).add(offerSignature(ev, a, c));
+  }
+  const seenSignatures = new Set();
 
   const byAdvCode = new Map();
   for (const link of links) {
@@ -147,9 +188,13 @@ export function reconcileEmailOffersWithCjStaging(opts = {}) {
 
   for (const ev of events) {
     const type = String(ev?.eventType || "");
+    // An expiry notice retires an offer; it is never itself a publishable/corroborating offer.
+    if (type === AI_EVENT_TYPE.COUPON_EXPIRED) {
+      skipped.push({ uid: ev.uid ?? null, reason: "coupon_expired_event_never_publishes", eventType: type });
+      continue;
+    }
     const isOffer =
       type === AI_EVENT_TYPE.COUPON_NEW ||
-      type === AI_EVENT_TYPE.COUPON_EXPIRED ||
       type === AI_EVENT_TYPE.PROMO_NEW ||
       type === AI_EVENT_TYPE.PRODUCT_NEW ||
       type === AI_EVENT_TYPE.OFFER_CHANGED;
@@ -213,6 +258,28 @@ export function reconcileEmailOffersWithCjStaging(opts = {}) {
       });
       continue;
     }
+
+    // Same coupon, same advertiser, different validity/terms across emails => conflicting offers: fail closed.
+    if (code && (sigsByAdvCode.get(adv + "|" + code)?.size || 0) > 1) {
+      conflicts.push({
+        uid: ev.uid ?? null,
+        advertiserId: adv,
+        couponCode: code,
+        contentState: EMAIL_CONTENT_STATE.HOLD,
+        decision: "CONFLICT_EMAIL_EMAIL",
+        reason: "same_coupon_conflicting_validity_or_terms",
+        mutate: false,
+        publishArmed: false,
+      });
+      continue;
+    }
+    // Exact duplicate email offer (same advertiser/code/validity/terms): count once.
+    const sig = offerSignature(ev, adv, code);
+    if (seenSignatures.has(sig)) {
+      skipped.push({ uid: ev.uid ?? null, reason: "duplicate_email_offer", eventType: type });
+      continue;
+    }
+    seenSignatures.add(sig);
 
     if (code && byAdvCode.has(adv + "|" + code)) {
       const matched = byAdvCode.get(adv + "|" + code);
@@ -288,6 +355,11 @@ export function reconcileEmailOffersWithCjStaging(opts = {}) {
       hasOfferSignal,
       hasTerms,
       hasValidity,
+      validityExpired: (() => {
+        const end = validityEndMs(ev);
+        return end != null && end < nowMs;
+      })(),
+      codeIsCid: Boolean(code) && code === adv,
       confidence: confidenceOk(ev.confidence),
       czUsable,
       forged: false,
@@ -299,7 +371,7 @@ export function reconcileEmailOffersWithCjStaging(opts = {}) {
 
     if (gateFails.length === 0) {
       const kind =
-        code || type === AI_EVENT_TYPE.COUPON_NEW || type === AI_EVENT_TYPE.COUPON_EXPIRED
+        code || type === AI_EVENT_TYPE.COUPON_NEW
           ? "coupon"
           : "action";
       const linkId = `email-${adv}-${ev.uid != null ? ev.uid : "x"}-${code || kind}`;

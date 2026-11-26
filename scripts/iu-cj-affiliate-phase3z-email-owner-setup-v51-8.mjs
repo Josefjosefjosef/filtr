@@ -13,17 +13,12 @@ const guide = {
   ],
   secretsToCreate: [
     {
-      name: "IU_CJ_EMAIL_IMAP_HOST",
+      name: "IU_FORPSI_IMAP_USER",
       where: "GitHub → Settings → Secrets → Actions",
-      purpose: "IMAP hostname",
+      purpose: "Mailbox username (read by cj-affiliate-email-ingest workflow + credentials interface)",
     },
     {
-      name: "IU_CJ_EMAIL_IMAP_USER",
-      where: "GitHub Actions secrets",
-      purpose: "Mailbox username",
-    },
-    {
-      name: "IU_CJ_EMAIL_IMAP_PASS",
+      name: "IU_FORPSI_IMAP_SECRET",
       where: "GitHub Actions secrets",
       purpose: "Mailbox app password / token (never commit)",
     },
@@ -34,9 +29,16 @@ const guide = {
       optional: true,
     },
   ],
+  variablesToSet: [
+    {
+      name: "IU_FORPSI_IMAP_CONNECT_APPROVED",
+      where: "GitHub → Settings → Variables → Actions (repository variable, not a secret)",
+      purpose: "Set to 1 ONLY after explicit owner approval of the live read-only IMAP connect; anything else keeps the offline mock path.",
+    },
+  ],
   steps: [
     "1) Create/confirm IMAP mailbox that receives CJ partner messages only.",
-    "2) Create app password / OAuth token; store ONLY in GitHub Actions secrets listed above.",
+    "2) Create app password / OAuth token; store ONLY in GitHub Actions secrets listed above (IU_FORPSI_IMAP_USER / IU_FORPSI_IMAP_SECRET; the IMAP host is not a secret and is configured in the workflow).",
     "3) Confirm workflow .github/workflows/cj-affiliate-email-ingest.yml is enabled.",
     "4) Run workflow_dispatch once; expect ingest SUCCESS without publishing email-only offers.",
     "5) Verify reconcile: JOINED + authorized CJ tracking URL required; email never invents URL/JOINED.",
