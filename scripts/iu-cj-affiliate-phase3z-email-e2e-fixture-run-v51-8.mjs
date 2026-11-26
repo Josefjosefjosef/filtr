@@ -380,6 +380,11 @@ if (detFixture.couponCode && detFixture.couponCode === FIXTURE_BEZVASPORT_CZ.dec
   });
 }
 const booking = fixtureRows.find((r) => r.fixtureId === "booking_editorial");
+expect(
+  "booking_editorial_not_coupon_offer",
+  !!booking && !booking.classification.commercialKinds.includes("coupon_offer"),
+  booking ? booking.classification.commercialKinds.join(",") : "missing",
+);
 if (booking && booking.classification.commercialKinds.includes("coupon_offer")) {
   findings.push({
     id: "EDITORIAL_NEGATION_MISCLASSIFIED_AS_COUPON",
