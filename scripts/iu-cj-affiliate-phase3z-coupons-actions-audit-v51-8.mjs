@@ -17,6 +17,7 @@ export const COUPONS_ACTIONS_AUDIT_SCHEMA =
 export const VALIDITY = Object.freeze({
   ACTIVE: "ACTIVE",
   EXPIRED: "EXPIRED",
+  NOT_YET_ACTIVE: "NOT_YET_ACTIVE",
   UNKNOWN_VALIDITY: "UNKNOWN_VALIDITY",
 });
 
@@ -33,7 +34,7 @@ function parseInstant(raw) {
  * Classify a single offer row.
  * @param {{ validFrom?: string|null, validTo?: string|null }} item
  * @param {number} nowMs
- * @returns {"ACTIVE"|"EXPIRED"|"UNKNOWN_VALIDITY"}
+ * @returns {"ACTIVE"|"EXPIRED"|"NOT_YET_ACTIVE"|"UNKNOWN_VALIDITY"}
  */
 export function classifyOfferValidity(item, nowMs) {
   const fromMs = parseInstant(item?.validFrom);
@@ -42,7 +43,7 @@ export function classifyOfferValidity(item, nowMs) {
   if (fromMs == null && toMs == null) return VALIDITY.UNKNOWN_VALIDITY;
 
   if (toMs != null && nowMs >= toMs) return VALIDITY.EXPIRED;
-  if (fromMs != null && nowMs < fromMs) return VALIDITY.EXPIRED;
+  if (fromMs != null && nowMs < fromMs) return VALIDITY.NOT_YET_ACTIVE;
 
   return VALIDITY.ACTIVE;
 }
@@ -80,6 +81,7 @@ export function buildCouponsActionsAudit({ coupons, actions, nowIso } = {}) {
   const counts = {
     ACTIVE: 0,
     EXPIRED: 0,
+    NOT_YET_ACTIVE: 0,
     UNKNOWN_VALIDITY: 0,
     coupons: couponRows.length,
     actions: actionRows.length,
@@ -134,6 +136,11 @@ export function runCouponsActionsAuditSelftest() {
   assert(audit.counts.EXPIRED === 2, "expired count");
   assert(audit.counts.ACTIVE === 2, "active count");
   assert(audit.counts.UNKNOWN_VALIDITY === 2, "unknown count");
+  const future = classifyOfferValidity(
+    { validFrom: "2026-07-01T00:00:00.000Z", validTo: "2026-07-31T00:00:00.000Z" },
+    Date.parse(nowIso),
+  );
+  assert(future === VALIDITY.NOT_YET_ACTIVE, "future start is not expired");
 
   return {
     schema: COUPONS_ACTIONS_AUDIT_SCHEMA + "-selftest",

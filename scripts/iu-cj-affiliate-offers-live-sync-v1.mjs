@@ -61,6 +61,7 @@ import {
   SOURCE_UPDATED_AT_STATUS,
 } from "./iu-cj-affiliate-phase3z-offers-freshness-v32.mjs";
 import { planCatalogFreshnessBatch, selectRefreshGroupsByFreshness } from "./iu-cj-affiliate-phase3z-catalog-freshness-scheduler-v51-8.mjs";
+import { classifyOfferValidity, VALIDITY as OFFER_VALIDITY } from "./iu-cj-affiliate-phase3z-coupons-actions-audit-v51-8.mjs";
 import {
   REFRESH_MODE,
   REFRESH_RESULT,
@@ -1242,6 +1243,13 @@ export function buildOffersPublicFromStaging(opts = {}) {
     if (!pubBase || !pubBase.sectionKey) {
       bump("public_card_rejected");
       continue;
+    }
+    const validityStatus = classifyOfferValidity(pubBase, refDate.getTime());
+    pubBase.validityStatus = validityStatus;
+    if (validityStatus === OFFER_VALIDITY.EXPIRED || validityStatus === OFFER_VALIDITY.NOT_YET_ACTIVE) {
+      pubBase.publicationReady = false;
+      pubBase.publishable = false;
+      pubBase.blockers = [validityStatus];
     }
     const sectionKeys = resolveOfferSectionKeys({
       primarySection: pubBase.sectionKey,
