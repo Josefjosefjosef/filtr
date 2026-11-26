@@ -4,6 +4,7 @@ import {
   estimateFreshnessCapacity,
   planCatalogFreshnessBatch,
   propagateIdentityVerification,
+  selectRefreshGroupsByFreshness,
 } from "./iu-cj-affiliate-phase3z-catalog-freshness-scheduler-v51-8.mjs";
 
 const now = Date.parse("2026-11-26T19:00:00.000Z");
@@ -135,6 +136,21 @@ const capacity = estimateFreshnessCapacity({ uniqueIdentities: 3657 });
 assert.equal(capacity.requests, 37);
 assert.equal(capacity.measured, false);
 assert.equal(capacity.withinThreeHours, true);
+
+const heldPlan = planCatalogFreshnessBatch([
+  product("A", "due", "2026-11-26T08:00:00.000Z"),
+  product("A", "later", "2026-11-26T22:00:00.000Z"),
+  product("A", "held", "2026-11-26T08:00:00.000Z", { retryNotBefore: "2026-11-27T00:00:00.000Z" }),
+], { nowMs: now, limit: 10, maxPerPartner: 10 });
+const selected = selectRefreshGroupsByFreshness([
+  { advertiserId: "A", keys: [{ productId: "due" }, { productId: "later" }, { productId: "held" }] },
+  { advertiserId: "B", keys: [{ productId: "other" }] },
+], heldPlan);
+assert.equal(selected.groups.length, 1);
+assert.equal(selected.groups[0].keys.length, 1);
+assert.equal(selected.groups[0].keys[0].productId, "due");
+assert.equal(selected.skippedProducts, 3);
+assert.equal(heldPlan.executeArmed, false);
 
 console.log(JSON.stringify({
   IU_CJ_CATALOG_FRESHNESS_SCHEDULER_SELFTEST: "PASS",
