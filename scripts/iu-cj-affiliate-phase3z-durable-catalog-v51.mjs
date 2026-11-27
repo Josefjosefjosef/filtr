@@ -92,6 +92,7 @@ export const DURABLE_CATALOG_GIT_WORKFLOW_GATE_BYTES = 99_000_000;
 export const DURABLE_CATALOG_ENTRY_KEYS = [
   "advertiserId",
   "productId",
+  "productVariant",
   "partnerName",
   "sectionKey",
   "title",
@@ -311,6 +312,13 @@ function productAgeHours(entry, nowMs) {
   return (nowMs - ms) / 3600000;
 }
 
+function durableIdentityKey(row) {
+  const base = compoundProductKey(row?.advertiserId, row?.productId);
+  const variant = String(row?.productVariant || "").trim();
+  if (!variant || base === "|") return base;
+  return base + "|" + variant;
+}
+
 /**
  * Upsert source-verified rows into durable catalog; retain unseen identities.
  */
@@ -358,7 +366,8 @@ export function mergeIntoDurableCatalog(priorDoc, sourceRows, opts = {}) {
     const adv = String(row.advertiserId || "");
     const pid = String(row.productId || "");
     if (!adv || !pid) continue;
-    const key = compoundProductKey(adv, pid);
+    const variant = String(row.productVariant || "").trim();
+    const key = durableIdentityKey(row);
     seen.add(key);
     const prev = doc.products[key] || {};
     const url = row.affiliateUrl || prev.affiliateUrl || null;
@@ -381,6 +390,7 @@ export function mergeIntoDurableCatalog(priorDoc, sourceRows, opts = {}) {
     doc.products[key] = normalizeDurableCatalogEntry({
       advertiserId: adv,
       productId: pid,
+      ...(variant ? { productVariant: variant } : {}),
       partnerName: row.partnerName || prev.partnerName || null,
       sectionKey: row.sectionKey || prev.sectionKey || null,
       title: row.title || row.name || prev.title || null,
@@ -637,7 +647,7 @@ export function evaluatePublicPopulationGates(prevPublicDoc, nextPublicDoc, opts
         if (p.publicOffer === false || p.lkgPublicHold === true) continue;
         if (p.publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD) continue;
         if (p.publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_BLOCKED) continue;
-        const key = compoundProductKey(p.advertiserId, p.productId);
+        const key = durableIdentityKey(p);
         if (!m.has(key)) m.set(key, p);
       }
     }
@@ -717,6 +727,7 @@ export function seedDurableCatalogFromOffersPublic(offersDoc, opts = {}) {
       rows.push({
         advertiserId: p.advertiserId,
         productId: p.productId,
+        productVariant: p.productVariant,
         partnerName: p.partnerName || sec.partnerName,
         sectionKey: p.sectionKey || sec.sectionKey,
         title: p.title || p.name,
