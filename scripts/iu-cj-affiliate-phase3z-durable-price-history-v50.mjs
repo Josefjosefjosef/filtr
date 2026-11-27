@@ -32,8 +32,10 @@ export const DURABLE_KEY_CLASS = Object.freeze({
   INVALID_KEYS: "INVALID_KEYS",
 });
 
-export function compoundIdentity(advertiserId, productId) {
-  return String(advertiserId || "") + "|" + String(productId || "");
+export function compoundIdentity(advertiserId, productId, productVariant) {
+  const base = String(advertiserId || "") + "|" + String(productId || "");
+  const variant = String(productVariant || "").trim();
+  return variant ? base + "|" + variant : base;
 }
 
 export function makePriceEventKey(ev) {
@@ -44,8 +46,10 @@ export function makePriceEventKey(ev) {
   const prevN = ev.previousMinorUnits != null ? String(ev.previousMinorUnits) : String(ev.previousNormalizedPrice ?? "");
   const nextN = ev.currentMinorUnits != null ? String(ev.currentMinorUnits) : String(ev.currentNormalizedPrice ?? "");
   const run = String(ev.runId || "");
-  // Economic identity of the transition + run (idempotent within a run).
-  return [adv, pid, cls, cur, prevN, nextN, run].join("::");
+  const parts = [adv, pid, cls, cur, prevN, nextN, run];
+  const variant = String(ev.productVariant || "").trim();
+  if (variant) parts.push(variant);
+  return parts.join("::");
 }
 
 export function emptyDurablePriceHistory(opts = {}) {
@@ -101,7 +105,8 @@ export function toDurablePriceEvent(row, opts = {}) {
   const ev = {
     advertiserId: adv,
     productId: pid,
-    compoundIdentity: compoundIdentity(adv, pid),
+    productVariant: String(row.productVariant || "").trim() || null,
+    compoundIdentity: compoundIdentity(adv, pid, row.productVariant),
     previousRawPrice: prevRaw,
     currentRawPrice: nextRaw,
     previousNormalizedPrice: classified.prev?.decimalString ?? row.previousNormalizedPrice ?? null,
@@ -188,11 +193,13 @@ export function appendDurablePriceHistory(priorDoc, opts = {}) {
   for (const raw of opts.availabilityChanges || []) {
     const adv = raw.advertiserId != null ? String(raw.advertiserId) : "";
     const pid = raw.productId != null ? String(raw.productId) : "";
+    const variant = String(raw.productVariant || "").trim();
     if (!adv || !pid) continue;
     const ev = {
       advertiserId: adv,
       productId: pid,
-      compoundIdentity: compoundIdentity(adv, pid),
+      productVariant: variant || null,
+      compoundIdentity: compoundIdentity(adv, pid, variant),
       previousAvailability: raw.previousAvailability ?? null,
       currentAvailability: raw.currentAvailability ?? null,
       sourceId: raw.source || "cj_product_refresh",
@@ -203,9 +210,9 @@ export function appendDurablePriceHistory(priorDoc, opts = {}) {
       hysteresisState: raw.hysteresisState || null,
       evidenceReference: "offers-public.product.card",
     };
-    ev.storageKey = ["avail", adv, pid, String(ev.previousAvailability), String(ev.currentAvailability), String(runId)].join(
-      "::"
-    );
+    const availParts = ["avail", adv, pid, String(ev.previousAvailability), String(ev.currentAvailability), String(runId)];
+    if (variant) availParts.push(variant);
+    ev.storageKey = availParts.join("::");
     ev.eventKey = ev.storageKey;
     if (keySet.has(ev.eventKey)) {
       skipped += 1;
@@ -657,7 +664,7 @@ export function buildFormatOnlyRetentionLedger(opts = {}) {
     eventKey: e.eventKey || e.storageKey || null,
     advertiserId: e.advertiserId != null ? String(e.advertiserId) : null,
     productId: e.productId != null ? String(e.productId) : null,
-    compoundIdentity: e.compoundIdentity || compoundIdentity(e.advertiserId, e.productId),
+    compoundIdentity: e.compoundIdentity || compoundIdentity(e.advertiserId, e.productId, e.productVariant),
     previousTimestamp: e.changeTimestamp || e.at || null,
     retentionTimestamp: nowIso,
     retentionReason: reason,
