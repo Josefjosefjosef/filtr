@@ -169,6 +169,13 @@ import { createSyncPhaseObserver } from "./iu-cj-affiliate-sync-phase-observer-v
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const WEBSITE_PID = "101883843";
 
+export function finalSectionProductKey(product) {
+  const base = compoundProductKey(product?.advertiserId, product?.productId);
+  const variant = String(product?.productVariant || "").trim();
+  if (!variant || base === "|") return base;
+  return base + "|" + variant;
+}
+
 /** Bounded concurrency pool for CJ refresh advertisers (hard cap 8). */
 export async function mapPool(items, concurrency, worker) {
   const list = Array.isArray(items) ? items : [];
@@ -3523,7 +3530,7 @@ export async function runOffersLiveSync(opts = {}) {
     let productsPublicEligible = 0;
     for (const sec of doc.sections || []) {
       for (const p of sec.products || []) {
-        const k = compoundProductKey(p.advertiserId, p.productId);
+        const k = finalSectionProductKey(p);
         if (k === "|") continue;
         if (p.lkgCarried === true) lkgUnique.add(k);
         if (p.lkgPublicHold === true || p.hideAsCurrent === true) lkgHoldUnique.add(k);
