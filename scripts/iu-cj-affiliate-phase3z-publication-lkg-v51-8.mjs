@@ -44,8 +44,10 @@ export const LKG_VALIDATION_CLASS = Object.freeze({
   LKG_BLOCKED: "LKG_BLOCKED",
 });
 
-export function compoundProductKey(advertiserId, productId) {
-  return String(advertiserId || "") + "|" + String(productId || "");
+export function compoundProductKey(advertiserId, productId, productVariant) {
+  const base = String(advertiserId || "") + "|" + String(productId || "");
+  const variant = String(productVariant || "").trim();
+  return variant ? base + "|" + variant : base;
 }
 
 export function isPublicOfferEligible(product) {
@@ -76,7 +78,7 @@ export function collectUniqueProductMap(doc) {
       const adv = String(p.advertiserId || "");
       const pid = String(p.productId || "");
       if (!adv || !pid) continue;
-      const key = compoundProductKey(adv, pid);
+      const key = compoundProductKey(adv, pid, p.productVariant);
       if (!map.has(key)) {
         map.set(key, {
           key,
@@ -626,10 +628,10 @@ export function mergeLkgPublishedProducts(nextDoc, prevDoc, opts = {}) {
     for (const p of sec.products || []) {
       if (p.publicationReady === false) continue;
       products += 1;
-      unique.add(compoundProductKey(p.advertiserId, p.productId));
+      unique.add(compoundProductKey(p.advertiserId, p.productId, p.productVariant));
       if (isPublicOfferEligible(p)) {
         productsPublicEligible += 1;
-        uniquePublic.add(compoundProductKey(p.advertiserId, p.productId));
+        uniquePublic.add(compoundProductKey(p.advertiserId, p.productId, p.productVariant));
       }
     }
   }
@@ -1019,7 +1021,7 @@ export function releaseLkgHoldsAgainstSource(doc, sourceVerifiedKeys, opts = {})
   for (const sec of out.sections || []) {
     for (const p of sec.products || []) {
       if (!p || p.publicationReady === false) continue;
-      const key = compoundProductKey(p.advertiserId, p.productId);
+      const key = compoundProductKey(p.advertiserId, p.productId, p.productVariant);
       const isHold =
         p.lkgPublicHold === true ||
         p.publicOffer === false ||
@@ -1092,7 +1094,7 @@ export function releaseLkgHoldsAgainstSource(doc, sourceVerifiedKeys, opts = {})
     for (const p of sec.products || []) {
       if (!isPublicOfferEligible(p)) continue;
       productsPublicEligible += 1;
-      uniquePublic.add(compoundProductKey(p.advertiserId, p.productId));
+      uniquePublic.add(compoundProductKey(p.advertiserId, p.productId, p.productVariant));
     }
   }
   out.stats = {
@@ -1307,7 +1309,7 @@ export function applyPublicGrowthBudget(nextDoc, prevDoc, opts = {}) {
   for (const sec of doc.sections || []) {
     for (const p of sec.products || []) {
       if (!isPublicOfferEligible(p)) continue;
-      const key = compoundProductKey(p.advertiserId, p.productId);
+      const key = compoundProductKey(p.advertiserId, p.productId, p.productVariant);
       if (!key || key === "|" || prevMap.has(key) || seenNew.has(key)) continue;
       if (requirePrice && !(Number(p.currentPrice) > 0)) continue;
       seenNew.add(key);
@@ -1338,7 +1340,7 @@ export function applyPublicGrowthBudget(nextDoc, prevDoc, opts = {}) {
     if (!Array.isArray(sec.products)) continue;
     sec.products = sec.products.filter((p) => {
       if (!p || p.publicationReady === false) return true;
-      const key = compoundProductKey(p.advertiserId, p.productId);
+      const key = compoundProductKey(p.advertiserId, p.productId, p.productVariant);
       if (prevMap.has(key)) return true;
       // LKG carry / unauthorized-loss recovery restores prior public identities — not DEFERRED_NEW growth.
       if (p.lkgCarried === true || p.lkgRecovered === true) return true;
@@ -1354,7 +1356,7 @@ export function applyPublicGrowthBudget(nextDoc, prevDoc, opts = {}) {
   for (const sec of doc.sections || []) {
     for (const p of sec.products || []) {
       if (!isPublicOfferEligible(p)) continue;
-      u.add(compoundProductKey(p.advertiserId, p.productId));
+      u.add(compoundProductKey(p.advertiserId, p.productId, p.productVariant));
     }
   }
   uniquePublic = u.size;
@@ -1379,7 +1381,7 @@ export function applyPublicGrowthBudget(nextDoc, prevDoc, opts = {}) {
   for (const sec of doc.sections || []) {
     for (const p of sec.products || []) {
       if (!p) continue;
-      const k = compoundProductKey(p.advertiserId, p.productId);
+      const k = compoundProductKey(p.advertiserId, p.productId, p.productVariant);
       if (k && k !== "|") productsByKey.set(k, p);
     }
   }
