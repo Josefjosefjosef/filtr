@@ -90,6 +90,12 @@ function assertOutsideRepo(dir) {
 }
 
 // ───────────────────────── offers index ─────────────────────────
+export function reconProductKey(advertiserId, product) {
+  const base = String(advertiserId) + "|" + String(product?.productId || "");
+  const variant = String(product?.productVariant || "").trim();
+  return variant ? base + "|" + variant : base;
+}
+
 /**
  * Per-advertiser published-offer index from offers-public (items carry their own advertiserId).
  * Unique counts de-duplicate cross-category placements (sections repeat the same offer/product).
@@ -132,7 +138,7 @@ export function indexOffersByAdvertiser(offersPublic) {
           e.actionPlacements += 1;
           e.actionIds.add(String(o.offerId ?? o.title));
         } else {
-          const key = `${id}|${o.productId}`;
+          const key = reconProductKey(id, o);
           // LKG public-hold items live in offers-public but are NOT publicly shown (hold ≠ published).
           if (o.lkgPublicHold === true || o.publicationEligibility === "PUBLICATION_HOLD") {
             e.heldProductKeys.add(key);
