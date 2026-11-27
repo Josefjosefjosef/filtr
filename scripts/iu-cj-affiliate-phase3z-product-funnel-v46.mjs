@@ -32,17 +32,17 @@ export function computeHonestOffersStats(sections = [], opts = {}) {
     for (const c of sec.coupons || []) {
       coupons += 1;
       if (c.advertiserId != null) couponAdv.add(String(c.advertiserId));
-      if (c.publicationReady !== false) publicationReady += 1;
+      if (c.publicationReady === true) publicationReady += 1;
     }
     for (const a of sec.actions || []) {
       actions += 1;
       if (a.advertiserId != null) actionAdv.add(String(a.advertiserId));
-      if (a.publicationReady !== false) publicationReady += 1;
+      if (a.publicationReady === true) publicationReady += 1;
     }
     for (const p of sec.products || []) {
       products += 1;
       if (p.advertiserId != null) productAdv.add(String(p.advertiserId));
-      if (p.publicationReady !== false) publicationReady += 1;
+      if (p.publicationReady === true) publicationReady += 1;
     }
   }
   const any = new Set([...productAdv, ...couponAdv, ...actionAdv]);
