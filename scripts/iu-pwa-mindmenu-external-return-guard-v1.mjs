@@ -15,10 +15,11 @@ import fs from "fs";
 import path from "path";
 import http from "http";
 import { spawn } from "child_process";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 import { createRequire } from "module";
 import { bootstrapGuardContext, bootstrapGuardPage } from "./guards/guard-playwright-bootstrap.mjs";
 import { swHasAllowedCacheVersion } from "./guards/iu-sw-cache-version-allowlist.mjs";
+import { navigationAbortShouldRetry } from "./iu-cj-navigation-abort-retry-v1.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(path.join(REPO, "package.json"));
@@ -688,7 +689,7 @@ async function runBehaviorAffHubStalePendingExternalReturnSim(page, label) {
     { affSec: AFF, staleT: Date.now() - 120000 }
   );
   const bootUrl = `http://127.0.0.1:${PORT}/projects/?iuInfoSystem=cutover&nosw=1`;
-  await page.goto(bootUrl, { waitUntil: "domcontentloaded", timeout: 90000 });
+  await gotoReady(page, bootUrl, { waitUntil: "domcontentloaded", timeout: 90000 });
   await waitRuntime(page);
   const cold = await page.evaluate(() => {
     const u = new URL(location.href);
@@ -710,9 +711,18 @@ async function runBehaviorAffHubStalePendingExternalReturnSim(page, label) {
  * PWA recorder 20261013: hub ?section= + stale MindMenu latch after external (no pending) must not
  * auto-open tools on cold document / gate init.
  */
+async function gotoReady(page, url, options) {
+  try {
+    await page.goto(url, options);
+  } catch (error) {
+    if (!navigationAbortShouldRetry(error)) throw error;
+    await page.goto(url, options);
+  }
+}
+
 async function runBehaviorAffHubLatchColdNoToolsGate(page, label) {
   const AFF = "aff-cestovni-kancelare";
-  await page.goto(BASE + "?section=" + AFF, { waitUntil: "domcontentloaded", timeout: 90000 });
+  await gotoReady(page, BASE + "?section=" + AFF, { waitUntil: "domcontentloaded", timeout: 90000 });
   await waitRuntime(page);
   await page.evaluate(() => {
     sessionStorage.setItem("iuMindMenuReturnLatchTs", String(Date.now()));
@@ -720,7 +730,7 @@ async function runBehaviorAffHubLatchColdNoToolsGate(page, label) {
     localStorage.removeItem("iuMindMenuReturnPendingV1");
   });
   const coldUrl = `http://127.0.0.1:${PORT}/?section=${AFF}&iuInfoSystem=cutover&nosw=1`;
-  await page.goto(coldUrl, { waitUntil: "domcontentloaded", timeout: 90000 });
+  await gotoReady(page, coldUrl, { waitUntil: "domcontentloaded", timeout: 90000 });
   await waitRuntime(page);
   await page.waitForTimeout(500);
   const snap = await page.evaluate(() => {
@@ -766,7 +776,7 @@ async function runBehaviorAffHubPhoneEarlyMainVisible(page, label) {
   const AFF = "aff-cestovni-kancelare";
   const affUrl = new URL(BASE);
   affUrl.searchParams.set("section", AFF);
-  await page.goto(affUrl.toString(), { waitUntil: "domcontentloaded", timeout: 90000 });
+  await gotoReady(page, affUrl.toString(), { waitUntil: "domcontentloaded", timeout: 90000 });
   const early = await page.evaluate(() => {
     const feed = document.getElementById("feed");
     let feedVisible = false;
@@ -794,7 +804,7 @@ async function runBehaviorHubSectionScrollExternalReturn(page, label) {
   const AFF = "aff-cestovni-kancelare";
   const affUrl = new URL(BASE);
   affUrl.searchParams.set("section", AFF);
-  await page.goto(affUrl.toString(), { waitUntil: "domcontentloaded", timeout: 90000 });
+  await gotoReady(page, affUrl.toString(), { waitUntil: "domcontentloaded", timeout: 90000 });
   await waitRuntime(page);
   const TARGET = 220;
   const result = await page.evaluate(async (targetY) => {
@@ -1180,7 +1190,7 @@ async function runMobileOrTabletPlatform(browser, label, viewport) {
   await installStandalone(context);
   const page = await bootstrapGuardPage(context);
   try {
-    await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 90000 });
+    await gotoReady(page, BASE, { waitUntil: "domcontentloaded", timeout: 90000 });
     await waitRuntime(page);
 
     await runBehaviorHubApplySectionArmPreserved(page, label);
@@ -1322,7 +1332,7 @@ async function runMobileOrTabletPlatform(browser, label, viewport) {
     });
     const coldUrl = new URL(page.url());
     coldUrl.hash = "";
-    await page.goto(coldUrl.toString(), { waitUntil: "domcontentloaded", timeout: 120000 });
+    await gotoReady(page, coldUrl.toString(), { waitUntil: "domcontentloaded", timeout: 120000 });
     await page.waitForFunction(
       () => {
         const wrap = document.getElementById("iuMobileGateWrap");
@@ -1399,7 +1409,7 @@ async function runPcAiOverlayPlatform(browser) {
   await installStandalone(context);
   const page = await bootstrapGuardPage(context);
   try {
-    await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 90000 });
+    await gotoReady(page, BASE, { waitUntil: "domcontentloaded", timeout: 90000 });
     await waitRuntime(page);
 
     const opened = await page.evaluate(() => {
@@ -1590,7 +1600,7 @@ async function runPcAiOverlayPlatform(browser) {
     });
     const pcColdUrl = new URL(page.url());
     pcColdUrl.hash = "";
-    await page.goto(pcColdUrl.toString(), { waitUntil: "domcontentloaded", timeout: 120000 });
+    await gotoReady(page, pcColdUrl.toString(), { waitUntil: "domcontentloaded", timeout: 120000 });
     await waitRuntime(page);
     await page.waitForTimeout(300);
     const pcLeft = await page.evaluate(() => {
@@ -1681,7 +1691,11 @@ async function main() {
   console.log("PASS iu-pwa-mindmenu-external-return-guard");
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+const isMain =
+  process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url;
+if (isMain) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}
