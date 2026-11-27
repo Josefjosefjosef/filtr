@@ -55,12 +55,19 @@ function czEligibilityOk(product) {
   return true;
 }
 
+export function shadowIdentityKey(product) {
+  const base = compoundProductKey(product?.advertiserId, product?.productId);
+  const variant = String(product?.productVariant || "").trim();
+  if (!variant || base === "|") return base;
+  return base + "|" + variant;
+}
+
 function normalizeDurableMap(durableProducts) {
   if (!durableProducts) return {};
   if (Array.isArray(durableProducts)) {
     const map = {};
     for (const p of durableProducts) {
-      const key = compoundProductKey(p?.advertiserId, p?.productId);
+      const key = shadowIdentityKey(p);
       if (key && key !== "|") map[key] = p;
     }
     return map;
@@ -163,7 +170,7 @@ export function validateShadowCandidate(product, opts = {}) {
   const partners = opts.partnerById instanceof Map ? opts.partnerById : partnerIndex(opts.joinedPartners);
   const adv = String(product?.advertiserId || "");
   const pid = String(product?.productId || "");
-  const key = compoundProductKey(adv, pid);
+  const key = shadowIdentityKey(product);
   const partner = partners.get(adv) || null;
   const category =
     product?.sectionKey ||
@@ -427,7 +434,7 @@ export function runGrowthShadowMode(opts = {}) {
         if (!Array.isArray(sec.products)) continue;
         sec.products = sec.products.filter((p) => {
           if (!isPublicOfferEligible(p)) return true;
-          const k = compoundProductKey(p.advertiserId, p.productId);
+          const k = shadowIdentityKey(p);
           if (prevPublicKeys.has(k)) return true;
           if (p.lkgCarried === true || p.lkgRecovered === true) return true;
           return !drop.has(k);
