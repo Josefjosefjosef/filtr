@@ -545,9 +545,16 @@ function toPublicProductCard(p, sectionKey) {
 }
 
 /**
- * Union published product cards from primary + secondary docs (dedupe by advertiserId|productId).
- * Primary fields win on collision. Used so refresh covers LIVE LKG keys before LKG merge.
+ * Union published product cards from primary + secondary docs.
+ * A non-empty variant stays in the key. Primary fields win on collision.
+ * Used so refresh covers LIVE LKG keys before LKG merge.
  */
+function refreshUnionProductKey(product) {
+  const base = String(product?.advertiserId || "") + "|" + String(product?.productId || "");
+  const variant = String(product?.productVariant || "").trim();
+  return variant ? base + "|" + variant : base;
+}
+
 export function unionPublishedSectionsForRefresh(primary, secondary) {
   const byKey = new Map();
   const sectionMeta = new Map();
@@ -565,7 +572,7 @@ export function unionPublishedSectionsForRefresh(primary, secondary) {
         });
       }
       for (const p of sec?.products || []) {
-        const key = String(p?.advertiserId || "") + "|" + String(p?.productId || "");
+        const key = refreshUnionProductKey(p);
         if (key === "|") continue;
         if (preferExisting && byKey.has(key)) continue;
         byKey.set(key, { ...p, _sectionKey: sk });
