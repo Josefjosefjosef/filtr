@@ -20,8 +20,10 @@ export const CONTINUITY_STATUS = Object.freeze({
   UNKNOWN: "UNKNOWN",
 });
 
-export function compoundKey(advertiserId, productId) {
-  return String(advertiserId || "") + "|" + String(productId || "");
+export function compoundKey(advertiserId, productId, productVariant) {
+  const base = String(advertiserId || "") + "|" + String(productId || "");
+  const variant = String(productVariant || "").trim();
+  return variant ? base + "|" + variant : base;
 }
 
 export function normalizeKey(k) {
@@ -37,7 +39,7 @@ function collectDocKeys(doc) {
   for (const sec of doc?.sections || []) {
     for (const p of sec.products || []) {
       if (!p) continue;
-      const raw = compoundKey(p.advertiserId, p.productId);
+      const raw = compoundKey(p.advertiserId, p.productId, p.productVariant);
       const n = normalizeKey(raw);
       if (!map.has(n)) {
         map.set(n, {
@@ -58,7 +60,7 @@ function collectDocKeys(doc) {
 function collectMissKeys(missDoc) {
   const map = new Map();
   for (const r of missDoc?.rows || []) {
-    const raw = r.compoundIdentity || r.sourceIdentity || compoundKey(r.advertiserId, r.productId);
+    const raw = r.compoundIdentity || r.sourceIdentity || compoundKey(r.advertiserId, r.productId, r.productVariant);
     map.set(normalizeKey(raw), { raw, row: r });
   }
   return map;
@@ -111,7 +113,7 @@ export function reconstruct329Continuity(input = {}) {
   };
 
   for (const r of origRows) {
-    const raw = r.compoundIdentity || compoundKey(r.advertiserId, r.productId);
+    const raw = r.compoundIdentity || compoundKey(r.advertiserId, r.productId, r.productVariant);
     const n = normalizeKey(raw);
     const liveHit = live.get(n) || null;
     const lkgHit = lkg.get(n) || null;
