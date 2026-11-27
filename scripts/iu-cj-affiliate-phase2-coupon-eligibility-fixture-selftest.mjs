@@ -94,6 +94,18 @@ expect(
   evDocumented.eligibilityReason === "promotion_full_sortiment_same_cz_store_documented_in_link_search"
 );
 expect("fixture_different_aid_publishable", evDocumented.publicProductBlockPublishable === true);
+expect("fixture_without_variant_omits_field", evDocumented.productVariant == null);
+
+const evVariant = evaluateProductBinding({
+  bindingRow,
+  product: { ...baseProduct, productVariant: "v" },
+  scope,
+  linkMeta: FIXTURE_LINK,
+  couponEval,
+  refDate,
+});
+expect("fixture_variant_kept", evVariant.productVariant === "v" && evVariant.productId === "SKU-FIX-1");
+expect("fixture_variant_still_eligible", evVariant.eligibility === "eligible");
 
 const evSameAidWrongStore = evaluateProductBinding({
   bindingRow,

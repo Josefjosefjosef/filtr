@@ -1498,8 +1498,10 @@ export function evaluateProductBinding(ctx) {
   const missingData = missingFieldsForScope(scope, offerText);
   const couponEval = ctx.couponEval || evaluateCouponCzPublish({ bindingRow, scope, linkId });
 
+  const variant = String(product.productVariant || "").trim();
   const base = {
     productId: product.productId != null ? String(product.productId) : null,
+    ...(variant ? { productVariant: variant } : {}),
     eligibility: "unknown",
     eligibilityReason: "",
     eligibilitySource: "",
