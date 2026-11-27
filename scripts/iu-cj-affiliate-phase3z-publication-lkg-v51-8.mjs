@@ -551,7 +551,7 @@ export function mergeLkgPublishedProducts(nextDoc, prevDoc, opts = {}) {
         descriptionReason: descN.reason,
         appliedAt: "lkg_carry",
       },
-      publicationReady: true,
+      publicationReady: !holdPublic,
       publishable: !holdPublic,
       publicOffer: !holdPublic,
       lkgCarried: true,
@@ -1018,13 +1018,14 @@ export function releaseLkgHoldsAgainstSource(doc, sourceVerifiedKeys, opts = {})
 
   for (const sec of out.sections || []) {
     for (const p of sec.products || []) {
-      if (!p || p.publicationReady === false) continue;
-      const key = compoundProductKey(p.advertiserId, p.productId);
+      if (!p) continue;
       const isHold =
         p.lkgPublicHold === true ||
         p.publicOffer === false ||
         p.hideAsCurrent === true ||
         p.publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD;
+      if (p.publicationReady === false && !isHold) continue;
+      const key = compoundProductKey(p.advertiserId, p.productId);
       if (!isHold && !p.lkgCarried) continue;
       const firstSeen = !seen.has(key);
       if (firstSeen) seen.add(key);
@@ -1061,6 +1062,7 @@ export function releaseLkgHoldsAgainstSource(doc, sourceVerifiedKeys, opts = {})
       p.hideAsCurrent = false;
       p.publicOffer = true;
       p.publishable = true;
+      p.publicationReady = true;
       p.publicationEligibility = PUBLICATION_ELIGIBILITY.PUBLICATION_ELIGIBLE;
       p.freshnessStatus = "SOURCE_VERIFIED";
       p.freshnessReason = "LKG_HOLD_RELEASED_SOURCE_MATCH";
