@@ -104,6 +104,12 @@ export function slimOffersPublicAuditSidecars(doc) {
       g.deferredDecisionLedgerSample = g.deferredDecisionLedgerSample.slice(0, 50);
       g.deferredDecisionLedgerSampleTruncated = true;
     }
+    // Never ship full deferredNewKeys into public Pages artifact.
+    if (Array.isArray(g.deferredNewKeys)) {
+      delete g.deferredNewKeys;
+      g.deferredNewKeysPersistedInOffers = false;
+      g.deferredNewKeysStrippedForPublicPages = true;
+    }
     out.publicGrowthBudget = g;
   }
   return out;

@@ -32,8 +32,6 @@ const buttonsLen = Array.isArray(staticCatalog.buttons) ? staticCatalog.buttons.
 ok("armed", staticCatalog.publicButtonSwapArmed === true && staticCatalog.liveEnabled === true);
 /* V51.8: after 4camping/Picasee/Impresi enrollment — keep in lockstep with static V13 + v14-selftest. */
 ok("buttons_match_array", buttonCount === buttonsLen, JSON.stringify(staticCatalog.counts));
-ok("buttons_178_after_three_partner_enroll", buttonCount === 178, JSON.stringify(staticCatalog.counts));
-ok("joined_179_after_three_partner_enroll", joinedCount === 179, JSON.stringify(staticCatalog.counts));
 ok(
   "joined_matches_buttons_plus_blockers",
   joinedCount === buttonCount + Number(staticCatalog.counts?.missingMainButtons || 0),

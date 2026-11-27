@@ -60,6 +60,7 @@ import {
   FRESHNESS_STATUS,
   SOURCE_UPDATED_AT_STATUS,
 } from "./iu-cj-affiliate-phase3z-offers-freshness-v32.mjs";
+import { planCatalogFreshnessBatch } from "./iu-cj-affiliate-phase3z-catalog-freshness-scheduler-v51-8.mjs";
 import {
   REFRESH_MODE,
   REFRESH_RESULT,
@@ -120,6 +121,7 @@ import {
   buildDeferredNewLedgerDocument,
   DEFERRED_NEW_LEDGER_FILENAME,
 } from "./iu-cj-affiliate-phase3z-publication-lkg-v51-8.mjs";
+import { persistDeferredNewKeys } from "./iu-cj-affiliate-deferred-new-keys-persist-v51-8.mjs";
 import {
   mergeIntoDurableCatalog,
   seedDurableCatalogFromOffersPublic,
@@ -441,7 +443,7 @@ export function offerEvidenceText(linkOrProduct = {}) {
     .join(" | ");
 }
 
-function toPublicOfferCard(card) {
+function toPublicOfferCard(card, clock = {}) {
   if (!card || card.state !== PUB_STATE.PUBLICATION_READY || card.publicationReady !== true) {
     return null;
   }
@@ -449,6 +451,15 @@ function toPublicOfferCard(card) {
   if (!affiliateOk) return null;
   const kind = card.kind === "coupon" ? "coupon" : "action";
   if (kind === "coupon" && !String(card.couponCode || "").trim()) return null;
+  const offerLoadedAt =
+    typeof clock.offerFetchedAt === "string" && Number.isFinite(Date.parse(clock.offerFetchedAt))
+      ? new Date(Date.parse(clock.offerFetchedAt)).toISOString()
+      : null;
+  const batchFetchedAt =
+    typeof clock.batchFetchedAt === "string" && Number.isFinite(Date.parse(clock.batchFetchedAt))
+      ? new Date(Date.parse(clock.batchFetchedAt)).toISOString()
+      : null;
+  const sourceUpdatedAt = card.sourceUpdatedAt ? String(card.sourceUpdatedAt) : null;
   return {
     kind,
     offerId: card.offerId || null,
@@ -469,6 +480,14 @@ function toPublicOfferCard(card) {
     blockers: [],
     sourceSystem: "cj_link_search_staging",
     fixtureOnly: false,
+    sourceBatchFetchedAt: batchFetchedAt,
+    offerLoadedAt,
+    fetchedAt: offerLoadedAt,
+    lastCheckedAt: card.lastCheckedAt || null,
+    lastSuccessfulVerificationAt: card.lastSuccessfulVerificationAt || null,
+    lastFailedAttemptAt: card.lastFailedAttemptAt || null,
+    sourceUpdatedAt,
+    nextCheckAt: card.nextCheckAt || null,
   };
 }
 
@@ -657,6 +676,38 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
     if (a.lastScanMs !== b.lastScanMs) return a.lastScanMs - b.lastScanMs;
     return String(a.advertiserId).localeCompare(String(b.advertiserId));
   });
+  const dueItems = [];
+  for (const row of prevByKey.values()) {
+    dueItems.push({
+      kind: "product",
+      advertiserId: row.advertiserId,
+      itemId: row.productId,
+      nextCheckAt: row.nextCheckAt || null,
+      validTo: row.validTo || null,
+      priceChanged: row.priceChangeClassification === "PRICE_CHANGED",
+      availabilityChanged: row.availabilityChangeSource === "cj_product_refresh" && row.previousAvailability != null,
+      lastSuccessfulVerificationAt: row.lastSuccessfulVerificationAt || row.lastVerifiedAt || null,
+    });
+  }
+  for (const sec of prevPublic?.sections || []) {
+    for (const offer of [...(sec.coupons || []), ...(sec.actions || [])]) {
+      dueItems.push({
+        kind: offer.kind === "coupon" ? "coupon" : "action",
+        advertiserId: offer.advertiserId,
+        itemId: offer.offerId,
+        nextCheckAt: offer.nextCheckAt || null,
+        validTo: offer.validTo || null,
+        lastSuccessfulVerificationAt: offer.lastSuccessfulVerificationAt || null,
+      });
+    }
+  }
+  const freshnessPlan = planCatalogFreshnessBatch(dueItems, {
+    nowMs: Date.now(),
+    limit: Math.max(1, dueItems.length || 1),
+    maxPerPartner: Math.max(1, dueItems.length || 1),
+  });
+  meta.freshnessDue = freshnessPlan.due;
+  meta.freshnessUnique = freshnessPlan.unique;
   meta.advertisers = ordered.length;
   const refreshedByKey = new Map();
   const matchedKeys = new Set();
@@ -1098,6 +1149,18 @@ export function applyPublishedRefreshToDoc(doc, refreshedByKey, nowIso, coverage
 /**
  * Build offers-public document from staging links (+ optional product cards).
  */
+export function crossCategoryPlacementKey(item) {
+  const offerId = String(item?.offerId || "").trim();
+  const productId = String(item?.productId || "").trim();
+  const id = offerId || productId;
+  if (!id) return "";
+  const advertiserId = String(item?.advertiserId || "").trim();
+  const variant = String(item?.productVariant || "").trim();
+  const base = advertiserId ? advertiserId + "|" + id : id;
+  if (offerId || !variant) return base;
+  return base + "|" + variant;
+}
+
 export function buildOffersPublicFromStaging(opts = {}) {
   const staging = opts.staging || { advertisers: [], links: [], apiOutage: true };
   const sectionByAdv = opts.sectionByAdv || {};
@@ -1173,7 +1236,12 @@ export function buildOffersPublicFromStaging(opts = {}) {
       card.kind = "coupon";
       card.couponCode = String(link.couponCode).trim();
     }
-    const pubBase = toPublicOfferCard(card);
+    const batchFetchedAt =
+      typeof staging.fetchedAt === "string" && Number.isFinite(Date.parse(staging.fetchedAt))
+        ? staging.fetchedAt
+        : null;
+    const offerFetchedAt = typeof link.fetchedAt === "string" ? link.fetchedAt : null;
+    const pubBase = toPublicOfferCard(card, { batchFetchedAt, offerFetchedAt });
     if (!pubBase || !pubBase.sectionKey) {
       bump("public_card_rejected");
       continue;
@@ -1234,7 +1302,7 @@ export function buildOffersPublicFromStaging(opts = {}) {
     delete sec.seenOfferIds;
     delete sec.seenProductKeys;
     for (const item of [...sec.coupons, ...sec.actions, ...sec.products]) {
-      const oid = item.offerId || item.productId;
+      const oid = crossCategoryPlacementKey(item);
       if (!oid) continue;
       if (!offerIdSections.has(oid)) offerIdSections.set(oid, new Set());
       offerIdSections.get(oid).add(sec.sectionKey);
@@ -3145,28 +3213,70 @@ export async function runOffersLiveSync(opts = {}) {
     } catch {
       // best-effort
     }
-    // Hook: full deferred-new keys → sidecar iu-affiliate-cj-deferred-new-ledger-v51.json
-    // (offers JSON keeps sample≤200). Does NOT unlock growth / never arms uncapped.
+    // Hook: FULL deferred-new identity keys → keys-only sidecar (+ jsonl.gz).
+    // Offers JSON keeps sample only (never embed ~300k keys into Pages).
+    // Does NOT unlock growth / never arms uncapped.
     try {
-      const deferredLedgerPath = path.join(dataDir, DEFERRED_NEW_LEDGER_FILENAME);
-      const ledgerDoc =
-        growthApplied.deferredLedger ||
-        buildDeferredNewLedgerDocument(growthApplied.deferredNew, {
-          reason:
-            growthApplied.budget?.cumulativeRemaining <= 0
-              ? "CUMULATIVE_BUDGET_EXHAUSTED"
-              : "PER_RUN_GROWTH_BUDGET",
-          budget: growthApplied.budget,
-          preferredCurrency: String(env.IU_CJ_OFFERS_PUBLIC_PREFERRED_CURRENCY || "CZK"),
-          runId: env.GITHUB_RUN_ID || null,
-        });
-      fs.mkdirSync(dataDir, { recursive: true });
-      fs.writeFileSync(deferredLedgerPath, JSON.stringify(ledgerDoc, null, 2) + "\n", "utf8");
+      const deferredPersist = await persistDeferredNewKeys(growthApplied.deferredNew, {
+        dataDir,
+        reason:
+          growthApplied.budget?.cumulativeRemaining <= 0
+            ? "CUMULATIVE_BUDGET_EXHAUSTED"
+            : "PER_RUN_GROWTH_BUDGET",
+        budget: growthApplied.budget,
+        preferredCurrency: String(env.IU_CJ_OFFERS_PUBLIC_PREFERRED_CURRENCY || "CZK"),
+        runId: env.GITHUB_RUN_ID || null,
+        catalogGeneration: env.IU_CJ_CATALOG_GENERATION || "UNKNOWN",
+        nowIso: new Date().toISOString(),
+      });
       if (!publicationRestore) publicationRestore = {};
-      publicationRestore.deferredNewLedgerPath = deferredLedgerPath;
-      publicationRestore.deferredNewLedgerCount = ledgerDoc.deferredNewCount;
+      publicationRestore.deferredNewLedgerPath = deferredPersist.ledgerPath;
+      publicationRestore.deferredNewLedgerCount = deferredPersist.keyCount;
+      publicationRestore.deferredNewKeysJsonlGzPath = deferredPersist.jsonlGzPath;
+      publicationRestore.deferredNewKeysMetaPath = deferredPersist.metaPath;
+      publicationRestore.deferredNewKeysPersistedSidecar = true;
+      if (growthApplied.doc?.publicGrowthBudget && typeof growthApplied.doc.publicGrowthBudget === "object") {
+        Object.assign(growthApplied.doc.publicGrowthBudget, deferredPersist.publicGrowthBudgetPatch);
+      }
     } catch {
       // best-effort; never block promote on sidecar IO
+      try {
+        // Fallback: legacy fat-in-memory document only if keys-only writer failed early.
+        const deferredLedgerPath = path.join(dataDir, DEFERRED_NEW_LEDGER_FILENAME);
+        const ledgerDoc =
+          growthApplied.deferredLedger ||
+          buildDeferredNewLedgerDocument(growthApplied.deferredNew, {
+            reason:
+              growthApplied.budget?.cumulativeRemaining <= 0
+                ? "CUMULATIVE_BUDGET_EXHAUSTED"
+                : "PER_RUN_GROWTH_BUDGET",
+            budget: growthApplied.budget,
+            preferredCurrency: String(env.IU_CJ_OFFERS_PUBLIC_PREFERRED_CURRENCY || "CZK"),
+            runId: env.GITHUB_RUN_ID || null,
+          });
+        // Prefer keys-only shape even in fallback (drop entries to avoid OOM/99MB omit).
+        const keysOnly = {
+          schema: ledgerDoc.schema,
+          updatedAt: ledgerDoc.updatedAt,
+          runId: ledgerDoc.runId,
+          catalogGeneration: ledgerDoc.catalogGeneration,
+          deferredNewCount: Array.isArray(ledgerDoc.keys) ? ledgerDoc.keys.length : 0,
+          reason: ledgerDoc.reason,
+          preferredCurrency: ledgerDoc.preferredCurrency,
+          budget: ledgerDoc.budget,
+          keys: Array.isArray(ledgerDoc.keys) ? ledgerDoc.keys : [],
+          keysOnly: true,
+          sampleOnlyInOffers: true,
+          evidenceCompleteness: "FULL_KEYS",
+        };
+        fs.mkdirSync(dataDir, { recursive: true });
+        fs.writeFileSync(deferredLedgerPath, JSON.stringify(keysOnly, null, 2) + "\n", "utf8");
+        if (!publicationRestore) publicationRestore = {};
+        publicationRestore.deferredNewLedgerPath = deferredLedgerPath;
+        publicationRestore.deferredNewLedgerCount = keysOnly.deferredNewCount;
+      } catch {
+        // swallow
+      }
     }
     if (!publicationRestore) publicationRestore = {};
     publicationRestore.publicGrowthBudget = growthApplied.doc.publicGrowthBudget || null;

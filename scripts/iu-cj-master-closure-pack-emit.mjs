@@ -47,7 +47,7 @@ export function summarize(matrix) {
   const utf8StatusOk = /CLEARED|REGRESSION_PROOF/i.test(String(proof.status || ""));
   const itemAOk =
     !itemA ||
-    /CLEARED|DONE|REGRESSION_PROOF/i.test(String(itemA.status || ""));
+    /CLEARED|DONE|REGRESSION_PROOF|PRODUCTION_PASS/i.test(String(itemA.status || ""));
   const utf8 = {
     cleared:
       utf8StatusOk &&

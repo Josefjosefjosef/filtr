@@ -425,7 +425,7 @@ export function applyFreshnessToOffersDocument(doc, opts = {}) {
         fetchedAt: p.fetchedAt || p.lastCheckedAt || null,
         sourceUpdatedAt: fr.sourceUpdatedAt != null ? fr.sourceUpdatedAt : null,
         sourceUpdatedAtStatus: fr.sourceUpdatedAtStatus || SOURCE_UPDATED_AT_STATUS.NOT_PROVIDED,
-        nextCheckAt: fr.nextCheckAt || null,
+        nextCheckAt: p.nextCheckAt || fr.nextCheckAt || null,
         sourceTimestampLabel:
           fr.sourceUpdatedAtStatus === SOURCE_UPDATED_AT_STATUS.PROVIDED
             ? "SOURCE_TIMESTAMP_PROVIDED"
@@ -491,13 +491,16 @@ export function collectPublishedProductKeys(doc) {
     for (const p of sec.products || []) {
       const adv = p.advertiserId != null ? String(p.advertiserId) : "";
       const pid = p.productId != null ? String(p.productId) : "";
+      const variant = String(p.productVariant || "").trim();
       if (!adv || !pid) continue;
-      const k = adv + "|" + pid;
+      const k = variant ? adv + "|" + pid + "|" + variant : adv + "|" + pid;
       if (seen.has(k)) continue;
       seen.add(k);
       keys.push({
         advertiserId: adv,
         productId: pid,
+        productVariant: variant || null,
+        currency: p.currency || null,
         feedId: p.feedId != null ? String(p.feedId) : null,
         sectionKey: sec.sectionKey || null,
       });
