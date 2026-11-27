@@ -1149,6 +1149,18 @@ export function applyPublishedRefreshToDoc(doc, refreshedByKey, nowIso, coverage
 /**
  * Build offers-public document from staging links (+ optional product cards).
  */
+export function crossCategoryPlacementKey(item) {
+  const offerId = String(item?.offerId || "").trim();
+  const productId = String(item?.productId || "").trim();
+  const id = offerId || productId;
+  if (!id) return "";
+  const advertiserId = String(item?.advertiserId || "").trim();
+  const variant = String(item?.productVariant || "").trim();
+  const base = advertiserId ? advertiserId + "|" + id : id;
+  if (offerId || !variant) return base;
+  return base + "|" + variant;
+}
+
 export function buildOffersPublicFromStaging(opts = {}) {
   const staging = opts.staging || { advertisers: [], links: [], apiOutage: true };
   const sectionByAdv = opts.sectionByAdv || {};
@@ -1290,7 +1302,7 @@ export function buildOffersPublicFromStaging(opts = {}) {
     delete sec.seenOfferIds;
     delete sec.seenProductKeys;
     for (const item of [...sec.coupons, ...sec.actions, ...sec.products]) {
-      const oid = item.offerId || item.productId;
+      const oid = crossCategoryPlacementKey(item);
       if (!oid) continue;
       if (!offerIdSections.has(oid)) offerIdSections.set(oid, new Set());
       offerIdSections.get(oid).add(sec.sectionKey);
