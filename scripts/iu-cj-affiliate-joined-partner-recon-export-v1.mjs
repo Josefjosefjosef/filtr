@@ -437,7 +437,7 @@ export function listShardFiles(dir) {
 
 /** Pure per-identity classifier (priority order = PRIMARY_STATE_PRIORITY). */
 export function classifyIdentity(rec, ctx) {
-  const key = `${rec.advertiserId}|${rec.productId}`;
+  const key = reconProductKey(rec.advertiserId, rec);
   if (ctx.endedIds.has(String(rec.advertiserId))) {
     return PRIMARY_STATE.ENDED_PARTNERSHIP;
   }
@@ -493,7 +493,7 @@ export async function exportProductInventoryJsonl({
     for (const [k, rec] of Object.entries(products)) {
       sourceRows += 1;
       n += 1;
-      const key = `${rec.advertiserId}|${rec.productId}`;
+      const key = reconProductKey(rec.advertiserId, rec);
       if (k !== key) identityCollisions += 1;
       if (seen.has(key)) {
         duplicates += 1;
@@ -518,6 +518,7 @@ export async function exportProductInventoryJsonl({
           key,
           advertiserId: adv,
           productId: String(rec.productId),
+          productVariant: String(rec.productVariant || "").trim() || null,
           primaryState: state,
           sectionKey: rec.sectionKey ?? null,
           currency: rec.currency ?? null,
