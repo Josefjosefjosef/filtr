@@ -1149,6 +1149,21 @@ export function applyPublishedRefreshToDoc(doc, refreshedByKey, nowIso, coverage
 /**
  * Build offers-public document from staging links (+ optional product cards).
  */
+export function sectionOfferSeenKey(pub) {
+  const offerId = String(pub?.offerId || "").trim();
+  if (!offerId) return "";
+  const advertiserId = String(pub?.advertiserId || "").trim();
+  return advertiserId ? advertiserId + "|" + offerId : offerId;
+}
+
+export function claimSectionOffer(seen, pub) {
+  const key = sectionOfferSeenKey(pub);
+  if (!key) return true;
+  if (seen.has(key)) return false;
+  seen.add(key);
+  return true;
+}
+
 export function buildOffersPublicFromStaging(opts = {}) {
   const staging = opts.staging || { advertisers: [], links: [], apiOutage: true };
   const sectionByAdv = opts.sectionByAdv || {};
@@ -1243,11 +1258,10 @@ export function buildOffersPublicFromStaging(opts = {}) {
     for (const sectionKey of sectionKeys) {
       const pub = { ...pubBase, sectionKey, sectionKeys };
       const sec = secBucket(sectionKey, pub.advertiserId, pub.partnerName);
-      if (pub.offerId && sec.seenOfferIds.has(pub.offerId)) {
+      if (!claimSectionOffer(sec.seenOfferIds, pub)) {
         bump("duplicate_offer_id");
         continue;
       }
-      if (pub.offerId) sec.seenOfferIds.add(pub.offerId);
       if (pub.kind === "coupon") sec.coupons.push(pub);
       else sec.actions.push(pub);
       placed += 1;
