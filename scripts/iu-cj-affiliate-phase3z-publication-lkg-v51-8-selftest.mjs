@@ -172,6 +172,8 @@ assert(
   "chronic incomplete → gradual HOLD"
 );
 assert(chronicMerged.heldPublic === 1, "chronic hold counted");
+assert(chronicProd.publicationReady === false, "chronic hold is not publication ready");
+assert(chronicProd.publicOffer === false, "chronic hold is not a public offer");
 assert(chronicProd.freshnessReason === "LKG_NOT_YET_SEEN_MAX_AGE_GRADUAL_HOLD", "chronic hold reason");
 
 // Complete feed (not incomplete) + age exceeded → do not silent-carry as public LKG
@@ -485,6 +487,8 @@ const holdMerged = mergeLkgPublishedProducts(holdNext, holdCollisionPrev, {
 });
 const holdProd = holdMerged.doc.sections[0].products.find((p) => p.productId === "keep-missing");
 assert(holdProd.publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD, "collision → HOLD");
+assert(holdProd.publicationReady === false, "collision hold is not publication ready");
+assert(staleProd.publicationReady === true, "pending reverify stays publication ready");
 const released = releaseLkgHoldsAgainstSource(
   holdMerged.doc,
   new Set([compoundProductKey("1", "keep-missing")]),
