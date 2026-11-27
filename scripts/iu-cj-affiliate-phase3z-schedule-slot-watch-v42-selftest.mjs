@@ -47,6 +47,7 @@ assert(byHour[6]?.classification === "SLOT_DELAYED" || byHour[6]?.classification
 assert(byHour[15]?.classification === "SLOT_DELAYED" || byHour[15]?.classification === "SLOT_HIT", "15 slot hit/delayed");
 assert(byHour[18]?.classification === "SLOT_MISS", "18 must be SLOT_MISS beyond delay budget");
 assert(byHour[21]?.classification === "SLOT_MISS", "21 must be SLOT_MISS beyond delay budget");
+assert(byHour[9]?.classification === "SLOT_FAILED", "09 failure is not a delivered slot");
 assert(report.counts.miss >= 2, "multiple misses");
 assert(report.watchResult === "FAIL", "multiple misses → FAIL (do not mask with 48h success)");
 assert(report.burninStatus === "CADENCE_DEGRADED_MULTIPLE_SLOT_MISS", "burnin status");
@@ -63,6 +64,24 @@ const m18 = mid.slots.find((s) => s.hour === 18);
 const m21 = mid.slots.find((s) => s.hour === 21);
 assert(m18?.classification === "SLOT_MISS", "18 at 22:32 → miss");
 assert(m21?.classification === "PENDING_OBSERVATION", "21 within budget → pending");
+
+const failedSlot = classifyScheduleSlots(
+  [
+    {
+      id: 46036632928,
+      created_at: "2026-11-27T16:48:01Z",
+      conclusion: "failure",
+      head_sha: "cd05359a3e42b1a5d61430f2f7692463fdd3d8e2",
+    },
+  ],
+  new Date("2026-11-27T18:18:00.000Z")
+);
+const failed15 = failedSlot.slots.find((s) => s.hour === 15);
+const pending18 = failedSlot.slots.find((s) => s.hour === 18);
+assert(failed15?.classification === "SLOT_FAILED", "15:17 selftest failure is not a delivered slot");
+assert(pending18?.classification === "PENDING_OBSERVATION", "18:17 stays pending inside the delay budget");
+assert(failedSlot.counts.hitOrDelayed === 0, "a failed run is not a hit");
+assert(failedSlot.watchResult === "FAIL", "a failed schedule slot fails the watch");
 
 console.log("PASS iu-cj-affiliate-phase3z-schedule-slot-watch-v42-selftest");
 console.log(
