@@ -2904,15 +2904,15 @@ export async function runOffersLiveSync(opts = {}) {
     // identities are NOT_YET_SEEN (carry) instead of SOURCE_STALE (drop).
     const sourceVerifiedKeys = new Set(productMeta?.sourceVerifiedIdentityKeys || []);
     for (const sp of sourceProducts || []) {
-      const k = compoundProductKey(sp.advertiserId, sp.productId);
+      const k = compoundProductKey(sp.advertiserId, sp.productId, sp.productVariant);
       if (k !== "|") sourceVerifiedKeys.add(k);
     }
     for (const p of products || []) {
-      const k = compoundProductKey(p.advertiserId, p.productId);
+      const k = compoundProductKey(p.advertiserId, p.productId, p.productVariant);
       if (k !== "|") sourceVerifiedKeys.add(k);
     }
     for (const r of productMeta?.fetchedIdentityRows || []) {
-      const k = compoundProductKey(r.advertiserId, r.productId);
+      const k = compoundProductKey(r.advertiserId, r.productId, r.productVariant);
       if (k !== "|") sourceVerifiedKeys.add(k);
     }
     const classifyOpts = {
