@@ -14,6 +14,7 @@ import {
   selectPartnersForFairDiscovery,
   summarizeTraversalClassifications,
 } from "./iu-cj-affiliate-phase3z-catalog-fairness-v51-8.mjs";
+import { continuationEvidenceKey } from "./iu-cj-continuation-evidence-key.mjs";
 
 const TEMP = process.env.TEMP || process.env.TMP;
 const OUT = path.join(TEMP, "iu-v518-cont-audit");
@@ -96,13 +97,13 @@ const missBaseline = missBaselinePack?.rows
       uniqueMisses: 329,
     }
   : null;
-const missCurrentByKey = new Map((missCurrent.rows || []).map((r) => [String(r.sourceIdentity), r]));
+const missCurrentByKey = new Map((missCurrent.rows || []).map((r) => [continuationEvidenceKey(r), r]));
 const miss = missBaseline
   ? {
       schema: missCurrent.schema || "iu-cj-affiliate-phase3z-miss-products-v38",
       counts: null,
       rows: (missBaseline.rows || []).map((r) => {
-        const key = String(r.sourceIdentity || r.advertiserId + "|" + r.productId);
+        const key = continuationEvidenceKey(r);
         const cur = missCurrentByKey.get(key);
         return cur ? { ...r, ...cur, sourceIdentity: key } : r;
       }),
