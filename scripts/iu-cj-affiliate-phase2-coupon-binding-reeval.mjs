@@ -26,6 +26,7 @@ import {
   runProductPublicationPipeline,
 } from "./iu-cj-affiliate-phase2-publication-pipeline.mjs";
 import { loadPhase1Artifacts, mergeLinkWithEnrichment } from "./iu-cj-affiliate-phase2-lib.mjs";
+import { landingBatchDiagnosticRow } from "./iu-cj-affiliate-phase2-landing-batch-diagnostic.mjs";
 
 const stateDir = defaultStateDir();
 const histPath = path.join(stateDir, "cj-phase2-coupon-product-bindings.json");
@@ -271,17 +272,7 @@ const eligibleRowsLandingBatchDiagnostics = [];
 for (const b of reevaluatedBindings) {
   for (const p of b.productRowsEvaluated || []) {
     if (p.eligibility !== "eligible") continue;
-    const v = p.landingBatchVerify;
-    eligibleRowsLandingBatchDiagnostics.push({
-      linkId: b.linkId,
-      productId: p.productId != null ? String(p.productId) : null,
-      landingBatchReason: v?.reason || p.landingIdentity?.reason || null,
-      linkageLayer: v?.linkageLayer || null,
-      productIdentityLinkage: v?.productIdentityLinkage || null,
-      offerActionLinkage: v?.offerActionLinkage || null,
-      diagnostics: v?.diagnostics || null,
-      landingSource: p.landingSource || null,
-    });
+    eligibleRowsLandingBatchDiagnostics.push(landingBatchDiagnosticRow(b, p));
   }
 }
 
