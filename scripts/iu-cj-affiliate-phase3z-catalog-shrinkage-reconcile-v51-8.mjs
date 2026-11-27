@@ -11,7 +11,9 @@ export const SHRINKAGE_RECONCILE_SCHEMA = "iu-cj-affiliate-phase3z-catalog-shrin
 function productKey(p) {
   const a = String(p?.advertiserId || "").trim();
   const id = String(p?.productId || p?.id || "").trim();
-  return a && id ? `${a}|${id}` : null;
+  if (!a || !id) return null;
+  const variant = String(p?.productVariant || "").trim();
+  return variant ? a + "|" + id + "|" + variant : a + "|" + id;
 }
 
 function indexOffers(doc) {
@@ -24,6 +26,8 @@ function indexOffers(doc) {
         key,
         advertiserId: String(p.advertiserId || ""),
         productId: String(p.productId || p.id || ""),
+        productVariant: String(p.productVariant || "").trim() || null,
+        currency: p.currency || null,
         title: p.title || p.name || null,
         lkgCarried: p.lkgCarried === true,
         hold:
@@ -75,6 +79,7 @@ export function reconcileCatalogShrinkage(prevDoc, nextDoc, opts = {}) {
     if (p.lkgCarried !== n.lkgCarried) changes.push("lkgCarried");
     if (availClass(p.availability) !== availClass(n.availability)) changes.push("availability");
     if (String(p.currentPrice) !== String(n.currentPrice)) changes.push("price");
+    if (String(p.currency || "") !== String(n.currency || "")) changes.push("currency");
     if (changes.length) {
       updated.push({ key, changes, prev: p, next: n });
     }
