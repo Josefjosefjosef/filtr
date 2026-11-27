@@ -60,7 +60,8 @@ import {
   FRESHNESS_STATUS,
   SOURCE_UPDATED_AT_STATUS,
 } from "./iu-cj-affiliate-phase3z-offers-freshness-v32.mjs";
-import { planCatalogFreshnessBatch } from "./iu-cj-affiliate-phase3z-catalog-freshness-scheduler-v51-8.mjs";
+import { planCatalogFreshnessBatch, selectRefreshGroupsByFreshness } from "./iu-cj-affiliate-phase3z-catalog-freshness-scheduler-v51-8.mjs";
+import { classifyOfferValidity, VALIDITY as OFFER_VALIDITY } from "./iu-cj-affiliate-phase3z-coupons-actions-audit-v51-8.mjs";
 import {
   REFRESH_MODE,
   REFRESH_RESULT,
@@ -683,6 +684,8 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
       advertiserId: row.advertiserId,
       itemId: row.productId,
       nextCheckAt: row.nextCheckAt || null,
+      retryNotBefore: row.retryNotBefore || null,
+      retryable: row.retryable !== false,
       validTo: row.validTo || null,
       priceChanged: row.priceChangeClassification === "PRICE_CHANGED",
       availabilityChanged: row.availabilityChangeSource === "cj_product_refresh" && row.previousAvailability != null,
@@ -696,6 +699,8 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
         advertiserId: offer.advertiserId,
         itemId: offer.offerId,
         nextCheckAt: offer.nextCheckAt || null,
+        retryNotBefore: offer.retryNotBefore || null,
+        retryable: offer.retryable !== false,
         validTo: offer.validTo || null,
         lastSuccessfulVerificationAt: offer.lastSuccessfulVerificationAt || null,
       });
@@ -708,6 +713,11 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
   });
   meta.freshnessDue = freshnessPlan.due;
   meta.freshnessUnique = freshnessPlan.unique;
+  meta.freshnessHeldForRetry = freshnessPlan.heldForRetry;
+  meta.freshnessBatch = freshnessPlan.batch.length;
+  const selectedRefresh = selectRefreshGroupsByFreshness(ordered, freshnessPlan);
+  meta.freshnessSkippedProducts = selectedRefresh.skippedProducts;
+  const refreshGroups = selectedRefresh.groups;
   meta.advertisers = ordered.length;
   const refreshedByKey = new Map();
   const matchedKeys = new Set();
@@ -762,7 +772,7 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
   meta.refreshConcurrency = refreshConcurrency;
 
   // Phase 1: bounded-parallel CJ fetches (no shared mutation).
-  const fetchRows = await mapPool(ordered, refreshConcurrency, async (group) => {
+  const fetchRows = await mapPool(refreshGroups, refreshConcurrency, async (group) => {
     const advertiserId = group.advertiserId;
     const want = new Map(group.keys.map((k) => [k.productId, k]));
     const wantIds = [...want.keys()];
@@ -1233,6 +1243,13 @@ export function buildOffersPublicFromStaging(opts = {}) {
     if (!pubBase || !pubBase.sectionKey) {
       bump("public_card_rejected");
       continue;
+    }
+    const validityStatus = classifyOfferValidity(pubBase, refDate.getTime());
+    pubBase.validityStatus = validityStatus;
+    if (validityStatus === OFFER_VALIDITY.EXPIRED || validityStatus === OFFER_VALIDITY.NOT_YET_ACTIVE) {
+      pubBase.publicationReady = false;
+      pubBase.publishable = false;
+      pubBase.blockers = [validityStatus];
     }
     const sectionKeys = resolveOfferSectionKeys({
       primarySection: pubBase.sectionKey,

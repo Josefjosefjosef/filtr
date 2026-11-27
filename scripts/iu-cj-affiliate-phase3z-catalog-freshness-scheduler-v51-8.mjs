@@ -161,6 +161,26 @@ export function planCatalogFreshnessBatch(items, opts = {}) {
   };
 }
 
+export function selectRefreshGroupsByFreshness(groups, plan) {
+  const selectable = new Set(
+    (plan?.batch || [])
+      .filter((row) => row && row.kind === "product")
+      .map((row) => String(row.advertiserId) + "|" + String(row.itemId)),
+  );
+  const next = [];
+  let skippedProducts = 0;
+  for (const group of groups || []) {
+    const keys = (group.keys || []).filter((key) => {
+      const id = String(group.advertiserId) + "|" + String(key.productId);
+      if (selectable.has(id)) return true;
+      skippedProducts += 1;
+      return false;
+    });
+    if (keys.length) next.push({ ...group, keys });
+  }
+  return { groups: next, skippedProducts };
+}
+
 export const MAX_SOURCE_ATTEMPTS = 5;
 export const LONG_TERM_RECHECK_MS = 7 * 24 * 60 * 60 * 1000;
 
