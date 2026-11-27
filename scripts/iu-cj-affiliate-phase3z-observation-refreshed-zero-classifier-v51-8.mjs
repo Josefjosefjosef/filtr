@@ -224,8 +224,9 @@ export function planSourceCurrentPriorityRefresh(doc, opts = {}) {
     for (const p of sec.products || []) {
       const adv = String(p?.advertiserId || "").trim();
       const pid = String(p?.productId || "").trim();
+      const variant = String(p?.productVariant || "").trim();
       if (!adv || !pid) continue;
-      const key = `${adv}|${pid}`;
+      const key = variant ? `${adv}|${pid}|${variant}` : `${adv}|${pid}`;
       if (seen.has(key)) continue;
       seen.add(key);
       const pr = classifyRefreshPriority(p, nowMs);
@@ -233,6 +234,7 @@ export function planSourceCurrentPriorityRefresh(doc, opts = {}) {
         key,
         advertiserId: adv,
         productId: pid,
+        ...(variant ? { productVariant: variant } : {}),
         title: p.title || null,
         ...pr,
         lastVerifiedMs: Date.parse(p.lastVerifiedAt || p.lastSuccessfulRefreshAt || p.fetchedAt || "") || 0,
