@@ -468,8 +468,10 @@ export function catalogDedupeKey(record) {
   return [
     String(record?.dataSource || ""),
     String(record?.partnerId || ""),
+    String(record?.productId || ""),
     String(record?.offerId || ""),
     String(record?.offerType || ""),
     String(record?.productVariant || "-"),
+    String(record?.currency || ""),
   ].join("|");
 }
