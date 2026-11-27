@@ -1016,6 +1016,13 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
   return { refreshedByKey, meta, refreshCheckpoint, coverageLedger: ledger };
 }
 
+function backfillIdentityKey(product) {
+  const base = String(product?.advertiserId || "") + "|" + String(product?.productId || "");
+  const variant = String(product?.productVariant || "").trim();
+  if (!variant || base === "|") return base;
+  return base + "|" + variant;
+}
+
 /**
  * When a fresh source row omits availability, retain the last known non-empty value
  * from previous LIVE (do not invent in_stock; do not wipe a known value to null).
@@ -1026,7 +1033,7 @@ export function backfillAvailabilityFromPrevious(doc, prevPublic, opts = {}) {
   const prev = new Map();
   for (const sec of prevPublic?.sections || []) {
     for (const p of sec.products || []) {
-      const key = String(p.advertiserId || "") + "|" + String(p.productId || "");
+      const key = backfillIdentityKey(p);
       if (!key || key === "|") continue;
       const a = p.availability;
       if (a == null || String(a).trim() === "") continue;
@@ -1071,7 +1078,7 @@ export function backfillAvailabilityFromPrevious(doc, prevPublic, opts = {}) {
       if (!p) continue;
       inspected += 1;
       if (p.availability != null && String(p.availability).trim() !== "") continue;
-      const key = String(p.advertiserId || "") + "|" + String(p.productId || "");
+      const key = backfillIdentityKey(p);
       const carry = prev.get(key);
       if (!carry) continue;
       p.availability = carry.availability;
