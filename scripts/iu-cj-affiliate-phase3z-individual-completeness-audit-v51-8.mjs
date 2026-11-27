@@ -69,6 +69,14 @@ function offerKey(row) {
   return row?.offerId ?? row?.id ?? null;
 }
 
+function offerIdentity(row) {
+  const id = offerKey(row);
+  if (id == null || String(id) === "") return null;
+  const adv = row?.advertiserId;
+  if (adv == null || String(adv).trim() === "") return String(id);
+  return String(adv).trim() + "|" + String(id);
+}
+
 function datesProblems(row) {
   const problems = [];
   const fromRaw = row?.validFrom;
@@ -148,13 +156,14 @@ function isPublished(row) {
 export function auditActionButtons(actions, opts = {}) {
   const list = Array.isArray(actions) ? actions : [];
   const buttons = Array.isArray(opts.buttons) ? opts.buttons : null;
-  const couponIds = new Set((Array.isArray(opts.coupons) ? opts.coupons : []).map(offerKey).filter((v) => v != null));
+  const couponIds = new Set((Array.isArray(opts.coupons) ? opts.coupons : []).map(offerIdentity).filter((v) => v != null));
   const seenIds = new Map();
   const seenUrls = new Map();
 
   const rows = list.map((row, index) => {
     const missing = [];
     const id = offerKey(row);
+    const identity = offerIdentity(row);
     if (!nonEmptyString(row?.title)) missing.push("title_missing");
     missing.push(...advertiserProblems(row));
     if (!nonEmptyString(row?.affiliateUrl)) missing.push("buttonUrl_missing");
@@ -162,10 +171,10 @@ export function auditActionButtons(actions, opts = {}) {
     if (id == null) missing.push("offerId_missing");
 
     const flags = [];
-    if (id != null) {
-      if (seenIds.has(id)) flags.push("duplicate_offerId");
-      seenIds.set(id, (seenIds.get(id) || 0) + 1);
-      if (couponIds.has(id)) flags.push("offerId_also_coupon");
+    if (identity != null) {
+      if (seenIds.has(identity)) flags.push("duplicate_offerId");
+      seenIds.set(identity, (seenIds.get(identity) || 0) + 1);
+      if (couponIds.has(identity)) flags.push("offerId_also_coupon");
     }
     if (nonEmptyString(row?.affiliateUrl)) {
       if (seenUrls.has(row.affiliateUrl)) flags.push("duplicate_buttonUrl");
@@ -193,10 +202,10 @@ export function auditActionButtons(actions, opts = {}) {
   const orphanButtons = [];
   const actionsWithoutButton = [];
   if (buttons) {
-    const publishedIds = new Set(rows.filter((r) => r.published && r.offerId != null).map((r) => r.offerId));
+    const publishedIds = new Set(rows.filter((r) => r.published && r.offerId != null).map((r) => offerIdentity(r)));
     const buttonIds = new Set();
     buttons.forEach((b, index) => {
-      const id = offerKey(b);
+      const id = offerIdentity(b);
       if (id != null) buttonIds.add(id);
       if (id == null || !publishedIds.has(id)) {
         orphanButtons.push({ kind: "button", index, offerId: id, status: BUTTON_STATUS.ORPHAN_BUTTON });
@@ -367,11 +376,15 @@ export function runIndividualCompletenessSelftest() {
     { ...okAction, offerId: "a3", publishable: false, affiliateUrl: "https://www.example.com/click-1-a3" },
     { ...okAction, offerId: "a4", blockers: ["x"], affiliateUrl: "https://www.example.com/click-1-a4" },
     { ...okAction, offerId: "a1", affiliateUrl: "https://www.example.com/click-1-dup" },
-    { ...okAction, offerId: "c1", affiliateUrl: "https://www.example.com/click-1-also" },
+    { ...okAction, offerId: "c1", advertiserId: "111", affiliateUrl: "https://www.example.com/click-1-also" },
   ];
   const aa = auditActionButtons(actions, {
     coupons: [okCoupon],
-    buttons: [{ offerId: "a1" }, { offerId: "ghost" }, { offerId: "a3" }],
+    buttons: [
+      { offerId: "a1", advertiserId: "222" },
+      { offerId: "ghost" },
+      { offerId: "a3", advertiserId: "222" },
+    ],
   });
   assert(aa.total === 6, "action total");
   assert(aa.counts.BUTTON_OK === 3, "action ok count: " + aa.counts.BUTTON_OK);
@@ -380,7 +393,13 @@ export function runIndividualCompletenessSelftest() {
   assert(aa.counts.ORPHAN_BUTTON === 2, "orphan buttons (ghost + unpublished a3)");
   assert(aa.duplicates === 1, "duplicate offerId");
   assert(aa.alsoCoupon === 1, "action also coupon");
-  assert(aa.actionsWithoutButton.includes("c1"), "published action without button");
+  assert(aa.actionsWithoutButton.includes("111|c1"), "published action without button");
+  const split = auditActionButtons([
+    { ...okAction, offerId: "shared", advertiserId: "111", affiliateUrl: "https://www.example.com/click-1-shared-a" },
+    { ...okAction, offerId: "shared", advertiserId: "333", affiliateUrl: "https://www.example.com/click-1-shared-b" },
+  ]);
+  assert(split.duplicates === 0, "same offer id on two advertisers is not a duplicate");
+  assert(split.total === 2, "split advertisers stay separate");
 
   const okProduct = {
     productKey: "p1",
