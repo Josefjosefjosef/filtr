@@ -42,6 +42,22 @@ assert.equal(slim.publicGrowthBudget.deferredDecisionLedgerSample.length, 50);
 assert.equal(slim.publicGrowthBudget.deferredDecisionLedgerSampleTruncated, true);
 assert.ok(JSON.stringify(slim).length < JSON.stringify(fatDoc).length / 10);
 
+const labeled = slimOffersPublicAuditSidecars({
+  sections: [
+    {
+      sectionKey: "aff-x",
+      products: [
+        { id: "recent", freshnessStatus: "FETCH_RECENT_SOURCE_AGE_UNKNOWN", sourceUpdatedAtStatus: "NOT_PROVIDED" },
+        { id: "fresh", freshnessStatus: "SOURCE_FRESH", sourceUpdatedAtStatus: "PROVIDED", sourceFreshLabelForbidden: true },
+        { id: "plain", idOnly: true },
+      ],
+    },
+  ],
+});
+assert.equal(labeled.sections[0].products[0].sourceFreshLabelForbidden, true);
+assert.equal(labeled.sections[0].products[1].sourceFreshLabelForbidden, false);
+assert.equal(labeled.sections[0].products[2].sourceFreshLabelForbidden, undefined);
+
 console.log(
   JSON.stringify({
     IU_CJ_PUBLIC_OFFERS_SLIM_V51_8_SELFTEST: "PASS",
