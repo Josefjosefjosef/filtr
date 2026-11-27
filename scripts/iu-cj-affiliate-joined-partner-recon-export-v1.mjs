@@ -90,6 +90,12 @@ function assertOutsideRepo(dir) {
 }
 
 // ───────────────────────── offers index ─────────────────────────
+export function reconProductKey(advertiserId, product) {
+  const base = String(advertiserId) + "|" + String(product?.productId || "");
+  const variant = String(product?.productVariant || "").trim();
+  return variant ? base + "|" + variant : base;
+}
+
 /**
  * Per-advertiser published-offer index from offers-public (items carry their own advertiserId).
  * Unique counts de-duplicate cross-category placements (sections repeat the same offer/product).
@@ -132,7 +138,7 @@ export function indexOffersByAdvertiser(offersPublic) {
           e.actionPlacements += 1;
           e.actionIds.add(String(o.offerId ?? o.title));
         } else {
-          const key = `${id}|${o.productId}`;
+          const key = reconProductKey(id, o);
           // LKG public-hold items live in offers-public but are NOT publicly shown (hold ≠ published).
           if (o.lkgPublicHold === true || o.publicationEligibility === "PUBLICATION_HOLD") {
             e.heldProductKeys.add(key);
@@ -431,7 +437,7 @@ export function listShardFiles(dir) {
 
 /** Pure per-identity classifier (priority order = PRIMARY_STATE_PRIORITY). */
 export function classifyIdentity(rec, ctx) {
-  const key = `${rec.advertiserId}|${rec.productId}`;
+  const key = reconProductKey(rec.advertiserId, rec);
   if (ctx.endedIds.has(String(rec.advertiserId))) {
     return PRIMARY_STATE.ENDED_PARTNERSHIP;
   }
@@ -487,7 +493,7 @@ export async function exportProductInventoryJsonl({
     for (const [k, rec] of Object.entries(products)) {
       sourceRows += 1;
       n += 1;
-      const key = `${rec.advertiserId}|${rec.productId}`;
+      const key = reconProductKey(rec.advertiserId, rec);
       if (k !== key) identityCollisions += 1;
       if (seen.has(key)) {
         duplicates += 1;
@@ -512,6 +518,7 @@ export async function exportProductInventoryJsonl({
           key,
           advertiserId: adv,
           productId: String(rec.productId),
+          productVariant: String(rec.productVariant || "").trim() || null,
           primaryState: state,
           sectionKey: rec.sectionKey ?? null,
           currency: rec.currency ?? null,
