@@ -97,6 +97,7 @@ export function publicProductFromEvidence(productEvidence, catalogRecord) {
   return {
     productId: card.productId,
     productVariant: card.productVariant,
+    advertiserId: catalogRecord?.partnerId != null ? String(catalogRecord.partnerId) : null,
     brand: productEvidence?.brand || productEvidence?.manufacturer || null,
     title: card.product,
     description: productEvidence?.description || null,
@@ -250,7 +251,7 @@ export function buildOffersDocumentFromCatalogBatch(batch, opts = {}) {
     const evidenceList = productEvidenceByOfferId[String(rec.offerId || "")] || [];
     for (const ev of evidenceList) {
       const p = publicProductFromEvidence(ev, rec);
-      const key = String(p.productId || "") + "|" + String(p.productVariant || "");
+      const key = [p.advertiserId || "", p.productId || "", p.productVariant || ""].join("|");
       if (sec.seenProductKeys.has(key)) continue;
       sec.seenProductKeys.add(key);
       sec.products.push(p);
