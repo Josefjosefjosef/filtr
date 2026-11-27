@@ -233,8 +233,11 @@ export function buildOffersDocumentFromCatalogBatch(batch, opts = {}) {
       });
     }
     const sec = bySection.get(sectionKey);
-    if (rec.offerId && sec.seenOfferIds.has(rec.offerId)) continue;
-    if (rec.offerId) sec.seenOfferIds.add(rec.offerId);
+    const offerKey = rec.offerId
+      ? String(rec.partnerId || "") + "|" + String(rec.offerId)
+      : "";
+    if (offerKey && sec.seenOfferIds.has(offerKey)) continue;
+    if (offerKey) sec.seenOfferIds.add(offerKey);
 
     if (rec.recordKind === CATALOG_RECORD_KIND.coupon_with_code) {
       const c = publicCouponOrActionFromRecord(rec);
