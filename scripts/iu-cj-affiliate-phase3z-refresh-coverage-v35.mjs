@@ -143,6 +143,14 @@ function isUnknownFreshness(prev) {
   return avail === "UNKNOWN" || fresh === "UNKNOWN" || prev.availabilityUnknown === true;
 }
 
+export function coverageIdentityKey(row) {
+  const advertiserId = String(row?.advertiserId || "");
+  const productId = String(row?.productId || "");
+  const variant = String(row?.productVariant || "").trim();
+  const base = advertiserId + "|" + productId;
+  return variant ? base + "|" + variant : base;
+}
+
 /**
  * Order advertisers: UNKNOWN / never-refreshed first, then oldest successful refresh.
  * Fairness: no permanent starve — secondary key remains oldestMs / advertiserId.
@@ -160,7 +168,7 @@ export function orderAdvertisersForRefresh(keys, prevByKey = new Map()) {
     let unknownCount = 0;
     let lkgDebt = 0;
     for (const k of list) {
-      const prev = prevByKey.get(advertiserId + "|" + k.productId);
+      const prev = prevByKey.get(coverageIdentityKey(k)) || prevByKey.get(advertiserId + "|" + k.productId);
       if (isUnknownFreshness(prev)) unknownCount += 1;
       if (prev?.lkgCarried === true || prev?.lkgPublicHold === true || prev?.lkgHold === true) {
         lkgDebt += 1;
@@ -277,16 +285,19 @@ export function buildRefreshCoverageLedger(opts = {}) {
     errors: 0,
   };
   for (const k of keys) {
-    const key = k.advertiserId + "|" + k.productId;
-    const prev = prevByKey.get(key) || {};
+    const base = String(k.advertiserId) + "|" + String(k.productId);
+    const key = coverageIdentityKey(k);
+    const prev = prevByKey.get(key) || prevByKey.get(base) || {};
     let refreshResult = REFRESH_RESULT.NOT_ATTEMPTED;
     let refreshReason = "advertiser_not_scanned_this_pass";
+    const variant = String(k.productVariant || "").trim();
+    const productMatched = matchedKeys.has(key) || (!variant && matchedKeys.has(base));
     if (errorAdvertisers.has(k.advertiserId)) {
       refreshResult = REFRESH_RESULT.ERROR;
       refreshReason = "advertiser_refresh_error";
       counts.errors += 1;
       counts.refreshAttempted += 1;
-    } else if (matchedKeys.has(key)) {
+    } else if (productMatched) {
       refreshResult = REFRESH_RESULT.SUCCESSFULLY_REFRESHED;
       refreshReason =
         opts.refreshMode === REFRESH_MODE.PRODUCT_IDS
@@ -309,6 +320,8 @@ export function buildRefreshCoverageLedger(opts = {}) {
     rows.push({
       productId: k.productId,
       advertiserId: k.advertiserId,
+      productVariant: String(k.productVariant || "").trim() || null,
+      currency: k.currency || null,
       sourceIdentity: key,
       sectionKey: k.sectionKey || null,
       feedId: k.feedId || null,
