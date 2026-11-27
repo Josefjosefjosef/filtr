@@ -68,6 +68,11 @@ const documentMock = {
         insertAdjacentHTML() {
           mountState.calls += 1;
         },
+        firstChild: null,
+        insertBefore(node) {
+          mountState.calls += 1;
+          mountState.offlineNote = node && node.textContent ? String(node.textContent) : "";
+        },
         querySelector() {
           return null;
         },
