@@ -35,7 +35,7 @@ function moneyLabel(value, unit, currency) {
   return String(value);
 }
 
-function productCardFromPipeline(pipeline, product, partnerName) {
+export function productCardFromPipeline(pipeline, product, partnerName) {
   const g = pipeline.publicationGatesTextOnly || {};
   const pe = pipeline.productEval || {};
   const price = product?.price ?? product?.salePrice ?? null;
@@ -49,8 +49,10 @@ function productCardFromPipeline(pipeline, product, partnerName) {
     pe.customerDiscountVerified === true && pe.customerDiscountDisplay
       ? pe.customerDiscountDisplay
       : null;
+  const variant = String(product?.productVariant || "").trim();
   return {
     productId: String(product.productId),
+    ...(variant ? { productVariant: variant } : {}),
     title: product.title || product.name || `Produkt ${product.productId}`,
     partnerName,
     imageUrl: g.imageLicenseOk === true && product.imageUrl ? product.imageUrl : null,
