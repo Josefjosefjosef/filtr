@@ -1094,6 +1094,12 @@ export function backfillAvailabilityFromPrevious(doc, prevPublic, opts = {}) {
  * Apply refreshed fields onto built public document products.
  * coverageByKey (optional): honest per-product refreshResult from V35 ledger.
  */
+export function publishedRefreshIdentity(product) {
+  const base = String(product?.advertiserId || "") + "|" + String(product?.productId || "");
+  const variant = String(product?.productVariant || "").trim();
+  return variant ? base + "|" + variant : base;
+}
+
 export function applyPublishedRefreshToDoc(doc, refreshedByKey, nowIso, coverageByKey = null) {
   let priceChanged = 0;
   let availabilityChanged = 0;
@@ -1103,7 +1109,7 @@ export function applyPublishedRefreshToDoc(doc, refreshedByKey, nowIso, coverage
   for (const sec of doc?.sections || []) {
     const products = [];
     for (const p of sec.products || []) {
-      const key = String(p.advertiserId || "") + "|" + String(p.productId || "");
+      const key = publishedRefreshIdentity(p);
       const cov = coverageByKey?.get?.(key) || null;
       const ref = refreshedByKey?.get(key);
       if (!ref) {
