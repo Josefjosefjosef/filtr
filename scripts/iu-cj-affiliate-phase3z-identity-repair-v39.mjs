@@ -11,6 +11,15 @@ export const IDENTITY_REPAIR_DECISION = Object.freeze({
   KEEP_PENDING: "KEEP_PENDING",
 });
 
+export function identityRepairKey(row) {
+  const advertiserId = String(row?.advertiserId || "").trim();
+  const productId = String(row?.productId || "").trim();
+  if (!advertiserId || !productId) return "";
+  const variant = String(row?.productVariant || "").trim();
+  const base = advertiserId + "|" + productId;
+  return variant ? base + "|" + variant : base;
+}
+
 /**
  * Normalize title for weak similarity checks.
  */
@@ -126,9 +135,10 @@ export function evaluateIdentityRepairBatch(rows = [], opts = {}) {
   for (const row of rows) {
     const d = decideIdentityRepair(row, opts);
     out.push({
-      sourceIdentity: row.sourceIdentity || `${row.advertiserId}|${row.productId}`,
+      sourceIdentity: row.sourceIdentity || identityRepairKey(row),
       advertiserId: row.advertiserId,
       productId: row.productId,
+      productVariant: String(row.productVariant || "").trim() || null,
       title: row.title || null,
       proposed: row.probe?.identityRepair || row.identityRepair || null,
       ...d,
@@ -162,17 +172,18 @@ export function applyVerifiedIdentityRepairsToDoc(doc, repairEval, opts = {}) {
   for (const sec of doc?.sections || []) {
     const products = [];
     for (const p of sec.products || []) {
-      const key = String(p.advertiserId || "") + "|" + String(p.productId || "");
+      const key = identityRepairKey(p);
       const hit = byKey.get(key);
       if (!hit?.proposed?.newAdvertiserId) {
         products.push(p);
         continue;
       }
-      // Avoid duplicate if target identity already exists in same section
-      const targetKey = hit.proposed.newAdvertiserId + "|" + (hit.proposed.newProductId || p.productId);
-      const dup = (sec.products || []).some(
-        (q) => String(q.advertiserId) + "|" + String(q.productId) === targetKey
-      );
+      const targetKey = identityRepairKey({
+        advertiserId: hit.proposed.newAdvertiserId,
+        productId: hit.proposed.newProductId || p.productId,
+        productVariant: p.productVariant,
+      });
+      const dup = (sec.products || []).some((q) => identityRepairKey(q) === targetKey);
       if (dup) {
         skipped += 1;
         products.push({
