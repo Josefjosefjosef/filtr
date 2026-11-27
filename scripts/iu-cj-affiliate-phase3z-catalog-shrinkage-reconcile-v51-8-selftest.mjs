@@ -36,4 +36,30 @@ assert.equal(doc.deltas.removed, 1);
 assert.equal(doc.deltas.newlyHeld, 1);
 assert.equal(doc.deltas.lkgCleared, 1);
 assert.equal(doc.deltas.uniqueDelta, 0);
+const negated = reconcileCatalogShrinkage(
+  {
+    sections: [
+      {
+        sectionKey: "s",
+        products: [{ advertiserId: "9", productId: "n", availability: "not in stock" }],
+      },
+    ],
+  },
+  { sections: [{ sectionKey: "s", products: [] }] },
+  {}
+);
+assert.equal(negated.removedReasons.REMOVED_WHILE_OUT_OF_STOCK_OR_UNAVAILABLE, 1);
+const plain = reconcileCatalogShrinkage(
+  {
+    sections: [
+      {
+        sectionKey: "s",
+        products: [{ advertiserId: "9", productId: "y", availability: "in stock" }],
+      },
+    ],
+  },
+  { sections: [{ sectionKey: "s", products: [] }] },
+  {}
+);
+assert.equal(plain.removedReasons.REMOVED_WHILE_OUT_OF_STOCK_OR_UNAVAILABLE, undefined);
 console.log(JSON.stringify({ ok: true, deltas: doc.deltas }));
