@@ -39,6 +39,7 @@ import {
   normalizeCjLinkToCatalogRecord,
 } from "./iu-cj-affiliate-phase2-cj-link-search-catalog-normalize-v1.mjs";
 import { isCjTrackingUrl } from "./iu-cj-affiliate-catalog-sync-publish-gate-v1.mjs";
+import { offerSeenKey } from "./iu-cj-affiliate-phase3d-complete-validation-v1.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const WEBSITE_PID_DEFAULT = "101883843";
@@ -381,11 +382,12 @@ export async function runPhase3cLiveReadonlyAudit(opts = {}) {
       bumpReject("expired");
     }
     if (link.linkId) {
-      if (seenOfferIds.has(link.linkId)) {
+      const seenKey = offerSeenKey(link);
+      if (seenOfferIds.has(seenKey)) {
         buckets.duplicate_offer_ids += 1;
         bumpReject("duplicate_offer_id");
       }
-      seenOfferIds.add(link.linkId);
+      seenOfferIds.add(seenKey);
     }
     const c = classifyLinkBucket(link, refDate);
     if (buckets[c.recordKind] != null) buckets[c.recordKind] += 1;

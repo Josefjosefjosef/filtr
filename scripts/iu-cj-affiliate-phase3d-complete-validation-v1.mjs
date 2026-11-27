@@ -204,6 +204,13 @@ function parseMinOrder(text) {
   return Number.isFinite(n) ? n : null;
 }
 
+export function offerSeenKey(link) {
+  const offerId = String((link && (link.linkId || link.offerId)) || "").trim();
+  if (!offerId) return "";
+  const advertiserId = String((link && link.advertiserId) || "").trim();
+  return advertiserId ? advertiserId + "|" + offerId : offerId;
+}
+
 /**
  * Classify one coupon/action link for neveřejná publication readiness.
  * PUBLICATION_READY requires trusted CJ URL + mapped section + not expired + code (coupons).
@@ -219,10 +226,11 @@ export function classifyOfferPublicationState(link, ctx = {}) {
     return { state: PUB_STATE.INVALID, reasons: ["missing_link"], publicationReady: false };
   }
   const offerId = String(link.linkId || "");
-  if (offerId && seenOfferIds.has(offerId)) {
+  const seenKey = offerSeenKey(link);
+  if (seenKey && seenOfferIds.has(seenKey)) {
     return { state: PUB_STATE.DUPLICATE, reasons: ["duplicate_offer_id"], publicationReady: false, offerId };
   }
-  if (offerId) seenOfferIds.add(offerId);
+  if (seenKey) seenOfferIds.add(seenKey);
 
   if (isExpired(link, ref)) {
     return { state: PUB_STATE.EXPIRED, reasons: ["expired"], publicationReady: false, offerId };
