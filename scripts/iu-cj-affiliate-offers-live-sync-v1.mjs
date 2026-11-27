@@ -615,6 +615,21 @@ export function unionPublishedSectionsForRefresh(primary, secondary) {
 }
 
 /**
+ * Published coverage identity. A non-empty variant stays in the key.
+ * A short sourceIdentity does not hide that variant.
+ */
+export function publishedCoverageKey(row) {
+  const base = String(row?.advertiserId || "") + "|" + String(row?.productId || "");
+  const variant = String(row?.productVariant || "").trim();
+  const full = variant ? base + "|" + variant : base;
+  const explicit = String(row?.sourceIdentity || "").trim();
+  if (!explicit) return full;
+  if (!variant) return explicit;
+  if (explicit === full || explicit.endsWith("|" + variant)) return explicit;
+  return full;
+}
+
+/**
  * V37: prefer documented shoppingProducts(productIds) for published keys.
  * Scan-window remains fallback when productIds mode is disabled or fails closed per advertiser.
  * Window/productIds miss ≠ product deleted. Never invents sourceUpdatedAt.
@@ -986,7 +1001,7 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
     nowIso,
     runId: env.GITHUB_RUN_ID || opts.runId || null,
     refreshMode: meta.refreshMode,
-    publishedKeys: keys.map((k) => k.advertiserId + "|" + k.productId),
+    publishedKeys: keys.map((k) => publishedCoverageKey(k)),
     matchedKeys,
     apiRequests: meta.apiRequests,
     errors: meta.errors,
@@ -2552,7 +2567,7 @@ export async function runOffersLiveSync(opts = {}) {
         let notInScanWindow = 0;
         let notAttempted = 0;
         const rows = coverageLedger.rows.map((r) => {
-          const key = r.sourceIdentity || r.advertiserId + "|" + r.productId;
+          const key = publishedCoverageKey(r);
           const cov = coverageByKey.get(key);
           const next = cov
             ? {
@@ -2603,7 +2618,7 @@ export async function runOffersLiveSync(opts = {}) {
             .filter(([, row]) => row?.refreshResult === REFRESH_RESULT.SUCCESSFULLY_REFRESHED)
             .map(([k]) => k);
           const publishedKeys = (coverageLedger.rows || []).map(
-            (r) => r.sourceIdentity || r.advertiserId + "|" + r.productId
+            (r) => publishedCoverageKey(r)
           );
           cpDoc.cumulative = updateCumulativeCoverage(cpDoc.cumulative, {
             nowIso,
