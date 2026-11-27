@@ -615,6 +615,24 @@ export function unionPublishedSectionsForRefresh(primary, secondary) {
 }
 
 /**
+ * Previous public cards indexed by advertiser|product, plus |variant when set.
+ * A variant does not replace the other variant or a row that has no variant.
+ */
+export function indexPreviousProductsByIdentity(prevPublic) {
+  const prevByKey = new Map();
+  for (const sec of prevPublic?.sections || []) {
+    for (const p of sec.products || []) {
+      const base = String(p?.advertiserId || "") + "|" + String(p?.productId || "");
+      if (base === "|") continue;
+      const variant = String(p?.productVariant || "").trim();
+      if (variant) prevByKey.set(base + "|" + variant, p);
+      else prevByKey.set(base, p);
+    }
+  }
+  return prevByKey;
+}
+
+/**
  * V37: prefer documented shoppingProducts(productIds) for published keys.
  * Scan-window remains fallback when productIds mode is disabled or fails closed per advertiser.
  * Window/productIds miss ≠ product deleted. Never invents sourceUpdatedAt.
@@ -654,13 +672,7 @@ export async function refreshPublishedProductsFromCj(opts = {}) {
       ? "V37: documented shoppingProducts(productIds) targeted refresh; miss ≠ deleted; does not advance discovery checkpoints."
       : "V35: continueable partner scan windows for published productIds; NOT_IN_SCAN_WINDOW ≠ deleted; does not advance discovery checkpoints.",
   };
-  const prevByKey = new Map();
-  for (const sec of prevPublic?.sections || []) {
-    for (const p of sec.products || []) {
-      const k = String(p.advertiserId || "") + "|" + String(p.productId || "");
-      if (k !== "|") prevByKey.set(k, p);
-    }
-  }
+  const prevByKey = indexPreviousProductsByIdentity(prevPublic);
   // Fairness: among equal age cohorts, prefer partners with oldest lastScanAt (avoid starving large catalogs).
   // Preserve LKG debt priority from orderAdvertisersForRefresh (MISSING_REFRESH reconnect).
   const ordered = orderAdvertisersForRefresh(keys, prevByKey).map((g) => {
