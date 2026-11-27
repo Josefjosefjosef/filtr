@@ -150,6 +150,13 @@ async function main() {
     } else {
       assert(mergedSnapEur.state === "live", "committed snapshot EUR must be live after refresh");
     }
+    const mergedSnapUsd = mergeInfoPanelItemForGuard(usd, snapUsd, snap);
+    const usdBehind = isCnbPublicationBehindExpected(snapUsd.updatedAt);
+    if (usdBehind) {
+      assert(mergedSnapUsd.state === "stale", "committed snapshot USD behind the expected CNB date must be stale");
+    } else {
+      assert(mergedSnapUsd.state === "live", "committed snapshot USD must be live after refresh");
+    }
   }
 
   if (failures.length) {
