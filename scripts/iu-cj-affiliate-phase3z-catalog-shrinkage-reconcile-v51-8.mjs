@@ -46,9 +46,18 @@ function indexOffers(doc) {
 }
 
 function availClass(v) {
-  if (v === false || v === "OUT_OF_STOCK" || v === "unavailable") return "OUT_OF_STOCK";
-  if (v === true || v === "IN_STOCK" || v === "available") return "IN_STOCK";
-  return String(v || "UNKNOWN");
+  if (v === false) return "OUT_OF_STOCK";
+  if (v === true) return "IN_STOCK";
+  const raw = String(v || "");
+  if (
+    /unavailable|not[\s-]+(?:in[\s-]+stock|available)|out[\s-]+of[\s-]+stock|neni\s+skladem|není\s+skladem/i.test(
+      raw
+    )
+  ) {
+    return "OUT_OF_STOCK";
+  }
+  if (raw === "IN_STOCK" || raw === "available" || /^in[\s_]?stock$/i.test(raw)) return "IN_STOCK";
+  return raw || "UNKNOWN";
 }
 
 /**
