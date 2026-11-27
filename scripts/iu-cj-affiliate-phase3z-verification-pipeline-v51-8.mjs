@@ -36,7 +36,15 @@ const TERMINAL = new Set([
 ]);
 
 const UNAVAILABLE = new Set(["OUT_OF_STOCK", "DISCONTINUED", "NOT_AVAILABLE"]);
-const AVAILABILITY_OK = new Set(["IN_STOCK", "AVAILABLE", "BACKORDER", "PREORDER", "UNKNOWN", "UNKNOWN_NULL", ""]);
+const AVAILABILITY_OK = new Set(["IN_STOCK", "AVAILABLE", "BACKORDER", "PREORDER"]);
+
+function availabilityIsNegated(value) {
+  return /NOT[\s-]+(?:IN[\s-]+STOCK|AVAILABLE)|UNAVAILABLE|OUT[\s-]+OF[\s-]+STOCK|NENI\s+SKLADEM|NENÍ\s+SKLADEM/.test(String(value || ""));
+}
+
+function availabilityIsMissing(value) {
+  return !value || value === "UNKNOWN" || value === "UNKNOWN_NULL" || value === "UNRECOGNIZED";
+}
 
 export function compositeIdentity(row) {
   const rawKey = row && row.key != null ? String(row.key) : "";
@@ -47,7 +55,9 @@ export function compositeIdentity(row) {
   const productId = String(
     (row && row.productId != null ? row.productId : splitAt >= 0 ? rawKey.slice(splitAt + 1) : "")
   ).trim();
-  return { advertiserId, productId, key: advertiserId + "|" + productId };
+  const variant = String((row && row.productVariant) || "").trim();
+  const base = advertiserId + "|" + productId;
+  return { advertiserId, productId, productVariant: variant, key: variant ? base + "|" + variant : base };
 }
 
 /**
@@ -71,6 +81,7 @@ export function dedupeVerificationGroups(groups) {
         cur = {
           advertiserId: id.advertiserId,
           productId: id.productId,
+          productVariant: id.productVariant,
           key: id.key,
           sources: [],
           priority,
@@ -124,6 +135,7 @@ export function attestEligibility(identity, ctx = {}) {
     key: id.key,
     advertiserId: id.advertiserId,
     productId: id.productId,
+    productVariant: id.productVariant,
     verifiedEligible: false,
     mode: PIPELINE_MODE.DISARMED_OFFLINE,
     attestedAt: new Date(nowMs).toISOString(),
@@ -150,11 +162,11 @@ export function attestEligibility(identity, ctx = {}) {
     return { ...base, state: VERIFICATION_STATE.SOURCE_MISSING, reason: "AUTHORITATIVE_SOURCE_ABSENT", retry: true };
   }
   const availability = String(rec.availability || rec.availabilityClass || "").toUpperCase();
-  if (UNAVAILABLE.has(availability)) {
+  if (UNAVAILABLE.has(availability) || availabilityIsNegated(availability)) {
     return {
       ...base,
       state: VERIFICATION_STATE.CONFIRMED_UNAVAILABLE,
-      reason: "AVAILABILITY_" + availability,
+      reason: "AVAILABILITY_" + (availability || "MISSING"),
       retry: false,
     };
   }
@@ -174,6 +186,7 @@ export function attestEligibility(identity, ctx = {}) {
   if (!httpsUrl(rec.imageUrl)) missing.push("imageUrl");
   if (!String(rec.language || "").trim()) missing.push("language");
   if (!String(rec.sectionId || "").trim()) missing.push("sectionId");
+  if (availabilityIsMissing(availability)) missing.push("availability");
   if (ctx.termsAccepted !== true) missing.push("terms");
   if (missing.length) {
     return {
@@ -384,6 +397,7 @@ function sourceRecordFromCjRow(row) {
     sectionId: row.sectionId || null,
     sourceUpdatedAt: row.lastUpdated || row.sourceUpdatedAt || null,
     productId: row.id || row.productId || null,
+    productVariant: row.productVariant || null,
   };
 }
 
@@ -466,10 +480,13 @@ export async function runAuthorizedSourceLookup(opts = {}) {
     const byId = new Map();
     for (const row of (fetched && fetched.resultList) || []) {
       const rec = sourceRecordFromCjRow(row);
-      if (rec && rec.productId) byId.set(String(rec.productId), rec);
+      if (!rec || !rec.productId) continue;
+      const variant = String(rec.productVariant || "").trim();
+      byId.set(variant ? String(rec.productId) + "|" + variant : String(rec.productId), rec);
     }
     for (const row of byPartner.get(advertiserId)) {
-      const rec = byId.get(row.productId) || null;
+      const variant = String(row.productVariant || "").trim();
+      const rec = byId.get(variant ? row.productId + "|" + variant : row.productId) || null;
       results.push(
         attestEligibility(row, {
           relationship: opts.relationship || "joined",
