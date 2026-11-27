@@ -32,6 +32,21 @@ assert(stats.productAdvertisers === 2, "product advertisers");
 assert(stats.partners === 3, "unique advertisers across coupons/actions/products");
 assert(stats.partners !== stats.sections, "partners must not equal sections when they differ");
 
+const explicitReady = computeHonestOffersStats([
+  {
+    sectionKey: "aff-a",
+    coupons: [{ advertiserId: "1" }, { advertiserId: "1", publicationReady: false }],
+    actions: [{ advertiserId: "1", publicationReady: false }],
+    products: [
+      { advertiserId: "1", productId: "p1", publicationReady: true },
+      { advertiserId: "1", productId: "p2" },
+    ],
+  },
+]);
+assert(explicitReady.publicationReady === 1, "only explicit publicationReady true counts");
+assert(explicitReady.products === 2, "product rows still counted");
+assert(explicitReady.coupons === 2, "coupon rows still counted");
+
 const funnel = buildProductFunnelDocument({
   inventoryPartners: [
     { advertiserId: "1", partnerName: "A", hasFeed: true, feedCount: 1, declaredProductCountSum: 10, inventoryStatus: "INVENTORIED_HAS_FEED" },
