@@ -22,7 +22,9 @@ export function catalogIdentity(item) {
           ? item.offerId
           : ""
   ).trim();
-  return { kind, advertiserId, itemId, key: kind + "|" + advertiserId + "|" + itemId };
+  const variant = String(item && item.productVariant != null ? item.productVariant : "").trim();
+  const key = kind + "|" + advertiserId + "|" + itemId + (variant ? "|" + variant : "");
+  return { kind, advertiserId, itemId, key };
 }
 
 function dueMs(item, nowMs) {

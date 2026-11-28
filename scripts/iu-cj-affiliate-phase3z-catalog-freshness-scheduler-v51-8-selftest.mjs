@@ -149,6 +149,20 @@ assert.equal(capacity.requests, 37);
 assert.equal(capacity.measured, false);
 assert.equal(capacity.withinThreeHours, true);
 
+const variants = planCatalogFreshnessBatch(
+  [
+    product("A", "same", "2026-11-26T08:00:00.000Z", { productVariant: "v" }),
+    product("A", "same", "2026-11-26T08:00:00.000Z", { productVariant: "w" }),
+  ],
+  { nowMs: now, limit: 4, maxPerPartner: 1 },
+);
+assert.equal(variants.unique, 2);
+assert.equal(variants.extraPlacements, 0);
+assert.deepEqual(
+  variants.batch.map((row) => row.key),
+  ["product|A|same|v"],
+);
+
 console.log(JSON.stringify({
   IU_CJ_CATALOG_FRESHNESS_SCHEDULER_SELFTEST: "PASS",
   drained: seen,
