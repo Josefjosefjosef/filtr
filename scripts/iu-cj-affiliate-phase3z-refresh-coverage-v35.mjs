@@ -87,6 +87,23 @@ export function leanCumulativeCoverageForPublic(cumulative) {
   };
 }
 
+function stampSourceFreshLabel(product) {
+  if (!product || typeof product !== "object") return product;
+  const status = product.freshnessStatus;
+  const source = product.sourceUpdatedAtStatus;
+  if (status === "SOURCE_FRESH" && source === "PROVIDED") {
+    return product.sourceFreshLabelForbidden === false
+      ? product
+      : { ...product, sourceFreshLabelForbidden: false };
+  }
+  if (status === "FETCH_RECENT_SOURCE_AGE_UNKNOWN" || source === "NOT_PROVIDED") {
+    return product.sourceFreshLabelForbidden === true
+      ? product
+      : { ...product, sourceFreshLabelForbidden: true };
+  }
+  return product;
+}
+
 /** Strip bloated audit sidecars from offers-public / LKG before git/Pages publish. */
 export function slimOffersPublicAuditSidecars(doc) {
   const out = doc && typeof doc === "object" ? { ...doc } : {};
@@ -111,6 +128,15 @@ export function slimOffersPublicAuditSidecars(doc) {
       g.deferredNewKeysStrippedForPublicPages = true;
     }
     out.publicGrowthBudget = g;
+  }
+  if (Array.isArray(out.sections)) {
+    out.sections = out.sections.map((sec) => {
+      if (!sec || !Array.isArray(sec.products)) return sec;
+      return {
+        ...sec,
+        products: sec.products.map((product) => stampSourceFreshLabel(product)),
+      };
+    });
   }
   return out;
 }
