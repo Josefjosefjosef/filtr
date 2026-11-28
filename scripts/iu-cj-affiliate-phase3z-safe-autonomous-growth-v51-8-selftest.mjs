@@ -104,6 +104,16 @@ const prep = prepareGrowthActivation({
   envUncapped: "0",
 });
 assert.equal(prep.ready, true);
+const armedPrep = prepareGrowthActivation({
+  mainSha,
+  requiredCiPass: true,
+  pagesPass: true,
+  growthLedger: { cumulativeAddedSinceBaseline: 500, maxCumulativeAbs: 500, allowedNew: 0 },
+  envUncapped: "0",
+  executeArmed: true,
+});
+assert.equal(armedPrep.ready, false);
+assert.ok(armedPrep.fails.includes("execute_disarmed"));
 
 /* ---- Auth negative tests ---- */
 const authCases = [];
