@@ -45,6 +45,25 @@ const recoveredExplicit = classifyMissRow({
 });
 assert(recoveredExplicit.classificationVerified === true, "explicit recovered stays verified");
 
+const probes = [true, false, null, undefined, "", "true", "false", 0, 1];
+for (const value of probes) {
+  const row = classifyMissRow({
+    decision: "KEEP_PENDING",
+    apiResult: "productIds_miss",
+    publicationReady: value,
+    publicationSafe: value,
+  });
+  const expectTrue = value === true;
+  assert(row.publicationReady === expectTrue, "publicationReady probe " + String(value));
+  assert(row.publicationSafe === expectTrue, "publicationSafe probe " + String(value));
+}
+const omitted = classifyMissRow({
+  decision: "KEEP_PENDING",
+  apiResult: "productIds_miss",
+});
+assert(omitted.publicationReady === false, "missing publicationReady is false");
+assert(omitted.publicationSafe === false, "missing publicationSafe is false");
+
 console.log(JSON.stringify({
   IU_CJ_MISS_ROW_CLASSIFICATION_SELFTEST: "PASS",
   pending: pending.classificationVerified,

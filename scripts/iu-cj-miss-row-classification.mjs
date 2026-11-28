@@ -41,7 +41,8 @@ export function classifyMissRow(row) {
     originalMissCauseVerified: row.originalMissCauseVerified === true || rootCauseVerified,
     classificationVerified: row.classificationVerified === true && classId !== "UNRESOLVED",
     rootCauseVerified,
-    publicationSafe: row.publicationSafe,
+    publicationReady: row.publicationReady === true,
+    publicationSafe: row.publicationSafe === true,
     classId,
     nextSafeStep:
       classId === "TEMPORARILY_UNAVAILABLE"
