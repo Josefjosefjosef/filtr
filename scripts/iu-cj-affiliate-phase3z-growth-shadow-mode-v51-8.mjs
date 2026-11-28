@@ -37,8 +37,8 @@ function availabilityOk(product) {
   if (cls === "IN_STOCK" || cls === "PREORDER" || cls === "BACKORDER") return true;
   if (cls === "OUT_OF_STOCK" || cls === "OOS" || cls === "UNAVAILABLE") return false;
   const raw = String(product?.availability || "");
-  if (!raw) return true; // missing → do not hard-reject in shadow (HOLD path handles)
-  if (/(out[_ ]?of[_ ]?stock|sold[_ ]?out|nedostupn|unavailable)/i.test(raw)) return false;
+  if (!raw) return false;
+  if (/(out[_ ]?of[_ ]?stock|sold[_ ]?out|nedostupn|unavailable|not[_ ]?in[_ ]?stock|not[_ ]?available|není skladem|neni skladem)/i.test(raw)) return false;
   return IN_STOCK_RE.test(raw) || raw.toLowerCase() === "in_stock";
 }
 
