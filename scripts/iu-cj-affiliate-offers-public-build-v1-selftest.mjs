@@ -155,6 +155,43 @@ expect(
 expect("eur_not_converted", identityProducts.every((row) => row.currency === "EUR"));
 expect("identity_rows_not_publication_ready", identityProducts.every((row) => row.publicationReady === false));
 
+const sameOfferTwoAdvertisers = buildOffersDocumentFromCatalogBatch(
+  {
+    ok: true,
+    records: [
+      {
+        offerId: "same-offer",
+        partnerId: "111",
+        recordKind: "action_without_code",
+        partnerMapping: { sectionKey: "aff-nabytek" },
+      },
+      {
+        offerId: "same-offer",
+        partnerId: "222",
+        recordKind: "action_without_code",
+        partnerMapping: { sectionKey: "aff-nabytek" },
+      },
+      {
+        offerId: "same-offer",
+        partnerId: "111",
+        recordKind: "action_without_code",
+        partnerMapping: { sectionKey: "aff-nabytek" },
+      },
+    ],
+  },
+  {}
+);
+const identityActions = (sameOfferTwoAdvertisers.doc.sections[0] || {}).actions || [];
+expect("same_offer_two_advertisers_kept", identityActions.length === 2);
+expect(
+  "same_offer_advertiser_ids",
+  identityActions.map((row) => String(row.advertiserId)).sort().join(",") === "111,222"
+);
+expect(
+  "same_offer_actions_not_ready",
+  identityActions.every((row) => row.publicationReady === false && row.publishable === false)
+);
+
 const ok = failures.length === 0;
 console.log(
   JSON.stringify({
