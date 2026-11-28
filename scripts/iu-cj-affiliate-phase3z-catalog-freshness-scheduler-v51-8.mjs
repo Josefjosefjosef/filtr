@@ -247,7 +247,9 @@ export function propagateIdentityVerification(rows, result) {
       next.push(row);
       continue;
     }
-    if (row.productVariant && String(row.productVariant) !== String(result.productVariant || "")) {
+    const rowVariant = String(row.productVariant || "").trim();
+    const resultVariant = String(result.productVariant || "").trim();
+    if (rowVariant !== resultVariant) {
       next.push(row);
       continue;
     }
