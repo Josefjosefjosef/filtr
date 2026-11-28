@@ -134,6 +134,45 @@ assert((fmtCollected.formatOnlyChanges || []).length === 1, "format diagnostic r
 // Idempotent: same change twice should still be one logical event when deduped by caller
 assert(collected.priceChanges[0].advertiserId === "9", "compound advertiser");
 assert(collected.priceChanges[0].productId === "p1", "compound product");
+assert(collected.priceChanges[0].productVariant == null, "missing variant stays absent");
+
+const variantDoc = {
+  sections: [
+    {
+      products: [
+        {
+          advertiserId: "9",
+          productId: "same",
+          productVariant: "v",
+          previousPrice: 10,
+          currentPrice: 11,
+          currency: "CZK",
+          priceChangedAt: nowIso,
+        },
+        {
+          advertiserId: "9",
+          productId: "same",
+          productVariant: "w",
+          previousPrice: 20,
+          currentPrice: 21,
+          currency: "CZK",
+          priceChangedAt: nowIso,
+          previousAvailability: "in stock",
+          availability: "out of stock",
+          availabilityChangedAt: nowIso,
+        },
+      ],
+    },
+  ],
+};
+const variantCollected = collectChangeRowsFromOffersDoc(variantDoc, { nowIso, runId: "selftest", acceptAny: true });
+assert(variantCollected.priceChanges.length === 2, "both variant prices recorded");
+assert(
+  variantCollected.priceChanges.map((row) => row.productVariant).join(",") === "v,w",
+  "price rows keep the variant"
+);
+assert(variantCollected.availabilityChanges.length === 1, "variant availability recorded");
+assert(variantCollected.availabilityChanges[0].productVariant === "w", "availability row keeps the variant");
 
 console.log(
   JSON.stringify({

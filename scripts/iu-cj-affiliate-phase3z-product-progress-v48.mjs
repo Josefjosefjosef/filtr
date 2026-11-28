@@ -445,6 +445,7 @@ export function collectChangeRowsFromOffersDoc(doc, opts = {}) {
     for (const p of sec.products || []) {
       const adv = p.advertiserId != null ? String(p.advertiserId) : "";
       const pid = p.productId != null ? String(p.productId) : "";
+      const variant = String(p.productVariant || "").trim();
       if (!adv || !pid) continue;
 
       const stampedEconomic = Boolean(p.priceChangedAt && p.previousPrice != null);
@@ -467,6 +468,7 @@ export function collectChangeRowsFromOffersDoc(doc, opts = {}) {
           const row = {
             advertiserId: adv,
             productId: pid,
+            ...(variant ? { productVariant: variant } : {}),
             previousRawPrice: prevRaw,
             currentRawPrice: p.currentPrice,
             previousPrice: prevRaw,
@@ -506,6 +508,7 @@ export function collectChangeRowsFromOffersDoc(doc, opts = {}) {
           availabilityChanges.push({
             advertiserId: adv,
             productId: pid,
+            ...(variant ? { productVariant: variant } : {}),
             previousAvailability: p.previousAvailability,
             currentAvailability: p.availability ?? null,
             source: p.availabilityChangeSource || "cj_product_refresh",
