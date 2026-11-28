@@ -90,7 +90,7 @@ export function buildProductReverifyLedger(opts = {}) {
       let sourceMatchResult = "NOT_ATTEMPTED";
       let reverifyAttempted = false;
       let publicationDecision =
-        p.publicationReady === false ? "HOLD_OR_HIDE" : "KEEP_PUBLISHED";
+        p.publicationReady === true ? "KEEP_PUBLISHED" : "HOLD_OR_HIDE";
       let economicChange = false;
       let formatOnlyChange = false;
       let availabilityChange = false;

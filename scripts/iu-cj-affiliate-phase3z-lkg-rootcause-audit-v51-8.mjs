@@ -76,7 +76,7 @@ export function classifyLkgProductFull(p, sec, nowMs = Date.now()) {
   if (p?.availability === false || p?.inStock === false || p?.availabilityClass === "OUT_OF_STOCK") {
     reasons.push("UNAVAILABLE_FLAG");
   }
-  if (p?.publicationReady === false) reasons.push("NOT_PUBLICATION_READY");
+  if (p?.publicationReady !== true) reasons.push("NOT_PUBLICATION_READY");
   if (!hasAffiliateUrl(p)) reasons.push("INVALID_OR_MISSING_AFFILIATE_URL");
   if (/COLLISION/i.test(String(p?.publicationClass || p?.refreshReason || ""))) {
     reasons.push("IDENTITY_COLLISION");
@@ -137,7 +137,7 @@ export function classifyLkgProductFull(p, sec, nowMs = Date.now()) {
     partnershipStatus: p?.partnerStatus || p?.advertiserStatus || null,
     dataAgeHours: ageHours(verifiedIso, nowMs),
     publicationEligible:
-      p?.publicationReady !== false &&
+      p?.publicationReady === true &&
       p?.publicationEligibility !== "PUBLICATION_BLOCKED" &&
       !isHold,
     nextCheckAt: p?.nextCheckAt || null,
