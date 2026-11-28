@@ -33,6 +33,15 @@ const DEFAULT_RETRY_HOURS = 3;
 const MAX_RETRY_ATTEMPTS = 12;
 export const LONG_TERM_RECHECK_MS = 7 * 24 * 60 * 60 * 1000;
 
+export function missingRefreshIdentityKey(row) {
+  const advertiserId = String(row?.advertiserId || "").trim();
+  const productId = String(row?.productId || "").trim();
+  if (!advertiserId || !productId) return "";
+  const variant = String(row?.productVariant || "").trim();
+  const base = advertiserId + "|" + productId;
+  return variant ? base + "|" + variant : base;
+}
+
 /**
  * Map V38 probe row → attempt status (honest, no PASS renaming).
  */
@@ -87,13 +96,14 @@ export function selectMissingRefreshTargets(docOrAudit, opts = {}) {
     const adv = String(row.advertiserId || "").trim();
     const pid = String(row.productId || "").trim();
     if (!adv || !pid) continue;
-    const key = `${adv}|${pid}`;
-    if (seen.has(key)) continue;
+    const key = missingRefreshIdentityKey(row);
+    if (!key || seen.has(key)) continue;
     seen.add(key);
     keys.push({
       key,
       advertiserId: adv,
       productId: pid,
+      productVariant: String(row.productVariant || "").trim() || null,
       title: row.title || null,
       partnershipStatus: row.partnershipStatus || null,
       causeCode: row.causeCode,
@@ -198,7 +208,7 @@ export function mergeTargetsWithRetryQueue(selectedTargets, queue, opts = {}) {
   const nowMs = opts.nowMs != null ? Number(opts.nowMs) : Date.now();
   const byKey = new Map();
   for (const t of selectedTargets || []) {
-    const key = t.key || `${t.advertiserId}|${t.productId}`;
+    const key = t.key || missingRefreshIdentityKey(t);
     byKey.set(key, { ...t, key, fromQueue: false });
   }
   let dueFromQueue = 0;
@@ -277,7 +287,7 @@ export function updateRetryQueueFromAttempts(priorQueue, attempts, opts = {}) {
   let scheduled = 0;
   let invalidHeld = 0;
   for (const a of attempts || []) {
-    const key = a.key || `${a.advertiserId}|${a.productId}`;
+    const key = a.key || missingRefreshIdentityKey(a);
     const prev = next.items[key] || {};
     const attemptCount = Number(prev.attemptCount || 0) + 1;
     if (a.status === ATTEMPT_STATUS.REFRESHED) {
@@ -393,7 +403,7 @@ export function stampAttemptMetaOnDoc(doc, attempts, nowIso) {
   for (const sec of doc?.sections || []) {
     const products = [];
     for (const p of sec.products || []) {
-      const key = String(p.advertiserId || "") + "|" + String(p.productId || "");
+      const key = missingRefreshIdentityKey(p);
       const a = byKey.get(key);
       if (!a || a.status === ATTEMPT_STATUS.REFRESHED) {
         products.push(p);
@@ -444,8 +454,8 @@ export async function attemptMissingRefreshBatch(opts = {}) {
       : new Set(opts.incompleteAdvertiserIds || []);
   const titleByKey = opts.titleByKey instanceof Map ? opts.titleByKey : new Map();
   for (const t of targets) {
-    if (t.title && !titleByKey.has(t.key || `${t.advertiserId}|${t.productId}`)) {
-      titleByKey.set(t.key || `${t.advertiserId}|${t.productId}`, t.title);
+    if (t.title && !titleByKey.has(t.key || missingRefreshIdentityKey(t))) {
+      titleByKey.set(t.key || missingRefreshIdentityKey(t), t.title);
     }
   }
   const missKeys = targets.map((t) => ({
@@ -468,7 +478,7 @@ export async function attemptMissingRefreshBatch(opts = {}) {
   for (const s of Object.values(ATTEMPT_STATUS)) byStatus[s] = 0;
   const attempts = [];
   for (const t of targets) {
-    const key = t.key || `${t.advertiserId}|${t.productId}`;
+    const key = t.key || missingRefreshIdentityKey(t);
     const probe = re.probeByKey.get(key) || { recovered: false, apiResult: "no_probe_row" };
     const emptyApiPartner = emptyApiByAdvertiser.has(String(t.advertiserId));
     const incomplete = incompleteByAdvertiser.has(String(t.advertiserId));
@@ -556,7 +566,7 @@ export function applyMissingRefreshAttemptsToDoc(doc, attemptResult, nowIso) {
   for (const sec of doc?.sections || []) {
     const products = [];
     for (const p of sec.products || []) {
-      const key = String(p.advertiserId || "") + "|" + String(p.productId || "");
+      const key = missingRefreshIdentityKey(p);
       const ref = refreshedByKey.get(key);
       if (!ref) {
         products.push(p);
