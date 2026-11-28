@@ -609,6 +609,16 @@ export function verifyLandingBatchProductIdentity(batch, ctx = {}) {
       diagnostics: { ...diagBase, batchProductId, expectedProductId: productId },
     };
   }
+  const expectedVariant = String(ctx.productVariant || product.productVariant || "").trim();
+  const batchVariant = String(batch.productVariant || "").trim();
+  if (expectedVariant && batchVariant && expectedVariant !== batchVariant) {
+    return {
+      ok: false,
+      reason: "batch_product_variant_mismatch",
+      productIdentityLinkage: { ok: false, reason: "batch_product_variant_mismatch" },
+      diagnostics: { ...diagBase, expectedVariant, batchVariant },
+    };
+  }
 
   const currentInner = extractLandingUrl(product.affiliateClickUrl)?.href || null;
   const batchUrl = batch.productInnerUrl || batch.productLandingUrl || null;
