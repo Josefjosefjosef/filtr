@@ -55,7 +55,16 @@ export function classifyScheduleSlots(runs, now = new Date(), opts = {}) {
     }
 
     if (hit) {
-      const kind = hit.delayMin <= 30 ? "SLOT_HIT" : "SLOT_DELAYED";
+      const conclusion = String(hit.conclusion || "");
+      const failed = conclusion === "failure" || conclusion === "cancelled";
+      const delivered = conclusion === "success";
+      const kind = failed
+        ? "SLOT_FAILED"
+        : delivered
+          ? hit.delayMin <= 30
+            ? "SLOT_HIT"
+            : "SLOT_DELAYED"
+          : "SLOT_OBSERVING";
       slots.push({
         hour: h,
         expectedUtc: slot.toISOString(),
@@ -84,6 +93,8 @@ export function classifyScheduleSlots(runs, now = new Date(), opts = {}) {
 
   const missCount = slots.filter((s) => s.classification === "SLOT_MISS").length;
   const pendingCount = slots.filter((s) => s.classification === "PENDING_OBSERVATION").length;
+  const failedCount = slots.filter((s) => s.classification === "SLOT_FAILED").length;
+  const observingCount = slots.filter((s) => s.classification === "SLOT_OBSERVING").length;
   const hitCount = slots.filter(
     (s) => s.classification === "SLOT_HIT" || s.classification === "SLOT_DELAYED"
   ).length;
@@ -96,6 +107,9 @@ export function classifyScheduleSlots(runs, now = new Date(), opts = {}) {
   let watchResult = "PASS";
   if (missCount >= 2) {
     burninStatus = "CADENCE_DEGRADED_MULTIPLE_SLOT_MISS";
+    watchResult = "FAIL";
+  } else if (failedCount > 0) {
+    burninStatus = "SCHEDULE_SLOT_FAILED";
     watchResult = "FAIL";
   } else if (missCount === 1) {
     burninStatus = "CADENCE_WARNING_SINGLE_SLOT_MISS";
@@ -129,7 +143,7 @@ export function classifyScheduleSlots(runs, now = new Date(), opts = {}) {
         }
       : null,
     slots,
-    counts: { hitOrDelayed: hitCount, miss: missCount, pending: pendingCount },
+    counts: { hitOrDelayed: hitCount, miss: missCount, pending: pendingCount, failed: failedCount, observing: observingCount },
     burninStatus,
     watchResult,
     note:
