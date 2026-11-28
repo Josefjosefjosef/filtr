@@ -127,6 +127,15 @@ for (const keep of ["124 \u00d7 124", "\u00dA\u017easn\u00fd", "Stra\u00dfe 5\u0
   assert(doc2.sections[0].products[0].imageUrl === "https://x/U\u2563\u00fc.jpg", "final pass never touches URLs");
 }
 
+{
+  const split = toCp852Mojibake("Železo") + "\uFFFF" + toCp852Mojibake("postel");
+  const repaired = normalizeCjProductText(split);
+  assert(repaired.repaired === true, "split run repairs");
+  assert(repaired.text.includes("\uFFFF"), "unmapped character stays");
+  assert(countBoxDrawing(repaired.text) === 0, "split run leaves no box drawing");
+  assert(!repaired.text.includes("\uFFFD"), "split run adds no replacement char");
+}
+
 console.log(
   JSON.stringify({
     ok: true,
