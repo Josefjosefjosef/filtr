@@ -15,6 +15,7 @@ import {
   evaluateProductShrinkageGate,
   evaluateIdentityChurnGate,
 } from "./iu-cj-affiliate-phase3z-publication-lkg-v51-8.mjs";
+import { functionalRepairFetched } from "./iu-cj-functional-repair-fetched.mjs";
 import {
   seedDurableCatalogFromOffersPublic,
   mergeIntoDurableCatalog,
@@ -58,7 +59,7 @@ const prevUnique = collectUniqueProductMap(prev).size;
 const all = [];
 for (const sec of prev.sections || []) {
   for (const p of sec.products || []) {
-    if (p?.publicationReady === false) continue;
+    if (!functionalRepairFetched(p)) continue;
     all.push({
       ...p,
       sectionKey: p.sectionKey || sec.sectionKey,
