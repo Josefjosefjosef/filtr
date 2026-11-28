@@ -158,6 +158,34 @@ assert.ok(
   "not unexplained silent loss",
 );
 
+const variants = buildFeedCompleteness({
+  inventory: {
+    partners: [
+      {
+        advertiserId: "111",
+        partnerName: "V",
+        joined: true,
+        hasFeed: true,
+        declaredProductCountSum: 2,
+      },
+    ],
+  },
+  offers: {
+    publicGrowthBudget: { cumulativeRemaining: 0, allowedNew: 0 },
+    sections: [
+      {
+        sectionKey: "aff-test",
+        products: [
+          { advertiserId: "111", productId: "SAME", productVariant: "v" },
+          { advertiserId: "111", productId: "SAME", productVariant: "w" },
+          { advertiserId: "111", productId: "SAME", productVariant: "v" },
+        ],
+      },
+    ],
+  },
+});
+assert.equal(variants.partners[0].publishedProducts, 2);
+
 console.log(
   JSON.stringify({
     IU_CJ_FEED_COMPLETENESS_V51_8_SELFTEST: "PASS",

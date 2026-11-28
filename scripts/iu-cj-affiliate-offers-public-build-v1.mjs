@@ -97,6 +97,7 @@ export function publicProductFromEvidence(productEvidence, catalogRecord) {
   return {
     productId: card.productId,
     productVariant: card.productVariant,
+    advertiserId: catalogRecord?.partnerId != null ? String(catalogRecord.partnerId) : null,
     brand: productEvidence?.brand || productEvidence?.manufacturer || null,
     title: card.product,
     description: productEvidence?.description || null,
@@ -232,8 +233,11 @@ export function buildOffersDocumentFromCatalogBatch(batch, opts = {}) {
       });
     }
     const sec = bySection.get(sectionKey);
-    if (rec.offerId && sec.seenOfferIds.has(rec.offerId)) continue;
-    if (rec.offerId) sec.seenOfferIds.add(rec.offerId);
+    const offerKey = rec.offerId
+      ? String(rec.partnerId || "") + "|" + String(rec.offerId)
+      : "";
+    if (offerKey && sec.seenOfferIds.has(offerKey)) continue;
+    if (offerKey) sec.seenOfferIds.add(offerKey);
 
     if (rec.recordKind === CATALOG_RECORD_KIND.coupon_with_code) {
       const c = publicCouponOrActionFromRecord(rec);
@@ -250,7 +254,7 @@ export function buildOffersDocumentFromCatalogBatch(batch, opts = {}) {
     const evidenceList = productEvidenceByOfferId[String(rec.offerId || "")] || [];
     for (const ev of evidenceList) {
       const p = publicProductFromEvidence(ev, rec);
-      const key = String(p.productId || "") + "|" + String(p.productVariant || "");
+      const key = [p.advertiserId || "", p.productId || "", p.productVariant || ""].join("|");
       if (sec.seenProductKeys.has(key)) continue;
       sec.seenProductKeys.add(key);
       sec.products.push(p);

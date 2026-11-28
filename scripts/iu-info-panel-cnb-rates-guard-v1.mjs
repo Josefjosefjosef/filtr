@@ -144,7 +144,12 @@ async function main() {
     assert(snapEur && typeof snapEur.value === "number", "snapshot eur_czk numeric");
     assert(snapUsd && typeof snapUsd.value === "number", "snapshot usd_czk numeric");
     const mergedSnapEur = mergeInfoPanelItemForGuard(eur, snapEur, snap);
-    assert(mergedSnapEur.state === "live", "committed snapshot EUR must be live after refresh");
+    const snapBehind = isCnbPublicationBehindExpected(snapEur.updatedAt);
+    if (snapBehind) {
+      assert(mergedSnapEur.state === "stale", "committed snapshot EUR behind the expected CNB date must be stale");
+    } else {
+      assert(mergedSnapEur.state === "live", "committed snapshot EUR must be live after refresh");
+    }
   }
 
   if (failures.length) {
