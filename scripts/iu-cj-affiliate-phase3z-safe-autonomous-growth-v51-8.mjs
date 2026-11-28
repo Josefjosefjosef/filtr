@@ -537,7 +537,7 @@ export function prepareGrowthActivation(opts = {}) {
     { id: "stop_conditions_ready", pass: true },
     { id: "rollback_ready", pass: true },
     { id: "growth_gate_locked", pass: growthGateLocked },
-    { id: "execute_disarmed", pass: true, note: "EXECUTE requires ownerApprovalToken" },
+    { id: "execute_disarmed", pass: opts.executeArmed !== true && growthGateLocked, note: "Fails when executeArmed is true or the uncapped gate is on. A missing executeArmed flag stays disarmed." },
   ];
   const fail = checks.filter((c) => c.pass === false);
   const doc = {
