@@ -16,6 +16,7 @@ import {
   selectPartnersForFairDiscovery,
   summarizeTraversalClassifications,
 } from "./iu-cj-affiliate-phase3z-catalog-fairness-v51-8.mjs";
+import { classifyMissRow } from "./iu-cj-miss-row-classification.mjs";
 
 const TEMP = process.env.TEMP || process.env.TMP;
 const OUT = path.join(TEMP, "iu-v518-audit");
@@ -85,59 +86,6 @@ const latestRefresh = (cov.runs || []).slice(-1)[0] || null;
 const published = Number(latestRefresh?.publishedProducts || 3292);
 const matched = Number(latestRefresh?.successfullyRefreshed || latestRefresh?.sourceMatched || 0);
 const notInScan = Number(latestRefresh?.notInScanWindow || 0);
-
-function classifyMissRow(row) {
-  const decision = String(row.decision || "");
-  const api = String(row.apiResult || "");
-  let classId = "UNRESOLVED";
-  if (decision === "RECOVERED") classId = "TEMPORARILY_UNAVAILABLE";
-  else if (decision === "HOLD_COLLISION") classId = "IDENTITY_MISMATCH";
-  else if (decision === "KEEP_PENDING" && /miss/i.test(api)) classId = "NOT_IN_CURRENT_FEED";
-  else if (decision === "REMOVE_CONFIRMED") classId = "PRODUCT_DISCONTINUED";
-  else if (/timeout/i.test(api)) classId = "SOURCE_TIMEOUT";
-  else if (/http|5\d\d|429/i.test(api)) classId = "SOURCE_HTTP_ERROR";
-  // V51.8 continuation: never treat RECOVERED null/legacy CAUSE_NOT_YET_VERIFIED as verified root cause.
-  const currentCause =
-    decision === "RECOVERED" && (!row.cause || row.cause === "CAUSE_NOT_YET_VERIFIED")
-      ? "PRODUCT_TEMPORARILY_UNAVAILABLE"
-      : row.cause || "CAUSE_NOT_YET_VERIFIED";
-  const originalMissCause =
-    row.originalMissCause ||
-    (decision === "RECOVERED" ? "CAUSE_NOT_YET_VERIFIED" : currentCause);
-  const rootCauseVerified =
-    row.rootCauseVerified === true ||
-    (decision === "HOLD_COLLISION" && currentCause === "IDENTITY_OR_MAPPING_ERROR");
-  return {
-    compoundIdentity: row.sourceIdentity,
-    advertiserId: row.advertiserId,
-    productId: row.productId,
-    partnerName: row.partnerName,
-    title: row.title,
-    sectionKey: row.sectionKey,
-    lastConfirmedPrice: row.lastConfirmedPrice,
-    lastConfirmedAvailability: row.lastConfirmedAvailability,
-    lastSuccessfulRefreshAt: row.lastSuccessfulRefreshAt,
-    lastRefreshAttemptAt: row.lastRefreshAttemptAt,
-    consecutiveMisses: row.consecutiveMisses,
-    apiResult: row.apiResult,
-    decision: row.decision,
-    cause: currentCause,
-    originalMissCause,
-    originalMissCauseVerified: row.originalMissCauseVerified === true || rootCauseVerified,
-    classificationVerified: row.classificationVerified !== false && classId !== "UNRESOLVED",
-    rootCauseVerified,
-    publicationSafe: row.publicationSafe,
-    classId,
-    nextSafeStep:
-      classId === "TEMPORARILY_UNAVAILABLE"
-        ? "KEEP_PUBLISHED_LKG_ALREADY_RECOVERED"
-        : classId === "IDENTITY_MISMATCH"
-          ? "HOLD_NO_AUTOMATIC_REMOVE"
-          : classId === "NOT_IN_CURRENT_FEED"
-            ? "RETRY_PRODUCTIDS_THEN_FULL_FEED_PAGE"
-            : "INVESTIGATE",
-  };
-}
 
 const missRows = (miss.rows || []).map(classifyMissRow);
 const missByClass = {};
