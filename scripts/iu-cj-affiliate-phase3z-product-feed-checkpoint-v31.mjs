@@ -192,6 +192,15 @@ export function selectPresentationSlice(readyRows, publishPerPartner, presentati
   };
 }
 
+function continuationProductId(item) {
+  if (item && typeof item === "object") {
+    const id = String(item.productId || "").trim();
+    const variant = String(item.productVariant || "").trim();
+    return variant ? id + "|" + variant : id;
+  }
+  return String(item);
+}
+
 /**
  * Dual-run progress proof (offline-friendly).
  * Expects runA/runB: { advertiserId, startedOffset, nextOffset, productIds[] }
@@ -200,8 +209,13 @@ export function proveContinuationBetweenRuns(runA, runB) {
   const aOff = Number(runA?.startedOffset);
   const bOff = Number(runB?.startedOffset);
   const aNext = Number(runA?.nextOffset);
-  const idsA = new Set((runA?.productIds || []).map(String));
-  const idsB = new Set((runB?.productIds || []).map(String));
+  const advertiserA = String(runA?.advertiserId || "").trim();
+  const advertiserB = String(runB?.advertiserId || "").trim();
+  const sameAdvertiser = advertiserA !== "" && advertiserA === advertiserB;
+  const idsA = new Set((runA?.productIds || []).map(continuationProductId));
+  const idsB = new Set((runB?.productIds || []).map(continuationProductId));
+  idsA.delete("");
+  idsB.delete("");
   let overlap = 0;
   for (const id of idsB) if (idsA.has(id)) overlap += 1;
   const advanced =
@@ -211,8 +225,10 @@ export function proveContinuationBetweenRuns(runA, runB) {
     Number.isFinite(aOff) &&
     bOff > aOff;
   const distinctWindow = idsA.size > 0 && idsB.size > 0 && overlap < Math.min(idsA.size, idsB.size);
+  const proven = sameAdvertiser === true && advanced === true && distinctWindow === true;
   return {
-    ok: advanced === true && distinctWindow === true,
+    ok: proven,
+    sameAdvertiser,
     advanced,
     distinctWindow,
     runAStartedOffset: aOff,
@@ -221,7 +237,7 @@ export function proveContinuationBetweenRuns(runA, runB) {
     overlapProductIds: overlap,
     runACount: idsA.size,
     runBCount: idsB.size,
-    proof: advanced && distinctWindow ? "CONTINUATION_PROVEN" : "CONTINUATION_NOT_PROVEN",
+    proof: proven ? "CONTINUATION_PROVEN" : "CONTINUATION_NOT_PROVEN",
   };
 }
 
