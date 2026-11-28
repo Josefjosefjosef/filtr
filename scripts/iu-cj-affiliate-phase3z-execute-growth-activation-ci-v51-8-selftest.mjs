@@ -51,12 +51,23 @@ const noDurableTok = mintOwnerApprovalToken({
   mainSha,
   nonce: "ci-nodurable-" + Date.now(),
 });
+const readyChecks = {
+  backupPlanReady: true,
+  requiredCiPass: true,
+  pagesPass: true,
+  joinedRegistryPass: true,
+  czEligibilityPass: true,
+  paidPositionsPass: true,
+  stopMechanismPass: true,
+  rollbackReady: true,
+};
 const noDurable = await runExecuteGrowthActivationCi({
   enabled: true,
   dryRun: false,
   ownerApprovalToken: noDurableTok.token,
   generationId,
   mainSha,
+  ...readyChecks,
   env: {
     GITHUB_ACTIONS: "true",
     IU_CJ_GROWTH_OWNER_APPROVAL_HMAC: hmacSecret,
@@ -77,6 +88,7 @@ const live = await runExecuteGrowthActivationCi({
   ownerApprovalToken: liveTok.token,
   generationId,
   mainSha,
+  ...readyChecks,
   allowInsecureLocal: true,
   nonceSqlitePath,
   env: {
@@ -96,6 +108,34 @@ assert.ok(envTxt.includes("IU_CJ_GROWTH_ACTIVATION_ARMED=1"));
 assert.ok(envTxt.includes("IU_CJ_GROWTH_FIRST_BATCH_MAX=25"));
 assert.ok(!envTxt.includes(liveTok.token));
 
+const omittedTok = mintOwnerApprovalToken({
+  hmacSecret,
+  generationId,
+  mainSha,
+  nonce: "ci-omitted-" + Date.now(),
+});
+const omittedEnv = path.join(tmp, "omitted_env.txt");
+const omitted = await runExecuteGrowthActivationCi({
+  enabled: true,
+  dryRun: false,
+  ownerApprovalToken: omittedTok.token,
+  generationId,
+  mainSha,
+  allowInsecureLocal: true,
+  nonceSqlitePath,
+  env: {
+    IU_CJ_GROWTH_OWNER_APPROVAL_HMAC: hmacSecret,
+    IU_CJ_PUBLIC_GROWTH_UNCAPPED: "1",
+    GITHUB_ENV: omittedEnv,
+  },
+  outPath: path.join(tmp, "omitted.json"),
+});
+assert.equal(omitted.reason, "PRECHECK_FAILED");
+assert.equal(omitted.executed, false);
+assert.equal(omitted.wroteProjectsData, false);
+assert.equal(omitted.githubEnvWritten, false);
+assert.equal(fs.existsSync(omittedEnv), false);
+
 console.log(
   JSON.stringify({
     IU_CJ_EXECUTE_GROWTH_ACTIVATION_CI_SELFTEST: "OK",
@@ -103,6 +143,7 @@ console.log(
     dry: dry.reason,
     noDurable: noDurable.reason,
     live: live.reason,
+    omitted: omitted.reason,
     wroteProjectsData: false,
     githubEnvWrittenOnLiveOnly: true,
     durableRequiredOnActions: true,

@@ -25,6 +25,10 @@ function appendGithubEnv(overlay, env = process.env) {
   return true;
 }
 
+function explicitReady(value) {
+  return value === true;
+}
+
 function maskToken(t) {
   const s = String(t || "");
   if (!s) return null;
@@ -68,14 +72,14 @@ export async function runExecuteGrowthActivationCi(opts = {}) {
     mainSha,
     dryRun,
     firstBatchMax: 25,
-    backupPlanReady: opts.backupPlanReady !== false,
-    requiredCiPass: opts.requiredCiPass !== false,
-    pagesPass: opts.pagesPass !== false,
-    joinedRegistryPass: opts.joinedRegistryPass !== false,
-    czEligibilityPass: opts.czEligibilityPass !== false,
-    paidPositionsPass: opts.paidPositionsPass !== false,
-    stopMechanismPass: opts.stopMechanismPass !== false,
-    rollbackReady: opts.rollbackReady !== false,
+    backupPlanReady: explicitReady(opts.backupPlanReady),
+    requiredCiPass: explicitReady(opts.requiredCiPass),
+    pagesPass: explicitReady(opts.pagesPass),
+    joinedRegistryPass: explicitReady(opts.joinedRegistryPass),
+    czEligibilityPass: explicitReady(opts.czEligibilityPass),
+    paidPositionsPass: explicitReady(opts.paidPositionsPass),
+    stopMechanismPass: explicitReady(opts.stopMechanismPass),
+    rollbackReady: explicitReady(opts.rollbackReady),
     requiredActor: env.IU_CJ_GROWTH_OWNER_ACTORS || undefined,
     actor: env.GITHUB_ACTOR,
     requireDurable: allowInsecureLocal ? false : true,
