@@ -69,6 +69,13 @@ function offerKey(row) {
   return row?.offerId ?? row?.id ?? null;
 }
 
+function actionDuplicateKey(row) {
+  const id = offerKey(row);
+  if (id == null) return null;
+  const advertiserId = String(row?.advertiserId || "").trim();
+  return advertiserId ? advertiserId + "|" + String(id) : String(id);
+}
+
 function datesProblems(row) {
   const problems = [];
   const fromRaw = row?.validFrom;
@@ -163,8 +170,9 @@ export function auditActionButtons(actions, opts = {}) {
 
     const flags = [];
     if (id != null) {
-      if (seenIds.has(id)) flags.push("duplicate_offerId");
-      seenIds.set(id, (seenIds.get(id) || 0) + 1);
+      const duplicateKey = actionDuplicateKey(row);
+      if (seenIds.has(duplicateKey)) flags.push("duplicate_offerId");
+      seenIds.set(duplicateKey, (seenIds.get(duplicateKey) || 0) + 1);
       if (couponIds.has(id)) flags.push("offerId_also_coupon");
     }
     if (nonEmptyString(row?.affiliateUrl)) {
