@@ -96,7 +96,7 @@
     var s = String(raw).trim();
     if (!s) return "UNKNOWN_EMPTY";
     var n = s.toLowerCase().replace(/[_-]+/g, " ").replace(/\s+/g, " ").trim();
-    if (/(^|\b)(out of stock|outofstock|sold out|nedostupn)/.test(n)) return "OUT_OF_STOCK";
+    if (/(^|\b)(out of stock|outofstock|sold out|unavailable|nedostupn|not in stock|not available|není skladem|neni skladem)\b/.test(n)) return "OUT_OF_STOCK";
     if (/(^|\b)(preorder|pre order|p[rř]edobjedn)/.test(n)) return "PREORDER";
     if (/(^|\b)(backorder|back order)\b/.test(n)) return "BACKORDER";
     if (/(^|\b)(in stock|instock|available|skladem)\b/.test(n)) return "IN_STOCK";
