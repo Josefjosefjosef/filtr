@@ -483,7 +483,7 @@ export function collectChangeRowsFromOffersDoc(doc, opts = {}) {
             publicationTimestamp: nowIso,
             runId,
             changeClassification: classification,
-            publicationResult: p.publicationReady === false ? "NOT_READY" : "PUBLISHED_CARD",
+            publicationResult: p.publicationReady === true ? "PUBLISHED_CARD" : "NOT_READY",
           };
 
           if (economic || classification === PRICE_CHANGE_CLASS.PRICE_CHANGED) {
@@ -511,7 +511,7 @@ export function collectChangeRowsFromOffersDoc(doc, opts = {}) {
             source: p.availabilityChangeSource || "cj_product_refresh",
             verificationTime: p.verifiedAt || p.availabilityChangedAt || null,
             runId,
-            publicationDecision: p.publicationReady === false ? "HOLD_OR_HIDE" : "KEEP_PUBLISHED",
+            publicationDecision: p.publicationReady === true ? "KEEP_PUBLISHED" : "HOLD_OR_HIDE",
             hysteresisState: p.hysteresisState || null,
           });
         }
