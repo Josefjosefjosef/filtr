@@ -209,7 +209,7 @@ export function productCurrencyClocks(row, nowMs = Date.now(), policy = FRESHNES
     sourceUpdatedAtStatus: sourceStatus,
     sourceTrusted: sourceStatus === "SOURCE_TIMESTAMP_PROVIDED",
     publicationEligible:
-      row?.publicationReady !== false &&
+      row?.publicationReady === true &&
       row?.publicationEligibility !== "PUBLICATION_BLOCKED" &&
       row?.lkgPublicHold !== true,
     nextCheckAt: nextCheckIsoFrom(lastVerifiedMs, nowMs, policy),

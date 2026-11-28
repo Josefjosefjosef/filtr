@@ -45,6 +45,34 @@ expect(
   clocks.sourceUpdatedAtStatus === "SOURCE_TIMESTAMP_UNAVAILABLE" && clocks.sourceTrusted === false
 );
 expect("next_check_clock", typeof clocks.nextCheckAt === "string");
+expect("missing_publication_ready_not_eligible", clocks.publicationEligible === false);
+const explicitReady = productCurrencyClocks(
+  {
+    lastSuccessfulRefreshAt: "2026-11-03T11:00:00Z",
+    publicationReady: true,
+  },
+  now
+);
+expect("explicit_publication_ready_eligible", explicitReady.publicationEligible === true);
+const blockedReady = productCurrencyClocks(
+  {
+    lastSuccessfulRefreshAt: "2026-11-03T11:00:00Z",
+    publicationReady: true,
+    publicationEligibility: "PUBLICATION_BLOCKED",
+  },
+  now
+);
+expect("blocked_ready_not_eligible", blockedReady.publicationEligible === false);
+for (const value of [false, null, "", "true", "false", 0, 1]) {
+  const probed = productCurrencyClocks(
+    {
+      lastSuccessfulRefreshAt: "2026-11-03T11:00:00Z",
+      publicationReady: value,
+    },
+    now
+  );
+  expect("publication_ready_probe_" + String(value), probed.publicationEligible === false);
+}
 
 const sourceFresh = classifyProductFreshness(
   {
