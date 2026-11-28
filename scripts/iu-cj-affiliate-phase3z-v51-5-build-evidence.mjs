@@ -8,6 +8,7 @@ import crypto from "node:crypto";
 import * as histMod from "./iu-cj-affiliate-phase3z-durable-price-history-v50.mjs";
 import * as revMod from "./iu-cj-affiliate-phase3z-product-reverify-v50.mjs";
 import { evaluateAuditSemanticConsistency } from "./iu-cj-affiliate-phase3z-audit-semantic-consistency-v51-5.mjs";
+import { explicitPublicationReady } from "./iu-cj-explicit-publication-ready.mjs";
 
 const TEMP = process.env.TEMP || process.env.TMP;
 const OUT = path.join(TEMP, "iu-v515-audit");
@@ -230,7 +231,7 @@ for (const sec of offers.sections || []) {
       validTo: c.validTo || c.endDate || null,
       validityStatus: validityStatus(c.validTo || c.endDate),
       affiliateUrl: c.affiliateUrl || null,
-      publicationReady: c.publicationReady !== false,
+      publicationReady: explicitPublicationReady(c.publicationReady),
       conditions: c.conditionsSummary || null,
       publicationDomStatus: "NOT_TESTED",
     });
@@ -245,7 +246,7 @@ for (const sec of offers.sections || []) {
       validTo: a.validTo || a.endDate || null,
       validityStatus: validityStatus(a.validTo || a.endDate),
       affiliateUrl: a.affiliateUrl || null,
-      publicationReady: a.publicationReady !== false,
+      publicationReady: explicitPublicationReady(a.publicationReady),
       publicationDomStatus: "NOT_TESTED",
     });
   }
