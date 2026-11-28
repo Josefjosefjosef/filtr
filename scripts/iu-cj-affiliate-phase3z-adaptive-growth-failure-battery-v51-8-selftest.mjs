@@ -83,7 +83,11 @@ function scenario(group, name, fn) {
   scenarios.push({ group, name, fn });
 }
 
-const candidates = Array.from({ length: 100 }, (_, i) => ({ id: "p" + i }));
+const candidates = Array.from({ length: 100 }, (_, i) => ({
+  id: "p" + i,
+  verifiedEligible: true,
+  verificationState: "VERIFIED_ELIGIBLE",
+}));
 const healthy = evaluateGrowthHealth({
   uniqueProducts: 1000,
   holdCount: 10,
