@@ -15,10 +15,10 @@ import {
   PUBLICATION_ELIGIBILITY,
   CATALOG_STATUS,
 } from "./iu-cj-affiliate-phase3z-publication-lkg-v51-8.mjs";
+import { isCjTrackingUrl } from "./iu-cj-affiliate-catalog-sync-publish-gate-v1.mjs";
 
 function trustedUrl(url) {
-  const s = String(url || "");
-  return /^https:\/\/(www\.)?(kqzyfj|jdoqocy|tkqlhce|dpbolvw|anrdoezrs|pjatr)\.(com|net)\//i.test(s);
+  return isCjTrackingUrl(url);
 }
 
 /**
