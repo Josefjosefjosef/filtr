@@ -38,7 +38,8 @@ export function buildFeedCompleteness(opts = {}) {
         };
       }
       const id = String(p?.productId || p?.id || "").trim();
-      const key = id ? `${adv}|${id}` : null;
+      const variant = String(p?.productVariant || "").trim();
+      const key = id ? (variant ? `${adv}|${id}|${variant}` : `${adv}|${id}`) : null;
       if (!key) continue;
       byAdvPublished[adv].publishedUnique.add(key);
       publishedProducts += 1;
