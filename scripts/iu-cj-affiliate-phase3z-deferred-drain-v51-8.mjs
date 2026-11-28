@@ -21,7 +21,7 @@ function makeProduct(advertiserId, productId, opts = {}) {
     affiliateUrl:
       opts.affiliateUrl ||
       `https://www.kqzyfj.com/click-101883843-${advertiserId}-${productId}`,
-    publicationReady: opts.publicationReady !== false,
+    publicationReady: opts.publicationReady === true,
     availability: opts.availability || "IN_STOCK",
   };
 }
@@ -156,11 +156,13 @@ export function runDeferredDrainScenarios() {
   });
 
   // applyPublicGrowthBudget invalid price never enters deferred
-  const prev = makeDoc(Array.from({ length: prevN }, (_, i) => makeProduct(1, `live-${i}`)));
+  const prev = makeDoc(
+    Array.from({ length: prevN }, (_, i) => makeProduct(1, `live-${i}`, { publicationReady: true }))
+  );
   const next = makeDoc([
-    ...Array.from({ length: prevN }, (_, i) => makeProduct(1, `live-${i}`)),
-    makeProduct(2, "badprice", { currentPrice: 0 }),
-    makeProduct(2, "ok"),
+    ...Array.from({ length: prevN }, (_, i) => makeProduct(1, `live-${i}`, { publicationReady: true })),
+    makeProduct(2, "badprice", { currentPrice: 0, publicationReady: true }),
+    makeProduct(2, "ok", { publicationReady: true }),
   ]);
   const applied = applyPublicGrowthBudget(next, prev, { uncappedMode: true });
   results.push({
@@ -168,6 +170,16 @@ export function runDeferredDrainScenarios() {
     ok: applied.keptNew.includes(compoundProductKey(2, "ok")) && applied.deferredNew.length === 0,
     kept: applied.keptNew,
     deferred: applied.deferredNew,
+  });
+
+  const omitted = makeProduct(1, "missing");
+  const explicit = makeProduct(1, "yes", { publicationReady: true });
+  const probes = [false, null, "", "true", "false", 0, 1].every(
+    (value) => makeProduct(1, "probe", { publicationReady: value }).publicationReady === false
+  );
+  results.push({
+    name: "publication_ready_only_boolean_true",
+    ok: omitted.publicationReady === false && explicit.publicationReady === true && probes,
   });
 
   const failed = results.filter((r) => r.ok !== true);
