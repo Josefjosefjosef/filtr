@@ -14,6 +14,15 @@ export const MISS_DECISION = Object.freeze({
   UNVERIFIED: "UNVERIFIED",
 });
 
+export function missIdentityKey(row) {
+  const advertiserId = String(row?.advertiserId || "").trim();
+  const productId = String(row?.productId || "").trim();
+  if (!advertiserId || !productId) return "";
+  const variant = String(row?.productVariant || "").trim();
+  const base = advertiserId + "|" + productId;
+  return variant ? base + "|" + variant : base;
+}
+
 export const MISS_CAUSE = Object.freeze({
   NOT_IN_CJ_FOR_PUBLISHER: "PRODUCT_NOT_IN_CJ_FOR_PUBLISHER",
   IDENTITY_CHANGED: "PRODUCT_CHANGED_IDENTIFIER",
@@ -194,8 +203,8 @@ export function buildMissProductAudit(opts = {}) {
   for (const p of products) {
     const advertiserId = String(p.advertiserId || "");
     const productId = String(p.productId || "");
-    const key = advertiserId + "|" + productId;
-    if (!advertiserId || !productId) continue;
+    const key = missIdentityKey(p);
+    if (!key) continue;
     const isMiss =
       p.refreshResult === "NOT_IN_SCAN_WINDOW" ||
       String(p.refreshReason || "").includes("productIds_query_miss");
@@ -227,6 +236,7 @@ export function buildMissProductAudit(opts = {}) {
       sourceIdentity: key,
       advertiserId,
       productId,
+      productVariant: String(p.productVariant || "").trim() || null,
       partnerName: p.partnerName || null,
       title: p.title || p.name || null,
       sectionKey: p.sectionKey || null,

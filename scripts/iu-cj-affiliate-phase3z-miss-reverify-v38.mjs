@@ -14,7 +14,7 @@ import {
   SOURCE_UPDATED_AT_STATUS,
 } from "./iu-cj-affiliate-phase3z-offers-freshness-v32.mjs";
 import { REFRESH_RESULT } from "./iu-cj-affiliate-phase3z-refresh-coverage-v35.mjs";
-import { MISS_DECISION } from "./iu-cj-affiliate-phase3z-miss-products-v38.mjs";
+import { MISS_DECISION, missIdentityKey } from "./iu-cj-affiliate-phase3z-miss-products-v38.mjs";
 import { decideIdentityRepair } from "./iu-cj-affiliate-phase3z-identity-repair-v39.mjs";
 
 /**
@@ -238,7 +238,7 @@ export function applyMissDecisionsToDoc(doc, missAudit) {
   for (const sec of doc?.sections || []) {
     const products = [];
     for (const p of sec.products || []) {
-      const key = String(p.advertiserId || "") + "|" + String(p.productId || "");
+      const key = missIdentityKey(p);
       const row = byKey.get(key);
       if (!row) {
         products.push(p);
