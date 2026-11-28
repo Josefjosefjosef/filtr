@@ -164,6 +164,17 @@ t('declared completionGate.pass=true with incomplete items is flagged', () => {
   assert.ok(r.problems.includes('DECLARED_PASS_BUT_COMPUTED_FAIL'));
 });
 
+t('object item map is read and a pending part stays incomplete', () => {
+  const m = baseMatrix();
+  m.items = {
+    'PART-01': { id: 'PART-01', kind: 'PART', part: 1, status: 'TEST_PENDING', productionFacing: true, openGaps: ['x'] },
+  };
+  const r = evaluate(m);
+  assert.equal(r.pass, false);
+  assert.equal(r.problems.includes('NOT_ARRAY:items'), false);
+  assert.ok(r.incomplete.some((row) => row.id === 'PART-01'));
+});
+
 t('duplicate ids fail matrix', () => {
   const m = baseMatrix();
   m.acceptanceGates = [doneItem('PART-01')];
