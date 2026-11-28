@@ -8,6 +8,7 @@ import {
   selectPublicProductsFromDurableCatalog,
   evaluatePublicPopulationGates,
   seedDurableCatalogFromOffersPublic,
+  retainMissingPublicSnapshotIdentities,
   summarizeDurableCatalog,
   normalizePublicationAvailability,
   publicationEligibilityFromAvailability,
@@ -312,6 +313,82 @@ assert(
     "soft below hard"
   );
 }
+
+const retainPrior = emptyDurableCatalog(now);
+retainPrior.products["1|keep"] = normalizeDurableCatalogEntry({
+  advertiserId: "1",
+  productId: "keep",
+  affiliateUrl: "https://www.kqzyfj.com/click-1-9",
+  publicationEligibility: PUBLICATION_ELIGIBILITY.PUBLICATION_ELIGIBLE,
+  publicOffer: true,
+  catalogStatus: "CATALOG_RETAINED",
+  freshnessStatus: "SOURCE_VERIFIED",
+  lastSourceMatchAt: now,
+  currency: "CZK",
+  currentPrice: "10.00",
+  availability: "in stock",
+  publicationReady: true,
+  updatedAt: now,
+});
+const retainedMissing = retainMissingPublicSnapshotIdentities(retainPrior, {
+  sections: [
+    {
+      sectionKey: "aff-nabytek",
+      products: [
+        {
+          advertiserId: "5992572",
+          productId: "oos-1",
+          title: "Out of stock chair",
+          currentPrice: "100.00",
+          currency: "CZK",
+          availability: "out of stock",
+          affiliateUrl: "https://www.jdoqocy.com/click-101883843-1",
+          publicationReady: false,
+        },
+        {
+          advertiserId: "1",
+          productId: "keep",
+          title: "already present",
+          publicationReady: true,
+          affiliateUrl: "https://www.kqzyfj.com/click-1-9",
+        },
+      ],
+    },
+    {
+      sectionKey: "aff-dum-zahrada",
+      products: [
+        {
+          advertiserId: "5992572",
+          productId: "oos-1",
+          title: "same identity again",
+          publicationReady: false,
+          currency: "EUR",
+          affiliateUrl: "https://www.kqzyfj.com/click-101883843-1",
+        },
+      ],
+    },
+  ],
+}, { nowIso: now });
+assert(retainedMissing.added === 1, "only the missing public identity is added");
+assert(retainedMissing.doc.products["1|keep"].lastSourceMatchAt === now, "existing source clock stays");
+assert(retainedMissing.doc.products["1|keep"].freshnessStatus === "SOURCE_VERIFIED", "existing source status stays");
+const retainedMerged = mergeIntoDurableCatalog(retainedMissing.doc, [], {
+  nowIso: now,
+  livePublicKeys: new Set(["1|keep"]),
+});
+const retainedOos = retainedMerged.doc.products["5992572|oos-1"];
+assert(retainedOos, "public identity missing from durable is retained");
+assert(retainedOos.freshnessStatus !== "SOURCE_VERIFIED", "retained identity is not source verified");
+assert(retainedOos.lastSourceMatchAt == null, "retained identity has no source match clock");
+assert(retainedOos.publicOffer === false, "out of stock identity stays unpublished");
+assert(
+  retainedOos.publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD,
+  "out of stock identity stays on hold"
+);
+assert(retainedOos.currency === "CZK", "currency is copied");
+assert(retainedOos.availability === "out of stock", "availability is copied");
+assert(retainedMerged.doc.products["1|keep"], "existing durable identity remains");
+assert(retainedMerged.doc.lastMerge.retainedUnseen >= 1, "merge counts the retained identity");
 
 console.log(
   JSON.stringify({

@@ -747,3 +747,52 @@ export function seedDurableCatalogFromOffersPublic(offersDoc, opts = {}) {
     incompleteAdvertisers: new Set(),
   });
 }
+
+/**
+ * Keep a prior public identity that the durable catalog never stored.
+ * This is not a source read: clocks that mean source verification stay empty.
+ * Merge decides whether a previously live identity stays pending reverify.
+ */
+export function retainMissingPublicSnapshotIdentities(priorDoc, offersDoc, opts = {}) {
+  const nowIso = opts.nowIso || new Date().toISOString();
+  const doc = priorDoc?.products ? priorDoc : emptyDurableCatalog(nowIso);
+  if (!doc.products) doc.products = {};
+  let added = 0;
+  for (const sec of offersDoc?.sections || []) {
+    for (const p of sec.products || []) {
+      const adv = String(p?.advertiserId || "");
+      const pid = String(p?.productId || "");
+      if (!adv || !pid) continue;
+      const key = compoundProductKey(adv, pid);
+      if (doc.products[key]) continue;
+      const entry = normalizeDurableCatalogEntry({
+        advertiserId: adv,
+        productId: pid,
+        partnerName: p.partnerName || sec.partnerName || null,
+        sectionKey: p.sectionKey || sec.sectionKey || null,
+        title: p.title || p.name || null,
+        imageUrl: p.imageUrl || null,
+        currentPrice: p.currentPrice ?? null,
+        originalPrice: p.originalPrice ?? null,
+        currency: p.currency || null,
+        availability: p.availability ?? null,
+        affiliateUrl: p.affiliateUrl || null,
+        feedId: p.feedId || null,
+        catalogStatus: CATALOG_STATUS.CATALOG_RETAINED,
+        publicationEligibility: PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD,
+        publicOffer: false,
+        lkgPublicHold: true,
+        hideAsCurrent: true,
+        publicationReady: false,
+        sourceFreshLabelForbidden: true,
+        freshnessStatus: "LAST_KNOWN_PENDING_REVERIFY",
+        freshnessReason: "RETAINED_FROM_PRIOR_PUBLIC_SNAPSHOT_NOT_SOURCE_VERIFIED",
+        updatedAt: p.updatedAt || nowIso,
+      });
+      if (!entry) continue;
+      doc.products[key] = entry;
+      added += 1;
+    }
+  }
+  return { doc, added };
+}
