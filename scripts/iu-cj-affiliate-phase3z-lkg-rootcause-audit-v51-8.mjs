@@ -27,7 +27,9 @@ export const LKG_CAUSE = {
 function productKey(p) {
   const a = String(p?.advertiserId || p?.advertiserID || "").trim();
   const id = String(p?.productId || p?.id || "").trim();
-  return a && id ? `${a}|${id}` : null;
+  if (!a || !id) return null;
+  const variant = String(p?.productVariant || "").trim();
+  return variant ? a + "|" + id + "|" + variant : a + "|" + id;
 }
 
 function ageHours(iso, nowMs) {
@@ -117,6 +119,8 @@ export function classifyLkgProductFull(p, sec, nowMs = Date.now()) {
     key: productKey(p),
     advertiserId: String(p?.advertiserId || p?.advertiserID || "").trim() || null,
     productId: String(p?.productId || p?.id || "").trim() || null,
+    productVariant: String(p?.productVariant || "").trim() || null,
+    currency: p?.currency || null,
     feedId: p?.feedId || p?.catalogId || p?.linkId || null,
     title: p?.title || p?.name || null,
     sectionKey: sec?.sectionKey || null,
