@@ -198,6 +198,39 @@ assert(idLedger.accounting.uniqueEqualsFetchedRows === false, "not equal");
 assert(idLedger.accounting.crossPartnerSameProductIdCount === 1, "cross partner P1");
 assert(idLedger.accounting.publishedUnique === 2, "published unique");
 
+const variantIndex = indexProductsByCompoundIdentity({
+  sections: [
+    {
+      products: [
+        { advertiserId: "1", productId: "P", productVariant: "v", currentPrice: "1" },
+        { advertiserId: "1", productId: "P", productVariant: "w", currentPrice: "2" },
+      ],
+    },
+  ],
+});
+assert(variantIndex.size === 2, "variant index size");
+assert(variantIndex.get("1|P|v").currentPrice === "1", "variant v");
+assert(variantIndex.get("1|P|w").currentPrice === "2", "variant w");
+const variantLedger = buildProductReverifyLedger({
+  doc: {
+    sections: [
+      {
+        products: [
+          { advertiserId: "1", productId: "P", productVariant: "v" },
+          { advertiserId: "1", productId: "P", productVariant: "w" },
+        ],
+      },
+    ],
+  },
+  runId: "runV",
+  nowIso,
+});
+assert(variantLedger.rows.length === 2, "variant ledger rows");
+assert(
+  variantLedger.rows.map((row) => row.compoundIdentity).sort().join(",") === "1|P|v,1|P|w",
+  "variant ledger keys"
+);
+
 console.log(
   JSON.stringify({
     V50_DURABLE_REVERIFY_SELFTEST: "PASS",
