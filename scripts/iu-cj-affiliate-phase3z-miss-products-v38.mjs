@@ -165,6 +165,15 @@ export function decideMissProduct(row = {}, opts = {}) {
   };
 }
 
+/** Missing verification flags stay false. */
+export function missRowVerificationFlags(product = {}, decided = {}) {
+  return {
+    publicationReady: product.publicationReady === true,
+    classificationVerified: decided.classificationVerified === true,
+    publicationSafe: decided.publicationSafe === true,
+  };
+}
+
 /**
  * Build individual miss audit rows from published products + optional probe results.
  */
@@ -222,6 +231,7 @@ export function buildMissProductAudit(opts = {}) {
       { nowMs, hideAfterHours: opts.hideAfterHours, hideAfterConsecutiveMisses: opts.hideAfterConsecutiveMisses }
     );
 
+    const flags = missRowVerificationFlags(p, decided);
     const row = {
       schema: MISS_SCHEMA,
       sourceIdentity: key,
@@ -230,7 +240,7 @@ export function buildMissProductAudit(opts = {}) {
       partnerName: p.partnerName || null,
       title: p.title || p.name || null,
       sectionKey: p.sectionKey || null,
-      publicationReady: p.publicationReady !== false,
+      publicationReady: flags.publicationReady,
       lastSuccessfulRefreshAt: p.lastSuccessfulRefreshAt || null,
       lastRefreshAttemptAt: p.lastRefreshAttemptAt || nowIso,
       lastConfirmedPrice: p.currentPrice ?? p.price ?? null,
@@ -248,11 +258,11 @@ export function buildMissProductAudit(opts = {}) {
       originalMissCause:
         decided.originalMissCause != null ? decided.originalMissCause : MISS_CAUSE.UNVERIFIED,
       originalMissCauseVerified: decided.originalMissCauseVerified === true,
-      classificationVerified: decided.classificationVerified !== false,
+      classificationVerified: flags.classificationVerified,
       rootCauseVerified: decided.rootCauseVerified === true,
       decision: decided.decision,
       hidePrice: decided.hidePrice === true,
-      publicationSafe: decided.publicationSafe !== false,
+      publicationSafe: flags.publicationSafe,
       note: decided.note,
       probe: probe
         ? {

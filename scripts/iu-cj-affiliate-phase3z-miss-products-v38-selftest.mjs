@@ -7,6 +7,7 @@ import {
   MISS_DECISION,
   buildMissProductAudit,
   decideMissProduct,
+  missRowVerificationFlags,
   summarizeMissCauses,
 } from "./iu-cj-affiliate-phase3z-miss-products-v38.mjs";
 import { buildPublisherProductsQuery } from "./iu-cj-affiliate-phase2-product-api.mjs";
@@ -87,6 +88,18 @@ assert(audit.rows[0].cause === MISS_CAUSE.TEMPORARILY_UNAVAILABLE, "recovered cu
 assert(audit.rows[0].originalMissCause === MISS_CAUSE.UNVERIFIED, "original miss cause separate");
 assert(audit.rows[0].rootCauseVerified === false, "original root cause not invented");
 assert(audit.rows[0].classificationVerified === true, "classification verified");
+assert(audit.rows[0].publicationReady === false, "omitted publicationReady is not ready");
+const missingFlags = missRowVerificationFlags({}, {});
+assert(missingFlags.publicationReady === false, "missing publicationReady");
+assert(missingFlags.classificationVerified === false, "missing classificationVerified");
+assert(missingFlags.publicationSafe === false, "missing publicationSafe");
+const explicitFlags = missRowVerificationFlags(
+  { publicationReady: true },
+  { classificationVerified: true, publicationSafe: false }
+);
+assert(explicitFlags.publicationReady === true, "explicit publicationReady");
+assert(explicitFlags.classificationVerified === true, "explicit classificationVerified");
+assert(explicitFlags.publicationSafe === false, "explicit publicationSafe false");
 assert(recovered.cause === MISS_CAUSE.TEMPORARILY_UNAVAILABLE, "decide recovered cause");
 assert(holdCollision.rootCauseVerified === true, "collision root cause verified");
 assert(keep.rootCauseVerified === false, "keep pending root cause unverified");
