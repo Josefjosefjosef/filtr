@@ -746,7 +746,7 @@ export function evaluateProductShrinkageGate(prevDoc, nextDoc, opts = {}) {
       if (raw != null && String(raw).trim() === "") oosRemediationRemoved += 1;
       continue;
     }
-    if (/(^|\b)(out of stock|outofstock|sold out|nedostupn)/.test(n)) {
+    if (/(^|\b)(out of stock|outofstock|sold out|unavailable|nedostupn|not in stock|not available|není skladem|neni skladem)/.test(n)) {
       oosRemediationRemoved += 1;
       continue;
     }
