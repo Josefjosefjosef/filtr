@@ -17,7 +17,7 @@ import {
 export const UNCAPPED_GROWTH_READINESS_SCHEMA =
   "iu-cj-affiliate-phase3z-uncapped-growth-readiness-v51-8";
 
-function makeProduct(advertiserId, productId, opts = {}) {
+function syntheticProduct(advertiserId, productId, opts = {}) {
   return {
     advertiserId: String(advertiserId),
     productId: String(productId),
@@ -28,9 +28,13 @@ function makeProduct(advertiserId, productId, opts = {}) {
     affiliateUrl:
       opts.affiliateUrl ||
       `https://www.kqzyfj.com/click-101883843-${advertiserId}-${productId}`,
-    publicationReady: opts.publicationReady !== false,
+    publicationReady: opts.publicationReady === true,
     availability: opts.availability || "IN_STOCK",
   };
+}
+
+function readyProduct(advertiserId, productId, opts = {}) {
+  return syntheticProduct(advertiserId, productId, { ...opts, publicationReady: true });
 }
 
 function makeDoc(products, liveEnabled = true) {
@@ -55,14 +59,14 @@ function makeDoc(products, liveEnabled = true) {
 export function runUncappedGrowthVolumeScenarios() {
   const prevN = 200;
   const prev = makeDoc(
-    Array.from({ length: prevN }, (_, i) => makeProduct(1, `live-${i}`)),
+    Array.from({ length: prevN }, (_, i) => readyProduct(1, `live-${i}`)),
     true,
   );
   const results = [];
 
   function scenario(name, nextExtra, opts = {}) {
     const nextProducts = [
-      ...Array.from({ length: prevN }, (_, i) => makeProduct(1, `live-${i}`)),
+      ...Array.from({ length: prevN }, (_, i) => readyProduct(1, `live-${i}`)),
       ...nextExtra,
     ];
     const next = makeDoc(nextProducts, false);
@@ -89,7 +93,7 @@ export function runUncappedGrowthVolumeScenarios() {
 
   scenario(
     "capped_100_new_budget_exhausted",
-    Array.from({ length: 100 }, (_, i) => makeProduct(2, `n100-${i}`)),
+    Array.from({ length: 100 }, (_, i) => readyProduct(2, `n100-${i}`)),
     {
       uncappedMode: false,
       cumulativeAddedSinceBaseline: 500,
@@ -98,7 +102,7 @@ export function runUncappedGrowthVolumeScenarios() {
   );
   scenario(
     "uncapped_100_ratio_bounded",
-    Array.from({ length: 100 }, (_, i) => makeProduct(2, `u100-${i}`)),
+    Array.from({ length: 100 }, (_, i) => readyProduct(2, `u100-${i}`)),
     {
       uncappedMode: true,
       expectOk: (a) => a.keptNew.length === 40 && a.deferredNew.length === 60, // 20% of 200
@@ -106,7 +110,7 @@ export function runUncappedGrowthVolumeScenarios() {
   );
   scenario(
     "uncapped_1000_surge_drip",
-    Array.from({ length: 1000 }, (_, i) => makeProduct(2, `u1k-${i}`)),
+    Array.from({ length: 1000 }, (_, i) => readyProduct(2, `u1k-${i}`)),
     {
       uncappedMode: true,
       expectOk: (a) =>
@@ -117,7 +121,7 @@ export function runUncappedGrowthVolumeScenarios() {
   );
   scenario(
     "uncapped_10000_surge_drip",
-    Array.from({ length: 10000 }, (_, i) => makeProduct(2, `u10k-${i}`)),
+    Array.from({ length: 10000 }, (_, i) => readyProduct(2, `u10k-${i}`)),
     {
       uncappedMode: true,
       expectOk: (a) =>
@@ -192,16 +196,16 @@ export function runUncappedGrowthVolumeScenarios() {
   {
     const afterFirst = applyPublicGrowthBudget(
       makeDoc([
-        ...Array.from({ length: prevN }, (_, i) => makeProduct(1, `live-${i}`)),
-        ...Array.from({ length: 1000 }, (_, i) => makeProduct(2, `ckpt-${i}`)),
+        ...Array.from({ length: prevN }, (_, i) => readyProduct(1, `live-${i}`)),
+        ...Array.from({ length: 1000 }, (_, i) => readyProduct(2, `ckpt-${i}`)),
       ]),
       prev,
       { uncappedMode: true },
     );
     const afterSecond = applyPublicGrowthBudget(
       makeDoc([
-        ...Array.from({ length: prevN }, (_, i) => makeProduct(1, `live-${i}`)),
-        ...Array.from({ length: 1000 }, (_, i) => makeProduct(2, `ckpt-${i}`)),
+        ...Array.from({ length: prevN }, (_, i) => readyProduct(1, `live-${i}`)),
+        ...Array.from({ length: 1000 }, (_, i) => readyProduct(2, `ckpt-${i}`)),
       ]),
       afterFirst.doc,
       { uncappedMode: true },
@@ -226,9 +230,9 @@ export function runUncappedGrowthVolumeScenarios() {
   scenario(
     "duplicates_collapsed",
     [
-      makeProduct(2, "dup"),
-      makeProduct(2, "dup"),
-      makeProduct(2, "dup"),
+      readyProduct(2, "dup"),
+      readyProduct(2, "dup"),
+      readyProduct(2, "dup"),
     ],
     {
       uncappedMode: true,
@@ -237,7 +241,7 @@ export function runUncappedGrowthVolumeScenarios() {
   );
   scenario(
     "invalid_price_excluded",
-    [makeProduct(2, "badprice", { currentPrice: 0 })],
+    [readyProduct(2, "badprice", { currentPrice: 0 })],
     {
       uncappedMode: true,
       expectOk: (a) => a.keptNew.length === 0 && a.deferredNew.length === 0,
@@ -245,7 +249,7 @@ export function runUncappedGrowthVolumeScenarios() {
   );
   scenario(
     "identity_collision_different_advertisers_ok",
-    [makeProduct(9, "live-0")], // same productId, different advertiser
+    [readyProduct(9, "live-0")], // same productId, different advertiser
     {
       uncappedMode: true,
       expectOk: (a) => {
@@ -256,7 +260,7 @@ export function runUncappedGrowthVolumeScenarios() {
   );
 
   // Shrinkage / LKG still refuse unauthorized mass drop even with uncapped growth opts.
-  const shrunk = makeDoc([makeProduct(1, "live-0")], false);
+  const shrunk = makeDoc([readyProduct(1, "live-0")], false);
   const merge = mergeLkgPublishedProducts(shrunk, prev, {
     incompleteAdvertisers: new Set(["1"]),
     fetchedAdvertisers: new Set(),
@@ -278,6 +282,16 @@ export function runUncappedGrowthVolumeScenarios() {
     carried: merge.carried,
     shrinkOk: shrinkGate.ok,
     churnOk: churnGate.ok,
+  });
+
+  const omitted = syntheticProduct(1, "missing");
+  const explicit = syntheticProduct(1, "yes", { publicationReady: true });
+  const probes = [false, null, "", "true", "false", 0, 1].every(
+    (value) => syntheticProduct(1, "probe", { publicationReady: value }).publicationReady === false
+  );
+  results.push({
+    name: "publication_ready_only_boolean_true",
+    ok: omitted.publicationReady === false && explicit.publicationReady === true && probes,
   });
 
   const failed = results.filter((r) => r.ok !== true);
