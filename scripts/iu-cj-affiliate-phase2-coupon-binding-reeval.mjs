@@ -141,7 +141,7 @@ for (const row of historical.bindings || []) {
     bump(ev.eligibility, ev.eligibilityReason);
     if (legacyPublishableProductBlock(ev, couponEval)) legacyPublishableProductBlockRows += 1;
     if (ev.eligibility === "eligible") couponProductEligibleRows += 1;
-    const batchKey = landingBatchKey(row.linkId, prod.productId);
+    const batchKey = landingBatchKey(row.linkId, prod.productId, prod.productVariant);
     const pipeline = await runProductPublicationPipeline({
       bindingRow: row,
       product: prod,
