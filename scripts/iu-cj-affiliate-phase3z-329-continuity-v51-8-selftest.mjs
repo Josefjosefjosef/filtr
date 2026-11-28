@@ -54,6 +54,30 @@ const popEq = assertPopulationNotEquated(
 );
 assert(popEq.ok === false, "must refuse equating populations");
 
+const variantOut = reconstruct329Continuity({
+  original329: {
+    rows: [
+      { compoundIdentity: "1|same|v", advertiserId: "1", productId: "same", productVariant: "v" },
+      { compoundIdentity: "1|same|w", advertiserId: "1", productId: "same", productVariant: "w" },
+    ],
+  },
+  liveDoc: {
+    sections: [
+      {
+        products: [
+          { advertiserId: "1", productId: "same", productVariant: "v", publicationReady: true },
+          { advertiserId: "1", productId: "same", productVariant: "w", publicationReady: true },
+        ],
+      },
+    ],
+  },
+});
+assert(variantOut.summary.originalCount === 2, "variant count");
+assert(
+  variantOut.timelines.filter((t) => t.continuityStatus === CONTINUITY_STATUS.CURRENT_LIVE).length === 2,
+  "both variants stay live"
+);
+
 console.log(
   JSON.stringify({
     IU_CJ_329_CONTINUITY_SELFTEST: "PASS",
