@@ -18,8 +18,18 @@ import {
 } from "./iu-cj-affiliate-phase2-offer-landing-lib.mjs";
 import { loadPhase1Artifacts, mergeLinkWithEnrichment } from "./iu-cj-affiliate-phase2-lib.mjs";
 
-export function landingBatchKey(linkId, productId) {
-  return String(linkId) + ":" + String(productId);
+export function landingBatchKey(linkId, productId, productVariant) {
+  const base = String(linkId) + ":" + String(productId);
+  const variant = String(productVariant || "").trim();
+  return variant ? base + ":" + variant : base;
+}
+
+export function findConfirmedProduct(products, productId, productVariant) {
+  const wantedId = String(productId);
+  const wantedVariant = String(productVariant || "").trim();
+  const rows = (Array.isArray(products) ? products : []).filter((row) => String(row?.productId) === wantedId);
+  if (!wantedVariant) return rows[0] || null;
+  return rows.find((row) => String(row?.productVariant || "").trim() === wantedVariant) || null;
 }
 
 export function readLandingBatchMap(stateDir = defaultStateDir()) {
@@ -209,12 +219,12 @@ export async function loadBindingContext(stateDir, linkId) {
 export async function runPublicationPipelineForLinkProduct(stateDir, linkId, productId, pipelineOpts = {}) {
   const ctx = await loadBindingContext(stateDir, linkId);
   if (!ctx) return { error: "binding_not_found", linkId };
-  const product = (ctx.bindingRow.confirmedProducts || []).find((p) => String(p.productId) === String(productId));
+  const product = findConfirmedProduct(ctx.bindingRow.confirmedProducts, productId, pipelineOpts.productVariant);
   if (!product) return { error: "product_not_in_binding", linkId, productId };
 
   const programTerms = readJson(path.join(stateDir, "cj-phase2-program-terms-probe.json"), null);
   const batchMap = readLandingBatchMap(stateDir);
-  const key = landingBatchKey(linkId, productId);
+  const key = landingBatchKey(linkId, productId, pipelineOpts.productVariant);
   const batchEntry = batchMap[key] || null;
 
   return runProductPublicationPipeline({
