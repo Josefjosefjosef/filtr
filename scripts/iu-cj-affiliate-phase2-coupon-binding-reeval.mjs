@@ -27,6 +27,7 @@ import {
 } from "./iu-cj-affiliate-phase2-publication-pipeline.mjs";
 import { loadPhase1Artifacts, mergeLinkWithEnrichment } from "./iu-cj-affiliate-phase2-lib.mjs";
 import { landingBatchDiagnosticRow } from "./iu-cj-affiliate-phase2-landing-batch-diagnostic.mjs";
+import { reevalProductIdRef, reevalProductStatusRow } from "./iu-cj-reeval-product-status-row.mjs";
 
 const stateDir = defaultStateDir();
 const histPath = path.join(stateDir, "cj-phase2-coupon-product-bindings.json");
@@ -207,21 +208,13 @@ for (const row of historical.bindings || []) {
     displayProducts,
     additionalPublishableProductIds:
       cardTypeInfo.type === COUPON_PUBLICATION_CARD_TYPE.LIMITED_SORTIMENT
-        ? publicationReadyProducts.slice(3).map((p) => p.productId)
+        ? publicationReadyProducts.slice(3).map((p) => reevalProductIdRef(p))
         : [],
     eligibleCount: eligible.length,
     publishableProductCount: publishable.length,
     publicationReadyProductCount: publicationReadyProducts.length,
-    unknownProductRows: unknown.map((p) => ({
-      productId: p.productId,
-      eligibility: p.eligibility,
-      reason: p.eligibilityReason,
-    })),
-    ineligibleProductRows: ineligible.map((p) => ({
-      productId: p.productId,
-      eligibility: p.eligibility,
-      reason: p.eligibilityReason,
-    })),
+    unknownProductRows: unknown.map((p) => reevalProductStatusRow(p)),
+    ineligibleProductRows: ineligible.map((p) => reevalProductStatusRow(p)),
     ineligibleCount: ineligible.length,
     unknownCount: unknown.length,
     publicProductBlockPolicy: IU_CJ_ELIGIBILITY_POLICY,
