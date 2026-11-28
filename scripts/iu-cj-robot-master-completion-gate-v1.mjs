@@ -57,6 +57,12 @@ export const EXTERNAL_BLOCK_FIELDS = Object.freeze([
 ]);
 
 const ITEM_ARRAYS = ['items', 'acceptanceGates'];
+
+function itemRows(value) {
+  if (Array.isArray(value)) return value;
+  if (value && typeof value === 'object') return Object.values(value);
+  return null;
+}
 const DISARMED_VALUES = new Set(['DISARMED', 'NOT_ACTIVATED']);
 
 export function assertTempPath(p) {
@@ -151,11 +157,12 @@ export function evaluate(matrix) {
   for (const key of ITEM_ARRAYS) {
     const arr = matrix[key];
     if (arr === undefined) continue;
-    if (!Array.isArray(arr)) {
+    const rows = itemRows(arr);
+    if (rows === null) {
       problems.push('NOT_ARRAY:' + key);
       continue;
     }
-    for (const item of arr) {
+    for (const item of rows) {
       total += 1;
       const id = item && item.id ? String(item.id) : '(no-id)';
       if (seen.has(id)) problems.push('DUPLICATE_ID:' + id);
@@ -171,7 +178,8 @@ export function evaluate(matrix) {
 
   if (total === 0) problems.push('NO_ITEMS');
 
-  const parts = Array.isArray(matrix.items) ? matrix.items.filter((i) => i && i.kind === 'PART') : [];
+  const itemSource = itemRows(matrix.items);
+  const parts = (itemSource || []).filter((i) => i && i.kind === 'PART');
   const partNums = new Set(parts.map((p) => p.part));
   for (let n = 1; n <= 41; n += 1) if (!partNums.has(n)) problems.push('MISSING_PART:' + n);
 
