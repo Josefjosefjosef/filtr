@@ -1,5 +1,5 @@
 /**
- * V50 — product identity uniqueness ledger (compound advertiserId|productId).
+ * V50 — product identity uniqueness ledger (compound advertiserId|productId, plus a non-empty productVariant).
  * Distinguishes in-run UNIQUE from catalog UNIQUE; never treats "rows processed" as UNIQUE.
  */
 import { compoundIdentity } from "./iu-cj-affiliate-phase3z-durable-price-history-v50.mjs";
@@ -27,11 +27,13 @@ export function buildProductIdentityLedger(opts = {}) {
     const adv = row.advertiserId != null ? String(row.advertiserId) : "";
     const pid = row.productId != null ? String(row.productId) : "";
     if (!adv || !pid) continue;
-    const key = compoundIdentity(adv, pid);
+    const variant = String(row.productVariant || "").trim();
+    const key = compoundIdentity(adv, pid, variant);
     const feedId = row.feedId != null ? String(row.feedId) : "";
     const entry = byCompound.get(key) || {
       advertiserId: adv,
       productId: pid,
+      ...(variant ? { productVariant: variant } : {}),
       compoundIdentity: key,
       occurrenceCount: 0,
       feedIds: new Set(),
@@ -73,7 +75,7 @@ export function buildProductIdentityLedger(opts = {}) {
       const adv = p.advertiserId != null ? String(p.advertiserId) : "";
       const pid = p.productId != null ? String(p.productId) : "";
       if (!adv || !pid) continue;
-      const key = compoundIdentity(adv, pid);
+      const key = compoundIdentity(adv, pid, p.productVariant);
       publishedOccurrences.push(key);
       publishedKeys.add(key);
     }
@@ -87,6 +89,7 @@ export function buildProductIdentityLedger(opts = {}) {
     .map((e) => ({
       advertiserId: e.advertiserId,
       productId: e.productId,
+      ...(e.productVariant ? { productVariant: e.productVariant } : {}),
       compoundIdentity: e.compoundIdentity,
       occurrenceCount: e.occurrenceCount,
       feedIds: [...e.feedIds],
@@ -102,7 +105,7 @@ export function buildProductIdentityLedger(opts = {}) {
     runId,
     sha: opts.sha || null,
     note:
-      "UNIQUE = distinct compoundIdentity(advertiserId|productId) in this fetch window. Same productId across partners is NOT a collision. UNIQUE ≠ fetchedRows unless zero duplicates.",
+      "UNIQUE = distinct compoundIdentity(advertiserId|productId|variant when present) in this fetch window. Same productId across partners is NOT a collision. UNIQUE ≠ fetchedRows unless zero duplicates.",
     accounting: {
       fetchedRowsWithIdentity: fetchedCount,
       uniqueIdentitiesInRun: uniqueInRun,

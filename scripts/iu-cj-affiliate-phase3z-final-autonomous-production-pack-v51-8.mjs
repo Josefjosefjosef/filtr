@@ -7,6 +7,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 import { buildCompletionAuditPack } from "./iu-cj-affiliate-phase3z-completion-audit-pack-v51-8.mjs";
 import {
@@ -24,6 +25,28 @@ const AUDIT_ROOT = process.env.IU_CJ_AUDITS_ROOT || "C:/projects/iu-cj-audits";
 /** /projects/data/* is the Pages asset path for JSON — not a wrong public homepage. */
 const DATA_ASSET_NOTE =
   "Canonical public site is https://infouzel.cz/. Offers JSON is served as a static asset under /projects/data/.";
+
+/** Fail closed. A missing flag is not proof that the gate is disarmed. */
+export function evaluatePackOwnerGates(input = {}) {
+  const growthExecute = input.growthExecute;
+  const emailOnlyPublishing = input.emailOnlyPublishing;
+  const growthExecuteDisarmed = growthExecute === "DISARMED" || growthExecute === false;
+  const emailOnlyPublishingDisarmed = emailOnlyPublishing === "DISARMED";
+  const executeArmed = input.executeArmed === true || growthExecute === "ARMED" || growthExecute === true;
+  return {
+    growthExecuteDisarmed,
+    emailOnlyPublishingDisarmed,
+    executeArmed,
+    uncappedArmed: input.uncappedMode === true,
+    preserved:
+      growthExecuteDisarmed &&
+      emailOnlyPublishingDisarmed &&
+      input.uncappedMode !== true &&
+      input.executeArmed !== true &&
+      growthExecute !== "ARMED" &&
+      growthExecute !== true,
+  };
+}
 
 function readJsonSafe(p) {
   try {
@@ -300,6 +323,12 @@ async function main() {
   const cumulativeUsed = Number(growth.cumulativeAddedSinceBaseline ?? 0);
   const cumulativeCap = Number(growth.maxCumulativeAbs ?? 500);
   const uncapped = growth.uncappedMode === true;
+  const ownerGates = evaluatePackOwnerGates({
+    growthExecute: offers?.growthExecute,
+    emailOnlyPublishing: offers?.emailOnlyPublishing,
+    uncappedMode: uncapped,
+    executeArmed: offers?.executeArmed,
+  });
 
   const openBlockers = [];
   if (!obsEval.complete) {
@@ -318,6 +347,18 @@ async function main() {
   }
   if (uncapped) {
     openBlockers.push({ id: "UNCAPPED_MODE_ARMED", evidence: { uncappedMode: true } });
+  }
+  if (!ownerGates.growthExecuteDisarmed) {
+    openBlockers.push({
+      id: "GROWTH_EXECUTE_NOT_PROVEN_DISARMED",
+      evidence: { growthExecute: offers?.growthExecute ?? null },
+    });
+  }
+  if (!ownerGates.emailOnlyPublishingDisarmed) {
+    openBlockers.push({
+      id: "EMAIL_ONLY_NOT_PROVEN_DISARMED",
+      evidence: { emailOnlyPublishing: offers?.emailOnlyPublishing ?? null },
+    });
   }
   if (cumulativeUsed !== 500 || cumulativeCap !== 500) {
     openBlockers.push({
@@ -394,9 +435,9 @@ async function main() {
       observation: obsEval,
       openBlockers,
       ownerGatesPreserved: {
-        growthExecute: false,
-        emailOnlyPublishing: "DISARMED",
-        uncappedGrowth: false,
+        growthExecute: ownerGates.growthExecuteDisarmed ? false : null,
+        emailOnlyPublishing: ownerGates.emailOnlyPublishingDisarmed ? "DISARMED" : "NOT_PROVEN",
+        uncappedGrowth: uncapped,
       },
     },
     ACCEPTANCE_MATRIX: {
@@ -441,8 +482,8 @@ async function main() {
           pass: cumulativeUsed === 500 && cumulativeCap === 500,
           detail: { cumulativeUsed, cumulativeCap },
         },
-        { id: "NO_GROWTH_EXECUTE", pass: true },
-        { id: "EMAIL_ONLY_DISARMED", pass: true },
+        { id: "NO_GROWTH_EXECUTE", pass: ownerGates.growthExecuteDisarmed },
+        { id: "EMAIL_ONLY_DISARMED", pass: ownerGates.emailOnlyPublishingDisarmed },
         {
           id: "PRODUCTS_SOURCE_FRESH_TRUTHFUL",
           pass: Number(stats?.freshness?.productsSourceFresh ?? 0) === 0,
@@ -527,16 +568,16 @@ async function main() {
     CJ_EMAIL_INGESTION: {
       at: nowIso,
       status: "SCHEDULED_SAFE_PROCESSING",
-      emailOnlyPublishing: "DISARMED",
-      note: "Email-only publication remains owner-gated DISARMED; ingestion/validation may proceed.",
+      emailOnlyPublishing: ownerGates.emailOnlyPublishingDisarmed ? "DISARMED" : "NOT_PROVEN",
+      note: "Email-only publication stays owner-gated. A missing flag is NOT_PROVEN, not DISARMED.",
     },
     CJ_EMAIL_VALIDATION: {
       at: nowIso,
-      emailOnlyPublishing: "DISARMED",
+      emailOnlyPublishing: ownerGates.emailOnlyPublishingDisarmed ? "DISARMED" : "NOT_PROVEN",
     },
     CJ_EMAIL_PUBLICATION_READINESS: {
       at: nowIso,
-      armed: false,
+      armed: ownerGates.executeArmed,
       ownerApprovalRequired: true,
     },
     GROWTH_READINESS: {
@@ -546,7 +587,7 @@ async function main() {
       ledger: `${cumulativeUsed}/${cumulativeCap}`,
       uncappedMode: uncapped,
       exceptionalGrowthRequiresOwner: true,
-      executeArmed: false,
+      executeArmed: ownerGates.executeArmed,
       observationComplete: obsEval.complete === true,
     },
     D1_NONCE_REPLAY: {
@@ -615,8 +656,8 @@ async function main() {
     SECURITY_GUARDS: {
       at: nowIso,
       paidPlacementsUntouched: true,
-      growthExecute: false,
-      emailOnlyDisarmed: true,
+      growthExecute: ownerGates.growthExecuteDisarmed ? false : null,
+      emailOnlyDisarmed: ownerGates.emailOnlyPublishingDisarmed,
       cspTrustedTypes: "preserved",
     },
     OPEN_BLOCKERS: {
@@ -685,7 +726,12 @@ async function main() {
   if (!pack.ok) process.exit(2);
 }
 
-main().catch((e) => {
-  console.error(String(e && e.stack ? e.stack : e));
-  process.exit(1);
-});
+const packIsDirect =
+  process.argv[1] &&
+  path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url));
+if (packIsDirect) {
+  main().catch((e) => {
+    console.error(String(e && e.stack ? e.stack : e));
+    process.exit(1);
+  });
+}
