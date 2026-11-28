@@ -133,6 +133,24 @@ assert.equal(planBackoff.deferredByBackoff, 1);
 assert.ok(!planBackoff.selected.some((r) => r.productId === "A"));
 assert.equal(planBackoff.selected[0].productId, "B");
 
+const variantPlan = planSourceCurrentPriorityRefresh(
+  {
+    sections: [
+      {
+        products: [
+          { advertiserId: "1", productId: "SAME", productVariant: "v", lastVerifiedAt: h(5), sourceUpdatedAt: h(6), sourceUpdatedAtStatus: "PROVIDED" },
+          { advertiserId: "1", productId: "SAME", productVariant: "w", lastVerifiedAt: h(5), sourceUpdatedAt: h(6), sourceUpdatedAtStatus: "PROVIDED" },
+          { advertiserId: "1", productId: "SAME", productVariant: "v", lastVerifiedAt: h(5), sourceUpdatedAt: h(6), sourceUpdatedAtStatus: "PROVIDED" },
+        ],
+      },
+    ],
+  },
+  { nowMs: NOW },
+);
+assert.equal(variantPlan.totalProducts, 2);
+assert.equal(variantPlan.growthArmed, false);
+assert.deepEqual(variantPlan.selected.map((row) => row.key), ["1|SAME|v", "1|SAME|w"]);
+
 // --- ledger integration ---
 let led = emptyObservationLedger({ startedAt: "2026-11-23T00:00:00.000Z" });
 led = recordResidualInObservationLedger(led, classifyRefreshedZeroResidual(mk({ RETRY_SCHEDULED: 2 }), { runId: "r1" }), {
