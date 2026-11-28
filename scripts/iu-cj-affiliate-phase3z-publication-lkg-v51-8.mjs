@@ -6,6 +6,7 @@
  */
 
 import { normalizeCjProductText } from "./iu-cj-affiliate-utf8-title-normalize-v51-8.mjs";
+import { isCjTrackingUrl } from "./iu-cj-affiliate-catalog-sync-publish-gate-v1.mjs";
 
 export const REMOVAL_CLASS = Object.freeze({
   NOT_YET_SEEN: "NOT_YET_SEEN",
@@ -101,9 +102,7 @@ export function collectUniqueProductMap(doc) {
  * Classify why a previous LIVE product is missing from the rebuilt catalog.
  */
 function isTrustedAffiliateUrl(url) {
-  const s = String(url || "");
-  // CJ click domains use both .com and .net (anrdoezrs.net / dpbolvw.net observed in LIVE).
-  return /^https:\/\/(www\.)?(kqzyfj|jdoqocy|tkqlhce|dpbolvw|anrdoezrs|pjatr)\.(com|net)\//i.test(s);
+  return isCjTrackingUrl(url);
 }
 
 function productAgeHours(product, nowMs) {
@@ -1181,11 +1180,7 @@ export function buildDeferredNewLedgerDocument(deferredNewKeys, opts = {}) {
       const [advertiserId, productId] = String(key).split("|");
       const src = productsByKey ? productsByKey.get(key) : null;
       const affiliateUrl = src?.affiliateUrl || null;
-      const affiliateUrlOk =
-        typeof affiliateUrl === "string" &&
-        /^https:\/\/(www\.)?(kqzyfj|jdoqocy|tkqlhce|dpbolvw|anrdoezrs|pjatr)\.(com|net)\//i.test(
-          affiliateUrl
-        );
+      const affiliateUrlOk = isTrustedAffiliateUrl(affiliateUrl);
       return {
         key,
         advertiserId: advertiserId || null,

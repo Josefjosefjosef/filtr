@@ -12,24 +12,22 @@ import {
   DEFERRED_NEW_LEDGER_SCHEMA,
   DEFERRED_NEW_LEDGER_FILENAME,
 } from "./iu-cj-affiliate-phase3z-publication-lkg-v51-8.mjs";
+import { isCjTrackingUrl } from "./iu-cj-affiliate-catalog-sync-publish-gate-v1.mjs";
 
 export const GROWTH_SHADOW_MODE_SCHEMA =
   "iu-cj-affiliate-phase3z-growth-shadow-mode-v51-8";
 
 export { DEFERRED_NEW_LEDGER_SCHEMA, DEFERRED_NEW_LEDGER_FILENAME, buildDeferredNewLedgerDocument };
 
-const TRUSTED_AFFILIATE_URL_RE =
-  /^https:\/\/(www\.)?(kqzyfj|jdoqocy|tkqlhce|dpbolvw|anrdoezrs|pjatr)\.(com|net)\//i;
+function isTrustedAffiliateUrl(url) {
+  return isCjTrackingUrl(url);
+}
 
 const IN_STOCK_RE =
   /(^|\b)(in[_ ]?stock|available|skladem|pre[_ ]?order|back[_ ]?order)\b/i;
 
 function cloneDoc(doc) {
   return JSON.parse(JSON.stringify(doc || { sections: [] }));
-}
-
-function isTrustedAffiliateUrl(url) {
-  return TRUSTED_AFFILIATE_URL_RE.test(String(url || ""));
 }
 
 function availabilityOk(product) {
