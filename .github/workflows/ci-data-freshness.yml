@@ -11,6 +11,7 @@ on:
 permissions:
   contents: read
   pull-requests: read
+  actions: read
 
 concurrency:
   group: ci-data-freshness
@@ -29,6 +30,11 @@ jobs:
           echo "---"
           test -f projects/data/articles.json && echo "articles.json exists" || echo "articles.json missing"
           test -f projects/data/videos.json && echo "videos.json exists" || echo "videos.json missing"
+
+      - name: Article pipeline workflows must be enabled (not disabled_manually)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/iu-articles-pipeline-workflows-guard.mjs
 
       # Repo freshness vs automation SLA: */5 publish check (GitHub min) + merge + Pages deploy.
       # 360m (6h) covers observed backlog (~255m) with margin; fails if main data older than 6h.
