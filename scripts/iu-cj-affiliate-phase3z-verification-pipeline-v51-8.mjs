@@ -500,11 +500,7 @@ export async function runAuthorizedSourceLookup(opts = {}) {
   }
   const verifiedQueue = results
     .filter((row) => row.verifiedEligible === true)
-    .map((row) => ({
-      key: row.key,
-      verifiedEligible: true,
-      verificationState: VERIFICATION_STATE.VERIFIED_ELIGIBLE,
-    }));
+    .map((row) => verifiedGrowthCandidate(row));
   return {
     ...access,
     refused: false,
@@ -520,6 +516,18 @@ export async function runAuthorizedSourceLookup(opts = {}) {
       uncappedGate: false,
       executeArmed: false,
     }),
+  };
+}
+
+export function verifiedGrowthCandidate(row) {
+  const variant = String(row && row.productVariant || "").trim();
+  return {
+    key: row.key,
+    advertiserId: row.advertiserId,
+    productId: row.productId,
+    ...(variant ? { productVariant: variant } : {}),
+    verifiedEligible: true,
+    verificationState: VERIFICATION_STATE.VERIFIED_ELIGIBLE,
   };
 }
 
@@ -593,11 +601,7 @@ export function runVerificationBatch(opts = {}) {
   }).length;
   const verifiedQueue = results
     .filter((row) => row.verifiedEligible === true)
-    .map((row) => ({
-      key: row.key,
-      verifiedEligible: true,
-      verificationState: VERIFICATION_STATE.VERIFIED_ELIGIBLE,
-    }));
+    .map((row) => verifiedGrowthCandidate(row));
   const growth = planAdaptiveBatch({
     candidates: verifiedQueue,
     health: { ok: true, stop: false, throttle: false },
