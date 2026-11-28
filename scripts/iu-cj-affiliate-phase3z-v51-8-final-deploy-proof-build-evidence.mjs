@@ -7,6 +7,7 @@ import fs from "fs";
 import path from "path";
 import crypto from "crypto";
 import { spawnSync } from "child_process";
+import { deployProofBucket } from "./iu-cj-deploy-proof-bucket.mjs";
 
 const ROOT = process.cwd();
 const TEMP = process.env.TEMP || process.env.TMP || "/tmp";
@@ -106,16 +107,12 @@ try {
   const now = Date.now();
   for (const sec of j.sections || []) {
     for (const p of sec.products || []) {
-      if (p?.publicationReady === false) continue;
+      const bucket = deployProofBucket(p);
+      if (bucket === "skip") continue;
       const k = String(p.advertiserId) + "|" + String(p.productId);
       if (uniq.has(k)) continue;
       uniq.add(k);
-      const isHold =
-        p.lkgPublicHold === true ||
-        p.publicOffer === false ||
-        p.publicationEligibility === "PUBLICATION_HOLD" ||
-        p.publicationEligibility === "PUBLICATION_BLOCKED";
-      if (isHold) hold += 1;
+      if (bucket === "hold") hold += 1;
       else pub += 1;
       if (p.freshnessStatus === "LAST_KNOWN_PENDING_REVERIFY" || p.sourceFreshLabelForbidden === true)
         pending += 1;
