@@ -164,6 +164,26 @@ const qRow = planQ.planned.find((r) => r.productId === "qdue");
 expect("queue_only_item_planned", qRow?.tier === REFRESH_TIER.P1_QUEUE_DUE && qRow.fromQueue === true);
 expect("closed_not_planned", !planQ.planned.some((r) => r.productId === "done"));
 
+const variantDoc = {
+  sections: [
+    {
+      sectionKey: "aff-test",
+      products: [
+        P("SAME", { productVariant: "v", lastSuccessfulRefreshAt: "2026-11-03T06:00:00Z" }),
+        P("SAME", { productVariant: "w", lastSuccessfulRefreshAt: "2026-11-03T06:00:00Z" }),
+        P("SAME", { productVariant: "v", lastSuccessfulRefreshAt: "2026-11-03T06:00:00Z" }),
+      ],
+    },
+  ],
+};
+const variantPlan = planPriorityRefresh(variantDoc, { nowMs: now, limit: 50 });
+expect("two_variants_both_planned", variantPlan.planned.length === 2);
+expect(
+  "variant_keys_distinct",
+  variantPlan.planned.map((r) => r.key).sort().join(",") === "1|SAME|v,1|SAME|w",
+);
+expect("variant_plan_read_only", variantPlan.readOnly === true && variantPlan.writes === 0);
+
 // determinism
 const again = planPriorityRefresh(doc, { nowMs: now, queue, limit: 50 });
 expect("deterministic", JSON.stringify(again.planned) === JSON.stringify(planQ.planned));
