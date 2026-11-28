@@ -221,9 +221,11 @@ function ensureSection(doc, product, partner) {
 }
 
 function toOfferProduct(raw) {
+  const variant = String(raw.productVariant || "").trim();
   return {
     advertiserId: String(raw.advertiserId),
     productId: String(raw.productId),
+    ...(variant ? { productVariant: variant } : {}),
     partnerName: raw.partnerName || null,
     sectionKey: raw.sectionKey || null,
     title: raw.title || `P-${raw.productId}`,
@@ -509,6 +511,7 @@ export function runGrowthShadowMode(opts = {}) {
     wroteProjectsData: false,
     uncappedShadow: uncappedShadow === true,
     growthGateStillLocked: true,
+    shadowDoc: working,
     productionNote:
       "Shadow mode never sets IU_CJ_PUBLIC_GROWTH_UNCAPPED and never publishes deferred products to production.",
     iterations: iterationRows.length,
