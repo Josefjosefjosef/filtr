@@ -123,6 +123,9 @@ export async function runProductPublicationPipeline(opts) {
         evidence: batch.landingIdentity?.evidence || [],
         blockers: ["landing_batch_linkage_failed"],
         productId: product.productId != null ? String(product.productId) : null,
+        ...(String(product.productVariant || "").trim()
+          ? { productVariant: String(product.productVariant).trim() }
+          : {}),
       };
       productFetch = batch.productFetch || null;
       landingSource = "landing_batch_rejected";
@@ -172,10 +175,12 @@ export async function runProductPublicationPipeline(opts) {
     refDate,
   });
 
+  const variant = String(product.productVariant || "").trim();
   return {
     pipelineVersion: "phase2_publication_v1",
     linkId: bindingRow.linkId,
     productId: product.productId,
+    ...(variant ? { productVariant: variant } : {}),
     landingBatchVerify,
     productInnerUrl: productInner,
     couponDestination: couponDest,
