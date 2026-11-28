@@ -418,7 +418,7 @@ export function mergeIntoDurableCatalog(priorDoc, sourceRows, opts = {}) {
         ? availGate.availabilityHoldReason
         : "DURABLE_CATALOG_SOURCE_UPSERT",
       updatedAt: nowIso,
-      publicationReady: true,
+      publicationReady: eligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_ELIGIBLE,
     });
     upserted += 1;
   }
@@ -429,10 +429,14 @@ export function mergeIntoDurableCatalog(priorDoc, sourceRows, opts = {}) {
   for (const [key, prev] of Object.entries(doc.products)) {
     if (seen.has(key)) continue;
     if (prev.catalogStatus === CATALOG_STATUS.CONFIRMED_REMOVED) continue;
-    if (prev.publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_BLOCKED) continue;
+    if (prev.publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_BLOCKED) {
+      prev.publicationReady = false;
+      continue;
+    }
     const adv = String(prev.advertiserId || "");
     if (ended.has(adv) || revoked.has(adv)) {
       prev.publicationEligibility = PUBLICATION_ELIGIBILITY.PUBLICATION_BLOCKED;
+      prev.publicationReady = false;
       prev.publicOffer = false;
       prev.lkgPublicHold = false;
       prev.hideAsCurrent = true;
@@ -442,6 +446,7 @@ export function mergeIntoDurableCatalog(priorDoc, sourceRows, opts = {}) {
     }
     if (!trustedUrl(prev.affiliateUrl)) {
       prev.publicationEligibility = PUBLICATION_ELIGIBILITY.PUBLICATION_BLOCKED;
+      prev.publicationReady = false;
       prev.publicOffer = false;
       prev.hideAsCurrent = true;
       prev.freshnessReason = "INVALID_AFFILIATE_URL";
@@ -457,6 +462,7 @@ export function mergeIntoDurableCatalog(priorDoc, sourceRows, opts = {}) {
           prev.publicationEligibility === PUBLICATION_ELIGIBILITY.PUBLICATION_ELIGIBLE;
     if (age != null && age >= staleAfterHours) {
       prev.publicationEligibility = PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD;
+      prev.publicationReady = false;
       prev.publicOffer = false;
       prev.lkgPublicHold = true;
       prev.hideAsCurrent = true;
@@ -474,6 +480,7 @@ export function mergeIntoDurableCatalog(priorDoc, sourceRows, opts = {}) {
       );
       if (availGate.availabilityHoldReason) {
         prev.publicationEligibility = PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD;
+        prev.publicationReady = false;
         prev.publicOffer = false;
         prev.lkgPublicHold = true;
         prev.hideAsCurrent = true;
@@ -485,6 +492,7 @@ export function mergeIntoDurableCatalog(priorDoc, sourceRows, opts = {}) {
         heldStale += 1;
       } else {
         prev.publicationEligibility = PUBLICATION_ELIGIBILITY.PUBLICATION_ELIGIBLE;
+        prev.publicationReady = true;
         prev.publicOffer = true;
         prev.lkgPublicHold = false;
         prev.hideAsCurrent = false;
@@ -500,6 +508,7 @@ export function mergeIntoDurableCatalog(priorDoc, sourceRows, opts = {}) {
     } else {
       // Never-LIVE + unseen in this window: retain in durable catalog, HOLD for publication.
       prev.publicationEligibility = PUBLICATION_ELIGIBILITY.PUBLICATION_HOLD;
+      prev.publicationReady = false;
       prev.publicOffer = false;
       prev.lkgPublicHold = true;
       prev.hideAsCurrent = true;
